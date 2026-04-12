@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/bootstrap.rtl.min.css')}}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css')}}"
+    />
+    <title>SEO RUN</title>
+  </head>
+  <body class="overflow-hidden">
+    <header>
+      <nav class="bg-light d-none d-lg-block">
+        <div class="container">
+          <div class="row py-3 justify-content-between align-items-center">
+            <!-- لوگو -->
+            <div class="col-2 d-flex">
+              <h1>LOGO</h1>
+            </div>
+
+            <!-- منو -->
+            <div
+              style="min-height: 40px"
+              class="col-8 d-flex justify-content-center align-items-center border border-dark rounded-pill"
+            >
+              <ul
+                class="d-flex w-100 justify-content-between list-unstyled m-0 p-2"
+              >
+                <li class="p-0 m-0">
+                  <a
+                    href="#"
+                    class="text-decoration-none text-dark fw-bold fs-6 p-2 nav-menu"
+                    >خانه</a
+                  >
+                </li>
+                <li class="p-0 m-0">
+                  <a
+                    href="#"
+                    class="text-decoration-none text-dark fw-bold fs-6 p-2 nav-menu"
+                    >خدمات</a
+                  >
+                </li>
+                <li class="p-0 m-0">
+                  <a
+                    href="#"
+                    class="text-decoration-none text-dark fw-bold fs-6 p-2 nav-menu"
+                    >پروژه ها</a
+                  >
+                </li>
+                <li class="p-0 m-0">
+                  <a
+                    href="#"
+                    class="text-decoration-none text-dark fw-bold fs-6 p-2 nav-menu"
+                    >آموزش</a
+                  >
+                </li>
+                <li class="p-0 m-0">
+                  <a
+                    href="#"
+                    class="text-decoration-none text-dark fw-bold fs-6 p-2 nav-menu"
+                    >درباره ما</a
+                  >
+                </li>
+                <li class="p-0 m-0">
+                  <a
+                    href="#"
+                    class="text-decoration-none text-dark fw-bold fs-6 p-2 nav-menu"
+                    >تماس با ما</a
+                  >
+                </li>
+              </ul>
+            </div>
+
+            <!-- دکمه کال تو اکشن -->
+            <div class="col-2 d-flex justify-content-end">
+              <button
+                type="button"
+                class="btn px-4 py-2 btn-primary text-dark fw-bold rounded-pill"
+              >
+                شروع پروژه
+              </button>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <!-- هیرو سکشن -->
+      <section class="bg-light">
+        <div class="container py-5">
+          <div class="row align-items-center align-items-center">
+            <!-- ستون متنی -->
+            <div class="col-12 col-md-7 d-flex flex-column mx-auto">
+              <div>
+                <h1 class="fw-bolder">سئو ران؛ مرجع احیای سایت شما</h1>
+              </div>
+
+              <div class="row mt-3 mt-md-5">
+                <!-- فلش -->
+                <div class="col-3 d-none d-md-block">
+                  <div class="skew-line"></div>
+                </div>
+                <!-- محتوا -->
+                <div class="col d-flex flex-column">
+                  <h3>اینجا چخبره؟</h3>
+                  <p>
+                    ما سئو ران هستیم؛ تیمی که قراره طراحی سایت تورو انجام بدن،
+                    سئو سایت تورو به بهترین نحو جلو ببرن، حتی روی پیج
+                    اینستاگرامت بهترین محتوارو قرار بدن. اگه علاقه داری تو دنیای
+                    وبسایت غرق بشی همراهمون باش.
+                  </p>
+                  <button
+                    type="button"
+                    id="myBtn"
+                    class="btn btn-dark rounded-pill align-self-start"
+                  >
+                    خدمات ما
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- ستون تصویر -->
+            <div class="col-10 col-md-5 text-center mt-4 mt-md-0 mx-auto">
+              <object
+                data="{{ url_for('static', filename='img/hero.svg')}}"
+                type="image/svg+xml"
+                style="max-height: 515px; max-width: 505px; width: 100%"
+              ></object>
+            </div>
+          </div>
+        </div>
+
+        <!-- مارکویی -->
+        <div
+          class="marquee-wrapper py-3 mt-5"
+          style="background-color: var(--primary-color); overflow: hidden">
+          <div class="marquee-track d-flex gap-5">
+            <!-- ست اول -->
+            <div class="marquee-content d-flex gap-5 flex-shrink-0">
+              <span class="fs-2 fw-bolder"># طراحی سایت</span>
+              <span class="fs-2 fw-bolder"># سئو</span>
+              <span class="fs-2 fw-bolder"># تولید محتوا</span>
+              <span class="fs-2 fw-bolder"># اینستاگرام</span>
+            </div>
+            <!-- ست دوم (کپی) -->
+            <div
+              class="marquee-content d-flex gap-5 flex-shrink-0"
+              aria-hidden="true">
+              <span class="fs-2 fw-bolder"># طراحی سایت</span>
+              <span class="fs-2 fw-bolder"># سئو</span>
+              <span class="fs-2 fw-bolder"># تولید محتوا</span>
+              <span class="fs-2 fw-bolder"># اینستاگرام</span>
+            </div>
+            <!-- ست دوم (کپی) -->
+            <div
+              class="marquee-content d-flex gap-5 flex-shrink-0"
+              aria-hidden="true">
+              <span class="fs-2 fw-bolder"># طراحی سایت</span>
+              <span class="fs-2 fw-bolder"># سئو</span>
+              <span class="fs-2 fw-bolder"># تولید محتوا</span>
+              <span class="fs-2 fw-bolder"># اینستاگرام</span>
+            </div>
+            <!-- ست دوم (کپی) -->
+            <div
+              class="marquee-content d-flex gap-5 flex-shrink-0"
+              aria-hidden="true">
+              <span class="fs-2 fw-bolder"># طراحی سایت</span>
+              <span class="fs-2 fw-bolder"># سئو</span>
+              <span class="fs-2 fw-bolder"># تولید محتوا</span>
+              <span class="fs-2 fw-bolder"># اینستاگرام</span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer></footer>
+    <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js')}}"></script>
+  </body>
+</html>
