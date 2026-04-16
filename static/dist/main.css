@@ -1,0 +1,21 @@
+.skew-line {
+  position: relative;
+  width: 100%;
+  height: 31px;
+  border-bottom: 2px solid red; /* خط اصلی */
+}
+
+.skew-line::before {
+  content: "";
+  position: absolute;
+  left: 0;
+
+  /* گوشه خم‌شده */
+  width: 2px;
+  height: 100%;
+  border-left: 2px solid red;
+
+  /* خم شدن به داخل به اندازه 10٪ عرض */
+  transform: skewX(-60deg) translateX(0px);
+  transform-origin: bottom left;
+}

@@ -3,185 +3,177 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- ALPINE JS -->
+    <script
+      src="https://lib.arvancloud.ir/alpinejs/3.9.6/cdn.min.js"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+
+    <!-- FONTAWESOME -->
+
     <link
       rel="stylesheet"
-      href="{{ url_for('static', filename='css/bootstrap.rtl.min.css')}}"
+      href="https://lib.arvancloud.ir/font-awesome/6.3.0/css/all.min.css"
     />
+    <title>Flask + Tailwind</title>
     <link
+      href="{{ url_for('static', filename='dist/output.css') }}"
       rel="stylesheet"
-      href="{{ url_for('static', filename='css/style.css')}}"
     />
-    <title>SEO RUN</title>
+    <link rel="stylesheet" href="../static/dist/main.css" />
   </head>
-  <body class="overflow-hidden">
+  <body class="bg-gray-100">
     <header>
-      <nav class="bg-light d-none d-lg-block">
-        <div class="container">
-          <div class="row py-3 justify-content-between align-items-center">
-            <!-- لوگو -->
-            <div class="col-2 d-flex">
-              <h1>LOGO</h1>
-            </div>
+      <nav class="flex md:hidden items-center justify-between p-5 shadow-sm">
+        <div class="bg-red-500 flex justify-center items-center">
+          <!-- منو موبایل -->
+          <div x-data="{open: false}">
+            <button @click="open = true">
+              <i class="fas fa-bars text-3xl"></i>
+            </button>
+
+            <!-- اورلی -->
+            <div
+              x-show="open"
+              x-transition:enter="transition ease-out duration-300"
+              x-transition:enter-start="opacity-0"
+              x-transition:enter-end="opacity-100"
+              x-transition:leave="transition ease-in duration-300"
+              x-transition:leave-start="opacity-100"
+              x-transition:leave-end="opacity-0"
+              @click="open = false"
+              class="fixed inset-0 bg-black/50 z-40"
+            ></div>
 
             <!-- منو -->
             <div
-              style="min-height: 40px"
-              class="col-8 d-flex justify-content-center align-items-center border border-dark rounded-pill"
+              x-show="open"
+              x-transition:enter="transition ease-out duration-300"
+              x-transition:enter-start="translate-x-full"
+              x-transition:enter-end="translate-x-0"
+              x-transition:leave="transition ease-in duration-300"
+              x-transition:leave-start="translate-x-0"
+              x-transition:leave-end="translate-x-full"
+              class="fixed top-0 right-0 h-full w-52 bg-white z-50 p-5"
             >
-              <ul
-                class="d-flex w-100 justify-content-between list-unstyled m-0 p-2"
-              >
-                <li class="p-0 m-0">
-                  <a
-                    href="#"
-                    class="text-decoration-none text-dark fw-bold fs-6 p-2 nav-menu"
-                    >خانه</a
+              <div class="bg-red-500 text-center">
+                <span class="font-bold text-3xl">seo run</span>
+              </div>
+              <div class="mt-5">
+                <ul class="font-semibold">
+                  <li
+                    class="group hover:bg-gray-100 hover:text-red-900 p-3 my-1 rounded-full"
                   >
-                </li>
-                <li class="p-0 m-0">
-                  <a
-                    href="#"
-                    class="text-decoration-none text-dark fw-bold fs-6 p-2 nav-menu"
-                    >خدمات</a
-                  >
-                </li>
-                <li class="p-0 m-0">
-                  <a
-                    href="#"
-                    class="text-decoration-none text-dark fw-bold fs-6 p-2 nav-menu"
-                    >پروژه ها</a
-                  >
-                </li>
-                <li class="p-0 m-0">
-                  <a
-                    href="#"
-                    class="text-decoration-none text-dark fw-bold fs-6 p-2 nav-menu"
-                    >آموزش</a
-                  >
-                </li>
-                <li class="p-0 m-0">
-                  <a
-                    href="#"
-                    class="text-decoration-none text-dark fw-bold fs-6 p-2 nav-menu"
-                    >درباره ما</a
-                  >
-                </li>
-                <li class="p-0 m-0">
-                  <a
-                    href="#"
-                    class="text-decoration-none text-dark fw-bold fs-6 p-2 nav-menu"
-                    >تماس با ما</a
-                  >
-                </li>
-              </ul>
-            </div>
-
-            <!-- دکمه کال تو اکشن -->
-            <div class="col-2 d-flex justify-content-end">
-              <button
-                type="button"
-                class="btn px-4 py-2 btn-primary text-dark fw-bold rounded-pill"
-              >
-                شروع پروژه
-              </button>
+                    <a class="text-gray-700 group-hover:text-gray-900" href="#"
+                      >خانه</a
+                    >
+                  </li>
+                  <li class="group hover:bg-gray-100 p-3 my-1 rounded-full">
+                    <a class="text-gray-700 group-hover:text-gray-900" href="#"
+                      >خدمات</a
+                    >
+                  </li>
+                  <li class="group hover:bg-gray-100 p-3 my-1 rounded-full">
+                    <a class="text-gray-700 group-hover:text-gray-900" href="#"
+                      >پروژه ها</a
+                    >
+                  </li>
+                  <li class="group hover:bg-gray-100 p-3 my-1 rounded-full">
+                    <a class="text-gray-700 group-hover:text-gray-900" href="#"
+                      >آموزش</a
+                    >
+                  </li>
+                  <li class="group hover:bg-gray-100 p-3 my-1 rounded-full">
+                    <a class="text-gray-700 group-hover:text-gray-900" href="#"
+                      >درباره ما</a
+                    >
+                  </li>
+                  <li class="group hover:bg-gray-100 p-3 my-1 rounded-full">
+                    <a class="text-gray-700 group-hover:text-gray-900" href="#"
+                      >ارتباط با سئو ران</a
+                    >
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
+        </div>
+        <div class="bg-blue-500 flex justify-center items-center">seo run</div>
+        <div class="bg-lime-300">
+          <i class="fas fa-star"></i>
         </div>
       </nav>
     </header>
-
     <main>
-      <!-- هیرو سکشن -->
-      <section class="bg-light">
-        <div class="container py-5">
-          <div class="row align-items-center align-items-center">
-            <!-- ستون متنی -->
-            <div class="col-12 col-md-7 d-flex flex-column mx-auto">
-              <div>
-                <h1 class="fw-bolder">سئو ران؛ مرجع احیای سایت شما</h1>
-              </div>
-
-              <div class="row mt-3 mt-md-5">
-                <!-- فلش -->
-                <div class="col-3 d-none d-md-block">
-                  <div class="skew-line"></div>
-                </div>
-                <!-- محتوا -->
-                <div class="col d-flex flex-column">
-                  <h3>اینجا چخبره؟</h3>
-                  <p>
-                    ما سئو ران هستیم؛ تیمی که قراره طراحی سایت تورو انجام بدن،
-                    سئو سایت تورو به بهترین نحو جلو ببرن، حتی روی پیج
-                    اینستاگرامت بهترین محتوارو قرار بدن. اگه علاقه داری تو دنیای
-                    وبسایت غرق بشی همراهمون باش.
-                  </p>
-                  <button
-                    type="button"
-                    id="myBtn"
-                    class="btn btn-dark rounded-pill align-self-start"
-                  >
-                    خدمات ما
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <!-- ستون تصویر -->
-            <div class="col-10 col-md-5 text-center mt-4 mt-md-0 mx-auto">
-              <object
-                data="{{ url_for('static', filename='img/hero.svg')}}"
-                type="image/svg+xml"
-                style="max-height: 515px; max-width: 505px; width: 100%"
-              ></object>
+      <!-- هیروسکشن -->
+      <section
+        class="container mx-auto p-5 flex flex-col justify-center items-center"
+      >
+        <!-- ستون سمت راست -->
+        <div class="bg-lime-300">
+          <div>
+            <h1 class="text-4xl font-bold">سئو ران؛ مرجع احیای سایت شما</h1>
+            <div class="flex flex-col mt-10 justify-between items-start">
+              <h3 class="text-3xl font-bold">اینجا چخبره؟</h3>
+              <p class="mt-5 font-semibold">
+                ما سئو ران هستیم؛ تیمی که قراره طراحی سایت تورو انجام بدن، سئو
+                سایت تورو به بهترین نحو جلو ببرن، حتی روی پیج اینستاگرامت بهترین
+                محتوارو قرار بدن. اگه علاقه داری تو دنیای وبسایت غرق بشی
+                همراهمون باش.
+              </p>
+              <a
+                href="#"
+                class="bg-black hover:bg-lime-400 px-[30px] py-[50px] text-gray-100 font-semibold rounded-full mt-10 ms-20"
+                >خدمات ما</a
+              >
             </div>
           </div>
         </div>
-
-        <!-- مارکویی -->
+        <div class="">
+          <img
+            src="../static/img/hero.svg"
+            alt="hero-img"
+            class="w-[320px] h-[325px]"
+          />
+        </div>
+      </section>
+      <!-- مارکویی -->
+      <section>
+        <!-- مارکوئی -->
         <div
-          class="marquee-wrapper py-3 mt-5"
-          style="background-color: var(--primary-color); overflow: hidden">
-          <div class="marquee-track d-flex gap-5">
+          class="overflow-hidden bg-lime-300 py-5"
+          x-data="{
+          items:['تولید محتوا', 'برنامه نویسی','سئو سایت','طراحی سایت'   ],
+          position: 0,
+          speed:1
+          }"
+          x-init="setInterval(() => { position += speed; 
+          if(position >= 500) position = 0},20)"
+        >
+          <div
+            class="inline-flex gap-10 whitespace-nowrap min-w-max"
+            :style="`transform: translateX(${position}px)`"
+          >
             <!-- ست اول -->
-            <div class="marquee-content d-flex gap-5 flex-shrink-0">
-              <span class="fs-2 fw-bolder"># طراحی سایت</span>
-              <span class="fs-2 fw-bolder"># سئو</span>
-              <span class="fs-2 fw-bolder"># تولید محتوا</span>
-              <span class="fs-2 fw-bolder"># اینستاگرام</span>
-            </div>
-            <!-- ست دوم (کپی) -->
-            <div
-              class="marquee-content d-flex gap-5 flex-shrink-0"
-              aria-hidden="true">
-              <span class="fs-2 fw-bolder"># طراحی سایت</span>
-              <span class="fs-2 fw-bolder"># سئو</span>
-              <span class="fs-2 fw-bolder"># تولید محتوا</span>
-              <span class="fs-2 fw-bolder"># اینستاگرام</span>
-            </div>
-            <!-- ست دوم (کپی) -->
-            <div
-              class="marquee-content d-flex gap-5 flex-shrink-0"
-              aria-hidden="true">
-              <span class="fs-2 fw-bolder"># طراحی سایت</span>
-              <span class="fs-2 fw-bolder"># سئو</span>
-              <span class="fs-2 fw-bolder"># تولید محتوا</span>
-              <span class="fs-2 fw-bolder"># اینستاگرام</span>
-            </div>
-            <!-- ست دوم (کپی) -->
-            <div
-              class="marquee-content d-flex gap-5 flex-shrink-0"
-              aria-hidden="true">
-              <span class="fs-2 fw-bolder"># طراحی سایت</span>
-              <span class="fs-2 fw-bolder"># سئو</span>
-              <span class="fs-2 fw-bolder"># تولید محتوا</span>
-              <span class="fs-2 fw-bolder"># اینستاگرام</span>
-            </div>
+            <template x-for="item in items">
+              <span class="flex items-center gap-3 text-black font-bold">
+                <i class="fas fa-star"></i>
+                <span x-text="item"></span>
+              </span>
+            </template>
+
+            <!-- ست دوم -->
+            <template x-for="item in items">
+              <span class="flex items-center gap-3 text-black font-bold">
+                <i class="fas fa-star"></i>
+                <span x-text="item"></span>
+              </span>
+            </template>
           </div>
         </div>
       </section>
     </main>
-
-    <footer></footer>
-    <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js')}}"></script>
   </body>
 </html>
