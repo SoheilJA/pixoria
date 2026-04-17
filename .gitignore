@@ -1,0 +1,44 @@
+# =============================
+# Python / Flask
+# =============================
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environment
+venv/
+env/
+.venv/
+
+# Flask instance folder (if used)
+instance/
+
+# Byte-compiled / cache
+*.cache
+*.log
+
+# =============================
+# Node / TailwindCSS
+# =============================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Build artifacts (optional)
+dist/
+build/
+
+# =============================
+# OS / Editor files
+# =============================
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+
+# VSCode
+.vscode/
