@@ -4,6 +4,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+    <!-- AOS -->
+    <link
+      rel="stylesheet"
+      href="https://lib.arvancloud.ir/aos/3.0.0-beta.6/aos.css"
+    />
+
     <!-- ALPINE JS -->
     <script
       src="https://lib.arvancloud.ir/alpinejs/3.9.6/cdn.min.js"
@@ -260,15 +266,12 @@
             خدمات سئو ران
           </h3>
           <a
-            class="border border-gray-400 text-white hover:bg-white transition-all duration-300 rounded-full px-4 pt-2 pb-3 inline-flex gap-4 justify-between items-center group"
+            class="border border-gray-400 text-white hover:bg-white transition-all duration-300 rounded-full px-4 pt-3 pb-3 inline-flex gap-4 justify-between items-center group"
             href="#"
           >
             <span class="group-hover:text-black transition-colors duration-100">
-              مشاهده بیشتر
+              مشاهده تمامی خدمات
             </span>
-            <i
-              class="fas fa-arrow-left leading-none mb-[-5px] group-hover:text-black transition-colors duration-100"
-            ></i>
           </a>
         </div>
 
@@ -349,15 +352,19 @@
         </div>
 
         <!-- نمایش کاروسل فقط در موبایل و تبلت -->
-        <div class="lg:hidden mt-7 overflow-hidden" x-data="carousel">
+        <div
+          class="mt-7 flex flex-col justify-between overflow-hidden"
+          x-data="carousel"
+        >
           <!-- ردیف کارت‌ها -->
           <div
-            class="flex gap-5 transition-transform duration-500 ease-out pr-5"
+            class="flex justify-evenly lg:w-full lg:pl-5 gap-5 transition-transform duration-500 ease-out pr-5"
             :style="`transform: translateX(${translateValue}px)`"
           >
             <!-- کارت اول -->
             <div
-              class="bg-gray-200 px-5 py-7 rounded-sm flex-shrink-0 w-[380px]">
+              class="bg-gray-200 px-5 py-7 rounded-sm flex-shrink-0 w-[380px]"
+            >
               <div class="flex justify-between items-center">
                 <img
                   class="w-[52px] h-[52px] p-3 bg-black rounded-full"
@@ -395,7 +402,8 @@
 
             <!-- کارت دوم -->
             <div
-              class="bg-gray-200 px-5 py-7 rounded-sm flex-shrink-0 w-[380px]">
+              class="bg-gray-200 px-5 py-7 rounded-sm flex-shrink-0 w-[380px]"
+            >
               <div class="flex justify-between items-center">
                 <img
                   class="w-[52px] h-[52px] p-3 bg-black rounded-full"
@@ -433,7 +441,8 @@
 
             <!-- کارت سوم -->
             <div
-              class="bg-gray-200 px-5 py-7 rounded-sm flex-shrink-0 w-[380px]">
+              class="bg-gray-200 px-5 py-7 rounded-sm flex-shrink-0 w-[380px]"
+            >
               <div class="flex justify-between items-center">
                 <img
                   class="w-[52px] h-[52px] p-3 bg-black rounded-full"
@@ -468,7 +477,8 @@
 
             <!-- کارت چهارم -->
             <div
-              class="bg-gray-200 px-5 py-7 rounded-sm flex-shrink-0 w-[380px]">
+              class="bg-gray-200 px-5 py-7 rounded-sm flex-shrink-0 w-[380px]"
+            >
               <div class="flex justify-between items-center">
                 <img
                   class="w-[52px] h-[52px] p-3 bg-black rounded-full"
@@ -506,25 +516,236 @@
           </div>
 
           <!-- دکمه‌های ناوبری -->
-          <div class="flex justify-end gap-3 mt-8 px-5">
+          <div class="md:hidden flex justify-center gap-3 mt-8 px-5">
             <button
               @click="prev"
-              class="bg-white border-2 border-gray-300 shadow-md rounded-full w-12 h-12 flex items-center justify-center hover:bg-gray-100 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+              class="group bg-black rounded-full w-10 h-10 flex items-center justify-center hover:bg-lime-300 transition-all disabled:cursor-not-allowed"
               :disabled="currentIndex === 0"
             >
-              <i class="fas fa-chevron-right text-gray-700"></i>
+              <i
+                class="fas fa-long-arrow-right text-white group-hover:text-black"
+              ></i>
             </button>
             <button
               @click="next"
-              class="bg-white border-2 border-gray-300 shadow-md rounded-full w-12 h-12 flex items-center justify-center hover:bg-gray-100 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+              class="group bg-black rounded-full w-10 h-10 flex items-center justify-center hover:bg-lime-300 transition-all disabled:cursor-not-allowed"
               :disabled="currentIndex >= totalCards - 1"
             >
-              <i class="fas fa-chevron-left text-gray-700"></i>
+              <i
+                class="fas fa-long-arrow-left text-white group-hover:text-black"
+              ></i>
             </button>
           </div>
         </div>
       </section>
+
+      <!-- سکشن نمونه کار ها -->
+      <section class="bg-gray-200">
+        <div class="container flex flex-col mt-10 py-10 px-5 mx-auto">
+          <!-- ردیف اول -->
+          <div
+            class="flex justify-between items-baseline border-b border-gray-300 pb-7"
+          >
+            <h3 class="text-3xl font-semibold">معرفی سئو ران</h3>
+            <a
+              class="border border-black hover:bg-black transition-all duration-300 rounded-full px-4 pt-2 pb-3 inline-flex gap-4 justify-between items-center group"
+              href="#"
+            >
+              <span
+                class="group-hover:text-gray-100 transition-colors duration-100"
+              >
+                مشاهده بیشتر
+              </span>
+            </a>
+          </div>
+
+          <!-- ردیف دوم -->
+          <div class="flex flex-col pb-5">
+            <!-- نمونه کار اول -->
+            <div class="flex flex-col gap-6 mb-12">
+              <img
+                class="w-[457px] h-[360px] object-cover object-center rounded-sm"
+                src="../static/img/imageye___-_imgi_22_project-246x300-1.png"
+                alt=""
+              />
+              <a class="font-bold text-3xl" href="#"
+                >لورم ایپسوم متن ساختگی با</a
+              >
+              <p class="text-sm">لورم ایپسوم متن ساختگی با تولید سادگی</p>
+            </div>
+
+            <!-- نمونه کار دوم -->
+            <div class="flex flex-col gap-6 mb-12">
+              <img
+                class="w-[457px] h-[360px] object-cover object-center rounded-sm"
+                src="../static/img/imageye___-_imgi_5_2-1024x576-1.webp"
+                alt=""
+              />
+              <a class="font-bold text-3xl" href="#"
+                >لورم ایپسوم متن ساختگی با</a
+              >
+              <p class="text-sm">لورم ایپسوم متن ساختگی با تولید سادگی</p>
+            </div>
+
+            <!-- نمونه کار سوم -->
+            <div class="flex flex-col gap-6">
+              <img
+                class="w-[457px] h-[360px] object-cover object-center rounded-sm"
+                src="../static/img/imageye___-_imgi_6_3-1024x683-1.webp"
+                alt=""
+              />
+              <a class="font-bold text-3xl" href="#"
+                >لورم ایپسوم متن ساختگی با</a
+              >
+              <p class="text-sm">لورم ایپسوم متن ساختگی با تولید سادگی</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- سکشن برند ها -->
+      <section class="bg-black">
+        <div class="container flex flex-col py-10 px-5 mx-auto">
+          <!-- ردیف اول -->
+          <div class="border-b border-[#222222] pb-10">
+            <h3 class="text-3xl text-white leading-none font-semibold">
+              برندهای ساخته شده با سئو ران
+            </h3>
+          </div>
+
+          <!-- ردیف دوم -->
+          <div class="flex flex-wrap gap-4 mt-10">
+            <div class="relative">
+              <!-- دایره محو (پس‌زمینه) -->
+              <div
+                class="absolute inset-0 flex items-center justify-center pointer-events-none"
+              >
+                <div
+                  class="w-64 h-64 rounded-full bg-gradient-radial blur-3xl from-lime-500 to-transparent"
+                ></div>
+              </div>
+            </div>
+
+            <!-- آیتم اول -->
+            <div
+              class="border border-[#222222] h-[110px] w-[48%] py-5 rounded-full flex justify-center items-center"
+            >
+              <img src="../static/img/imageye___-_imgi_9_3-1.png" alt="" />
+            </div>
+
+            <!-- آیتم دوم -->
+            <div
+              class="border border-[#222222] h-[110px] w-[48%] py-5 rounded-full flex justify-center items-center"
+            >
+              <img src="../static/img/imageye___-_imgi_8_Vector.png" alt="" />
+            </div>
+
+            <!-- آیتم سوم -->
+            <div
+              class="border border-[#222222] h-[110px] w-[48%] py-5 rounded-full flex justify-center items-center"
+            >
+              <img src="../static/img/imageye___-_imgi_7_1.png" alt="" />
+            </div>
+
+            <!-- آیتم چهارم -->
+            <div
+              class="border border-[#222222] h-[110px] w-[48%] py-5 rounded-full flex justify-center items-center"
+            >
+              <img src="../static/img/imageye___-_imgi_11_5.png" alt="" />
+            </div>
+
+            <!-- آیتم پنجم -->
+            <div
+              class="border border-[#222222] h-[110px] w-full py-5 rounded-full flex justify-center items-center"
+            >
+              <img src="../static/img/imageye___-_imgi_10_4.png" alt="" />
+            </div>
+          </div>
+
+          <!-- ردیف سوم -->
+          <div class="flex flex-col gap-8 py-10 mt-10">
+            <!-- اینمیشین  -->
+            <div
+              class="w-[185px] h-[185px] relative flex justify-center items-center"
+            >
+              <img
+                data-aos="fade-in"
+                class="w-[80px] h-[80px]"
+                src="../static/img/qote.svg"
+                alt=""
+              />
+              <img
+                data-aos="fade-in"
+                data-aos-duration="1000"
+                class="absolute animate-[spin_10s_linear_infinite] w-[180px] h-[180px]"
+                src="../static/img/text.svg"
+                alt=""
+              />
+            </div>
+
+            <!-- نظرات کاربران -->
+            <div class="bg-black m-6 mx-auto w-full">
+              <!-- نظر اول -->
+              <div class="flex flex-col p-7 gap-3">
+                <p
+                  class="text-white font-bold leading-8 pb-8 border-b border-[#222222]"
+                >
+                  لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ، و
+                  با استفاده از طراحان گرافیک است، چاپگرها و متون بلکه روزنامه و
+                  مجله در ستون و سطرآنچنان که لازم است، و برای شرایط فعلی
+                  تکنولوژی مورد نیاز، و کاربردهای متنوع با هدف بهبود ابزارهای
+                  کاربردی می باشد، کتابهای
+                </p>
+                <h6 class="font-bold text-white pt-5">دانیال احمدی</h6>
+                <span class="font-bold text-gray-400">فروشگاه عطر آبانسا</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- سکشن قیمت خدمات -->
+      <section>
+        <div class="container flex flex-col py-10 px-5 mx-auto">
+          <!-- ردیف اول -->
+          <div class="py-10">
+            <h3 class="text-3xl leading-none font-semibold">قیمت خدمات</h3>
+            <p>
+              برای اطلاع دقیق از هزینه پلن های طراحی سایت و سئو سایت سئو ران،
+              می‌توانید با ما <span class="font-bold">تماس</span> بگیرید
+            </p>
+          </div>
+
+          <!-- ردیف دوم -->
+          <div class="flex flex-col">
+
+            <!-- کارت اول -->
+             <div class="flex flex-col bg-gray-200 p-8 rounded-sm">
+
+              <!-- عنوان و توضیحات -->
+              <div class="flex flex-col text-justify gap-10">
+                <h6 class="font-bold text-3xl">طراحی سایت</h6>
+                <p>طراحی سایت با سئو ران، یک در به دنیای جدیدی از طراحی سایت است. همکاری با ما، تجربه‌هایی فراتر از یک قالب آماده و یا طراحی های ساده و تکراری است. برای شگفت زده شدن دنبال کن!</p>
+              </div>
+
+              <!-- قیمت و دکمه -->
+              <div class="flex flex-col justify-center items-center gap-6">
+                <h6 class="font-bold text-2xl">شروع از 25 میلیون</h6>
+                <span> برای شگفت زده شدن کلیک کنید </span>
+                <a href="#">طراحی سایت با سئو ران</a>
+              </div>
+
+             </div>
+
+          </div>
+        </div>
+      </section>
     </main>
+
+    <script src="https://lib.arvancloud.ir/aos/3.0.0-beta.6/aos.js"></script>
+    <script>
+      AOS.init();
+    </script>
 
     <script>
       document.addEventListener("alpine:init", () => {
