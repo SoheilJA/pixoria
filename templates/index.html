@@ -45,7 +45,7 @@
   </head>
   <body>
     <header>
-      <nav class="flex md:hidden items-center justify-between p-5 shadow-sm">
+      <nav class="flex lg:hidden items-center justify-between p-5 shadow-sm">
         <div class="flex justify-center items-center">
           <!-- منو موبایل -->
           <div x-data="{open: false}">
@@ -130,8 +130,9 @@
     <main>
       <!-- هیروسکشن -->
       <section
-        class="container mx-auto p-5 flex flex-col justify-center items-center"
-      >
+        class=" bg-gray-25 pb-20 p-5 flex flex-col justify-center items-center">
+      <div class="container mx-auto flex flex-col justify-between items-center">
+
         <!-- ستون سمت راست -->
         <div class="">
           <div>
@@ -152,6 +153,7 @@
             </div>
           </div>
         </div>
+
         <div class="">
           <img
             src="../static/img/hero.svg"
@@ -159,10 +161,12 @@
             class="w-[320px] h-[325px] mt-5"
           />
         </div>
+      </div>
+        
       </section>
 
       <!-- مارکویی -->
-      <section class="mt-10">
+      <section>
         <!-- مارکوئی -->
         <div
           class="overflow-hidden bg-lime-300 py-5"
@@ -198,145 +202,215 @@
       </section>
 
       <!-- سکشن معرفی سئو ران -->
-      <section class="flex flex-col mt-10 p-5">
-        <!-- ردیف اول -->
+      <section class="flex flex-col min-h-[70vh] py-20 p-5 relative">
+        <!-- انیمیشن -->
         <div
-          class="flex justify-between items-baseline border-b border-gray-300 pb-7"
+          data-aos="fade-up-left"
+          class="absolute inset-0 pointer-events-none -z-10"
         >
-          <h3 class="text-3xl font-semibold">معرفی سئو ران</h3>
-          <a
-            class="border border-black hover:bg-black transition-all duration-300 rounded-full px-4 pt-2 pb-3 inline-flex gap-4 justify-between items-center group"
-            href="#"
+          <!-- تصویر پسزمینه -->
+          <div
+            class="absolute w-full h-full bg-[url('/static/img/GLobal.png')] bg-[position:right_-50px_bottom_-50px] bg-[length:400px_400px] bg-no-repeat opacity-10"
+          ></div>
+        </div>
+
+        <div class="container mx-auto flex flex-col flex-1 h-full justify-evenly  border-gray-300 pb-7 px-5">
+          <div>
+
+
+          <!-- ردیف اول -->
+          <div
+            class="flex justify-between items-baseline border-b border-gray-300 pb-7"
           >
-            <span
-              class="group-hover:text-gray-100 transition-colors duration-100"
+            <h3 class="text-3xl font-semibold">معرفی سئو ران</h3>
+            <a
+              class="border border-black hover:bg-black transition-all duration-300 rounded-full px-4 pt-2 pb-3 inline-flex gap-4 justify-between items-center group"
+              href="#"
             >
-              مشاهده بیشتر
-            </span>
-            <i
-              class="fas fa-arrow-left leading-none mb-[-5px] group-hover:text-gray-100 transition-colors duration-100"
-            ></i>
-          </a>
-        </div>
-
-        <!-- ردیف دوم -->
-        <div class="mt-8">
-          <p class="leading-6 font-semibold">
-            سئو ران یک تیم برنامه نویسی است که به کمک دانش و تجربه خود، توانسته
-            است فعالیت‌ها و موفقیت‌های زیادی در رونق تجارت و افزایش فروش کسب و
-            کارهای مختلف بدست آورد. فعالیت‌های سئو ران شامل طراحی سایت، سئو سایت
-            و تولید محتوا می‌باشد. برای آشنایی با خدمات ما، سئو ران را دنبال
-            کنید.
-          </p>
-        </div>
-
-        <!-- ردیف سوم -->
-        <div
-          class="flex flex-col mt-8 bg-[url('/static/img/GLobal.png')] bg-right-bottom bg-no-repeat bg-[size:150px_auto] bg-opacity-50 relative"
-        >
-          <!-- آیتم اول -->
-          <div class="flex flex-col">
-            <span>5</span>
-            <span>سال</span>
-            <span>تجربه</span>
+              <span
+                class="group-hover:text-gray-100 transition-colors duration-100"
+              >
+                مشاهده بیشتر
+              </span>
+              <i
+                class="fas fa-arrow-left leading-none mb-[-5px] group-hover:text-gray-100 transition-colors duration-100"
+              ></i>
+            </a>
+          </div>
+          <!-- ردیف دوم -->
+          <div class="mt-8  ">
+            <p class="leading-6 font-semibold">
+              سئو ران یک تیم برنامه نویسی است که به کمک دانش و تجربه خود،
+              توانسته است فعالیت‌ها و موفقیت‌های زیادی در رونق تجارت و افزایش
+              فروش کسب و کارهای مختلف بدست آورد. فعالیت‌های سئو ران شامل طراحی
+              سایت، سئو سایت و تولید محتوا می‌باشد. برای آشنایی با خدمات ما، سئو
+              ران را دنبال کنید.
+            </p>
+          </div>
           </div>
 
-          <!-- آیتم دوم -->
-          <div class="flex flex-col">
-            <span>5</span>
-            <span>سال</span>
-            <span>تجربه</span>
-          </div>
-          <!-- آیتم سوم -->
-          <div class="flex flex-col">
-            <span>5</span>
-            <span>سال</span>
-            <span>تجربه</span>
+          
+          <!-- ردیف سوم -->
+          <div class="flex flex-col gap-6 md:flex-row  justify-around mt-8 relative">
+            <!-- آیتم اول -->
+            <div class="flex w-[130px] h-[140px] gap-2">
+              <div class="h-[125px] w-[40px] border-r border-b border-[#999999] "></div>
+              <div class="flex w-5/6 flex-col justify-between  items-start">
+                <div class="w-full flex justify-between items-start">
+                  <span class=" inline-block  text-8xl " >5</span>
+                  <span class=" inline-block  text-xl " >سال</span>
+                </div>
+                <div class="text-xl font-bold ">تجربه</div>
+              </div>
+            </div>
+
+             <!-- آیتم دوم -->
+            <div class="flex w-[130px] h-[140px] gap-2">
+              <div class="h-[125px] w-[40px] border-r border-b border-[#999999] "></div>
+              <div class="flex w-5/6 flex-col justify-between  items-start">
+                <div class="w-full flex justify-between items-start">
+                  <span class=" inline-block  text-8xl " >25</span>
+                  <span class=" inline-block  text-xl " >مشتری</span>
+                </div>
+                <div class="text-xl font-bold ">رضایتمند</div>
+              </div>
+            </div>
+
+             <!-- آیتم سوم -->
+            <div class="flex w-[130px] h-[140px] gap-2">
+              <div class="h-[125px] w-[40px] border-r border-b border-[#999999] "></div>
+              <div class="flex w-5/6 flex-col justify-between  items-start">
+                <div class="w-full flex justify-between items-start">
+                  <span class=" inline-block  text-8xl " >32</span>
+                  <span class=" inline-block  text-xl " >پروژه</span>
+                </div>
+                <div class="text-xl font-bold ">موفق</div>
+              </div>
+            </div>
+
+
           </div>
         </div>
       </section>
 
       <!-- سکشن خدمات -->
-      <section class="mt-10 py-10 bg-black px-5">
-        <!-- ردیف اول -->
-        <div
-          class="flex justify-between items-baseline border-b border-gray-600 pb-7 text-center"
-        >
-          <h3 class="text-3xl text-white leading-none font-semibold">
-            خدمات سئو ران
-          </h3>
-          <a
-            class="border border-gray-400 text-white hover:bg-white transition-all duration-300 rounded-full px-4 pt-3 pb-3 inline-flex gap-4 justify-between items-center group"
-            href="#"
-          >
-            <span class="group-hover:text-black transition-colors duration-100">
-              مشاهده تمامی خدمات
-            </span>
-          </a>
-        </div>
-
-        <!-- ردیف دوم -->
-        <div class="flex flex-col mt-10">
-          <!-- کارت اول -->
+      <section class="py-10 bg-black px-5 overflow-hidden">
+        <div class="container mx-auto flex flex-col py-10 px-5">
+          <!-- ردیف اول -->
           <div
-            class="flex group px-5 pt-8 pb-10 hover:pb-20 hover:pt-16 hover:mt-0 transition-all duration-300 z-[1] border-gray-600 bg-black hover:bg-[#161616] rounded-sm justify-between items-end"
+            class="flex justify-between z-10 relative items-baseline border-b border-[#222222] pb-7 text-center"
           >
-            <div class="text-white">
-              <h6
-                class="group-hover:text-lime-300 transition-all duration-300 font-bold text-3xl"
-              >
-                طراحی سایت
-              </h6>
-              <p>سایتت رو با هر دیزاینی که توی ذهنت داری طراحی کن.</p>
-            </div>
-            <div>
+            <h3 class="text-3xl text-white leading-none font-semibold">
+              خدمات سئو ران
+            </h3>
+            <a
+              class="border border-gray-400 text-white hover:bg-white transition-all duration-300 rounded-full px-4 pt-3 pb-3 inline-flex gap-4 justify-between items-center group"
+              href="#"
+            >
               <span
-                class="border border-gray-600 group-hover:border-lime-300 transition-all duration-300 rounded-full leading-none px-[15px] pt-[12px] pb-[10px] text-white"
+                class="group-hover:text-black transition-colors duration-100"
               >
-                <i class="fas fa-star"></i>
+                مشاهده تمامی خدمات
               </span>
-            </div>
+            </a>
           </div>
 
-          <!-- کارت دوم -->
-          <div
-            class="border-t border-gray-600 flex group px-5 pt-8 pb-10 hover:pb-20 hover:pt-16 hover:mt-0 transition-all duration-300 z-[2] bg-black hover:bg-[#161616] rounded-sm justify-between items-end"
-          >
-            <div class="text-white">
-              <h6
-                class="group-hover:text-lime-300 transition-all duration-300 font-bold text-3xl"
-              >
-                طراحی سایت
-              </h6>
-              <p>سایتت رو با هر دیزاینی که توی ذهنت داری طراحی کن.</p>
+          <!-- ردیف دوم -->
+          <div class="relative">
+            <div
+              data-aos="fade-up-left"
+              class="absolute top-1/2 right-1/2 pointer-events-none z-0"
+            >
+              <div
+                class="w-[750px] h-[450px] rounded-full bg-gradient-radial blur-3xl from-lime-700 to-transparent"
+              ></div>
             </div>
-            <div>
-              <span
-                class="border border-[#222222] group-hover:border-lime-300 transition-all duration-300 rounded-full leading-none px-[15px] pt-[12px] pb-[10px] text-white"
-              >
-                <i class="fas fa-star"></i>
-              </span>
-            </div>
-          </div>
 
-          <!-- کارت سوم -->
-          <div
-            class="flex border-t group px-5 pt-8 pb-10 hover:pb-20 hover:pt-16 hover:mt-0 transition-all duration-300 z-[3] border-gray-600 bg-black hover:bg-[#161616] rounded-sm justify-between items-end"
-          >
-            <div class="text-white">
-              <h6
-                class="group-hover:text-lime-300 transition-all duration-300 font-bold text-3xl"
-              >
-                طراحی سایت
-              </h6>
-              <p>سایتت رو با هر دیزاینی که توی ذهنت داری طراحی کن.</p>
+            <div
+              data-aos="fade-in-right"
+              class="absolute bottom-0 left-1/2 pointer-events-none z-0"
+            >
+              <div
+                class="w-[750px] h-[450px] rounded-full bg-gradient-radial blur-3xl from-lime-700 to-transparent"
+              ></div>
             </div>
-            <div>
-              <span
-                class="border border-gray-600 group-hover:border-lime-300 transition-all duration-300 rounded-full leading-none px-[15px] pt-[12px] pb-[10px] text-white"
-              >
-                <i class="fas fa-star"></i>
-              </span>
+
+            <div class="flex flex-col md:mt-0 z-10 relative">
+              <div class="rounded-full">
+                <!-- کارت اول -->
+                <div
+                  class="flex group px-5 md:py-16 pt-8 md:pt-10 md:hover:pt-20 md:hover:pb-40 pb-10 hover:pb-24 md:justify-between hover:pt-16 hover:mt-0 transition-all duration-300 z-[1] bg-black hover:bg-[#161616] rounded-sm justify-between items-end"
+                >
+                  <div
+                    class="text-white flex flex-col gap-4 md:flex-row md:justify-between md:items-center md:w-11/12"
+                  >
+                    <h6
+                      class="group-hover:text-lime-300 transition-all duration-300 font-bold text-5xl md:inline-block md:w-4/6 md:text-7xl"
+                    >
+                      طراحی سایت
+                    </h6>
+                    <p class="md:w-2/6">
+                      سایتت رو با هر دیزاینی که توی ذهنت داری طراحی کن.
+                    </p>
+                  </div>
+                  <div class="flex justify-end md:w-1/12">
+                    <span
+                      class="border border-gray-600 group-hover:border-lime-300 transition-all duration-300 rounded-full leading-none px-[15px] pt-[15px] pb-[14px] text-white"
+                    >
+                      <i class="fas fa-star"></i>
+                    </span>
+                  </div>
+                </div>
+
+                <!-- کارت دوم -->
+                <div
+                  class="flex group px-5 -mt-10 border-t border-[#222222] md:py-16 pt-8 md:pt-10 md:hover:pt-20 md:hover:pb-40 pb-10 hover:pb-24 md:justify-between hover:pt-16 hover:mt-0 transition-all duration-300 z-[1] bg-black hover:bg-[#161616] rounded-sm justify-between items-end"
+                >
+                  <div
+                    class="text-white flex flex-col gap-4 md:flex-row md:justify-between md:items-center md:w-11/12"
+                  >
+                    <h6
+                      class="group-hover:text-lime-300 transition-all duration-300 font-bold text-5xl md:inline-block md:w-4/6 md:text-7xl"
+                    >
+                      طراحی سایت
+                    </h6>
+                    <p class="md:w-2/6">
+                      سایتت رو با هر دیزاینی که توی ذهنت داری طراحی کن.
+                    </p>
+                  </div>
+                  <div class="flex justify-end md:w-1/12">
+                    <span
+                      class="border border-gray-600 group-hover:border-lime-300 transition-all duration-300 rounded-full leading-none px-[15px] pt-[15px] pb-[14px] text-white"
+                    >
+                      <i class="fas fa-star"></i>
+                    </span>
+                  </div>
+                </div>
+                <!-- کارت سوم -->
+                <div
+                  class="flex group px-5 -mt-10 border-t border-[#222222] md:py-16 pt-8 md:pt-10 md:hover:pt-20 md:hover:pb-24 pb-10 hover:pb-24 md:justify-between hover:pt-16 hover:mt-0 transition-all duration-300 z-[1] bg-black hover:bg-[#161616] rounded-sm justify-between items-end"
+                >
+                  <div
+                    class="text-white flex flex-col gap-4 md:flex-row md:justify-between md:items-center md:w-11/12"
+                  >
+                    <h6
+                      class="group-hover:text-lime-300 transition-all duration-300 font-bold text-5xl md:inline-block md:w-4/6 md:text-7xl"
+                    >
+                      طراحی سایت
+                    </h6>
+                    <p class="md:w-2/6">
+                      سایتت رو با هر دیزاینی که توی ذهنت داری طراحی کن.
+                    </p>
+                  </div>
+                  <div class="flex justify-end md:w-1/12">
+                    <span
+                      class="border border-gray-600 group-hover:border-lime-300 transition-all duration-300 rounded-full leading-none px-[15px] pt-[15px] pb-[14px] text-white"
+                    >
+                      <i class="fas fa-star"></i>
+                    </span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -344,16 +418,206 @@
 
       <!-- سکشن چرا سئو ران -->
       <section class="mt-10 py-10">
-        <!-- ردیف اول -->
-        <div class="border-b border-gray-300 pb-7 px-5">
-          <h3 class="font-bold text-3xl">
-            چرا سئو ران برای سایت من مناسب است؟
-          </h3>
+        <div class="container flex flex-col py-10 px-5 mx-auto">
+          <!-- ردیف اول -->
+          <div class="border-b border-gray-300 pb-7 px-5">
+            <h3 class="font-bold text-3xl">
+              چرا سئو ران برای سایت من مناسب است؟
+            </h3>
+          </div>
+
+          <!-- نمایش کاروسل فقط در دسکتاپ -->
+          <div
+            class="hidden mt-7 lg:flex lg:flex-col lg:justify-between overflow-hidden"
+            x-data="carousel"
+          >
+            <!-- ردیف کارت‌ها -->
+            <div
+              class="flex justify-evenly lg:w-full lg:pl-5 gap-5 transition-transform duration-500 ease-out pr-5"
+              :style="`transform: translateX(${translateValue}px)`"
+            >
+              <!-- کارت اول -->
+              <div
+                class="bg-gray-25 px-5 py-7 rounded-sm flex-shrink-0 w-[380px]"
+              >
+                <div class="flex justify-between items-center">
+                  <img
+                    class="w-[52px] h-[52px] p-3 bg-black rounded-full"
+                    src="../static/img/download-14.svg"
+                    alt=""
+                  />
+                  <span class="font-bold text-4xl text-gray-400">01</span>
+                </div>
+                <div class="mt-4 flex flex-col gap-8">
+                  <h4 class="font-bold text-2xl">تدوین بهترین استراتژی</h4>
+                  <p>
+                    بخش تولید محتوا، برای هر سایت به صورت مجزا یک استراتژی تدوین
+                    می‌کند. به این طریق هر سایت با سرعتی فوق العاده رشد خواهد
+                    کرد.
+                  </p>
+                </div>
+                <div class="flex mt-7 flex-wrap gap-3 pe-6">
+                  <span
+                    class="border border-gray-300 rounded-full px-4 py-3 text-xs font-bold"
+                    >مرتبط با آخرین آپدیت‌ها</span
+                  >
+                  <span
+                    class="border border-gray-300 rounded-full px-4 py-3 text-xs font-bold"
+                    >جلسه با کارفرما</span
+                  >
+                  <span
+                    class="border border-gray-300 rounded-full px-4 py-3 text-xs font-bold"
+                    >پلن های استراتژی</span
+                  >
+                  <span
+                    class="border border-gray-300 rounded-full px-4 py-3 text-xs font-bold"
+                    >نقشه راه اختصاصی</span
+                  >
+                </div>
+              </div>
+
+              <!-- کارت دوم -->
+              <div
+                class="bg-gray-25 px-5 py-7 rounded-sm flex-shrink-0 w-[380px]"
+              >
+                <div class="flex justify-between items-center">
+                  <img
+                    class="w-[52px] h-[52px] p-3 bg-black rounded-full"
+                    src="../static/img/download-13.svg"
+                    alt=""
+                  />
+                  <span class="font-bold text-4xl text-gray-400">02</span>
+                </div>
+                <div class="mt-4 flex flex-col gap-8">
+                  <h4 class="font-bold text-2xl">طراحی اختصاصی</h4>
+                  <p>
+                    دیزاین و طراحی سایت برای هر سلیقه متفاوت است و هریک از
+                    پروژه‌ها بدون تداخل با دیگری طراحی می‌شود.
+                  </p>
+                </div>
+                <div class="flex mt-7 flex-wrap gap-3 pe-6">
+                  <span
+                    class="border border-gray-300 rounded-full px-4 py-3 text-xs font-bold"
+                    >بک تست مداوم</span
+                  >
+                  <span
+                    class="border border-gray-300 rounded-full px-4 py-3 text-xs font-bold"
+                    >کدنویسی تمیز</span
+                  >
+                  <span
+                    class="border border-gray-300 rounded-full px-4 py-3 text-xs font-bold"
+                    >بهینه سازی اصولی</span
+                  >
+                  <span
+                    class="border border-gray-300 rounded-full px-4 py-3 text-xs font-bold"
+                    >تست و اجرا قبل از تحویل</span
+                  >
+                </div>
+              </div>
+
+              <!-- کارت سوم -->
+              <div
+                class="bg-gray-25 px-5 py-7 rounded-sm flex-shrink-0 w-[380px]"
+              >
+                <div class="flex justify-between items-center">
+                  <img
+                    class="w-[52px] h-[52px] p-3 bg-black rounded-full"
+                    src="../static/img/download-12.svg"
+                    alt=""
+                  />
+                  <span class="font-bold text-4xl text-gray-400">03</span>
+                </div>
+                <div class="mt-4 flex flex-col gap-8">
+                  <h4 class="font-bold text-2xl">تحویل فوری</h4>
+                  <p>
+                    سئو ران همه روز هفته به صورت فعال بر روی پروژه شما فعالیت
+                    می‌کند تا در کمترین زمان ممکن طراحی سایت شما و یا سئو سایت
+                    شما به نتیجه بنشیند.
+                  </p>
+                </div>
+                <div class="flex mt-7 flex-wrap gap-3 pe-6">
+                  <span
+                    class="border border-gray-300 rounded-full px-4 py-3 text-xs font-bold"
+                    >همه روزه فعال</span
+                  >
+                  <span
+                    class="border border-gray-300 rounded-full px-4 py-3 text-xs font-bold"
+                    >سرعت بالا</span
+                  >
+                  <span
+                    class="border border-gray-300 rounded-full px-4 py-3 text-xs font-bold"
+                    >پشتیبانی سریع</span
+                  >
+                </div>
+              </div>
+
+              <!-- کارت چهارم -->
+              <div
+                class="bg-gray-25 px-5 py-7 rounded-sm flex-shrink-0 w-[380px]"
+              >
+                <div class="flex justify-between items-center">
+                  <img
+                    class="w-[52px] h-[52px] p-3 bg-black rounded-full"
+                    src="../static/img/download-11.svg"
+                    alt=""
+                  />
+                  <span class="font-bold text-4xl text-gray-400">04</span>
+                </div>
+                <div class="mt-4 flex flex-col gap-8">
+                  <h4 class="font-bold text-2xl">پشتیبانی سایت</h4>
+                  <p>
+                    سیستم پشتیبانی سایت سئو ران، به صورت 24 ساعته از هر روز هفته
+                    در خدمت شماست.
+                  </p>
+                </div>
+                <div class="flex mt-7 flex-wrap gap-3 pe-6">
+                  <span
+                    class="border border-gray-300 rounded-full px-4 py-3 text-xs font-bold"
+                    >پشتیبانی 24/7</span
+                  >
+                  <span
+                    class="border border-gray-300 rounded-full px-4 py-3 text-xs font-bold"
+                    >پشتیبانی فنی</span
+                  >
+                  <span
+                    class="border border-gray-300 rounded-full px-4 py-3 text-xs font-bold"
+                    >بکاپ گیری مداوم</span
+                  >
+                  <span
+                    class="border border-gray-300 rounded-full px-4 py-3 text-xs font-bold"
+                    >ارائه گزارشات ماهانه</span
+                  >
+                </div>
+              </div>
+            </div>
+
+            <!-- دکمه‌های ناوبری -->
+            <div class="flex justify-center gap-3 mt-8 px-5">
+              <button
+                @click="prev"
+                class="group bg-black rounded-full w-10 h-10 flex items-center justify-center hover:bg-lime-300 transition-all disabled:cursor-not-allowed"
+                :disabled="currentIndex === 0"
+              >
+                <i
+                  class="fas fa-long-arrow-right text-white group-hover:text-black"
+                ></i>
+              </button>
+              <button
+                @click="next"
+                class="group bg-black rounded-full w-10 h-10 flex items-center justify-center hover:bg-lime-300 transition-all disabled:cursor-not-allowed"
+                :disabled="currentIndex >= totalCards - 1"
+              >
+                <i
+                  class="fas fa-long-arrow-left text-white group-hover:text-black"
+                ></i>
+              </button>
+            </div>
+          </div>
         </div>
 
         <!-- نمایش کاروسل فقط در موبایل و تبلت -->
         <div
-          class="mt-7 flex flex-col justify-between overflow-hidden"
+          class="mt-7 flex flex-col justify-between lg:hidden overflow-hidden"
           x-data="carousel"
         >
           <!-- ردیف کارت‌ها -->
@@ -516,7 +780,7 @@
           </div>
 
           <!-- دکمه‌های ناوبری -->
-          <div class="md:hidden flex justify-center gap-3 mt-8 px-5">
+          <div class="flex justify-center gap-3 mt-8 px-5">
             <button
               @click="prev"
               class="group bg-black rounded-full w-10 h-10 flex items-center justify-center hover:bg-lime-300 transition-all disabled:cursor-not-allowed"
@@ -540,11 +804,11 @@
       </section>
 
       <!-- سکشن نمونه کار ها -->
-      <section class="bg-gray-200">
+      <section class="bg-gray-25">
         <div class="container flex flex-col mt-10 py-10 px-5 mx-auto">
           <!-- ردیف اول -->
           <div
-            class="flex justify-between items-baseline border-b border-gray-300 pb-7"
+            class="flex justify-between items-baseline border-b border-gray-300 pb-7 mb-7"
           >
             <h3 class="text-3xl font-semibold">معرفی سئو ران</h3>
             <a
@@ -560,11 +824,13 @@
           </div>
 
           <!-- ردیف دوم -->
-          <div class="flex flex-col pb-5">
+          <div
+            class="flex flex-col md:flex-row md:flex-wrap md:justify-between pb-5"
+          >
             <!-- نمونه کار اول -->
-            <div class="flex flex-col gap-6 mb-12">
+            <div class="flex flex-col md:w-[48%] gap-4 mb-12">
               <img
-                class="w-[457px] h-[360px] object-cover object-center rounded-sm"
+                class="w-full h-[360px] md:h-[600px] object-cover object-center rounded-sm"
                 src="../static/img/imageye___-_imgi_22_project-246x300-1.png"
                 alt=""
               />
@@ -575,9 +841,9 @@
             </div>
 
             <!-- نمونه کار دوم -->
-            <div class="flex flex-col gap-6 mb-12">
+            <div class="flex flex-col md:w-[48%] gap-4 mb-12">
               <img
-                class="w-[457px] h-[360px] object-cover object-center rounded-sm"
+                class="w-full h-[360px] md:h-[600px] object-cover object-center rounded-sm"
                 src="../static/img/imageye___-_imgi_5_2-1024x576-1.webp"
                 alt=""
               />
@@ -588,9 +854,9 @@
             </div>
 
             <!-- نمونه کار سوم -->
-            <div class="flex flex-col gap-6">
+            <div class="flex flex-col gap-4 md:w-full">
               <img
-                class="w-[457px] h-[360px] object-cover object-center rounded-sm"
+                class="w-[457px] h-[360px] md:w-full md:h-[500px] object-cover object-center rounded-sm"
                 src="../static/img/imageye___-_imgi_6_3-1024x683-1.webp"
                 alt=""
               />
@@ -604,87 +870,85 @@
       </section>
 
       <!-- سکشن برند ها -->
-      <section class="bg-black">
+      <section class="bg-black overflow-hidden">
         <div class="container flex flex-col py-10 px-5 mx-auto">
           <!-- ردیف اول -->
-          <div class="border-b border-[#222222] pb-10">
+          <div class="border-b border-[#222222] pt-10 pb-10">
             <h3 class="text-3xl text-white leading-none font-semibold">
               برندهای ساخته شده با سئو ران
             </h3>
           </div>
 
           <!-- ردیف دوم -->
-          <div class="flex flex-wrap gap-4 mt-10">
-            <div class="relative">
-              <!-- دایره محو (پس‌زمینه) -->
+          <div class="flex flex-wrap gap-4 mt-10 relative">
+            <!-- دایره محو (پس‌زمینه) -->
+            <div
+              data-aos="fade-up"
+              class="absolute bottom-0 left-1/2 -ml-[375px] mb-[-275px] pointer-events-none z-0"
+            >
               <div
-                class="absolute inset-0 flex items-center justify-center pointer-events-none"
-              >
-                <div
-                  class="w-64 h-64 rounded-full bg-gradient-radial blur-3xl from-lime-500 to-transparent"
-                ></div>
-              </div>
+                class="w-[750px] h-[450px] rounded-full bg-gradient-radial blur-3xl from-lime-700 to-transparent"
+              ></div>
             </div>
 
             <!-- آیتم اول -->
             <div
-              class="border border-[#222222] h-[110px] w-[48%] py-5 rounded-full flex justify-center items-center"
+              class="relative z-10 bg-black bg-opacity-70 border border-[#222222] h-[110px] w-[48%] py-5 rounded-full flex justify-center items-center"
             >
               <img src="../static/img/imageye___-_imgi_9_3-1.png" alt="" />
             </div>
 
             <!-- آیتم دوم -->
             <div
-              class="border border-[#222222] h-[110px] w-[48%] py-5 rounded-full flex justify-center items-center"
+              class="relative z-10 bg-black bg-opacity-70 border border-[#222222] h-[110px] w-[48%] py-5 rounded-full flex justify-center items-center"
             >
               <img src="../static/img/imageye___-_imgi_8_Vector.png" alt="" />
             </div>
 
             <!-- آیتم سوم -->
             <div
-              class="border border-[#222222] h-[110px] w-[48%] py-5 rounded-full flex justify-center items-center"
+              class="relative z-10 bg-black bg-opacity-70 border border-[#222222] h-[110px] w-[48%] py-5 rounded-full flex justify-center items-center"
             >
               <img src="../static/img/imageye___-_imgi_7_1.png" alt="" />
             </div>
 
             <!-- آیتم چهارم -->
             <div
-              class="border border-[#222222] h-[110px] w-[48%] py-5 rounded-full flex justify-center items-center"
+              class="relative z-10 bg-black bg-opacity-70 border border-[#222222] h-[110px] w-[48%] py-5 rounded-full flex justify-center items-center"
             >
               <img src="../static/img/imageye___-_imgi_11_5.png" alt="" />
             </div>
 
             <!-- آیتم پنجم -->
             <div
-              class="border border-[#222222] h-[110px] w-full py-5 rounded-full flex justify-center items-center"
+              class="relative bg-black bg-opacity-70 z-10 border border-[#222222] h-[110px] w-full py-5 rounded-full flex justify-center items-center"
             >
               <img src="../static/img/imageye___-_imgi_10_4.png" alt="" />
             </div>
           </div>
 
           <!-- ردیف سوم -->
-          <div class="flex flex-col gap-8 py-10 mt-10">
-            <!-- اینمیشین  -->
-            <div
-              class="w-[185px] h-[185px] relative flex justify-center items-center"
-            >
-              <img
-                data-aos="fade-in"
-                class="w-[80px] h-[80px]"
-                src="../static/img/qote.svg"
-                alt=""
-              />
-              <img
-                data-aos="fade-in"
-                data-aos-duration="1000"
-                class="absolute animate-[spin_10s_linear_infinite] w-[180px] h-[180px]"
-                src="../static/img/text.svg"
-                alt=""
-              />
-            </div>
-
+          <div class="z-10 flex flex-col gap-8 py-10 mt-10 relative">
             <!-- نظرات کاربران -->
-            <div class="bg-black m-6 mx-auto w-full">
+            <div class="bg-black z-10 p-5 rounded-sm m-6 mx-auto w-full">
+              <!-- انیمیشن  -->
+              <div
+                class="w-[185px] h-[185px] relative flex justify-center items-center"
+              >
+                <img
+                  data-aos="fade-in"
+                  class="w-[80px] h-[80px]"
+                  src="../static/img/qote.svg"
+                  alt=""
+                />
+                <img
+                  data-aos="fade-in"
+                  data-aos-duration="1000"
+                  class="absolute animate-[spin_10s_linear_infinite] w-[180px] h-[180px]"
+                  src="../static/img/text.svg"
+                  alt=""
+                />
+              </div>
               <!-- نظر اول -->
               <div class="flex flex-col p-7 gap-3">
                 <p
@@ -700,6 +964,14 @@
                 <span class="font-bold text-gray-400">فروشگاه عطر آبانسا</span>
               </div>
             </div>
+            <div
+              data-aos="fade-up-left"
+              class="absolute bottom-0 left-4 -ml-[375px] mb-[-275px] pointer-events-none z-0"
+            >
+              <div
+                class="w-[750px] h-[450px] rounded-full bg-gradient-radial blur-3xl from-lime-700 to-transparent"
+              ></div>
+            </div>
           </div>
         </div>
       </section>
@@ -708,7 +980,7 @@
       <section>
         <div class="container flex flex-col py-10 px-5 mx-auto">
           <!-- ردیف اول -->
-          <div class="py-10">
+          <div class="py-10 md:w-full">
             <h3 class="text-3xl leading-none font-semibold">قیمت خدمات</h3>
             <p>
               برای اطلاع دقیق از هزینه پلن های طراحی سایت و سئو سایت سئو ران،
@@ -717,7 +989,7 @@
           </div>
 
           <!-- ردیف دوم -->
-          <div class="flex flex-col gap-10">
+          <div class="flex flex-col md:flex-row gap-10">
             <!-- کارت اول -->
             <div class="flex flex-col bg-gray-25 p-8 gap-8 rounded-sm">
               <!-- عنوان و توضیحات -->
@@ -778,12 +1050,13 @@
 
       <!-- سکشن سوالات متداول -->
       <section class="bg-gray-25">
-        <div class="container flex flex-col py-10 px-5 mx-auto">
+        <div
+          class="container flex flex-col md:flex-row md:flex-wrap md:justify-between py-10 px-5 mx-auto"
+        >
           <!-- ردیف اول -->
-          <div class="py-10 flex flex-col gap-5">
+          <div class="py-10 flex flex-col gap-5 md:w-full">
             <h3 class="text-3xl leading-none font-semibold">
-              سوالی داری؟<br />
-              از سئو ران بپرس
+              سوالی داری؟ از سئو ران بپرس
             </h3>
             <p>
               تیم سئو ران در هر ساعت از شبانه روز منتظر جواب دادن به سوالایی وب
@@ -792,7 +1065,7 @@
           </div>
 
           <!-- ردیف دوم -->
-          <div class="space-y-4" x-data="{ active: 0 }">
+          <div class="space-y-4 md:w-3/5" x-data="{ active: 0 }">
             <!-- سوال اول -->
             <div
               class="overflow-hidden border-b border-gray-400 transition-all"
@@ -962,9 +1235,10 @@
             </div>
           </div>
 
-          <div>
+          <!-- ردیف سوم -->
+          <div class="md:w-2/5">
             <img
-              class="w-[455px] h-[650px]"
+              class="w-[455px] h-[650px] md:w-full md:h-[450px]"
               src="../static/img/Frame.svg"
               alt=""
             />
@@ -974,160 +1248,199 @@
     </main>
 
     <!-- فوتر -->
-    <footer>
-      <div class="container mx-auto flex flex-col py-10 px-5">
+    <footer class="mb-0">
+      <div
+        class="container mx-auto flex flex-col justify-center items-center px-5"
+      >
         <!-- ردیف اول -->
-        <div class="flex flex-col justify-center items-center gap-10">
-          <div class="flex flex-col justify-center items-center gap-2">
-            <h6 class="font-bold text-3xl">برند خودت رو ارتقا بده</h6>
-            <p class="text-center text-lg">
-              با سئو ران دنیای سایت رو یاد بگیر و جست و جو کن چجوری سایت خودت رو
-              ارتقا بدی. عضو خبرنامه سئو ران شو!
-            </p>
+        <div
+          class="relative w-full min-h-[400px] flex justify-between items-end overflow-hidden"
+        >
+          <!-- دایره محو (پس‌زمینه) -->
+          <div
+            class="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 pointer-events-none z-0"
+          >
+            <div
+              data-aos="fade-in"
+              data-aos-duration="400"
+              class="w-[700px] h-[700px] rounded-full bg-gradient-radial from-lime-200 to-transparent opacity-60"
+            ></div>
           </div>
 
-          <!-- فرم شماره تماس -->
-          <div class="w-full">
-            <form
-              action=""
-              class="w-full flex flex-col justify-center items-center gap-5"
-            >
-              <input
-                class="bg-black w-full rounded-full px-5 py-3 text-white"
-                type="tel"
-                name=""
-                maxlength="11"
-                id=""
-                placeholder="شماره تماس"
-                dir="rtl"
-                pattern="[0-9]{11}"
-                required
-              />
-              <button
-                class="bg-lime-500 text-black hover:bg-black hover:text-white px-5 py-2 rounded-full transition-all duration-300"
-                type="submit"
+          <!-- محتوا -->
+          <div
+            class="relative z-10 flex flex-col md:w-2/3 mx-auto justify-center items-center gap-10 py-10"
+          >
+            <div class="flex flex-col justify-center items-center gap-2">
+              <h6 class="font-bold text-3xl">برند خودت رو ارتقا بده</h6>
+              <p class="text-center text-lg">
+                با سئو ران دنیای سایت رو یاد بگیر و جست و جو کن چجوری سایت خودت
+                رو ارتقا بدی. عضو خبرنامه سئو ران شو!
+              </p>
+            </div>
+
+            <!-- فرم شماره تماس -->
+            <div class="w-full">
+              <form
+                action=""
+                class="w-full flex flex-col justify-center items-center gap-5"
               >
-                ارسال
-              </button>
-            </form>
+                <input
+                  class="bg-black w-full rounded-full md:w-10/12 px-5 py-3 text-white"
+                  type="tel"
+                  name=""
+                  maxlength="11"
+                  id=""
+                  placeholder="شماره تماس"
+                  dir="rtl"
+                  pattern="[0-9]{11}"
+                  required
+                />
+                <button
+                  class="bg-lime-600 text-white hover:bg-black hover:text-white px-5 py-2 rounded-full transition-all duration-300"
+                  type="submit"
+                >
+                  ارسال
+                </button>
+              </form>
+            </div>
           </div>
         </div>
       </div>
 
-      <div class="container mx-auto flex px-5 py-12 bg-black text-white">
-        <!-- ردیف دوم -->
-        <div class="flex flex-wrap justify-between gap-y-7 w-full bg-black">
+      <div class="w-full flex px-5 py-12 bg-black text-white">
+        <div class="container mx-auto">
+          <!-- ردیف دوم -->
+          <div
+            class="flex flex-wrap justify-between gap-y-7 w-full bg-black md:items-start"
+          >
+            <!-- بخش اول -->
+            <div
+              class="flex flex-col justify-center items-center w-[48%] md:w-[22%]"
+            >
+              <h6 class="font-bold text-center pb-3">درسترسی به سئو ران</h6>
+              <ul
+                class="list-none flex flex-col justify-center items-center gap-2"
+              >
+                <li>
+                  <a
+                    class="font-light text-sm hover:text-lime-400 text-gray-25"
+                    href="#"
+                    >درباره سئو ران</a
+                  >
+                </li>
+                <li>
+                  <a
+                    class="font-light text-sm hover:text-lime-400 text-gray-25"
+                    href="#"
+                    >تماس با ما</a
+                  >
+                </li>
+                <li>
+                  <a
+                    class="font-light text-sm hover:text-lime-400 text-gray-25"
+                    href="#"
+                    >پاسخ به سوالات شما</a
+                  >
+                </li>
+              </ul>
+            </div>
 
-          <!-- بخش اول -->
-          <div class="flex flex-col justify-center items-center w-[48%] md:w-[22%]">
-            <h6 class="font-bold text-center pb-3">درسترسی به سئو ران</h6>
-            <ul class="list-none flex flex-col justify-center items-center gap-2">
-              <li>
-                <a
-                  class="font-light text-sm hover:text-lime-400 text-gray-25"
-                  href="#"
-                  >درباره سئو ران</a
-                >
-              </li>
-              <li>
-                <a
-                  class="font-light text-sm hover:text-lime-400 text-gray-25"
-                  href="#"
-                  >تماس با ما</a
-                >
-              </li>
-              <li>
-                <a
-                  class="font-light text-sm hover:text-lime-400 text-gray-25"
-                  href="#"
-                  >پاسخ به سوالات شما</a
-                >
-              </li>
-            </ul>
-          </div>
+            <!-- بخش دوم -->
+            <div
+              class="flex flex-col justify-center items-center border-s border-[#222222] md:border-l md:border-[#222222] w-[48%] md:w-[22%]"
+            >
+              <h6 class="font-bold pb-3">خدمات</h6>
+              <ul
+                class="list-none flex flex-col justify-center items-center gap-2"
+              >
+                <li>
+                  <a
+                    class="font-light text-sm hover:text-lime-400 text-gray-25"
+                    href="#"
+                    >سئو سایت</a
+                  >
+                </li>
+                <li>
+                  <a
+                    class="font-light text-sm hover:text-lime-400 text-gray-25"
+                    href="#"
+                    >طراحی سایت</a
+                  >
+                </li>
+                <li>
+                  <a
+                    class="font-light text-sm hover:text-lime-400 text-gray-25"
+                    href="#"
+                    >تولید محتوا</a
+                  >
+                </li>
+              </ul>
+            </div>
 
-          <!-- بخش دوم -->
-          <div class="flex flex-col  justify-center items-center border-s border-[#222222] w-[48%] md:w-[22%]">
-            <h6 class="font-bold pb-3">خدمات</h6>
-            <ul class="list-none flex flex-col justify-center items-center gap-2">
-              <li>
-                <a
-                  class="font-light text-sm hover:text-lime-400 text-gray-25"
-                  href="#"
-                  >سئو سایت</a
-                >
-              </li>
-              <li>
-                <a
-                  class="font-light text-sm hover:text-lime-400 text-gray-25"
-                  href="#"
-                  >طراحی سایت</a
-                >
-              </li>
-              <li>
-                <a
-                  class="font-light text-sm hover:text-lime-400 text-gray-25"
-                  href="#"
-                  >تولید محتوا</a
-                >
-              </li>
-            </ul>
-          </div>
+            <!-- بخش سوم -->
+            <div
+              class="flex flex-col justify-center items-center w-[48%] md:w-[25%]"
+            >
+              <h6 class="font-bold pb-3">ارتباط با ما</h6>
+              <ul
+                class="list-none flex flex-col justify-center items-center gap-2"
+              >
+                <li>
+                  <a
+                    class="font-light text-sm hover:text-lime-400 text-gray-25"
+                    href="#"
+                    >مشهد مقدس، دانشگاه فردوسی</a
+                  >
+                </li>
+                <li>
+                  <a
+                    class="font-light text-sm hover:text-lime-400 text-gray-25"
+                    href="#"
+                    >support@seo-run.ir</a
+                  >
+                </li>
+                <li>
+                  <a
+                    class="font-light text-sm hover:text-lime-400 text-gray-25"
+                    href="#"
+                    >09123456789</a
+                  >
+                </li>
+              </ul>
+            </div>
 
-          <!-- بخش سوم -->
-          <div class="flex flex-col justify-center items-center w-[48%] md:w-[22%]">
-            <h6 class="font-bold pb-3">ارتباط با ما</h6>
-            <ul class="list-none flex flex-col justify-center items-center gap-2">
-              <li>
-                <a
-                  class="font-light text-sm hover:text-lime-400 text-gray-25"
-                  href="#"
-                  >مشهد مقدس، دانشگاه فردوسی</a
-                >
-              </li>
-              <li>
-                <a
-                  class="font-light text-sm hover:text-lime-400 text-gray-25"
-                  href="#"
-                  >support@seo-run.ir</a
-                >
-              </li>
-              <li>
-                <a
-                  class="font-light text-sm hover:text-lime-400 text-gray-25"
-                  href="#"
-                  >09123456789</a
-                >
-              </li>
-            </ul>
-          </div>
-
-          <!-- بخش چهارم -->
-          <div class="flex flex-col justify-center items-center border-s border-[#222222] w-[48%] md:w-[22%]">
-            <h6 class="font-bold pb-3">شبکه‌های اجتماعی</h6>
-            <ul class="list-none flex flex-col justify-center items-center gap-2">
-              <li>
-                <a
-                  class="font-light text-sm hover:text-lime-400 text-gray-25"
-                  href="#"
-                  >اینستاگرام</a
-                >
-              </li>
-              <li>
-                <a
-                  class="font-light text-sm hover:text-lime-400 text-gray-25"
-                  href="#"
-                  >تلگرام</a
-                >
-              </li>
-              <li>
-                <a
-                  class="font-light text-sm hover:text-lime-400 text-gray-25"
-                  href="#"
-                  >لینکدین</a
-                >
-              </li>
-            </ul>
+            <!-- بخش چهارم -->
+            <div
+              class="flex flex-col justify-center items-center border-s border-[#222222] w-[48%] md:w-[22%]"
+            >
+              <h6 class="font-bold pb-3">شبکه‌های اجتماعی</h6>
+              <ul
+                class="list-none flex flex-col justify-center items-center gap-2"
+              >
+                <li>
+                  <a
+                    class="font-light text-sm hover:text-lime-400 text-gray-25"
+                    href="#"
+                    >اینستاگرام</a
+                  >
+                </li>
+                <li>
+                  <a
+                    class="font-light text-sm hover:text-lime-400 text-gray-25"
+                    href="#"
+                    >تلگرام</a
+                  >
+                </li>
+                <li>
+                  <a
+                    class="font-light text-sm hover:text-lime-400 text-gray-25"
+                    href="#"
+                    >لینکدین</a
+                  >
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
