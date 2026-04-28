@@ -15,7 +15,7 @@ class Config:
     SECRET_KEY = os.environ.get("SECRET_KEY") or "dev-secret-key-change-in-production"
 
     # SQLAlchemy
-    SQLALCHEMY_TRACK_MODIFICATIONS = False  # تصحیح typo
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_ECHO = False
 
     # JWT
@@ -40,7 +40,7 @@ class Config:
     # Rate Limiting
     RATELIMIT_STORAGE_URL = os.environ.get("RATELIMIT_STORAGE_URL", "memory://")
     RATELIMIT_DEFAULT = "200 per day, 50 per hour"
-    RATELIMIT_HEADERS_ENABLED = True  # تصحیح typo
+    RATELIMIT_HEADERS_ENABLED = True  
 
     # Upload settings
     MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 16MB max file size
@@ -73,7 +73,7 @@ class ProductionConfig(Config):
     """Production configuration"""
 
     DEBUG = False
-    SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URL")  # تصحیح typo
+    SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URL")
     SQLALCHEMY_ECHO = False
     JWT_COOKIE_SECURE = True
     JWT_COOKIE_SAMESITE = "Strict"
