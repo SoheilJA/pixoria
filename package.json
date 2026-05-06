@@ -1,16 +1,12 @@
 {
-  "name": "seorun",
+  "name": "company_website",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "tailwindcss -i ./static/src/input.css -o ./static/dist/output.css",
-    "dev": "tailwindcss -i ./static/src/input.css -o ./static/dist/output.css --watch"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://dev.aatilis.ir/soheil/seo_run.git"
-  },
+  "dev": "tailwindcss -i ./theme/input.css -o ./static/css/output.css --watch",
+  "build": "tailwindcss -i ./theme/input.css -o ./static/css/output.css --minify"
+},
   "keywords": [],
   "author": "",
   "license": "ISC",
