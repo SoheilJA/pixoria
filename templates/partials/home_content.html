@@ -1,6 +1,7 @@
+{% load static %}
 
 <!-- هیروسکشن -->
-<section class="bg-gray-25 pb-20 p-5 flex flex-col justify-center items-center">
+<section class="bg-gray-25 pb-20 p-5 flex flex-col justify-center items-center overflow-hidden">
   <div
     class="container mx-auto flex flex-col md:flex-row justify-between items-center"
   >
@@ -9,7 +10,7 @@
       <!-- ردیف اول -->
       <div class="">
         <h1 data-aos="fade-left" class="text-4xl mt-5 md:text-5xl font-bold">
-          سئو ران؛ مرجع احیای سایت شما
+          {{ homepage.main_title}}
         </h1>
       </div>
 
@@ -29,16 +30,15 @@
             data-aos-delay="400"
             class="text-3xl font-semibold"
           >
-            اینجا چخبره؟
+            {{ homepage.second_title}}
           </h3>
           <p
             data-aos="fade-in"
             data-aos-delay="500"
             class="mt-4 font-semibold leading-6"
           >
-            ما سئو ران هستیم؛ تیمی که قراره طراحی سایت تورو انجام بدن، سئو سایت
-            تورو به بهترین نحو جلو ببرن، حتی روی پیج اینستاگرامت بهترین محتوارو
-            قرار بدن. اگه علاقه داری تو دنیای وبسایت غرق بشی همراهمون باش.
+           
+          {{ homepage.text }}
           </p>
           <span
             data-aos="fade-up-left"
@@ -60,7 +60,7 @@
     <!-- ستون سمت چپ -->
     <div class="lg:w-2/6">
       <img
-        src="../static/img/hero.svg"
+        src=" {% static 'images/hero.svg' %} "
         alt="hero-img"
         data-aos="fade-right"
         class="w-[320px] h-[325px] md:w-[90%] mx-auto md:h-full"
@@ -107,7 +107,7 @@
 </section>
 
 <!-- سکشن معرفی سئو ران -->
-<section class="flex flex-col min-h-[60vh] py-20 p-5 md:py-0 relative">
+<section class="flex flex-col min-h-[60vh] py-20 p-5 md:py-0 relative overflow-hidden">
   <!-- انیمیشن -->
   <div
     data-aos="fade-up-left"
@@ -116,9 +116,10 @@
     class="absolute inset-0 pointer-events-none -z-10"
   >
     <!-- تصویر پسزمینه -->
-    <div
-      class="absolute w-full h-full bg-[url('/static/img/GLobal.png')] bg-[position:right_-50px_bottom_-50px] bg-[length:400px_400px] bg-no-repeat opacity-10"
-    ></div>
+    <div class="absolute w-full h-full bg-[position:right_-50px_bottom_-50px] bg-[length:400px_400px] bg-no-repeat opacity-10"
+     style="background-image: url('{% static 'images/GLobal.png' %}');">
+</div>
+
   </div>
 
   <div
@@ -335,7 +336,7 @@
 </section>
 
 <!-- سکشن چرا سئو ران -->
-<section class="mt-10 py-10">
+<section class="mt-10 py-10 overflow-hidden">
   <div class="container flex flex-col py-10 px-5 mx-auto">
     <!-- ردیف اول -->
     <div class="border-b border-gray-300 pb-7 px-5">
@@ -540,7 +541,7 @@
 </section>
 
 <!-- سکشن نمونه کار ها -->
-<section class="bg-gray-25">
+<section class="bg-gray-25 overflow-hidden">
   <div class="container flex flex-col mt-10 py-10 px-5 mx-auto">
     <!-- ردیف اول -->
     <div
@@ -572,7 +573,7 @@
       >
         <img
           class="w-full h-[360px] md:h-[600px] lg:w-full lg:h-[500px] object-cover object-center rounded-sm"
-          src="../static/img/imageye___-_imgi_22_project-246x300-1.png"
+          src=" {% static 'images/imageye___-_imgi_22_project-246x300-1.png' %} "
           alt=""
         />
         <a class="font-bold text-3xl lg:text-2xl" href="#"
@@ -589,7 +590,7 @@
       >
         <img
           class="w-full h-[360px] md:h-[600px] lg:w-full lg:h-[500px] object-cover object-center rounded-sm"
-          src="../static/img/imageye___-_imgi_5_2-1024x576-1.webp"
+          src=" {% static 'images/imageye___-_imgi_5_2-1024x576-1.webp' %} "
           alt=""
         />
         <a class="font-bold text-3xl lg:text-2xl" href="#"
@@ -606,7 +607,7 @@
       >
         <img
           class="w-[457px] h-[360px] md:w-full md:h-[500px] lg:w-full lg:h-[500px] object-cover object-center rounded-sm"
-          src="../static/img/imageye___-_imgi_6_3-1024x683-1.webp"
+          src=" {% static 'images/imageye___-_imgi_6_3-1024x683-1.webp' %} "
           alt=""
         />
         <a class="font-bold text-3xl lg:text-2xl" href="#"
@@ -650,7 +651,7 @@
         data-aos-duration="600"
         class="relative z-10 bg-black bg-opacity-70 border border-[#222222] h-[110px] w-[45%] lg:w-1/5 py-5 rounded-full flex justify-center items-center"
       >
-        <img src="../static/img/imageye___-_imgi_9_3-1.png" alt="" />
+        <img src=" {% static 'images/imageye___-_imgi_9_3-1.png' %} " alt="" />
       </div>
 
       <!-- آیتم دوم -->
@@ -660,7 +661,7 @@
         data-aos-duration="600"
         class="relative z-10 bg-black bg-opacity-70 border border-[#222222] h-[110px] w-[45%] lg:w-1/5 py-5 rounded-full flex justify-center items-center"
       >
-        <img src="../static/img/imageye___-_imgi_8_Vector.png" alt="" />
+        <img src=" {% static 'images/imageye___-_imgi_8_Vector.png' %} " alt="" />
       </div>
 
       <!-- آیتم سوم -->
@@ -670,7 +671,7 @@
         data-aos-duration="600"
         class="relative z-10 bg-black bg-opacity-70 border border-[#222222] h-[110px] w-[45%] lg:w-1/5 py-5 rounded-full flex justify-center items-center"
       >
-        <img src="../static/img/imageye___-_imgi_7_1.png" alt="" />
+        <img src=" static 'images/imageye___-_imgi_7_1.png' " alt="" />
       </div>
 
       <!-- آیتم چهارم -->
@@ -680,7 +681,7 @@
         data-aos-duration="600"
         class="relative z-10 bg-black bg-opacity-70 border border-[#222222] h-[110px] w-[45%] lg:w-1/5 py-5 rounded-full flex justify-center items-center"
       >
-        <img src="../static/img/imageye___-_imgi_11_5.png" alt="" />
+        <img src=" {% static 'images/imageye___-_imgi_11_5.png' %} " alt="" />
       </div>
 
       <!-- آیتم پنجم -->
@@ -690,7 +691,7 @@
         data-aos-duration="600"
         class="relative bg-black bg-opacity-70 z-10 border border-[#222222] h-[110px] w-full lg:w-1/5 py-5 rounded-full flex justify-center items-center"
       >
-        <img src="../static/img/imageye___-_imgi_10_4.png" alt="" />
+        <img src=" static 'images/imageye___-_imgi_10_4.png' " alt="" />
       </div>
     </div>
 
@@ -722,7 +723,7 @@
             data-aos-delay="1000"
             data-aos-duration="900"
             class="absolute animate-[spin_10s_linear_infinite] w-[180px] h-[180px]"
-            src="../static/img/text.svg"
+            src=" {% static 'images/trusted-clients.svg' %} "
             alt=""
           />
         </div>
@@ -839,7 +840,7 @@
 </section>
 
 <!-- سکشن سوالات متداول -->
-<section class="bg-gray-25">
+<section class="bg-gray-25 overflow-hidden">
   <div
     class="container flex flex-col md:flex-row md:flex-wrap md:justify-between lg:flex-row py-10 px-5 mx-auto"
   >
@@ -1042,7 +1043,7 @@
     <div data-aos="fade-right" data-aos-delay="400" class="md:w-2/5 lg:w-2/5">
       <img
         class="w-[455px] h-[650px] md:w-full md:h-[450px] lg:h-[550px]"
-        src="../static/img/Frame.svg"
+        src=" {% static 'images/Frame.svg' %} "
         alt=""
       />
     </div>
