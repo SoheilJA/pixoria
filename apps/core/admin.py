@@ -12,4 +12,4 @@ class SiteSettingsAdmin(admin.ModelAdmin):
 
 @admin.register(SocialLink)
 class SocialLinkAdmin(admin.ModelAdmin):
-    list_display = ["label", "url", "order"]
+    list_display = ["label",'name', "url", "order"]

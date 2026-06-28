@@ -1,0 +1,151 @@
+{% extends "base.html" %} {% block title %} سئو ران — دکتر سایت شما {%endblock%}
+ {%block descreption%} آژانس دیجیتال مارکتینگ {%endblock%} {%block content%}
+
+<section class="hero" aria-label="Welcome">
+  <div class="hero-meta">
+    <span><span class="lime-tag">● مشاوره رایگان</span></span>
+    <span>خدمات در سراسر ایران</span>
+    <span>طراحی سایت و سئو</span>
+    <span>پشتیبانی مستمر</span>
+  </div>
+  <h1 class="hero-headline">
+    {{ hero.title}}
+    <span style="color: var(--lime-deep)">.</span>
+  </h1>
+  <div class="hero-bottom">
+    <p class="hero-pitch">{{hero.description}}</p>
+    <div class="hero-actions">
+      {% comment %}
+      <a class="btn btn-ink" href=" {% url 'portfolio:list '%} "
+        >مشاهده نمونه کار ها <span class="arrow">←</span></a
+      >
+      {% endcomment %}
+      {% comment %} <a class="btn btn-ghost" href=" {% url 'contact:contact'%} "
+        >شروع همکاری</a> {% endcomment %}
+    </div>
+  </div>
+  <div class="hero-marquee" aria-hidden="true">
+    <div class="marquee-track">
+      {%for item in hero_marquee %}
+      <span> {{item.text}} </span>
+      {%endfor%} {%for item in hero_marquee %}
+      <span> {{item.text}} </span>
+      {%endfor%}
+    </div>
+  </div>
+</section>
+
+<!-- نمونه کار های منتخب -->
+<section aria-labelledby="work-head">
+  <header class="section-head reveal">
+    <span class="eyebrow"> <span class="dot"></span>پروژه‌های منتخب </span>
+
+    <h2 id="work-head">{{ featured_work_section.title}}</h2>
+
+    <p class="lede">{{ featured_work_section.description}}</p>
+  </header>
+
+  <div class="work-strip reveal">
+
+    {% for work in featured_works %}
+
+    <article class="work-card lg">
+      <div class="img-wrap">
+        <img
+          src=" {{ work.image.url }} "
+          alt=" {{work.title}} "
+          loading="lazy"
+        />
+      </div>
+
+      <div class="body">
+        <div class="meta">
+          {% for category in work.categories.all %}
+          <span> {{category}} </span><span>·</span>
+            {%endfor%}
+        </div>
+
+        <h3> {{work.title}} </h3>
+
+        <p>
+          {{work.excerpt}}
+        </p>
+
+        <a class="arrow-link" href=" {% url 'portfolio:detail' work.slug %} "> مشاهده پروژه <span>←</span> </a>
+      </div>
+    </article>
+    {%endfor%}
+
+  </div>
+</section>
+
+<!--لیست خدمات  -->
+<section aria-labelledby="services-head">
+  <header class="section-head reveal">
+    <span class="eyebrow"> <span class="dot"></span> حوزه های کاری · ۶ </span>
+
+    <h2 id="services-head">{{services_section.title}}</h2>
+
+    <p class="lede">{{services_section.description }}</p>
+  </header>
+
+  <div class="services-list reveal">
+    {% for service in services %}
+    <article class="row">
+      <span class="num">
+        {{forloop.counter|stringformat:"02d"}} /
+        {{services|length|stringformat:"02d"}}
+      </span>
+      <h3>{{service.title}}</h3>
+      <p>{{service.excerpt}}</p>
+      <span class="arrow">←</span>
+    </article>
+    {%endfor%}
+  </div>
+</section>
+
+<!-- ─── مارکویی شرکت های مشتری ─── -->
+<section style="padding: 0" aria-label="Selected clients">
+  <div class="clients-marquee">
+    <div class="track">
+
+      {% for client in clients%}
+      <span> {{client.name }} </span>
+      {%endfor%}
+
+      {% for client in clients%}
+      <span> {{client.name }} </span>
+      {%endfor%}
+
+    </div>
+  </div>
+</section>
+
+<!-- ─── برتری های ما ─── -->
+<section class="manifesto" aria-labelledby="manifesto-head">
+  <div class="grid">
+    <div>
+      <span class="label"> {{manifesto.label}} </span>
+      <h2 id="manifesto-head" class="reveal">
+         {{manifesto.title}}
+        <span class="lime-text"> {{manifesto.highlighted_word}} </span>.
+      </h2>
+    </div>
+
+    <div class="reveal">
+      <p> {{ manifesto.paragraph_one}}
+      </p>
+
+      <p> {{manifesto.paragraph_two}}
+      </p>
+
+      <div class="signature">
+        <span> ↲ {{manifesto.signature_name  }}   </span>
+        <span></span>
+        <span> {{manifesto.signature_title}} </span>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

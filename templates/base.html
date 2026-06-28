@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" dir="rtl">
+<html lang="fa" dir="rtl">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -19,7 +19,7 @@
     />
 
     {% load static %}
-    <link rel="stylesheet" href=" {% static 'css/style.css' %} " />
+    <link rel="stylesheet" href=" {% static 'css/styles.css' %} " />
   </head>
   <body>
     <!-- هدر موبایل -->
@@ -36,17 +36,17 @@
     <nav class="mobile-nav" aria-label="Mobile">
       <button class="mobile-close" aria-label="Close menu">بستن ✕</button>
       <a href=" {% url 'home:home' %} ">خانه</a>
-      <a href=" {% url 'portfolio:list' %} ">نمونه کار ها</a>
+      {% comment %} <a href=" {% url 'portfolio:list' %} ">نمونه کار ها</a>
       <a href=" {% url 'services:list' %} ">خدمات</a>
       <a href=" {% url 'core:about' %} ">درباره ما</a>
-      <a href=" {% url 'contact:contact' %} ">تماس با ما</a>
+      <a href=" {% url 'contact:contact' %} ">تماس با ما</a> {% endcomment %}
     </nav>
 
     <div class="shell">
       <!-- سایدبار -->
       <aside class="rail" aria-label="Primary">
-        <a class="rail-brand" href="index.html">
-          <span class="rail-brand-mark">A</span>
+        <a class="rail-brand" href="/">
+          <span class="rail-brand-mark">S</span>
           <span>
             {{ settings.site_name }}
             <span class="rail-brand-sub"
@@ -57,59 +57,37 @@
         <nav class="rail-nav" aria-label="Sections">
           <a
             href="{% url 'home:home' %}"
-            {%
-            if
-            request.resolver_match.app_name=""
-            ="home"
-            %}
+            {% if request.resolver_match.app_name == "home"%}
             class="active"
-            {%
-            endif
-            %}
-          >
+            {%endif%}>
             <span class="num"></span>
             <span class="title">خانه</span>
           </a>
 
+{% comment %} 
           <a
             href="{% url 'portfolio:list' %}"
-            {%
-            if
-            request.resolver_match.app_name=""
-            ="portfolio"
-            %}class="active"
-            {%
-            endif
-            %}
-          >
+            {% if request.resolver_match.app_name == "portfolio"%}
+            class="active"
+            {% endif %}>
             <span class="num"></span>
             <span class="title">نمونه کار ها</span>
           </a>
 
           <a
             href=" {% url 'services:list '%} "
-            {%
-            if
-            request.resolver_match.app_name=""
-            ="services"
-            %}
+            {% if request.resolver_match.app_name == "services" %}
             class="active"
-            {%endif%}
-          >
+            {%endif%}>
             <span class="num"></span>
             <span class="title">خدمات</span>
           </a>
 
           <a
             href=" {% url 'core:about' %} "
-            {%
-            if
-            request.resolver_match.app_name=""
-            ="core"
-            %}
+            {% if request.resolver_match.app_name == "core"%}
             class="active"
-            {%endif%}
-          >
+            {%endif%}>
             <span class="num"></span>
             <span class="title">درباره ما</span>
           </a>
@@ -118,6 +96,8 @@
             <span class="num"></span>
             <span class="title">تماس با ما</span>
           </a>
+           {% endcomment %}
+
         </nav>
         <div class="rail-foot">
           <div class="meta-row">
@@ -150,28 +130,28 @@
           {% block content %}
 
           {%endblock%}
+
           <!-- ─── کال تو اکشن - پریفوتر ─── -->
           <section class="cta-band" aria-labelledby="cta-head">
             <div class="inner">
-              <h2 id="cta-head">پروژه ای داری که <em>باید</em> ساخته شود؟</h2>
+              <h2 id="cta-head"> {{cta.title}}  </h2>
 
               <div class="right">
                 <p>
-                  برای ما تعریفش کن. بیشتر درخواست ها همان هفته با زمان بندی و
-                  یک برآورد اولیه برای ادامه مسیر پاسخ داده می شوند.
-                </p>
+                  {{cta.description}}
+                 </p>
 
                 <a
                   class="btn btn-ink"
-                  href="contact.html"
+                  {% comment %} href=" {% url 'contact:contact' %} " {% endcomment %}
                   style="margin-top: 24px"
                 >
                   شروع گفتگو <span class="arrow">←</span>
                 </a>
 
                 <div class="meta">
-                  <span>hello@axioma.studio</span>
-                  <span>+1 (212) 555-0144</span>
+                  <span> {{cta.email}} </span>
+                  <span> {{cta.phone}} </span>
                 </div>
               </div>
             </div>
@@ -183,18 +163,16 @@
           <h2
             id="footer-head"
             class="visually-hidden"
-            style="position: absolute; left: -9999px"
-          >
+            style="position: absolute; left: -9999px">
             فوتر سایت
           </h2>
 
           <div class="top">
             <div class="brand-block">
-              <span class="mark"><span class="badge">A</span> آکسیوما</span>
+              <span class="mark"><span class="badge">S</span> {{settings.site_name}} </span>
               <p style="color: #b0afaa; margin: 0; line-height: 1.55">
-                یک استودیو خلاق مستقل در حوزه هویت برند، طراحی وب، کارگردانی
-                هنری و موشن. دفتر اصلی در نیویورک و استودیوی دوم در مکزیکو سیتی.
-              </p>
+                  {{settings.footer_description}}
+               </p>
             </div>
 
             <div class="col">
@@ -217,11 +195,9 @@
 
             <div class="col">
               <h4>ما را دنبال کنید</h4>
-              <a href="#">اینستاگرام</a>
-              <a href="#">آرنا</a>
-              <a href="#">لینکدین</a>
-              <a href="#">خبرنامه</a>
-              <a href="mailto:hello@axioma.studio">hello@axioma.studio</a>
+              {% for social in socials %}
+              <a href="{{social.url}}"> {{social.name}} </a>
+              {% endfor %}
             </div>
           </div>
 
@@ -234,6 +210,6 @@
       </div>
     </div>
 
-    <script src="assets/js/main.js"></script>
+    <script src=" {% static "js/main.js" %} "></script>
   </body>
 </html>

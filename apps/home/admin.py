@@ -15,12 +15,12 @@ class HeroMarqueeItemAdmin(admin.ModelAdmin):
     list_display = ["text", "order"]
 
 
-# @admin.register(FeaturedWorkSection)
-# class FeaturedWorkSectionAdmin(admin.ModelAdmin):
-#     list_display = ["title"]
+@admin.register(FeaturedWorkSection)
+class FeaturedWorkSectionAdmin(admin.ModelAdmin):
+    list_display = ["title"]
 
-#     def has_add_permission(self, request):
-#         return not FeaturedWorkSection.objects.exists()
+    def has_add_permission(self, request):
+        return not FeaturedWorkSection.objects.exists()
 
 
 @admin.register(ServicesSection)

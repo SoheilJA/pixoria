@@ -35,23 +35,23 @@ class HeroMarqueeItem(models.Model):
         return self.text
 
 
-# class FeatureWorkSection(models.Model):
-#     """سکشن نمونه کار های منتخب"""
+class FeaturedWorkSection(models.Model):
+    """سکشن نمونه کار های منتخب"""
 
-#     title = models.CharField(max_length=200, verbose_name="عنوان")
-#     description = models.TextField(verbose_name="توضیحات")
+    title = models.CharField(max_length=200, verbose_name="عنوان")
+    description = models.TextField(verbose_name="توضیحات")
 
-#     class Meta:
-#         verbose_name = "سکشن نمونه کار"
-#         verbose_name_plural = "سکشن نمونه کار ها"
+    class Meta:
+        verbose_name = "سکشن نمونه کار"
+        verbose_name_plural = "سکشن نمونه کار ها"
 
-#     def __str__(self):
-#         return self.title
+    def __str__(self):
+        return self.title
 
-#     def save(self, *args, **kwargs):
-#         if not self.pk and FeatureWorkSection.objects.exists():
-#             raise ValueError("فقط یک سکشن نمونه کار مجاز است")
-#         super().save(*args, **kwargs)
+    def save(self, *args, **kwargs):
+        if not self.pk and FeaturedWorkSection.objects.exists():
+            raise ValueError("فقط یک سکشن نمونه کار مجاز است")
+        super().save(*args, **kwargs)
 
 
 class ServicesSection(models.Model):

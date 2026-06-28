@@ -34,6 +34,9 @@ class SocialLink(models.Model):
     label = models.CharField(
         max_length=10, verbose_name="برچست", help_text="مثلا LI یا IG"
     )
+    name = models.CharField(
+        max_length=50, verbose_name="نام کامل", help_text="مثلا اینستاگرام"
+    )
 
     url = models.URLField(verbose_name="لینک")
     order = models.PositiveIntegerField(default=0, verbose_name="ترتیب")
