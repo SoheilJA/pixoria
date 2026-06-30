@@ -1340,6 +1340,39 @@ section {
   letter-spacing: 0.06em;
 }
 
+/* ─── filter bar ─── */
+.filter-bar {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 48px;
+}
+.filter-btn {
+  font-family: var(--mono);
+  font-size: 0.76rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border: 1px solid var(--ink-line);
+  color: var(--ink-dim);
+  padding: 8px 18px;
+  border-radius: var(--radius-pill);
+  transition: all 0.2s var(--ease);
+}
+.filter-btn:hover,
+.filter-btn.active {
+  border-color: var(--ink);
+  color: var(--ink);
+  background: var(--ink);
+  color: var(--paper);
+}
+
+/* ─── work grid (archive) ─── */
+.work-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 28px;
+}
+
 /* ─── responsive ─── */
 @media (max-width: 1024px) {
   :root {

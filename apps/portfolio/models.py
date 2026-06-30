@@ -1,6 +1,23 @@
 from django.db import models
 
 
+class PortfolioPageSection(models.Model):
+    title = models.CharField(max_length=200, verbose_name="عنوان")
+    description = models.TextField(verbose_name="توضیحات")
+
+    class Meta:
+        verbose_name = "هیروسکشن آرشیو نمونه کار ها"
+        verbose_name_plural = "هیروسکشن آرشیو نمونه کار ها"
+
+    def __str__(self):
+        return self.title
+
+    def save(self, *args, **kwargs):
+        if not self.pk and PortfolioPageSecteion.objects.exists():
+            raise ValueError("فقط یک سکشن مجاز است")
+        super().save(*args, **kwargs)
+
+
 class Category(models.Model):
     """دسته بندی نمونه کار ها"""
 

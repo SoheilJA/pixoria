@@ -129,7 +129,7 @@
         <main>
           {% block content %}
 
-          {%endblock%}
+          {% endblock content %}
 
           <!-- ─── کال تو اکشن - پریفوتر ─── -->
           <section class="cta-band" aria-labelledby="cta-head">
@@ -156,6 +156,9 @@
               </div>
             </div>
           </section>
+
+          {% block afterPrefooter %}
+          {% endblock afterPrefooter %}
         </main>
 
         <!-- فوتر -->

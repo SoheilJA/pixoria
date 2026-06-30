@@ -2,6 +2,14 @@ from django.contrib import admin
 from .models import *
 
 
+
+@admin.register(PortfolioPageSection)
+class PortfolioPageSectionAdmin(admin.ModelAdmin):
+    list_display=['title']
+
+    def has_add_permission(self, request):
+        return not PortfolioPageSection.objects.exists()
+
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ["name", "slug", "order"]

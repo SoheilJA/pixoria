@@ -1,0 +1,173 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ portfolio.title }} — سئو ران{% endblock %}
+{% block description %}{{ portfolio.excerpt }}{% endblock %}
+
+{% block content %}
+<main>
+
+  <!-- ─── هیرو پروژه ─── -->
+  <section class="project-hero">
+    <p class="crumb">
+      <a href="{% url 'home:home' %}">خانه</a> ←
+      <a href="{% url 'portfolio:list' %}">نمونه کارها</a> ←
+      <span style="color: var(--ink)">{{ portfolio.title }}</span>
+    </p>
+
+    <div class="hero-tags">
+      {% for cat in portfolio.categories.all %}
+        <a href="{% url 'portfolio:list' %}?category={{ cat.slug }}" class="tag">{{ cat.name }}</a>
+      {% endfor %}
+    </div>
+
+    <h1>{{ portfolio.title }}</h1>
+
+    <div class="hero-bottom">
+      <p class="lede">{{ portfolio.excerpt }}</p>
+      <div class="hero-meta-mini">
+        <div class="m">
+          <span class="lab">مشتری</span>
+          <span class="val">{{ portfolio.client_name }}</span>
+        </div>
+        <div class="m">
+          <span class="lab">سال</span>
+          <span class="val">{{ portfolio.year }}</span>
+        </div>
+        <div class="m">
+          <span class="lab">حوزه کاری</span>
+          <span class="val">{{ portfolio.service_type }}</span>
+        </div>
+        {% if portfolio.client_url %}
+        <div class="m">
+          <span class="lab">سایت</span>
+          <span class="val">
+            <a href="{{ portfolio.client_url }}" target="_blank" rel="noopener">
+              مشاهده سایت ↗
+            </a>
+          </span>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── تصویر اصلی ─── -->
+  <div class="project-cover">
+    <img src="{{ portfolio.image.url }}" alt="{{ portfolio.title }}" loading="eager" />
+  </div>
+
+  <!-- ─── توضیحات کامل ─── -->
+  <div class="project-overview">
+    <div class="sticky-label">
+      <span class="eyebrow"><span class="dot"></span>درباره پروژه</span>
+      <h2>ماجرا چه بود؟</h2>
+    </div>
+    <div class="body-text reveal">
+      {{ portfolio.description|linebreaks }}
+    </div>
+  </div>
+
+  <!-- ─── آمار (اختیاری) ─── -->
+  {% if stats %}
+  <div class="stats-strip">
+    {% for stat in stats %}
+      <div class="stat">
+        <span class="num">{{ stat.number }}</span>
+        <span class="lab">{{ stat.label }}</span>
+        {% if stat.description %}
+          <span class="desc">{{ stat.description }}</span>
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- ─── چالش و راهکار (اختیاری) ─── -->
+  {% if portfolio.challenge or portfolio.solution %}
+  <div class="project-challenge">
+    {% if portfolio.challenge %}
+    <div class="col reveal">
+      <span class="eyebrow"><span class="dot"></span>چالش</span>
+      <h3>مشکل کجا بود؟</h3>
+      {{ portfolio.challenge|linebreaks }}
+    </div>
+    {% endif %}
+    {% if portfolio.solution %}
+    <div class="col reveal">
+      <span class="eyebrow"><span class="dot"></span>راهکار</span>
+      <h3>چطور حلش کردیم؟</h3>
+      {{ portfolio.solution|linebreaks }}
+    </div>
+    {% endif %}
+  </div>
+  {% endif %}
+
+  <!-- ─── CTA ─── -->
+  <section class="cta-band" aria-labelledby="cta-head">
+    <div class="inner">
+      <h2 id="cta-head">پروژه ای داری که <em>باید</em> ساخته شود؟</h2>
+      <div class="right">
+        <p>برای ما تعریفش کن. بیشتر درخواست‌ها همان هفته پاسخ داده می‌شوند.</p>
+        {% comment %} <a class="btn btn-ink" href="{% url 'contact:contact' %}" style="margin-top: 24px"> {% endcomment %}
+          شروع گفتگو <span class="arrow">←</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── ناوبری قبلی/بعدی ─── -->
+  <nav class="project-nav" aria-label="پروژه‌های دیگر">
+    {% if prev_portfolio %}
+      <a href="{% url 'portfolio:detail' prev_portfolio.slug %}">
+        <span class="dir">→ پروژه قبلی</span>
+        <span class="proj-title">{{ prev_portfolio.title }}</span>
+        <span class="proj-type">{{ prev_portfolio.service_type }}</span>
+        <span class="arrow-corner">↗</span>
+      </a>
+    {% else %}
+      <div></div>
+    {% endif %}
+    {% if next_portfolio %}
+      <a href="{% url 'portfolio:detail' next_portfolio.slug %}">
+        <span class="dir">← پروژه بعدی</span>
+        <span class="proj-title">{{ next_portfolio.title }}</span>
+        <span class="proj-type">{{ next_portfolio.service_type }}</span>
+        <span class="arrow-corner">↗</span>
+      </a>
+    {% else %}
+      <div></div>
+    {% endif %}
+  </nav>
+
+</main>
+
+<!-- ─── فوتر ─── -->
+<footer class="site-footer">
+  <div class="top">
+    <div class="brand-block">
+      <span class="mark"><span class="badge">A</span> {{ settings.site_name }}</span>
+      <p style="color:#b0afaa;margin:0;line-height:1.55">{{ settings.footer_description }}</p>
+    </div>
+    <div class="col">
+      <h4>استودیو</h4>
+      <a href="{% url 'home:home' %}">خانه</a>
+      <a href="{% url 'portfolio:list' %}">نمونه کارها</a>
+      <a href="#">خدمات</a>
+      <a href="#">درباره ما</a>
+      <a href="#">تماس</a>
+    </div>
+    <div class="col">
+      <h4>ما را دنبال کنید</h4>
+      {% for social in socials %}
+        <a href="{{ social.url }}">{{ social.name }}</a>
+      {% endfor %}
+    </div>
+  </div>
+  <div class="bottom">
+    <span>© ۱۴۰۵ {{ settings.site_name }}</span>
+    <span class="center">ساخته شده در ایران</span>
+    <span class="right">نسخه ۰۱</span>
+  </div>
+</footer>
+
+{% endblock %}
