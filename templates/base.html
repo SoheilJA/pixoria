@@ -64,16 +64,16 @@
             <span class="title">خانه</span>
           </a>
 
-{% comment %} 
           <a
-            href="{% url 'portfolio:list' %}"
-            {% if request.resolver_match.app_name == "portfolio"%}
-            class="active"
-            {% endif %}>
-            <span class="num"></span>
-            <span class="title">نمونه کار ها</span>
+          href="{% url 'portfolio:list' %}"
+          {% if request.resolver_match.app_name == "portfolio"%}
+          class="active"
+          {% endif %}>
+          <span class="num"></span>
+          <span class="title">نمونه کار ها</span>
           </a>
-
+          
+          {% comment %} 
           <a
             href=" {% url 'services:list '%} "
             {% if request.resolver_match.app_name == "services" %}

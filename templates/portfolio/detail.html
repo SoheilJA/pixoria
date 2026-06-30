@@ -1,10 +1,219 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 
-{% block title %}{{ portfolio.title }} — سئو ران{% endblock %}
+{% block title %}{{ portfolio.title }} — {{ settings.site_name }}{% endblock %}
 {% block description %}{{ portfolio.excerpt }}{% endblock %}
 
+{% block extra_css %}
+<style>
+  /* ─── project hero ─── */
+  .project-hero {
+    padding: clamp(64px, 9vw, 130px) var(--pad-x) clamp(40px, 5vw, 80px);
+    border-bottom: 1px solid var(--ink-line);
+  }
+  .project-hero .crumb {
+    font-family: var(--mono);
+    font-size: 0.76rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+    margin-bottom: 24px;
+  }
+  .project-hero .crumb a:hover { color: var(--ink); }
+  .project-hero .hero-tags {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 28px;
+  }
+  .project-hero .hero-tags .tag {
+    font-family: var(--mono);
+    font-size: 0.76rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border: 1px solid var(--ink-line);
+    color: var(--ink-dim);
+    padding: 5px 14px;
+    border-radius: var(--radius-pill);
+    transition: border-color 0.2s var(--ease), color 0.2s var(--ease);
+  }
+  .project-hero .hero-tags .tag:hover { border-color: var(--ink); color: var(--ink); }
+  .project-hero h1 {
+    font-size: clamp(2.4rem, 5vw, 5.5rem);
+    line-height: 0.98;
+    letter-spacing: -0.03em;
+    max-width: 22ch;
+    margin: 0 0 40px;
+    color: var(--ink);
+  }
+  .project-hero .hero-bottom {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: end;
+    padding-top: 32px;
+    border-top: 1px solid var(--ink-line);
+  }
+  .project-hero .lede {
+    max-width: 52ch;
+    font-size: 1.12rem;
+    color: var(--ink-soft);
+    line-height: 1.55;
+    margin: 0;
+  }
+  .project-hero .hero-meta-mini {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  .project-hero .hero-meta-mini .m { display: flex; flex-direction: column; gap: 5px; }
+  .project-hero .hero-meta-mini .m .lab {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+  }
+  .project-hero .hero-meta-mini .m .val { font-size: 0.96rem; color: var(--ink); font-weight: 500; }
+  .project-hero .hero-meta-mini .m .val a {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--ink);
+    border-bottom: 1px solid var(--ink-line);
+    padding-bottom: 1px;
+    transition: border-color 0.2s var(--ease);
+  }
+  .project-hero .hero-meta-mini .m .val a:hover { border-color: var(--ink); }
+
+  /* ─── project cover image ─── */
+  .project-cover {
+    width: 100%;
+    aspect-ratio: 16/7;
+    background: var(--paper-soft);
+    overflow: hidden;
+    border-bottom: 1px solid var(--ink-line);
+  }
+  .project-cover img { width: 100%; height: 100%; object-fit: cover; }
+
+  /* ─── project overview ─── */
+  .project-overview {
+    display: grid;
+    grid-template-columns: 1fr 1.8fr;
+    gap: 80px;
+    padding: clamp(56px, 7vw, 100px) var(--pad-x);
+    border-bottom: 1px solid var(--ink-line);
+    align-items: start;
+  }
+  .project-overview .sticky-label { position: sticky; top: 32px; }
+  .project-overview .sticky-label .eyebrow { display: block; margin-bottom: 14px; }
+  .project-overview .sticky-label h2 {
+    font-size: clamp(1.8rem, 2.6vw, 2.6rem);
+    line-height: 1.08;
+    letter-spacing: -0.025em;
+  }
+  .project-overview .body-text p {
+    font-size: 1.1rem;
+    line-height: 1.65;
+    color: var(--ink-soft);
+    margin-bottom: 1.4em;
+  }
+  .project-overview .body-text p:last-child { margin-bottom: 0; }
+  .project-overview .body-text p strong { color: var(--ink); font-weight: 600; }
+
+  /* ─── stats strip ─── */
+  .stats-strip { background: var(--ink); display: flex; border-bottom: 1px solid #2a2a28; }
+  .stats-strip .stat {
+    flex: 1;
+    padding: clamp(36px, 5vw, 64px) var(--pad-x);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    border-left: 1px solid #2a2a28;
+  }
+  .stats-strip .stat:last-child { border-left: none; }
+  .stats-strip .stat .num {
+    font-family: var(--display);
+    font-size: clamp(2.8rem, 4.5vw, 5rem);
+    line-height: 1;
+    font-weight: 600;
+    letter-spacing: -0.04em;
+    color: var(--lime);
+  }
+  .stats-strip .stat .lab {
+    font-family: var(--mono);
+    font-size: 0.76rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #8b8a85;
+  }
+  .stats-strip .stat .desc { font-size: 0.92rem; color: #c8c7c2; max-width: 28ch; line-height: 1.5; margin-top: 4px; }
+
+  /* ─── challenge / solution ─── */
+  .project-challenge { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid var(--ink-line); }
+  .project-challenge .col { padding: clamp(48px, 6vw, 80px) var(--pad-x); }
+  .project-challenge .col:first-child { border-left: 1px solid var(--ink-line); }
+  .project-challenge .col .eyebrow { display: block; margin-bottom: 20px; }
+  .project-challenge .col h3 { font-size: clamp(1.5rem, 2.2vw, 2rem); line-height: 1.1; margin-bottom: 20px; }
+  .project-challenge .col p { font-size: 1.05rem; line-height: 1.65; color: var(--ink-soft); margin-bottom: 1.2em; }
+  .project-challenge .col p:last-child { margin-bottom: 0; }
+
+  /* ─── project nav ─── */
+  .project-nav { display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid var(--ink-line); }
+  .project-nav a {
+    padding: clamp(32px, 5vw, 56px) var(--pad-x);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    border-bottom: 1px solid var(--ink-line);
+    position: relative;
+    transition: background 0.2s var(--ease);
+    overflow: hidden;
+  }
+  .project-nav a:first-child { border-left: 1px solid var(--ink-line); }
+  .project-nav a:hover { background: var(--paper-soft); }
+  .project-nav a .dir {
+    font-family: var(--mono);
+    font-size: 0.74rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+  }
+  .project-nav a .proj-title {
+    font-family: var(--display);
+    font-size: clamp(1.3rem, 2vw, 1.8rem);
+    font-weight: 500;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+  .project-nav a .proj-type { font-family: var(--mono); font-size: 0.76rem; color: var(--ink-dim); letter-spacing: 0.08em; }
+  .project-nav a .arrow-corner {
+    position: absolute;
+    top: 24px;
+    left: 24px;
+    font-size: 1.4rem;
+    color: var(--ink-dim);
+    transition: transform 0.3s var(--ease), color 0.3s var(--ease);
+  }
+  .project-nav a:hover .arrow-corner { transform: translate(4px, -4px); color: var(--lime-deep); }
+
+  @media (max-width: 768px) {
+    .project-hero .hero-bottom { grid-template-columns: 1fr; gap: 28px; }
+    .project-cover { aspect-ratio: 4/3; }
+    .project-overview { grid-template-columns: 1fr; gap: 32px; }
+    .project-overview .sticky-label { position: static; }
+    .stats-strip { flex-direction: column; }
+    .stats-strip .stat { border-left: none; border-top: 1px solid #2a2a28; }
+    .stats-strip .stat:first-child { border-top: none; }
+    .project-challenge { grid-template-columns: 1fr; }
+    .project-challenge .col:first-child { border-left: none; border-bottom: 1px solid var(--ink-line); }
+    .project-nav { grid-template-columns: 1fr; }
+    .project-nav a:first-child { border-left: none; }
+  }
+</style>
+{% endblock %}
+
 {% block content %}
-<main>
 
   <!-- ─── هیرو پروژه ─── -->
   <section class="project-hero">
@@ -24,6 +233,7 @@
 
     <div class="hero-bottom">
       <p class="lede">{{ portfolio.excerpt }}</p>
+
       <div class="hero-meta-mini">
         <div class="m">
           <span class="lab">مشتری</span>
@@ -51,12 +261,12 @@
     </div>
   </section>
 
-  <!-- ─── تصویر اصلی ─── -->
+  <!-- ─── تصویر اصلی پروژه ─── -->
   <div class="project-cover">
     <img src="{{ portfolio.image.url }}" alt="{{ portfolio.title }}" loading="eager" />
   </div>
 
-  <!-- ─── توضیحات کامل ─── -->
+  <!-- ─── توضیحات کامل پروژه ─── -->
   <div class="project-overview">
     <div class="sticky-label">
       <span class="eyebrow"><span class="dot"></span>درباره پروژه</span>
@@ -67,7 +277,7 @@
     </div>
   </div>
 
-  <!-- ─── آمار (اختیاری) ─── -->
+  <!-- ─── آمار و نتایج (اختیاری) ─── -->
   {% if stats %}
   <div class="stats-strip">
     {% for stat in stats %}
@@ -82,7 +292,7 @@
   </div>
   {% endif %}
 
-  <!-- ─── چالش و راهکار (اختیاری) ─── -->
+  <!-- ─── چالش‌ها و راهکارها (اختیاری) ─── -->
   {% if portfolio.challenge or portfolio.solution %}
   <div class="project-challenge">
     {% if portfolio.challenge %}
@@ -102,20 +312,7 @@
   </div>
   {% endif %}
 
-  <!-- ─── CTA ─── -->
-  <section class="cta-band" aria-labelledby="cta-head">
-    <div class="inner">
-      <h2 id="cta-head">پروژه ای داری که <em>باید</em> ساخته شود؟</h2>
-      <div class="right">
-        <p>برای ما تعریفش کن. بیشتر درخواست‌ها همان هفته پاسخ داده می‌شوند.</p>
-        {% comment %} <a class="btn btn-ink" href="{% url 'contact:contact' %}" style="margin-top: 24px"> {% endcomment %}
-          شروع گفتگو <span class="arrow">←</span>
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- ─── ناوبری قبلی/بعدی ─── -->
+  <!-- ─── ناوبری پروژه قبلی / بعدی ─── -->
   <nav class="project-nav" aria-label="پروژه‌های دیگر">
     {% if prev_portfolio %}
       <a href="{% url 'portfolio:detail' prev_portfolio.slug %}">
@@ -138,36 +335,5 @@
       <div></div>
     {% endif %}
   </nav>
-
-</main>
-
-<!-- ─── فوتر ─── -->
-<footer class="site-footer">
-  <div class="top">
-    <div class="brand-block">
-      <span class="mark"><span class="badge">A</span> {{ settings.site_name }}</span>
-      <p style="color:#b0afaa;margin:0;line-height:1.55">{{ settings.footer_description }}</p>
-    </div>
-    <div class="col">
-      <h4>استودیو</h4>
-      <a href="{% url 'home:home' %}">خانه</a>
-      <a href="{% url 'portfolio:list' %}">نمونه کارها</a>
-      <a href="#">خدمات</a>
-      <a href="#">درباره ما</a>
-      <a href="#">تماس</a>
-    </div>
-    <div class="col">
-      <h4>ما را دنبال کنید</h4>
-      {% for social in socials %}
-        <a href="{{ social.url }}">{{ social.name }}</a>
-      {% endfor %}
-    </div>
-  </div>
-  <div class="bottom">
-    <span>© ۱۴۰۵ {{ settings.site_name }}</span>
-    <span class="center">ساخته شده در ایران</span>
-    <span class="right">نسخه ۰۱</span>
-  </div>
-</footer>
 
 {% endblock %}
