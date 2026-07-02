@@ -9,5 +9,5 @@ urlpatterns = [
     path("portfolio/", include("apps.portfolio.urls")),
     # path("services/", include("apps.services.urls")),
     # path("about/", include("apps.contact.urls")),
-    # path("contact/", include("apps.contact.urls")),
+    path("contact/", include("apps.contact.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

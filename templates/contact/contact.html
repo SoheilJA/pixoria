@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+
+{% block title %}تماس با ما {% endblock %}
+{% block description %}{{ page_section.description }}{% endblock %}
+
+{% block content %}
+
+<section class="page-hero">
+  <p class="crumb">
+    خانه ← <span style="color: var(--ink)">تماس</span>
+  </p>
+  <h1>{{ page_section.title }}</h1>
+  <p class="lede">{{ page_section.description }}</p>
+</section>
+
+<section class="contact-grid" aria-label="Contact details">
+
+  <!-- ─── ستون اطلاعات تماس ─── -->
+  <aside class="contact-info">
+    <h3>{{ contact_info.office_title }}</h3>
+
+    <div class="office">
+      <address>{{ contact_info.office_address|linebreaksbr }}</address>
+    </div>
+
+    <div class="channels">
+      {% if contact_info.email_project %}
+      <a href="mailto:{{ contact_info.email_project }}">
+        <span class="lab">پروژه های جدید</span>
+        <span>{{ contact_info.email_project }}</span>
+      </a>
+      {% endif %}
+
+      {% if contact_info.email_press %}
+      <a href="mailto:{{ contact_info.email_press }}">
+        <span class="lab">رسانه</span>
+        <span>{{ contact_info.email_press }}</span>
+      </a>
+      {% endif %}
+
+      {% if contact_info.email_career %}
+      <a href="mailto:{{ contact_info.email_career }}">
+        <span class="lab">فرصت های شغلی</span>
+        <span>{{ contact_info.email_career }}</span>
+      </a>
+      {% endif %}
+
+      <a href="tel:{{ contact_info.phone }}">
+        <span class="lab">تلفن</span>
+        <span>{{ contact_info.phone }}</span>
+      </a>
+
+      <a href="#">
+        <span class="lab">ساعات کاری استودیو</span>
+        <span>{{ contact_info.working_hours }}</span>
+      </a>
+    </div>
+  </aside>
+
+  <!-- ─── فرم تماس ─── -->
+  <form
+    class="contact-form"
+    aria-label="فرم درخواست پروژه"
+    novalidate
+    hx-post="{% url 'contact:contact' %}"
+    hx-target="#form-result"
+    hx-swap="innerHTML"
+    hx-on::after-request="if(event.detail.successful) this.reset()"
+  >
+    {% csrf_token %}
+
+    <h3 style="font-size: 1.4rem; margin-bottom: 6px">درخواست پروژه</h3>
+    <p style="font-family: var(--mono); font-size: 0.74rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-dim); margin: 0 0 14px;">
+      همه فیلدها به جز پیام اجباری هستند
+    </p>
+
+    <div class="row">
+      <label>
+        نام شما
+        <input type="text" name="name" autocomplete="name" required />
+      </label>
+      <label>
+        شماره تماس
+        <input type="tel" name="phone" autocomplete="tel" required />
+      </label>
+    </div>
+
+    <div class="row">
+      <label>
+        شرکت / سازمان
+        <input type="text" name="company" autocomplete="organization" />
+      </label>
+    </div>
+
+    <div class="row">
+      <label>
+        نوع پروژه
+        <select name="project_type" required>
+          <option value="">انتخاب کنید…</option>
+          {% for item in project_types %}
+            <option value="{{ item.label }}">{{ item.label }}</option>
+          {% endfor %}
+        </select>
+      </label>
+
+      <label>
+        بودجه تقریبی
+        <select name="budget" required>
+          <option value="">انتخاب کنید…</option>
+          {% for item in budgets %}
+            <option value="{{ item.label }}">{{ item.label }}</option>
+          {% endfor %}
+        </select>
+      </label>
+    </div>
+
+    <div class="row">
+      <label>
+        زمان شروع
+        <select name="start_time" required>
+          <option value="">انتخاب کنید…</option>
+          {% for item in start_times %}
+            <option value="{{ item.label }}">{{ item.label }}</option>
+          {% endfor %}
+        </select>
+      </label>
+    </div>
+
+    <label>
+      درباره پروژه کمی توضیح بدهید
+      <textarea
+        name="message"
+        placeholder="روی چه چیزی کار می کنید، موفقیت برای شما چه معنی دارد، چرا سراغ ما آمدید — توضیح طولانی هم اوکی است."
+      ></textarea>
+    </label>
+
+    <div class="submit-row">
+      <p class="small">ما فقط برای پاسخ به شما از این اطلاعات استفاده می کنیم.</p>
+      <button type="submit" class="btn btn-ink">
+        ارسال درخواست <span class="arrow">←</span>
+      </button>
+    </div>
+
+    <!-- ─── پیام نتیجه ─── -->
+    <div id="form-result" style="margin-top: 16px;"></div>
+  </form>
+
+</section>
+
+{% endblock %}
+
+{% block afterPrefooter %}
+<nav style="display:none"></nav>
+{% endblock %}

@@ -18,6 +18,9 @@
       href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&family=Vazirmatn:wght@300;400;500;600&family=Geist+Mono:wght@400;500&display=swap"
     />
 
+    <!-- htmx -->
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+
     {% load static %}
     <link rel="stylesheet" href=" {% static 'css/styles.css' %} " />
   </head>
@@ -91,12 +94,12 @@
             <span class="num"></span>
             <span class="title">درباره ما</span>
           </a>
+           {% endcomment %}
 
           <a href=" {% url 'contact:contact'%} ">
             <span class="num"></span>
             <span class="title">تماس با ما</span>
           </a>
-           {% endcomment %}
 
         </nav>
         <div class="rail-foot">
