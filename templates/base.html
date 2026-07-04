@@ -1,13 +1,14 @@
+{% load static %}
 <!doctype html>
 <html lang="fa" dir="rtl">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <meta name="theme-color" content="#0e0e0e" />
-    <title>سئوران — {% block title %} {% endblock %}</title>
+    <title>سئوران — {% block title %}{% endblock %}</title>
     <meta
       name="description"
-      content=" {% block description %} {% endblock %} "
+      content="{% block description %}{% endblock %}"
     />
 
     <!-- فونت گوگل -->
@@ -21,14 +22,16 @@
     <!-- htmx -->
     <script src="https://unpkg.com/htmx.org@1.9.10"></script>
 
-    {% load static %}
-    <link rel="stylesheet" href=" {% static 'css/styles.css' %} " />
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+
+    <!-- بلاک برای استایل‌های اختصاصی هر صفحه -->
+    {% block extra_css %}{% endblock extra_css %}
   </head>
   <body>
     <!-- هدر موبایل -->
     <div class="topbar">
-      <a class="brand" href="/"
-        ><span class="rail-brand-mark">S</span> {{settings.site_name }}
+      <a class="brand" href="/">
+        <span class="rail-brand-mark">S</span> {{settings.site_name}}
       </a>
       <button class="menu-toggle" aria-label="Open menu" aria-expanded="false">
         منو
@@ -38,11 +41,29 @@
     <!-- منو موبایل -->
     <nav class="mobile-nav" aria-label="Mobile">
       <button class="mobile-close" aria-label="Close menu">بستن ✕</button>
-      <a href=" {% url 'home:home' %} ">خانه</a>
-      {% comment %} <a href=" {% url 'portfolio:list' %} ">نمونه کار ها</a>
-      <a href=" {% url 'services:list' %} ">خدمات</a>
-      <a href=" {% url 'core:about' %} ">درباره ما</a>
-      <a href=" {% url 'contact:contact' %} ">تماس با ما</a> {% endcomment %}
+      <a href="{% url 'home:home' %}"
+        {% if request.resolver_match.app_name == "home" %}class="active"{% endif %}>
+        خانه
+      </a>
+      <a href="{% url 'portfolio:list' %}"
+        {% if request.resolver_match.app_name == "portfolio" %}class="active"{% endif %}>
+        نمونه کار ها
+      </a>
+      {% comment %} لینک‌های زیر تا پیاده‌سازی اپ‌های مربوطه کامنت شده‌اند
+      <a href="{% url 'services:list' %}"
+        {% if request.resolver_match.app_name == "services" %}class="active"{% endif %}>
+        خدمات
+      </a>
+      {% endcomment %}
+      <a href="{% url 'core:about' %}"
+        {% if request.resolver_match.app_name == "core" %}class="active"{% endif %}>
+        درباره ما
+      </a>
+      
+      <a href="{% url 'contact:contact' %}"
+        {% if request.resolver_match.app_name == "contact" %}class="active"{% endif %}>
+        تماس با ما
+      </a>
     </nav>
 
     <div class="shell">
@@ -52,51 +73,45 @@
           <span class="rail-brand-mark">S</span>
           <span>
             {{ settings.site_name }}
-            <span class="rail-brand-sub"
-              >آژانس دیجیتال مارکتینگ · تاسیس.{{settings.established_year}}
-            </span></span
-          >
+            <span class="rail-brand-sub">
+              آژانس دیجیتال مارکتینگ · تاسیس.{{settings.established_year}}
+            </span>
+          </span>
         </a>
         <nav class="rail-nav" aria-label="Sections">
           <a
             href="{% url 'home:home' %}"
-            {% if request.resolver_match.app_name == "home"%}
-            class="active"
-            {%endif%}>
+            {% if request.resolver_match.app_name == "home" %}class="active" aria-current="page"{% endif %}>
             <span class="num"></span>
             <span class="title">خانه</span>
           </a>
 
           <a
-          href="{% url 'portfolio:list' %}"
-          {% if request.resolver_match.app_name == "portfolio"%}
-          class="active"
-          {% endif %}>
-          <span class="num"></span>
-          <span class="title">نمونه کار ها</span>
+            href="{% url 'portfolio:list' %}"
+            {% if request.resolver_match.app_name == "portfolio" %}class="active" aria-current="page"{% endif %}>
+            <span class="num"></span>
+            <span class="title">نمونه کار ها</span>
           </a>
-          
-          {% comment %} 
+
+          {% comment %} لینک‌های زیر تا پیاده‌سازی اپ‌های مربوطه کامنت شده‌اند
           <a
-            href=" {% url 'services:list '%} "
-            {% if request.resolver_match.app_name == "services" %}
-            class="active"
-            {%endif%}>
+            href="{% url 'services:list' %}"
+            {% if request.resolver_match.app_name == "services" %}class="active" aria-current="page"{% endif %}>
             <span class="num"></span>
             <span class="title">خدمات</span>
           </a>
-
+{% endcomment %}
           <a
-            href=" {% url 'core:about' %} "
-            {% if request.resolver_match.app_name == "core"%}
-            class="active"
-            {%endif%}>
+            href="{% url 'core:about' %}"
+            {% if request.resolver_match.app_name == "core" %}class="active" aria-current="page"{% endif %}>
             <span class="num"></span>
             <span class="title">درباره ما</span>
           </a>
-           {% endcomment %}
+          
 
-          <a href=" {% url 'contact:contact'%} ">
+          <a
+            href="{% url 'contact:contact' %}"
+            {% if request.resolver_match.app_name == "contact" %}class="active" aria-current="page"{% endif %}>
             <span class="num"></span>
             <span class="title">تماس با ما</span>
           </a>
@@ -104,17 +119,17 @@
         </nav>
         <div class="rail-foot">
           <div class="meta-row">
-            <span>فصل تابستان </span>
+            <span>فصل تابستان</span>
             <span>نسخه ۰۱</span>
           </div>
 
           <div class="meta-row">
-            <span class="rail-status"> {{ settings.status }} </span>
+            <span class="rail-status">{{ settings.status }}</span>
           </div>
 
           <div class="rail-socials">
             {% for social in socials %}
-            <a href="{{ social.url }}" aria-label=" {{ social.label}} ">
+            <a href="{{ social.url }}" aria-label="{{ social.label }}">
               {{social.label}}
             </a>
             {% endfor %}
@@ -131,30 +146,27 @@
       <div class="content">
         <main>
           {% block content %}
-
           {% endblock content %}
 
           <!-- ─── کال تو اکشن - پریفوتر ─── -->
           <section class="cta-band" aria-labelledby="cta-head">
             <div class="inner">
-              <h2 id="cta-head"> {{cta.title}}  </h2>
+              <h2 id="cta-head">{{cta.title}}</h2>
 
               <div class="right">
-                <p>
-                  {{cta.description}}
-                 </p>
+                <p>{{cta.description}}</p>
 
                 <a
                   class="btn btn-ink"
-                  {% comment %} href=" {% url 'contact:contact' %} " {% endcomment %}
+                  href="{% url 'contact:contact' %}"
                   style="margin-top: 24px"
                 >
                   شروع گفتگو <span class="arrow">←</span>
                 </a>
 
                 <div class="meta">
-                  <span> {{cta.email}} </span>
-                  <span> {{cta.phone}} </span>
+                  <span>{{cta.email}}</span>
+                  <span>{{cta.phone}}</span>
                 </div>
               </div>
             </div>
@@ -168,41 +180,49 @@
         <footer class="site-footer" aria-labelledby="footer-head">
           <h2
             id="footer-head"
-            class="visually-hidden"
-            style="position: absolute; left: -9999px">
+            class="visually-hidden">
             فوتر سایت
           </h2>
 
           <div class="top">
             <div class="brand-block">
-              <span class="mark"><span class="badge">S</span> {{settings.site_name}} </span>
+              <span class="mark"><span class="badge">S</span> {{settings.site_name}}</span>
               <p style="color: #b0afaa; margin: 0; line-height: 1.55">
-                  {{settings.footer_description}}
-               </p>
+                {{settings.footer_description}}
+              </p>
             </div>
 
             <div class="col">
               <h4>استودیو</h4>
-              <a href="index.html">خانه</a>
-              <a href="work.html">کارها</a>
-              <a href="services.html">خدمات</a>
-              <a href="about.html">استودیو</a>
-              <a href="contact.html">تماس</a>
+              <a href="{% url 'home:home' %}">خانه</a>
+              <a href="{% url 'portfolio:list' %}">کارها</a>
+              {% comment %} لینک‌های زیر تا پیاده‌سازی اپ‌های مربوطه کامنت شده‌اند
+              <a href="{% url 'services:list' %}">خدمات</a>
+              <a href="{% url 'core:about' %}">استودیو</a>
+              {% endcomment %}
+              <a href="{% url 'contact:contact' %}">تماس</a>
             </div>
 
             <div class="col">
               <h4>حوزه های کاری</h4>
-              <a href="services.html">هویت برند</a>
-              <a href="services.html">طراحی وب</a>
-              <a href="services.html">کارگردانی هنری</a>
-              <a href="services.html">موشن و فیلم</a>
-              <a href="services.html">ادیتوریال</a>
+              {% comment %} این لینک‌ها باید به صفحات خدمات متصل شوند وقتی اپ services پیاده‌سازی شد
+              <a href="{% url 'services:list' %}">هویت برند</a>
+              <a href="{% url 'services:list' %}">طراحی وب</a>
+              <a href="{% url 'services:list' %}">کارگردانی هنری</a>
+              <a href="{% url 'services:list' %}">موشن و فیلم</a>
+              <a href="{% url 'services:list' %}">ادیتوریال</a>
+              {% endcomment %}
+              <a href="{% url 'contact:contact' %}">هویت برند</a>
+              <a href="{% url 'contact:contact' %}">طراحی وب</a>
+              <a href="{% url 'contact:contact' %}">کارگردانی هنری</a>
+              <a href="{% url 'contact:contact' %}">موشن و فیلم</a>
+              <a href="{% url 'contact:contact' %}">ادیتوریال</a>
             </div>
 
             <div class="col">
               <h4>ما را دنبال کنید</h4>
               {% for social in socials %}
-              <a href="{{social.url}}"> {{social.name}} </a>
+              <a href="{{social.url}}">{{social.name}}</a>
               {% endfor %}
             </div>
           </div>
@@ -216,6 +236,6 @@
       </div>
     </div>
 
-    <script src=" {% static "js/main.js" %} "></script>
+    <script src="{% static 'js/main.js' %}"></script>
   </body>
 </html>

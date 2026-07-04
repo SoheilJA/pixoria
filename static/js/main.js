@@ -73,18 +73,19 @@
 })();
 
 // Active nav link based on current page
+// نکته: class="active" توسط Django در سمت سرور (base.html) تنظیم می‌شود.
+// این بخش فقط اطمینان می‌دهد که منوی موبایل هم همان وضعیت را منعکس کند.
 (function () {
-  const links = document.querySelectorAll(".rail-nav a");
-  const currentPath = window.location.pathname;
-
-  links.forEach((link) => {
-    const href = link.getAttribute("href");
-
-    if (currentPath.endsWith(href)) {
-      link.classList.add("active");
-    } else {
-      link.classList.remove("active");
-    }
+  // active لینک‌های موبایل را از rail-nav کپی می‌کند
+  const railLinks = document.querySelectorAll(".rail-nav a.active");
+  railLinks.forEach((activeLink) => {
+    const href = activeLink.getAttribute("href");
+    const mobileLinks = document.querySelectorAll(".mobile-nav a");
+    mobileLinks.forEach((mLink) => {
+      if (mLink.getAttribute("href") === href) {
+        mLink.classList.add("active");
+      }
+    });
   });
 })();
 

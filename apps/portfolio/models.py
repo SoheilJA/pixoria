@@ -13,7 +13,7 @@ class PortfolioPageSection(models.Model):
         return self.title
 
     def save(self, *args, **kwargs):
-        if not self.pk and PortfolioPageSecteion.objects.exists():
+        if not self.pk and PortfolioPageSection.objects.exists():
             raise ValueError("فقط یک سکشن مجاز است")
         super().save(*args, **kwargs)
 

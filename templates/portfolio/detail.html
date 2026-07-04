@@ -211,7 +211,7 @@
     .project-nav a:first-child { border-left: none; }
   }
 </style>
-{% endblock %}
+{% endblock extra_css %}
 
 {% block content %}
 
@@ -251,7 +251,7 @@
         <div class="m">
           <span class="lab">سایت</span>
           <span class="val">
-            <a href="{{ portfolio.client_url }}" target="_blank" rel="noopener">
+            <a href="{{ portfolio.client_url }}" target="_blank" rel="noopener noreferrer">
               مشاهده سایت ↗
             </a>
           </span>
