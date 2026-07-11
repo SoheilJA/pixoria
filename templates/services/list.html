@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  خدمات — {{ settings.site_name }}
+{% endblock %}
+{% block description %}
+  {{ page_section.description }}
+{% endblock %}
+
+{% block content %}
+  <section class="page-hero" aria-labelledby="ph">
+    <p class="crumb">
+      خانه ← <span style="color: var(--ink)">خدمات</span>
+    </p>
+    <h1 id="ph">{{ page_section.title|safe }}</h1>
+    <p class="lede">{{ page_section.description|safe }}</p>
+  </section>
+
+  <div class="services-list reveal">
+    {% for service in services %}
+      <article class="row">
+        <span class="num">{{ forloop.counter|stringformat:'02d' }} / {{ services|length|stringformat:'02d' }}</span>
+        <h3><a href="{% url 'services:detail' service.slug %}" style="color:inherit;text-decoration:none">{{ service.title }}</a></h3>
+        <p>{{ service.excerpt }}</p>
+        <a class="arrow-link" href="{% url 'services:detail' service.slug %}">مشاهده خدمت <span>←</span></a>
+      </article>
+    {% endfor %}
+  </div>
+{% endblock %}
