@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}صفحه پیدا نشد — ۴۰۴{% endblock %}
+
+{% block content %}
+<div class="not-found">
+  <span class="bg-number" aria-hidden="true">۴۰۴</span>
+
+  <div class="body">
+    <p class="crumb">
+      خطا ← <span style="color: var(--ink)">صفحه پیدا نشد</span>
+    </p>
+
+    <h1>
+      اینجا <em class="italic-display">چیزی</em><br />
+      نیست.
+    </h1>
+
+    <p>
+      صفحه‌ای که دنبالش می‌گردی یا حذف شده، یا آدرسش عوض شده، یا اصلاً
+      وجود نداشته. از لینک‌های زیر برگرد.
+    </p>
+
+    <div class="actions">
+      <a class="btn btn-ink" href="{% url 'home:home' %}">
+        برگشت به خانه <span class="arrow">←</span>
+      </a>
+      <a class="btn btn-ghost" href="{% url 'contact:contact' %}">تماس با ما</a>
+    </div>
+  </div>
+
+  <div class="suggestions">
+    <span class="lab">شاید دنبال این بودی</span>
+    <div class="links">
+      <a href="{% url 'portfolio:list' %}">نمونه کار ها</a>
+      <a href="{% url 'services:list' %}">خدمات</a>
+      <a href="{% url 'core:about' %}">درباره ما</a>
+      <a href="{% url 'contact:contact' %}">تماس با ما</a>
+      <a href="{% url 'home:home' %}">صفحه اصلی</a>
+    </div>
+  </div>
+</div>
+{% endblock %}
