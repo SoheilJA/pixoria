@@ -12,7 +12,6 @@ urlpatterns = [
     path("services/", include("apps.services.urls")),
     path("about/", include("apps.core.urls")),
     path("contact/", include("apps.contact.urls")),
-    path("test-404/", lambda request: custom_404(request, None)),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if not settings.DEBUG:

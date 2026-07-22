@@ -66,7 +66,19 @@ class ServiceFAQInline(admin.TabularInline):
 class ServiceTestimonialInline(admin.TabularInline):
     model = ServiceTestimonial
     extra = 1
-
+    fields = [
+        "author_name",
+        "author_role",
+        "author_image",
+        "text",
+        "order",
+        "show_on_home",
+    ]
+@admin.register(ServiceTestimonial)
+class ServiceTestimonialAdmin(admin.ModelAdmin):
+    list_display = ['author_name', 'author_role', 'service', 'show_on_home', 'order']
+    list_editable = ['show_on_home', 'order']
+    list_filter = ['service', 'show_on_home']
 
 @admin.register(Service)
 class ServiceAdmin(admin.ModelAdmin):

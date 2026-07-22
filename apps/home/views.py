@@ -9,6 +9,7 @@ from .models import (
     CTASection,
 )
 from apps.portfolio.models import Portfolio
+from apps.services.models import Service, ServiceTestimonial
 
 
 def home(request):
@@ -16,12 +17,12 @@ def home(request):
         "hero": HeroSection.objects.first(),
         "hero_marquee": HeroMarqueeItem.objects.all(),
         "featured_work_section": FeaturedWorkSection.objects.first(),
-        "featured_works": Portfolio.objects.filter(featured=True).order_by("order"),
+        "featured_works": Portfolio.objects.filter(featured=True)[:3],
         "services_section": ServicesSection.objects.first(),
-        "services": [],  # TODO: مدل Service هنوز پیاده‌سازی نشده
+        "services": Service.objects.filter(featured=True),
         "clients": ClientMarqueeItem.objects.all(),
         "manifesto": ManifestoSection.objects.first(),
         "cta": CTASection.objects.first(),
+        "testimonials": ServiceTestimonial.objects.filter(show_on_home=True),
     }
-
     return render(request, "home/index.html", context)

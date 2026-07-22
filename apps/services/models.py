@@ -252,6 +252,7 @@ class ServiceTestimonial(models.Model):
         upload_to="testimonials/", verbose_name="تصویر", blank=True
     )
     text = models.TextField(verbose_name="متن نظر")
+    show_on_home = models.BooleanField(default=False, verbose_name="نمایش در صفحه اصلی")
     order = models.PositiveIntegerField(default=0, verbose_name="ترتیب")
 
     class Meta:

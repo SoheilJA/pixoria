@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block title %}
-دکتر سایت شما
+  دکتر سایت شما
 {% endblock %}
 {% block description %}
   آژانس دیجیتال مارکتینگ
@@ -23,9 +23,9 @@
       <p class="hero-pitch">{{ hero.description|safe }}</p>
       <div class="hero-actions">
         <a class="btn btn-ink" href="{% url 'portfolio:list' %}">مشاهده نمونه کار ها <span class="arrow">←</span></a>
-        {% comment %}دکمه شروع همکاری تا راه‌اندازی فرم تماس فعال می‌شود
+        دکمه شروع همکاری تا راه‌اندازی فرم تماس فعال می‌شود
         <a class="btn btn-ghost" href="{% url 'contact:contact' %}">شروع همکاری</a>
-        {% endcomment %}
+        
       </div>
     </div>
     <div class="hero-marquee" aria-hidden="true">
@@ -40,7 +40,7 @@
     </div>
   </section>
 
-  <!-- نمونه کار های منتخب -->
+<!-- نمونه کار های منتخب -->
   <section aria-labelledby="work-head">
     <header class="section-head reveal">
       <span class="eyebrow"><span class="dot"></span>پروژه‌های منتخب</span>
@@ -48,29 +48,39 @@
       <p class="lede">{{ featured_work_section.description }}</p>
     </header>
 
-    <div class="work-strip reveal">
+    <div class="carousel-wrap" id="works-carousel">
+  <div class="work-strip reveal" style="display:grid; grid-template-columns: repeat(4,1fr); gap: 20px;">
+    {% for work in featured_works %}
+    <article class="work-card lg" data-index="{{ forloop.counter0 }}">
+      <a href="{% url 'portfolio:detail' work.slug %}" style="display:contents; color:inherit; text-decoration:none">
+        <div class="img-wrap">
+          <img src="{{ work.image.url }}" alt="{{ work.title }}" loading="lazy" />
+        </div>
+        <div class="body">
+          <div class="meta">
+            {% for cat in work.categories.all %}
+              <span>{{ cat.name }}</span>{% if not forloop.last %}<span>·</span>{% endif %}
+            {% endfor %}
+          </div>
+          <h3>{{ work.title }}</h3>
+          <p>{{ work.excerpt }}</p>
+          <span class="arrow-link">مشاهده پروژه <span>←</span></span>
+        </div>
+      </a>
+    </article>
+    {% endfor %}
+  </div>
+  <div class="carousel-controls">
+    <button class="carousel-btn" id="works-prev" aria-label="قبلی">→</button>
+    <div class="carousel-dots" id="works-dots">
       {% for work in featured_works %}
-        <article class="work-card lg">
-          <div class="img-wrap">
-            <img src="{{ work.image.url }}" alt="{{ work.title }}" loading="lazy" />
-          </div>
-
-          <div class="body">
-            <div class="meta">
-              {% for category in work.categories.all %}
-                <span>{{ category }}</span><span>·</span>
-              {% endfor %}
-            </div>
-
-            <h3>{{ work.title }}</h3>
-
-            <p>{{ work.excerpt }}</p>
-
-            <a class="arrow-link" href="{% url 'portfolio:detail' work.slug %}">مشاهده پروژه <span>←</span></a>
-          </div>
-        </article>
+      <button data-index="{{ forloop.counter0 }}" aria-label="نمونه کار {{ forloop.counter }}"></button>
       {% endfor %}
     </div>
+    <button class="carousel-btn" id="works-next" aria-label="بعدی">←</button>
+  </div>
+</div>
+
   </section>
 
   <!-- لیست خدمات -->
@@ -133,4 +143,70 @@
       </div>
     </div>
   </section>
+
+  <!-- ─── نظرات مشتریان ─── -->
+{% if testimonials %}
+<section aria-labelledby="testimonials-head"
+  x-data="{
+    current: 0,
+    total: {{ testimonials|length }},
+    prev() { this.current = this.current > 0 ? this.current - 1 : this.total - 1 },
+    next() { this.current = this.current < this.total - 1 ? this.current + 1 : 0 }
+  }"
+>
+  <header class="section-head reveal">
+    <span class="eyebrow"><span class="dot"></span>نظرات مشتریان</span>
+    <h2 id="testimonials-head">آن‌ها تجربه‌شان را گفتند.</h2>
+  </header>
+
+  <div class="testimonials-carousel">
+    {% for t in testimonials %}
+    <article
+      class="testimonial-card"
+      :class="{
+        'is-center': current === {{ forloop.counter0 }},
+        'is-prev': current === {{ forloop.counter0 }} + 1 || (current === 0 && {{ forloop.counter0 }} === total - 1),
+        'is-next': current === {{ forloop.counter0 }} - 1 || (current === total - 1 && {{ forloop.counter0 }} === 0)
+      }"
+      x-show="
+        current === {{ forloop.counter0 }} ||
+        current === {{ forloop.counter0 }} - 1 ||
+        current === {{ forloop.counter0 }} + 1 ||
+        (current === 0 && {{ forloop.counter0 }} === total - 1) ||
+        (current === total - 1 && {{ forloop.counter0 }} === 0)
+      "
+      x-transition
+    >
+      <div class="stars">★★★★★</div>
+      <blockquote>{{ t.text }}</blockquote>
+      <div class="author">
+        {% if t.author_image %}
+        <div class="author-avatar">
+          <img src="{{ t.author_image.url }}" alt="{{ t.author_name }}" loading="lazy" />
+        </div>
+        {% endif %}
+        <div class="author-info">
+          <span class="author-name">{{ t.author_name }}</span>
+          <span class="author-role">{{ t.author_role }}</span>
+        </div>
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+
+  <div class="carousel-controls">
+    <button @click="prev()" class="carousel-btn" aria-label="قبلی">→</button>
+    <div class="carousel-dots">
+      {% for t in testimonials %}
+      <button
+        @click="current = {{ forloop.counter0 }}"
+        :class="current === {{ forloop.counter0 }} ? 'active' : ''"
+        aria-label="نظر {{ forloop.counter }}"
+      ></button>
+      {% endfor %}
+    </div>
+    <button @click="next()" class="carousel-btn" aria-label="بعدی">←</button>
+  </div>
+</section>
+{% endif %}
 {% endblock %}
