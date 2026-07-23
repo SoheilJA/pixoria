@@ -12,8 +12,8 @@
     <p class="crumb">
       خانه ← <span style="color: var(--ink)">خدمات</span>
     </p>
-    <h1 id="ph">{{ page_section.title|safe }}</h1>
-    <p class="lede">{{ page_section.description|safe }}</p>
+    <h1 id="ph">{% if page_section %}{{ page_section.title|safe }}{% else %}خدمات ما{% endif %}</h1>
+    <p class="lede">{% if page_section %}{{ page_section.description|safe }}{% endif %}</p>
   </section>
 
   <div class="services-list reveal">
