@@ -3502,6 +3502,37 @@ details[open] .faq-icon {
   }
 }
 
+/* ─── service row tags ─── */
+.service-row-body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.service-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.service-tag {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  background: var(--paper-soft);
+  border: 1px solid var(--ink-line);
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+  transition: border-color 0.2s var(--ease), color 0.2s var(--ease);
+}
+
+.services-list .row:hover .service-tag {
+  border-color: var(--ink-dim);
+  color: var(--ink-soft);
+}
+
 /* ═══════════════════════════════════════════════
    Carousel — works & testimonials
    ═══════════════════════════════════════════════ */
