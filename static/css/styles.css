@@ -3502,6 +3502,166 @@ details[open] .faq-icon {
   }
 }
 
+/* ═══════════════════════════════════════════════
+   Carousel — works & testimonials
+   ═══════════════════════════════════════════════ */
+
+/* ─── wrapper: clip overflow بدون اثر روی height ─── */
+.carousel-wrap {
+  position: relative;
+  overflow: hidden;
+}
+
+/* ─── track: JS عرض هر slide و gap رو اینلاین ست می‌کند ─── */
+.carousel-track {
+  display: flex;          /* JS مقدار flex و width هر slide رو تنظیم می‌کند */
+  transition: transform 0.45s var(--ease-out);
+  will-change: transform;
+}
+
+/* ─── slide‌های کاروسل نمونه کارها ─── */
+/* عرض توسط JS تنظیم می‌شود — فقط overflow و flex-shrink اینجا */
+#works-carousel .work-card {
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+/* ─── slide‌های کاروسل نظرات ─── */
+#testimonials-carousel .testimonial-card {
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+/* ─── نوار کنترل (دکمه‌ها + نقاط) ─── */
+.carousel-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid var(--ink-line);
+}
+
+/* ─── دکمه‌های قبلی / بعدی ─── */
+.carousel-btn {
+  /* اندازه و شکل */
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  padding: 0;
+
+  /* رنگ پیش‌فرض */
+  background: var(--paper);
+  color: var(--ink);
+  border: 1px solid var(--ink-line);
+
+  /* تایپوگرافی */
+  font-family: var(--mono);
+  font-size: 1.1rem;
+  line-height: 1;
+
+  /* چیدمان محتوا */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+  transition:
+    background 0.2s var(--ease),
+    color 0.2s var(--ease),
+    border-color 0.2s var(--ease),
+    transform 0.15s var(--ease),
+    opacity 0.2s var(--ease);
+}
+
+.carousel-btn:hover:not(:disabled) {
+  background: var(--ink);
+  color: var(--lime);
+  border-color: var(--ink);
+}
+
+.carousel-btn:active:not(:disabled) {
+  transform: scale(0.92);
+}
+
+/* دکمه غیرفعال وقتی به ابتدا/انتها رسیدیم */
+.carousel-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  background: var(--paper);
+  color: var(--ink-dim);
+  border-color: var(--ink-line);
+}
+
+/* ─── نقاط ناوبری (dots) ─── */
+.carousel-dots {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  justify-content: center;
+}
+
+.carousel-dots button {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: none;
+  padding: 0;
+  background: var(--ink-line);
+  cursor: pointer;
+  transition:
+    background 0.2s var(--ease),
+    transform 0.2s var(--ease),
+    width 0.25s var(--ease);
+}
+
+.carousel-dots button:hover {
+  background: var(--ink-dim);
+}
+
+.carousel-dots button.active {
+  background: var(--lime);
+  width: 22px;
+  border-radius: var(--radius-pill);
+  transform: none;
+}
+
+/* Responsive Carousel */
+@media (max-width: 1024px) {
+  .carousel-track .work-card {
+    width: calc(33.333% - 14px);
+  }
+}
+
+@media (max-width: 768px) {
+  .carousel-track .work-card {
+    width: calc(50% - 10px);
+  }
+
+  .testimonials-carousel .testimonial-card {
+    width: 100%;
+  }
+
+  .carousel-btn {
+    width: 40px;
+    height: 40px;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .carousel-track .work-card {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .carousel-controls {
+    gap: 12px;
+  }
+}
+
 
 .not-found {
   min-height: calc(100vh - 0px);
