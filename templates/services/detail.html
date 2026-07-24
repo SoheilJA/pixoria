@@ -13,17 +13,26 @@
       <a href="{% url 'services:list' %}">خدمات</a> ←
       <span style="color:var(--ink)">{{ service.title }}</span>
     </p>
+
+    {% if service.tags %}
     <div class="tags" data-aos="fade-up" data-aos-delay="50">
       {% for tag in service.get_tags_list %}
         <span>{{ tag }}</span>
       {% endfor %}
     </div>
-    <h1 id="service-title" data-aos="fade-up" data-aos-delay="100">{{ service.title|safe }}</h1>
+    {% endif %}
+
+    <h1 id="service-title" data-aos="fade-up" data-aos-delay="100">{{ service.title }}</h1>
+
     <div class="hero-bottom" data-aos="fade-up" data-aos-delay="200">
-      <p class="lede">{{ service.excerpt|safe }}</p>
+      <p class="lede">{{ service.excerpt }}</p>
       <div class="hero-actions">
-        <a class="btn btn-ink" href="{% url 'contact:contact' %}">مشاوره رایگان بگیرید <span class="arrow">←</span></a>
+        <a class="btn btn-ink" href="{% url 'contact:contact' %}">
+          مشاوره رایگان <span class="arrow">←</span>
+        </a>
+        {% if plans %}
         <a class="btn btn-ghost" href="#pricing">مشاهده قیمت‌ها</a>
+        {% endif %}
       </div>
     </div>
   </section>
@@ -41,6 +50,47 @@
   </div>
   {% endif %}
 
+  <!-- ─── توضیحات کامل ─── -->
+  {% if service.description %}
+  <div class="project-overview">
+    <div class="sticky-label" data-aos="fade-up">
+      <span class="eyebrow"><span class="dot"></span>درباره این خدمت</span>
+      <h2>{{ service.title }} چیست؟</h2>
+    </div>
+    <div class="body-text" data-aos="fade-up" data-aos-delay="100">
+      {{ service.description|safe }}
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- ─── خروجی‌ها و فرآیند ─── -->
+  {% if deliverables or processes %}
+  <div class="project-challenge">
+    {% if deliverables %}
+    <div class="col" data-aos="fade-up">
+      <span class="eyebrow"><span class="dot"></span>چه چیزی تحویل می‌گیرید</span>
+      <h3>خروجی‌های معمول</h3>
+      <ul class="deliverables-list" style="margin-top:24px">
+        {% for item in deliverables %}
+          <li>{{ item.title }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+    {% if processes %}
+    <div class="col" data-aos="fade-up" data-aos-delay="100">
+      <span class="eyebrow"><span class="dot"></span>چطور پیش می‌رویم</span>
+      <h3>فرآیند کار</h3>
+      <ol class="process-list" style="margin-top:24px">
+        {% for step in processes %}
+          <li><span>{{ step.title }}</span></li>
+        {% endfor %}
+      </ol>
+    </div>
+    {% endif %}
+  </div>
+  {% endif %}
+
   <!-- ─── چرا ما ─── -->
   {% if why_us %}
   <section class="why-us">
@@ -53,48 +103,9 @@
         <div class="why-card" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
           <span class="icon">{{ item.icon }}</span>
           <h3>{{ item.title }}</h3>
-          <p>{{ item.description|safe }}</p>
+          <p>{{ item.description }}</p>
         </div>
       {% endfor %}
-    </div>
-  </section>
-  {% endif %}
-
-  <!-- ─── خروجی‌ها و فرآیند ─── -->
-  <section class="service-overview">
-    {% if deliverables %}
-    <div class="col" data-aos="fade-up">
-      <span class="eyebrow"><span class="dot"></span>چه چیزی تحویل می‌گیرید</span>
-      <h2>خروجی‌های معمول</h2>
-      <ul class="deliverables-list">
-        {% for item in deliverables %}
-          <li>{{ item.title }}</li>
-        {% endfor %}
-      </ul>
-    </div>
-    {% endif %}
-    {% if processes %}
-    <div class="col" data-aos="fade-up" data-aos-delay="100">
-      <span class="eyebrow"><span class="dot"></span>چطور پیش می‌رویم</span>
-      <h2>فرآیند کار</h2>
-      <ol class="process-list">
-        {% for step in processes %}
-          <li><span>{{ step.title }}</span></li>
-        {% endfor %}
-      </ol>
-    </div>
-    {% endif %}
-  </section>
-
-  <!-- ─── توضیحات کامل ─── -->
-  {% if service.description %}
-  <section class="service-deep">
-    <div class="deep-grid">
-      <div class="sticky-label" data-aos="fade-up">
-        <span class="eyebrow"><span class="dot"></span>همه چیز درباره این خدمت</span>
-        <h2>{{ service.title }} چیست؟</h2>
-      </div>
-      <div class="body-text" data-aos="fade-up" data-aos-delay="100">{{ service.description|safe }}</div>
     </div>
   </section>
   {% endif %}
@@ -124,17 +135,21 @@
           <div class="plan-divider"></div>
           <ul class="plan-features">
             {% for feature in plan.features.all %}
-              <li class="{% if feature.included %}included{% else %}excluded{% endif %}">{{ feature.title }}</li>
+              <li class="{% if feature.included %}included{% else %}excluded{% endif %}">
+                {{ feature.title }}
+              </li>
             {% endfor %}
           </ul>
           <a class="btn {% if plan.is_featured %}btn-lime{% else %}btn-ghost{% endif %}"
-             href="{% url 'contact:contact' %}">شروع کنید <span class="arrow">←</span></a>
+             href="{% url 'contact:contact' %}">
+            شروع کنید <span class="arrow">←</span>
+          </a>
         </article>
       {% endfor %}
     </div>
 
     {% if custom_items %}
-    <div class="custom-plan" data-aos="fade-up" data-aos-delay="100">
+    <div class="custom-plan" data-aos="fade-up">
       <div class="custom-header">
         <div>
           <span class="eyebrow"><span class="dot"></span>پلن دلخواه</span>
@@ -161,7 +176,9 @@
       </div>
       <div class="custom-footer">
         <p>قیمت‌ها تخمینی هستند. برآورد دقیق بعد از جلسه اولیه ارائه می‌شود.</p>
-        <a class="btn btn-ink" href="{% url 'contact:contact' %}">درخواست مشاوره <span class="arrow">←</span></a>
+        <a class="btn btn-ink" href="{% url 'contact:contact' %}">
+          درخواست مشاوره <span class="arrow">←</span>
+        </a>
       </div>
     </div>
     {% endif %}
@@ -212,7 +229,7 @@
               <h3>{{ faq.question }}</h3>
               <span class="faq-icon">+</span>
             </summary>
-            <p class="faq-answer">{{ faq.answer|safe }}</p>
+            <p class="faq-answer">{{ faq.answer }}</p>
           </details>
         {% endfor %}
       </div>
@@ -247,12 +264,12 @@
 
 {% block extra_js %}
 <script>
-  const checkboxes = document.querySelectorAll('.custom-item input[type="checkbox"]');
-  const totalEl = document.getElementById('custom-total-amount');
+  var checkboxes = document.querySelectorAll('.custom-item input[type="checkbox"]');
+  var totalEl = document.getElementById('custom-total-amount');
   if (totalEl) {
     function updateTotal() {
-      let total = 0;
-      checkboxes.forEach((cb) => {
+      var total = 0;
+      checkboxes.forEach(function(cb) {
         if (cb.checked) {
           total += parseInt(cb.dataset.price);
           cb.closest('.custom-item').classList.add('selected');
@@ -262,7 +279,7 @@
       });
       totalEl.textContent = total === 0 ? '۰' : total;
     }
-    checkboxes.forEach((cb) => cb.addEventListener('change', updateTotal));
+    checkboxes.forEach(function(cb) { cb.addEventListener('change', updateTotal); });
   }
 </script>
 {% endblock %}

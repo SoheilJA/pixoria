@@ -2740,7 +2740,8 @@ section {
   margin-bottom: 28px;
 }
 
-.service-overview .deliverables-list {
+.service-overview .deliverables-list,
+.project-challenge .col .deliverables-list {
   list-style: none;
   padding: 0;
   margin: 0;
@@ -2749,7 +2750,8 @@ section {
   gap: 12px;
 }
 
-.service-overview .deliverables-list li {
+.service-overview .deliverables-list li,
+.project-challenge .col .deliverables-list li {
   display: flex;
   align-items: baseline;
   gap: 14px;
@@ -2759,11 +2761,13 @@ section {
   border-bottom: 1px solid var(--line-soft);
 }
 
-.service-overview .deliverables-list li:last-child {
+.service-overview .deliverables-list li:last-child,
+.project-challenge .col .deliverables-list li:last-child {
   border-bottom: none;
 }
 
-.service-overview .deliverables-list li::before {
+.service-overview .deliverables-list li::before,
+.project-challenge .col .deliverables-list li::before {
   content: '+';
   color: var(--lime-deep);
   font-weight: 700;
@@ -2772,14 +2776,16 @@ section {
   flex-shrink: 0;
 }
 
-.service-overview .process-list {
+.service-overview .process-list,
+.project-challenge .col .process-list {
   list-style: none;
   padding: 0;
   margin: 0;
   counter-reset: process-counter;
 }
 
-.service-overview .process-list li {
+.service-overview .process-list li,
+.project-challenge .col .process-list li {
   counter-increment: process-counter;
   display: grid;
   grid-template-columns: 40px 1fr;
@@ -2789,11 +2795,13 @@ section {
   border-bottom: 1px solid var(--line-soft);
 }
 
-.service-overview .process-list li:last-child {
+.service-overview .process-list li:last-child,
+.project-challenge .col .process-list li:last-child {
   border-bottom: none;
 }
 
-.service-overview .process-list li::before {
+.service-overview .process-list li::before,
+.project-challenge .col .process-list li::before {
   content: counter(process-counter, decimal-leading-zero);
   font-family: var(--mono);
   font-size: 0.74rem;
@@ -2802,7 +2810,8 @@ section {
   padding-top: 3px;
 }
 
-.service-overview .process-list li span {
+.service-overview .process-list li span,
+.project-challenge .col .process-list li span {
   font-size: 1rem;
   color: var(--ink-soft);
   line-height: 1.5;
