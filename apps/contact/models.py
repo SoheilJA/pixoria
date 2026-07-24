@@ -29,6 +29,20 @@ class ContactInfo(models.Model):
     office_address = models.TextField(verbose_name="آدرس دفتر")
     phone = models.CharField(max_length=20, verbose_name="شماره تماس")
     working_hours = models.CharField(max_length=100, verbose_name="ساعت کاری")
+    email_project = models.EmailField(
+        verbose_name="ایمیل پروژه‌های جدید", blank=True,
+        help_text="مثال: project@example.com"
+    )
+    email_press = models.EmailField(
+        verbose_name="ایمیل رسانه", blank=True
+    )
+    email_career = models.EmailField(
+        verbose_name="ایمیل فرصت‌های شغلی", blank=True
+    )
+    tagline = models.CharField(
+        max_length=200, verbose_name="جمله کوتاه / شعار", blank=True,
+        help_text="یک جمله کوتاه در ستون تماس نمایش داده می‌شود"
+    )
 
     class Meta:
         verbose_name = "اطلاعات تماس"

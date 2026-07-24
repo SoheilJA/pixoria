@@ -3502,6 +3502,109 @@ details[open] .faq-icon {
   }
 }
 
+/* ─── contact info sidebar enhancements ─── */
+.contact-tagline {
+  font-family: var(--display);
+  font-size: clamp(1.3rem, 1.8vw, 1.7rem);
+  font-weight: 500;
+  color: var(--ink);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  margin: 0 0 32px;
+  padding-bottom: 32px;
+  border-bottom: 1px solid var(--ink-line);
+}
+
+.contact-meta-label {
+  display: block;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  margin-bottom: 10px;
+}
+
+.contact-meta-block {
+  margin-bottom: 28px;
+}
+
+.contact-meta-block h3 {
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+}
+
+.contact-socials {
+  margin-top: 28px;
+  padding-top: 28px;
+  border-top: 1px solid var(--ink-line);
+}
+
+.social-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.social-link {
+  font-family: var(--mono);
+  font-size: 0.76rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  border: 1px solid var(--ink-line);
+  padding: 6px 14px;
+  border-radius: var(--radius-pill);
+  transition: all 0.2s var(--ease);
+}
+
+.social-link:hover {
+  background: var(--ink);
+  color: var(--lime);
+  border-color: var(--ink);
+}
+
+.contact-services-list {
+  margin-top: 28px;
+  padding-top: 28px;
+  border-top: 1px solid var(--ink-line);
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.contact-service-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px dashed var(--ink-line);
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+  transition: color 0.2s var(--ease), padding-right 0.2s var(--ease);
+}
+
+.contact-service-item:last-child {
+  border-bottom: none;
+}
+
+.contact-service-item:hover {
+  color: var(--ink);
+  padding-right: 6px;
+}
+
+.contact-service-item .arrow-sm {
+  font-size: 0.9rem;
+  color: var(--ink-dim);
+  transition: transform 0.2s var(--ease), color 0.2s var(--ease);
+}
+
+.contact-service-item:hover .arrow-sm {
+  transform: translateX(-4px);
+  color: var(--lime-deep);
+}
+
 /* ─── service row tags ─── */
 .service-row-body {
   display: flex;

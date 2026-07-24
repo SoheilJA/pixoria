@@ -8,6 +8,8 @@ from .models import (
     StartTimeChoice,
     ContactSubmission,
 )
+from apps.services.models import Service
+from apps.core.models import SocialLink
 
 
 def contact(request):
@@ -59,5 +61,7 @@ def contact(request):
         "project_types": ProjectTypeChoice.objects.all(),
         "budgets": BudgetChoice.objects.all(),
         "start_times": StartTimeChoice.objects.all(),
+        "contact_services": Service.objects.filter(featured=True),
+        "socials": SocialLink.objects.all(),
     }
     return render(request, "contact/contact.html", context)

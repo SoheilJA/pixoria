@@ -17,14 +17,29 @@
 
     <!-- ─── ستون اطلاعات تماس ─── -->
     <aside class="contact-info" data-aos="fade-up" data-aos-duration="700">
-      <h3>{{ contact_info.office_title }}</h3>
-      <div class="office">
-        <address>{{ contact_info.office_address|linebreaksbr }}</address>
+
+      {% if contact_info.tagline %}
+      <p class="contact-tagline">{{ contact_info.tagline }}</p>
+      {% endif %}
+
+      <div class="contact-meta-block">
+        <span class="contact-meta-label">دفتر</span>
+        <h3>{{ contact_info.office_title }}</h3>
+        <div class="office">
+          <address>{{ contact_info.office_address|linebreaksbr }}</address>
+        </div>
       </div>
+
       <div class="channels">
+        {% if contact_info.phone %}
+          <a href="tel:{{ contact_info.phone }}">
+            <span class="lab">تلفن</span>
+            <span>{{ contact_info.phone }}</span>
+          </a>
+        {% endif %}
         {% if contact_info.email_project %}
           <a href="mailto:{{ contact_info.email_project }}">
-            <span class="lab">پروژه های جدید</span>
+            <span class="lab">پروژه‌های جدید</span>
             <span>{{ contact_info.email_project }}</span>
           </a>
         {% endif %}
@@ -36,23 +51,41 @@
         {% endif %}
         {% if contact_info.email_career %}
           <a href="mailto:{{ contact_info.email_career }}">
-            <span class="lab">فرصت های شغلی</span>
+            <span class="lab">فرصت‌های شغلی</span>
             <span>{{ contact_info.email_career }}</span>
-          </a>
-        {% endif %}
-        {% if contact_info.phone %}
-          <a href="tel:{{ contact_info.phone }}">
-            <span class="lab">تلفن</span>
-            <span>{{ contact_info.phone }}</span>
           </a>
         {% endif %}
         {% if contact_info.working_hours %}
           <div class="channel-item">
-            <span class="lab">ساعات کاری استودیو</span>
+            <span class="lab">ساعات کاری</span>
             <span>{{ contact_info.working_hours }}</span>
           </div>
         {% endif %}
       </div>
+
+      {% if socials %}
+      <div class="contact-socials">
+        <span class="contact-meta-label">شبکه‌های اجتماعی</span>
+        <div class="social-links">
+          {% for social in socials %}
+            <a href="{{ social.url }}" target="_blank" rel="noopener noreferrer" class="social-link">
+              {{ social.name }}
+            </a>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+
+      <div class="contact-services-list">
+        <span class="contact-meta-label">خدمات ما</span>
+        {% for service in contact_services %}
+          <a href="{% url 'services:detail' service.slug %}" class="contact-service-item">
+            <span>{{ service.title }}</span>
+            <span class="arrow-sm">←</span>
+          </a>
+        {% endfor %}
+      </div>
+
     </aside>
 
     <!-- ─── فرم تماس ─── -->
