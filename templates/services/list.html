@@ -1,27 +1,30 @@
 {% extends 'base.html' %}
 
-{% block title %}
-  خدمات — {{ settings.site_name }}
-{% endblock %}
-{% block description %}
-  {{ page_section.description }}
-{% endblock %}
+{% block title %}خدمات — {{ settings.site_name }}{% endblock %}
+{% block description %}{{ page_section.description }}{% endblock %}
 
 {% block content %}
+
   <section class="page-hero" aria-labelledby="ph">
-    <p class="crumb">
+    <p class="crumb" data-aos="fade-down">
       خانه ← <span style="color: var(--ink)">خدمات</span>
     </p>
-    <h1 id="ph">{% if page_section %}{{ page_section.title|safe }}{% else %}خدمات ما{% endif %}</h1>
-    <p class="lede">{% if page_section %}{{ page_section.description|safe }}{% endif %}</p>
+    <h1 id="ph" data-aos="fade-up" data-aos-delay="50">
+      {% if page_section %}{{ page_section.title|safe }}{% else %}خدمات ما{% endif %}
+    </h1>
+    <p class="lede" data-aos="fade-up" data-aos-delay="150">
+      {% if page_section %}{{ page_section.description|safe }}{% endif %}
+    </p>
   </section>
 
-  <div class="services-list reveal">
+  <div class="services-list">
     {% for service in services %}
-      <article class="row">
+      <article class="row" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}0">
         <span class="num">{{ forloop.counter|stringformat:'02d' }} / {{ services|length|stringformat:'02d' }}</span>
         <div class="service-row-body">
-          <h3><a href="{% url 'services:detail' service.slug %}" style="color:inherit;text-decoration:none">{{ service.title }}</a></h3>
+          <h3>
+            <a href="{% url 'services:detail' service.slug %}" style="color:inherit;text-decoration:none">{{ service.title }}</a>
+          </h3>
           {% if service.tags %}
           <div class="service-tags">
             {% for tag in service.get_tags_list %}
@@ -35,4 +38,5 @@
       </article>
     {% endfor %}
   </div>
+
 {% endblock %}

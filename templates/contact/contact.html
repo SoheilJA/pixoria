@@ -1,30 +1,26 @@
 {% extends 'base.html' %}
 
-{% block title %}
-  تماس با ما
-{% endblock %}
-{% block description %}
-  {{ page_section.description }}
-{% endblock %}
+{% block title %}تماس با ما{% endblock %}
+{% block description %}{{ page_section.description }}{% endblock %}
 
 {% block content %}
+
   <section class="page-hero">
-    <p class="crumb">
+    <p class="crumb" data-aos="fade-down">
       خانه ← <span style="color: var(--ink)">تماس</span>
     </p>
-    <h1>{{ page_section.title }}</h1>
-    <p class="lede">{{ page_section.description }}</p>
+    <h1 data-aos="fade-up" data-aos-delay="50">{{ page_section.title }}</h1>
+    <p class="lede" data-aos="fade-up" data-aos-delay="150">{{ page_section.description }}</p>
   </section>
 
   <section class="contact-grid" aria-label="Contact details">
-    <!-- ─── ستون اطلاعات تماس ─── -->
-    <aside class="contact-info">
-      <h3>{{ contact_info.office_title }}</h3>
 
+    <!-- ─── ستون اطلاعات تماس ─── -->
+    <aside class="contact-info" data-aos="fade-left" data-aos-duration="700">
+      <h3>{{ contact_info.office_title }}</h3>
       <div class="office">
         <address>{{ contact_info.office_address|linebreaksbr }}</address>
       </div>
-
       <div class="channels">
         {% if contact_info.email_project %}
           <a href="mailto:{{ contact_info.email_project }}">
@@ -32,28 +28,24 @@
             <span>{{ contact_info.email_project }}</span>
           </a>
         {% endif %}
-
         {% if contact_info.email_press %}
           <a href="mailto:{{ contact_info.email_press }}">
             <span class="lab">رسانه</span>
             <span>{{ contact_info.email_press }}</span>
           </a>
         {% endif %}
-
         {% if contact_info.email_career %}
           <a href="mailto:{{ contact_info.email_career }}">
             <span class="lab">فرصت های شغلی</span>
             <span>{{ contact_info.email_career }}</span>
           </a>
         {% endif %}
-
         {% if contact_info.phone %}
           <a href="tel:{{ contact_info.phone }}">
             <span class="lab">تلفن</span>
             <span>{{ contact_info.phone }}</span>
           </a>
         {% endif %}
-
         {% if contact_info.working_hours %}
           <div class="channel-item">
             <span class="lab">ساعات کاری استودیو</span>
@@ -64,33 +56,45 @@
     </aside>
 
     <!-- ─── فرم تماس ─── -->
-    <form class="contact-form" aria-label="فرم درخواست پروژه" novalidate hx-post="{% url 'contact:contact' %}" hx-target="#form-result" hx-swap="innerHTML" hx-on::after-request="if(event.detail.successful) this.reset()">
+    <form class="contact-form" aria-label="فرم درخواست پروژه" novalidate
+          data-aos="fade-right" data-aos-duration="700" data-aos-delay="100"
+          hx-post="{% url 'contact:contact' %}"
+          hx-target="#form-result"
+          hx-swap="innerHTML"
+          hx-on::after-request="if(event.detail.successful) this.reset()">
       {% csrf_token %}
 
-      <h3 style="font-size: 1.4rem; margin-bottom: 6px">درخواست پروژه</h3>
-      <p style="font-family: var(--mono); font-size: 0.74rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-dim); margin: 0 0 14px;">همه فیلدها به جز پیام اجباری هستند</p>
+      <h3 style="font-size:1.4rem;margin-bottom:6px">درخواست پروژه</h3>
+      <p style="font-family:var(--mono);font-size:0.74rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-dim);margin:0 0 14px">
+        همه فیلدها به جز پیام اجباری هستند
+      </p>
 
       <div class="row">
-        <label for="contact-name">نام شما<input id="contact-name" type="text" name="name" autocomplete="name" required /></label>
-        <label for="contact-phone">شماره تماس<input id="contact-phone" type="tel" name="phone" autocomplete="tel" required /></label>
+        <label for="contact-name">نام شما
+          <input id="contact-name" type="text" name="name" autocomplete="name" required />
+        </label>
+        <label for="contact-phone">شماره تماس
+          <input id="contact-phone" type="tel" name="phone" autocomplete="tel" required />
+        </label>
       </div>
 
       <div class="row">
-        <label for="contact-company">شرکت / سازمان<input id="contact-company" type="text" name="company" autocomplete="organization" /></label>
+        <label for="contact-company">شرکت / سازمان
+          <input id="contact-company" type="text" name="company" autocomplete="organization" />
+        </label>
       </div>
 
       <div class="row">
-        <label for="contact-project-type">
-          نوع پروژه<select id="contact-project-type" name="project_type" required>
+        <label for="contact-project-type">نوع پروژه
+          <select id="contact-project-type" name="project_type" required>
             <option value="">انتخاب کنید…</option>
             {% for item in project_types %}
               <option value="{{ item.label }}">{{ item.label }}</option>
             {% endfor %}
           </select>
         </label>
-
-        <label for="contact-budget">
-          بودجه تقریبی<select id="contact-budget" name="budget" required>
+        <label for="contact-budget">بودجه تقریبی
+          <select id="contact-budget" name="budget" required>
             <option value="">انتخاب کنید…</option>
             {% for item in budgets %}
               <option value="{{ item.label }}">{{ item.label }}</option>
@@ -100,8 +104,8 @@
       </div>
 
       <div class="row">
-        <label for="contact-start-time">
-          زمان شروع<select id="contact-start-time" name="start_time" required>
+        <label for="contact-start-time">زمان شروع
+          <select id="contact-start-time" name="start_time" required>
             <option value="">انتخاب کنید…</option>
             {% for item in start_times %}
               <option value="{{ item.label }}">{{ item.label }}</option>
@@ -110,17 +114,21 @@
         </label>
       </div>
 
-      <label for="contact-message">درباره پروژه کمی توضیح بدهید<textarea id="contact-message" name="message" placeholder="روی چه چیزی کار می کنید، موفقیت برای شما چه معنی دارد، چرا سراغ ما آمدید — توضیح طولانی هم اوکی است."></textarea></label>
+      <label for="contact-message">درباره پروژه کمی توضیح بدهید
+        <textarea id="contact-message" name="message"
+          placeholder="روی چه چیزی کار می‌کنید، موفقیت برای شما چه معنی دارد، چرا سراغ ما آمدید…"></textarea>
+      </label>
 
       <div class="submit-row">
-        <p class="small">ما فقط برای پاسخ به شما از این اطلاعات استفاده می کنیم.</p>
+        <p class="small">ما فقط برای پاسخ به شما از این اطلاعات استفاده می‌کنیم.</p>
         <button type="submit" class="btn btn-ink">ارسال درخواست <span class="arrow">←</span></button>
       </div>
 
-      <!-- ─── پیام نتیجه ─── -->
-      <div id="form-result" role="status" aria-live="polite" style="margin-top: 16px;"></div>
+      <div id="form-result" role="status" aria-live="polite" style="margin-top:16px"></div>
     </form>
+
   </section>
+
 {% endblock %}
 
 {% block afterPrefooter %}

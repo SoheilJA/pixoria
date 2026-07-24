@@ -7,24 +7,24 @@
 
   <!-- ─── هیرو ─── -->
   <section class="hero" aria-label="Welcome">
-    <div class="hero-meta">
+    <div class="hero-meta" data-aos="fade-down" data-aos-duration="600">
       <span><span class="lime-tag">● مشاوره رایگان</span></span>
       <span>خدمات در سراسر ایران</span>
       <span>طراحی سایت و سئو</span>
       <span>پشتیبانی مستمر</span>
     </div>
-    <h1 class="hero-headline">
+    <h1 class="hero-headline" data-aos="fade-up" data-aos-delay="100">
       {{ hero.title|safe }}
       <span style="color: var(--lime-deep)">.</span>
     </h1>
-    <div class="hero-bottom">
+    <div class="hero-bottom" data-aos="fade-up" data-aos-delay="200">
       <p class="hero-pitch">{{ hero.description|safe }}</p>
       <div class="hero-actions">
         <a class="btn btn-ink" href="{% url 'portfolio:list' %}">مشاهده نمونه کار ها <span class="arrow">←</span></a>
         <a class="btn btn-ghost" href="{% url 'contact:contact' %}">شروع همکاری</a>
       </div>
     </div>
-    <div class="hero-marquee" aria-hidden="true">
+    <div class="hero-marquee" aria-hidden="true" data-aos="fade-up" data-aos-delay="300">
       <div class="marquee-track">
         {% for item in hero_marquee %}<span>{{ item.text }}</span>{% endfor %}
         {% for item in hero_marquee %}<span>{{ item.text }}</span>{% endfor %}
@@ -34,13 +34,13 @@
 
   <!-- ─── نمونه کارهای منتخب (کاروسل) ─── -->
   <section aria-labelledby="work-head">
-    <header class="section-head reveal">
+    <header class="section-head" data-aos="fade-up">
       <span class="eyebrow"><span class="dot"></span>پروژه‌های منتخب</span>
       <h2 id="work-head">{{ featured_work_section.title }}</h2>
       <p class="lede">{{ featured_work_section.description }}</p>
     </header>
 
-    <div class="carousel-wrap" id="works-carousel">
+    <div class="carousel-wrap" id="works-carousel" data-aos="fade-up" data-aos-delay="100">
       <div class="carousel-track">
         {% for work in featured_works %}
         <article class="work-card">
@@ -62,7 +62,6 @@
         </article>
         {% endfor %}
       </div>
-
       <div class="carousel-controls">
         <button type="button" class="carousel-btn carousel-btn-prev" aria-label="قبلی">→</button>
         <div class="carousel-dots"></div>
@@ -73,14 +72,14 @@
 
   <!-- ─── لیست خدمات ─── -->
   <section aria-labelledby="services-head">
-    <header class="section-head reveal">
+    <header class="section-head" data-aos="fade-up">
       <span class="eyebrow"><span class="dot"></span> حوزه های کاری · ۶</span>
       <h2 id="services-head">{{ services_section.title }}</h2>
       <p class="lede">{{ services_section.description }}</p>
     </header>
-    <div class="services-list reveal">
+    <div class="services-list">
       {% for service in services %}
-        <article class="row">
+        <article class="row" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}0">
           <span class="num">{{ forloop.counter|stringformat:'02d' }} / {{ services|length|stringformat:'02d' }}</span>
           <div class="service-row-body">
             <h3>{{ service.title }}</h3>
@@ -100,7 +99,7 @@
   </section>
 
   <!-- ─── مارکویی مشتریان ─── -->
-  <section style="padding:0" aria-label="Selected clients">
+  <section style="padding:0" aria-label="Selected clients" data-aos="fade-in">
     <div class="clients-marquee">
       <div class="track">
         {% for client in clients %}<span>{{ client.name }}</span>{% endfor %}
@@ -112,14 +111,14 @@
   <!-- ─── مانیفستو ─── -->
   <section class="manifesto" aria-labelledby="manifesto-head">
     <div class="grid">
-      <div>
+      <div data-aos="fade-left" data-aos-duration="700">
         <span class="label">{{ manifesto.label }}</span>
-        <h2 id="manifesto-head" class="reveal">
+        <h2 id="manifesto-head">
           {{ manifesto.title }}
           <span class="lime-text">{{ manifesto.highlighted_word }}</span>.
         </h2>
       </div>
-      <div class="reveal">
+      <div data-aos="fade-right" data-aos-duration="700" data-aos-delay="100">
         <p>{{ manifesto.paragraph_one }}</p>
         <p>{{ manifesto.paragraph_two }}</p>
         <div class="signature">
@@ -134,12 +133,11 @@
   <!-- ─── نظرات مشتریان (کاروسل) ─── -->
   {% if testimonials %}
   <section aria-labelledby="testimonials-head">
-    <header class="section-head reveal">
+    <header class="section-head" data-aos="fade-up">
       <span class="eyebrow"><span class="dot"></span>نظرات مشتریان</span>
       <h2 id="testimonials-head">آن‌ها تجربه‌شان را گفتند.</h2>
     </header>
-
-    <div class="carousel-wrap" id="testimonials-carousel">
+    <div class="carousel-wrap" id="testimonials-carousel" data-aos="fade-up" data-aos-delay="100">
       <div class="carousel-track">
         {% for t in testimonials %}
         <article class="testimonial-card">
@@ -159,7 +157,6 @@
         </article>
         {% endfor %}
       </div>
-
       <div class="carousel-controls">
         <button type="button" class="carousel-btn carousel-btn-prev" aria-label="قبلی">→</button>
         <div class="carousel-dots"></div>

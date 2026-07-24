@@ -1,100 +1,88 @@
 {% extends "base.html" %}
-{% block title %} درباره ما {% endblock title %}
-{% block description %}{% endblock description %}
+{% load static %}
+
+{% block title %}درباره ما — {{ settings.site_name }}{% endblock %}
+{% block description %}{% endblock %}
+
 {% block content %}
 
+  <!-- ─── هیرو ─── -->
+  <section class="page-hero">
+    <p class="crumb" data-aos="fade-down">
+      خانه ← <span style="color: var(--ink)">استودیو</span>
+    </p>
+    <h1 data-aos="fade-up" data-aos-delay="50">{{ hero.title|safe }}</h1>
+    <p class="lede" data-aos="fade-up" data-aos-delay="150">{{ hero.description|safe }}</p>
+  </section>
 
-<!-- ─── هیرو ─── -->
-
-<section class="page-hero">
-  <p class="crumb">خانه  ← <span style="color: var(--ink)">استودیو</span></p>
-    <h1>{{ hero.title|safe }}</h1>
-  <p class="lede"> {{ hero.description|safe}} </p>
-</section>
-
-<!-- ─── داستان سئوران ─── -->
-<section class="about-story">
-  <div class="grid">
-    <div class="img-wrap">
-      {% load static %}
-      <!-- REPLACE: studio interior photo · 800×1000 -->
-      <img
-        src=" {static 'img/about.svg'} "
-        alt=" {{ settings.site_name}} "
-        loading="lazy"
-      />
+  <!-- ─── داستان ─── -->
+  <section class="about-story">
+    <div class="grid">
+      <div class="img-wrap" data-aos="fade-left" data-aos-duration="800">
+        <img src="{% static 'img/about.svg' %}" alt="{{ settings.site_name }}" loading="lazy" />
+      </div>
+      <div data-aos="fade-right" data-aos-delay="100" data-aos-duration="700">
+        {{ story.description|safe }}
+      </div>
     </div>
-    <div>
-      {{story.description|safe}}
-    </div>
-  </div>
-</section>
+  </section>
 
-<!-- ─── تیم ─── -->
-<section class="team-grid" aria-label="تیم">
-  {% for member in team %}
-  <article class="team-card">
-    <div class="img-wrap">
-      <!-- REPLACE: portrait · نازنین نادری، بنیان گذار · 600×750 -->
-      <img
-        src=" {{member.image.url }}"
-        alt=" {{member.name }}"
-        loading="lazy"
-      />
-    </div>
-    <h3> {{member.name}}  </h3>
-    <span class="role"> {{member.role|safe}} </span>
-    <p> {{member.bio|safe}} </p>
-  </article>
-  {% endfor %}
-</section>
+  <!-- ─── تیم ─── -->
+  <section class="team-grid" aria-label="تیم">
+    {% for member in team %}
+      <article class="team-card" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
+        <div class="img-wrap">
+          <img src="{{ member.image.url }}" alt="{{ member.name }}" loading="lazy" />
+        </div>
+        <h3>{{ member.name }}</h3>
+        <span class="role">{{ member.role|safe }}</span>
+        <p>{{ member.bio|safe }}</p>
+      </article>
+    {% endfor %}
+  </section>
 
-<!-- ─── ارزش ها ─── -->
-<section class="values-list" aria-labelledby="vh">
-  <header class="section-head">
-    <span class="eyebrow"><span class="dot"></span>نحوه کار ما</span>
-    <h2 id="vh">چند چیز که به آن ها باور داریم.</h2>
-  </header>
-
-  <div class="grid">
-    {% for value in values  %}
-    <div class="v">
-      <span class="n"> {{forloop.counter|stringformat:"02d"}} </span>
-      <h3> {{value.title|safe}} </h3>
-      <p> {{value.description|safe}}
-      </p>
+  <!-- ─── ارزش‌ها ─── -->
+  <section class="values-list" aria-labelledby="vh">
+    <header class="section-head" data-aos="fade-up">
+      <span class="eyebrow"><span class="dot"></span>نحوه کار ما</span>
+      <h2 id="vh">چند چیز که به آن‌ها باور داریم.</h2>
+    </header>
+    <div class="grid">
+      {% for value in values %}
+        <div class="v" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}0">
+          <span class="n">{{ forloop.counter|stringformat:"02d" }}</span>
+          <h3>{{ value.title|safe }}</h3>
+          <p>{{ value.description|safe }}</p>
+        </div>
+      {% endfor %}
     </div>
+  </section>
+
+  <!-- ─── آمار و ارقام ─── -->
+  <div class="stats-strip">
+    {% for stat in stats %}
+      <div class="stat" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
+        <span class="num">{{ stat.number }}</span>
+        <span class="lab">{{ stat.label }}</span>
+        {% if stat.description %}<span class="desc">{{ stat.description }}</span>{% endif %}
+      </div>
     {% endfor %}
   </div>
-</section>
 
-
-<!-- ─── آمار و ارقام ─── -->
-<div class="stats-strip">
-  {% for stat in stats %}
-  <div class="stat">
-    <span class="num">{{ stat.number }}</span>
-    <span class="lab">{{ stat.label }}</span>
-    {% if stat.description %}
-    <span class="desc">{{ stat.description }}</span>
-    {% endif %}
-  </div>
-  {% endfor %}
-</div>
-
-<!-- ─── پریفوتر ─── -->
-<section class="manifesto" aria-labelledby="pre-head">
-  <div class="grid">
-    <div>
-      <span class="label">{{ pre.label|safe }}</span>
-      <h2 id="pre-head">{{ pre.title|safe }}</h2>
+  <!-- ─── پریفوتر ─── -->
+  <section class="manifesto" aria-labelledby="pre-head">
+    <div class="grid">
+      <div data-aos="fade-left" data-aos-duration="700">
+        <span class="label">{{ pre.label|safe }}</span>
+        <h2 id="pre-head">{{ pre.title|safe }}</h2>
+      </div>
+      <div data-aos="fade-right" data-aos-delay="100" data-aos-duration="700">
+        {{ pre.description|safe }}
+        <a class="btn btn-lime" href="{{ pre.button_url }}" style="margin-top: 18px">
+          {{ pre.button_text }} <span class="arrow">←</span>
+        </a>
+      </div>
     </div>
-    <div>
-      {{ pre.description|safe }}
-      <a class="btn btn-lime" href="{{ pre.button_url }}" style="margin-top: 18px">
-        {{ pre.button_text }} <span class="arrow">←</span>
-      </a>
-    </div>
-  </div>
-</section>
-{% endblock content %}
+  </section>
+
+{% endblock %}

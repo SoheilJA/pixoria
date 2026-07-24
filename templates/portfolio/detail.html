@@ -1,32 +1,25 @@
 {% extends 'base.html' %}
 
-{% block title %}
-  {{ portfolio.title }} — {{ settings.site_name }}
-{% endblock %}
-{% block description %}
-  {{ portfolio.excerpt }}
-{% endblock %}
+{% block title %}{{ portfolio.title }} — {{ settings.site_name }}{% endblock %}
+{% block description %}{{ portfolio.excerpt }}{% endblock %}
 
 {% block content %}
+
   <!-- ─── هیرو پروژه ─── -->
   <section class="project-hero">
-    <p class="crumb">
+    <p class="crumb" data-aos="fade-down">
       <a href="{% url 'home:home' %}">خانه</a> ←
       <a href="{% url 'portfolio:list' %}">نمونه کارها</a> ←
       <span style="color: var(--ink)">{{ portfolio.title }}</span>
     </p>
-
-    <div class="hero-tags">
+    <div class="hero-tags" data-aos="fade-up" data-aos-delay="50">
       {% for cat in portfolio.categories.all %}
         <a href="{% url 'portfolio:list' %}?category={{ cat.slug }}" class="tag">{{ cat.name }}</a>
       {% endfor %}
     </div>
-
-    <h1>{{ portfolio.title }}</h1>
-
-    <div class="hero-bottom">
+    <h1 data-aos="fade-up" data-aos-delay="100">{{ portfolio.title }}</h1>
+    <div class="hero-bottom" data-aos="fade-up" data-aos-delay="200">
       <p class="lede">{{ portfolio.excerpt }}</p>
-
       <div class="hero-meta-mini">
         <div class="m">
           <span class="lab">مشتری</span>
@@ -41,66 +34,68 @@
           <span class="val">{{ portfolio.service_type }}</span>
         </div>
         {% if portfolio.client_url %}
-          <div class="m">
-            <span class="lab">سایت</span>
-            <span class="val"><a href="{{ portfolio.client_url }}" target="_blank" rel="noopener noreferrer">مشاهده سایت ↗</a></span>
-          </div>
+        <div class="m">
+          <span class="lab">سایت</span>
+          <span class="val">
+            <a href="{{ portfolio.client_url }}" target="_blank" rel="noopener noreferrer">مشاهده سایت ↗</a>
+          </span>
+        </div>
         {% endif %}
       </div>
     </div>
   </section>
 
   <!-- ─── تصویر اصلی پروژه ─── -->
-  <div class="project-cover">
+  <div class="project-cover" data-aos="fade-in" data-aos-duration="800">
     <img src="{{ portfolio.image.url }}" alt="{{ portfolio.title }}" loading="eager" />
   </div>
 
   <!-- ─── توضیحات کامل پروژه ─── -->
   <div class="project-overview">
-    <div class="sticky-label">
+    <div class="sticky-label" data-aos="fade-left">
       <span class="eyebrow"><span class="dot"></span>درباره پروژه</span>
       <h2>ماجرا چه بود؟</h2>
     </div>
-    <div class="body-text reveal">{{ portfolio.description|linebreaks }}</div>
+    <div class="body-text" data-aos="fade-up" data-aos-delay="100">
+      {{ portfolio.description|linebreaks }}
+    </div>
   </div>
 
-  <!-- ─── آمار و نتایج (اختیاری) ─── -->
+  <!-- ─── آمار و نتایج ─── -->
   {% if stats %}
-    <div class="stats-strip">
-      {% for stat in stats %}
-        <div class="stat">
-          <span class="num">{{ stat.number }}</span>
-          <span class="lab">{{ stat.label }}</span>
-          {% if stat.description %}
-            <span class="desc">{{ stat.description }}</span>
-          {% endif %}
-        </div>
-      {% endfor %}
-    </div>
+  <div class="stats-strip">
+    {% for stat in stats %}
+      <div class="stat" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
+        <span class="num">{{ stat.number }}</span>
+        <span class="lab">{{ stat.label }}</span>
+        {% if stat.description %}<span class="desc">{{ stat.description }}</span>{% endif %}
+      </div>
+    {% endfor %}
+  </div>
   {% endif %}
 
-  <!-- ─── چالش‌ها و راهکارها (اختیاری) ─── -->
+  <!-- ─── چالش‌ها و راهکارها ─── -->
   {% if portfolio.challenge or portfolio.solution %}
-    <div class="project-challenge">
-      {% if portfolio.challenge %}
-        <div class="col reveal">
-          <span class="eyebrow"><span class="dot"></span>چالش</span>
-          <h3>مشکل کجا بود؟</h3>
-          {{ portfolio.challenge|linebreaks }}
-        </div>
-      {% endif %}
-      {% if portfolio.solution %}
-        <div class="col reveal">
-          <span class="eyebrow"><span class="dot"></span>راهکار</span>
-          <h3>چطور حلش کردیم؟</h3>
-          {{ portfolio.solution|linebreaks }}
-        </div>
-      {% endif %}
+  <div class="project-challenge">
+    {% if portfolio.challenge %}
+    <div class="col" data-aos="fade-left">
+      <span class="eyebrow"><span class="dot"></span>چالش</span>
+      <h3>مشکل کجا بود؟</h3>
+      {{ portfolio.challenge|linebreaks }}
     </div>
+    {% endif %}
+    {% if portfolio.solution %}
+    <div class="col" data-aos="fade-right" data-aos-delay="100">
+      <span class="eyebrow"><span class="dot"></span>راهکار</span>
+      <h3>چطور حلش کردیم؟</h3>
+      {{ portfolio.solution|linebreaks }}
+    </div>
+    {% endif %}
+  </div>
   {% endif %}
 
   <!-- ─── ناوبری پروژه قبلی / بعدی ─── -->
-  <nav class="project-nav" aria-label="پروژه‌های دیگر">
+  <nav class="project-nav" aria-label="پروژه‌های دیگر" data-aos="fade-up">
     {% if prev_portfolio %}
       <a href="{% url 'portfolio:detail' prev_portfolio.slug %}">
         <span class="dir">→ پروژه قبلی</span>
@@ -122,4 +117,5 @@
       <div></div>
     {% endif %}
   </nav>
+
 {% endblock %}

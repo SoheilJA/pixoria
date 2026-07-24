@@ -1,28 +1,25 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}
-  {{ service.title }} — {{ settings.site_name }}
-{% endblock %}
-{% block description %}
-  {{ service.excerpt }}
-{% endblock %}
+{% block title %}{{ service.title }} — {{ settings.site_name }}{% endblock %}
+{% block description %}{{ service.excerpt }}{% endblock %}
 
 {% block content %}
+
   <!-- ─── هیرو ─── -->
   <section class="service-hero" aria-labelledby="service-title">
-    <p class="crumb">
+    <p class="crumb" data-aos="fade-down">
       <a href="{% url 'home:home' %}">خانه</a> ←
       <a href="{% url 'services:list' %}">خدمات</a> ←
       <span style="color:var(--ink)">{{ service.title }}</span>
     </p>
-    <div class="tags">
+    <div class="tags" data-aos="fade-up" data-aos-delay="50">
       {% for tag in service.get_tags_list %}
         <span>{{ tag }}</span>
       {% endfor %}
     </div>
-    <h1 id="service-title">{{ service.title|safe }}</h1>
-    <div class="hero-bottom">
+    <h1 id="service-title" data-aos="fade-up" data-aos-delay="100">{{ service.title|safe }}</h1>
+    <div class="hero-bottom" data-aos="fade-up" data-aos-delay="200">
       <p class="lede">{{ service.excerpt|safe }}</p>
       <div class="hero-actions">
         <a class="btn btn-ink" href="{% url 'contact:contact' %}">مشاوره رایگان بگیرید <span class="arrow">←</span></a>
@@ -33,260 +30,239 @@
 
   <!-- ─── آمار ─── -->
   {% if stats %}
-    <div class="stats-strip">
-      {% for stat in stats %}
-        <div class="stat">
-          <span class="num">{{ stat.number }}</span>
-          <span class="lab">{{ stat.label }}</span>
-          {% if stat.description %}
-            <span class="desc">{{ stat.description }}</span>
-          {% endif %}
-        </div>
-      {% endfor %}
-    </div>
+  <div class="stats-strip">
+    {% for stat in stats %}
+      <div class="stat" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
+        <span class="num">{{ stat.number }}</span>
+        <span class="lab">{{ stat.label }}</span>
+        {% if stat.description %}<span class="desc">{{ stat.description }}</span>{% endif %}
+      </div>
+    {% endfor %}
+  </div>
   {% endif %}
 
   <!-- ─── چرا ما ─── -->
   {% if why_us %}
-    <section class="why-us">
-      <header class="section-head">
-        <span class="eyebrow"><span class="dot"></span>مزیت رقابتی</span>
-        <h2>چرا {{ settings.site_name }}؟</h2>
-      </header>
-      <div class="why-us-grid">
-        {% for item in why_us %}
-          <div class="why-card reveal">
-            <span class="icon">{{ item.icon }}</span>
-            <h3>{{ item.title }}</h3>
-            <p>{{ item.description|safe }}</p>
-          </div>
-        {% endfor %}
-      </div>
-    </section>
+  <section class="why-us">
+    <header class="section-head" data-aos="fade-up">
+      <span class="eyebrow"><span class="dot"></span>مزیت رقابتی</span>
+      <h2>چرا {{ settings.site_name }}؟</h2>
+    </header>
+    <div class="why-us-grid">
+      {% for item in why_us %}
+        <div class="why-card" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
+          <span class="icon">{{ item.icon }}</span>
+          <h3>{{ item.title }}</h3>
+          <p>{{ item.description|safe }}</p>
+        </div>
+      {% endfor %}
+    </div>
+  </section>
   {% endif %}
 
   <!-- ─── خروجی‌ها و فرآیند ─── -->
   <section class="service-overview">
     {% if deliverables %}
-      <div class="col">
-        <span class="eyebrow"><span class="dot"></span>چه چیزی تحویل می‌گیرید</span>
-        <h2>خروجی‌های معمول</h2>
-        <ul class="deliverables-list">
-          {% for item in deliverables %}
-            <li>{{ item.title }}</li>
-          {% endfor %}
-        </ul>
-      </div>
+    <div class="col" data-aos="fade-left">
+      <span class="eyebrow"><span class="dot"></span>چه چیزی تحویل می‌گیرید</span>
+      <h2>خروجی‌های معمول</h2>
+      <ul class="deliverables-list">
+        {% for item in deliverables %}
+          <li>{{ item.title }}</li>
+        {% endfor %}
+      </ul>
+    </div>
     {% endif %}
     {% if processes %}
-      <div class="col">
-        <span class="eyebrow"><span class="dot"></span>چطور پیش می‌رویم</span>
-        <h2>فرآیند کار</h2>
-        <ol class="process-list">
-          {% for step in processes %}
-            <li>
-              <span>{{ step.title }}</span>
-            </li>
-          {% endfor %}
-        </ol>
-      </div>
+    <div class="col" data-aos="fade-right" data-aos-delay="100">
+      <span class="eyebrow"><span class="dot"></span>چطور پیش می‌رویم</span>
+      <h2>فرآیند کار</h2>
+      <ol class="process-list">
+        {% for step in processes %}
+          <li><span>{{ step.title }}</span></li>
+        {% endfor %}
+      </ol>
+    </div>
     {% endif %}
   </section>
 
   <!-- ─── توضیحات کامل ─── -->
   {% if service.description %}
-    <section class="service-deep">
-      <div class="deep-grid">
-        <div class="sticky-label">
-          <span class="eyebrow"><span class="dot"></span>همه چیز درباره این خدمت</span>
-          <h2>{{ service.title }} چیست؟</h2>
-        </div>
-        <div class="body-text reveal">{{ service.description|safe }}</div>
+  <section class="service-deep">
+    <div class="deep-grid">
+      <div class="sticky-label" data-aos="fade-left">
+        <span class="eyebrow"><span class="dot"></span>همه چیز درباره این خدمت</span>
+        <h2>{{ service.title }} چیست؟</h2>
       </div>
-    </section>
+      <div class="body-text" data-aos="fade-up" data-aos-delay="100">{{ service.description|safe }}</div>
+    </div>
+  </section>
   {% endif %}
 
   <!-- ─── قیمت‌گذاری ─── -->
   {% if plans %}
-    <section class="pricing-section" id="pricing">
-      <div class="section-intro">
-        <span class="eyebrow"><span class="dot"></span>قیمت‌گذاری شفاف</span>
-        <h2>پلن مناسب خودتان را انتخاب کنید.</h2>
-        <p>قیمت‌ها شامل مالیات نیستند. برای پروژه‌های سازمانی با ما تماس بگیرید.</p>
-      </div>
-
-      <div class="plans-grid">
-        {% for plan in plans %}
-          <article class="plan-card {% if plan.is_featured %}featured{% endif %}">
-            {% if plan.is_featured %}
-              <span class="plan-badge">پیشنهادی</span>
-            {% endif %}
-            <div>
-              <span class="plan-name">{{ plan.name }}</span>
-              <div class="plan-price">
-                {% if plan.old_price %}
-                  <span class="old-amount">{{ plan.old_price }}</span>
-                {% endif %}
-                <span class="amount">{{ plan.price }}</span>
-                <span class="unit">میلیون تومان</span>
-              </div>
-              {% if plan.discount_label %}
-                <span class="discount-badge">{{ plan.discount_label }}</span>
-              {% endif %}
+  <section class="pricing-section" id="pricing">
+    <div class="section-intro" data-aos="fade-up">
+      <span class="eyebrow"><span class="dot"></span>قیمت‌گذاری شفاف</span>
+      <h2>پلن مناسب خودتان را انتخاب کنید.</h2>
+      <p>قیمت‌ها شامل مالیات نیستند. برای پروژه‌های سازمانی با ما تماس بگیرید.</p>
+    </div>
+    <div class="plans-grid">
+      {% for plan in plans %}
+        <article class="plan-card {% if plan.is_featured %}featured{% endif %}"
+                 data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
+          {% if plan.is_featured %}<span class="plan-badge">پیشنهادی</span>{% endif %}
+          <div>
+            <span class="plan-name">{{ plan.name }}</span>
+            <div class="plan-price">
+              {% if plan.old_price %}<span class="old-amount">{{ plan.old_price }}</span>{% endif %}
+              <span class="amount">{{ plan.price }}</span>
+              <span class="unit">میلیون تومان</span>
             </div>
-            <div class="plan-divider"></div>
-            <ul class="plan-features">
-              {% for feature in plan.features.all %}
-                <li class="{% if feature.included %}
-                    included
-                  {% else %}
-                    excluded
-                  {% endif %}">{{ feature.title }}</li>
-              {% endfor %}
-            </ul>
-            <a class="btn {% if plan.is_featured %}
-                btn-lime
-              {% else %}
-                btn-ghost
-              {% endif %}"
-              href="{% url 'contact:contact' %}">
-              شروع کنید <span class="arrow">←</span>
-            </a>
-          </article>
+            {% if plan.discount_label %}<span class="discount-badge">{{ plan.discount_label }}</span>{% endif %}
+          </div>
+          <div class="plan-divider"></div>
+          <ul class="plan-features">
+            {% for feature in plan.features.all %}
+              <li class="{% if feature.included %}included{% else %}excluded{% endif %}">{{ feature.title }}</li>
+            {% endfor %}
+          </ul>
+          <a class="btn {% if plan.is_featured %}btn-lime{% else %}btn-ghost{% endif %}"
+             href="{% url 'contact:contact' %}">شروع کنید <span class="arrow">←</span></a>
+        </article>
+      {% endfor %}
+    </div>
+
+    {% if custom_items %}
+    <div class="custom-plan" data-aos="fade-up" data-aos-delay="100">
+      <div class="custom-header">
+        <div>
+          <span class="eyebrow"><span class="dot"></span>پلن دلخواه</span>
+          <h2>فقط چیزی که نیاز دارید.</h2>
+          <p>آیتم‌های موردنظر را انتخاب کنید — قیمت نهایی به‌صورت خودکار محاسبه می‌شود.</p>
+        </div>
+        <div class="custom-total">
+          <span class="total-label">مجموع تخمینی</span>
+          <span class="total-amount" id="custom-total-amount">۰</span>
+          <span class="total-unit">میلیون تومان</span>
+        </div>
+      </div>
+      <div class="items-grid">
+        {% for item in custom_items %}
+          <label class="custom-item" for="ci-{{ item.id }}">
+            <input type="checkbox" id="ci-{{ item.id }}" data-price="{{ item.price }}" />
+            <div class="item-info">
+              <span class="item-title">{{ item.title }}</span>
+              {% if item.description %}<span class="item-desc">{{ item.description }}</span>{% endif %}
+            </div>
+            <span class="item-price">{{ item.price }}M</span>
+          </label>
         {% endfor %}
       </div>
-
-      <!-- ─── پلن سفارشی ─── -->
-      {% if custom_items %}
-        <div class="custom-plan">
-          <div class="custom-header">
-            <div>
-              <span class="eyebrow"><span class="dot"></span>پلن دلخواه</span>
-              <h2>فقط چیزی که نیاز دارید.</h2>
-              <p>آیتم‌های موردنظر را انتخاب کنید — قیمت نهایی به‌صورت خودکار محاسبه می‌شود.</p>
-            </div>
-            <div class="custom-total">
-              <span class="total-label">مجموع تخمینی</span>
-              <span class="total-amount" id="custom-total-amount">۰</span>
-              <span class="total-unit">میلیون تومان</span>
-            </div>
-          </div>
-          <div class="items-grid">
-            {% for item in custom_items %}
-              <label class="custom-item" for="ci-{{ item.id }}">
-                <input type="checkbox" id="ci-{{ item.id }}" data-price="{{ item.price }}" />
-                <div class="item-info">
-                  <span class="item-title">{{ item.title }}</span>
-                  {% if item.description %}
-                    <span class="item-desc">{{ item.description }}</span>
-                  {% endif %}
-                </div>
-                <span class="item-price">{{ item.price }}M</span>
-              </label>
-            {% endfor %}
-          </div>
-          <div class="custom-footer">
-            <p>قیمت‌ها تخمینی هستند. برآورد دقیق بعد از جلسه اولیه ارائه می‌شود.</p>
-            <a class="btn btn-ink" href="{% url 'contact:contact' %}">درخواست مشاوره <span class="arrow">←</span></a>
-          </div>
-        </div>
-      {% endif %}
-    </section>
+      <div class="custom-footer">
+        <p>قیمت‌ها تخمینی هستند. برآورد دقیق بعد از جلسه اولیه ارائه می‌شود.</p>
+        <a class="btn btn-ink" href="{% url 'contact:contact' %}">درخواست مشاوره <span class="arrow">←</span></a>
+      </div>
+    </div>
+    {% endif %}
+  </section>
   {% endif %}
 
   <!-- ─── نظرات مشتریان ─── -->
   {% if testimonials %}
-    <section class="testimonials">
-      <header class="section-head">
-        <span class="eyebrow"><span class="dot"></span>نظرات مشتریان</span>
-        <h2>آن‌ها تجربه‌شان را گفتند.</h2>
-      </header>
-      <div class="testimonials-grid">
-        {% for t in testimonials %}
-          <article class="testimonial-card">
-            <div class="stars">★★★★★</div>
-            <blockquote>{{ t.text }}</blockquote>
-            <div class="author">
-              {% if t.author_image %}
-                <div class="author-avatar">
-                  <img src="{{ t.author_image.url }}" alt="{{ t.author_name }}" loading="lazy" />
-                </div>
-              {% endif %}
-              <div class="author-info">
-                <span class="author-name">{{ t.author_name }}</span>
-                <span class="author-role">{{ t.author_role }}</span>
-              </div>
+  <section class="testimonials">
+    <header class="section-head" data-aos="fade-up">
+      <span class="eyebrow"><span class="dot"></span>نظرات مشتریان</span>
+      <h2>آن‌ها تجربه‌شان را گفتند.</h2>
+    </header>
+    <div class="testimonials-grid">
+      {% for t in testimonials %}
+        <article class="testimonial-card" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
+          <div class="stars">★★★★★</div>
+          <blockquote>{{ t.text }}</blockquote>
+          <div class="author">
+            {% if t.author_image %}
+            <div class="author-avatar">
+              <img src="{{ t.author_image.url }}" alt="{{ t.author_name }}" loading="lazy" />
             </div>
-          </article>
-        {% endfor %}
-      </div>
-    </section>
+            {% endif %}
+            <div class="author-info">
+              <span class="author-name">{{ t.author_name }}</span>
+              <span class="author-role">{{ t.author_role }}</span>
+            </div>
+          </div>
+        </article>
+      {% endfor %}
+    </div>
+  </section>
   {% endif %}
 
   <!-- ─── سوالات متداول ─── -->
   {% if faqs %}
-    <section class="service-faq">
-      <div class="faq-intro">
-        <div class="sticky-label">
-          <span class="eyebrow"><span class="dot"></span>سوالات متداول</span>
-          <h2>چیزی که معمولاً می‌پرسند.</h2>
-        </div>
-        <div class="faq-list">
-          {% for faq in faqs %}
-            <details class="faq-item">
-              <summary class="faq-question">
-                <h3>{{ faq.question }}</h3>
-                <span class="faq-icon">+</span>
-              </summary>
-              <p class="faq-answer">{{ faq.answer|safe }}</p>
-            </details>
-          {% endfor %}
-        </div>
+  <section class="service-faq">
+    <div class="faq-intro">
+      <div class="sticky-label" data-aos="fade-left">
+        <span class="eyebrow"><span class="dot"></span>سوالات متداول</span>
+        <h2>چیزی که معمولاً می‌پرسند.</h2>
       </div>
-    </section>
+      <div class="faq-list">
+        {% for faq in faqs %}
+          <details class="faq-item" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}0">
+            <summary class="faq-question">
+              <h3>{{ faq.question }}</h3>
+              <span class="faq-icon">+</span>
+            </summary>
+            <p class="faq-answer">{{ faq.answer|safe }}</p>
+          </details>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
   {% endif %}
 
   <!-- ─── سایر خدمات ─── -->
   {% if other_services %}
-    <section class="other-services">
-      <header class="section-head">
-        <span class="eyebrow"><span class="dot"></span>سایر خدمات</span>
-        <h2>خدمات دیگر ما را هم ببینید.</h2>
-      </header>
-      <div>
-        {% for s in other_services %}
-          <a href="{% url 'services:detail' s.slug %}" class="other-service-row">
-            <span class="num">{{ forloop.counter|stringformat:'02d' }}</span>
-            <div>
-              <h3>{{ s.title }}</h3>
-              <p>{{ s.excerpt }}</p>
-            </div>
-            <span class="arrow">←</span>
-          </a>
-        {% endfor %}
-      </div>
-    </section>
+  <section class="other-services">
+    <header class="section-head" data-aos="fade-up">
+      <span class="eyebrow"><span class="dot"></span>سایر خدمات</span>
+      <h2>خدمات دیگر ما را هم ببینید.</h2>
+    </header>
+    <div>
+      {% for s in other_services %}
+        <a href="{% url 'services:detail' s.slug %}" class="other-service-row"
+           data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}0">
+          <span class="num">{{ forloop.counter|stringformat:'02d' }}</span>
+          <div>
+            <h3>{{ s.title }}</h3>
+            <p>{{ s.excerpt }}</p>
+          </div>
+          <span class="arrow">←</span>
+        </a>
+      {% endfor %}
+    </div>
+  </section>
   {% endif %}
+
 {% endblock %}
 
 {% block extra_js %}
-  <script>
-    const checkboxes = document.querySelectorAll('.custom-item input[type="checkbox"]')
-    const totalEl = document.getElementById('custom-total-amount')
-    if (totalEl) {
-      function updateTotal() {
-        let total = 0
-        checkboxes.forEach((cb) => {
-          if (cb.checked) {
-            total += parseInt(cb.dataset.price)
-            cb.closest('.custom-item').classList.add('selected')
-          } else {
-            cb.closest('.custom-item').classList.remove('selected')
-          }
-        })
-        totalEl.textContent = total === 0 ? '۰' : total
-      }
-      checkboxes.forEach((cb) => cb.addEventListener('change', updateTotal))
+<script>
+  const checkboxes = document.querySelectorAll('.custom-item input[type="checkbox"]');
+  const totalEl = document.getElementById('custom-total-amount');
+  if (totalEl) {
+    function updateTotal() {
+      let total = 0;
+      checkboxes.forEach((cb) => {
+        if (cb.checked) {
+          total += parseInt(cb.dataset.price);
+          cb.closest('.custom-item').classList.add('selected');
+        } else {
+          cb.closest('.custom-item').classList.remove('selected');
+        }
+      });
+      totalEl.textContent = total === 0 ? '۰' : total;
     }
-  </script>
+    checkboxes.forEach((cb) => cb.addEventListener('change', updateTotal));
+  }
+</script>
 {% endblock %}

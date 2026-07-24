@@ -3211,7 +3211,7 @@ section {
 }
 
 .testimonial-card .stars {
-  color: var(--lime-deep);
+  color: var(--ink-dim);
   font-size: 1rem;
   letter-spacing: 2px;
 }
@@ -3227,7 +3227,7 @@ section {
 .testimonial-card blockquote::before {
   content: '\201C';
   font-size: 2rem;
-  color: var(--lime);
+  color: var(--ink-dim);
   font-style: normal;
   line-height: 0;
   vertical-align: -0.4em;
