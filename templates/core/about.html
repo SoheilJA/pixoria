@@ -18,10 +18,10 @@
   <!-- ─── داستان ─── -->
   <section class="about-story">
     <div class="grid">
-      <div class="img-wrap" data-aos="fade-left" data-aos-duration="800">
+      <div class="img-wrap" data-aos="fade-up" data-aos-duration="800">
         <img src="{% static 'img/about.svg' %}" alt="{{ settings.site_name }}" loading="lazy" />
       </div>
-      <div data-aos="fade-right" data-aos-delay="100" data-aos-duration="700">
+      <div data-aos="fade-up" data-aos-delay="100" data-aos-duration="700">
         {{ story.description|safe }}
       </div>
     </div>
@@ -72,11 +72,11 @@
   <!-- ─── پریفوتر ─── -->
   <section class="manifesto" aria-labelledby="pre-head">
     <div class="grid">
-      <div data-aos="fade-left" data-aos-duration="700">
+      <div data-aos="fade-up" data-aos-duration="700">
         <span class="label">{{ pre.label|safe }}</span>
         <h2 id="pre-head">{{ pre.title|safe }}</h2>
       </div>
-      <div data-aos="fade-right" data-aos-delay="100" data-aos-duration="700">
+      <div data-aos="fade-up" data-aos-delay="100" data-aos-duration="700">
         {{ pre.description|safe }}
         <a class="btn btn-lime" href="{{ pre.button_url }}" style="margin-top: 18px">
           {{ pre.button_text }} <span class="arrow">←</span>

@@ -52,7 +52,7 @@
 
   <!-- ─── توضیحات کامل پروژه ─── -->
   <div class="project-overview">
-    <div class="sticky-label" data-aos="fade-left">
+    <div class="sticky-label" data-aos="fade-up">
       <span class="eyebrow"><span class="dot"></span>درباره پروژه</span>
       <h2>ماجرا چه بود؟</h2>
     </div>
@@ -78,14 +78,14 @@
   {% if portfolio.challenge or portfolio.solution %}
   <div class="project-challenge">
     {% if portfolio.challenge %}
-    <div class="col" data-aos="fade-left">
+    <div class="col" data-aos="fade-up">
       <span class="eyebrow"><span class="dot"></span>چالش</span>
       <h3>مشکل کجا بود؟</h3>
       {{ portfolio.challenge|linebreaks }}
     </div>
     {% endif %}
     {% if portfolio.solution %}
-    <div class="col" data-aos="fade-right" data-aos-delay="100">
+    <div class="col" data-aos="fade-up" data-aos-delay="100">
       <span class="eyebrow"><span class="dot"></span>راهکار</span>
       <h3>چطور حلش کردیم؟</h3>
       {{ portfolio.solution|linebreaks }}

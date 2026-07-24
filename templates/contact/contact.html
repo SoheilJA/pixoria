@@ -16,7 +16,7 @@
   <section class="contact-grid" aria-label="Contact details">
 
     <!-- ─── ستون اطلاعات تماس ─── -->
-    <aside class="contact-info" data-aos="fade-left" data-aos-duration="700">
+    <aside class="contact-info" data-aos="fade-up" data-aos-duration="700">
       <h3>{{ contact_info.office_title }}</h3>
       <div class="office">
         <address>{{ contact_info.office_address|linebreaksbr }}</address>
@@ -57,7 +57,7 @@
 
     <!-- ─── فرم تماس ─── -->
     <form class="contact-form" aria-label="فرم درخواست پروژه" novalidate
-          data-aos="fade-right" data-aos-duration="700" data-aos-delay="100"
+          data-aos="fade-up" data-aos-duration="700" data-aos-delay="100"
           hx-post="{% url 'contact:contact' %}"
           hx-target="#form-result"
           hx-swap="innerHTML"
