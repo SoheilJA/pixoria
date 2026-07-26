@@ -1,14 +1,5 @@
 from django.contrib import admin
-from .models import (
-    SiteSettings,
-    SocialLink,
-    AboutPageHero,
-    AboutStory,
-    TeamMember,
-    AboutValue,
-    AboutStat,
-    AboutPre,
-)
+from .models import *
 
 
 @admin.register(SiteSettings)
@@ -51,10 +42,12 @@ class AboutValueAdmin(admin.ModelAdmin):
     list_display = ["title", "order"]
     list_editable = ["order"]
 
+
 @admin.register(AboutStat)
 class AboutStatAdmin(admin.ModelAdmin):
-    list_display=['label','number', 'order']
-    list_editable=['order']
+    list_display = ["label", "number", "order"]
+    list_editable = ["order"]
+
 
 @admin.register(AboutPre)
 class AboutPreAdmin(admin.ModelAdmin):
@@ -62,3 +55,25 @@ class AboutPreAdmin(admin.ModelAdmin):
 
     def has_add_permission(self, request):
         return not AboutPre.objects.exists()
+
+
+class ProposalStatInline(admin.TabularInline):
+    model = ProposalStat
+    extra = 1
+
+
+class ProposalProblemInline(admin.StackedInline):
+    model = ProposalProblem
+    extra = 1
+
+
+class ProposalServiceInline(admin.TabularInline):
+    model = ProposalService
+    extra = 1
+
+
+@admin.register(Proposal)
+class ProposalAdmin(admin.ModelAdmin):
+    list_display = ["client_name", "client_website", "slug", "created_at"]
+    prepopulated_fields = {"slug": ("client_name",)}
+    inlines = [ProposalStatInline, ProposalProblemInline, ProposalServiceInline]
