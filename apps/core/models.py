@@ -163,3 +163,156 @@ class AboutPre(models.Model):
         if not self.pk and AboutPre.objects.exists():
             raise ValueError("فقط یک سکشن مجاز است")
         super().save(*args, **kwargs)
+
+
+"""مدل های پروپوزال"""
+
+
+class Proposal(models.Model):
+    """پروپوزال برای مشتری"""
+
+    # اطلاعات اصلی
+    client_name = models.CharField(max_length=200, verbose_name="نام مشتری")
+    client_website = models.URLField(verbose_name="آدرس سایت مشتری")
+    slug = models.SlugField(
+        max_length=200, unique=True, verbose_name="اسلاگ", help_text="مثلاً: digikala"
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    # تصاویر
+    website_screenshot = models.ImageField(
+        upload_to="proposals/screenshots/", verbose_name="اسکرین‌شات سایت", blank=True
+    )
+    lighthouse_screenshot = models.ImageField(
+        upload_to="proposals/lighthouse/", verbose_name="تصویر Lighthouse", blank=True
+    )
+    inspect_screenshot = models.ImageField(
+        upload_to="proposals/inspect/", verbose_name="تصویر اینسپکت", blank=True
+    )
+
+    # معرفی
+    intro_title = models.CharField(max_length=200, verbose_name="عنوان معرفی")
+    intro_text = models.TextField(verbose_name="متن معرفی")
+
+    # قیمت
+    price = models.CharField(
+        max_length=100,
+        verbose_name="قیمت پیشنهادی",
+        blank=True,
+        help_text="مثلاً: از ۵ میلیون تومان",
+    )
+
+    class Meta:
+        verbose_name = "پروپوزال"
+        verbose_name_plural = "پروپوزال‌ها"
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return self.client_name
+
+
+class ProposalStat(models.Model):
+    """آمار و اعداد پروپوزال"""
+
+    proposal = models.ForeignKey(
+        Proposal,
+        on_delete=models.CASCADE,
+        related_name="stats",
+        verbose_name="پروپوزال",
+    )
+    label = models.CharField(
+        max_length=100, verbose_name="برچسب", help_text="مثلاً: امتیاز سرعت فعلی"
+    )
+    current_value = models.CharField(
+        max_length=50, verbose_name="مقدار فعلی", help_text="مثلاً: ۳۲"
+    )
+    target_value = models.CharField(
+        max_length=50, verbose_name="مقدار هدف", help_text="مثلاً: ۹۰+"
+    )
+    unit = models.CharField(
+        max_length=20,
+        verbose_name="واحد",
+        blank=True,
+        help_text="مثلاً: امتیاز یا ثانیه یا ٪",
+    )
+    order = models.PositiveIntegerField(default=0, verbose_name="ترتیب")
+
+    class Meta:
+        verbose_name = "آمار"
+        verbose_name_plural = "آمارها"
+        ordering = ["order"]
+
+    def __str__(self):
+        return self.label
+
+
+class ProposalProblem(models.Model):
+    """مشکلات سایت"""
+
+    SEVERITY_CHOICES = [
+        ("critical", "بحرانی"),
+        ("warning", "متوسط"),
+        ("info", "جزئی"),
+    ]
+    CATEGORY_CHOICES = [
+        ("seo", "سئو فنی"),
+        ("speed", "سرعت"),
+        ("content", "محتوا"),
+        ("security", "امنیت"),
+        ("ux", "تجربه کاربری"),
+        ("other", "سایر"),
+    ]
+    proposal = models.ForeignKey(
+        Proposal,
+        on_delete=models.CASCADE,
+        related_name="problems",
+        verbose_name="پروپوزال",
+    )
+    category = models.CharField(
+        max_length=20, choices=CATEGORY_CHOICES, verbose_name="دسته‌بندی"
+    )
+    severity = models.CharField(
+        max_length=10, choices=SEVERITY_CHOICES, verbose_name="شدت"
+    )
+    title = models.CharField(max_length=200, verbose_name="عنوان مشکل")
+    description = models.TextField(verbose_name="توضیح مشکل", blank=True)
+    solution = models.TextField(verbose_name="راه‌حل پیشنهادی", blank=True)
+    order = models.PositiveIntegerField(default=0, verbose_name="ترتیب")
+
+    class Meta:
+        verbose_name = "مشکل"
+        verbose_name_plural = "مشکلات"
+        ordering = ["order"]
+
+    def __str__(self):
+        return self.title
+
+
+class ProposalService(models.Model):
+    """خدمات پیشنهادی"""
+
+    TYPE_CHOICES = [
+        ("essential", "ضروری"),
+        ("optional", "اختیاری"),
+    ]
+    proposal = models.ForeignKey(
+        Proposal,
+        on_delete=models.CASCADE,
+        related_name="services",
+        verbose_name="پروپوزال",
+    )
+    title = models.CharField(max_length=200, verbose_name="عنوان خدمت")
+    description = models.TextField(verbose_name="توضیحات", blank=True)
+    service_type = models.CharField(
+        max_length=10, choices=TYPE_CHOICES, default="essential", verbose_name="نوع"
+    )
+    price = models.CharField(max_length=100, verbose_name="قیمت", blank=True)
+    order = models.PositiveIntegerField(default=0, verbose_name="ترتیب")
+
+    class Meta:
+        verbose_name = "خدمت پیشنهادی"
+        verbose_name_plural = "خدمات پیشنهادی"
+        ordering = ["order"]
+
+    def __str__(self):
+        return self.title
