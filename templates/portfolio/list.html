@@ -14,23 +14,27 @@
   </section>
 
   <div class="work-filters" role="toolbar" aria-label="Filter work" data-aos="fade-up" data-aos-delay="200">
-    <a href="{% url 'portfolio:list' %}"
-       class="filter-btn{% if not selected_category %} active{% endif %}"
-       aria-current="{% if not selected_category %}true{% else %}false{% endif %}">
+    <button type="button"
+            class="filter-btn{% if not selected_category %} active{% endif %}"
+            data-filter="all"
+            aria-pressed="{% if not selected_category %}true{% else %}false{% endif %}">
       همه
-    </a>
+    </button>
     {% for category in categories %}
-      <a href="{% url 'portfolio:list' %}?category={{ category.slug }}"
-         class="filter-btn{% if selected_category.slug == category.slug %} active{% endif %}"
-         aria-current="{% if selected_category.slug == category.slug %}true{% else %}false{% endif %}">
+      <button type="button"
+              class="filter-btn{% if selected_category.slug == category.slug %} active{% endif %}"
+              data-filter="{{ category.slug }}"
+              data-name="{{ category.name }}"
+              aria-pressed="{% if selected_category.slug == category.slug %}true{% else %}false{% endif %}">
         {{ category.name }}
-      </a>
+      </button>
     {% endfor %}
   </div>
 
-  <section class="work-grid" aria-label="Project archive">
+  <section class="work-grid" aria-label="Project archive" id="portfolio-grid-target">
     {% for item in portfolios %}
       <article data-tags="{% for cat in item.categories.all %}{{ cat.slug }}{% if not forloop.last %},{% endif %}{% endfor %}"
+               data-category="{% for cat in item.categories.all %}{{ cat.slug }}{% if not forloop.last %},{% endif %}{% endfor %}"
                data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}0">
         <a href="{% url 'portfolio:detail' item.slug %}" style="display:contents;color:inherit;text-decoration:none">
           <div class="img-wrap">
@@ -48,5 +52,69 @@
       </article>
     {% endfor %}
   </section>
+
+  <script>
+    (function() {
+      const filters = document.querySelector('.work-filters');
+      if (!filters) return;
+      const grid = document.getElementById('portfolio-grid-target');
+      const articles = grid ? grid.querySelectorAll('article') : [];
+
+      function filterItems(slug) {
+        articles.forEach(function(article) {
+          const tags = (article.getAttribute('data-category') || '').split(',');
+          const show = slug === 'all' || tags.includes(slug);
+          article.style.display = show ? '' : 'none';
+        });
+      }
+
+      filters.addEventListener('click', function(e) {
+        const btn = e.target.closest('button[data-filter]');
+        if (!btn) return;
+
+        filters.querySelectorAll('button').forEach(function(b) {
+          b.classList.remove('active');
+          b.setAttribute('aria-pressed', 'false');
+        });
+        btn.classList.add('active');
+        btn.setAttribute('aria-pressed', 'true');
+
+        const slug = btn.getAttribute('data-filter');
+        filterItems(slug);
+
+        const url = slug === 'all'
+          ? "{% url 'portfolio:list' %}"
+          : "{% url 'portfolio:list' %}?category=" + slug;
+        if (window.location.search !== '?' + (slug === 'all' ? '' : 'category=' + slug)) {
+          history.pushState({filter: slug}, '', url);
+        }
+      });
+    })();
+  </script>
+
+  <div id="portfolio-grid-target">
+
+    <section class="work-grid" aria-label="Project archive">
+      {% for item in portfolios %}
+        <article data-tags="{% for cat in item.categories.all %}{{ cat.slug }}{% if not forloop.last %},{% endif %}{% endfor %}"
+                 data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}0">
+          <a href="{% url 'portfolio:detail' item.slug %}" style="display:contents;color:inherit;text-decoration:none">
+            <div class="img-wrap">
+              <img src="{{ item.image.url }}" alt="{{ item.title }}" loading="lazy" />
+            </div>
+            <div class="meta">
+              <span>{{ item.client_name }}</span><span>·</span><span>{{ item.year }}</span><span>·</span>
+              {% for cat in item.categories.all %}
+                <span>{{ cat.name }}</span>{% if not forloop.last %}<span>·</span>{% endif %}
+              {% endfor %}
+            </div>
+            <h3>{{ item.title }}</h3>
+            <p>{{ item.excerpt }}</p>
+          </a>
+        </article>
+      {% endfor %}
+    </section>
+
+  </div>
 
 {% endblock %}

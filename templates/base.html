@@ -244,16 +244,19 @@
         });
       }, 100);
 
-      document.body.addEventListener('htmx:afterSwap', function() {
-        // آپدیت title صفحه
+      document.body.addEventListener('htmx:afterSwap', function(e) {
         const newTitle = document.querySelector('title');
         if (newTitle) document.title = newTitle.textContent;
-        
-        // راه‌اندازی دوباره AOS
-        AOS.refreshHard();
-        
-        // اسکرول به بالای صفحه
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+
+        const trigger = e.detail.requestConfig.elt;
+        const isFilterSwap = trigger && trigger.closest('.work-filters');
+
+        if (isFilterSwap) {
+          AOS.refresh();
+        } else {
+          AOS.refreshHard();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
       });
     </script>
 

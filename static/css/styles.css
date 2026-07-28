@@ -993,10 +993,11 @@ section {
 
 /* ─── footer ─── */
 .site-footer {
-  background: var(--ink);
+  background: var(--surface-dark);
   color: #c8c7c2;
   padding: clamp(60px, 7vw, 100px) var(--pad-x) 24px;
   font-size: 0.92rem;
+  overflow: hidden;
 }
 
 .site-footer .top {
@@ -1051,10 +1052,12 @@ section {
   display: block;
   padding: 5px 0;
   color: #b0afaa;
+  transition: color 0.2s var(--ease), transform 0.2s var(--ease);
 }
 
 .site-footer .col a:hover {
   color: var(--lime);
+  transform: translateX(-4px);
 }
 
 .site-footer .bottom {
