@@ -25,7 +25,7 @@ SECRET_KEY = "django-insecure-&i^(qejd(3ad!89zlcdeezds717=dmpfas4vmp5f9(lh3=a1*v
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["127.0.0.1", 'localhost']
+ALLOWED_HOSTS = ["127.0.0.1", 'localhost','django-avazeh-e2m-avazeh.runflare.cloud']
 
 
 # Application definition

@@ -1,0 +1,175 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+  پیشنهاد ویژه برای {{ proposal.client_name }} — {{ settings.site_name }}
+{% endblock %}
+{% block description %}
+  {{ proposal.intro_title }}
+{% endblock %}
+
+{% block content %}
+  <!-- ─── هیرو پروپوزال ─── -->
+  <section class="proposal-hero" data-aos="fade-up">
+    <p class="tag-line">
+      <span class="dot"></span>پیشنهاد اختصاصی · تهیه‌شده برای {{ proposal.client_name }}
+    </p>
+    <h1>{{ proposal.intro_title|safe }}</h1>
+    <p class="lede">{{ proposal.intro_text|safe }}</p>
+    {% if proposal.client_website %}
+      <a class="site-chip" href="{{ proposal.client_website }}" target="_blank" rel="noopener">مشاهده سایت فعلی ↗ <span style="color:var(--ink-dim)">{{ proposal.client_website }}</span></a>
+    {% endif %}
+  </section>
+
+  <!-- ─── تصاویر (اسکرین‌شات / لایت‌هاوس / اینسپکت) ─── -->
+  {% if proposal.website_screenshot or proposal.lighthouse_screenshot or proposal.inspect_screenshot %}
+    <section class="proposal-shots" aria-labelledby="shots-head">
+      <header class="section-head" data-aos="fade-up">
+        <span class="eyebrow"><span class="dot"></span>بررسی فنی</span>
+        <h2 id="shots-head">این چیزی است که الان می‌بینیم.</h2>
+      </header>
+      <div class="shots-grid" data-aos="fade-up" data-aos-delay="100">
+        {% if proposal.website_screenshot %}
+          <figure class="shot-figure">
+            <img src="{{ proposal.website_screenshot.url }}" alt="اسکرین‌شات سایت {{ proposal.client_name }}" loading="lazy" />
+            <figcaption>نمای فعلی سایت</figcaption>
+          </figure>
+        {% endif %}
+        {% if proposal.lighthouse_screenshot %}
+          <figure class="shot-figure">
+            <img src="{{ proposal.lighthouse_screenshot.url }}" alt="نتیجه آزمون Lighthouse" loading="lazy" />
+            <figcaption>آزمون Lighthouse</figcaption>
+          </figure>
+        {% endif %}
+        {% if proposal.inspect_screenshot %}
+          <figure class="shot-figure">
+            <img src="{{ proposal.inspect_screenshot.url }}" alt="بررسی فنی (Inspect)" loading="lazy" />
+            <figcaption>بررسی فنی صفحه</figcaption>
+          </figure>
+        {% endif %}
+      </div>
+    </section>
+  {% endif %}
+
+  <!-- ─── آمار: الان در برابر هدف ─── -->
+  {% if stats %}
+    <section class="proposal-stats" aria-labelledby="stats-head">
+      <header class="section-head" data-aos="fade-up">
+        <span class="eyebrow"><span class="dot"></span>وضعیت فعلی در برابر هدف</span>
+        <h2 id="stats-head">بعد از بهینه‌سازی به کجا می‌رسیم؟</h2>
+      </header>
+      <div class="stats-cards" data-aos="fade-up" data-aos-delay="100">
+        {% for stat in stats %}
+          <div class="proposal-stat-card">
+            <span class="stat-label">{{ stat.label }}</span>
+            <div class="compare">
+              <div class="val current">
+                <span class="num">{{ stat.current_value }}{{ stat.unit }}</span>
+                <span class="tag">الان</span>
+              </div>
+              <span class="compare-arrow">←</span>
+              <div class="val target">
+                <span class="num">{{ stat.target_value }}{{ stat.unit }}</span>
+                <span class="tag">هدف ما</span>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </section>
+  {% endif %}
+
+  <!-- ─── مشکلات و راهکارها ─── -->
+  {% if problems %}
+    <section class="proposal-problems" aria-labelledby="problems-head">
+      <header class="section-head" data-aos="fade-up">
+        <span class="eyebrow"><span class="dot"></span>یافته‌های ما</span>
+        <h2 id="problems-head">چیزهایی که پیدا کردیم و می‌توانیم بهتر کنیم.</h2>
+      </header>
+      <div class="problems-list" data-aos="fade-up" data-aos-delay="100">
+        {% for problem in problems %}
+          <article class="problem-card sev-{{ problem.severity }}">
+            <div class="problem-top">
+              <h3>{{ problem.title }}</h3>
+              <div class="badges">
+                <span class="badge category">{{ problem.get_category_display }}</span>
+                <span class="badge severity">{{ problem.get_severity_display }}</span>
+              </div>
+            </div>
+            {% if problem.description %}
+              <p>{{ problem.description|safe }}</p>
+            {% endif %}
+            {% if problem.solution %}
+              <div class="solution">
+                <span class="check">✓</span>
+                <p>{{ problem.solution|safe }}</p>
+              </div>
+            {% endif %}
+          </article>
+        {% endfor %}
+      </div>
+    </section>
+  {% endif %}
+
+  <!-- ─── خدمات پیشنهادی ─── -->
+  {% if essential_services or optional_services %}
+    <section class="proposal-services" aria-labelledby="services-head">
+      <header class="section-head" data-aos="fade-up">
+        <span class="eyebrow"><span class="dot"></span>راه‌حل پیشنهادی</span>
+        <h2 id="services-head">این کارها را برای شما انجام می‌دهیم.</h2>
+      </header>
+
+      {% if essential_services %}
+        <div class="service-group" data-aos="fade-up" data-aos-delay="100">
+          <h3>در این پیشنهاد گنجانده شده</h3>
+          {% for s in essential_services %}
+            <div class="service-item-row">
+              <div class="info">
+                <h4>{{ s.title }}</h4>
+                {% if s.description %}
+                  <p>{{ s.description|safe }}</p>
+                {% endif %}
+              </div>
+              {% if s.price %}
+                <span class="price">{{ s.price }}</span>
+              {% endif %}
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      {% if optional_services %}
+        <div class="service-group" data-aos="fade-up" data-aos-delay="150">
+          <h3>پیشنهادهای تکمیلی</h3>
+          <p class="group-note">این موارد ضروری نیستند، ولی می‌توانند نتیجه را قوی‌تر کنند.</p>
+          {% for s in optional_services %}
+            <div class="service-item-row optional">
+              <div class="info">
+                <h4>{{ s.title }}</h4>
+                {% if s.description %}
+                  <p>{{ s.description|safe }}</p>
+                {% endif %}
+              </div>
+              {% if s.price %}
+                <span class="price">{{ s.price }}</span>
+              {% endif %}
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </section>
+  {% endif %}
+
+  <!-- ─── سرمایه‌گذاری پیشنهادی ─── -->
+  {% if proposal.price %}
+    <section class="proposal-price" aria-labelledby="price-head" data-aos="fade-up">
+      <div class="price-card">
+        <span class="eyebrow"><span class="dot"></span>سرمایه‌گذاری پیشنهادی</span>
+        <h2 id="price-head">هزینه اجرای این پروژه</h2>
+        <span class="amount">{{ proposal.price }}</span>
+        <p class="note">این پیشنهاد مخصوص {{ proposal.client_name }} تهیه شده و بر اساس بررسی‌های انجام‌شده قابل تنظیم است.</p>
+        <a class="btn btn-lime" href="{% url 'contact:contact' %}">شروع همکاری <span class="arrow">←</span></a>
+      </div>
+    </section>
+  {% endif %}
+{% endblock %}

@@ -11,14 +11,9 @@
       content="{% block description %}{% endblock %}"
     />
 
-    <!-- فونت گوگل -->
-    {% comment %} <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&family=Vazirmatn:wght@300;400;500;600&family=Geist+Mono:wght@400;500&display=swap"
-    /> {% endcomment %}
-
+    <!-- فونت‌های محلی -->
+    <link rel="stylesheet" href="{% static 'fonts/font_urls.css' %}" />
+  
     <!-- AOS css -->
     <link rel="stylesheet" href="{% static 'css/aos.css' %}">
 
