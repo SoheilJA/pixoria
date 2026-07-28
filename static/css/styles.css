@@ -685,12 +685,14 @@ section {
   flex-direction: column;
   transition:
     transform 0.3s var(--ease),
-    border-color 0.3s var(--ease);
+    border-color 0.3s var(--ease),
+    box-shadow 0.3s var(--ease);
 }
 
 .work-card:hover {
   transform: translateY(-4px);
   border-color: var(--ink);
+  box-shadow: 0 8px 24px rgba(14, 14, 14, 0.08);
 }
 
 .work-card .img-wrap {
@@ -716,26 +718,55 @@ section {
 }
 
 .work-card .body {
-  padding: 22px;
+  padding: 18px 22px 22px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
   flex: 1;
+  border-top: 1px solid transparent;
+  transition: border-color 0.3s var(--ease);
+}
+
+.work-card:hover .body {
+  border-top-color: var(--ink-line);
 }
 
 .work-card .body .meta {
   display: flex;
-  gap: 10px;
+  gap: 8px;
   font-family: var(--mono);
-  font-size: 0.74rem;
+  font-size: 0.72rem;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   color: var(--ink-dim);
+  flex-wrap: wrap;
+}
+
+.work-card .body .meta span {
+  transition: color 0.2s var(--ease);
+}
+
+.work-card:hover .body .meta span {
+  color: var(--ink-soft);
 }
 
 .work-card .body h3 {
-  font-size: 1.45rem;
-  line-height: 1.1;
+  font-size: 1.4rem;
+  line-height: 1.15;
+  color: var(--ink);
+  transition: color 0.2s var(--ease);
+}
+
+.work-card:hover .body h3 {
+  color: var(--lime-deep);
+}
+
+.work-card .body p {
+  color: var(--ink-soft);
+  font-size: 0.94rem;
+  line-height: 1.55;
+  margin: 0;
+  max-width: 52ch;
 }
 
 .work-card .body .arrow-link {
@@ -748,10 +779,14 @@ section {
   display: inline-flex;
   align-items: center;
   gap: 8px;
+  transition:
+    color 0.2s var(--ease),
+    transform 0.2s var(--ease);
 }
 
-.work-card .body .arrow-link:hover {
+.work-card:hover .body .arrow-link {
   color: var(--lime-deep);
+  transform: translateX(-4px);
 }
 
 /* ─── services list (numbered, NOT card grid) ─── */
@@ -3774,7 +3809,7 @@ details[open] .faq-icon {
 /* Responsive Carousel */
 @media (max-width: 1024px) {
   .carousel-track .work-card {
-    width: calc(33.333% - 14px);
+    width: calc(50% - 14px);
   }
 }
 
@@ -3796,7 +3831,7 @@ details[open] .faq-icon {
 
 @media (max-width: 480px) {
   .carousel-track .work-card {
-    width: 100%;
+    width: calc(100% - 20px);
     margin-left: 0;
   }
 

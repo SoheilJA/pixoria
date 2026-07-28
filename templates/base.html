@@ -143,22 +143,24 @@
           {% endblock content %}
 
           <!-- ─── کال تو اکشن - پریفوتر ─── -->
-          <section class="cta-band" aria-labelledby="cta-head">
+          <section class="cta-band" aria-labelledby="cta-head" data-aos="fade-up">
             <div class="inner">
-              <h2 id="cta-head">{{cta.title}}</h2>
+              <h2 id="cta-head" data-aos="fade-up" data-aos-delay="100">{{cta.title}}</h2>
 
-              <div class="right">
+              <div class="right" data-aos="fade-up" data-aos-delay="200">
                 <p>{{cta.description}}</p>
 
                 <a
                   class="btn btn-ink"
                   href="{% url 'contact:contact' %}"
                   style="margin-top: 24px"
+                  data-aos="fade-up"
+                  data-aos-delay="300"
                 >
                   شروع گفتگو <span class="arrow">←</span>
                 </a>
 
-                <div class="meta">
+                <div class="meta" data-aos="fade-up" data-aos-delay="350">
                   <span>{{cta.email}}</span>
                   <span>{{cta.phone}}</span>
                 </div>
@@ -171,22 +173,25 @@
         </main>
 
         <!-- فوتر -->
-        <footer class="site-footer" aria-labelledby="footer-head">
+        <footer class="site-footer" aria-labelledby="footer-head" data-aos="fade-up">
           <h2
             id="footer-head"
-            class="visually-hidden">
+            class="visually-hidden"
+            data-aos="fade-up"
+            data-aos-delay="50"
+          >
             فوتر سایت
           </h2>
 
-          <div class="top">
-            <div class="brand-block">
+          <div class="top" data-aos="fade-up" data-aos-delay="100">
+            <div class="brand-block" data-aos="fade-up" data-aos-delay="150">
               <span class="mark"><span class="badge">S</span> {{settings.site_name}}</span>
               <p style="color: #b0afaa; margin: 0; line-height: 1.55">
                 {{settings.footer_description}}
               </p>
             </div>
 
-            <div class="col">
+            <div class="col" data-aos="fade-up" data-aos-delay="200">
               <h4>استودیو</h4>
               <a href="{% url 'home:home' %}">خانه</a>
               <a href="{% url 'portfolio:list' %}">کارها</a>
@@ -195,14 +200,14 @@
               <a href="{% url 'contact:contact' %}">تماس</a>
             </div>
 
-            <div class="col">
+            <div class="col" data-aos="fade-up" data-aos-delay="250">
               <h4>حوزه های کاری</h4>
               {%for service in services_footer %}
               <a href="{% url 'services:detail' service.slug %}"> {{ service.title }} </a>
               {% endfor %}
             </div>
 
-            <div class="col">
+            <div class="col" data-aos="fade-up" data-aos-delay="300">
               <h4>ما را دنبال کنید</h4>
               {% for social in socials %}
               <a href="{{social.url}}">{{social.name}}</a>
@@ -210,7 +215,7 @@
             </div>
           </div>
 
-          <div class="bottom">
+          <div class="bottom" data-aos="fade-up" data-aos-delay="350">
             <span>© {{ settings.established_year }} {{ settings.site_name }}</span>
             <span class="center">ساخته شده در مشهد</span>
             <span class="right">نسخه 01 · تابستان 1405</span>
