@@ -8,13 +8,17 @@ def portfolio_list(request):
 
     if selected_slug:
         selected_category = get_object_or_404(Category, slug=selected_slug)
-        portfolios = Portfolio.objects.filter(categories=selected_category)
+        portfolios = list(Portfolio.objects.filter(categories=selected_category))
     else:
         selected_category = None
-        portfolios = Portfolio.objects.all()
+        portfolios = list(Portfolio.objects.all())
 
     context = {
         "portfolios": portfolios,
+        "portfolios_with_delay": [
+            {"portfolio": portfolio, "delay": (index % 4) * 100}
+            for index, portfolio in enumerate(portfolios)
+        ],
         "categories": categories,
         "selected_category": selected_category,
         "page_section": PortfolioPageSection.objects.first(),

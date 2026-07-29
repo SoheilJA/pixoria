@@ -32,24 +32,42 @@
   </div>
 
   <section class="work-grid" aria-label="Project archive" id="portfolio-grid-target">
-    {% for item in portfolios %}
-      <article data-tags="{% for cat in item.categories.all %}{{ cat.slug }}{% if not forloop.last %},{% endif %}{% endfor %}"
-               data-category="{% for cat in item.categories.all %}{{ cat.slug }}{% if not forloop.last %},{% endif %}{% endfor %}"
-               data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}0">
-        <a href="{% url 'portfolio:detail' item.slug %}" style="display:contents;color:inherit;text-decoration:none">
+    {% for item in portfolios_with_delay %}
+      {% with portfolio=item.portfolio delay=item.delay %}
+      <article class="work-card"
+               data-category="{% for cat in portfolio.categories.all %}{{ cat.slug }}{% if not forloop.last %},{% endif %}{% endfor %}"
+               data-aos="fade-up"
+               data-aos-duration="500"
+               data-aos-delay="{{ delay }}"
+               data-aos-anchor-placement="top-bottom">
+        <a href="{% url 'portfolio:detail' portfolio.slug %}" style="display:contents;color:inherit;text-decoration:none">
           <div class="img-wrap">
-            <img src="{{ item.image.url }}" alt="{{ item.title }}" loading="lazy" />
+            <span class="index">{{ forloop.counter|stringformat:'02d' }}</span>
+            <img src="{{ portfolio.image.url }}" alt="{{ portfolio.title }}" loading="lazy" />
           </div>
-          <div class="meta">
-            <span>{{ item.client_name }}</span><span>·</span><span>{{ item.year }}</span><span>·</span>
-            {% for cat in item.categories.all %}
-              <span>{{ cat.name }}</span>{% if not forloop.last %}<span>·</span>{% endif %}
-            {% endfor %}
+          <div class="body">
+            <div class="meta">
+              <span>{{ portfolio.client_name }}</span>
+              <span class="year">{{ portfolio.year }}</span>
+            </div>
+            <h3>{{ portfolio.title }}</h3>
+            <p>{{ portfolio.excerpt }}</p>
+            {% if portfolio.categories.all %}
+            <div class="tags">
+              {% for cat in portfolio.categories.all %}
+                <span class="service-tag">{{ cat.name }}</span>
+              {% endfor %}
+            </div>
+            {% endif %}
+            <span class="arrow-link">
+              مشاهده پروژه <span class="line"></span> <span>←</span>
+            </span>
           </div>
-          <h3>{{ item.title }}</h3>
-          <p>{{ item.excerpt }}</p>
         </a>
       </article>
+      {% endwith %}
+    {% empty %}
+      <p class="empty">نمونه کاری برای این دسته بندی ثبت نشده است.</p>
     {% endfor %}
   </section>
 
@@ -91,30 +109,5 @@
       });
     })();
   </script>
-
-  <div id="portfolio-grid-target">
-
-    <section class="work-grid" aria-label="Project archive">
-      {% for item in portfolios %}
-        <article data-tags="{% for cat in item.categories.all %}{{ cat.slug }}{% if not forloop.last %},{% endif %}{% endfor %}"
-                 data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}0">
-          <a href="{% url 'portfolio:detail' item.slug %}" style="display:contents;color:inherit;text-decoration:none">
-            <div class="img-wrap">
-              <img src="{{ item.image.url }}" alt="{{ item.title }}" loading="lazy" />
-            </div>
-            <div class="meta">
-              <span>{{ item.client_name }}</span><span>·</span><span>{{ item.year }}</span><span>·</span>
-              {% for cat in item.categories.all %}
-                <span>{{ cat.name }}</span>{% if not forloop.last %}<span>·</span>{% endif %}
-              {% endfor %}
-            </div>
-            <h3>{{ item.title }}</h3>
-            <p>{{ item.excerpt }}</p>
-          </a>
-        </article>
-      {% endfor %}
-    </section>
-
-  </div>
 
 {% endblock %}

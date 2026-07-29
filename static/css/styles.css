@@ -800,6 +800,10 @@ section {
   line-height: 1.55;
   margin: 0;
   max-width: 52ch;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .work-card .body .arrow-link {
@@ -809,9 +813,11 @@ section {
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--ink);
-  display: inline-flex;
+  display: flex;
   align-items: center;
   gap: 8px;
+  width: 100%;
+  padding-top: 16px;
   transition:
     color 0.2s var(--ease),
     transform 0.2s var(--ease);
@@ -819,7 +825,6 @@ section {
 
 .work-card:hover .body .arrow-link {
   color: var(--lime-deep);
-  transform: translateX(-4px);
 }
 
 /* ─── services list (numbered, NOT card grid) ─── */
@@ -1194,54 +1199,81 @@ section {
 .work-grid {
   padding: 64px var(--pad-x);
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 56px 32px;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 32px;
+  align-items: stretch;
 }
 
-.work-grid article {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.work-grid .img-wrap {
-  aspect-ratio: 4/3;
-  background: var(--paper-soft);
-  overflow: hidden;
-  border-radius: var(--radius);
-}
-
-.work-grid .img-wrap img {
-  width: 100%;
+.work-grid .work-card {
   height: 100%;
-  object-fit: cover;
-  transition: transform 0.6s var(--ease);
 }
 
-.work-grid article:hover .img-wrap img {
-  transform: scale(1.03);
-}
-
-.work-grid .meta {
+.work-card .img-wrap .index {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 1;
   font-family: var(--mono);
-  font-size: 0.74rem;
+  font-size: 0.72rem;
   letter-spacing: 0.1em;
-  text-transform: uppercase;
+  color: var(--ink);
+  background: var(--paper);
+  border: 1px solid var(--ink-line);
+  padding: 3px 9px;
+  border-radius: var(--radius-pill);
+  transition:
+    background 0.3s var(--ease),
+    border-color 0.3s var(--ease);
+}
+
+.work-card:hover .img-wrap .index {
+  background: var(--lime);
+  border-color: var(--lime-deep);
+}
+
+.work-card .body .year {
+  margin-right: auto;
   color: var(--ink-dim);
+}
+
+.work-card .body .tags {
   display: flex;
-  gap: 14px;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
 }
 
-.work-grid h3 {
-  font-size: 1.7rem;
-  line-height: 1.05;
-}
-
-.work-grid p {
+.work-card:hover .service-tag {
+  border-color: var(--ink-dim);
   color: var(--ink-soft);
-  margin: 0;
-  font-size: 0.96rem;
-  max-width: 48ch;
+}
+
+.work-card .body .arrow-link .line {
+  flex: 1;
+  height: 1px;
+  background: var(--ink-line);
+  transition: background 0.2s var(--ease);
+}
+
+.work-grid .work-card .body .arrow-link {
+  display: flex;
+  width: 100%;
+  padding-top: 16px;
+}
+
+.work-card:hover .body .arrow-link .line {
+  background: var(--lime-deep);
+}
+
+.work-grid .empty {
+  grid-column: 1 / -1;
+  padding: 80px 0;
+  text-align: center;
+  font-family: var(--mono);
+  font-size: 0.84rem;
+  letter-spacing: 0.1em;
+  color: var(--ink-dim);
+  border-top: 1px solid var(--ink-line);
 }
 
 /* ─── services page ─── */
@@ -1627,13 +1659,6 @@ section {
   color: var(--ink);
   background: var(--ink);
   color: var(--paper);
-}
-
-/* ─── work grid (archive) ─── */
-.work-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 28px;
 }
 
 /* ─── project hero ─── */
@@ -2316,7 +2341,7 @@ section {
   /* work grid: 2 ستون */
   .work-grid {
     grid-template-columns: repeat(2, 1fr);
-    gap: 36px 24px;
+    gap: 24px;
   }
 
   /* team */
@@ -3742,6 +3767,7 @@ details[open] .faq-icon {
 /* ─── track: JS عرض هر slide و gap رو اینلاین ست می‌کند ─── */
 .carousel-track {
   display: flex;          /* JS مقدار flex و width هر slide رو تنظیم می‌کند */
+  align-items: stretch;
   transition: transform 0.45s var(--ease-out);
   will-change: transform;
 }

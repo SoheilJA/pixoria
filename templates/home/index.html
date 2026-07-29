@@ -46,17 +46,26 @@
         <article class="work-card">
           <a href="{% url 'portfolio:detail' work.slug %}" style="display:contents;color:inherit;text-decoration:none">
             <div class="img-wrap">
+              <span class="index">{{ forloop.counter|stringformat:'02d' }}</span>
               <img src="{{ work.image.url }}" alt="{{ work.title }}" loading="lazy" />
             </div>
             <div class="body">
               <div class="meta">
-                {% for cat in work.categories.all %}
-                  <span>{{ cat.name }}</span>{% if not forloop.last %}<span>·</span>{% endif %}
-                {% endfor %}
+                <span>{{ work.client_name }}</span>
+                <span class="year">{{ work.year }}</span>
               </div>
               <h3>{{ work.title }}</h3>
               <p>{{ work.excerpt }}</p>
-              <span class="arrow-link">مشاهده پروژه <span>←</span></span>
+              {% if work.categories.all %}
+              <div class="tags">
+                {% for cat in work.categories.all %}
+                  <span class="service-tag">{{ cat.name }}</span>
+                {% endfor %}
+              </div>
+              {% endif %}
+              <span class="arrow-link">
+                مشاهده پروژه <span class="line"></span> <span>←</span>
+              </span>
             </div>
           </a>
         </article>
