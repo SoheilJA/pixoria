@@ -64,40 +64,48 @@
 
     <div class="shell">
       <!-- سایدبار -->
-      <aside class="rail" aria-label="Primary">
-        <a class="rail-brand" href="/">
-          <span class="rail-brand-mark">S</span>
+      <aside class="rail" aria-label="Primary"
+             data-aos="fade-up"
+             data-aos-delay="100"
+             data-aos-anchor="#content-start"
+             data-aos-offset="-120">
+        <a class="rail-brand" href="/" data-aos="fade-up" data-aos-delay="100">
+          <span class="rail-brand-mark" data-aos="fade-up" data-aos-delay="150">S</span>
           <span>
             {{ settings.site_name }}
-            <span class="rail-brand-sub">
+            <span class="rail-brand-sub" data-aos="fade-up" data-aos-delay="200">
               آژانس دیجیتال مارکتینگ · تاسیس.{{settings.established_year}}
             </span>
           </span>
         </a>
-        <nav class="rail-nav" aria-label="Sections">
+        <nav class="rail-nav" aria-label="Sections" data-aos="fade-up" data-aos-delay="250">
           <a
             href="{% url 'home:home' %}"
-            {% if request.resolver_match.app_name == "home" %}class="active" aria-current="page"{% endif %}>
+            {% if request.resolver_match.app_name == "home" %}class="active" aria-current="page"{% endif %}
+            data-aos="fade-up" data-aos-delay="300">
             <span class="num"></span>
             <span class="title">خانه</span>
           </a>
 
           <a
             href="{% url 'portfolio:list' %}"
-            {% if request.resolver_match.app_name == "portfolio" %}class="active" aria-current="page"{% endif %}>
+            {% if request.resolver_match.app_name == "portfolio" %}class="active" aria-current="page"{% endif %}
+            data-aos="fade-up" data-aos-delay="350">
             <span class="num"></span>
             <span class="title">نمونه کار ها</span>
           </a>
 
           <a
             href="{% url 'services:list' %}"
-            {% if request.resolver_match.app_name == "services" %}class="active" aria-current="page"{% endif %}>
+            {% if request.resolver_match.app_name == "services" %}class="active" aria-current="page"{% endif %}
+            data-aos="fade-up" data-aos-delay="400">
             <span class="num"></span>
             <span class="title">خدمات</span>
           </a>
           <a
             href="{% url 'core:about' %}"
-            {% if request.resolver_match.app_name == "core" %}class="active" aria-current="page"{% endif %}>
+            {% if request.resolver_match.app_name == "core" %}class="active" aria-current="page"{% endif %}
+            data-aos="fade-up" data-aos-delay="450">
             <span class="num"></span>
             <span class="title">درباره ما</span>
           </a>
@@ -105,13 +113,14 @@
 
           <a
             href="{% url 'contact:contact' %}"
-            {% if request.resolver_match.app_name == "contact" %}class="active" aria-current="page"{% endif %}>
+            {% if request.resolver_match.app_name == "contact" %}class="active" aria-current="page"{% endif %}
+            data-aos="fade-up" data-aos-delay="500">
             <span class="num"></span>
             <span class="title">تماس با ما</span>
           </a>
 
         </nav>
-        <div class="rail-foot">
+        <div class="rail-foot" id="rail-foot">
           <div class="meta-row">
             <span>فصل تابستان</span>
             <span>نسخه ۰۱</span>
@@ -234,14 +243,16 @@
     <script src="{% static 'js/aos.js'  %}"></script>
 
     <script>
-      // کمی تأخیر برای اطمینان از رندر کامل صفحه قبل از شروع AOS
       setTimeout(function() {
         AOS.init({
-          duration: 600,
+          duration: 500,
           easing: 'ease-out',
           once: true,
           offset: 80,
         });
+        AOS.refresh();
+
+        animateRailFoot();
       }, 100);
 
       document.body.addEventListener('htmx:afterSwap', function(e) {
@@ -258,6 +269,34 @@
           window.scrollTo({ top: 0, behavior: 'smooth' });
         }
       });
+
+      function animateRailFoot() {
+        var foot = document.getElementById('rail-foot');
+        if (!foot || foot.dataset.footAnimated === 'true') return;
+        foot.dataset.footAnimated = 'true';
+
+        foot.classList.add('is-visible');
+      }
+
+      if ('IntersectionObserver' in window) {
+        var footObserver = new IntersectionObserver(function(entries) {
+          entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+              animateRailFoot();
+              footObserver.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.01 });
+
+        var footInit = document.getElementById('rail-foot');
+        if (footInit) {
+          footObserver.observe(footInit);
+        }
+      } else {
+        window.addEventListener('load', animateRailFoot);
+      }
+
+      setTimeout(animateRailFoot, 400);
     </script>
 
         {% block extra_js %}{% endblock %}
