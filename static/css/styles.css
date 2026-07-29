@@ -825,6 +825,8 @@ section {
 /* ─── services list (numbered, NOT card grid) ─── */
 .services-list {
   border-top: 1px solid var(--ink);
+  padding-left: var(--pad-x);
+  padding-right: var(--pad-x);
 }
 
 .services-list .row {

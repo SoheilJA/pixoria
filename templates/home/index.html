@@ -78,14 +78,21 @@
       <p class="lede">{{ services_section.description }}</p>
     </header>
     <div class="services-list">
-      {% for service in services %}
-        <article class="row"
-                 data-aos="fade-up"
-                 data-aos-duration="500"
-                 data-aos-delay="{% if forloop.counter == 1 %}0{% elif forloop.counter == 2 %}80{% elif forloop.counter == 3 %}160{% elif forloop.counter == 4 %}240{% elif forloop.counter == 5 %}320{% else %}400{% endif %}"
-                 data-aos-anchor-placement="top-bottom">
-          <span class="num">{{ forloop.counter|stringformat:'02d' }} / {{ services|length|stringformat:'02d' }}</span>
-          <div class="service-row-body">
+      {% for item in services_with_delay %}
+        {% with service=item.service delay=item.delay %}
+        <article class="row">
+          <span class="num"
+                data-aos="fade-up"
+                data-aos-duration="500"
+                data-aos-delay="{{ delay }}"
+                data-aos-anchor-placement="top-bottom">
+            {{ forloop.counter|stringformat:'02d' }} / {{ services|length|stringformat:'02d' }}
+          </span>
+          <div class="service-row-body"
+               data-aos="fade-up"
+               data-aos-duration="500"
+               data-aos-delay="{{ delay|add:50 }}"
+               data-aos-anchor-placement="top-bottom">
             <h3>{{ service.title }}</h3>
             {% if service.tags %}
             <div class="service-tags">
@@ -95,9 +102,19 @@
             </div>
             {% endif %}
           </div>
-          <p>{{ service.excerpt }}</p>
-          <span class="arrow">←</span>
+          <p data-aos="fade-up"
+             data-aos-duration="500"
+             data-aos-delay="{{ delay|add:100 }}"
+             data-aos-anchor-placement="top-bottom">
+            {{ service.excerpt }}
+          </p>
+          <span class="arrow"
+                data-aos="fade-up"
+                data-aos-duration="500"
+                data-aos-delay="{{ delay|add:150 }}"
+                data-aos-anchor-placement="top-bottom">←</span>
         </article>
+        {% endwith %}
       {% endfor %}
     </div>
   </section>

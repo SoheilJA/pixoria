@@ -3,9 +3,15 @@ from .models import Service, ServicesPageSection
 
 
 def services_list(request):
+    services = list(Service.objects.all())
+    services_with_delay = [
+        {"service": service, "delay": (index % 5) * 100}
+        for index, service in enumerate(services)
+    ]
     context = {
         "page_section": ServicesPageSection.objects.first(),
-        "services": Service.objects.all(),
+        "services": services,
+        "services_with_delay": services_with_delay,
     }
     return render(request, "services/list.html", context)
 
