@@ -1,4 +1,4 @@
-from .models import SiteSettings, SocialLink
+from .models import SiteSettings, SocialLink, AboutStat
 from apps.home.models import CTASection
 from apps.services.models import Service
 
@@ -11,11 +11,13 @@ def site_context(request):
 
     socials = SocialLink.objects.all()
     cta = CTASection.objects.first()
-    services_footer=Service.objects.all()[:5]
+    services_footer = Service.objects.all()[:5]
+    stats = AboutStat.objects.all()
 
     return {
         "settings": settings,
         "socials": socials,
         "cta": cta,
         "services_footer": services_footer,
+        "stats": stats,
     }

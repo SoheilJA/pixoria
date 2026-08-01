@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib.auth import views as auth_views
 from apps.core import views as core_views
 
 urlpatterns = [
@@ -11,5 +12,9 @@ urlpatterns = [
     path("services/", include("apps.services.urls")),
     path("about/", include("apps.core.urls")),
     path("contact/", include("apps.contact.urls")),
+    path("login/", auth_views.LoginView.as_view(
+        template_name="registration/login.html"
+    ), name="login"),
+    path("logout/", auth_views.LogoutView.as_view(), name="logout"),
     path("proposal/<slug:slug>/", core_views.proposal, name="proposal"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

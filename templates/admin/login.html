@@ -1,0 +1,91 @@
+{% load static %}
+{% load cache %}
+<!doctype html>
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#0e0e0e" />
+    <title>ورود — {{ settings.site_name|default:"سئو ران" }}</title>
+    <meta name="robots" content="noindex" />
+
+    <!-- فونت‌های محلی (همانند base.html) -->
+    <link rel="stylesheet" href="{% static 'fonts/font_urls.css' %}" />
+
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+  </head>
+  <body>
+    <div class="auth-shell">
+      <!-- ─── پنل برند ─── -->
+      <div class="auth-brand">
+        <div class="top">
+          <a class="logo" href="/">
+            <span class="mark">S</span>
+            {{ settings.site_name|default:"سئو ران" }}
+          </a>
+        </div>
+
+        <div class="middle">
+          <p class="label">پنل مدیریت</p>
+          <h2>به <em>داشبورد</em> خوش آمدید.</h2>
+        </div>
+
+        {% if stats %}
+        <div class="bottom">
+          {% for stat in stats %}
+          <div class="stat">
+            <span class="num">{{ stat.number }}</span>
+            <span class="desc">{{ stat.label }}</span>
+          </div>
+          {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+
+      <!-- ─── پنل فرم ─── -->
+      <div class="auth-form-panel">
+        <div class="auth-form-wrap">
+          <div class="form-head">
+            <p class="crumb">
+              {{ settings.site_name|default:"سئو ران" }} ← <span style="color: var(--ink)">ورود</span>
+            </p>
+            <h1>ورود به حساب</h1>
+            <p>
+              حساب ندارید؟
+              <a href="{% url 'admin:index' %}">به پنل ادمین</a>
+            </p>
+          </div>
+
+          <form class="auth-form" method="post" action="{% url 'admin:login' %}">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ next }}" />
+
+            {% if form.errors %}
+            <div class="auth-error">
+              نام کاربری یا رمز عبور اشتباه است.
+            </div>
+            {% endif %}
+
+            {% for field in form %}
+            <label>
+              {{ field.label }}
+              {{ field }}
+              {% if field.help_text %}
+              <small>{{ field.help_text }}</small>
+              {% endif %}
+            </label>
+            {% endfor %}
+
+            <button type="submit" class="btn btn-ink btn-submit">
+              ورود <span class="arrow">←</span>
+            </button>
+          </form>
+
+          <div class="auth-footer">
+            <span>© {{ settings.established_year|default:"۱۴۰۵" }} {{ settings.site_name|default:"سئو ران" }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
