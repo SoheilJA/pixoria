@@ -36,8 +36,8 @@
   <section aria-labelledby="work-head">
     <header class="section-head" data-aos="fade-up">
       <span class="eyebrow"><span class="dot"></span>پروژه‌های منتخب</span>
-      <h2 id="work-head">{{ featured_work_section.title }}</h2>
-      <p class="lede">{{ featured_work_section.description }}</p>
+      <h2 id="work-head">{{ featured_work_section.title|safe }}</h2>
+      <p class="lede">{{ featured_work_section.description|safe }}</p>
     </header>
 
     <div class="carousel-wrap" id="works-carousel" data-aos="fade-up" data-aos-delay="100">

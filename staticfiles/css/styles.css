@@ -2618,11 +2618,7 @@ section {
 
   .hero-meta {
     grid-template-columns: 1fr 1fr;
-  }
-
-  .hero-meta> :nth-child(3),
-  .hero-meta> :nth-child(4) {
-    display: none;
+    gap: 10px 20px;
   }
 
   .hero-bottom {
@@ -2940,11 +2936,6 @@ section {
     gap: 12px 24px;
   }
 
-  .hero-meta span:nth-child(3),
-  .hero-meta span:nth-child(4) {
-    display: none;
-  }
-
   .hero-bottom {
     grid-template-columns: 1fr;
     gap: 24px;
@@ -3114,13 +3105,8 @@ section {
 
   /* hero */
   .hero-meta {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr;
     gap: 8px;
-  }
-
-  .hero-meta span:nth-child(3),
-  .hero-meta span:nth-child(4) {
-    display: none;
   }
 
   .hero-actions {
