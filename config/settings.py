@@ -25,7 +25,7 @@ SECRET_KEY = "django-insecure-&i^(qejd(3ad!89zlcdeezds717=dmpfas4vmp5f9(lh3=a1*v
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["127.0.0.1", "localhost", "django-avazeh-k3p-avazeh.runflare.cloud"]
+ALLOWED_HOSTS = ["127.0.0.1", "localhost", "pixoria.ir"]
 
 
 # Application definition
@@ -131,5 +131,5 @@ STATICFILES_DIRS = [BASE_DIR / "static"]
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
-LOGIN_URL = '/login/'
-LOGIN_REDIRECT_URL = '/'
+LOGIN_URL = "/login/"
+LOGIN_REDIRECT_URL = "/"

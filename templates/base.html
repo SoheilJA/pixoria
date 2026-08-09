@@ -209,18 +209,19 @@
               <a href="{% url 'contact:contact' %}">تماس</a>
             </div>
 
-            <div class="col" data-aos="fade-up" data-aos-delay="250">
-              <h4>حوزه های کاری</h4>
-              {%for service in services_footer %}
-              <a href="{% url 'services:detail' service.slug %}"> {{ service.title }} </a>
-              {% endfor %}
-            </div>
-
-            <div class="col" data-aos="fade-up" data-aos-delay="300">
-              <h4>ما را دنبال کنید</h4>
-              {% for social in socials %}
-              <a href="{{social.url}}">{{social.name}}</a>
-              {% endfor %}
+            <div class="col col-combined" data-aos="fade-up" data-aos-delay="250">
+              <div class="col-sub">
+                <h4>حوزه های کاری</h4>
+                {% for service in services_footer %}
+                <a href="{% url 'services:detail' service.slug %}">{{ service.title }}</a>
+                {% endfor %}
+              </div>
+              <div class="col-sub" data-aos="fade-up" data-aos-delay="300">
+                <h4>ما را دنبال کنید</h4>
+                {% for social in socials %}
+                <a href="{{social.url}}">{{social.name}}</a>
+                {% endfor %}
+              </div>
             </div>
           </div>
 
