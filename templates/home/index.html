@@ -1,203 +1,189 @@
 {% extends 'base.html' %}
 
-{% block title %}دکتر سایت شما{% endblock %}
+{% block title %}{{ settings.site_name }} — {{ settings.site_description }}{% endblock %}
 {% block description %}آژانس دیجیتال مارکتینگ{% endblock %}
 
 {% block content %}
 
-  <!-- ─── هیرو ─── -->
-  <section class="hero" aria-label="Welcome">
-    <div class="hero-meta" data-aos="fade-down" data-aos-duration="600">
-      <span><span class="lime-tag">● مشاوره رایگان</span></span>
-      <span>خدمات در سراسر ایران</span>
-      <span>طراحی سایت و سئو</span>
-      <span>پشتیبانی مستمر</span>
+<!-- ─── هیرو ─── -->
+<section class="hero" aria-label="Welcome">
+  <div class="hero-meta" data-aos="fade-down" data-aos-duration="600">
+    <span><span class="lime-tag">● مشاوره رایگان</span></span>
+    <span>خدمات در سراسر ایران</span>
+    <span>طراحی سایت و سئو</span>
+    <span>پشتیبانی مستمر</span>
+  </div>
+  <h1 class="hero-headline" data-aos="fade-up" data-aos-delay="100">
+    {{ hero.title|safe }}
+    <span style="color: var(--lime-deep)">.</span>
+  </h1>
+  <div class="hero-bottom" data-aos="fade-up" data-aos-delay="200">
+    <p class="hero-pitch">{{ hero.description|safe }}</p>
+    <div class="hero-actions">
+      <a class="btn btn-ink" href="{% url 'portfolio:list' %}">مشاهده نمونه کار ها <span class="arrow">←</span></a>
+      <a class="btn btn-ghost" href="{% url 'contact:contact' %}">شروع همکاری</a>
     </div>
-    <h1 class="hero-headline" data-aos="fade-up" data-aos-delay="100">
-      {{ hero.title|safe }}
-      <span style="color: var(--lime-deep)">.</span>
-    </h1>
-    <div class="hero-bottom" data-aos="fade-up" data-aos-delay="200">
-      <p class="hero-pitch">{{ hero.description|safe }}</p>
-      <div class="hero-actions">
-        <a class="btn btn-ink" href="{% url 'portfolio:list' %}">مشاهده نمونه کار ها <span class="arrow">←</span></a>
-        <a class="btn btn-ghost" href="{% url 'contact:contact' %}">شروع همکاری</a>
-      </div>
+  </div>
+  <div class="hero-marquee" aria-hidden="true" data-aos="fade-up" data-aos-delay="300">
+    <div class="marquee-track">
+      {% for item in hero_marquee %}<span>{{ item.text }}</span>{% endfor %}
+      {% for item in hero_marquee %}<span>{{ item.text }}</span>{% endfor %}
     </div>
-    <div class="hero-marquee" aria-hidden="true" data-aos="fade-up" data-aos-delay="300">
-      <div class="marquee-track">
-        {% for item in hero_marquee %}<span>{{ item.text }}</span>{% endfor %}
-        {% for item in hero_marquee %}<span>{{ item.text }}</span>{% endfor %}
-      </div>
-    </div>
-  </section>
+  </div>
+</section>
 
-  <!-- ─── نمونه کارهای منتخب (کاروسل) ─── -->
-  <section aria-labelledby="work-head">
-    <header class="section-head" data-aos="fade-up">
-      <span class="eyebrow"><span class="dot"></span>پروژه‌های منتخب</span>
-      <h2 id="work-head">{{ featured_work_section.title|safe }}</h2>
-      <p class="lede">{{ featured_work_section.description|safe }}</p>
-    </header>
+<!-- ─── نمونه کارهای منتخب (کاروسل) ─── -->
+<section aria-labelledby="work-head">
+  <header class="section-head" data-aos="fade-up">
+    <span class="eyebrow"><span class="dot"></span>پروژه‌های منتخب</span>
+    <h2 id="work-head">{{ featured_work_section.title|safe }}</h2>
+    <p class="lede">{{ featured_work_section.description|safe }}</p>
+  </header>
 
-    <div class="carousel-wrap" id="works-carousel" data-aos="fade-up" data-aos-delay="100">
-      <div class="carousel-track">
-        {% for work in featured_works %}
-        <article class="work-card">
-          <a href="{% url 'portfolio:detail' work.slug %}" style="display:contents;color:inherit;text-decoration:none">
-            <div class="img-wrap">
-              <span class="index">{{ forloop.counter|stringformat:'02d' }}</span>
-              <img src="{{ work.image.url }}" alt="{{ work.title }}" loading="lazy" />
+  <div class="carousel-wrap" id="works-carousel" data-aos="fade-up" data-aos-delay="100">
+    <div class="carousel-track">
+      {% for work in featured_works %}
+      <article class="work-card">
+        <a href="{% url 'portfolio:detail' work.slug %}" style="display:contents;color:inherit;text-decoration:none">
+          <div class="img-wrap">
+            <span class="index">{{ forloop.counter|stringformat:'02d' }}</span>
+            <img src="{{ work.image.url }}" alt="{{ work.title }}" loading="lazy" />
+          </div>
+          <div class="body">
+            <div class="meta">
+              <span>{{ work.client_name }}</span>
+              <span class="year">{{ work.year }}</span>
             </div>
-            <div class="body">
-              <div class="meta">
-                <span>{{ work.client_name }}</span>
-                <span class="year">{{ work.year }}</span>
-              </div>
-              <h3>{{ work.title }}</h3>
-              <p>{{ work.excerpt }}</p>
-              {% if work.categories.all %}
-              <div class="tags">
-                {% for cat in work.categories.all %}
-                  <span class="service-tag">{{ cat.name }}</span>
-                {% endfor %}
-              </div>
-              {% endif %}
-              <span class="arrow-link">
-                مشاهده پروژه <span class="line"></span> <span>←</span>
-              </span>
-            </div>
-          </a>
-        </article>
-        {% endfor %}
-      </div>
-      <div class="carousel-controls">
-        <button type="button" class="carousel-btn carousel-btn-prev" aria-label="قبلی">→</button>
-        <div class="carousel-dots"></div>
-        <button type="button" class="carousel-btn carousel-btn-next" aria-label="بعدی">←</button>
-      </div>
-    </div>
-  </section>
-
-  <!-- ─── لیست خدمات ─── -->
-  <section aria-labelledby="services-head">
-    <header class="section-head" data-aos="fade-up">
-      <span class="eyebrow"><span class="dot"></span> حوزه های کاری · ۶</span>
-      <h2 id="services-head">{{ services_section.title }}</h2>
-      <p class="lede">{{ services_section.description }}</p>
-    </header>
-    <div class="services-list">
-      {% for item in services_with_delay %}
-        {% with service=item.service delay=item.delay %}
-        <a href="{% url 'services:detail' service.slug %}" class="row" aria-label="{{ service.title }}">
-          <span class="num"
-                data-aos="fade-up"
-                data-aos-duration="500"
-                data-aos-delay="{{ delay }}"
-                data-aos-anchor-placement="top-bottom">
-            {{ forloop.counter|stringformat:'02d' }} / {{ services|length|stringformat:'02d' }}
-          </span>
-          <div class="service-row-body"
-               data-aos="fade-up"
-               data-aos-duration="500"
-               data-aos-delay="{{ delay|add:50 }}"
-               data-aos-anchor-placement="top-bottom">
-            <h3>{{ service.title }}</h3>
-            {% if service.tags %}
-            <div class="service-tags"
-                 data-aos="fade-up"
-                 data-aos-duration="500"
-                 data-aos-delay="{{ delay|add:80 }}"
-                 data-aos-anchor-placement="top-bottom">
-              {% for tag in service.get_tags_list %}
-                <span class="service-tag">{{ tag }}</span>
+            <h3>{{ work.title }}</h3>
+            <p>{{ work.excerpt }}</p>
+            {% if work.categories.all %}
+            <div class="tags">
+              {% for cat in work.categories.all %}
+              <span class="service-tag">{{ cat.name }}</span>
               {% endfor %}
             </div>
             {% endif %}
+            <span class="arrow-link">
+              مشاهده پروژه <span class="line"></span> <span>←</span>
+            </span>
           </div>
-          <p data-aos="fade-up"
-             data-aos-duration="500"
-             data-aos-delay="{{ delay|add:110 }}"
-             data-aos-anchor-placement="top-bottom">
-            {{ service.excerpt }}
-          </p>
-          <span class="arrow"
-                data-aos="fade-up"
-                data-aos-duration="500"
-                data-aos-delay="{{ delay|add:150 }}"
-                data-aos-anchor-placement="top-bottom">←</span>
         </a>
-        {% endwith %}
+      </article>
       {% endfor %}
     </div>
-  </section>
-
-  <!-- ─── مارکویی مشتریان ─── -->
-  <section style="padding:0" aria-label="Selected clients" data-aos="fade-in">
-    <div class="clients-marquee">
-      <div class="track">
-        {% for client in clients %}<span>{{ client.name }}</span>{% endfor %}
-        {% for client in clients %}<span>{{ client.name }}</span>{% endfor %}
-      </div>
+    <div class="carousel-controls">
+      <button type="button" class="carousel-btn carousel-btn-prev" aria-label="قبلی">→</button>
+      <div class="carousel-dots"></div>
+      <button type="button" class="carousel-btn carousel-btn-next" aria-label="بعدی">←</button>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- ─── مانیفستو ─── -->
-  <section class="manifesto" aria-labelledby="manifesto-head">
-    <div class="grid">
-      <div data-aos="fade-up" data-aos-duration="700">
-        <span class="label">{{ manifesto.label }}</span>
-        <h2 id="manifesto-head">
-          {{ manifesto.title }}
-          <span class="lime-text">{{ manifesto.highlighted_word }}</span>.
-        </h2>
-      </div>
-      <div data-aos="fade-up" data-aos-duration="700" data-aos-delay="100">
-        <p>{{ manifesto.paragraph_one }}</p>
-        <p>{{ manifesto.paragraph_two }}</p>
-        <div class="signature">
-          <span>↲ {{ manifesto.signature_name }}</span>
-          <span></span>
-          <span>{{ manifesto.signature_title }}</span>
+<!-- ─── لیست خدمات ─── -->
+<section aria-labelledby="services-head">
+  <header class="section-head" data-aos="fade-up">
+    <span class="eyebrow"><span class="dot"></span> حوزه های کاری · ۶</span>
+    <h2 id="services-head">{{ services_section.title|safe }}</h2>
+    <p class="lede">{{ services_section.description|safe }}</p>
+  </header>
+  <div class="services-list">
+    {% for item in services_with_delay %}
+    {% with service=item.service delay=item.delay %}
+    <a href="{% url 'services:detail' service.slug %}" class="row" aria-label="{{ service.title }}">
+      <span class="num" data-aos="fade-up" data-aos-duration="500" data-aos-delay="{{ delay }}"
+        data-aos-anchor-placement="top-bottom">
+        {{ forloop.counter|stringformat:'02d' }} / {{ services|length|stringformat:'02d' }}
+      </span>
+      <div class="service-row-body" data-aos="fade-up" data-aos-duration="500" data-aos-delay="{{ delay|add:50 }}"
+        data-aos-anchor-placement="top-bottom">
+        <h3>{{ service.title }}</h3>
+        {% if service.tags %}
+        <div class="service-tags" data-aos="fade-up" data-aos-duration="500" data-aos-delay="{{ delay|add:80 }}"
+          data-aos-anchor-placement="top-bottom">
+          {% for tag in service.get_tags_list %}
+          <span class="service-tag">{{ tag }}</span>
+          {% endfor %}
         </div>
+        {% endif %}
       </div>
-    </div>
-  </section>
+      <p data-aos="fade-up" data-aos-duration="500" data-aos-delay="{{ delay|add:110 }}"
+        data-aos-anchor-placement="top-bottom">
+        {{ service.excerpt }}
+      </p>
+      <span class="arrow" data-aos="fade-up" data-aos-duration="500" data-aos-delay="{{ delay|add:150 }}"
+        data-aos-anchor-placement="top-bottom">←</span>
+    </a>
+    {% endwith %}
+    {% endfor %}
+  </div>
+</section>
 
-  <!-- ─── نظرات مشتریان (کاروسل) ─── -->
-  {% if testimonials %}
-  <section aria-labelledby="testimonials-head">
-    <header class="section-head" data-aos="fade-up">
-      <span class="eyebrow"><span class="dot"></span>نظرات مشتریان</span>
-      <h2 id="testimonials-head">آن‌ها تجربه‌شان را گفتند.</h2>
-    </header>
-    <div class="carousel-wrap" id="testimonials-carousel" data-aos="fade-up" data-aos-delay="100">
-      <div class="carousel-track">
-        {% for t in testimonials %}
-        <article class="testimonial-card">
-          <div class="stars">★★★★★</div>
-          <blockquote>{{ t.text }}</blockquote>
-          <div class="author">
-            {% if t.author_image %}
-            <div class="author-avatar">
-              <img src="{{ t.author_image.url }}" alt="{{ t.author_name }}" loading="lazy" />
-            </div>
-            {% endif %}
-            <div class="author-info">
-              <span class="author-name">{{ t.author_name }}</span>
-              <span class="author-role">{{ t.author_role }}</span>
-            </div>
-          </div>
-        </article>
-        {% endfor %}
-      </div>
-      <div class="carousel-controls">
-        <button type="button" class="carousel-btn carousel-btn-prev" aria-label="قبلی">→</button>
-        <div class="carousel-dots"></div>
-        <button type="button" class="carousel-btn carousel-btn-next" aria-label="بعدی">←</button>
+<!-- ─── مارکویی مشتریان ─── -->
+<section style="padding:0" aria-label="Selected clients" data-aos="fade-in">
+  <div class="clients-marquee">
+    <div class="track">
+      {% for client in clients %}<span>{{ client.name }}</span>{% endfor %}
+      {% for client in clients %}<span>{{ client.name }}</span>{% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- ─── مانیفستو ─── -->
+<section class="manifesto" aria-labelledby="manifesto-head">
+  <div class="grid">
+    <div data-aos="fade-up" data-aos-duration="700">
+      <span class="label">{{ manifesto.label }}</span>
+      <h2 id="manifesto-head">
+        {{ manifesto.title }}
+        <span class="lime-text">{{ manifesto.highlighted_word }}</span>.
+      </h2>
+    </div>
+    <div data-aos="fade-up" data-aos-duration="700" data-aos-delay="100">
+      <p>{{ manifesto.paragraph_one }}</p>
+      <p>{{ manifesto.paragraph_two }}</p>
+      <div class="signature">
+        <span>↲ {{ manifesto.signature_name }}</span>
+        <span></span>
+        <span>{{ manifesto.signature_title }}</span>
       </div>
     </div>
-  </section>
-  {% endif %}
+  </div>
+</section>
+
+<!-- ─── نظرات مشتریان (کاروسل) ─── -->
+{% if testimonials %}
+<section aria-labelledby="testimonials-head">
+  <header class="section-head" data-aos="fade-up">
+    <span class="eyebrow"><span class="dot"></span>نظرات مشتریان</span>
+    <h2 id="testimonials-head">آن‌ها تجربه‌شان را گفتند.</h2>
+  </header>
+  <div class="carousel-wrap" id="testimonials-carousel" data-aos="fade-up" data-aos-delay="100">
+    <div class="carousel-track">
+      {% for t in testimonials %}
+      <article class="testimonial-card">
+        <div class="stars">★★★★★</div>
+        <blockquote>{{ t.text }}</blockquote>
+        <div class="author">
+          {% if t.author_image %}
+          <div class="author-avatar">
+            <img src="{{ t.author_image.url }}" alt="{{ t.author_name }}" loading="lazy" />
+          </div>
+          {% endif %}
+          <div class="author-info">
+            <span class="author-name">{{ t.author_name }}</span>
+            <span class="author-role">{{ t.author_role }}</span>
+          </div>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+    <div class="carousel-controls">
+      <button type="button" class="carousel-btn carousel-btn-prev" aria-label="قبلی">→</button>
+      <div class="carousel-dots"></div>
+      <button type="button" class="carousel-btn carousel-btn-next" aria-label="بعدی">←</button>
+    </div>
+  </div>
+</section>
+{% endif %}
 
 {% endblock %}
