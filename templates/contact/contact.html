@@ -23,44 +23,44 @@
       {% endif %}
 
       <div class="contact-meta-block">
-        <span class="contact-meta-label">دفتر</span>
-        <h3>{{ contact_info.office_title }}</h3>
-        <div class="office">
-          <address>{{ contact_info.office_address|linebreaksbr }}</address>
-        </div>
+        <span class="contact-meta-label">دفتر — {{ contact_info.office_title }}</span>
+        <address>{{ contact_info.office_address|linebreaksbr }}</address>
       </div>
 
-      <div class="channels">
-        {% if contact_info.phone %}
-          <a href="tel:{{ contact_info.phone }}">
-            <span class="lab">تلفن</span>
-            <span>{{ contact_info.phone }}</span>
-          </a>
-        {% endif %}
-        {% if contact_info.email_project %}
-          <a href="mailto:{{ contact_info.email_project }}">
-            <span class="lab">پروژه‌های جدید</span>
-            <span>{{ contact_info.email_project }}</span>
-          </a>
-        {% endif %}
-        {% if contact_info.email_press %}
-          <a href="mailto:{{ contact_info.email_press }}">
-            <span class="lab">رسانه</span>
-            <span>{{ contact_info.email_press }}</span>
-          </a>
-        {% endif %}
-        {% if contact_info.email_career %}
-          <a href="mailto:{{ contact_info.email_career }}">
-            <span class="lab">فرصت‌های شغلی</span>
-            <span>{{ contact_info.email_career }}</span>
-          </a>
-        {% endif %}
-        {% if contact_info.working_hours %}
-          <div class="channel-item">
-            <span class="lab">ساعات کاری</span>
-            <span>{{ contact_info.working_hours }}</span>
-          </div>
-        {% endif %}
+      <div class="contact-meta-block channels">
+        <span class="contact-meta-label">اطلاعات تماس</span>
+        <div class="channels">
+          {% if contact_info.phone %}
+            <a href="tel:{{ contact_info.phone }}">
+              <span class="lab">تلفن</span>
+              <span>{{ contact_info.phone }}</span>
+            </a>
+          {% endif %}
+          {% if contact_info.working_hours %}
+            <div class="channel-item">
+              <span class="lab">ساعات کاری</span>
+              <span>{{ contact_info.working_hours }}</span>
+            </div>
+          {% endif %}
+          {% if contact_info.email_project %}
+            <a href="mailto:{{ contact_info.email_project }}">
+              <span class="lab">پروژه‌های جدید</span>
+              <span>{{ contact_info.email_project }}</span>
+            </a>
+          {% endif %}
+          {% if contact_info.email_press %}
+            <a href="mailto:{{ contact_info.email_press }}">
+              <span class="lab">رسانه</span>
+              <span>{{ contact_info.email_press }}</span>
+            </a>
+          {% endif %}
+          {% if contact_info.email_career %}
+            <a href="mailto:{{ contact_info.email_career }}">
+              <span class="lab">فرصت‌های شغلی</span>
+              <span>{{ contact_info.email_career }}</span>
+            </a>
+          {% endif %}
+        </div>
       </div>
 
       {% if socials %}

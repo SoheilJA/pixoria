@@ -1485,7 +1485,8 @@ section {
   margin-top: 24px;
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  flex-wrap: wrap;
+  justify-content: space-around;
   align-items: center;
   gap: 24px;
   font-family: var(--mono);
@@ -1956,56 +1957,146 @@ section {
   padding: 64px var(--pad-x);
 }
 
+/* ─── بلاک‌های ستون راست — همه با یک ریتم ─── */
+.contact-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
 .contact-info h3 {
   font-size: 1.3rem;
   margin-bottom: 14px;
 }
 
-.contact-info .office {
-  border-top: 1px solid var(--ink-line);
+/* هر بلاک با border-bottom جدا میشه */
+.contact-block {
   padding: 24px 0;
-}
-
-.contact-info .office:last-child {
   border-bottom: 1px solid var(--ink-line);
 }
 
-.contact-info .office .city {
+.contact-block:first-child {
+  padding-top: 0;
+}
+
+/* label کوچک بالای هر بلاک */
+.contact-meta-label {
+  display: block;
   font-family: var(--mono);
-  font-size: 0.78rem;
-  letter-spacing: 0.1em;
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--ink-dim);
-  margin-bottom: 6px;
+  margin-bottom: 12px;
 }
 
-.contact-info .office address {
+/* آدرس دفتر */
+.contact-info address {
   font-style: normal;
   color: var(--ink-soft);
-  line-height: 1.5;
+  line-height: 1.7;
+  font-size: 0.95rem;
 }
 
+/* کانال‌های تماس */
 .contact-info .channels {
-  margin-top: 32px;
-  display: grid;
-  gap: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
 }
 
-.contact-info .channels a {
+.contact-info .channels a,
+.contact-info .channels .channel-item {
   display: flex;
-  gap: 12px;
+  justify-content: space-between;
   align-items: baseline;
-  padding: 6px 0;
+  gap: 12px;
+  padding: 10px 0;
   border-bottom: 1px dashed var(--ink-line);
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+  text-decoration: none;
+  transition: color 0.2s var(--ease);
+}
+
+.contact-info .channels a:last-child,
+.contact-info .channels .channel-item:last-child {
+  border-bottom: none;
+}
+
+.contact-info .channels a:hover {
+  color: var(--ink);
 }
 
 .contact-info .channels .lab {
   font-family: var(--mono);
-  font-size: 0.74rem;
+  font-size: 0.72rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--ink-dim);
-  min-width: 80px;
+  flex-shrink: 0;
+}
+
+/* شبکه‌های اجتماعی */
+.contact-socials .social-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.social-link {
+  font-family: var(--mono);
+  font-size: 0.76rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  border: 1px solid var(--ink-line);
+  padding: 6px 14px;
+  border-radius: var(--radius-pill);
+  transition: background 0.2s var(--ease), color 0.2s var(--ease), border-color 0.2s var(--ease);
+}
+
+.social-link:hover {
+  background: var(--ink);
+  color: var(--lime);
+  border-color: var(--ink);
+}
+
+/* لیست خدمات */
+.contact-services-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.contact-service-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px dashed var(--ink-line);
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+  text-decoration: none;
+  transition: color 0.2s var(--ease), padding-right 0.2s var(--ease);
+}
+
+.contact-service-item:last-child {
+  border-bottom: none;
+}
+
+.contact-service-item:hover {
+  color: var(--ink);
+  padding-right: 6px;
+}
+
+.contact-service-item .arrow-sm {
+  font-size: 0.9rem;
+  color: var(--ink-dim);
+  transition: transform 0.2s var(--ease);
+}
+
+.contact-service-item:hover .arrow-sm {
+  transform: translateX(-4px);
 }
 
 .contact-form {
@@ -3068,7 +3159,9 @@ section {
 
   .site-footer .bottom {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
     align-items: center;
     gap: 8px;
     text-align: center;
@@ -4107,99 +4200,23 @@ details[open] .faq-icon {
   color: var(--ink);
   line-height: 1.2;
   letter-spacing: -0.02em;
-  margin: 0 0 32px;
-  padding-bottom: 32px;
+  margin: 0 0 0;
+  padding-bottom: 24px;
   border-bottom: 1px solid var(--ink-line);
 }
 
-.contact-meta-label {
-  display: block;
-  font-family: var(--mono);
-  font-size: 0.7rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--ink-dim);
-  margin-bottom: 10px;
-}
-
 .contact-meta-block {
-  margin-bottom: 28px;
-}
-
-.contact-meta-block h3 {
-  font-size: 1.1rem;
-  margin-bottom: 8px;
+  padding: 24px 0;
+  border-bottom: 1px solid var(--ink-line);
 }
 
 .contact-socials {
-  margin-top: 28px;
-  padding-top: 28px;
-  border-top: 1px solid var(--ink-line);
-}
-
-.social-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 4px;
-}
-
-.social-link {
-  font-family: var(--mono);
-  font-size: 0.76rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--ink-soft);
-  border: 1px solid var(--ink-line);
-  padding: 6px 14px;
-  border-radius: var(--radius-pill);
-  transition: all 0.2s var(--ease);
-}
-
-.social-link:hover {
-  background: var(--ink);
-  color: var(--lime);
-  border-color: var(--ink);
+  padding: 24px 0;
+  border-bottom: 1px solid var(--ink-line);
 }
 
 .contact-services-list {
-  margin-top: 28px;
-  padding-top: 28px;
-  border-top: 1px solid var(--ink-line);
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-}
-
-.contact-service-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 12px 0;
-  border-bottom: 1px dashed var(--ink-line);
-  color: var(--ink-soft);
-  font-size: 0.95rem;
-  transition: color 0.2s var(--ease), padding-right 0.2s var(--ease);
-}
-
-.contact-service-item:last-child {
-  border-bottom: none;
-}
-
-.contact-service-item:hover {
-  color: var(--ink);
-  padding-right: 6px;
-}
-
-.contact-service-item .arrow-sm {
-  font-size: 0.9rem;
-  color: var(--ink-dim);
-  transition: transform 0.2s var(--ease), color 0.2s var(--ease);
-}
-
-.contact-service-item:hover .arrow-sm {
-  transform: translateX(-4px);
-  color: var(--lime-deep);
+  padding: 24px 0;
 }
 
 /* ─── service row tags ─── */
@@ -4921,7 +4938,7 @@ body {
 
 /* المان دکوراتیو پس‌زمینه */
 .auth-brand::before {
-  content: "A";
+  content: "P";
   position: absolute;
   bottom: -6rem;
   left: -3rem;
