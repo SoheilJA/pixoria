@@ -79,10 +79,30 @@
       const articles = grid ? grid.querySelectorAll('article') : [];
 
       function filterItems(slug) {
+        var visible = [];
+        var hidden  = [];
+
         articles.forEach(function(article) {
           const tags = (article.getAttribute('data-category') || '').split(',');
           const show = slug === 'all' || tags.includes(slug);
-          article.style.display = show ? '' : 'none';
+          if (show) visible.push(article);
+          else      hidden.push(article);
+        });
+
+        // مخفی کردن کارت‌های غیر مرتبط
+        hidden.forEach(function(article) {
+          article.style.display = 'none';
+          article.classList.remove('filter-enter');
+        });
+
+        // نمایش کارت‌های مرتبط با stagger
+        visible.forEach(function(article, i) {
+          article.style.display = '';
+          article.classList.remove('filter-enter');
+          // force reflow برای restart انیمیشن
+          void article.offsetWidth;
+          article.style.animationDelay = (i * 55) + 'ms';
+          article.classList.add('filter-enter');
         });
       }
 

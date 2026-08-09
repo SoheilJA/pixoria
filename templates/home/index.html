@@ -104,7 +104,11 @@
                data-aos-anchor-placement="top-bottom">
             <h3>{{ service.title }}</h3>
             {% if service.tags %}
-            <div class="service-tags">
+            <div class="service-tags"
+                 data-aos="fade-up"
+                 data-aos-duration="500"
+                 data-aos-delay="{{ delay|add:80 }}"
+                 data-aos-anchor-placement="top-bottom">
               {% for tag in service.get_tags_list %}
                 <span class="service-tag">{{ tag }}</span>
               {% endfor %}
@@ -113,7 +117,7 @@
           </div>
           <p data-aos="fade-up"
              data-aos-duration="500"
-             data-aos-delay="{{ delay|add:100 }}"
+             data-aos-delay="{{ delay|add:110 }}"
              data-aos-anchor-placement="top-bottom">
             {{ service.excerpt }}
           </p>

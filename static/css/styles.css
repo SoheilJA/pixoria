@@ -1073,7 +1073,7 @@ section {
 }
 
 .work-card:hover .body h3 {
-  color: var(--lime-deep);
+  color: inherit;
 }
 
 .work-card .body p {
@@ -1106,7 +1106,7 @@ section {
 }
 
 .work-card:hover .body .arrow-link {
-  color: var(--lime-deep);
+  color: var(--ink);
 }
 
 /* ─── services list (numbered, NOT card grid) ─── */
@@ -1563,10 +1563,12 @@ section {
   cursor: pointer;
   font-family: inherit;
   font-size: inherit;
+  transition: background 0.2s var(--ease), color 0.2s var(--ease), border-color 0.2s var(--ease);
 }
 
 .work-filters button:hover {
   border-color: var(--ink);
+  background: var(--paper-soft);
   color: var(--ink);
 }
 
@@ -1582,6 +1584,21 @@ section {
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 32px;
   align-items: stretch;
+}
+
+@keyframes cardFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.work-card.filter-enter {
+  animation: cardFadeUp 0.45s var(--ease) both;
 }
 
 .work-grid .work-card {
@@ -1642,7 +1659,7 @@ section {
 }
 
 .work-card:hover .body .arrow-link .line {
-  background: var(--lime-deep);
+  background: var(--ink-dim);
 }
 
 .work-grid .empty {
@@ -2028,17 +2045,23 @@ section {
   text-transform: uppercase;
   border: 1px solid var(--ink-line);
   color: var(--ink-dim);
+  background: transparent;
   padding: 8px 18px;
   border-radius: var(--radius-pill);
-  transition: all 0.2s var(--ease);
+  cursor: pointer;
+  transition: background 0.2s var(--ease), color 0.2s var(--ease), border-color 0.2s var(--ease);
 }
 
-.filter-btn:hover,
-.filter-btn.active {
+.filter-btn:hover {
   border-color: var(--ink);
+  background: var(--paper-soft);
   color: var(--ink);
+}
+
+.filter-btn.active {
   background: var(--ink);
   color: var(--paper);
+  border-color: var(--ink);
 }
 
 /* ─── project hero ─── */
