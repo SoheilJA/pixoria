@@ -38,28 +38,60 @@
 
     <!-- منو موبایل -->
     <nav class="mobile-nav" aria-label="Mobile">
-      <button class="mobile-close" aria-label="Close menu">بستن ✕</button>
-      <a href="{% url 'home:home' %}"
-        {% if request.resolver_match.app_name == "home" %} class="active" {% endif %}>
-        خانه
-      </a>
-      <a href="{% url 'portfolio:list' %}"
-        {% if request.resolver_match.app_name == "portfolio" %}class="active"{% endif %}>
-        نمونه کار ها
-      </a>
-      <a href="{% url 'services:list' %}"
-        {% if request.resolver_match.app_name == "services" %}class="active"{% endif %}>
-        خدمات
-      </a>
-      <a href="{% url 'core:about' %}"
-        {% if request.resolver_match.app_name == "core" %}class="active"{% endif %}>
-        درباره ما
-      </a>
-      
-      <a href="{% url 'contact:contact' %}"
-        {% if request.resolver_match.app_name == "contact" %}class="active"{% endif %}>
-        تماس با ما
-      </a>
+
+      <!-- هدر منو -->
+      <div class="mobile-nav-topbar">
+        <a class="mobile-nav-brand" href="/">
+          <span class="rail-brand-mark">S</span>
+          {{ settings.site_name }}
+        </a>
+        <button class="mobile-close" aria-label="Close menu">
+          بستن ✕
+        </button>
+      </div>
+
+      <!-- لینک های ناوبری -->
+      <div class="mobile-nav-links">
+        <a href="{% url 'home:home' %}"
+          {% if request.resolver_match.app_name == "home" %}class="active"{% endif %}>
+          خانه
+        </a>
+        <a href="{% url 'portfolio:list' %}"
+          {% if request.resolver_match.app_name == "portfolio" %}class="active"{% endif %}>
+          نمونه کار ها
+        </a>
+        <a href="{% url 'services:list' %}"
+          {% if request.resolver_match.app_name == "services" %}class="active"{% endif %}>
+          خدمات
+        </a>
+        <a href="{% url 'core:about' %}"
+          {% if request.resolver_match.app_name == "core" %}class="active"{% endif %}>
+          درباره ما
+        </a>
+        <a href="{% url 'contact:contact' %}"
+          {% if request.resolver_match.app_name == "contact" %}class="active"{% endif %}>
+          تماس با ما
+        </a>
+      </div>
+
+      <!-- فوتر منو -->
+      <div class="mobile-nav-foot">
+        {% if settings.phone %}
+        <a class="mobile-nav-phone" href="tel:{{ settings.phone }}">
+          {{ settings.phone }}
+        </a>
+        {% endif %}
+        <div class="mobile-nav-socials">
+          {% for social in socials %}
+          <a href="{{ social.url }}" target="_blank" rel="noopener">{{ social.name }}</a>
+          {% endfor %}
+        </div>
+        <div class="mobile-nav-meta">
+          <span class="mobile-nav-status">آماده همکاری</span>
+          <span>© {{ settings.established_year }} {{ settings.site_name }}</span>
+        </div>
+      </div>
+
     </nav>
 
     <div class="shell">
