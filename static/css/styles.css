@@ -1148,7 +1148,7 @@ section {
 }
 
 .services-list .row:hover .num {
-  color: var(--lime-deep);
+  color: var(--ink);
 }
 
 .services-list .row h3 {
@@ -1180,7 +1180,52 @@ section {
 
 .services-list .row:hover .arrow {
   transform: rotate(45deg);
-  color: var(--lime-deep);
+  color: var(--ink);
+}
+
+/* دکمه مشاهده خدمت — تغییر متن روی hover */
+.services-list .arrow-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  text-decoration: none;
+  transition: color 0.2s var(--ease);
+  overflow: hidden;
+}
+
+.services-list .arrow-link .link-label,
+.services-list .arrow-link .link-label-hover {
+  display: inline-block;
+  transition: transform 0.3s var(--ease), opacity 0.3s var(--ease);
+}
+
+.services-list .arrow-link .link-label-hover {
+  position: absolute;
+  opacity: 0;
+  transform: translateY(100%);
+}
+
+.services-list .arrow-link {
+  position: relative;
+}
+
+.services-list .row:hover .arrow-link {
+  color: var(--ink);
+}
+
+.services-list .row:hover .arrow-link .link-label {
+  opacity: 0;
+  transform: translateY(-100%);
+}
+
+.services-list .row:hover .arrow-link .link-label-hover {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 /* ─── client logos marquee ─── */
