@@ -1036,14 +1036,18 @@ section {
   border-bottom: 1px solid var(--ink-line);
   position: relative;
   transition:
-    padding 0.3s var(--ease),
-    background 0.3s var(--ease);
+    padding 0.35s var(--ease),
+    background 0.35s var(--ease),
+    border-color 0.35s var(--ease);
+  text-decoration: none;
+  color: inherit;
 }
 
 .services-list .row:hover {
   background: var(--paper-soft);
   padding-left: 16px;
   padding-right: 16px;
+  border-color: var(--ink-dim);
 }
 
 .services-list .row .num {
@@ -1051,6 +1055,11 @@ section {
   color: var(--ink-dim);
   font-size: 0.84rem;
   letter-spacing: 0.06em;
+  transition: color 0.35s var(--ease);
+}
+
+.services-list .row:hover .num {
+  color: var(--lime-deep);
 }
 
 .services-list .row h3 {
@@ -1065,14 +1074,19 @@ section {
   color: var(--ink-soft);
   margin: 0;
   max-width: 50ch;
+  transition: color 0.35s var(--ease);
+}
+
+.services-list .row:hover p {
+  color: var(--ink);
 }
 
 .services-list .row .arrow {
   font-size: 1.4rem;
   color: var(--ink);
   transition:
-    transform 0.3s var(--ease),
-    color 0.3s var(--ease);
+    transform 0.35s var(--ease),
+    color 0.35s var(--ease);
 }
 
 .services-list .row:hover .arrow {

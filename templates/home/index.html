@@ -89,7 +89,7 @@
     <div class="services-list">
       {% for item in services_with_delay %}
         {% with service=item.service delay=item.delay %}
-        <article class="row">
+        <a href="{% url 'services:detail' service.slug %}" class="row" aria-label="{{ service.title }}">
           <span class="num"
                 data-aos="fade-up"
                 data-aos-duration="500"
@@ -122,7 +122,7 @@
                 data-aos-duration="500"
                 data-aos-delay="{{ delay|add:150 }}"
                 data-aos-anchor-placement="top-bottom">←</span>
-        </article>
+        </a>
         {% endwith %}
       {% endfor %}
     </div>
