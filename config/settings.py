@@ -23,15 +23,21 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-&i^(qejd(3ad!89zlcdeezds717=dmpfas4vmp5f9(lh3=a1*v"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ["127.0.0.1", "localhost", "pixoria.ir"]
 
+CSRF_TRUSTED_ORIGINS = [
+    "https://pixoria.ir",
+    "https://www.pixoria.ir",
+]
 
 # Application definition
 
 INSTALLED_APPS = [
     "django.contrib.admin",
+    # sitemaps
+    "django.contrib.sitemaps",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
@@ -132,8 +138,8 @@ LOGIN_REDIRECT_URL = "/"
 
 import os
 
-STATIC_URL = '/public/static/'
+STATIC_URL = "/public/static/"
 STATIC_ROOT = os.path.join(BASE_DIR, "public", "static")
 
-MEDIA_URL = '/public/media/'
+MEDIA_URL = "/public/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "public", "media")
