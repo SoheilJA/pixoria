@@ -5,6 +5,8 @@ from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
 from apps.core import views as core_views
 
+handler404 = "config.views.custom_404"
+
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include("apps.home.urls")),
@@ -12,9 +14,11 @@ urlpatterns = [
     path("services/", include("apps.services.urls")),
     path("about/", include("apps.core.urls")),
     path("contact/", include("apps.contact.urls")),
-    path("login/", auth_views.LoginView.as_view(
-        template_name="registration/login.html"
-    ), name="login"),
+    path(
+        "login/",
+        auth_views.LoginView.as_view(template_name="registration/login.html"),
+        name="login",
+    ),
     path("logout/", auth_views.LogoutView.as_view(), name="logout"),
     path("proposal/<slug:slug>/", core_views.proposal, name="proposal"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
