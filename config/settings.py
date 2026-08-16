@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-&i^(qejd(3ad!89zlcdeezds717=dmpfas4vmp5f9(lh3=a1*v"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ["127.0.0.1", "localhost", "pixoria.ir"]
 
@@ -49,7 +49,30 @@ INSTALLED_APPS = [
     "apps.portfolio",
     "apps.services",
     "apps.contact",
+    "apps.blog"
+    "tinymce",
+    
 ]
+
+TINYMCE_DEFAULT_CONFIG = {
+    "height": 500,
+    "width": "100%",
+    "menubar": "edit view insert format tools table",
+    "plugins": "advlist autolink lists link image charmap preview anchor "
+               "searchreplace visualblocks code fullscreen "
+               "insertdatetime media table wordcount directionality",
+    "toolbar": "undo redo | blocks fontsizeinput | bold italic underline strikethrough | "
+               "alignleft aligncenter alignright alignjustify | "
+               "bullist numlist outdent indent | link image media table | "
+               "code preview fullscreen | removeformat help",
+    "directionality": "rtl",
+    "images_upload_url": "/blog/tinymce-image-upload/",
+    "automatic_uploads": True,
+    "file_picker_types": "image",
+    "branding": False,
+}
+
+
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",

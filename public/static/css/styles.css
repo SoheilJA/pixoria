@@ -1388,11 +1388,10 @@ section {
 
 /* ─── footer ─── */
 .site-footer {
-  background: var(--surface-dark);
+  background: var(--ink);
   color: #c8c7c2;
-  padding: clamp(60px, 7vw, 100px) var(--pad-x) clamp(32px, 4vw, 48px);
+  padding: clamp(60px, 7vw, 100px) var(--pad-x) 24px;
   font-size: 0.92rem;
-  overflow: visible;
 }
 
 #rail-foot {
@@ -1408,39 +1407,10 @@ section {
 
 .site-footer .top {
   display: grid;
-  grid-template-columns: 1.2fr 1fr;
+  grid-template-columns: 1.4fr 1fr 1fr 1fr;
   gap: 48px;
   border-bottom: 1px solid #2a2a27;
   padding-bottom: 48px;
-}
-
-/* ستون ترکیبی: حوزه های کاری بالا، ما را دنبال کنید زیرش */
-.site-footer .col-combined {
-  display: flex;
-  flex-direction: column;
-  gap: 32px;
-}
-
-.site-footer .col-sub h4 {
-  font-family: var(--mono);
-  font-size: 0.74rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--paper-on-dark);
-  margin-bottom: 14px;
-  font-weight: 500;
-}
-
-.site-footer .col-sub a {
-  display: block;
-  padding: 5px 0;
-  color: #b0afaa;
-  transition: color 0.2s var(--ease), transform 0.2s var(--ease);
-}
-
-.site-footer .col-sub a:hover {
-  color: var(--lime);
-  transform: translateX(-4px);
 }
 
 .site-footer .brand-block {
@@ -1487,37 +1457,23 @@ section {
   display: block;
   padding: 5px 0;
   color: #b0afaa;
-  transition: color 0.2s var(--ease), transform 0.2s var(--ease);
 }
 
 .site-footer .col a:hover {
   color: var(--lime);
-  transform: translateX(-4px);
 }
 
 .site-footer .bottom {
   margin-top: 24px;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: space-around;
-  align-items: center;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
   gap: 24px;
+  align-items: center;
   font-family: var(--mono);
   font-size: 0.74rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: #8b8a85;
-}
-
-.site-footer .bottom a {
-  color: inherit;
-  text-decoration: none;
-  transition: color 0.2s var(--ease);
-}
-
-.site-footer .bottom a:hover {
-  color: var(--lime);
 }
 
 .site-footer .bottom .center {
@@ -1527,6 +1483,7 @@ section {
 .site-footer .bottom .right {
   text-align: right;
 }
+
 
 .site-footer .copyright {
   margin-top: 32px;
@@ -5278,4 +5235,98 @@ body {
   .auth-form-wrap {
     max-width: 100%;
   }
+}
+
+/* ─── HTMX preloader ─── */
+.htmx-progress {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 2px;
+  width: 0%;
+  background: var(--lime);
+  z-index: 9999;
+  opacity: 0;
+  box-shadow: 0 0 8px rgba(200, 255, 61, 0.6);
+  transition: width 0.3s var(--ease-out), opacity 0.3s var(--ease);
+  pointer-events: none;
+}
+
+.htmx-progress.is-active {
+  opacity: 1;
+}
+
+.htmx-loader {
+  position: fixed;
+  bottom: 24px;
+  left: 24px;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  background: var(--ink);
+  color: var(--paper-on-dark);
+  border-radius: var(--radius-pill);
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0;
+  transform: translateY(12px);
+  pointer-events: none;
+  transition: opacity 0.25s var(--ease), transform 0.25s var(--ease);
+}
+
+.htmx-loader.is-active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.htmx-loader-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--lime);
+  animation: htmx-pulse 0.9s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+@keyframes htmx-pulse {
+
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  50% {
+    transform: scale(1.6);
+    opacity: 0.5;
+  }
+}
+
+/* ─── اسکرول‌بار سفارشی ─── */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: var(--ink-line) var(--paper);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--paper);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--ink-line);
+  border-radius: var(--radius-pill);
+  border: 2px solid var(--paper);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--lime-deep);
 }

@@ -26,6 +26,13 @@
 </head>
 
 <body hx-boost="true">
+  {% comment %} پریلودر {% endcomment %}
+
+  <div id="htmx-progress" class="htmx-progress"></div>
+<div id="htmx-loader" class="htmx-loader" aria-hidden="true">
+  <span class="htmx-loader-dot"></span>
+  <span class="htmx-loader-text">در حال بارگذاری</span>
+</div>
   <!-- هدر موبایل -->
   <div class="topbar">
     <a class="brand" href="/">
@@ -214,13 +221,16 @@
               <a href="{% url 'services:detail' service.slug %}">{{ service.title }}</a>
               {% endfor %}
             </div>
-            <div class="col-sub" data-aos="fade-up" data-aos-delay="300">
-              <h4>ما را دنبال کنید</h4>
-              {% for social in socials %}
-              <a href="{{social.url}}">{{social.name}}</a>
-              {% endfor %}
-            </div>
-          </div>
+<div class="col-sub" data-aos="fade-up" data-aos-delay="300">
+  <h4>ما را دنبال کنید</h4>
+  <div class="footer-socials">
+    {% for social in socials %}
+    <a href="{{ social.url }}" target="_blank" rel="noopener" class="footer-social-btn" aria-label="{{ social.name }}">
+      {{ social.label }}
+    </a>
+    {% endfor %}
+  </div>
+</div>          </div>
         </div>
 
         <div class="bottom" data-aos="fade-up" data-aos-delay="350">
@@ -297,7 +307,51 @@
     setTimeout(animateRailFoot, 400);
   </script>
 
-  {% block extra_js %}{% endblock %}
+  {% block extra_js %}
+  <script>
+  (function () {
+    var progress = document.getElementById('htmx-progress');
+    var loader = document.getElementById('htmx-loader');
+    var progressTimer = null;
+    var loaderTimer = null;
+    var width = 0;
+
+    function startProgress() {
+      width = 0;
+      progress.style.width = '0%';
+      progress.classList.add('is-active');
+
+      clearInterval(progressTimer);
+      progressTimer = setInterval(function () {
+        width += (90 - width) / 12;
+        progress.style.width = Math.min(width, 90) + '%';
+      }, 180);
+
+      clearTimeout(loaderTimer);
+      loaderTimer = setTimeout(function () {
+        loader.classList.add('is-active');
+      }, 250);
+    }
+
+    function finishProgress() {
+      clearInterval(progressTimer);
+      clearTimeout(loaderTimer);
+      progress.style.width = '100%';
+      loader.classList.remove('is-active');
+
+      setTimeout(function () {
+        progress.classList.remove('is-active');
+        setTimeout(function () {
+          progress.style.width = '0%';
+        }, 300);
+      }, 200);
+    }
+
+    document.body.addEventListener('htmx:beforeRequest', startProgress);
+    document.body.addEventListener('htmx:afterRequest', finishProgress);
+  })();
+</script>
+  {% endblock %}
 
 
 

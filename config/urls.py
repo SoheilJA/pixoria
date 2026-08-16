@@ -5,7 +5,12 @@ from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
 from apps.core import views as core_views
 from django.contrib.sitemaps.views import sitemap
-from apps.core.sitemaps import StaticViewSitemap, PortfolioSitemap, ServiceSitemap
+from apps.core.sitemaps import (
+    StaticViewSitemap,
+    PortfolioSitemap,
+    ServiceSitemap,
+    ArticleSitemap,
+)
 
 handler404 = "config.views.custom_404"
 
@@ -13,6 +18,7 @@ sitemaps = {
     "static": StaticViewSitemap,
     "portfolio": PortfolioSitemap,
     "services": ServiceSitemap,
+    "blog": ArticleSitemap,
 }
 
 
@@ -30,6 +36,8 @@ urlpatterns = [
     ),
     path("logout/", auth_views.LogoutView.as_view(), name="logout"),
     path("proposal/<slug:slug>/", core_views.proposal, name="proposal"),
+    path("tinymce/", include("tinymce.urls")),
+    path("blog/", include("apps.blog.urls")),
     path(
         "sitemap.xml",
         sitemap,
