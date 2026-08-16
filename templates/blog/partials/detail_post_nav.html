@@ -1,0 +1,35 @@
+{% comment %} navigation between previous and next articles in same category {% endcomment %}
+{% if prev_article or next_article %}
+  <nav class="post-nav" aria-label="پیمایش مقالات">
+    {% if prev_article %}
+      <a href="{% url 'blog:detail' prev_article.slug %}" title="مقاله قبلی">
+        <span class="dir">← مقاله قبلی</span>
+        <span class="post-title">{{ prev_article.title }}</span>
+        <span class="post-cat">
+          {{ prev_article.category.title }} 
+          · 
+          {{ prev_article.reading_time }} دقیقه
+        </span>
+      </a>
+    {% else %}
+      <span></span>
+    {% endif %}
+    
+    {% if next_article %}
+      <a 
+        href="{% url 'blog:detail' next_article.slug }}" 
+        style="text-align: right"
+        title="مقاله بعدی">
+        <span class="dir" style="justify-content: flex-end">مقاله بعدی →</span>
+        <span class="post-title">{{ next_article.title }}</span>
+        <span class="post-cat">
+          {{ next_article.category.title }} 
+          · 
+          {{ next_article.reading_time }} دقیقه
+        </span>
+      </a>
+    {% else %}
+      <span></span>
+    {% endif %}
+  </nav>
+{% endif %}

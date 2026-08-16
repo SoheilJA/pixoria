@@ -1,0 +1,51 @@
+{% comment %}بخش بالای صفحه مقاله (hero section){% endcomment %}
+<section class="post-hero">
+  {# breadcrumb navigation #}
+  <p class="crumb">
+    <a href="{% url 'home:home' %}">خانه</a>
+    ←
+    <a href="{% url 'blog:list' %}">بلاگ</a>
+    ←
+    <span style="color: var(--ink)">{{ article.category.title }}</span>
+  </p>
+
+  {# category and tags #}
+  <div class="post-tags">
+    <span class="tag highlight">{{ article.category.title }}</span>
+    {% for tag in article.tags.all %}
+      <span class="tag">{{ tag.title }}</span>
+    {% endfor %}
+  </div>
+
+  {# title #}
+  <h1>{{ article.title }}</h1>
+
+  {# metadata bar: author, date, reading time, update info #}
+  <div class="post-meta-bar">
+    {% if article.author %}
+      <div class="author">
+        <div class="avatar">
+          {% if article.author.avatar %}
+            <img src="{{ article.author.avatar.url }}" alt="{{ article.author.name }}" loading="eager" />
+          {% else %}
+            {{ article.author.initial }}
+          {% endif %}
+        </div>
+        <div class="name">{{ article.author.name }}</div>
+      </div>
+    {% endif %}
+
+    <span>{{ article.published_at|date:'d F Y' }}</span>
+
+    {% if article.author and article.reading_time %}
+      <span>·</span>
+    {% endif %}
+
+    <span>{{ article.reading_time }} دقیقه مطالعه</span>
+
+    {% if article.is_updated %}
+      <span>·</span>
+      <span>به‌روز شده: {{ article.updated_at|date:'F Y' }}</span>
+    {% endif %}
+  </div>
+</section>

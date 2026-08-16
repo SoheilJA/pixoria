@@ -1,0 +1,13 @@
+{% comment %}sidebar: table of contents{% endcomment %}
+{% if toc %}
+  <div class="sidebar-block">
+    <div class="sb-label">فهرست مطالب</div>
+    <ul class="toc-list" id="toc">
+      {% for item in toc %}
+        <li>
+          <a href="#{{ item.id }}">{{ item.number }}. {{ item.text }}</a>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endif %}

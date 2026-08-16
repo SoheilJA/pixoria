@@ -1,57 +1,104 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 
-{% block title %}{{ article.get_meta_title }}{% endblock %}
-{% block description %}{{ article.get_meta_description }}{% endblock %}
+{% block title %}
+  {{ article.get_meta_title }}
+{% endblock %}
+
+{% block description %}
+  {{ article.get_meta_description }}
+{% endblock %}
 
 {% block extra_css %}
-<style>
-  .article-content {
-    max-width: 72ch;
-    margin: 0 auto;
-    font-family: inherit;
-    line-height: 1.9;
-    font-size: 1.05rem;
-  }
-  .article-content * { max-width: 100%; }
-  .article-content img { height: auto; border-radius: 6px; }
-  .article-content h1,
-  .article-content h2,
-  .article-content h3,
-  .article-content h4 { margin: 1.6em 0 0.6em; line-height: 1.3; }
-  .article-content p { margin: 0 0 1.2em; }
-  .article-content ul,
-  .article-content ol { padding-right: 1.4em; margin-bottom: 1.2em; }
-  .article-content blockquote {
-    border-right: 3px solid #ccc;
-    padding: 4px 20px;
-    margin: 1.5em 0;
-    color: #555;
-  }
-  .article-content table { border-collapse: collapse; width: 100%; margin-bottom: 1.2em; }
-  .article-content table th,
-  .article-content table td { border: 1px solid #ddd; padding: 8px 12px; }
-  .article-content pre { overflow-x: auto; padding: 16px; background: #f4f4f4; border-radius: 6px; }
-  .article-content a { text-decoration: underline; }
-</style>
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'css/blog.css' %}" />
 {% endblock %}
 
 {% block content %}
-<section id="content-start">
-  <div class="meta" style="margin-bottom: 24px">
-    <span class="category">{{ article.category.title }}</span>
-    <span>{{ article.published_at|date:"d F Y" }}</span>
-    <span>·</span>
-    <span>{{ article.reading_time }} دقیقه</span>
-  </div>
+  <div class="single-blog-page">
+    {# Hero Section: breadcrumb, tags, title, metadata #}
+    {% include 'blog/partials/detail_hero.html' %}
 
-  <h1>{{ article.title }}</h1>
+    {# Cover Image #}
+    {% include 'blog/partials/detail_cover.html' %}
 
-  <div class="img-wrap" style="margin: 24px 0">
-    <img src="{{ article.cover_image.url }}" alt="{{ article.cover_image_alt }}">
-  </div>
+    {# Main Layout: Article Body + Sidebar #}
+    <div class="post-layout">
+      {# Article Body #}
+      {% include 'blog/partials/detail_body.html' %}
 
-  <div class="article-content">
-    {{ article.content|safe }}
+      {# Sidebar with multiple blocks #}
+      <aside class="post-sidebar">
+        {# Table of Contents #}
+        {% include 'blog/partials/sidebar_toc.html' %}
+
+        {# Author Information #}
+        {% include 'blog/partials/sidebar_author.html' %}
+
+        {# Related Articles in Sidebar #}
+        {% include 'blog/partials/sidebar_related.html' %}
+
+        {# Free Consultation CTA #}
+        {% include 'blog/partials/sidebar_cta.html' %}
+      </aside>
+    </div>
+
+    {# Related Posts Grid Section #}
+    {% include 'blog/partials/detail_related_section.html' %}
+
+    {# Previous/Next Article Navigation #}
+    {% include 'blog/partials/detail_post_nav.html' %}
   </div>
-</section>
+{% endblock %}
+
+{% block extra_js %}
+  <script>
+    ;(function () {
+      // ─── Table of Contents Active Link on Scroll ───
+      const headings = document.querySelectorAll('.post-body h2[id]')
+      const tocLinks = document.querySelectorAll('#toc a')
+    
+      if (headings.length && tocLinks.length) {
+        const io = new IntersectionObserver(
+          function (entries) {
+            entries.forEach(function (entry) {
+              if (entry.isIntersecting) {
+                // Remove active class from all links
+                tocLinks.forEach(function (a) {
+                  a.classList.remove('active')
+                })
+                // Add active class to current section
+                const active = document.querySelector('#toc a[href="#' + entry.target.id + '"]')
+                if (active) active.classList.add('active')
+              }
+            })
+          },
+          { rootMargin: '-20% 0px -70% 0px' }
+        )
+    
+        headings.forEach(function (h) {
+          io.observe(h)
+        })
+      }
+    
+      // ─── Copy Link Button ───
+      const copyBtn = document.getElementById('copy-link-btn')
+      if (copyBtn) {
+        copyBtn.addEventListener('click', function (e) {
+          e.preventDefault()
+          navigator.clipboard
+            .writeText(window.location.href)
+            .then(function () {
+              const originalText = copyBtn.innerHTML
+              copyBtn.textContent = '✓ کپی شد'
+              setTimeout(function () {
+                copyBtn.innerHTML = originalText
+              }, 2000)
+            })
+            .catch(function () {
+              alert('خطا در کپی کردن لینک')
+            })
+        })
+      }
+    })()
+  </script>
 {% endblock %}

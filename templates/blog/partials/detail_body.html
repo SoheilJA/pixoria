@@ -1,0 +1,17 @@
+{% comment %}محتوای اصلی مقاله + اشتراک‌گذاری{% endcomment %}
+<article class="post-body">
+  {# lead paragraph (excerpt) #}
+  <div class="lead">{{ article.excerpt }}</div>
+
+  {# main content #}
+  {{ content_html|safe }}
+
+  {# social sharing bar #}
+  <div class="post-share">
+    <span>اشتراک‌گذاری:</span>
+    <a href="https://twitter.com/intent/tweet?url={{ request.build_absolute_uri }}" target="_blank" rel="noopener noreferrer" title="اشتراک‌گذاری در توییتر" aria-label="اشتراک‌گذاری در توییتر">TW</a>
+    <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ request.build_absolute_uri }}" target="_blank" rel="noopener noreferrer" title="اشتراک‌گذاری در لینکدین" aria-label="اشتراک‌گذاری در لینکدین">LI</a>
+    <a href="https://t.me/share/url?url={{ request.build_absolute_uri }}&text={{ article.title|urlencode }}" target="_blank" rel="noopener noreferrer" title="اشتراک‌گذاری در تلگرام" aria-label="اشتراک‌گذاری در تلگرام">TG</a>
+    <a href="#" id="copy-link-btn" title="کپی لینک صفحه" aria-label="کپی لینک صفحه">🔗 کپی لینک</a>
+  </div>
+</article>

@@ -65,15 +65,19 @@
   <a href="{% url 'portfolio:list' %}" {% if request.resolver_match.app_name == "portfolio" %}class="active"{% endif %}>
     نمونه کار ها
   </a>
-  <a href="{% url 'services:list' %}" {% if request.resolver_match.app_name == "services" %}class="active"{% endif %}>
-    خدمات
-  </a>
-  <a href="{% url 'core:about' %}" {% if request.resolver_match.app_name == "core" %}class="active"{% endif %}>
-    درباره ما
-  </a>
+<a href="{% url 'services:list' %}" {% if request.resolver_match.app_name == "services" %}class="active"{% endif %}>
+  خدمات
+</a>
+<a href="{% url 'blog:list' %}" {% if request.resolver_match.app_name == "blog" %}class="active"{% endif %}>
+  بلاگ
+</a>
+<a href="{% url 'core:about' %}" {% if request.resolver_match.app_name == "core" %}class="active"{% endif %}>
+  درباره ما
+</a>
   <a href="{% url 'contact:contact' %}" {% if request.resolver_match.app_name == "contact" %}class="active"{% endif %}>
     تماس با ما
   </a>
+
 </div>
 
     <!-- فوتر منو -->
@@ -121,19 +125,25 @@
   </a>
 
   <a href="{% url 'services:list' %}" {% if request.resolver_match.app_name == "services" %}class="active" aria-current="page"{% endif %} data-aos="fade-up" data-aos-delay="400">
-    <span class="num"></span>
-    <span class="title">خدمات</span>
-  </a>
+  <span class="num"></span>
+  <span class="title">خدمات</span>
+</a>
 
-  <a href="{% url 'core:about' %}" {% if request.resolver_match.app_name == "core" %}class="active" aria-current="page"{% endif %} data-aos="fade-up" data-aos-delay="450">
-    <span class="num"></span>
-    <span class="title">درباره ما</span>
-  </a>
+<a href="{% url 'blog:list' %}" {% if request.resolver_match.app_name == "blog" %}class="active" aria-current="page"{% endif %} data-aos="fade-up" data-aos-delay="425">
+  <span class="num"></span>
+  <span class="title">بلاگ</span>
+</a>
+
+<a href="{% url 'core:about' %}" {% if request.resolver_match.app_name == "core" %}class="active" aria-current="page"{% endif %} data-aos="fade-up" data-aos-delay="450">
+  <span class="num"></span>
+  <span class="title">درباره ما</span>
+</a>
 
   <a href="{% url 'contact:contact' %}" {% if request.resolver_match.app_name == "contact" %}class="active" aria-current="page"{% endif %} data-aos="fade-up" data-aos-delay="500">
     <span class="num"></span>
     <span class="title">تماس با ما</span>
   </a>
+
 </nav>
       <div class="rail-foot" id="rail-foot">
         <div class="meta-row">
@@ -197,46 +207,79 @@
           فوتر سایت
         </h2>
 
-        <div class="top" data-aos="fade-up" data-aos-delay="100">
-          <div class="brand-block" data-aos="fade-up" data-aos-delay="150">
-            <span class="mark"><span class="badge">S</span> {{settings.site_name}}</span>
-            <p style="color: #b0afaa; margin: 0; line-height: 1.55">
-              {{settings.footer_description}}
-            </p>
-          </div>
+        <div class="site-footer__inner">
+          <div class="footer-grid">
+            <div class="footer-brand" data-aos="fade-up" data-aos-delay="120">
+              <div class="footer-brand-mark">P</div>
+              <div class="footer-brand-copy">
+                <div class="footer-brand-name">{{ settings.site_name }}</div>
+                <p>{{ settings.footer_description }}</p>
+              </div>
+            </div>
 
-          <div class="col" data-aos="fade-up" data-aos-delay="200">
-            <h4>استودیو</h4>
-            <a href="{% url 'home:home' %}">خانه</a>
-            <a href="{% url 'portfolio:list' %}">کارها</a>
-            <a href="{% url 'services:list' %}">خدمات</a>
-            <a href="{% url 'core:about' %}">درباره ما</a>
-            <a href="{% url 'contact:contact' %}">تماس</a>
-          </div>
+            <div class="footer-links" data-aos="fade-up" data-aos-delay="180">
+              <h4>نقشه سایت</h4>
+              <a href="{% url 'home:home' %}">خانه</a>
+              <a href="{% url 'portfolio:list' %}">نمونه‌کارها</a>
+              <a href="{% url 'services:list' %}">خدمات</a>
+              <a href="{% url 'blog:list' %}">بلاگ</a>
+              <a href="{% url 'core:about' %}">درباره ما</a>
+              <a href="{% url 'contact:contact' %}">تماس با ما</a>
+            </div>
 
-          <div class="col col-combined" data-aos="fade-up" data-aos-delay="250">
-            <div class="col-sub">
-              <h4>حوزه های کاری</h4>
+            <div class="footer-links" data-aos="fade-up" data-aos-delay="240">
+              <h4>خدمات</h4>
               {% for service in services_footer %}
               <a href="{% url 'services:detail' service.slug %}">{{ service.title }}</a>
+              {% empty %}
+              <a href="{% url 'services:list' %}">مشاهده خدمات</a>
               {% endfor %}
             </div>
-<div class="col-sub" data-aos="fade-up" data-aos-delay="300">
-  <h4>ما را دنبال کنید</h4>
-  <div class="footer-socials">
-    {% for social in socials %}
-    <a href="{{ social.url }}" target="_blank" rel="noopener" class="footer-social-btn" aria-label="{{ social.name }}">
-      {{ social.label }}
-    </a>
-    {% endfor %}
-  </div>
-</div>          </div>
-        </div>
 
-        <div class="bottom" data-aos="fade-up" data-aos-delay="350">
-          <span><a href="{% url 'home:home' %}">© {{ settings.established_year }} {{ settings.site_name }}</a></span>
-          <span class="center">ساخته شده در مشهد</span>
-          <span class="right">نسخه 01 · تابستان 1405</span>
+            <div class="footer-contact" data-aos="fade-up" data-aos-delay="300">
+              <h4>ارتباط</h4>
+              <ul class="footer-contact-list">
+                {% if settings.email %}
+                <li><a href="mailto:{{ settings.email }}">{{ settings.email }}</a></li>
+                {% endif %}
+                {% if settings.phone %}
+                <li><a href="tel:{{ settings.phone }}">{{ settings.phone }}</a></li>
+                {% endif %}
+                {% if settings.address %}
+                <li>{{ settings.address }}</li>
+                {% endif %}
+              </ul>
+
+              <div class="footer-socials">
+                {% for social in socials %}
+                <a href="{{ social.url }}" target="_blank" rel="noopener" class="footer-social-btn" aria-label="{{ social.name }}">
+                  {{ social.label }}
+                </a>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+
+          <div class="footer-bottom" data-aos="fade-up" data-aos-delay="360">
+            <div class="footer-bottom__meta">
+              <span>© {{ settings.established_year }} {{ settings.site_name }}</span>
+              <span>{{ settings.status }}</span>
+            </div>
+
+            <div class="footer-bottom__meta footer-bottom__meta--center">
+              {% if settings.address %}
+              <span>{{ settings.address }}</span>
+              {% else %}
+              <span>ایران</span>
+              {% endif %}
+            </div>
+
+            <div class="footer-bottom__meta footer-bottom__meta--left">
+              {% for social in socials|slice:':3' %}
+              <a href="{{ social.url }}" target="_blank" rel="noopener">{{ social.name }}</a>
+              {% endfor %}
+            </div>
+          </div>
         </div>
       </footer>
     </div>

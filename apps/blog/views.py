@@ -6,7 +6,8 @@ from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
 from django.views.decorators.http import require_POST
 
-from .models import Article, Category
+from .models import Article, Category, BlogPageSettings
+from .utils import process_content_toc
 
 PAGE_SIZE = 9
 
@@ -15,7 +16,7 @@ def _get_articles(category_slug):
     qs = Article.objects.filter(status="published", published_at__lte=timezone.now())
     if category_slug and category_slug != "all":
         qs = qs.filter(category__slug=category_slug)
-    return qs.select_related("category").order_by("-published_at")
+    return qs.select_related("category", "author").order_by("-published_at")
 
 
 def article_list(request):
@@ -23,6 +24,7 @@ def article_list(request):
     paginator = Paginator(qs, PAGE_SIZE)
     page_obj = paginator.get_page(1)
     context = {
+        "page_settings": BlogPageSettings.objects.first(),
         "categories": Category.objects.all(),
         "articles": page_obj.object_list,
         "has_next": page_obj.has_next(),
@@ -51,9 +53,52 @@ def load_articles(request):
 
 def article_detail(request, slug):
     article = get_object_or_404(
-        Article, slug=slug, status="published", published_at__lte=timezone.now()
+        Article.objects.select_related("author", "category").prefetch_related("tags"),
+        slug=slug,
+        status="published",
+        published_at__lte=timezone.now(),
     )
-    return render(request, "blog/detail.html", {"article": article})
+
+    content_html, toc = process_content_toc(article.content)
+
+    # مقالات مرتبط از همین دسته‌بندی
+    related_articles = (
+        Article.objects.filter(status="published", category=article.category)
+        .exclude(pk=article.pk)
+        .select_related("category")
+        .order_by("-published_at")[:3]
+    )
+
+    # مقاله قبلی (بر اساس تاریخ منتشر شدن)
+    prev_article = (
+        Article.objects.filter(
+            status="published",
+            published_at__lt=article.published_at,
+            category=article.category,
+        )
+        .order_by("-published_at")
+        .first()
+    )
+    # مقاله بعدی (بر اساس تاریخ منتشر شدن)
+    next_article = (
+        Article.objects.filter(
+            status="published",
+            published_at__gt=article.published_at,
+            category=article.category,
+        )
+        .order_by("published_at")
+        .first()
+    )
+
+    context = {
+        "article": article,
+        "content_html": content_html,
+        "toc": toc,
+        "related_articles": related_articles,
+        "prev_article": prev_article,
+        "next_article": next_article,
+    }
+    return render(request, "blog/detail.html", context)
 
 
 @staff_member_required

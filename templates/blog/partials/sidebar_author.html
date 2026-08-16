@@ -1,0 +1,18 @@
+{% comment %}sidebar: author card{% endcomment %}
+{% if article.author %}
+  <div class="sidebar-block">
+    <div class="sb-label">نویسنده</div>
+    <div class="author-card">
+      <div class="avatar-lg">
+        {% if article.author.avatar %}
+          <img src="{{ article.author.avatar.url }}" alt="{{ article.author.name }}" loading="lazy" style="width:100%;height:100%;border-radius:50%;object-fit:cover" />
+        {% else %}
+          {{ article.author.initial }}
+        {% endif %}
+      </div>
+      <div class="author-name">{{ article.author.name }}</div>
+      <div class="author-role">{{ article.author.role }}</div>
+      <p>{{ article.author.bio }}</p>
+    </div>
+  </div>
+{% endif %}

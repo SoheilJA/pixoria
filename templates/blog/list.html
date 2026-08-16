@@ -1,11 +1,23 @@
 {% extends "base.html" %}
 
-{% block title %}بلاگ{% endblock %}
-{% block description %}مقالات و آموزش‌های تخصصی{% endblock %}
+{% block title %}{{ page_settings.title }} {{ page_settings.title_highlight }}{% endblock %}
+{% block description %}{{ page_settings.description }}{% endblock %}
+
+{% block extra_css %}<link rel="stylesheet" href="{% load static %}{% static 'css/blog.css' %}">{% endblock %}
 
 {% block content %}
-<section id="content-start">
-  <div class="blog-filters" id="blog-filters">
+<section class="page-hero" id="content-start" aria-labelledby="blog-head">
+  <p class="crumb">
+    <a href="{% url 'home:home' %}">خانه</a> ← <span style="color: var(--ink)">بلاگ</span>
+  </p>
+  <h1 id="blog-head">
+    {{ page_settings.title }} <em class="italic-display">{{ page_settings.title_highlight }}</em>
+  </h1>
+  <p class="lede">{{ page_settings.description }}</p>
+</section>
+
+<section style="padding-top: 0; padding-bottom: 0">
+  <div class="blog-filters" id="blog-filters" role="toolbar" aria-label="دسته‌بندی مقالات">
     <button type="button" class="filter-btn" aria-pressed="true"
       hx-get="{% url 'blog:load' %}?category=all&page=1"
       hx-target="#blog-grid" hx-swap="innerHTML" hx-indicator="#htmx-loader">
@@ -19,7 +31,9 @@
     </button>
     {% endfor %}
   </div>
+</section>
 
+<section style="padding-top: 0" aria-label="مقالات">
   <div class="blog-grid" id="blog-grid">
     {% include "blog/partials/article_cards.html" %}
   </div>

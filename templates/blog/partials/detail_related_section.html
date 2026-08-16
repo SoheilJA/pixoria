@@ -1,0 +1,27 @@
+{% comment %}بخش مقالات مرتبط در انتهای صفحه{% endcomment %}
+{% if related_articles %}
+  <section class="related-posts-section reveal" aria-labelledby="related-head">
+    <header class="section-head">
+      <span class="eyebrow"><span class="dot"></span>بیشتر بخوانید</span>
+      <h2 id="related-head">مقالات مرتبط</h2>
+    </header>
+    <div class="related-grid">
+      {% for rel in related_articles %}
+        <a href="{% url 'blog:detail' rel.slug %}" class="related-card" title="{{ rel.title }}">
+          {% if rel.cover_image and rel.cover_image.url %}
+            <div class="img-wrap">
+              <img src="{{ rel.cover_image.url }}" alt="{{ rel.cover_image_alt }}" loading="lazy" style="width:100%;height:100%;object-fit:cover" />
+            </div>
+          {% endif %}
+          <div class="body">
+            <div class="cat-tag">{{ rel.category.title }}</div>
+            <h3>{{ rel.title }}</h3>
+            <div class="date">{{ rel.published_at|date:'d F Y' }}
+              ·
+              {{ rel.reading_time }} دقیقه</div>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+  </section>
+{% endif %}

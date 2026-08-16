@@ -8,7 +8,7 @@
       <span class="category">{{ article.category.title }}</span>
       <span>{{ article.published_at|date:"d F Y" }}</span>
       <span>·</span>
-      <span>{{ article.reading_time }} دقیقه</span>
+      <span>{{ article.reading_time }} دقیقه مطالعه</span>
     </div>
     <h3><a href="{% url 'blog:detail' article.slug %}">{{ article.title }}</a></h3>
     <p>{{ article.excerpt }}</p>

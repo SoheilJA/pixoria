@@ -1,0 +1,22 @@
+{% comment %}sidebar: related articles from same category{% endcomment %}
+{% if related_articles %}
+  <div class="sidebar-block">
+    <div class="sb-label">مقالات مرتبط</div>
+    <div class="related-list">
+      {% for rel in related_articles %}
+        <a href="{% url 'blog:detail' rel.slug %}" class="related-item" title="{{ rel.title }}">
+          {% if rel.cover_image and rel.cover_image.url %}
+            <div class="thumb">
+              <img src="{{ rel.cover_image.url }}" alt="{{ rel.cover_image_alt }}" loading="lazy" style="width:100%;height:100%;object-fit:cover" />
+            </div>
+          {% endif %}
+          <div class="info">
+            <div class="cat">{{ rel.category.title }}</div>
+            <h4>{{ rel.title }}</h4>
+            <div class="date">{{ rel.published_at|date:'d F Y' }}</div>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+{% endif %}

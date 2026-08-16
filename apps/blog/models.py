@@ -133,11 +133,11 @@ class BlogPageSettings(models.Model):
     title = models.CharField(
         max_length=100, verbose_name="عنوان صفحه بلاگ", help_text="مثلاً: دانش،"
     )
-    title_highlight = models.CharField(
-        max_length=100,
-        verbose_name="بخش هایلایت‌شده عنوان",
-        help_text="مثلاً: بی‌واسطه.",
-    )
+    # title_highlight = models.CharField(
+    #     max_length=100,
+    #     verbose_name="بخش هایلایت‌شده عنوان",
+    #     help_text="مثلاً: بی‌واسطه.",
+    # )
     description = models.TextField(verbose_name="توضیحات صفحه بلاگ")
 
     class Meta:
