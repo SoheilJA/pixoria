@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}بلاگ{% endblock %}
+{% block description %}مقالات و آموزش‌های تخصصی{% endblock %}
+
+{% block content %}
+<section id="content-start">
+  <div class="blog-filters" id="blog-filters">
+    <button type="button" class="filter-btn" aria-pressed="true"
+      hx-get="{% url 'blog:load' %}?category=all&page=1"
+      hx-target="#blog-grid" hx-swap="innerHTML" hx-indicator="#htmx-loader">
+      همه
+    </button>
+    {% for cat in categories %}
+    <button type="button" class="filter-btn" aria-pressed="false"
+      hx-get="{% url 'blog:load' %}?category={{ cat.slug }}&page=1"
+      hx-target="#blog-grid" hx-swap="innerHTML" hx-indicator="#htmx-loader">
+      {{ cat.title }}
+    </button>
+    {% endfor %}
+  </div>
+
+  <div class="blog-grid" id="blog-grid">
+    {% include "blog/partials/article_cards.html" %}
+  </div>
+
+  <div id="load-more-wrapper" style="text-align:center;margin-top:56px">
+    {% if has_next %}
+    <button class="btn btn-ghost" id="load-more-btn"
+      hx-get="{% url 'blog:load' %}?category={{ current_category }}&page={{ next_page }}"
+      hx-target="#blog-grid" hx-swap="beforeend" hx-indicator="#htmx-loader">
+      مقالات بیشتر <span class="arrow">↓</span>
+    </button>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  document.getElementById('blog-filters').addEventListener('click', function (e) {
+    const btn = e.target.closest('.filter-btn');
+    if (!btn) return;
+    document.querySelectorAll('#blog-filters .filter-btn').forEach(function (b) {
+      b.setAttribute('aria-pressed', b === btn ? 'true' : 'false');
+    });
+  });
+</script>
+{% endblock %}

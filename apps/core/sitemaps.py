@@ -2,6 +2,7 @@ from django.contrib.sitemaps import Sitemap
 from django.urls import reverse
 from apps.portfolio.models import Portfolio
 from apps.services.models import Service
+from apps.blog.models import Article
 
 
 class StaticViewSitemap(Sitemap):
@@ -41,3 +42,17 @@ class ServiceSitemap(Sitemap):
 
     def location(self, obj):
         return reverse("services:detail", args=[obj.slug])
+
+
+class ArticleSitemap(Sitemap):
+    priority = 0.7
+    changefreq = "weekly"
+
+    def items(self):
+        return Article.objects.filter(status="published")
+
+    def location(self, obj):
+        return reverse("blog:detail", args=[obj.slug])
+
+    def lastmod(self, obj):
+        return obj.updated_at

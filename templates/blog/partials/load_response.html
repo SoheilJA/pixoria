@@ -1,0 +1,11 @@
+{% include "blog/partials/article_cards.html" %}
+
+<div id="load-more-wrapper" hx-swap-oob="true" style="text-align:center;margin-top:56px">
+  {% if has_next %}
+  <button class="btn btn-ghost" id="load-more-btn"
+    hx-get="{% url 'blog:load' %}?category={{ current_category }}&page={{ next_page }}"
+    hx-target="#blog-grid" hx-swap="beforeend" hx-indicator="#htmx-loader">
+    مقالات بیشتر <span class="arrow">↓</span>
+  </button>
+  {% endif %}
+</div>

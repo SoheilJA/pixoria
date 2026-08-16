@@ -49,7 +49,7 @@ INSTALLED_APPS = [
     "apps.portfolio",
     "apps.services",
     "apps.contact",
-    "apps.blog"
+    "apps.blog",
     "tinymce",
     
 ]
