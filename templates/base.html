@@ -129,17 +129,17 @@
   <span class="title">خدمات</span>
 </a>
 
-<a href="{% url 'blog:list' %}" {% if request.resolver_match.app_name == "blog" %}class="active" aria-current="page"{% endif %} data-aos="fade-up" data-aos-delay="425">
+<a href="{% url 'blog:list' %}" {% if request.resolver_match.app_name == "blog" %}class="active" aria-current="page"{% endif %} data-aos="fade-up" data-aos-delay="450">
   <span class="num"></span>
   <span class="title">بلاگ</span>
 </a>
 
-<a href="{% url 'core:about' %}" {% if request.resolver_match.app_name == "core" %}class="active" aria-current="page"{% endif %} data-aos="fade-up" data-aos-delay="450">
+<a href="{% url 'core:about' %}" {% if request.resolver_match.app_name == "core" %}class="active" aria-current="page"{% endif %} data-aos="fade-up" data-aos-delay="500">
   <span class="num"></span>
   <span class="title">درباره ما</span>
 </a>
 
-  <a href="{% url 'contact:contact' %}" {% if request.resolver_match.app_name == "contact" %}class="active" aria-current="page"{% endif %} data-aos="fade-up" data-aos-delay="500">
+  <a href="{% url 'contact:contact' %}" {% if request.resolver_match.app_name == "contact" %}class="active" aria-current="page"{% endif %} data-aos="fade-up" data-aos-delay="550">
     <span class="num"></span>
     <span class="title">تماس با ما</span>
   </a>
