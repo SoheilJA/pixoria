@@ -1,13 +1,13 @@
 {% comment %}بخش مقالات مرتبط در انتهای صفحه{% endcomment %}
 {% if related_articles %}
-  <section class="related-posts-section reveal" aria-labelledby="related-head">
+  <section class="related-posts-section reveal" aria-labelledby="related-head" data-aos="fade-up" data-aos-duration="700">
     <header class="section-head">
       <span class="eyebrow"><span class="dot"></span>بیشتر بخوانید</span>
       <h2 id="related-head">مقالات مرتبط</h2>
     </header>
     <div class="related-grid">
       {% for rel in related_articles %}
-        <a href="{% url 'blog:detail' rel.slug %}" class="related-card" title="{{ rel.title }}">
+        <a href="{% url 'blog:detail' rel.slug %}" class="related-card" title="{{ rel.title }}" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:'100' }}" data-aos-duration="700">
           {% if rel.cover_image and rel.cover_image.url %}
             <div class="img-wrap">
               <img src="{{ rel.cover_image.url }}" alt="{{ rel.cover_image_alt }}" loading="lazy" style="width:100%;height:100%;object-fit:cover" />

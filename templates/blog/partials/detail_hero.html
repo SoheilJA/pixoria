@@ -1,7 +1,7 @@
 {% comment %}بخش بالای صفحه مقاله (hero section){% endcomment %}
-<section class="post-hero">
+<section class="post-hero" data-aos="fade-up" data-aos-duration="700">
   {# breadcrumb navigation #}
-  <p class="crumb">
+  <p class="crumb" data-aos="fade-down" data-aos-delay="50">
     <a href="{% url 'home:home' %}">خانه</a>
     ←
     <a href="{% url 'blog:list' %}">بلاگ</a>
@@ -10,7 +10,7 @@
   </p>
 
   {# category and tags #}
-  <div class="post-tags">
+  <div class="post-tags" data-aos="fade-up" data-aos-delay="100">
     <span class="tag highlight">{{ article.category.title }}</span>
     {% for tag in article.tags.all %}
       <span class="tag">{{ tag.title }}</span>
@@ -18,10 +18,10 @@
   </div>
 
   {# title #}
-  <h1>{{ article.title }}</h1>
+  <h1 data-aos="fade-up" data-aos-delay="150">{{ article.title }}</h1>
 
   {# metadata bar: author, date, reading time, update info #}
-  <div class="post-meta-bar">
+  <div class="post-meta-bar" data-aos="fade-up" data-aos-delay="200">
     {% if article.author %}
       <div class="author">
         <div class="avatar">

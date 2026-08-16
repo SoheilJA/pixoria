@@ -1,18 +1,16 @@
 {% for article in articles %}
-<article class="blog-card">
-  <a href="{% url 'blog:detail' article.slug %}" class="img-wrap">
-    <img src="{{ article.cover_image.url }}" alt="{{ article.cover_image_alt }}" loading="lazy">
-  </a>
-  <div class="body">
-    <div class="meta">
-      <span class="category">{{ article.category.title }}</span>
-      <span>{{ article.published_at|date:"d F Y" }}</span>
-      <span>·</span>
-      <span>{{ article.reading_time }} دقیقه مطالعه</span>
+  <article class="blog-card" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:'50' }}" data-aos-duration="700">
+    <a href="{% url 'blog:detail' article.slug %}" class="img-wrap"><img src="{{ article.cover_image.url }}" alt="{{ article.cover_image_alt }}" loading="lazy" /></a>
+    <div class="body">
+      <div class="meta">
+        <span class="category">{{ article.category.title }}</span>
+        <span>{{ article.published_at|date:'d F Y' }}</span>
+        <span>·</span>
+        <span>{{ article.reading_time }} دقیقه مطالعه</span>
+      </div>
+      <h3><a href="{% url 'blog:detail' article.slug %}">{{ article.title }}</a></h3>
+      <p>{{ article.excerpt }}</p>
+      <a class="arrow-link" href="{% url 'blog:detail' article.slug %}">خواندن مقاله <span>←</span></a>
     </div>
-    <h3><a href="{% url 'blog:detail' article.slug %}">{{ article.title }}</a></h3>
-    <p>{{ article.excerpt }}</p>
-    <a class="arrow-link" href="{% url 'blog:detail' article.slug %}">خواندن مقاله <span>←</span></a>
-  </div>
-</article>
+  </article>
 {% endfor %}

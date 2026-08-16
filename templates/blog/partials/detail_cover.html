@@ -1,6 +1,6 @@
 {% comment %}تصویر کاور مقاله{% endcomment %}
 {% if article.cover_image and article.cover_image.url %}
-  <div class="post-cover">
+  <div class="post-cover" data-aos="fade-up" data-aos-duration="800" data-aos-delay="100">
     <img src="{{ article.cover_image.url }}" alt="{{ article.cover_image_alt }}" loading="eager" />
   </div>
 {% endif %}

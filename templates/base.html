@@ -29,10 +29,17 @@
   {% comment %} پریلودر {% endcomment %}
 
   <div id="htmx-progress" class="htmx-progress"></div>
-<div id="htmx-loader" class="htmx-loader" aria-hidden="true">
-  <span class="htmx-loader-dot"></span>
-  <span class="htmx-loader-text">در حال بارگذاری</span>
-</div>
+  <div id="htmx-loader" class="htmx-loader" aria-hidden="true">
+    <div class="htmx-loader-panel">
+      <span class="htmx-loader-mark">P</span>
+      <div class="htmx-loader-copy">
+        <span class="htmx-loader-text">در حال بارگذاری</span>
+        <span class="htmx-loader-track">
+          <span class="htmx-loader-bar"></span>
+        </span>
+      </div>
+    </div>
+  </div>
   <!-- هدر موبایل -->
   <div class="topbar">
     <a class="brand" href="/">
@@ -380,18 +387,34 @@
       clearInterval(progressTimer);
       clearTimeout(loaderTimer);
       progress.style.width = '100%';
-      loader.classList.remove('is-active');
+
+      setTimeout(function () {
+        loader.classList.remove('is-active');
+      }, 420);
 
       setTimeout(function () {
         progress.classList.remove('is-active');
         setTimeout(function () {
           progress.style.width = '0%';
         }, 300);
-      }, 200);
+      }, 520);
     }
 
     document.body.addEventListener('htmx:beforeRequest', startProgress);
     document.body.addEventListener('htmx:afterRequest', finishProgress);
+
+    function showInitialLoader() {
+      startProgress();
+      window.setTimeout(function () {
+        finishProgress();
+      }, 800);
+    }
+
+    if (document.readyState === 'complete') {
+      showInitialLoader();
+    } else {
+      window.addEventListener('load', showInitialLoader, { once: true });
+    }
   })();
 </script>
   {% endblock %}
