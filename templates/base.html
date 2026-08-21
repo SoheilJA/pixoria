@@ -26,20 +26,8 @@
 </head>
 
 <body hx-boost="true">
-  {% comment %} پریلودر {% endcomment %}
-
-  <div id="htmx-progress" class="htmx-progress"></div>
-  <div id="htmx-loader" class="htmx-loader" aria-hidden="true">
-    <div class="htmx-loader-panel">
-      <span class="htmx-loader-mark">P</span>
-      <div class="htmx-loader-copy">
-        <span class="htmx-loader-text">در حال بارگذاری</span>
-        <span class="htmx-loader-track">
-          <span class="htmx-loader-bar"></span>
-        </span>
-      </div>
-    </div>
-  </div>
+  {% comment %} نوار پیشرفت بالای صفحه {% endcomment %}
+  <div id="htmx-progress" class="htmx-progress" aria-hidden="true"></div>
   <!-- هدر موبایل -->
   <div class="topbar">
     <a class="brand" href="/">
@@ -209,8 +197,8 @@
       </main>
 
       <!-- فوتر -->
-      <footer class="site-footer" aria-labelledby="footer-head" data-aos="fade-up">
-        <h2 id="footer-head" class="visually-hidden" data-aos="fade-up" data-aos-delay="50">
+      <footer class="site-footer" aria-labelledby="footer-head">
+        <h2 id="footer-head" class="visually-hidden">
           فوتر سایت
         </h2>
 
@@ -267,7 +255,7 @@
             </div>
           </div>
 
-          <div class="footer-bottom" data-aos="fade-up" data-aos-delay="360">
+          <div class="footer-bottom" data-aos="fade" data-aos-delay="360" data-aos-offset="-200">
             <div class="footer-bottom__meta">
               <span>© {{ settings.established_year }} {{ settings.site_name }}</span>
               <span>{{ settings.status }}</span>
@@ -357,67 +345,65 @@
     setTimeout(animateRailFoot, 400);
   </script>
 
-  {% block extra_js %}
   <script>
   (function () {
-    var progress = document.getElementById('htmx-progress');
-    var loader = document.getElementById('htmx-loader');
-    var progressTimer = null;
-    var loaderTimer = null;
+    if (window.__pixoriaProgress) return;
+    window.__pixoriaProgress = true;
+
+    var bar = document.getElementById('htmx-progress');
+    var timer = null;
+    var hideTimer = null;
     var width = 0;
+    var active = false;
 
-    function startProgress() {
+    function render() {
+      bar.style.width = width + '%';
+    }
+
+    function start() {
+      clearTimeout(hideTimer);
+      clearInterval(timer);
+      active = true;
       width = 0;
-      progress.style.width = '0%';
-      progress.classList.add('is-active');
+      render();
+      bar.classList.add('is-active');
 
-      clearInterval(progressTimer);
-      progressTimer = setInterval(function () {
-        width += (90 - width) / 12;
-        progress.style.width = Math.min(width, 90) + '%';
-      }, 180);
-
-      clearTimeout(loaderTimer);
-      loaderTimer = setTimeout(function () {
-        loader.classList.add('is-active');
-      }, 250);
+      timer = setInterval(function () {
+        width += Math.max((90 - width) * 0.06, 0.2);
+        if (width > 90) width = 90;
+        render();
+      }, 150);
     }
 
-    function finishProgress() {
-      clearInterval(progressTimer);
-      clearTimeout(loaderTimer);
-      progress.style.width = '100%';
+    function done() {
+      if (!active) return;
+      active = false;
+      clearInterval(timer);
+      width = 100;
+      render();
 
-      setTimeout(function () {
-        loader.classList.remove('is-active');
-      }, 420);
-
-      setTimeout(function () {
-        progress.classList.remove('is-active');
+      hideTimer = setTimeout(function () {
+        bar.classList.remove('is-active');
         setTimeout(function () {
-          progress.style.width = '0%';
-        }, 300);
-      }, 520);
+          width = 0;
+          render();
+        }, 350);
+      }, 300);
     }
 
-    document.body.addEventListener('htmx:beforeRequest', startProgress);
-    document.body.addEventListener('htmx:afterRequest', finishProgress);
+    document.addEventListener('htmx:beforeRequest', start);
+    document.addEventListener('htmx:afterRequest', done);
 
-    function showInitialLoader() {
-      startProgress();
-      window.setTimeout(function () {
-        finishProgress();
-      }, 800);
-    }
-
+    start();
     if (document.readyState === 'complete') {
-      showInitialLoader();
+      done();
     } else {
-      window.addEventListener('load', showInitialLoader, { once: true });
+      window.addEventListener('load', done, { once: true });
     }
   })();
-</script>
-  {% endblock %}
+  </script>
+
+  {% block extra_js %}{% endblock %}
 
 
 

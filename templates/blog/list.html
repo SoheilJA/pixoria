@@ -20,23 +20,21 @@
     <p class="lede" data-aos="fade-up" data-aos-delay="150">{{ page_settings.description }}</p>
   </section>
 
-  <section style="padding-top: 0; padding-bottom: 0">
-    <div class="blog-filters" id="blog-filters" role="toolbar" aria-label="دسته‌بندی مقالات" data-aos="fade-up" data-aos-delay="150">
-      <button type="button" class="filter-btn" aria-pressed="true" hx-get="{% url 'blog:load' %}?category=all&page=1" hx-target="#blog-grid" hx-swap="innerHTML" hx-indicator="#htmx-loader">همه</button>
-      {% for cat in categories %}
-        <button type="button" class="filter-btn" aria-pressed="false" hx-get="{% url 'blog:load' %}?category={{ cat.slug }}&page=1" hx-target="#blog-grid" hx-swap="innerHTML" hx-indicator="#htmx-loader">{{ cat.title }}</button>
-      {% endfor %}
-    </div>
-  </section>
+  <div class="blog-filters" id="blog-filters" role="toolbar" aria-label="دسته‌بندی مقالات" data-aos="fade-up" data-aos-delay="150">
+    <button type="button" class="filter-btn" aria-pressed="true" hx-get="{% url 'blog:load' %}?category=all&page=1" hx-target="#blog-grid" hx-swap="innerHTML">همه</button>
+    {% for cat in categories %}
+      <button type="button" class="filter-btn" aria-pressed="false" hx-get="{% url 'blog:load' %}?category={{ cat.slug }}&page=1" hx-target="#blog-grid" hx-swap="innerHTML">{{ cat.title }}</button>
+    {% endfor %}
+  </div>
 
-  <section style="padding-top: 0" aria-label="مقالات">
+  <section aria-label="مقالات">
     <div class="blog-grid" id="blog-grid">
       {% include 'blog/partials/article_cards.html' %}
     </div>
 
     <div id="load-more-wrapper" style="text-align:center;margin-top:56px">
       {% if has_next %}
-        <button class="btn btn-ghost" id="load-more-btn" hx-get="{% url 'blog:load' %}?category={{ current_category }}&page={{ next_page }}" hx-target="#blog-grid" hx-swap="beforeend" hx-indicator="#htmx-loader">مقالات بیشتر <span class="arrow">↓</span></button>
+        <button class="btn btn-ghost" id="load-more-btn" hx-get="{% url 'blog:load' %}?category={{ current_category }}&page={{ next_page }}" hx-target="#blog-grid" hx-swap="beforeend">مقالات بیشتر <span class="arrow">↓</span></button>
       {% endif %}
     </div>
   </section>

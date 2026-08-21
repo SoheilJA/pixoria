@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load anim_tags %}
 
 {% block title %}{{ service.title }} — {{ settings.site_name }}{% endblock %}
 {% block description %}{{ service.excerpt }}{% endblock %}
@@ -41,7 +42,7 @@
   {% if stats %}
   <div class="stats-strip">
     {% for stat in stats %}
-      <div class="stat" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
+      <div class="stat" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|stagger:100 }}">
         <span class="num">{{ stat.number }}</span>
         <span class="lab">{{ stat.label }}</span>
         {% if stat.description %}<span class="desc">{{ stat.description }}</span>{% endif %}
@@ -72,7 +73,7 @@
       <h3>خروجی‌های معمول</h3>
       <ul class="deliverables-list" style="margin-top:24px">
         {% for item in deliverables %}
-          <li>{{ item.title }}</li>
+          <li data-aos="fade-up" data-aos-delay="{{ forloop.counter0|stagger:60 }}">{{ item.title }}</li>
         {% endfor %}
       </ul>
     </div>
@@ -83,7 +84,7 @@
       <h3>فرآیند کار</h3>
       <ol class="process-list" style="margin-top:24px">
         {% for step in processes %}
-          <li><span>{{ step.title }}</span></li>
+          <li data-aos="fade-up" data-aos-delay="{{ forloop.counter0|stagger:60 }}"><span>{{ step.title }}</span></li>
         {% endfor %}
       </ol>
     </div>
@@ -100,7 +101,7 @@
     </header>
     <div class="why-us-grid">
       {% for item in why_us %}
-        <div class="why-card" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
+        <div class="why-card" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|stagger:100 }}">
           <span class="icon">{{ item.icon }}</span>
           <h3>{{ item.title }}</h3>
           <p>{{ item.description }}</p>
@@ -121,7 +122,7 @@
     <div class="plans-grid">
       {% for plan in plans %}
         <article class="plan-card {% if plan.is_featured %}featured{% endif %}"
-                 data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
+                 data-aos="fade-up" data-aos-delay="{{ forloop.counter0|stagger:100 }}">
           {% if plan.is_featured %}<span class="plan-badge">پیشنهادی</span>{% endif %}
           <div>
             <span class="plan-name">{{ plan.name }}</span>
@@ -135,7 +136,8 @@
           <div class="plan-divider"></div>
           <ul class="plan-features">
             {% for feature in plan.features.all %}
-              <li class="{% if feature.included %}included{% else %}excluded{% endif %}">
+              <li class="{% if feature.included %}included{% else %}excluded{% endif %}"
+                  data-aos="fade-up" data-aos-delay="{{ forloop.counter0|stagger:40 }}">
                 {{ feature.title }}
               </li>
             {% endfor %}
@@ -164,7 +166,8 @@
       </div>
       <div class="items-grid">
         {% for item in custom_items %}
-          <label class="custom-item" for="ci-{{ item.id }}">
+          <label class="custom-item" for="ci-{{ item.id }}"
+                 data-aos="fade-up" data-aos-delay="{{ forloop.counter0|stagger:60 }}">
             <input type="checkbox" id="ci-{{ item.id }}" data-price="{{ item.price }}" />
             <div class="item-info">
               <span class="item-title">{{ item.title }}</span>
@@ -174,7 +177,7 @@
           </label>
         {% endfor %}
       </div>
-      <div class="custom-footer">
+      <div class="custom-footer" data-aos="fade-up">
         <p>قیمت‌ها تخمینی هستند. برآورد دقیق بعد از جلسه اولیه ارائه می‌شود.</p>
         <a class="btn btn-ink" href="{% url 'contact:contact' %}">
           درخواست مشاوره <span class="arrow">←</span>
@@ -194,7 +197,7 @@
     </header>
     <div class="testimonials-grid">
       {% for t in testimonials %}
-        <article class="testimonial-card" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
+        <article class="testimonial-card" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|stagger:100 }}">
           <div class="stars">★★★★★</div>
           <blockquote>{{ t.text }}</blockquote>
           <div class="author">
@@ -224,7 +227,7 @@
       </div>
       <div class="faq-list">
         {% for faq in faqs %}
-          <details class="faq-item" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}0">
+          <details class="faq-item" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|stagger:50 }}">
             <summary class="faq-question">
               <h3>{{ faq.question }}</h3>
               <span class="faq-icon">+</span>
@@ -247,7 +250,7 @@
     <div>
       {% for s in other_services %}
         <a href="{% url 'services:detail' s.slug %}" class="other-service-row"
-           data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}0">
+           data-aos="fade-up" data-aos-delay="{{ forloop.counter0|stagger:50 }}">
           <span class="num">{{ forloop.counter|stringformat:'02d' }}</span>
           <div>
             <h3>{{ s.title }}</h3>

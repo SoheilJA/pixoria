@@ -4,7 +4,7 @@
   {% if has_next %}
   <button class="btn btn-ghost" id="load-more-btn"
     hx-get="{% url 'blog:load' %}?category={{ current_category }}&page={{ next_page }}"
-    hx-target="#blog-grid" hx-swap="beforeend" hx-indicator="#htmx-loader">
+    hx-target="#blog-grid" hx-swap="beforeend">
     مقالات بیشتر <span class="arrow">↓</span>
   </button>
   {% endif %}
