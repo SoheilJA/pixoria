@@ -5405,6 +5405,114 @@ body {
   opacity: 1;
 }
 
+/* ─── صفحه پریلود ─── */
+.preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+  display: none;
+  pointer-events: none;
+}
+
+.preloader.is-active {
+  display: block;
+}
+
+.preloader.is-done {
+  display: none;
+}
+
+html.preloader-lock,
+html.preloader-lock body {
+  overflow: hidden !important;
+}
+
+.preloader__panel {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50%;
+  background: var(--lime);
+  transition: transform 0.55s cubic-bezier(0.65, 0, 0.35, 1), opacity 0.55s var(--ease);
+  will-change: transform, opacity;
+}
+
+.preloader__panel--left {
+  left: 0;
+  transform: translateX(-101%);
+}
+
+.preloader__panel--right {
+  right: 0;
+  transform: translateX(101%);
+}
+
+.preloader.is-covered .preloader__panel {
+  transform: translateX(0);
+}
+
+.preloader.is-leaving .preloader__panel--left {
+  transform: translateX(-101%);
+  opacity: 0;
+}
+
+.preloader.is-leaving .preloader__panel--right {
+  transform: translateX(101%);
+  opacity: 0;
+}
+
+.preloader__title {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  opacity: 0;
+  transform: translateY(18px) scale(0.96);
+  transition: opacity 0.4s var(--ease), transform 0.4s var(--ease-out);
+}
+
+.preloader.is-title-in .preloader__title {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.preloader.is-title-out .preloader__title {
+  opacity: 0;
+  transform: translateY(-12px) scale(0.98);
+}
+
+.preloader__mark {
+  width: clamp(44px, 8vw, 60px);
+  height: clamp(44px, 8vw, 60px);
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  background: var(--ink);
+  color: var(--lime);
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: clamp(1.1rem, 3vw, 1.5rem);
+  line-height: 1;
+}
+
+.preloader__name {
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: clamp(1.6rem, 6vw, 2.8rem);
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .preloader__panel,
+  .preloader__title {
+    transition-duration: 0.01ms !important;
+  }
+}
+
 /* ─── اسکرول‌بار سفارشی ─── */
 html {
   scrollbar-width: thin;

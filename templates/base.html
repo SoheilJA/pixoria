@@ -26,6 +26,81 @@
 </head>
 
 <body hx-boost="true">
+  {% comment %} صفحه پریلود {% endcomment %}
+  <div id="preloader" class="preloader" aria-hidden="true">
+    <div class="preloader__panel preloader__panel--left"></div>
+    <div class="preloader__panel preloader__panel--right"></div>
+    <div class="preloader__title">
+      <span class="preloader__mark">P</span>
+      <span class="preloader__name">{{ settings.site_name }}</span>
+    </div>
+  </div>
+  <script>
+  (function () {
+    var el = document.getElementById('preloader');
+    if (!el) return;
+
+    var root = document.documentElement;
+    var storageOk = true;
+    var seen = null;
+    try {
+      seen = sessionStorage.getItem('pixoriaPreloaded');
+    } catch (e) {
+      storageOk = false;
+    }
+
+    var navType = 'navigate';
+    try {
+      var entries = performance.getEntriesByType('navigation');
+      if (entries && entries.length) navType = entries[0].type;
+    } catch (e) {}
+
+    var reducedMotion = window.matchMedia &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    var shouldShow = (!seen || navType === 'reload') && !reducedMotion;
+
+    if (!shouldShow) {
+      el.classList.add('is-skip');
+      window.__pixoriaPreloaderDone = true;
+      return;
+    }
+
+    el.classList.add('is-active');
+    root.classList.add('preloader-lock');
+
+    var finished = false;
+    function finish() {
+      if (finished) return;
+      finished = true;
+      root.classList.remove('preloader-lock');
+      window.__pixoriaPreloaderDone = true;
+      el.classList.add('is-done');
+    }
+
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        el.classList.add('is-covered');
+
+        setTimeout(function () { el.classList.add('is-title-in'); }, 500);
+
+        setTimeout(function () { el.classList.add('is-title-out'); }, 1350);
+
+        setTimeout(function () {
+          el.classList.add('is-leaving');
+          setTimeout(finish, 620);
+        }, 1550);
+      });
+    });
+
+    setTimeout(finish, 4500);
+
+    if (storageOk) {
+      try { sessionStorage.setItem('pixoriaPreloaded', '1'); } catch (e) {}
+    }
+  })();
+  </script>
+
   {% comment %} نوار پیشرفت بالای صفحه {% endcomment %}
   <div id="htmx-progress" class="htmx-progress" aria-hidden="true"></div>
   <!-- هدر موبایل -->
@@ -394,11 +469,14 @@
     document.addEventListener('htmx:beforeRequest', start);
     document.addEventListener('htmx:afterRequest', done);
 
-    start();
-    if (document.readyState === 'complete') {
-      done();
-    } else {
-      window.addEventListener('load', done, { once: true });
+    var pre = document.getElementById('preloader');
+    if (!pre || !pre.classList.contains('is-active')) {
+      start();
+      if (document.readyState === 'complete') {
+        done();
+      } else {
+        window.addEventListener('load', done, { once: true });
+      }
     }
   })();
   </script>
