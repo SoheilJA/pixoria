@@ -232,7 +232,7 @@ function updateStrength(val) {
     // کاروسل نمونه‌کارها
     var worksWrap = document.getElementById('works-carousel');
     if (worksWrap) {
-      initCarousel(worksWrap, { perView: 3, gap: 24, autoplay: false });
+      initCarousel(worksWrap, { perView: 4, gap: 24, autoplay: false });
     }
 
     // کاروسل نظرات

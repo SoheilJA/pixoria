@@ -1023,14 +1023,12 @@ section {
   flex-direction: column;
   transition:
     transform 0.3s var(--ease),
-    border-color 0.3s var(--ease),
-    box-shadow 0.3s var(--ease);
+    border-color 0.3s var(--ease);
 }
 
 .work-card:hover {
   transform: translateY(-4px);
   border-color: var(--ink);
-  box-shadow: 0 8px 24px rgba(14, 14, 14, 0.08);
 }
 
 .work-card .img-wrap {
@@ -1113,6 +1111,7 @@ section {
 
 .work-card .body .arrow-link {
   margin-top: auto;
+  justify-content: flex-end;
   font-family: var(--mono);
   font-size: 0.78rem;
   letter-spacing: 0.1em;
@@ -1697,9 +1696,15 @@ section {
 .work-grid {
   padding: 64px var(--pad-x);
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  grid-template-columns: repeat(4, 1fr);
   gap: 32px;
   align-items: stretch;
+}
+
+@media (max-width: 1400px) {
+  .work-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 
 @keyframes cardFadeUp {
@@ -4372,6 +4377,9 @@ details[open] .faq-icon {
   display: flex;
   /* JS مقدار flex و width هر slide رو تنظیم می‌کند */
   align-items: stretch;
+  /* فضای لازم برای هاور (بالا اومدن کارت) بدون کلیپ شدن */
+  padding-top: 8px;
+  margin-top: -8px;
   transition: transform 0.45s var(--ease-out);
   will-change: transform;
 }
@@ -4381,6 +4389,11 @@ details[open] .faq-icon {
 #works-carousel .work-card {
   flex-shrink: 0;
   overflow: hidden;
+}
+
+/* کارت‌های صفحه اصلی موقع هاور بالا نیایند */
+#works-carousel .work-card:hover {
+  transform: none;
 }
 
 /* ─── slide‌های کاروسل نظرات ─── */
@@ -5540,7 +5553,7 @@ html {
 
 .blog-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 28px;
 }
 
@@ -5625,6 +5638,8 @@ html {
 
 .blog-card .body .arrow-link {
   margin-top: auto;
+  justify-content: flex-end;
+  width: 100%;
   font-family: var(--mono);
   font-size: 0.78rem;
   letter-spacing: 0.1em;
@@ -5657,7 +5672,7 @@ html {
 /* ─── blog list ─── */
 .blog-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 28px;
 }
 
@@ -5742,6 +5757,8 @@ html {
 
 .blog-card .body .arrow-link {
   margin-top: auto;
+  justify-content: flex-end;
+  width: 100%;
   font-family: var(--mono);
   font-size: 0.78rem;
   letter-spacing: 0.1em;
@@ -6365,6 +6382,12 @@ html {
   color: var(--ink-dim);
   text-transform: uppercase;
   letter-spacing: 0.08em;
+}
+
+@media (max-width: 1400px) {
+  .blog-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 
 @media (max-width: 1024px) {
