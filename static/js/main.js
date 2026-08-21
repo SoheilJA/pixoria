@@ -240,6 +240,12 @@ function updateStrength(val) {
     if (testimonialsWrap) {
       initCarousel(testimonialsWrap, { perView: 2, gap: 24, autoplay: true, interval: 5000 });
     }
+
+    // کاروسل آخرین مقالات
+    var articlesWrap = document.getElementById('latest-articles-carousel');
+    if (articlesWrap) {
+      initCarousel(articlesWrap, { perView: 3, gap: 24, autoplay: false });
+    }
   });
 
 })();

@@ -131,3 +131,23 @@ class CTASection(models.Model):
         if not self.pk and CTASection.objects.exists():
             raise ValueError("فقط یک کال تو اکشن مجاز است")
         super().save(*args, **kwargs)
+
+
+class LatestArticlesSection(models.Model):
+    """سکشن آخرین مقالات در صفحه اصلی"""
+
+    subtitle = models.CharField(max_length=100, verbose_name="ساب تایتل")
+    title = models.CharField(max_length=200, verbose_name="عنوان")
+    description = models.TextField(verbose_name="توضیحات")
+
+    class Meta:
+        verbose_name = "سکشن آخرین مقالات"
+        verbose_name_plural = "سکشن آخرین مقالات"
+
+    def __str__(self):
+        return self.title
+
+    def save(self, *args, **kwargs):
+        if not self.pk and LatestArticlesSection.objects.exists():
+            raise ValueError("فقط یک سکشن آخرین مقالات مجاز است")
+        super().save(*args, **kwargs)

@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.utils import timezone
 from .models import (
     HeroSection,
     HeroMarqueeItem,
@@ -7,9 +8,11 @@ from .models import (
     ClientMarqueeItem,
     ManifestoSection,
     CTASection,
+    LatestArticlesSection,
 )
 from apps.portfolio.models import Portfolio
 from apps.services.models import Service, ServiceTestimonial
+from apps.blog.models import Article
 
 
 def home(request):
@@ -29,5 +32,11 @@ def home(request):
         "manifesto": ManifestoSection.objects.first(),
         "cta": CTASection.objects.first(),
         "testimonials": ServiceTestimonial.objects.filter(show_on_home=True),
+        "latest_articles_section": LatestArticlesSection.objects.first(),
+        "latest_articles": Article.objects.filter(
+            status="published", published_at__lte=timezone.now()
+        )
+        .select_related("category")
+        .order_by("-published_at")[:8],
     }
     return render(request, "home/index.html", context)

@@ -50,3 +50,11 @@ class CTASectionAdmin(admin.ModelAdmin):
 
     def has_add_permission(self, request):
         return not CTASection.objects.exists()
+
+
+@admin.register(LatestArticlesSection)
+class LatestArticlesSectionAdmin(admin.ModelAdmin):
+    list_display = ["title", "subtitle"]
+
+    def has_add_permission(self, request):
+        return not LatestArticlesSection.objects.exists()
