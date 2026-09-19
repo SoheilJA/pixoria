@@ -1,0 +1,27 @@
+{
+  "name": "pixoria",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build:css": "tailwindcss -i ./static/src/input.css -o ./static/css/tailwind.css",
+    "watch:css": "tailwindcss -i ./static/src/input.css -o ./static/css/tailwind.css --watch",
+    "test": "echo \"no tests specified\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SoheilJA/pixoria.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/SoheilJA/pixoria/issues"
+  },
+  "homepage": "https://github.com/SoheilJA/pixoria#readme",
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.3.3",
+    "tailwindcss": "^4.3.3"
+  }
+}
