@@ -12,6 +12,9 @@ The two template sets represent the same website and should remain behaviorally 
 - Active Django templates: `templates/`.
 - Tailwind reference templates: `Pixoria-tailwind-version/`.
 - Source CSS/JS: `static/`.
+- Tailwind source: `static/src/input.css`.
+- Tailwind generated CSS: `static/css/tailwind.css`.
+- Tailwind build package: root `package.json`.
 - Deployment static output: `public/static/`.
 - Deployment media output: `public/media/`.
 - SQLite database: `database/db.sqlite3`.
@@ -37,9 +40,49 @@ DATABASES["default"]["NAME"] = BASE_DIR / "database" / "db.sqlite3"
 - The 404 page preserves Django URL reversing and uses Django static references.
 - `apps/home/migrations/0003_latestarticlessection.py` was added to create the missing `home_latestarticlessection` table.
 - The database and media files were moved to their deployment paths.
+- Tailwind build tooling is installed in the project root with `tailwindcss` and `@tailwindcss/cli` version `4.3.3`.
+- The current npm commands are `npm run build` and `npm run watch`.
+- The shared `templates/base.html` uses the Tailwind shell, plain JavaScript mobile navigation, local AOS, HTMX, and no Alpine script.
+- Completed Tailwind migrations and commits:
+   - `2352e3c` - shared base layout.
+   - `48cea38` - contact page.
+   - `e581178` - about page.
+   - `06a97a9` - login page.
+   - `96e6e47` - services list page.
+   - `ab0b608` - deployment paths and missing home migration.
+- `Pixoria-tailwind-version/contact.html`, `about.html`, `login.html`, and `services.html` were removed after their Django replacements passed focused checks.
 - The Tailwind source copy of a template must be deleted only after its Django replacement is complete, tested, and committed.
 
 Before starting a new page, inspect the current working tree and recent commits. Do not undo user changes or unrelated work.
+
+The working tree may contain formatter edits or generated files from previous sessions. Inspect `git status` and the current file contents before editing. Never restore or overwrite user edits in `templates/base.html`, `templates/contact/contact.html`, `templates/core/about.html`, `templates/registration/login.html`, or `templates/services/list.html` without confirming their current state.
+
+## Current Page Map
+
+Completed Django replacements:
+
+- `templates/base.html` - shared Tailwind shell.
+- `templates/404.html` - standalone Tailwind 404 page.
+- `templates/contact/contact.html` - Tailwind contact page with HTMX form behavior.
+- `templates/core/about.html` - Tailwind about page with team, values, stats, and manifesto data.
+- `templates/registration/login.html` - Tailwind login page with the real Django authentication form.
+- `templates/services/list.html` - Tailwind services list with dynamic service rows and tags.
+
+Remaining Tailwind reference pages:
+
+- `Pixoria-tailwind-version/index.html` -> `templates/home/index.html`.
+- `Pixoria-tailwind-version/work.html` -> `templates/portfolio/list.html`.
+- `Pixoria-tailwind-version/single-project.html` -> `templates/portfolio/detail.html`.
+- `Pixoria-tailwind-version/blog.html` -> `templates/blog/list.html` and its article-card/load-response partials.
+- `Pixoria-tailwind-version/single-blog.html` -> `templates/blog/detail.html` and all detail partials.
+- `Pixoria-tailwind-version/single-service-webdev.html`, `single-service-webdev-tailwind.html`, `single-service-seo.html`, and `single-service-programming.html` -> `templates/services/detail.html`. Inspect how the slug/type selects the correct visual reference before editing.
+- `Pixoria-tailwind-version/404.html` remains as a reference but the Django 404 replacement is already complete; remove this duplicate only after a final 404 review.
+
+Templates without an exact remaining Tailwind reference need an explicit decision, not an invented mapping:
+
+- `templates/core/proposal.html`.
+- `templates/admin/login.html`.
+- Blog partials, which must be migrated as part of the blog list/detail work.
 
 ## Required Migration Workflow
 
@@ -58,7 +101,7 @@ Perform one page or one coherent feature at a time.
 8. Use `{% load static %}` and `{% static %}` for assets. Use `{% url %}` for internal links.
 9. Preserve responsive behavior and verify desktop and mobile layouts.
 10. Add or adapt JavaScript behavior using plain JavaScript only.
-11. Run focused checks for the page, then run the broader Django checks.
+11. Run `npm run build` after changing Tailwind source, then run focused Django checks for the page and broader Django checks.
 12. Delete the corresponding source template from `Pixoria-tailwind-version/` only after validation succeeds.
 13. Make a short English commit immediately for that completed page or coherent feature.
 
@@ -133,7 +176,10 @@ If the Tailwind reference omits functionality that exists in the raw template, r
 - Use `{% static '...' %}` for CSS, JavaScript, fonts, and images.
 - Use `{% url 'namespace:name' %}` for internal navigation.
 - Keep source assets in `static/`; run `collectstatic` when deployment output must be refreshed.
+- Build Tailwind from the repository root with `npm run build`; use `npm run watch` during active styling work.
+- Do not edit generated `static/css/tailwind.css` by hand. Change `static/src/input.css` and rebuild it.
 - Do not commit generated `__pycache__` files.
+- Do not commit `node_modules/` or generated `public/static/` output unless the task explicitly requires it.
 - Do not commit unrelated generated output unless the task explicitly requires it.
 
 ## Validation Commands
@@ -146,6 +192,7 @@ Run commands from the repository root with the project virtual environment:
 .\venv\Scripts\python.exe manage.py migrate --plan
 .\venv\Scripts\python.exe manage.py test
 .\venv\Scripts\python.exe manage.py collectstatic --noinput
+npm run build
 ```
 
 For a page migration, also test the relevant route with Django's test client using an allowed host, for example:
@@ -182,16 +229,13 @@ Do not combine unrelated pages into one commit. Before committing:
 
 Use this order unless the current task requires another dependency order:
 
-1. Shared base layout, header, mobile navigation, footer, AOS initialization, and Alpine removal.
-2. Home page, including the raw-template manifesto section.
-3. Services list and service detail pages.
-4. Portfolio/work list and project detail pages.
-5. About page.
-6. Blog list, blog detail, and blog partials.
-7. Contact page and forms.
-8. Login and any remaining registration/auth templates.
-9. 404 page final review and cleanup of the migrated Tailwind source.
-10. Full regression checks, `collectstatic`, responsive review, and deployment checklist.
+1. Home page, including the raw-template manifesto section.
+2. Service detail page and its slug-specific Tailwind references.
+3. Portfolio/work list and project detail pages.
+4. Blog list, blog detail, and all blog partials.
+5. Final review of contact, about, login, and 404 pages.
+6. Decide and implement templates without exact Tailwind references, such as proposal and admin login.
+7. Full regression checks, `npm run build`, `collectstatic`, responsive review, and deployment checklist.
 
 ## Definition of Done
 
@@ -205,6 +249,7 @@ A migration is complete only when all of the following are true:
 - The manifesto section matches the raw implementation where applicable.
 - Alpine.js is not used by the migrated code.
 - AOS is applied to the page sections and initialized locally.
+- `npm run build` completes successfully and generated Tailwind CSS is served from the configured static path.
 - `manage.py check` and focused route tests pass.
 - The matching Tailwind source template is deleted only after success.
 - The completed work has its own short English commit.
