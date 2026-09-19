@@ -1,43 +1,90 @@
-{% extends "base.html" %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#0e0e0e" />
+    <title>۴۰۴ — صفحه پیدا نشد · پیکسوریا</title>
+    <meta name="description" content="این صفحه وجود ندارد یا جابجا شده." />
+    <meta name="robots" content="noindex" />
+    <link rel="stylesheet" href="{% static 'fonts/font_urls.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/tailwind.css' %}" />
+  </head>
 
-{% block title %}صفحه پیدا نشد — ۴۰۴{% endblock %}
+  <body>
+    <div class="grid min-h-screen grid-cols-1 md:grid-cols-[200px_minmax(0,1fr)] lg:grid-cols-[240px_minmax(0,1fr)]">
+      <aside class="sticky top-0 z-40 hidden h-screen flex-col border-l border-ink-line bg-paper px-6 py-7 md:flex">
+        <a href="{% url 'home:home' %}" class="flex items-center gap-2.5 font-display text-[1.4rem] font-semibold tracking-[-0.02em] text-ink">
+          <span class="grid h-[26px] w-[26px] place-items-center rounded-sm bg-ink font-mono text-[0.78rem] font-semibold text-lime">P</span>
+          <span class="leading-none">{{ settings.site_name|default:'پیکسوریا' }}</span>
+        </a>
 
-{% block content %}
-<div class="not-found">
-  <span class="bg-number" aria-hidden="true">۴۰۴</span>
+        <nav class="rail-nav mt-14 flex flex-col gap-0.5 font-mono text-[0.84rem]" aria-label="Primary">
+          <a href="{% url 'home:home' %}" class="relative flex items-center gap-3.5 rounded-sm px-2 py-2.5 text-ink-soft transition-colors duration-200 ease-ax hover:bg-paper-soft hover:text-ink"><span class="text-[0.7rem] tracking-[0.04em] text-ink-dim">01</span>خانه</a>
+          <a href="{% url 'portfolio:list' %}" class="relative flex items-center gap-3.5 rounded-sm px-2 py-2.5 text-ink-soft transition-colors duration-200 ease-ax hover:bg-paper-soft hover:text-ink"><span class="text-[0.7rem] tracking-[0.04em] text-ink-dim">02</span>نمونه کار ها</a>
+          <a href="{% url 'services:list' %}" class="relative flex items-center gap-3.5 rounded-sm px-2 py-2.5 text-ink-soft transition-colors duration-200 ease-ax hover:bg-paper-soft hover:text-ink"><span class="text-[0.7rem] tracking-[0.04em] text-ink-dim">03</span>خدمات</a>
+          <a href="{% url 'core:about' %}" class="relative flex items-center gap-3.5 rounded-sm px-2 py-2.5 text-ink-soft transition-colors duration-200 ease-ax hover:bg-paper-soft hover:text-ink"><span class="text-[0.7rem] tracking-[0.04em] text-ink-dim">04</span>درباره ما</a>
+          <a href="{% url 'contact:contact' %}" class="relative flex items-center gap-3.5 rounded-sm px-2 py-2.5 text-ink-soft transition-colors duration-200 ease-ax hover:bg-paper-soft hover:text-ink"><span class="text-[0.7rem] tracking-[0.04em] text-ink-dim">05</span>تماس با ما</a>
+        </nav>
 
-  <div class="body">
-    <p class="crumb">
-      خطا ← <span style="color: var(--ink)">صفحه پیدا نشد</span>
-    </p>
+        <div class="mt-auto flex flex-col gap-4 font-mono text-[0.72rem] tracking-[0.04em] text-ink-dim">
+          <div class="flex justify-between">
+            <span>فصل تابستان</span><span>نسخه ۰۱</span>
+          </div>
+          <span class="inline-flex items-center gap-2.5 text-ink"><span class="h-1.5 w-1.5 rounded-full bg-ok shadow-[0_0_0_4px_rgba(42,157,62,0.18)]"></span>آماده همکاری</span>
+          <div class="flex gap-3.5">
+            <a href="#" aria-label="Instagram">IG</a><a href="#" aria-label="Telegram">TG</a><a href="#" aria-label="LinkedIn">LI</a>
+          </div>
+          <div class="flex justify-between">
+            <span>ایران</span><span>آنلاین</span>
+          </div>
+        </div>
+      </aside>
 
-    <h1>
-      اینجا <em class="italic-display">چیزی</em><br />
-      نیست.
-    </h1>
+      <div class="min-w-0">
+        <header class="sticky top-0 z-50 flex items-center justify-between border-b border-ink-line bg-paper px-page py-3.5 md:hidden">
+          <a href="{% url 'home:home' %}" class="flex items-center gap-2 font-display font-semibold text-ink"><span class="grid h-[26px] w-[26px] place-items-center rounded-sm bg-ink font-mono text-[0.78rem] font-semibold leading-none text-lime">P</span>پیکسوریا</a>
+          <button class="menu-toggle inline-flex cursor-pointer flex-col gap-1 rounded-sm bg-ink px-3.5 py-2.5 font-mono text-[0.8rem] text-lime" aria-label="Open menu" aria-expanded="false">منو</button>
+        </header>
 
-    <p>
-      صفحه‌ای که دنبالش می‌گردی یا حذف شده، یا آدرسش عوض شده، یا اصلاً
-      وجود نداشته. از لینک‌های زیر برگرد.
-    </p>
+        <nav class="mobile-nav fixed inset-0 z-[60] hidden flex-col gap-1 bg-ink px-page pb-8 pt-20 font-display text-[2rem] text-paper [&.open]:flex" aria-label="Mobile">
+          <button class="mobile-close absolute right-[18px] top-[18px] cursor-pointer bg-transparent font-mono text-[0.85rem] text-paper" aria-label="Close menu">بستن ✕</button>
+          <a href="{% url 'home:home' %}" class="border-b border-ink-soft py-3.5 transition-colors hover:text-lime">خانه</a>
+          <a href="{% url 'portfolio:list' %}" class="border-b border-ink-soft py-3.5 transition-colors hover:text-lime">نمونه کار ها</a>
+          <a href="{% url 'services:list' %}" class="border-b border-ink-soft py-3.5 transition-colors hover:text-lime">خدمات</a>
+          <a href="{% url 'core:about' %}" class="border-b border-ink-soft py-3.5 transition-colors hover:text-lime">درباره ما</a>
+          <a href="{% url 'contact:contact' %}" class="border-b border-ink-soft py-3.5 transition-colors hover:text-lime">تماس با ما</a>
+        </nav>
 
-    <div class="actions">
-      <a class="btn btn-ink" href="{% url 'home:home' %}">
-        برگشت به خانه <span class="arrow">←</span>
-      </a>
-      <a class="btn btn-ghost" href="{% url 'contact:contact' %}">تماس با ما</a>
+        <main>
+          <div class="relative grid min-h-screen grid-rows-[1fr_auto] overflow-hidden px-page pb-[clamp(48px,6vw,80px)] pt-[clamp(64px,10vw,140px)]">
+            <span aria-hidden="true" class="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[55%] select-none whitespace-nowrap font-display text-[clamp(18rem,40vw,38rem)] font-semibold leading-none tracking-[-0.06em] text-transparent [-webkit-text-stroke:1px_var(--color-ink-line)] max-md:top-[20%] max-md:translate-y-0 max-md:text-[52vw]">۴۰۴</span>
+            <div class="relative z-[2] flex max-w-[640px] flex-col justify-center gap-8">
+              <p class="font-mono text-[0.76rem] uppercase tracking-[0.12em] text-ink-dim">
+                خطا ← <span class="text-ink">صفحه پیدا نشد</span>
+              </p>
+              <h1 class="m-0 text-[clamp(2.4rem,5vw,5.2rem)] leading-[0.98] tracking-[-0.03em]">اینجا <em class="font-display font-normal italic">چیزی</em><br />نیست.</h1>
+              <p class="m-0 max-w-[44ch] text-[1.12rem] leading-[1.6] text-ink-soft">صفحه‌ای که دنبالش می‌گردی یا حذف شده، یا آدرسش عوض شده، یا اصلاً وجود نداشته. از لینک‌های زیر برگرد.</p>
+              <div class="mt-2 flex flex-wrap gap-3">
+                <a class="btn btn-ink group" href="{% url 'home:home' %}">برگشت به خانه <span class="arrow transition-transform duration-[250ms] ease-ax group-hover:translate-y-1">←</span></a><a class="btn btn-ghost" href="{% url 'contact:contact' %}">تماس با ما</a>
+              </div>
+            </div>
+
+            <div class="relative z-[2] grid grid-cols-[auto_1fr] items-start gap-8 border-t border-ink-line pt-10 max-md:grid-cols-1 max-md:gap-4">
+              <span class="whitespace-nowrap pt-1 font-mono text-[0.74rem] uppercase tracking-[0.12em] text-ink-dim">شاید دنبال این بودی</span>
+              <div class="flex flex-wrap gap-2">
+                <a href="{% url 'portfolio:list' %}" class="rounded-full border border-ink-line px-4 py-2 font-mono text-[0.8rem] text-ink-soft transition-colors duration-200 ease-ax hover:border-ink hover:bg-paper-soft hover:text-ink">نمونه کار ها</a>
+                <a href="{% url 'services:list' %}" class="rounded-full border border-ink-line px-4 py-2 font-mono text-[0.8rem] text-ink-soft transition-colors duration-200 ease-ax hover:border-ink hover:bg-paper-soft hover:text-ink">خدمات</a>
+                <a href="{% url 'core:about' %}" class="rounded-full border border-ink-line px-4 py-2 font-mono text-[0.8rem] text-ink-soft transition-colors duration-200 ease-ax hover:border-ink hover:bg-paper-soft hover:text-ink">درباره ما</a>
+                <a href="{% url 'contact:contact' %}" class="rounded-full border border-ink-line px-4 py-2 font-mono text-[0.8rem] text-ink-soft transition-colors duration-200 ease-ax hover:border-ink hover:bg-paper-soft hover:text-ink">تماس با ما</a>
+                <a href="{% url 'home:home' %}" class="rounded-full border border-ink-line px-4 py-2 font-mono text-[0.8rem] text-ink-soft transition-colors duration-200 ease-ax hover:border-ink hover:bg-paper-soft hover:text-ink">صفحه اصلی</a>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
     </div>
-  </div>
-
-  <div class="suggestions">
-    <span class="lab">شاید دنبال این بودی</span>
-    <div class="links">
-      <a href="{% url 'portfolio:list' %}">نمونه کار ها</a>
-      <a href="{% url 'services:list' %}">خدمات</a>
-      <a href="{% url 'core:about' %}">درباره ما</a>
-      <a href="{% url 'contact:contact' %}">تماس با ما</a>
-      <a href="{% url 'home:home' %}">صفحه اصلی</a>
-    </div>
-  </div>
-</div>
-{% endblock %}
+    <script src="{% static 'js/tailwind-main.js' %}" defer></script>
+  </body>
+</html>
