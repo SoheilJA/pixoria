@@ -1,72 +1,50 @@
 {% extends 'base.html' %}
 
-{% block title %}خدمات — {{ settings.site_name }}{% endblock %}
-{% block description %}{{ page_section.description }}{% endblock %}
+{% block title %}
+  خدمات — {{ settings.site_name }}
+{% endblock %}
+{% block description %}
+  {{ page_section.description }}
+{% endblock %}
 
 {% block content %}
-
-  <section class="page-hero" aria-labelledby="ph">
-    <p class="crumb" data-aos="fade-down">
-      خانه ← <span style="color: var(--ink)">خدمات</span>
+  <section class="border-b border-ink-line px-page pb-[clamp(40px,5vw,80px)] pt-[clamp(64px,9vw,130px)]" aria-labelledby="services-head" data-aos="fade-up">
+    <p class="mb-4 font-mono text-[0.74rem] text-ink-dim" data-aos="fade-down">
+      خانه ← <span class="text-ink">خدمات</span>
     </p>
-    <h1 id="ph" data-aos="fade-up" data-aos-delay="50">
-      {% if page_section %}{{ page_section.title|safe }}{% else %}خدمات ما{% endif %}
+    <h1 id="services-head" class="mb-6 max-w-[18ch] text-[clamp(2.6rem,5.4vw,6rem)] leading-[0.98]" data-aos="fade-up" data-aos-delay="50">
+      {% if page_section %}
+        {{ page_section.title|safe }}
+      {% else %}
+        خدمات ما
+      {% endif %}
     </h1>
-    <p class="lede" data-aos="fade-up" data-aos-delay="150">
-      {% if page_section %}{{ page_section.description|safe }}{% endif %}
-    </p>
+    {% if page_section %}
+      <div class="m-0 max-w-[60ch] text-[1.18rem] leading-[1.5] text-ink-soft" data-aos="fade-up" data-aos-delay="150">{{ page_section.description|safe }}</div>
+    {% endif %}
   </section>
 
-  <div class="services-list">
+  <section class="px-page pt-8 md:pt-16" aria-label="فهرست خدمات">
     {% for item in services_with_delay %}
       {% with service=item.service delay=item.delay %}
-        <article class="row">
-          <span class="num"
-                data-aos="fade-up"
-                data-aos-duration="500"
-                data-aos-delay="{{ delay }}"
-                data-aos-anchor-placement="top-bottom">
-            {{ forloop.counter|stringformat:'02d' }} / {{ services|length|stringformat:'02d' }}
-          </span>
-          <div class="service-row-body"
-               data-aos="fade-up"
-               data-aos-duration="500"
-               data-aos-delay="{{ delay|add:50 }}"
-               data-aos-anchor-placement="top-bottom">
-            <h3>
-              <a href="{% url 'services:detail' service.slug %}" style="color:inherit;text-decoration:none">{{ service.title }}</a>
-            </h3>
+        <article class="grid grid-cols-1 items-start gap-8 border-b border-ink-line py-10 md:grid-cols-[80px_1fr_1.4fr_auto] md:gap-8 md:py-14" data-aos="fade-up" data-aos-duration="500" data-aos-delay="{{ delay }}" data-aos-anchor-placement="top-bottom">
+          <span class="font-mono text-[0.84rem] text-ink-dim">{{ forloop.counter|stringformat:'02d' }} / {{ services|length|stringformat:'02d' }}</span>
+          <div>
+            <h2 class="mb-3.5 text-[clamp(1.6rem,2.4vw,2.4rem)]"><a href="{% url 'services:detail' service.slug %}" class="text-ink hover:text-ink-soft">{{ service.title }}</a></h2>
             {% if service.tags %}
-            <div class="service-tags"
-                 data-aos="fade-up"
-                 data-aos-duration="500"
-                 data-aos-delay="{{ delay|add:80 }}"
-                 data-aos-anchor-placement="top-bottom">
-              {% for tag in service.get_tags_list %}
-                <span class="service-tag">{{ tag }}</span>
-              {% endfor %}
-            </div>
+              <div class="flex flex-wrap gap-1.5" data-aos="fade-up" data-aos-delay="{{ delay|add:80 }}">
+                {% for tag in service.get_tags_list %}
+                  <span class="rounded-full bg-paper-soft px-2.5 py-[5px] font-mono text-[0.72rem] text-ink-soft">{{ tag }}</span>
+                {% endfor %}
+              </div>
             {% endif %}
           </div>
-          <p data-aos="fade-up"
-             data-aos-duration="500"
-             data-aos-delay="{{ delay|add:110 }}"
-             data-aos-anchor-placement="top-bottom">
-            {{ service.excerpt }}
-          </p>
-          <a class="arrow-link"
-             href="{% url 'services:detail' service.slug %}"
-             data-aos="fade-up"
-             data-aos-duration="500"
-             data-aos-delay="{{ delay|add:150 }}"
-             data-aos-anchor-placement="top-bottom">
-            <span class="link-label">مشاهده خدمت</span>
-            <span class="link-label-hover">بریم ببینیم</span>
-            <span>←</span>
-          </a>
+          <p class="m-0 text-[1rem] leading-[1.6] text-ink-soft" data-aos="fade-up" data-aos-delay="{{ delay|add:110 }}">{{ service.excerpt }}</p>
+          <a class="group inline-flex items-center gap-3 whitespace-nowrap font-mono text-[0.78rem] text-ink" href="{% url 'services:detail' service.slug %}" data-aos="fade-up" data-aos-delay="{{ delay|add:150 }}"><span class="transition-transform duration-200 group-hover:-translate-x-1">مشاهده خدمت</span><span class="text-lg transition-transform duration-200 group-hover:-translate-x-1">←</span></a>
         </article>
       {% endwith %}
+    {% empty %}
+      <p class="py-16 text-ink-dim" data-aos="fade-up">در حال حاضر خدمتی ثبت نشده است.</p>
     {% endfor %}
-  </div>
-
+  </section>
 {% endblock %}
