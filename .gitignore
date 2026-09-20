@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# Node / build
+node_modules/
+.npm/
+
+# Generated Tailwind / deployment output
+public/static/
+public/media/
+static/css/tailwind.css
+
+# Editors / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Kilo
+.kilo/

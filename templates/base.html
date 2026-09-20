@@ -1,26 +1,177 @@
 {% load static %}
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fa" dir="rtl">
-<head>
-  <meta charset="utf-8" /><meta name="viewport" content="width=device-width,initial-scale=1" /><meta name="theme-color" content="#0e0e0e" />
-  <title>{% block title %}{{ settings.site_name }}{% endblock %}</title>
-  <meta name="description" content="{% block description %}{% endblock %}" />
-  <link rel="stylesheet" href="{% static 'fonts/font_urls.css' %}" /><link rel="stylesheet" href="{% static 'css/aos.css' %}" /><link rel="stylesheet" href="{% static 'css/tailwind.css' %}" /><link rel="stylesheet" href="{% static 'css/styles.css' %}" />
-  {% block extra_css %}{% endblock extra_css %}
-</head>
-<body class="overflow-x-hidden bg-paper font-sans text-body text-ink-soft antialiased" hx-boost="true">
-  <div id="preloader" class="preloader" aria-hidden="true"><div class="preloader__panel preloader__panel--left"></div><div class="preloader__panel preloader__panel--right"></div><div class="preloader__title"><span class="preloader__mark">P</span><span class="preloader__name">{{ settings.site_name }}</span></div></div>
-  <div id="htmx-progress" class="htmx-progress" aria-hidden="true"></div>
-  <header class="fixed inset-x-0 top-0 z-50 flex items-center justify-between border-b border-ink-line bg-paper px-page py-3.5 md:hidden" data-aos="fade-down"><a href="{% url 'home:home' %}" class="flex items-center gap-2 font-display font-semibold text-ink"><span class="grid h-[26px] w-[26px] place-items-center rounded-sm bg-ink font-mono text-[0.78rem] font-semibold leading-none text-lime">P</span>{{ settings.site_name }}</a><button class="menu-toggle inline-flex cursor-pointer flex-col gap-1 rounded-sm bg-ink px-3.5 py-2.5 font-mono text-[0.8rem] text-lime" aria-label="باز کردن منو" aria-controls="mobile-nav" aria-expanded="false"><span class="block h-[2px] w-5 bg-lime"></span><span class="block h-[2px] w-5 bg-lime"></span></button></header>
-  <nav id="mobile-nav" class="mobile-nav fixed inset-0 z-[60] hidden flex-col gap-1 bg-ink px-page pb-8 pt-20 font-display text-[2rem] text-paper [&.open]:flex" aria-label="Mobile"><button class="mobile-close absolute right-[18px] top-[18px] cursor-pointer bg-transparent font-mono text-[0.85rem] text-paper" aria-label="بستن منو">بستن ✕</button><a href="{% url 'home:home' %}" class="border-b border-ink-soft py-3.5 hover:text-lime">خانه</a><a href="{% url 'portfolio:list' %}" class="border-b border-ink-soft py-3.5 hover:text-lime">نمونه کار ها</a><a href="{% url 'services:list' %}" class="border-b border-ink-soft py-3.5 hover:text-lime">خدمات</a><a href="{% url 'blog:list' %}" class="border-b border-ink-soft py-3.5 hover:text-lime">بلاگ</a><a href="{% url 'core:about' %}" class="border-b border-ink-soft py-3.5 hover:text-lime">درباره ما</a><a href="{% url 'contact:contact' %}" class="border-b border-ink-soft py-3.5 hover:text-lime">تماس با ما</a><div class="mt-auto border-t border-ink-soft pt-6 font-mono text-[0.78rem] text-mist-soft">{% if settings.phone %}<a href="tel:{{ settings.phone }}" class="block py-2">{{ settings.phone }}</a>{% endif %}<div class="flex flex-wrap gap-3">{% for social in socials %}<a href="{{ social.url }}" target="_blank" rel="noopener">{{ social.name }}</a>{% endfor %}</div><div class="mt-4 flex justify-between"><span>آماده همکاری</span><span>© {{ settings.established_year }} {{ settings.site_name }}</span></div></div></nav>
-  <div class="grid min-h-screen grid-cols-1 md:grid-cols-[200px_minmax(0,1fr)] lg:grid-cols-[240px_minmax(0,1fr)]">
-    <aside class="sticky top-0 z-40 hidden h-screen flex-col border-l border-ink-line bg-paper px-6 py-7 md:flex" aria-label="Primary" data-aos="fade-left"><a href="{% url 'home:home' %}" class="flex items-center gap-2.5 font-display text-[1.4rem] font-semibold text-ink" data-aos="fade-down"><span class="grid h-[26px] w-[26px] place-items-center rounded-sm bg-ink font-mono text-[0.78rem] font-semibold text-lime">P</span><span class="leading-none">{{ settings.site_name }}<small class="mt-0.5 block font-mono text-[0.66rem] font-normal text-ink-dim">{{ settings.site_description }}</small></span></a><nav class="rail-nav mt-14 flex flex-col gap-0.5 font-mono text-[0.84rem]" aria-label="Sections"><a href="{% url 'home:home' %}" class="flex gap-3.5 rounded-sm px-2 py-2.5 text-ink-soft hover:bg-paper-soft hover:text-ink {% if request.resolver_match.app_name == 'home' %}active text-ink{% endif %}"><span class="text-[0.7rem] text-ink-dim">01</span>خانه</a><a href="{% url 'portfolio:list' %}" class="flex gap-3.5 rounded-sm px-2 py-2.5 text-ink-soft hover:bg-paper-soft hover:text-ink {% if request.resolver_match.app_name == 'portfolio' %}active text-ink{% endif %}"><span class="text-[0.7rem] text-ink-dim">02</span>نمونه کار ها</a><a href="{% url 'services:list' %}" class="flex gap-3.5 rounded-sm px-2 py-2.5 text-ink-soft hover:bg-paper-soft hover:text-ink {% if request.resolver_match.app_name == 'services' %}active text-ink{% endif %}"><span class="text-[0.7rem] text-ink-dim">03</span>خدمات</a><a href="{% url 'blog:list' %}" class="flex gap-3.5 rounded-sm px-2 py-2.5 text-ink-soft hover:bg-paper-soft hover:text-ink {% if request.resolver_match.app_name == 'blog' %}active text-ink{% endif %}"><span class="text-[0.7rem] text-ink-dim">04</span>بلاگ</a><a href="{% url 'core:about' %}" class="flex gap-3.5 rounded-sm px-2 py-2.5 text-ink-soft hover:bg-paper-soft hover:text-ink {% if request.resolver_match.app_name == 'core' %}active text-ink{% endif %}"><span class="text-[0.7rem] text-ink-dim">05</span>درباره ما</a><a href="{% url 'contact:contact' %}" class="flex gap-3.5 rounded-sm px-2 py-2.5 text-ink-soft hover:bg-paper-soft hover:text-ink {% if request.resolver_match.app_name == 'contact' %}active text-ink{% endif %}"><span class="text-[0.7rem] text-ink-dim">06</span>تماس با ما</a></nav><div class="mt-auto flex flex-col gap-4 font-mono text-[0.72rem] text-ink-dim" id="rail-foot"><div class="flex justify-between"><span>فصل تابستان</span><span>نسخه ۰۱</span></div><span class="text-ink">{{ settings.status|default:'آماده همکاری' }}</span><div class="flex gap-3.5">{% for social in socials|slice:':3' %}<a href="{{ social.url }}" target="_blank" rel="noopener">{{ social.name }}</a>{% endfor %}</div><div class="flex justify-between"><span>ایران</span><span>آنلاین</span></div></div></aside>
-    <div class="min-w-0"><main id="content-start">{% block content %}{% endblock content %}{% if cta %}<section class="bg-ink px-page py-[clamp(64px,9vw,130px)] text-paper" aria-labelledby="cta-head" data-aos="fade-up"><div class="grid grid-cols-1 gap-10 md:grid-cols-[1fr_1.2fr] md:gap-20"><h2 id="cta-head" class="text-paper" data-aos="fade-up">{{ cta.title }}</h2><div data-aos="fade-up" data-aos-delay="100"><p class="text-[1.05rem] leading-[1.6] text-mist">{{ cta.description }}</p><a class="btn btn-lime mt-3" href="{% url 'contact:contact' %}">شروع گفتگو <span>←</span></a><div class="mt-6 flex flex-wrap gap-5 font-mono text-[0.78rem] text-mist-dim"><span>{{ cta.email }}</span><span>{{ cta.phone }}</span></div></div></div></section>{% endif %}{% block afterPrefooter %}{% endblock afterPrefooter %}</main>
-      <footer class="bg-ink px-page pb-6 pt-[clamp(60px,7vw,100px)] text-[0.92rem] text-mist" aria-labelledby="footer-head" data-aos="fade-up"><h2 id="footer-head" class="sr-only">فوتر سایت</h2><div class="grid grid-cols-2 gap-8 border-b border-ink-line-dark pb-12 md:grid-cols-[1.4fr_1fr_1fr_1fr] md:gap-12"><div class="flex max-w-[36ch] flex-col gap-[18px]"><span class="flex items-center gap-2.5 font-display text-[1.6rem] font-semibold text-paper"><span class="grid h-7 w-7 place-items-center rounded-sm bg-lime font-mono text-[0.76rem] font-semibold text-ink">P</span>{{ settings.site_name }}</span><p class="m-0 leading-[1.55] text-mist-soft">{{ settings.footer_description }}</p></div><div><h4 class="mb-3.5 font-mono text-[0.74rem] text-paper">نقشه سایت</h4><a href="{% url 'home:home' %}" class="block py-1.5 text-mist-soft hover:text-lime">خانه</a><a href="{% url 'portfolio:list' %}" class="block py-1.5 text-mist-soft hover:text-lime">نمونه‌کارها</a><a href="{% url 'services:list' %}" class="block py-1.5 text-mist-soft hover:text-lime">خدمات</a><a href="{% url 'blog:list' %}" class="block py-1.5 text-mist-soft hover:text-lime">بلاگ</a><a href="{% url 'core:about' %}" class="block py-1.5 text-mist-soft hover:text-lime">درباره ما</a><a href="{% url 'contact:contact' %}" class="block py-1.5 text-mist-soft hover:text-lime">تماس با ما</a></div><div><h4 class="mb-3.5 font-mono text-[0.74rem] text-paper">خدمات</h4>{% for service in services_footer %}<a href="{% url 'services:detail' service.slug %}" class="block py-1.5 text-mist-soft hover:text-lime">{{ service.title }}</a>{% empty %}<a href="{% url 'services:list' %}" class="block py-1.5 text-mist-soft hover:text-lime">مشاهده خدمات</a>{% endfor %}</div><div><h4 class="mb-3.5 font-mono text-[0.74rem] text-paper">ارتباط</h4>{% if settings.email %}<a href="mailto:{{ settings.email }}" class="block py-1.5 text-mist-soft hover:text-lime">{{ settings.email }}</a>{% endif %}{% if settings.phone %}<a href="tel:{{ settings.phone }}" class="block py-1.5 text-mist-soft hover:text-lime">{{ settings.phone }}</a>{% endif %}{% if settings.address %}<span class="block py-1.5 text-mist-soft">{{ settings.address }}</span>{% endif %}<div class="mt-3 flex flex-wrap gap-3">{% for social in socials %}<a href="{{ social.url }}" target="_blank" rel="noopener" class="text-mist-soft hover:text-lime">{{ social.name }}</a>{% endfor %}</div></div></div><div class="mt-6 grid grid-cols-1 gap-2 font-mono text-[0.74rem] text-mist-dim md:grid-cols-3 md:gap-6"><span>© {{ settings.established_year }} {{ settings.site_name }}</span><span class="md:text-center">{{ settings.address|default:'ایران' }}</span><span class="md:text-left">{{ settings.status|default:'آماده همکاری' }}</span></div></footer>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#0e0e0e" />
+    <title>
+      {% block title %}
+        {{ settings.site_name }}
+      {% endblock %}
+    </title>
+    <meta name="description"
+      content="{% block description %}
+      {% endblock %}" />
+    <link rel="stylesheet" href="{% static 'fonts/font_urls.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/aos.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/tailwind.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+    {% block extra_css %}
+    {% endblock %}
+  </head>
+  <body class="overflow-x-hidden bg-paper font-sans text-body text-ink-soft antialiased" hx-boost="true">
+    <div id="preloader" class="preloader" aria-hidden="true">
+      <div class="preloader__panel preloader__panel--left"></div>
+      <div class="preloader__panel preloader__panel--right"></div>
+      <div class="preloader__title">
+        <span class="preloader__mark">P</span><span class="preloader__name">{{ settings.site_name }}</span>
+      </div>
     </div>
-  </div>
-  <script src="{% static 'js/main.js' %}" defer></script><script src="{% static 'js/htmx.min.js' %}" defer></script><script src="{% static 'js/aos.js' %}" defer></script>
-  <script>(function(){var p=document.getElementById('preloader');if(!p)return;var r=document.documentElement,s=null;try{s=sessionStorage.getItem('pixoriaPreloaded')}catch(e){}if(s||window.matchMedia('(prefers-reduced-motion: reduce)').matches){p.classList.add('is-skip');return}p.classList.add('is-active');r.classList.add('preloader-lock');function done(){r.classList.remove('preloader-lock');p.classList.add('is-done');try{sessionStorage.setItem('pixoriaPreloaded','1')}catch(e){}}setTimeout(function(){p.classList.add('is-covered')},50);setTimeout(function(){p.classList.add('is-title-in')},500);setTimeout(function(){p.classList.add('is-title-out')},1350);setTimeout(function(){p.classList.add('is-leaving');setTimeout(done,620)},1550);setTimeout(done,4500)})();document.addEventListener('DOMContentLoaded',function(){if(window.AOS){AOS.init({duration:700,easing:'ease-out',once:true,offset:80});AOS.refresh()}});document.addEventListener('htmx:afterSwap',function(){if(window.AOS)AOS.refreshHard()});</script>
-  {% block extra_js %}{% endblock %}
-</body>
+    <div id="htmx-progress" class="htmx-progress" aria-hidden="true"></div>
+    <header class="fixed inset-x-0 top-0 z-50 flex items-center justify-between border-b border-ink-line bg-paper px-page py-3.5 md:hidden" data-aos="fade-down">
+      <a href="{% url 'home:home' %}" class="flex items-center gap-2 font-display font-semibold text-ink"><span class="grid h-[26px] w-[26px] place-items-center rounded-sm bg-ink font-mono text-[0.78rem] font-semibold leading-none text-lime">P</span>{{ settings.site_name }}</a><button class="menu-toggle inline-flex cursor-pointer flex-col gap-1 rounded-sm bg-ink px-3.5 py-2.5 font-mono text-[0.8rem] text-lime" aria-label="باز کردن منو" aria-controls="mobile-nav" aria-expanded="false"><span class="block h-[2px] w-5 bg-lime"></span><span class="block h-[2px] w-5 bg-lime"></span></button>
+    </header>
+    <nav id="mobile-nav" class="mobile-nav fixed inset-0 z-[60] hidden flex-col gap-1 bg-ink px-page pb-8 pt-20 font-display text-[2rem] text-paper [&.open]:flex" aria-label="Mobile">
+      <button class="mobile-close absolute right-[18px] top-[18px] cursor-pointer bg-transparent font-mono text-[0.85rem] text-paper" aria-label="بستن منو">بستن ✕</button><a href="{% url 'home:home' %}" class="border-b border-ink-soft py-3.5 hover:text-lime">خانه</a><a href="{% url 'portfolio:list' %}" class="border-b border-ink-soft py-3.5 hover:text-lime">نمونه کار ها</a><a href="{% url 'services:list' %}" class="border-b border-ink-soft py-3.5 hover:text-lime">خدمات</a><a href="{% url 'blog:list' %}" class="border-b border-ink-soft py-3.5 hover:text-lime">بلاگ</a><a href="{% url 'core:about' %}" class="border-b border-ink-soft py-3.5 hover:text-lime">درباره ما</a><a href="{% url 'contact:contact' %}" class="border-b border-ink-soft py-3.5 hover:text-lime">تماس با ما</a><div class="mt-auto border-t border-ink-soft pt-6 font-mono text-[0.78rem] text-mist-soft">
+        {% if settings.phone %}
+          <a href="tel:{{ settings.phone }}" class="block py-2">{{ settings.phone }}</a>
+        {% endif %}
+        <div class="flex flex-wrap gap-3">
+          {% for social in socials %}
+            <a href="{{ social.url }}" target="_blank" rel="noopener">{{ social.name }}</a>
+          {% endfor %}
+        </div>
+        <div class="mt-4 flex justify-between">
+          <span>آماده همکاری</span><span>© {{ settings.established_year }} {{ settings.site_name }}</span>
+        </div>
+      </div>
+    </nav>
+    <div class="grid min-h-screen grid-cols-1 md:grid-cols-[200px_minmax(0,1fr)] lg:grid-cols-[240px_minmax(0,1fr)]">
+      <aside class="sticky top-0 z-40 hidden h-screen flex-col border-l border-ink-line bg-paper px-6 py-7 md:flex" aria-label="Primary" data-aos="fade-left">
+        <a href="{% url 'home:home' %}" class="flex items-center gap-2.5 font-display text-[1.4rem] font-semibold text-ink" data-aos="fade-down"><span class="grid h-[26px] w-[26px] place-items-center rounded-sm bg-ink font-mono text-[0.78rem] font-semibold text-lime">P</span><span class="leading-none">{{ settings.site_name }}<small class="mt-0.5 block font-mono text-[0.66rem] font-normal text-ink-dim">{{ settings.site_description }}</small></span></a><nav class="rail-nav mt-14 flex flex-col gap-0.5 font-mono text-[0.84rem]" aria-label="Sections">
+          <a href="{% url 'home:home' %}" class="flex gap-3.5 rounded-sm px-2 py-2.5 text-ink-soft hover:bg-paper-soft hover:text-ink {% if request.resolver_match.app_name == 'home' %}active text-ink{% endif %}"><span class="text-[0.7rem] text-ink-dim">01</span>خانه</a><a href="{% url 'portfolio:list' %}" class="flex gap-3.5 rounded-sm px-2 py-2.5 text-ink-soft hover:bg-paper-soft hover:text-ink {% if request.resolver_match.app_name == 'portfolio' %}active text-ink{% endif %}"><span class="text-[0.7rem] text-ink-dim">02</span>نمونه کار ها</a><a href="{% url 'services:list' %}" class="flex gap-3.5 rounded-sm px-2 py-2.5 text-ink-soft hover:bg-paper-soft hover:text-ink {% if request.resolver_match.app_name == 'services' %}active text-ink{% endif %}"><span class="text-[0.7rem] text-ink-dim">03</span>خدمات</a><a href="{% url 'blog:list' %}" class="flex gap-3.5 rounded-sm px-2 py-2.5 text-ink-soft hover:bg-paper-soft hover:text-ink {% if request.resolver_match.app_name == 'blog' %}active text-ink{% endif %}"><span class="text-[0.7rem] text-ink-dim">04</span>بلاگ</a><a href="{% url 'core:about' %}" class="flex gap-3.5 rounded-sm px-2 py-2.5 text-ink-soft hover:bg-paper-soft hover:text-ink {% if request.resolver_match.app_name == 'core' %}active text-ink{% endif %}"><span class="text-[0.7rem] text-ink-dim">05</span>درباره ما</a><a href="{% url 'contact:contact' %}" class="flex gap-3.5 rounded-sm px-2 py-2.5 text-ink-soft hover:bg-paper-soft hover:text-ink {% if request.resolver_match.app_name == 'contact' %}active text-ink{% endif %}"><span class="text-[0.7rem] text-ink-dim">06</span>تماس با ما</a>
+        </nav>
+        <div class="mt-auto flex flex-col gap-4 font-mono text-[0.72rem] text-ink-dim" id="rail-foot">
+          <div class="flex justify-between">
+            <span>فصل تابستان</span><span>نسخه ۰۱</span>
+          </div><span class="text-ink">{{ settings.status|default:'آماده همکاری' }}</span><div class="flex gap-3.5">
+            {% for social in socials|slice:':3' %}
+              <a href="{{ social.url }}" target="_blank" rel="noopener">{{ social.name }}</a>
+            {% endfor %}
+          </div>
+          <div class="flex justify-between">
+            <span>ایران</span><span>آنلاین</span>
+          </div>
+        </div>
+      </aside>
+      <div class="min-w-0">
+        <main id="content-start">
+          {% block content %}
+          {% endblock %}
+          {% if cta %}
+            <section class="bg-ink px-page py-[clamp(64px,9vw,130px)] text-paper" aria-labelledby="cta-head" data-aos="fade-up">
+              <div class="grid grid-cols-1 gap-10 md:grid-cols-[1fr_1.2fr] md:gap-20">
+                <h2 id="cta-head" class="text-paper" data-aos="fade-up">{{ cta.title }}</h2><div data-aos="fade-up" data-aos-delay="100">
+                  <p class="text-[1.05rem] leading-[1.6] text-mist">{{ cta.description }}</p><a class="btn btn-lime mt-3" href="{% url 'contact:contact' %}">شروع گفتگو <span>←</span></a><div class="mt-6 flex flex-wrap gap-5 font-mono text-[0.78rem] text-mist-dim">
+                    <span>{{ cta.email }}</span><span>{{ cta.phone }}</span>
+                  </div>
+                </div>
+              </div>
+            </section>
+          {% endif %}
+          {% block afterPrefooter %}
+          {% endblock %}
+        </main>
+        <footer class="bg-ink px-page pb-6 pt-[clamp(60px,7vw,100px)] text-[0.92rem] text-mist" aria-labelledby="footer-head" data-aos="fade-up">
+          <h2 id="footer-head" class="sr-only">فوتر سایت</h2><div class="grid grid-cols-2 gap-8 border-b border-ink-line-dark pb-12 md:grid-cols-[1.4fr_1fr_1fr_1fr] md:gap-12">
+            <div class="flex max-w-[36ch] flex-col gap-[18px]">
+              <span class="flex items-center gap-2.5 font-display text-[1.6rem] font-semibold text-paper"><span class="grid h-7 w-7 place-items-center rounded-sm bg-lime font-mono text-[0.76rem] font-semibold text-ink">P</span>{{ settings.site_name }}</span><p class="m-0 leading-[1.55] text-mist-soft">{{ settings.footer_description }}</p>
+            </div>
+            <div>
+              <h4 class="mb-3.5 font-mono text-[0.74rem] text-paper">نقشه سایت</h4><a href="{% url 'home:home' %}" class="block py-1.5 text-mist-soft hover:text-lime">خانه</a><a href="{% url 'portfolio:list' %}" class="block py-1.5 text-mist-soft hover:text-lime">نمونه‌کارها</a><a href="{% url 'services:list' %}" class="block py-1.5 text-mist-soft hover:text-lime">خدمات</a><a href="{% url 'blog:list' %}" class="block py-1.5 text-mist-soft hover:text-lime">بلاگ</a><a href="{% url 'core:about' %}" class="block py-1.5 text-mist-soft hover:text-lime">درباره ما</a><a href="{% url 'contact:contact' %}" class="block py-1.5 text-mist-soft hover:text-lime">تماس با ما</a>
+            </div>
+            <div>
+              <h4 class="mb-3.5 font-mono text-[0.74rem] text-paper">خدمات</h4>{% for service in services_footer %}
+                <a href="{% url 'services:detail' service.slug %}" class="block py-1.5 text-mist-soft hover:text-lime">{{ service.title }}</a>
+              {% empty %}
+                <a href="{% url 'services:list' %}" class="block py-1.5 text-mist-soft hover:text-lime">مشاهده خدمات</a>
+              {% endfor %}
+            </div>
+            <div>
+              <h4 class="mb-3.5 font-mono text-[0.74rem] text-paper">ارتباط</h4>{% if settings.email %}
+                <a href="mailto:{{ settings.email }}" class="block py-1.5 text-mist-soft hover:text-lime">{{ settings.email }}</a>
+              {% endif %}
+              {% if settings.phone %}
+                <a href="tel:{{ settings.phone }}" class="block py-1.5 text-mist-soft hover:text-lime">{{ settings.phone }}</a>
+              {% endif %}
+              {% if settings.address %}
+                <span class="block py-1.5 text-mist-soft">{{ settings.address }}</span>
+              {% endif %}
+              <div class="mt-3 flex flex-wrap gap-3">
+                {% for social in socials %}
+                  <a href="{{ social.url }}" target="_blank" rel="noopener" class="text-mist-soft hover:text-lime">{{ social.name }}</a>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+          <div class="mt-6 grid grid-cols-1 gap-2 font-mono text-[0.74rem] text-mist-dim md:grid-cols-3 md:gap-6">
+            <span>© {{ settings.established_year }} {{ settings.site_name }}</span><span class="md:text-center">{{ settings.address|default:'ایران' }}</span><span class="md:text-left">{{ settings.status|default:'آماده همکاری' }}</span>
+          </div>
+        </footer>
+      </div>
+    </div>
+    <script src="{% static 'js/main.js' %}" defer></script>
+    <script src="{% static 'js/htmx.min.js' %}" defer></script>
+    <script src="{% static 'js/aos.js' %}" defer></script>
+    <script>
+      ;(function () {
+        var p = document.getElementById('preloader')
+        if (!p) return
+        var r = document.documentElement,
+          s = null
+        try {
+          s = sessionStorage.getItem('pixoriaPreloaded')
+        } catch (e) {}
+        if (s || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          p.classList.add('is-skip')
+          return
+        }
+        p.classList.add('is-active')
+        r.classList.add('preloader-lock')
+        function done() {
+          r.classList.remove('preloader-lock')
+          p.classList.add('is-done')
+          try {
+            sessionStorage.setItem('pixoriaPreloaded', '1')
+          } catch (e) {}
+        }
+        setTimeout(function () {
+          p.classList.add('is-covered')
+        }, 50)
+        setTimeout(function () {
+          p.classList.add('is-title-in')
+        }, 500)
+        setTimeout(function () {
+          p.classList.add('is-title-out')
+        }, 1350)
+        setTimeout(function () {
+          p.classList.add('is-leaving')
+          setTimeout(done, 620)
+        }, 1550)
+        setTimeout(done, 4500)
+      })()
+      document.addEventListener('DOMContentLoaded', function () {
+        if (window.AOS) {
+          AOS.init({ duration: 700, easing: 'ease-out', once: true, offset: 80 })
+          AOS.refresh()
+        }
+      })
+      document.addEventListener('htmx:afterSwap', function () {
+        if (window.AOS) AOS.refreshHard()
+      })
+    </script>
+    {% block extra_js %}
+    {% endblock %}
+  </body>
 </html>
