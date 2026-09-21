@@ -1,16 +1,9 @@
 {% for article in articles %}
-  <article class="blog-card" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:'50' }}" data-aos-duration="700">
-    <a href="{% url 'blog:detail' article.slug %}" class="img-wrap"><img src="{{ article.cover_image.url }}" alt="{{ article.cover_image_alt }}" loading="lazy" /></a>
-    <div class="body">
-      <div class="meta">
-        <span class="category">{{ article.category.title }}</span>
-        <span>{{ article.published_at|date:'d F Y' }}</span>
-        <span>·</span>
-        <span>{{ article.reading_time }} دقیقه مطالعه</span>
-      </div>
-      <h3><a href="{% url 'blog:detail' article.slug %}">{{ article.title }}</a></h3>
-      <p>{{ article.excerpt }}</p>
-      <a class="arrow-link" href="{% url 'blog:detail' article.slug %}">خواندن مقاله <span>←</span></a>
+  <article class="group overflow-hidden rounded-md border border-ink-line bg-paper transition duration-300 hover:-translate-y-1 hover:border-ink" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:'50' }}" data-aos-duration="700">
+    <a href="{% url 'blog:detail' article.slug %}" class="block aspect-[4/3] overflow-hidden bg-paper-soft"><img src="{{ article.cover_image.url }}" alt="{{ article.cover_image_alt }}" loading="lazy" class="h-full w-full object-cover transition duration-500 group-hover:scale-105" /></a><div class="p-[22px]">
+      <div class="flex flex-wrap gap-2 font-mono text-[0.72rem] text-ink-dim">
+        <span>{{ article.category.title }}</span><span>{{ article.published_at|date:'d F Y' }}</span><span>{{ article.reading_time }} دقیقه مطالعه</span>
+      </div><h3 class="mt-3 text-[1.3rem]"><a href="{% url 'blog:detail' article.slug %}">{{ article.title }}</a></h3><p class="text-ink-soft">{{ article.excerpt }}</p><a class="font-mono text-[0.78rem] text-ink hover:text-lime-deep" href="{% url 'blog:detail' article.slug %}">خواندن مقاله ←</a>
     </div>
   </article>
 {% endfor %}

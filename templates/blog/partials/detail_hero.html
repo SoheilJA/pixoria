@@ -1,37 +1,37 @@
 {% comment %}بخش بالای صفحه مقاله (hero section){% endcomment %}
-<section class="post-hero" data-aos="fade-up" data-aos-duration="700">
+<section class="reveal max-w-[900px] border-b border-ink-line px-page pb-[clamp(40px,5vw,72px)] pt-[clamp(64px,9vw,130px)]" data-aos="fade-up" data-aos-duration="700">
   {# breadcrumb navigation #}
-  <p class="crumb" data-aos="fade-down" data-aos-delay="50">
-    <a href="{% url 'home:home' %}">خانه</a>
+  <p class="mb-6 font-mono text-[0.76rem] uppercase tracking-[0.12em] text-ink-dim" data-aos="fade-down" data-aos-delay="50">
+    <a href="{% url 'home:home' %}" class="transition-colors hover:text-ink">خانه</a>
     ←
-    <a href="{% url 'blog:list' %}">بلاگ</a>
+    <a href="{% url 'blog:list' %}" class="transition-colors hover:text-ink">بلاگ</a>
     ←
-    <span style="color: var(--ink)">{{ article.category.title }}</span>
+    <span class="text-ink">{{ article.category.title }}</span>
   </p>
 
   {# category and tags #}
-  <div class="post-tags" data-aos="fade-up" data-aos-delay="100">
-    <span class="tag highlight">{{ article.category.title }}</span>
+  <div class="mb-7 flex flex-wrap gap-2" data-aos="fade-up" data-aos-delay="100">
+    <span class="rounded-full border border-lime bg-lime px-3 py-[5px] font-mono text-[0.74rem] font-semibold uppercase tracking-[0.1em] text-ink">{{ article.category.title }}</span>
     {% for tag in article.tags.all %}
-      <span class="tag">{{ tag.title }}</span>
+      <span class="rounded-full border border-ink-line px-3 py-[5px] font-mono text-[0.74rem] uppercase tracking-[0.1em] text-ink-dim">{{ tag.title }}</span>
     {% endfor %}
   </div>
 
   {# title #}
-  <h1 data-aos="fade-up" data-aos-delay="150">{{ article.title }}</h1>
+  <h1 class="mb-8 max-w-none font-display text-[clamp(2.2rem,4.5vw,5rem)] leading-[0.98] tracking-[-0.03em] text-ink" data-aos="fade-up" data-aos-delay="150">{{ article.title }}</h1>
 
   {# metadata bar: author, date, reading time, update info #}
-  <div class="post-meta-bar" data-aos="fade-up" data-aos-delay="200">
+  <div class="flex flex-wrap items-center gap-8 border-t border-ink-line pt-7 font-mono text-[0.78rem] uppercase tracking-[0.08em] text-ink-dim" data-aos="fade-up" data-aos-delay="200">
     {% if article.author %}
-      <div class="author">
-        <div class="avatar">
+      <div class="flex items-center gap-3">
+        <div class="grid h-[38px] w-[38px] place-items-center overflow-hidden rounded-full border border-ink-line bg-paper-soft font-display text-[0.9rem] text-ink">
           {% if article.author.avatar %}
-            <img src="{{ article.author.avatar.url }}" alt="{{ article.author.name }}" loading="eager" />
+            <img src="{{ article.author.avatar.url }}" alt="{{ article.author.name }}" loading="eager" class="h-full w-full object-cover" />
           {% else %}
             {{ article.author.initial }}
           {% endif %}
         </div>
-        <div class="name">{{ article.author.name }}</div>
+        <div class="normal-case text-ink font-medium">{{ article.author.name }}</div>
       </div>
     {% endif %}
 

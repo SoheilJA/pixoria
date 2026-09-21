@@ -170,6 +170,13 @@
       document.addEventListener('htmx:afterSwap', function () {
         if (window.AOS) AOS.refreshHard()
       })
+      var htmxBar = document.getElementById('htmx-progress')
+      document.body.addEventListener('htmx:beforeRequest', function () {
+        if (htmxBar) htmxBar.classList.add('is-loading')
+      })
+      document.body.addEventListener('htmx:afterRequest', function () {
+        if (htmxBar) htmxBar.classList.remove('is-loading')
+      })
     </script>
     {% block extra_js %}
     {% endblock %}

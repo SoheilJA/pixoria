@@ -7,32 +7,24 @@
   {{ page_settings.description }}
 {% endblock %}
 
-{% block extra_css %}
-  <link rel="stylesheet" href="{% load static %}{% static 'css/blog.css' %}" />
-{% endblock %}
-
 {% block content %}
-  <section class="page-hero" id="content-start" aria-labelledby="blog-head" data-aos="fade-up" data-aos-duration="700">
-    <p class="crumb" data-aos="fade-down" data-aos-delay="50">
-      <a href="{% url 'home:home' %}">خانه</a> ← <span style="color: var(--ink)">بلاگ</span>
-    </p>
-    <h1 id="blog-head" data-aos="fade-up" data-aos-delay="100">{{ page_settings.title }} <em class="italic-display">{{ page_settings.title_highlight }}</em></h1>
-    <p class="lede" data-aos="fade-up" data-aos-delay="150">{{ page_settings.description }}</p>
+  <section class="border-b border-ink-line px-page pb-[clamp(40px,5vw,72px)] pt-[clamp(64px,9vw,130px)]" id="content-start" aria-labelledby="blog-head" data-aos="fade-up" data-aos-duration="700">
+    <p class="mb-6 font-mono text-[0.76rem] uppercase tracking-[0.12em] text-ink-dim" data-aos="fade-down" data-aos-delay="50"><a href="{% url 'home:home' %}" class="transition-colors hover:text-ink">خانه</a> ← <span class="text-ink">بلاگ</span></p><h1 id="blog-head" class="max-w-[16ch]" data-aos="fade-up" data-aos-delay="100">{{ page_settings.title }} <em class="font-display font-normal italic text-lime-deep">{{ page_settings.title_highlight }}</em></h1><p class="mt-5 max-w-[60ch] text-[1.15rem] leading-[1.5] text-ink-soft" data-aos="fade-up" data-aos-delay="150">{{ page_settings.description }}</p>
   </section>
 
-  <div class="blog-filters" id="blog-filters" role="toolbar" aria-label="دسته‌بندی مقالات" data-aos="fade-up" data-aos-delay="150">
-    <button type="button" class="filter-btn" aria-pressed="true" hx-get="{% url 'blog:load' %}?category=all&page=1" hx-target="#blog-grid" hx-swap="innerHTML">همه</button>
+  <div class="flex flex-wrap gap-2.5 border-b border-ink-line px-page py-6" id="blog-filters" role="toolbar" aria-label="دسته‌بندی مقالات" data-aos="fade-up" data-aos-delay="150">
+    <button type="button" class="filter-btn rounded-full border border-ink px-3.5 py-2 font-mono text-[0.78rem] uppercase tracking-[0.06em] text-ink transition-colors duration-200 aria-pressed:bg-ink aria-pressed:text-lime" aria-pressed="true" hx-get="{% url 'blog:load' %}?category=all&page=1" hx-target="#blog-grid" hx-swap="innerHTML">همه</button>
     {% for cat in categories %}
-      <button type="button" class="filter-btn" aria-pressed="false" hx-get="{% url 'blog:load' %}?category={{ cat.slug }}&page=1" hx-target="#blog-grid" hx-swap="innerHTML">{{ cat.title }}</button>
+      <button type="button" class="filter-btn rounded-full border border-ink-line px-3.5 py-2 font-mono text-[0.78rem] uppercase tracking-[0.06em] text-ink-soft transition-colors duration-200 hover:border-ink hover:text-ink aria-pressed:border-ink aria-pressed:bg-ink aria-pressed:text-lime" aria-pressed="false" hx-get="{% url 'blog:load' %}?category={{ cat.slug }}&page=1" hx-target="#blog-grid" hx-swap="innerHTML">{{ cat.title }}</button>
     {% endfor %}
   </div>
 
-  <section aria-label="مقالات">
-    <div class="blog-grid" id="blog-grid">
+  <section class="px-page py-[clamp(56px,7vw,100px)]" aria-label="مقالات">
+    <div class="grid grid-cols-1 gap-7 md:grid-cols-2 lg:grid-cols-3" id="blog-grid">
       {% include 'blog/partials/article_cards.html' %}
     </div>
 
-    <div id="load-more-wrapper" style="text-align:center;margin-top:56px">
+    <div class="mt-14 text-center" id="load-more-wrapper">
       {% if has_next %}
         <button class="btn btn-ghost" id="load-more-btn" hx-get="{% url 'blog:load' %}?category={{ current_category }}&page={{ next_page }}" hx-target="#blog-grid" hx-swap="beforeend">مقالات بیشتر <span class="arrow">↓</span></button>
       {% endif %}

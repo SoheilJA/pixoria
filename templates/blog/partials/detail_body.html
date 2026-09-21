@@ -1,17 +1,17 @@
 {% comment %}محتوای اصلی مقاله + اشتراک‌گذاری{% endcomment %}
-<article class="post-body" data-aos="fade-up" data-aos-delay="100" data-aos-duration="700">
+<article class="post-body max-w-[72ch]" data-aos="fade-up" data-aos-delay="100" data-aos-duration="700">
   {# lead paragraph (excerpt) #}
-  <div class="lead">{{ article.excerpt }}</div>
+  <div class="mb-[2em] border-b border-ink-line pb-[2em] text-[clamp(1.1rem,1.4vw,1.35rem)] leading-[1.6] text-ink-soft">{{ article.excerpt }}</div>
 
   {# main content #}
   {{ content_html|safe }}
 
   {# social sharing bar #}
-  <div class="post-share">
+  <div class="mt-[3em] flex flex-wrap items-center gap-3.5 border-t border-ink-line pt-7 font-mono text-[0.78rem] uppercase tracking-[0.1em] text-ink-dim">
     <span>اشتراک‌گذاری:</span>
-    <a href="https://twitter.com/intent/tweet?url={{ request.build_absolute_uri }}" target="_blank" rel="noopener noreferrer" title="اشتراک‌گذاری در توییتر" aria-label="اشتراک‌گذاری در توییتر">TW</a>
-    <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ request.build_absolute_uri }}" target="_blank" rel="noopener noreferrer" title="اشتراک‌گذاری در لینکدین" aria-label="اشتراک‌گذاری در لینکدین">LI</a>
-    <a href="https://t.me/share/url?url={{ request.build_absolute_uri }}&text={{ article.title|urlencode }}" target="_blank" rel="noopener noreferrer" title="اشتراک‌گذاری در تلگرام" aria-label="اشتراک‌گذاری در تلگرام">TG</a>
-    <a href="#" id="copy-link-btn" title="کپی لینک صفحه" aria-label="کپی لینک صفحه">🔗 کپی لینک</a>
+    <a href="https://twitter.com/intent/tweet?url={{ request.build_absolute_uri }}" target="_blank" rel="noopener noreferrer" title="اشتراک‌گذاری در توییتر" aria-label="اشتراک‌گذاری در توییتر" class="inline-flex items-center gap-[7px] rounded-full border border-ink-line px-4 py-2 text-ink-soft transition-[background,border-color,color] duration-200 hover:border-ink hover:bg-ink hover:text-paper">TW</a>
+    <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ request.build_absolute_uri }}" target="_blank" rel="noopener noreferrer" title="اشتراک‌گذاری در لینکدین" aria-label="اشتراک‌گذاری در لینکدین" class="inline-flex items-center gap-[7px] rounded-full border border-ink-line px-4 py-2 text-ink-soft transition-[background,border-color,color] duration-200 hover:border-ink hover:bg-ink hover:text-paper">LI</a>
+    <a href="https://t.me/share/url?url={{ request.build_absolute_uri }}&text={{ article.title|urlencode }}" target="_blank" rel="noopener noreferrer" title="اشتراک‌گذاری در تلگرام" aria-label="اشتراک‌گذاری در تلگرام" class="inline-flex items-center gap-[7px] rounded-full border border-ink-line px-4 py-2 text-ink-soft transition-[background,border-color,color] duration-200 hover:border-ink hover:bg-ink hover:text-paper">TG</a>
+    <a href="#" id="copy-link-btn" title="کپی لینک صفحه" aria-label="کپی لینک صفحه" class="inline-flex items-center gap-[7px] rounded-full border border-ink-line px-4 py-2 text-ink-soft transition-[background,border-color,color] duration-200 hover:border-ink hover:bg-ink hover:text-paper">🔗 کپی لینک</a>
   </div>
 </article>

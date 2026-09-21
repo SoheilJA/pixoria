@@ -8,46 +8,24 @@
   {{ article.get_meta_description }}
 {% endblock %}
 
-{% block extra_css %}
-  {% load static %}
-  <link rel="stylesheet" href="{% static 'css/blog.css' %}" />
-{% endblock %}
-
 {% block content %}
-  <div class="single-blog-page">
-    {# Hero Section: breadcrumb, tags, title, metadata #}
-    {% include 'blog/partials/detail_hero.html' %}
+  {% include 'blog/partials/detail_hero.html' %}
+  {% include 'blog/partials/detail_cover.html' %}
 
-    {# Cover Image #}
-    {% include 'blog/partials/detail_cover.html' %}
+  <div class="grid grid-cols-1 items-start gap-20 border-b border-ink-line px-page py-[clamp(56px,7vw,100px)] lg:grid-cols-[1fr_300px]">
+    {% include 'blog/partials/detail_body.html' %}
 
-    {# Main Layout: Article Body + Sidebar #}
-    <div class="post-layout">
-      {# Article Body #}
-      {% include 'blog/partials/detail_body.html' %}
-
-      {# Sidebar with multiple blocks #}
-      <aside class="post-sidebar">
-        {# Table of Contents #}
-        {% include 'blog/partials/sidebar_toc.html' %}
-
-        {# Author Information #}
-        {% include 'blog/partials/sidebar_author.html' %}
-
-        {# Related Articles in Sidebar #}
-        {% include 'blog/partials/sidebar_related.html' %}
-
-        {# Free Consultation CTA #}
-        {% include 'blog/partials/sidebar_cta.html' %}
-      </aside>
-    </div>
-
-    {# Related Posts Grid Section #}
-    {% include 'blog/partials/detail_related_section.html' %}
-
-    {# Previous/Next Article Navigation #}
-    {% include 'blog/partials/detail_post_nav.html' %}
+    <aside class="flex flex-col gap-8 lg:sticky lg:top-8">
+      {% include 'blog/partials/sidebar_toc.html' %}
+      {% include 'blog/partials/sidebar_author.html' %}
+      {% include 'blog/partials/sidebar_related.html' %}
+      {% include 'blog/partials/sidebar_cta.html' %}
+    </aside>
   </div>
+
+  {% include 'blog/partials/detail_related_section.html' %}
+  {% include 'blog/partials/detail_post_nav.html' %}
+  {% comment %} {% include 'blog/partials/detail_cta.html' %} {% endcomment %}
 {% endblock %}
 
 {% block extra_js %}

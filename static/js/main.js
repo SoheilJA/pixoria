@@ -21,8 +21,8 @@
 
   // ─── Mobile nav toggle ───
   const toggle = document.querySelector('.menu-toggle');
-  const nav    = document.querySelector('.mobile-nav');
-  const close  = document.querySelector('.mobile-close');
+  const nav = document.querySelector('.mobile-nav');
+  const close = document.querySelector('.mobile-close');
   if (toggle && nav) {
     toggle.addEventListener('click', () => {
       const open = nav.classList.toggle('open');
@@ -84,8 +84,8 @@ function updateStrength(val) {
   const b3 = document.getElementById('bar3');
   if (!b1) return;
   [b1, b2, b3].forEach((b) => (b.className = 'bar'));
-  if (val.length >= 4)  b1.classList.add('active-1');
-  if (val.length >= 8)  b2.classList.add('active-2');
+  if (val.length >= 4) b1.classList.add('active-1');
+  if (val.length >= 8) b2.classList.add('active-2');
   if (val.length >= 12 && /[A-Z0-9!@#$]/.test(val)) b3.classList.add('active-3');
 }
 
@@ -97,26 +97,26 @@ function updateStrength(val) {
   // تعداد اسلاید قابل نمایش بر اساس عرض صفحه
   function visibleCount(defaultCount) {
     const w = window.innerWidth;
-    if (w <= 480)  return 1;
-    if (w <= 768)  return Math.min(defaultCount, 2);
+    if (w <= 480) return 1;
+    if (w <= 768) return Math.min(defaultCount, 2);
     if (w <= 1024) return Math.min(defaultCount, 3);
     return defaultCount;
   }
 
   function initCarousel(wrap, opts) {
-    var track       = wrap.querySelector('.carousel-track');
-    var prevBtn     = wrap.querySelector('.carousel-btn-prev');
-    var nextBtn     = wrap.querySelector('.carousel-btn-next');
-    var dotsWrap    = wrap.querySelector('.carousel-dots');
+    var track = wrap.querySelector('.carousel-track');
+    var prevBtn = wrap.querySelector('.carousel-btn-prev');
+    var nextBtn = wrap.querySelector('.carousel-btn-next');
+    var dotsWrap = wrap.querySelector('.carousel-dots');
 
     if (!track) return;
 
-    var slides      = Array.from(track.children);
-    var total       = slides.length;
-    var current     = 0;
-    var perView     = visibleCount(opts.perView || 3);
-    var gap         = opts.gap || 20;
-    var autoTimer   = null;
+    var slides = Array.from(track.children);
+    var total = slides.length;
+    var current = 0;
+    var perView = visibleCount(opts.perView || 3);
+    var gap = opts.gap || 20;
+    var autoTimer = null;
 
     // ─── layout slides ───
     function layout() {
@@ -128,8 +128,8 @@ function updateStrength(val) {
       track.style.gap = gap + 'px';
 
       slides.forEach(function (s) {
-        s.style.flex    = '0 0 ' + slideW + 'px';
-        s.style.width   = slideW + 'px';
+        s.style.flex = '0 0 ' + slideW + 'px';
+        s.style.width = slideW + 'px';
         s.style.minWidth = slideW + 'px';
       });
     }
@@ -201,8 +201,8 @@ function updateStrength(val) {
     track.addEventListener('touchend', function (e) {
       var dx = e.changedTouches[0].screenX - touchX;
       // RTL: swipe چپ = next، swipe راست = prev
-      if (dx < -50)  { stopAuto(); next(); startAuto(); }
-      if (dx >  50)  { stopAuto(); prev(); startAuto(); }
+      if (dx < -50) { stopAuto(); next(); startAuto(); }
+      if (dx > 50) { stopAuto(); prev(); startAuto(); }
     }, { passive: true });
 
     // pause on hover
@@ -244,7 +244,7 @@ function updateStrength(val) {
     // کاروسل آخرین مقالات
     var articlesWrap = document.getElementById('latest-articles-carousel');
     if (articlesWrap) {
-      initCarousel(articlesWrap, { perView: 3, gap: 24, autoplay: false });
+      initCarousel(articlesWrap, { perView: 4, gap: 24, autoplay: false });
     }
   });
 

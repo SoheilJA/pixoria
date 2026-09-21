@@ -1,18 +1,18 @@
 {% comment %}sidebar: author card{% endcomment %}
 {% if article.author %}
-  <div class="sidebar-block" data-aos="fade-up" data-aos-delay="150" data-aos-duration="700">
-    <div class="sb-label">نویسنده</div>
-    <div class="author-card">
-      <div class="avatar-lg">
+  <div class="rounded-[6px] border border-ink-line p-6" data-aos="fade-up" data-aos-delay="150" data-aos-duration="700">
+    <div class="mb-4 border-b border-ink-line pb-3 font-mono text-[0.72rem] uppercase tracking-[0.14em] text-ink-dim">نویسنده</div>
+    <div class="flex flex-col items-start gap-3">
+      <div class="grid h-14 w-14 place-items-center overflow-hidden rounded-full border border-ink-line bg-paper-soft font-display text-[1.2rem] text-ink">
         {% if article.author.avatar %}
-          <img src="{{ article.author.avatar.url }}" alt="{{ article.author.name }}" loading="lazy" style="width:100%;height:100%;border-radius:50%;object-fit:cover" />
+          <img src="{{ article.author.avatar.url }}" alt="{{ article.author.name }}" loading="lazy" class="h-full w-full object-cover" />
         {% else %}
           {{ article.author.initial }}
         {% endif %}
       </div>
-      <div class="author-name">{{ article.author.name }}</div>
-      <div class="author-role">{{ article.author.role }}</div>
-      <p>{{ article.author.bio }}</p>
+      <div class="font-display text-[1rem] font-semibold text-ink">{{ article.author.name }}</div>
+      <div class="-mt-1.5 font-mono text-[0.72rem] uppercase tracking-[0.1em] text-ink-dim">{{ article.author.role }}</div>
+      <p class="m-0 text-[0.9rem] leading-[1.6] text-ink-soft">{{ article.author.bio }}</p>
     </div>
   </div>
 {% endif %}
