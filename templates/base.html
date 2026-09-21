@@ -70,10 +70,10 @@
           {% block content %}
           {% endblock %}
           {% if cta %}
-            <section class="bg-ink px-page py-[clamp(64px,9vw,130px)] text-paper" aria-labelledby="cta-head" data-aos="fade-up">
+            <section class="bg-lime px-page py-[clamp(64px,9vw,130px)] text-ink" aria-labelledby="cta-head" data-aos="fade-up">
               <div class="grid grid-cols-1 gap-10 md:grid-cols-[1fr_1.2fr] md:gap-20">
-                <h2 id="cta-head" class="text-paper" data-aos="fade-up">{{ cta.title }}</h2><div data-aos="fade-up" data-aos-delay="100">
-                  <p class="text-[1.05rem] leading-[1.6] text-mist">{{ cta.description }}</p><a class="btn btn-lime mt-3" href="{% url 'contact:contact' %}">شروع گفتگو <span>←</span></a><div class="mt-6 flex flex-wrap gap-5 font-mono text-[0.78rem] text-mist-dim">
+                <h2 id="cta-head" class="text-ink font-display text-[clamp(2.6rem,5vw,5.2rem)] font-medium leading-[0.96] tracking-[-0.03em]" data-aos="fade-up">{{ cta.title }}</h2><div data-aos="fade-up" data-aos-delay="100">
+                  <p class="text-[1.05rem] leading-[1.6] text-ink-soft">{{ cta.description }}</p><a class="btn btn-ink mt-3" href="{% url 'contact:contact' %}">شروع گفتگو <span>←</span></a><div class="mt-6 flex flex-wrap gap-5 font-mono text-[0.78rem] text-ink-dim">
                     <span>{{ cta.email }}</span><span>{{ cta.phone }}</span>
                   </div>
                 </div>
