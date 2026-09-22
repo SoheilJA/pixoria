@@ -5,69 +5,66 @@
 
 {% block content %}
 
-  <section class="page-hero" aria-labelledby="ph">
-    <p class="crumb" data-aos="fade-down">
-      خانه ← <span style="color: var(--ink)">کارها</span>
+  <section class="border-b border-ink-line px-page pb-[clamp(40px,5vw,80px)] pt-[clamp(64px,9vw,130px)]" aria-labelledby="ph">
+    <p class="mb-4 font-mono text-[0.74rem] uppercase tracking-[0.12em] text-ink-dim" data-aos="fade-down">
+      خانه / <span class="text-ink">کارها</span>
     </p>
-    <h1 id="ph" data-aos="fade-up" data-aos-delay="50">{{ page_section.title }}</h1>
-    <p class="lede" data-aos="fade-up" data-aos-delay="150">{{ page_section.description }}</p>
+    <h1 id="ph" class="mb-6 max-w-[18ch] text-[clamp(2.6rem,5.4vw,6rem)] leading-[0.98] tracking-[-0.03em]" data-aos="fade-up" data-aos-delay="50">{{ page_section.title }}</h1>
+    <p class="m-0 max-w-[60ch] text-[1.18rem] leading-[1.5] text-ink-soft" data-aos="fade-up" data-aos-delay="150">{{ page_section.description }}</p>
   </section>
 
-  <div class="work-filters" role="toolbar" aria-label="Filter work" data-aos="fade-up" data-aos-delay="200">
+  <div class="work-filters flex flex-wrap gap-2 border-b border-ink-line px-page py-6 font-mono text-[0.78rem] uppercase tracking-[0.06em]" role="toolbar" aria-label="فیلتر کارها" data-aos="fade-up" data-aos-delay="200">
     <button type="button"
-            class="filter-btn{% if not selected_category %} active{% endif %}"
             data-filter="all"
-            aria-pressed="{% if not selected_category %}true{% else %}false{% endif %}">
+            aria-pressed="{% if not selected_category %}true{% else %}false{% endif %}"
+            class="cursor-pointer rounded-full border px-3.5 py-2 transition-colors duration-200 {% if not selected_category %}border-ink bg-ink text-paper{% else %}border-ink-line bg-transparent text-ink-soft hover:border-ink hover:text-ink{% endif %}">
       همه
     </button>
     {% for category in categories %}
       <button type="button"
-              class="filter-btn{% if selected_category.slug == category.slug %} active{% endif %}"
               data-filter="{{ category.slug }}"
-              data-name="{{ category.name }}"
-              aria-pressed="{% if selected_category.slug == category.slug %}true{% else %}false{% endif %}">
+              aria-pressed="{% if selected_category.slug == category.slug %}true{% else %}false{% endif %}"
+              class="cursor-pointer rounded-full border px-3.5 py-2 transition-colors duration-200 {% if selected_category.slug == category.slug %}border-ink bg-ink text-paper{% else %}border-ink-line bg-transparent text-ink-soft hover:border-ink hover:text-ink{% endif %}">
         {{ category.name }}
       </button>
     {% endfor %}
   </div>
 
-  <section class="work-grid" aria-label="Project archive" id="portfolio-grid-target">
+  <section class="work-grid grid grid-cols-1 gap-y-10 px-page py-16 md:grid-cols-2 md:gap-x-8 md:gap-y-14" aria-label="آرشیو پروژه ها" id="portfolio-grid-target">
     {% for item in portfolios_with_delay %}
       {% with portfolio=item.portfolio delay=item.delay %}
-      <article class="work-card"
+      <article class="reveal group flex flex-col gap-4"
                data-category="{% for cat in portfolio.categories.all %}{{ cat.slug }}{% if not forloop.last %},{% endif %}{% endfor %}"
                data-aos="fade-up"
                data-aos-duration="500"
                data-aos-delay="{{ delay }}"
                data-aos-anchor-placement="top-bottom">
-        <a href="{% url 'portfolio:detail' portfolio.slug %}" style="display:contents;color:inherit;text-decoration:none">
-          <div class="img-wrap">
-            <span class="index">{{ forloop.counter|stringformat:'02d' }}</span>
-            <img src="{{ portfolio.image.url }}" alt="{{ portfolio.title }}" loading="lazy" />
+        <a href="{% url 'portfolio:detail' portfolio.slug %}" class="flex flex-col gap-4 text-inherit no-underline">
+          <div class="relative aspect-[4/3] overflow-hidden rounded-md bg-paper-soft">
+            <span class="absolute right-4 top-4 z-[1] font-mono text-[0.74rem] text-ink-dim">{{ forloop.counter|stringformat:'02d' }}</span>
+            <img src="{{ portfolio.image.url }}" alt="{{ portfolio.title }}" loading="lazy"
+                 class="h-full w-full object-cover transition-transform duration-[600ms] ease-ax group-hover:scale-[1.03]" />
           </div>
-          <div class="body">
-            <div class="meta">
-              <span>{{ portfolio.client_name }}</span>
-              <span class="year">{{ portfolio.year }}</span>
-            </div>
-            <h3>{{ portfolio.title }}</h3>
-            <p>{{ portfolio.excerpt }}</p>
-            {% if portfolio.categories.all %}
-            <div class="tags">
-              {% for cat in portfolio.categories.all %}
-                <span class="service-tag">{{ cat.name }}</span>
-              {% endfor %}
-            </div>
-            {% endif %}
-            <span class="arrow-link">
-              مشاهده پروژه <span class="line"></span> <span>←</span>
-            </span>
+          <div class="flex gap-3.5 font-mono text-[0.74rem] uppercase tracking-[0.1em] text-ink-dim">
+            <span>{{ portfolio.client_name }}</span><span>{{ portfolio.year }}</span>
           </div>
+          <h3 class="text-[1.7rem] leading-[1.05]">{{ portfolio.title }}</h3>
+          <p class="m-0 max-w-[48ch] text-[0.96rem] text-ink-soft">{{ portfolio.excerpt }}</p>
+          {% if portfolio.categories.all %}
+          <div class="flex flex-wrap gap-2">
+            {% for cat in portfolio.categories.all %}
+              <span class="rounded-full border border-ink-line px-3 py-[3px] font-mono text-[0.72rem] uppercase tracking-[0.08em] text-ink-dim">{{ cat.name }}</span>
+            {% endfor %}
+          </div>
+          {% endif %}
+          <span class="inline-flex items-center gap-2.5 font-mono text-[0.8rem] text-ink">
+            مشاهده پروژه <span class="h-px w-8 bg-ink-line transition-colors group-hover:bg-ink"></span> <span>←</span>
+          </span>
         </a>
       </article>
       {% endwith %}
     {% empty %}
-      <p class="empty">نمونه کاری برای این دسته بندی ثبت نشده است.</p>
+      <p class="col-span-full py-10 text-center font-mono text-[0.9rem] text-ink-dim">نمونه کاری برای این دسته بندی ثبت نشده است.</p>
     {% endfor %}
   </section>
 
@@ -78,31 +75,27 @@
       const grid = document.getElementById('portfolio-grid-target');
       const articles = grid ? grid.querySelectorAll('article') : [];
 
-      function filterItems(slug) {
-        var visible = [];
-        var hidden  = [];
+      function setActive(btn) {
+        filters.querySelectorAll('button').forEach(function(b) {
+          b.classList.remove('border-ink', 'bg-ink', 'text-paper');
+          b.classList.add('border-ink-line', 'bg-transparent', 'text-ink-soft');
+          b.setAttribute('aria-pressed', 'false');
+        });
+        btn.classList.add('border-ink', 'bg-ink', 'text-paper');
+        btn.classList.remove('border-ink-line', 'bg-transparent', 'text-ink-soft');
+        btn.setAttribute('aria-pressed', 'true');
+      }
 
+      function filterItems(slug) {
         articles.forEach(function(article) {
           const tags = (article.getAttribute('data-category') || '').split(',');
           const show = slug === 'all' || tags.includes(slug);
-          if (show) visible.push(article);
-          else      hidden.push(article);
-        });
-
-        // مخفی کردن کارت‌های غیر مرتبط
-        hidden.forEach(function(article) {
-          article.style.display = 'none';
-          article.classList.remove('filter-enter');
-        });
-
-        // نمایش کارت‌های مرتبط با stagger
-        visible.forEach(function(article, i) {
-          article.style.display = '';
-          article.classList.remove('filter-enter');
-          // force reflow برای restart انیمیشن
-          void article.offsetWidth;
-          article.style.animationDelay = (i * 55) + 'ms';
-          article.classList.add('filter-enter');
+          article.style.display = show ? '' : 'none';
+          if (show) {
+            article.classList.remove('in');
+            void article.offsetWidth;
+            article.classList.add('in');
+          }
         });
       }
 
@@ -110,16 +103,10 @@
         const btn = e.target.closest('button[data-filter]');
         if (!btn) return;
 
-        filters.querySelectorAll('button').forEach(function(b) {
-          b.classList.remove('active');
-          b.setAttribute('aria-pressed', 'false');
-        });
-        btn.classList.add('active');
-        btn.setAttribute('aria-pressed', 'true');
+        setActive(btn);
+        filterItems(btn.getAttribute('data-filter'));
 
         const slug = btn.getAttribute('data-filter');
-        filterItems(slug);
-
         const url = slug === 'all'
           ? "{% url 'portfolio:list' %}"
           : "{% url 'portfolio:list' %}?category=" + slug;
