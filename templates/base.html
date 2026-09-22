@@ -33,7 +33,7 @@
       <a href="{% url 'home:home' %}" class="flex items-center gap-2 font-display font-semibold text-ink"><span class="grid h-[26px] w-[26px] place-items-center rounded-sm bg-ink font-mono text-[0.78rem] font-semibold leading-none text-lime">P</span>{{ settings.site_name }}</a><button class="menu-toggle inline-flex cursor-pointer flex-col gap-1 rounded-sm bg-ink px-3.5 py-2.5 font-mono text-[0.8rem] text-lime" aria-label="باز کردن منو" aria-controls="mobile-nav" aria-expanded="false"><span class="block h-[2px] w-5 bg-lime"></span><span class="block h-[2px] w-5 bg-lime"></span></button>
     </header>
     <nav id="mobile-nav" class="mobile-nav fixed inset-0 z-[60] hidden flex-col gap-1 bg-ink px-page pb-8 pt-20 font-display text-[2rem] text-paper [&.open]:flex" aria-label="Mobile">
-      <button class="mobile-close absolute right-[18px] top-[18px] cursor-pointer bg-transparent font-mono text-[0.85rem] text-paper" aria-label="بستن منو">بستن ✕</button><a href="{% url 'home:home' %}" class="border-b border-ink-soft py-3.5 hover:text-lime">خانه</a><a href="{% url 'portfolio:list' %}" class="border-b border-ink-soft py-3.5 hover:text-lime">نمونه کار ها</a><a href="{% url 'services:list' %}" class="border-b border-ink-soft py-3.5 hover:text-lime">خدمات</a><a href="{% url 'blog:list' %}" class="border-b border-ink-soft py-3.5 hover:text-lime">بلاگ</a><a href="{% url 'core:about' %}" class="border-b border-ink-soft py-3.5 hover:text-lime">درباره ما</a><a href="{% url 'contact:contact' %}" class="border-b border-ink-soft py-3.5 hover:text-lime">تماس با ما</a><div class="mt-auto border-t border-ink-soft pt-6 font-mono text-[0.78rem] text-mist-soft">
+      <button class="mobile-close absolute right-[18px] top-[18px] cursor-pointer bg-transparent font-mono text-[0.85rem] text-paper" aria-label="بستن منو">بستن ✕</button><a href="{% url 'home:home' %}" class="border-b border-ink-soft py-3.5 transition-colors hover:text-lime {% if request.resolver_match.app_name == 'home' %}text-lime{% endif %}">خانه</a><a href="{% url 'portfolio:list' %}" class="border-b border-ink-soft py-3.5 transition-colors hover:text-lime {% if request.resolver_match.app_name == 'portfolio' %}text-lime{% endif %}">نمونه کار ها</a><a href="{% url 'services:list' %}" class="border-b border-ink-soft py-3.5 transition-colors hover:text-lime {% if request.resolver_match.app_name == 'services' %}text-lime{% endif %}">خدمات</a><a href="{% url 'blog:list' %}" class="border-b border-ink-soft py-3.5 transition-colors hover:text-lime {% if request.resolver_match.app_name == 'blog' %}text-lime{% endif %}">بلاگ</a><a href="{% url 'core:about' %}" class="border-b border-ink-soft py-3.5 transition-colors hover:text-lime {% if request.resolver_match.app_name == 'core' %}text-lime{% endif %}">درباره ما</a><a href="{% url 'contact:contact' %}" class="border-b border-ink-soft py-3.5 transition-colors hover:text-lime {% if request.resolver_match.app_name == 'contact' %}text-lime{% endif %}">تماس با ما</a><div class="mt-auto border-t border-ink-soft pt-6 font-mono text-[0.78rem] text-mist-soft">
         {% if settings.phone %}
           <a href="tel:{{ settings.phone }}" class="block py-2">{{ settings.phone }}</a>
         {% endif %}
@@ -177,6 +177,27 @@
       document.body.addEventListener('htmx:afterRequest', function () {
         if (htmxBar) htmxBar.classList.remove('is-loading')
       })
+      function syncActiveNav() {
+        var path = window.location.pathname
+        document.querySelectorAll('.rail-nav a, #mobile-nav a[href^="/"]').forEach(function (a) {
+          var href = a.getAttribute('href').replace(/\/$/, '')
+          var isActive = href !== '' && (path === href || (href !== '/' && path.indexOf(href) === 0))
+          if (a.closest('.rail-nav')) {
+            a.classList.toggle('active', isActive)
+            if (isActive) {
+              a.classList.add('text-ink')
+            } else {
+              a.classList.remove('text-ink')
+            }
+          }
+          if (a.closest('#mobile-nav')) {
+            a.classList.toggle('text-lime', isActive)
+          }
+        })
+      }
+      document.addEventListener('DOMContentLoaded', syncActiveNav)
+      document.body.addEventListener('htmx:pushedIntoHistory', syncActiveNav)
+      document.body.addEventListener('htmx:afterSettle', syncActiveNav)
     </script>
     {% block extra_js %}
     {% endblock %}
