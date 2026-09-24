@@ -1,0 +1,54 @@
+<section id="arcade" class="sec" aria-labelledby="arcH">
+  <header class="sec-head rv">
+    <span class="kicker"><span class="k-tag gold">ARCADE</span> آرکید دستی — بازی و ثبت رکورد</span>
+    <h2 id="arcH">پایگاه بازی؛ آرکید دستی</h2>
+    <p>سه کارتریج، سه بازی کامل با کنترل کیبورد و لمسی. رکورد بزن و اسمت را در جدول پنج‌نفره‌ی برتر ثبت کن. <span class="k-tag">نمونه/DEMO</span></p>
+  </header>
+  <div class="arcade-grid">
+    <div id="arcade" class="console rv" tabindex="-1">
+      <div class="con-top">
+        <span class="con-brand"><b>PIXEL·BOY</b> LR-01</span>
+        <div class="carts" role="tablist" aria-label="انتخاب بازی">
+          <button class="cart-chip on" data-g="pac" role="tab" aria-selected="true" aria-label="بازی پک‌مان">PAC</button>
+          <button class="cart-chip" data-g="tank" role="tab" aria-selected="false" aria-label="بازی تانک">TANK</button>
+          <button class="cart-chip" data-g="tetris" role="tab" aria-selected="false" aria-label="بازی تتریس">TETRIS</button>
+        </div>
+        <span class="con-leds" aria-hidden="true"><i></i><i></i></span>
+      </div>
+      <div class="lcd">
+        <canvas id="gameCanvas" width="320" height="224" aria-label="صفحه‌ی بازی کنسول"></canvas>
+        <div id="lcdOv" dir="rtl"></div>
+      </div>
+      <div class="con-ctl">
+        <div class="dpad" id="gDpad" aria-label="دی‌پد کنترل">
+          <button class="d-u" data-d="u" aria-label="بالا">▲</button>
+          <button class="d-l" data-d="l" aria-label="چپ">◀</button>
+          <span class="d-c" aria-hidden="true"></span>
+          <button class="d-r" data-d="r" aria-label="راست">▶</button>
+          <button class="d-d" data-d="d" aria-label="پایین">▼</button>
+        </div>
+        <div class="mid-sw">
+          <button id="gSelect" class="btn-sound" aria-pressed="false" aria-label="روشن یا خاموش کردن صدا">SELECT·SND</button>
+          <button id="gStart" aria-label="شروع یا مکث">START</button>
+        </div>
+        <div class="ab">
+          <button id="gB" aria-label="دکمه‌ی B: بازگشت به منو">B</button>
+          <button id="gA" aria-label="دکمه‌ی A: شلیک یا چرخش">A</button>
+        </div>
+      </div>
+      <p id="armedHint" class="armed-hint">برای فعال‌شدن کنترل کیبورد روی کنسول کلیک کن — Esc برای خروج.</p>
+    </div>
+    <aside class="arcade-side">
+      <div class="card rv">
+        <h3>جدول رکوردها</h3>
+        <span id="lbGame" dir="ltr">PAC-CORRIDOR</span>
+        <ol id="lbList"></ol>
+        <p class="lb-note">رکوردها فعلاً نمونه/DEMO هستند و در همین مرورگر ذخیره می‌شوند؛ ثبت رسمی و کد تخفیف واقعی بعد از اتصال API فعال می‌شود.</p>
+      </div>
+      <div class="card rv">
+        <h3>راهنمای کنترل</h3>
+        <div class="help-keys" id="helpBody"></div>
+      </div>
+    </aside>
+  </div>
+</section>

@@ -8,6 +8,7 @@ import { initTyping } from "./core/typewriter.js";
 import { initReveals } from "./core/reveal.js";
 import { initPreloader } from "./core/preloader.js";
 import { injectSprites } from "./core/sprites.js";
+import { initSceneEngine } from "./engine/scene-engine.js";
 
 function initScroll() {
   const apply = () => {
@@ -36,6 +37,7 @@ async function boot() {
   initScroll();
   initTyping();
   initReveals();
+  initSceneEngine();
 
   const story = document.body.dataset.story;
   if (story) {
