@@ -1,0 +1,6172 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>[BRAND] — سکانس پرتاب | آژانس خدمات دیجیتال</title>
+    <meta
+      name="description"
+      content="آژانس دیجیتال [BRAND]: طراحی سایت، برنامه‌نویسی، برندینگ، UI/UX و شبکه‌های اجتماعی — در یک سفر پرتاب موشک."
+    />
+
+    <!-- بوت تم (قبل از رندر) -->
+    <script>
+      (function () {
+        var t = null;
+        try {
+          t = localStorage.getItem("lr_theme");
+        } catch (e) {}
+        if (!t) {
+          t =
+            window.matchMedia &&
+            matchMedia("(prefers-color-scheme: dark)").matches
+              ? "dark"
+              : "light";
+        }
+        document.documentElement.classList.toggle("dark", t === "dark");
+      })();
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Jersey+10&family=Vazirmatn:wght@400;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            fontFamily: {
+              pix: ['"Press Start 2P"', "Vazirmatn", "monospace"],
+              j10: ['"Jersey 10"', "monospace"],
+              fa: ["Vazirmatn", "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollToPlugin.min.js"></script>
+
+    <style>
+      /* ═════════ توکن‌های تم (بیزینس ۶۰/۴۰) ═════════ */
+      :root {
+        --bg: #f4f7fb;
+        --panel: #ffffff;
+        --panel2: #f2f5fa;
+        --panel-a: rgba(255, 255, 255, 0.88);
+        --ink: #101a2e;
+        --dim: #5b6b84;
+        --line: #dfe6ef;
+        --line2: #e9eef5;
+        --acc: #e2543e;
+        --acc2: #1f8fa8;
+        --gold: #c07b21;
+        --pink: #c2337a;
+        --shadow: 0 8px 24px rgba(16, 26, 46, 0.09);
+        --backdrop: rgba(244, 247, 251, 0.94);
+        --lcd-bg: #f2edda;
+        --lcd-ink: #2b2a22;
+        --lcd-mid: #8f8873;
+        --lcd-dim: #ddd6bd;
+        --lcd-ov: rgba(242, 237, 218, 0.86);
+      }
+      html.dark {
+        --bg: #0a101f;
+        --panel: #111a30;
+        --panel2: #0d1426;
+        --panel-a: rgba(17, 26, 48, 0.84);
+        --ink: #e9edf7;
+        --dim: #8b97b4;
+        --line: #22304f;
+        --line2: #1a2540;
+        --acc: #ff6b54;
+        --acc2: #38d6bd;
+        --gold: #ffb85c;
+        --pink: #ff6ea6;
+        --shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
+        --backdrop: rgba(10, 16, 31, 0.94);
+        --lcd-bg: #0c2410;
+        --lcd-ink: #cdf08c;
+        --lcd-mid: #5f9a4a;
+        --lcd-dim: #1c3a1e;
+        --lcd-ov: rgba(12, 36, 16, 0.82);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: auto;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font-family: Vazirmatn, sans-serif;
+        overflow-x: hidden;
+        transition:
+          background-color 0.2s steps(3),
+          color 0.2s steps(3);
+      }
+      canvas,
+      svg.pixart {
+        image-rendering: pixelated;
+      }
+      ::selection {
+        background: var(--acc);
+        color: #fff;
+      }
+      :focus-visible {
+        outline: 3px solid var(--acc2);
+        outline-offset: 2px;
+      }
+      section {
+        scroll-margin-top: 86px;
+      }
+
+      .px {
+        font-family: "Press Start 2P", Vazirmatn, monospace;
+        -webkit-font-smoothing: none;
+        letter-spacing: 0.04em;
+        line-height: 1.9;
+      }
+      .j10 {
+        font-family: "Jersey 10", monospace;
+        -webkit-font-smoothing: none;
+      }
+
+      /* ═════════ صحنه‌ی پرتاب (Canvas پس‌زمینه) ═════════ */
+      #scene {
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+      }
+
+      /* ═════════ اسپرایت دوفریمی ═════════ */
+      .sprite {
+        display: inline-grid;
+        place-items: center;
+        line-height: 0;
+      }
+      .sprite .f {
+        grid-area: 1/1;
+        display: none;
+      }
+      .sprite .f1 {
+        display: block;
+      }
+      .sprite.fr .f1 {
+        display: none;
+      }
+      .sprite.fr .f2 {
+        display: block;
+      }
+      .sprite svg {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+
+      /* ═════════ چیدمان عمومی ═════════ */
+      .wrap {
+        max-width: 1040px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+      .sec-pad {
+        padding: 76px 0 64px;
+      }
+      .sec-head {
+        margin-bottom: 24px;
+      }
+      .kicker {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 10px;
+        flex-wrap: wrap;
+      }
+      .k-tag {
+        font-family: "Press Start 2P";
+        font-size: 0.5rem;
+        background: var(--acc);
+        color: #fff;
+        padding: 5px 9px;
+        border-radius: 8px;
+      }
+      .k-tag.gold {
+        background: var(--gold);
+        color: #241a06;
+      }
+      .k-lbl {
+        font-family: "Press Start 2P";
+        font-size: 0.5rem;
+        color: var(--dim);
+      }
+      .sec-head h2 {
+        font-size: clamp(1.35rem, 4.2vw, 2.1rem);
+        margin: 0;
+        font-weight: 900;
+      }
+      .sec-sub {
+        color: var(--dim);
+        line-height: 2.05;
+        max-width: 40rem;
+        margin: 8px 0 0;
+        font-size: 0.95rem;
+      }
+
+      .card {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        box-shadow: var(--shadow);
+      }
+      .pxbtn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.6rem;
+        font-family: Vazirmatn;
+        font-weight: 800;
+        font-size: 0.95rem;
+        padding: 13px 20px;
+        cursor: pointer;
+        user-select: none;
+        color: #fff;
+        background: var(--acc);
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 4px 14px var(--shadow);
+        transition:
+          transform 0.12s,
+          box-shadow 0.12s;
+      }
+      .pxbtn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px var(--shadow);
+      }
+      .pxbtn:active {
+        transform: translateY(1px);
+      }
+      .pxbtn.ghost {
+        background: var(--panel);
+        color: var(--ink);
+        border: 1px solid var(--line);
+      }
+      .pxbtn .lat {
+        font-family: "Press Start 2P";
+        font-size: 0.5rem;
+        opacity: 0.85;
+      }
+      .ditherline {
+        height: 1px;
+        border: none;
+        margin: 0;
+        background: var(--line);
+        background-image: repeating-conic-gradient(
+          var(--line2) 0% 25%,
+          transparent 0% 50%
+        );
+        background-size: 8px 8px;
+        opacity: 0.8;
+      }
+      @keyframes btx {
+        0%,
+        59% {
+          opacity: 1;
+        }
+        60%,
+        100% {
+          opacity: 0.25;
+        }
+      }
+      .blink {
+        animation: btx 1.1s steps(1) infinite;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+
+      /* ═════════ پیش‌لودر ═════════ */
+      #pre {
+        position: fixed;
+        inset: 0;
+        z-index: 200;
+        background: #0a101f;
+        color: #e9edf7;
+        display: grid;
+        place-items: center;
+        padding: 16px;
+      }
+      .pre-box {
+        width: min(470px, 94vw);
+        background: #111a30;
+        border: 1px solid #22304f;
+        border-radius: 18px;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        padding: 26px 28px;
+        text-align: center;
+      }
+      #preSprite {
+        width: 56px;
+        margin: 0 auto 12px;
+        display: block;
+      }
+      #preLines {
+        font-size: 0.92rem;
+        font-weight: 700;
+        text-align: right;
+        min-height: 7.2em;
+        margin: 0 0 16px;
+        line-height: 2.1;
+        color: #8b97b4;
+        direction: rtl;
+      }
+      #preBar {
+        height: 16px;
+        border: 2px solid #22304f;
+        border-radius: 8px;
+        background: #0d1426;
+        padding: 2px;
+        overflow: hidden;
+      }
+      #preFill {
+        display: block;
+        height: 100%;
+        width: 0;
+        background: #38d6bd;
+        background-image: repeating-linear-gradient(
+          90deg,
+          rgba(0, 0, 0, 0.16) 0 5px,
+          transparent 5px 10px
+        );
+      }
+      #preStart {
+        margin-top: 16px;
+        display: none;
+        font-family: "Press Start 2P";
+        font-size: 0.6rem;
+        background: #ff6b54;
+        color: #fff;
+        border: none;
+        border-radius: 10px;
+        padding: 13px 18px;
+        cursor: pointer;
+      }
+      #preStart.show {
+        display: inline-block;
+        animation: btx 1.1s steps(1) infinite;
+      }
+      .pre-tip {
+        color: #8b97b4;
+        font-size: 0.78rem;
+        margin: 12px 0 0;
+      }
+
+      /* ═════════ نوار بالا ═════════ */
+      #topbar {
+        position: fixed;
+        inset-inline: 0;
+        top: 0;
+        z-index: 70;
+        display: flex;
+        align-items: center;
+        gap: 10px 16px;
+        padding: 8px 16px;
+        background: var(--panel-a);
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid var(--line);
+      }
+      .brand {
+        display: flex;
+        flex-direction: column;
+        line-height: 1.2;
+      }
+      .brand .b1 {
+        font-family: "Press Start 2P";
+        font-size: 0.7rem;
+        color: var(--acc);
+      }
+      .brand .b1 b {
+        color: var(--ink);
+      }
+      .brand .b2 {
+        font-family: "Press Start 2P";
+        font-size: 0.4rem;
+        color: var(--dim);
+        margin-top: 4px;
+      }
+      #topnav {
+        display: flex;
+        gap: 2px;
+        overflow-x: auto;
+        scrollbar-width: none;
+      }
+      #topnav::-webkit-scrollbar {
+        display: none;
+      }
+      .nav-a {
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: var(--dim);
+        background: none;
+        border: none;
+        padding: 7px 10px;
+        cursor: pointer;
+        white-space: nowrap;
+        font-family: inherit;
+        border-radius: 8px;
+      }
+      .nav-a:hover {
+        color: var(--acc);
+        background: var(--panel2);
+      }
+      .spacer {
+        flex: 1;
+      }
+      .tbtn {
+        min-width: 36px;
+        height: 36px;
+        padding: 0 9px;
+        font-family: "Press Start 2P";
+        font-size: 0.5rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        background: var(--panel);
+        color: var(--ink);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        cursor: pointer;
+      }
+      .tbtn:hover {
+        border-color: var(--acc);
+        color: var(--acc);
+      }
+      .tbtn[aria-pressed="true"] {
+        background: var(--acc2);
+        color: #08251e;
+        border-color: var(--acc2);
+      }
+      #themeIco svg {
+        width: 16px;
+        height: 16px;
+        display: block;
+      }
+      #btnMenu {
+        background: var(--acc);
+        color: #fff;
+        border-color: var(--acc);
+      }
+      @media (max-width: 880px) {
+        #topnav {
+          display: none;
+        }
+        .brand .b2 {
+          display: none;
+        }
+      }
+
+      /* ═════════ منوی پاپ‌آپ (سبک لندینگ ۱) ═════════ */
+      #menuOverlay {
+        position: fixed;
+        inset: 0;
+        z-index: 100;
+        background: var(--backdrop);
+        backdrop-filter: blur(8px);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 18px;
+        overflow: auto;
+      }
+      #menuOverlay.open {
+        display: flex;
+      }
+      .menu-box {
+        width: min(430px, 100%);
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        box-shadow: var(--shadow);
+        padding: 24px;
+        position: relative;
+      }
+      .menu-box .m-cap {
+        font-family: "Press Start 2P";
+        font-size: 0.5rem;
+        color: var(--acc2);
+        margin: 0 0 6px;
+      }
+      .menu-box .m-title {
+        font-family: "Press Start 2P";
+        font-size: 1rem;
+        margin: 0 0 16px;
+        direction: ltr;
+        text-align: right;
+      }
+      .menu-item {
+        display: flex;
+        align-items: baseline;
+        gap: 12px;
+        width: 100%;
+        padding: 10px 12px;
+        background: none;
+        border: none;
+        border-radius: 10px;
+        color: var(--dim);
+        cursor: pointer;
+        text-align: right;
+        font-family: inherit;
+      }
+      .menu-item .mi-stage {
+        font-family: "Press Start 2P";
+        font-size: 0.52rem;
+        min-width: 5.4em;
+        flex: none;
+        direction: ltr;
+        text-align: left;
+      }
+      .menu-item .mi-fa {
+        font-size: 0.95rem;
+        font-weight: 700;
+      }
+      .menu-item:hover,
+      .menu-item.sel {
+        background: var(--ink);
+        color: var(--bg);
+      }
+      .menu-box .m-hint {
+        font-family: "Press Start 2P";
+        font-size: 0.42rem;
+        color: var(--dim);
+        margin: 14px 0 0;
+        direction: ltr;
+      }
+      #menuClose {
+        position: absolute;
+        top: 14px;
+        left: 14px;
+      }
+
+      /* ═════════ ریلِ همراه (سبک لندینگ ۱) ═════════ */
+      #rail {
+        position: fixed;
+        left: 12px;
+        top: 0;
+        bottom: 0;
+        width: 46px;
+        z-index: 40;
+        pointer-events: none;
+      }
+      #railTrack {
+        position: absolute;
+        left: 19px;
+        top: 92px;
+        bottom: 92px;
+        width: 4px;
+        border-radius: 2px;
+        background: repeating-linear-gradient(
+          180deg,
+          var(--line) 0 8px,
+          transparent 8px 16px
+        );
+      }
+      .rail-dot {
+        position: absolute;
+        left: -4px;
+        width: 12px;
+        height: 12px;
+        background: var(--panel);
+        border: 2px solid var(--line);
+        transform: rotate(45deg);
+        transition:
+          background 0.3s,
+          border-color 0.3s;
+      }
+      .rail-dot.on {
+        background: var(--acc);
+        border-color: var(--acc);
+      }
+      #railBuddy {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 46px;
+        pointer-events: auto;
+        background: none;
+        border: none;
+        padding: 0;
+        cursor: pointer;
+      }
+      #railBuddy .b-in {
+        display: block;
+        width: 100%;
+      }
+      #railAlt {
+        position: absolute;
+        bottom: 58px;
+        left: -4px;
+        width: 54px;
+        text-align: center;
+        font-family: "Press Start 2P";
+        font-size: 0.4rem;
+        color: var(--dim);
+        direction: ltr;
+      }
+      #buddySay {
+        position: fixed;
+        z-index: 60;
+        background: var(--ink);
+        color: var(--bg);
+        border-radius: 10px;
+        padding: 6px 10px;
+        font-size: 0.76rem;
+        font-weight: 800;
+        opacity: 0;
+        transform: translateY(6px);
+        transition:
+          opacity 0.12s steps(2),
+          transform 0.12s steps(2);
+        pointer-events: none;
+        white-space: nowrap;
+      }
+      #buddySay.show {
+        opacity: 1;
+        transform: none;
+      }
+      @media (max-width: 900px) {
+        #rail {
+          display: none;
+        }
+      }
+
+      /* ═════════ HERO ═════════ */
+      #hero {
+        min-height: 100svh;
+        display: flex;
+        align-items: flex-start;
+        padding-top: 104px;
+        padding-bottom: 180px;
+      }
+      .hero-in {
+        max-width: 40rem;
+        margin: 0 auto;
+        text-align: center;
+      }
+      .hero-kicker {
+        display: inline-block;
+        font-family: "Press Start 2P";
+        font-size: 0.55rem;
+        color: var(--ink);
+        background: var(--panel-a);
+        backdrop-filter: blur(8px);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 9px 13px;
+      }
+      #hero h1 {
+        font-size: clamp(2rem, 6.2vw, 3.4rem);
+        margin: 18px 0 14px;
+        direction: ltr;
+        font-weight: 900;
+        text-shadow: 0 6px 24px rgba(0, 0, 0, 0.18);
+      }
+      .hero-lead {
+        color: var(--ink);
+        background: var(--panel-a);
+        backdrop-filter: blur(8px);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        display: inline-block;
+        padding: 16px 20px;
+        line-height: 2.1;
+        margin: 0 0 24px;
+        font-size: 1rem;
+        min-height: 6.4em;
+        box-shadow: var(--shadow);
+      }
+      .hero-cta {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 12px;
+      }
+      .scroll-hint {
+        margin-top: 26px;
+        font-family: "Press Start 2P";
+        font-size: 0.5rem;
+        color: var(--dim);
+      }
+
+      /* ═════════ ناحیه‌ی پرتاب (فاصله‌ی خالی) ═════════ */
+      #lift {
+        min-height: 78vh;
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        padding-top: 16vh;
+      }
+      .lift-chip {
+        background: var(--panel-a);
+        backdrop-filter: blur(8px);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 14px 20px;
+        text-align: center;
+        box-shadow: var(--shadow);
+      }
+      .lift-chip .px {
+        font-size: 0.5rem;
+        color: var(--acc);
+        display: block;
+        margin-bottom: 8px;
+      }
+      .lift-chip p {
+        margin: 0;
+        font-weight: 700;
+        font-size: 0.92rem;
+        color: var(--dim);
+        min-height: 1.8em;
+      }
+
+      /* ═════════ خدمات ═════════ */
+      .st-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(196px, 1fr));
+        gap: 16px;
+        margin-top: 26px;
+      }
+      .st-card {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        box-shadow: var(--shadow);
+        padding: 20px 18px 16px;
+        text-align: right;
+        transition:
+          transform 0.15s,
+          box-shadow 0.15s;
+      }
+      .st-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 14px 32px var(--shadow);
+      }
+      .st-ico {
+        width: 42px;
+        display: block;
+        margin-bottom: 12px;
+      }
+      .st-lat {
+        font-family: "Press Start 2P";
+        font-size: 0.48rem;
+        color: var(--acc2);
+        display: block;
+        margin-bottom: 8px;
+        direction: ltr;
+      }
+      .st-card h3 {
+        margin: 0 0 6px;
+        font-size: 1rem;
+        font-weight: 900;
+      }
+      .st-card p {
+        margin: 0;
+        color: var(--dim);
+        font-size: 0.84rem;
+        line-height: 1.95;
+      }
+      .tagrow {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+        margin-top: 10px;
+      }
+      .tagrow span {
+        border: 1px solid var(--line2);
+        background: var(--panel2);
+        color: var(--dim);
+        border-radius: 7px;
+        padding: 2px 8px;
+        font-size: 0.68rem;
+        font-weight: 800;
+      }
+
+      /* ═════════ نمونه‌کارها ═════════ */
+      .cap-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+        gap: 16px;
+        margin-top: 26px;
+      }
+      .cap {
+        position: relative;
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 12px;
+        cursor: pointer;
+        text-align: center;
+        box-shadow: var(--shadow);
+        font-family: inherit;
+        transition:
+          transform 0.15s,
+          box-shadow 0.15s;
+      }
+      .cap:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 14px 32px var(--shadow);
+      }
+      .cap canvas {
+        width: 100%;
+        border-radius: 9px;
+        border: 1px solid var(--line);
+        display: block;
+      }
+      .cap .c-pts {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        font-family: "Press Start 2P";
+        font-size: 0.42rem;
+        color: var(--gold);
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 7px;
+        padding: 4px 6px;
+        direction: ltr;
+      }
+      .cap-t {
+        display: block;
+        margin-top: 10px;
+        font-weight: 900;
+        font-size: 0.95rem;
+      }
+      .cap-cat {
+        display: block;
+        font-family: "Press Start 2P";
+        font-size: 0.4rem;
+        color: var(--dim);
+        margin-top: 6px;
+        direction: ltr;
+      }
+
+      /* ═════════ نقشه‌ی پرواز ═════════ */
+      .jlist {
+        list-style: none;
+        margin: 0;
+        padding: 6px 18px;
+      }
+      .jlist li {
+        display: flex;
+        gap: 16px;
+        align-items: flex-start;
+        padding: 16px 0;
+        border-bottom: 1px dashed var(--line2);
+      }
+      .jlist li:last-child {
+        border-bottom: none;
+      }
+      .j-pin {
+        width: 48px;
+        height: 48px;
+        flex: none;
+        display: grid;
+        place-items: center;
+        background: var(--panel2);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+      }
+      .j-pin svg {
+        width: 26px;
+        height: auto;
+      }
+      .j-lbl {
+        font-family: "Press Start 2P";
+        font-size: 0.44rem;
+        color: var(--dim);
+        display: block;
+        margin-bottom: 5px;
+        direction: ltr;
+      }
+      .jlist h3 {
+        margin: 0 0 5px;
+        font-size: 1rem;
+        font-weight: 900;
+      }
+      .jlist p {
+        margin: 0;
+        color: var(--dim);
+        font-size: 0.88rem;
+        line-height: 2;
+        min-height: 2em;
+      }
+
+      /* ═════════ زرادخانه ═════════ */
+      .ars-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+        gap: 12px;
+        padding: 18px;
+      }
+      .slot {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 7px;
+        background: var(--panel2);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 12px 6px 9px;
+      }
+      .slot .s-ico {
+        width: 34px;
+        height: 34px;
+        display: grid;
+        place-items: center;
+        font-family: "Press Start 2P";
+        font-size: 0.85rem;
+        color: #fff;
+        background: var(--slot, var(--acc));
+        border-radius: 9px;
+      }
+      .slot .s-n {
+        font-size: 0.74rem;
+        font-weight: 800;
+      }
+      .slot .tip {
+        position: absolute;
+        bottom: calc(100% + 8px);
+        right: 50%;
+        transform: translate(50%, 5px);
+        width: 160px;
+        background: var(--ink);
+        color: var(--bg);
+        border-radius: 10px;
+        padding: 8px 10px;
+        font-size: 0.72rem;
+        font-weight: 700;
+        line-height: 1.8;
+        text-align: center;
+        opacity: 0;
+        pointer-events: none;
+        transition:
+          opacity 0.12s,
+          transform 0.12s;
+        z-index: 20;
+      }
+      .slot:hover .tip,
+      .slot:focus-visible .tip {
+        opacity: 1;
+        transform: translate(50%, 0);
+      }
+
+      /* ═════════ تله‌متری ═════════ */
+      .tele-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 14px;
+        padding: 20px;
+      }
+      .tele {
+        background: var(--panel2);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 18px 10px;
+        text-align: center;
+      }
+      .tele .t-n {
+        font-family: "Jersey 10";
+        font-size: clamp(2.2rem, 5vw, 3rem);
+        color: var(--acc);
+        display: block;
+        line-height: 1;
+      }
+      .tele .t-l {
+        font-size: 0.8rem;
+        font-weight: 800;
+        display: block;
+        margin-top: 8px;
+        line-height: 1.7;
+      }
+      @media (max-width: 640px) {
+        .tele-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      /* ═════════ ناوگان (قیمت) ═════════ */
+      .fleet-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+        align-items: stretch;
+        margin-top: 26px;
+      }
+      .ship-card {
+        display: flex;
+        flex-direction: column;
+        text-align: right;
+        cursor: pointer;
+        font-family: inherit;
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        box-shadow: var(--shadow);
+        transition:
+          transform 0.15s,
+          box-shadow 0.15s;
+      }
+      .ship-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 14px 32px var(--shadow);
+      }
+      .ship-card.sel {
+        outline: 3px solid var(--gold);
+        outline-offset: -3px;
+      }
+      .sc-bar {
+        height: 6px;
+        border-radius: 16px 16px 0 0;
+        background: var(--st, var(--acc));
+      }
+      .ship-in {
+        padding: 16px 16px 14px;
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+      }
+      .ship-in .s-lat {
+        font-family: "Press Start 2P";
+        font-size: 0.48rem;
+        color: var(--dim);
+        display: block;
+        direction: ltr;
+        margin-bottom: 5px;
+      }
+      .ship-in h3 {
+        margin: 0 0 8px;
+        font-size: 1.02rem;
+        font-weight: 900;
+      }
+      .ship-in .s-price {
+        font-family: "Jersey 10";
+        font-size: 1.5rem;
+        color: var(--gold);
+        display: block;
+        border-bottom: 1px dashed var(--line2);
+        padding-bottom: 8px;
+        margin-bottom: 10px;
+      }
+      .ship-in ul {
+        list-style: none;
+        margin: 0 0 12px;
+        padding: 0;
+        display: grid;
+        gap: 7px;
+        flex: 1;
+      }
+      .ship-in li {
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: var(--dim);
+        line-height: 1.8;
+      }
+      .ship-in .pick {
+        font-size: 0.74rem;
+        font-weight: 800;
+        text-align: center;
+        padding: 8px;
+        background: var(--panel2);
+        border: 1px solid var(--line);
+        border-radius: 9px;
+        color: var(--dim);
+      }
+      .ship-card.sel .pick {
+        background: var(--gold);
+        color: #241a06;
+        border-color: var(--gold);
+      }
+      .fleet-cta {
+        text-align: center;
+        margin-top: 24px;
+      }
+      @media (max-width: 820px) {
+        .fleet-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      /* ═════════ پیام‌های رادیویی ═════════ */
+      .tx-list {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        margin-top: 24px;
+      }
+      .tx {
+        position: relative;
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 16px 18px 14px;
+        box-shadow: var(--shadow);
+      }
+      .tx::before {
+        content: "";
+        position: absolute;
+        top: 14px;
+        bottom: 14px;
+        right: -1px;
+        width: 4px;
+        border-radius: 2px;
+        background: repeating-linear-gradient(
+          180deg,
+          var(--acc2) 0 8px,
+          transparent 8px 14px
+        );
+      }
+      .tx-head {
+        display: flex;
+        align-items: baseline;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-bottom: 8px;
+      }
+      .tx-freq {
+        font-family: "Press Start 2P";
+        font-size: 0.46rem;
+        color: var(--acc2);
+        direction: ltr;
+      }
+      .tx-from {
+        font-family: "Press Start 2P";
+        font-size: 0.52rem;
+        color: var(--gold);
+        direction: ltr;
+      }
+      .tx-rate {
+        font-family: "Jersey 10";
+        font-size: 1.2rem;
+        color: var(--pink);
+        margin-inline-start: auto;
+      }
+      .tx-msg {
+        margin: 0;
+        font-size: 0.92rem;
+        font-weight: 700;
+        line-height: 2.1;
+        min-height: 2em;
+      }
+      .tx-src {
+        display: block;
+        margin-top: 6px;
+        color: var(--dim);
+        font-size: 0.76rem;
+      }
+
+      /* ═════════ پرسش‌ها ═════════ */
+      .faq-l {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 24px;
+      }
+      .faq-l details {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        box-shadow: var(--shadow);
+      }
+      .faq-l summary {
+        cursor: pointer;
+        font-weight: 900;
+        font-size: 0.94rem;
+        padding: 14px 16px;
+        list-style: none;
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        align-items: center;
+      }
+      .faq-l summary::-webkit-details-marker {
+        display: none;
+      }
+      .faq-l summary .qs {
+        font-family: "Press Start 2P";
+        color: var(--acc2);
+        font-size: 0.5rem;
+        flex: none;
+        direction: ltr;
+      }
+      .faq-l details[open] summary .qs {
+        color: var(--acc);
+      }
+      .faq-l p {
+        margin: 0;
+        padding: 0 16px 14px;
+        color: var(--dim);
+        line-height: 2.05;
+        font-size: 0.88rem;
+        min-height: 2em;
+      }
+
+      /* ═════════ آرکید: کنسول دستی ═════════ */
+      .arcade-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.3fr) minmax(250px, 0.9fr);
+        gap: 20px;
+        align-items: start;
+        margin-top: 26px;
+      }
+      .console {
+        direction: ltr;
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 24px;
+        box-shadow: var(--shadow);
+        padding: 16px 18px 18px;
+      }
+      .con-top {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-bottom: 12px;
+      }
+      .con-brand {
+        font-family: "Press Start 2P";
+        font-size: 0.58rem;
+        color: var(--dim);
+      }
+      .con-brand b {
+        color: var(--acc);
+      }
+      .carts {
+        display: flex;
+        gap: 6px;
+        margin: 0 auto;
+      }
+      .cart-chip {
+        font-family: "Press Start 2P";
+        font-size: 0.48rem;
+        padding: 9px 11px;
+        border-radius: 10px;
+        background: var(--panel2);
+        color: var(--dim);
+        border: 1px solid var(--line);
+        cursor: pointer;
+      }
+      .cart-chip.on {
+        background: var(--acc);
+        color: #fff;
+        border-color: var(--acc);
+      }
+      .con-leds {
+        display: flex;
+        gap: 5px;
+        align-items: center;
+      }
+      .con-leds i {
+        width: 7px;
+        height: 7px;
+        border-radius: 2px;
+        background: var(--line);
+        display: block;
+      }
+      .con-leds i:first-child {
+        background: var(--acc);
+        animation: btx 2.6s steps(1) infinite;
+      }
+      .lcd {
+        position: relative;
+        border-radius: 14px;
+        overflow: hidden;
+        border: 2px solid var(--line);
+        background: var(--lcd-bg);
+      }
+      .lcd canvas {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+      #lcdOv {
+        position: absolute;
+        inset: 0;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        background: var(--lcd-ov);
+        padding: 14px;
+        text-align: center;
+      }
+      #lcdOv.show {
+        display: flex;
+      }
+      .ov-title {
+        font-family: "Press Start 2P";
+        font-size: 0.85rem;
+        color: var(--lcd-ink);
+        margin: 0 0 10px;
+        direction: ltr;
+      }
+      .ov-title.warn {
+        color: var(--pink);
+      }
+      .ov-sub {
+        color: var(--lcd-ink);
+        font-size: 0.85rem;
+        font-weight: 700;
+        line-height: 2;
+        margin: 0 0 8px;
+        direction: rtl;
+      }
+      .ov-sub.dim {
+        opacity: 0.75;
+        font-size: 0.78rem;
+      }
+      .ov-btn {
+        font-family: Vazirmatn;
+        font-weight: 800;
+        font-size: 0.85rem;
+        background: var(--lcd-ink);
+        color: var(--lcd-bg);
+        border: none;
+        border-radius: 9px;
+        padding: 10px 16px;
+        cursor: pointer;
+        margin-top: 6px;
+      }
+      .ov-btn.ghost {
+        background: transparent;
+        color: var(--lcd-ink);
+        border: 2px solid var(--lcd-ink);
+      }
+      .ov-form {
+        display: flex;
+        gap: 8px;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-top: 6px;
+      }
+      .ov-form input {
+        background: transparent;
+        border: 2px solid var(--lcd-ink);
+        border-radius: 9px;
+        color: var(--lcd-ink);
+        font-family: Vazirmatn;
+        font-weight: 800;
+        font-size: 0.9rem;
+        padding: 9px 12px;
+        width: 150px;
+        text-align: center;
+        direction: rtl;
+      }
+      .ov-form input:focus {
+        outline: none;
+      }
+      .ov-row {
+        display: flex;
+        gap: 8px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+      .con-ctl {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 16px;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .dpad {
+        display: grid;
+        grid-template-columns: repeat(3, 46px);
+        grid-template-rows: repeat(3, 46px);
+        gap: 5px;
+        touch-action: none;
+      }
+      .dpad button {
+        background: var(--panel2);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        cursor: pointer;
+        color: var(--ink);
+        font-size: 0.9rem;
+        user-select: none;
+        touch-action: none;
+      }
+      .dpad button:active {
+        background: var(--ink);
+        color: var(--bg);
+      }
+      .d-u {
+        grid-area: 1/2;
+      }
+      .d-l {
+        grid-area: 2/1;
+      }
+      .d-r {
+        grid-area: 2/3;
+      }
+      .d-d {
+        grid-area: 3/2;
+      }
+      .d-c {
+        grid-area: 2/2;
+        border: none !important;
+        background: none !important;
+        cursor: default;
+      }
+      .mid-sw {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .mid-sw button {
+        font-family: "Press Start 2P";
+        font-size: 0.44rem;
+        padding: 8px 12px;
+        border-radius: 999px;
+        background: var(--panel2);
+        border: 1px solid var(--line);
+        color: var(--dim);
+        cursor: pointer;
+      }
+      .mid-sw button:active {
+        background: var(--ink);
+        color: var(--bg);
+      }
+      .ab {
+        display: flex;
+        gap: 14px;
+      }
+      .ab button {
+        width: 54px;
+        height: 54px;
+        border-radius: 50%;
+        font-family: "Press Start 2P";
+        font-size: 0.9rem;
+        background: var(--panel2);
+        border: 1px solid var(--line);
+        color: var(--ink);
+        cursor: pointer;
+        user-select: none;
+        touch-action: none;
+      }
+      .ab button:active {
+        transform: translateY(2px);
+      }
+      .ab #gA {
+        background: var(--acc);
+        color: #fff;
+        border-color: var(--acc);
+      }
+      .arcade-side {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+      .arcade-side .card {
+        padding: 18px;
+      }
+      .arcade-side h3 {
+        margin: 0 0 4px;
+        font-size: 1rem;
+        font-weight: 900;
+      }
+      #lbGame {
+        font-family: "Press Start 2P";
+        font-size: 0.5rem;
+        color: var(--acc2);
+        display: block;
+        margin-bottom: 12px;
+        direction: ltr;
+        text-align: right;
+      }
+      #lbList {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+      }
+      #lbList li {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: var(--panel2);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 8px 12px;
+      }
+      .lb-rank {
+        font-family: "Press Start 2P";
+        font-size: 0.55rem;
+        width: 26px;
+        height: 26px;
+        display: grid;
+        place-items: center;
+        border-radius: 7px;
+        background: var(--line);
+        color: var(--ink);
+        flex: none;
+      }
+      .lb-rank.r1 {
+        background: var(--gold);
+        color: #241a06;
+      }
+      .lb-rank.r2 {
+        background: var(--acc2);
+        color: #08251e;
+      }
+      .lb-rank.r3 {
+        background: var(--pink);
+        color: #fff;
+      }
+      .lb-n {
+        font-weight: 800;
+        font-size: 0.9rem;
+        flex: 1;
+      }
+      .lb-s {
+        font-family: "Jersey 10";
+        font-size: 1.25rem;
+        color: var(--acc);
+      }
+      .lb-note {
+        margin: 12px 0 0;
+        font-size: 0.74rem;
+        color: var(--dim);
+        line-height: 1.9;
+      }
+      .help-keys {
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+        margin-top: 10px;
+      }
+      .help-keys span {
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: var(--dim);
+        border-bottom: 1px dashed var(--line2);
+        padding-bottom: 6px;
+      }
+      .help-keys b {
+        color: var(--acc);
+      }
+      @media (max-width: 900px) {
+        .arcade-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      /* ═════════ تماس ═════════ */
+      .board-grid {
+        display: grid;
+        grid-template-columns: 1.4fr 1fr;
+        gap: 18px;
+        align-items: start;
+        margin-top: 24px;
+      }
+      .form-side {
+        padding: 22px;
+      }
+      .fld {
+        margin-bottom: 13px;
+      }
+      .fld label {
+        display: block;
+        font-weight: 800;
+        font-size: 0.85rem;
+        margin-bottom: 5px;
+      }
+      .fld input,
+      .fld select,
+      .fld textarea {
+        width: 100%;
+        background: var(--panel2);
+        color: var(--ink);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 10px 12px;
+        font-family: Vazirmatn;
+        font-size: 0.92rem;
+      }
+      .fld input:focus,
+      .fld select:focus,
+      .fld textarea:focus {
+        outline: none;
+        border-color: var(--acc2);
+      }
+      .fld input::placeholder,
+      .fld textarea::placeholder {
+        color: var(--dim);
+      }
+      .fld select {
+        appearance: none;
+        -webkit-appearance: none;
+        padding-left: 2rem;
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 5 3.5' shape-rendering='crispEdges'><rect x='2' width='1' height='1' fill='gray'/><rect x='1' y='1' width='3' height='1' fill='gray'/><rect y='2' width='5' height='1' fill='gray'/></svg>");
+        background-repeat: no-repeat;
+        background-position: left 0.7rem center;
+      }
+      .board-side {
+        padding: 22px;
+      }
+      .board-side h3 {
+        margin: 0 0 12px;
+        font-size: 1rem;
+        font-weight: 900;
+      }
+      .reward-note {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: grid;
+        gap: 9px;
+      }
+      .reward-note li {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        font-size: 0.82rem;
+        font-weight: 700;
+        color: var(--dim);
+        border-bottom: 1px dashed var(--line2);
+        padding-bottom: 8px;
+      }
+      .reward-note b {
+        color: var(--gold);
+      }
+      #planNote {
+        display: none;
+        margin: 14px 0 0;
+        padding: 10px 12px;
+        background: var(--panel2);
+        border: 1px dashed var(--gold);
+        border-radius: 10px;
+        font-size: 0.8rem;
+        font-weight: 800;
+      }
+      #planNote.show {
+        display: block;
+      }
+      @media (max-width: 820px) {
+        .board-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      /* ═════════ فرود ═════════ */
+      #arrived {
+        min-height: 74svh;
+        display: flex;
+        align-items: flex-start;
+        padding-top: 12vh;
+      }
+      .arrive-card {
+        background: var(--panel-a);
+        backdrop-filter: blur(8px);
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        box-shadow: var(--shadow);
+        padding: 26px 28px;
+        text-align: center;
+        max-width: 30rem;
+        margin: 0 auto;
+      }
+      .arrive-card .px {
+        font-size: 0.5rem;
+        color: var(--acc2);
+        display: block;
+        margin-bottom: 10px;
+      }
+      .arrive-card h2 {
+        margin: 0 0 10px;
+        font-size: 1.4rem;
+        font-weight: 900;
+      }
+      .arrive-card p {
+        margin: 0 0 14px;
+        color: var(--dim);
+        line-height: 2;
+        font-size: 0.95rem;
+      }
+      .arrive-chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        justify-content: center;
+        margin-bottom: 18px;
+      }
+      .arrive-chips span {
+        border: 1px solid var(--line);
+        background: var(--panel);
+        border-radius: 999px;
+        padding: 7px 13px;
+        font-size: 0.78rem;
+        font-weight: 800;
+        color: var(--dim);
+      }
+      .arrive-chips b {
+        color: var(--acc2);
+      }
+
+      /* ═════════ فوتر / مودال / توست ═════════ */
+      footer {
+        border-top: 1px solid var(--line);
+        background: var(--panel);
+        padding: 30px 0 26px;
+      }
+      .foot-in {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+      }
+      .foot-in .px {
+        font-size: 0.6rem;
+        color: var(--acc);
+      }
+      .foot-in p {
+        margin: 4px 0 0;
+        color: var(--dim);
+        font-size: 0.82rem;
+      }
+      .foot-nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 14px;
+      }
+      .foot-nav a {
+        color: var(--dim);
+        font-weight: 700;
+        text-decoration: none;
+        font-size: 0.84rem;
+      }
+      .foot-nav a:hover {
+        color: var(--acc);
+      }
+      .modal-root {
+        position: fixed;
+        inset: 0;
+        z-index: 120;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 18px;
+      }
+      .modal-root.open {
+        display: flex;
+      }
+      .modal-bk {
+        position: absolute;
+        inset: 0;
+        background: rgba(5, 9, 20, 0.72);
+      }
+      .modal-panel {
+        position: relative;
+        width: min(560px, 100%);
+        max-height: 88vh;
+        overflow: auto;
+        padding: 24px;
+      }
+      .modal-panel h3 {
+        margin: 0 0 4px;
+        font-size: 1.2rem;
+        font-weight: 900;
+      }
+      .modal-panel .m-cat {
+        font-family: "Press Start 2P";
+        font-size: 0.5rem;
+        color: var(--acc2);
+        margin: 0 0 8px;
+        direction: ltr;
+      }
+      .modal-panel .m-desc {
+        color: var(--dim);
+        line-height: 2.05;
+        font-size: 0.9rem;
+        margin: 12px 0;
+      }
+      .modal-panel canvas {
+        width: 100%;
+        border-radius: 10px;
+        border: 1px solid var(--line);
+      }
+      #toast {
+        position: fixed;
+        bottom: 18px;
+        right: 50%;
+        transform: translate(50%, 170%);
+        z-index: 130;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        max-width: min(470px, 92vw);
+        padding: 12px 16px;
+        background: var(--ink);
+        color: var(--bg);
+        border-radius: 12px;
+        font-weight: 800;
+        font-size: 0.9rem;
+        transition: transform 0.18s steps(3);
+      }
+      #toast.show {
+        transform: translate(50%, 0);
+      }
+      #toast .t-ico {
+        color: var(--gold);
+        flex: none;
+        font-family: "Jersey 10";
+        font-size: 1.2rem;
+      }
+
+      /* ═════════ کرسر پیکسلی (دسکتاپ) ═════════ */
+      @media (hover: hover) and (pointer: fine) {
+        body {
+          cursor:
+            url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='15' height='15' viewBox='0 0 7.5 7.5' shape-rendering='crispEdges'><rect width='7' height='7' fill='%23e2543e'/><rect x='1' y='1' width='5' height='5' fill='%23ffffff'/><rect x='1' y='6' width='2' height='1' fill='%23e2543e'/><rect x='6' y='1' width='1' height='2' fill='%23e2543e'/></svg>")
+              2 2,
+            auto;
+        }
+        a,
+        button,
+        summary,
+        select,
+        label,
+        .slot,
+        .cap,
+        .ship-card,
+        .cart-chip {
+          cursor:
+            url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='17' height='17' viewBox='0 0 8.5 8.5' shape-rendering='crispEdges'><rect width='8' height='8' fill='%231f8fa8'/><rect x='2' y='2' width='4' height='4' fill='%23ffffff'/><rect x='3' y='3' width='1' height='1' fill='%231f8fa8'/></svg>")
+              4 4,
+            pointer;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ═════════ پیش‌لودر ═════════ -->
+    <div id="pre" role="status" aria-label="در حال آماده‌سازی سکوی پرتاب">
+      <div class="pre-box">
+        <span id="preSprite" aria-hidden="true"></span>
+        <div id="preLines"></div>
+        <div id="preBar"><span id="preFill"></span></div>
+        <button id="preStart">PRESS LAUNCH</button>
+        <p class="pre-tip">برای پرتاب کلیک کن یا منتظر بمان</p>
+      </div>
+    </div>
+
+    <!-- ═════════ صحنه‌ی پرتاب (پس‌زمینه) ═════════ -->
+    <canvas id="scene" aria-hidden="true"></canvas>
+
+    <!-- ═════════ ریل همراه (سمت چپ) ═════════ -->
+    <aside id="rail" aria-hidden="true">
+      <div id="railTrack"></div>
+      <button id="railBuddy" aria-label="بیپ، همراه ما — کلیکش کن!">
+        <span class="b-in sprite" data-frames="2"></span>
+      </button>
+      <span id="railAlt">ALT 00%</span>
+    </aside>
+    <div id="buddySay" role="status" aria-live="polite"></div>
+
+    <!-- ═════════ نوار بالا ═════════ -->
+    <header id="topbar">
+      <div class="brand">
+        <span class="b1" dir="ltr">[<b>BRAND</b>]</span>
+        <span class="b2" dir="ltr">LAUNCH SEQUENCE · 8-BIT</span>
+      </div>
+      <nav id="topnav" aria-label="ناوبری سریع">
+        <button class="nav-a" data-go="services">خدمات</button>
+        <button class="nav-a" data-go="works">نمونه‌کارها</button>
+        <button class="nav-a" data-go="pricing">پکیج‌ها</button>
+        <button class="nav-a" data-go="arcade">آرکید</button>
+        <button class="nav-a" data-go="contact">تماس</button>
+      </nav>
+      <span class="spacer"></span>
+      <button
+        id="btnSound"
+        class="tbtn"
+        aria-pressed="false"
+        aria-label="روشن یا خاموش کردن صدا (صدای تایپ و بازی)"
+      >
+        SND
+      </button>
+      <button id="btnTheme" class="tbtn" aria-label="تعویض روز و شب">
+        <span id="themeIco"></span>
+      </button>
+      <button
+        id="btnMenu"
+        class="tbtn"
+        aria-haspopup="dialog"
+        aria-label="باز کردن منوی انتخاب مرحله"
+      >
+        MENU
+      </button>
+    </header>
+
+    <!-- ═════════ منوی پاپ‌آپ ═════════ -->
+    <div
+      id="menuOverlay"
+      role="dialog"
+      aria-modal="true"
+      aria-label="منوی انتخاب مرحله"
+    >
+      <div class="menu-box">
+        <p class="m-cap" dir="ltr">— SELECT STAGE —</p>
+        <h2 class="m-title">[BRAND]</h2>
+        <nav id="menuList" aria-label="سکشن‌های صفحه">
+          <button class="menu-item" data-target="hero">
+            <span class="mi-stage">STAGE 0</span
+            ><span class="mi-fa">صفحه‌ی پرتاب</span>
+          </button>
+          <button class="menu-item" data-target="services">
+            <span class="mi-stage">STAGE 01</span
+            ><span class="mi-fa">خدمات — ایستگاه‌های مداری</span>
+          </button>
+          <button class="menu-item" data-target="works">
+            <span class="mi-stage">STAGE 02</span
+            ><span class="mi-fa">نمونه‌کارها — کپسول‌ها</span>
+          </button>
+          <button class="menu-item" data-target="process">
+            <span class="mi-stage">STAGE 03</span
+            ><span class="mi-fa">نقشه‌ی پرواز — فرایند</span>
+          </button>
+          <button class="menu-item" data-target="tech">
+            <span class="mi-stage">STAGE 04</span
+            ><span class="mi-fa">زرادخانه — ابزارها</span>
+          </button>
+          <button class="menu-item" data-target="stats">
+            <span class="mi-stage">STAGE 05</span
+            ><span class="mi-fa">تله‌متری — آمار</span>
+          </button>
+          <button class="menu-item" data-target="pricing">
+            <span class="mi-stage">STAGE 06</span
+            ><span class="mi-fa">ناوگان — پکیج‌ها</span>
+          </button>
+          <button class="menu-item" data-target="testimonials">
+            <span class="mi-stage">STAGE 07</span
+            ><span class="mi-fa">پیام‌ها — نظرات</span>
+          </button>
+          <button class="menu-item" data-target="faq">
+            <span class="mi-stage">STAGE 08</span
+            ><span class="mi-fa">پرسش‌های متداول</span>
+          </button>
+          <button class="menu-item" data-target="arcade">
+            <span class="mi-stage">STAGE 09</span
+            ><span class="mi-fa">آرکید — پایگاه بازی</span>
+          </button>
+          <button class="menu-item" data-target="contact">
+            <span class="mi-stage">STAGE 10</span
+            ><span class="mi-fa">مرکز کنترل — تماس</span>
+          </button>
+          <button class="menu-item" data-target="arrived">
+            <span class="mi-stage">FINAL</span
+            ><span class="mi-fa">سیاره‌ی مقصد — فرود</span>
+          </button>
+        </nav>
+        <p class="m-hint">↑↓ + ENTER · ESC TO CLOSE</p>
+        <button
+          id="menuClose"
+          class="pxbtn ghost"
+          style="padding: 8px 12px; font-size: 0.75rem"
+        >
+          بستن
+        </button>
+      </div>
+    </div>
+
+    <main>
+      <!-- ═════════ HERO: سکوی پرتاب ═════════ -->
+      <section id="hero" aria-label="معرفی برند — سکوی پرتاب">
+        <div class="wrap">
+          <div class="hero-in">
+            <span class="hero-kicker rv" dir="ltr"
+              >LAUNCH SEQUENCE · DIGITAL AGENCY</span
+            >
+            <h1 class="rv" dir="ltr">[BRAND]</h1>
+            <p class="hero-lead rv" id="heroLead" aria-live="off"></p>
+            <div class="hero-cta rv">
+              <button id="heroStart" class="pxbtn">
+                شروع کاوش <span class="lat">EXPLORE</span>
+              </button>
+              <button id="heroArcade" class="pxbtn ghost">
+                بازی در آرکید <span class="lat">PLAY</span>
+              </button>
+            </div>
+            <p class="scroll-hint blink rv" dir="ltr">▼ SCROLL TO LAUNCH ▼</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═════════ ناحیه‌ی پرتاب (فضای خالی برای تماشای پرتاب) ═════════ -->
+      <section id="lift" aria-label="ناحیه‌ی پرتاب">
+        <div class="lift-chip rv">
+          <span class="px" dir="ltr">LIFT-OFF ZONE</span>
+          <p
+            data-type="فشار موتور در حال افزایش است… موشک را دنبال کنید؛ اولین ایستگاه در انتظار شماست."
+          ></p>
+        </div>
+      </section>
+
+      <!-- ═════════ خدمات ═════════ -->
+      <section id="services" class="sec-pad" aria-labelledby="svcH">
+        <div class="wrap">
+          <header class="sec-head rv">
+            <div class="kicker">
+              <span class="k-tag">STAGE 01</span
+              ><span class="k-lbl" dir="ltr">ORBITAL STATIONS — SERVICES</span>
+            </div>
+            <h2 id="svcH">ایستگاه‌های مداری؛ پنج خدمت اصلی</h2>
+            <p class="sec-sub">
+              در مسیر پرواز از کنار هر ایستگاه که رد می‌شویم، یک تخصص ما را نشان
+              می‌دهد. این‌جا فهرست کاملشان است.
+            </p>
+          </header>
+          <div class="st-grid">
+            <div class="st-card rv">
+              <span
+                class="st-ico"
+                data-sprite="browser"
+                aria-hidden="true"
+              ></span>
+              <span class="st-lat" dir="ltr">ST-01 · WEB</span>
+              <h3>طراحی و توسعه‌ی وب‌سایت</h3>
+              <p>
+                از لندینگ تک‌صفحه‌ای تا فروشگاه کامل؛ سریع، ریسپانسیو و سئوشده —
+                بدون قالب تکراری.
+              </p>
+              <div class="tagrow">
+                <span>طراحی اختصاصی</span><span>ریسپانسیو</span><span>سئو</span>
+              </div>
+            </div>
+            <div class="st-card rv">
+              <span class="st-ico" data-sprite="chip" aria-hidden="true"></span>
+              <span class="st-lat" dir="ltr">ST-02 · CODE</span>
+              <h3>برنامه‌نویسی اختصاصی</h3>
+              <p>
+                وب‌اپ، پنل مدیریت و API با معماری تمیز؛ کدی که سال‌ها قابل توسعه
+                بماند.
+              </p>
+              <div class="tagrow">
+                <span>وب‌اپ</span><span>Django / Node</span><span>API</span>
+              </div>
+            </div>
+            <div class="st-card rv">
+              <span
+                class="st-ico"
+                data-sprite="brush"
+                aria-hidden="true"
+              ></span>
+              <span class="st-lat" dir="ltr">ST-03 · BRAND</span>
+              <h3>لوگو و برندینگ</h3>
+              <p>
+                هویتی که از اولین نگاه در ذهن می‌ماند: لوگوتایپ، پالت رنگ و
+                راهنمای کامل برند.
+              </p>
+              <div class="tagrow">
+                <span>لوگوتایپ</span><span>پالت و تایپ</span
+                ><span>استایل‌گاید</span>
+              </div>
+            </div>
+            <div class="st-card rv">
+              <span
+                class="st-ico"
+                data-sprite="palette"
+                aria-hidden="true"
+              ></span>
+              <span class="st-lat" dir="ltr">ST-04 · UI/UX</span>
+              <h3>طراحی UI/UX</h3>
+              <p>
+                رابط‌هایی که کاربر بدون راهنما می‌فهمد؛ از تحقیق کاربر تا
+                پروتوتایپ تعاملی.
+              </p>
+              <div class="tagrow">
+                <span>تحقیق کاربر</span><span>وایرفریم</span
+                ><span>پروتوتایپ</span>
+              </div>
+            </div>
+            <div class="st-card rv">
+              <span
+                class="st-ico"
+                data-sprite="signal"
+                aria-hidden="true"
+              ></span>
+              <span class="st-lat" dir="ltr">ST-05 · SOCIAL</span>
+              <h3>مدیریت شبکه‌های اجتماعی</h3>
+              <p>
+                تقویم محتوا و کمپین‌هایی که تعامل واقعی می‌سازند؛ رشد واقعی، نه
+                فالوور قلابی.
+              </p>
+              <div class="tagrow">
+                <span>تقویم محتوا</span><span>کمپین</span
+                ><span>گزارش ماهانه</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <hr class="ditherline" />
+
+      <!-- ═════════ نمونه‌کارها ═════════ -->
+      <section id="works" class="sec-pad" aria-labelledby="wrkH">
+        <div class="wrap">
+          <header class="sec-head rv">
+            <div class="kicker">
+              <span class="k-tag">STAGE 02</span
+              ><span class="k-lbl" dir="ltr"
+                >RECOVERY CAPSULES — PORTFOLIO</span
+              >
+            </div>
+            <h2 id="wrkH">کپسول‌های بازیابی؛ نمونه‌کارها</h2>
+            <p class="sec-sub">
+              روی هر کپسول کلیک کن تا محتوایش باز شود: شرح مأموریت، تگ‌ها و
+              امتیاز نهایی.
+            </p>
+          </header>
+          <div class="cap-grid" id="capGrid">
+            <button class="cap rv" data-work="0">
+              <span class="c-pts" dir="ltr">100 PTS</span
+              ><canvas width="72" height="48" aria-hidden="true"></canvas
+              ><span class="cap-t">پیکسل‌مارکت</span
+              ><span class="cap-cat" dir="ltr">ONLINE SHOP</span>
+            </button>
+            <button class="cap rv" data-work="1">
+              <span class="c-pts" dir="ltr">300 PTS</span
+              ><canvas width="72" height="48" aria-hidden="true"></canvas
+              ><span class="cap-t">آتلیه لمیز</span
+              ><span class="cap-cat" dir="ltr">BRANDING</span>
+            </button>
+            <button class="cap rv" data-work="2">
+              <span class="c-pts" dir="ltr">500 PTS</span
+              ><canvas width="72" height="48" aria-hidden="true"></canvas
+              ><span class="cap-t">کافه دارک‌روست</span
+              ><span class="cap-cat" dir="ltr">WEBSITE</span>
+            </button>
+            <button class="cap rv" data-work="3">
+              <span class="c-pts" dir="ltr">700 PTS</span
+              ><canvas width="72" height="48" aria-hidden="true"></canvas
+              ><span class="cap-t">استارتاپ ویتا</span
+              ><span class="cap-cat" dir="ltr">WEB APP</span>
+            </button>
+            <button class="cap rv" data-work="4">
+              <span class="c-pts" dir="ltr">1000 PTS</span
+              ><canvas width="72" height="48" aria-hidden="true"></canvas
+              ><span class="cap-t">جشنواره بازی‌سازان</span
+              ><span class="cap-cat" dir="ltr">EVENT</span>
+            </button>
+            <button class="cap rv" data-work="5">
+              <span class="c-pts" dir="ltr">5000 PTS</span
+              ><canvas width="72" height="48" aria-hidden="true"></canvas
+              ><span class="cap-t">پلتفرم کدکده</span
+              ><span class="cap-cat" dir="ltr">EDTECH</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <hr class="ditherline" />
+
+      <!-- ═════════ فرایند کار ═════════ -->
+      <section id="process" class="sec-pad" aria-labelledby="prcH">
+        <div class="wrap">
+          <header class="sec-head rv">
+            <div class="kicker">
+              <span class="k-tag">STAGE 03</span
+              ><span class="k-lbl" dir="ltr">FLIGHT PLAN — PROCESS</span>
+            </div>
+            <h2 id="prcH">نقشه‌ی پرواز؛ فرایند همکاری</h2>
+            <p class="sec-sub">
+              پنج مرحله، بدون استثنا. متن‌ها همان لحظه که می‌رسید، مثل رادیو
+              پایگاه تایپ می‌شوند.
+            </p>
+          </header>
+          <div class="card rv">
+            <ol class="jlist">
+              <li>
+                <span class="j-pin" data-ico="coin"></span>
+                <div>
+                  <span class="j-lbl" dir="ltr">STEP 1 — BRIEFING</span>
+                  <h3>بریفینگ و شمارش معکوس</h3>
+                  <p
+                    data-type="گفت‌وگوی رایگان درباره‌ی هدف، مخاطب و بودجه؛ خروجی: صورت‌جلسه‌ی شفاف از نیاز شما."
+                  ></p>
+                </div>
+              </li>
+              <li>
+                <span class="j-pin" data-ico="map"></span>
+                <div>
+                  <span class="j-lbl" dir="ltr">STEP 2 — SET THE COURSE</span>
+                  <h3>تعیین مسیر</h3>
+                  <p
+                    data-type="تحلیل رقبا، شناخت مخاطب و کشیدن نقشه‌ی راه پروژه؛ قبل از نوشتن حتی یک خط کد."
+                  ></p>
+                </div>
+              </li>
+              <li>
+                <span class="j-pin" data-ico="hammer"></span>
+                <div>
+                  <span class="j-lbl" dir="ltr">STEP 3 — BUILD THE ROCKET</span>
+                  <h3>ساخت موشک</h3>
+                  <p
+                    data-type="طراحی پیکسل‌به‌پیکسل رابط و کدنویسی تمیز و قابل توسعه؛ با گزارش هفتگی پیشرفت."
+                  ></p>
+                </div>
+              </li>
+              <li>
+                <span class="j-pin" data-ico="bug"></span>
+                <div>
+                  <span class="j-lbl" dir="ltr">STEP 4 — PRE-LAUNCH TESTS</span>
+                  <h3>تست‌های پیش از پرتاب</h3>
+                  <p
+                    data-type="تست روی دستگاه‌های واقعی، بهینه‌سازی سرعت و سئو؛ باگ‌ها قبل از تحویل حذف می‌شوند، نه بعد."
+                  ></p>
+                </div>
+              </li>
+              <li>
+                <span class="j-pin" data-ico="flag"></span>
+                <div>
+                  <span class="j-lbl" dir="ltr"
+                    >STEP 5 — TOUCHDOWN &amp; SUPPORT</span
+                  >
+                  <h3>فرود و تحویل</h3>
+                  <p
+                    data-type="آموزش تیم شما، مستندات کامل و پشتیبانی سه‌ماهه. فرودِ نرم، همان‌قدر مهمِ پرتاب است."
+                  ></p>
+                </div>
+              </li>
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      <hr class="ditherline" />
+
+      <!-- ═════════ تکنولوژی‌ها ═════════ -->
+      <section id="tech" class="sec-pad" aria-labelledby="techH">
+        <div class="wrap">
+          <header class="sec-head rv">
+            <div class="kicker">
+              <span class="k-tag">STAGE 04</span
+              ><span class="k-lbl" dir="ltr">THE ARSENAL — TECH</span>
+            </div>
+            <h2 id="techH">زرادخانه؛ ابزارهای پایگاه</h2>
+            <p class="sec-sub">
+              روی هر آیتم برو تا توضیحش را ببینی. ابزار بر اساس نیاز پروژه
+              انتخاب می‌شود، نه هوس.
+            </p>
+          </header>
+          <div class="card rv"><div class="ars-grid" id="arsGrid"></div></div>
+        </div>
+      </section>
+
+      <hr class="ditherline" />
+
+      <!-- ═════════ آمار ═════════ -->
+      <section id="stats" class="sec-pad" aria-labelledby="stH">
+        <div class="wrap">
+          <header class="sec-head rv">
+            <div class="kicker">
+              <span class="k-tag gold">STAGE 05</span
+              ><span class="k-lbl" dir="ltr">TELEMETRY — STATS</span>
+            </div>
+            <h2 id="stH">تله‌متری؛ اعداد پایگاه</h2>
+          </header>
+          <div class="card tele-grid rv" id="teleGrid">
+            <div class="tele">
+              <span class="t-n" data-n="128" data-suf="+">0</span
+              ><span class="t-l">پروژه‌ی تحویل‌شده</span>
+            </div>
+            <div class="tele">
+              <span class="t-n" data-n="64" data-suf="">0</span
+              ><span class="t-l">مشتری همکار ثابت</span>
+            </div>
+            <div class="tele">
+              <span class="t-n" data-n="8" data-suf="">0</span
+              ><span class="t-l">سال تجربه‌ی حرفه‌ای</span>
+            </div>
+            <div class="tele">
+              <span class="t-n" data-n="98" data-suf="٪">0</span
+              ><span class="t-l">رضایت از همکاری</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <hr class="ditherline" />
+
+      <!-- ═════════ پکیج‌ها ═════════ -->
+      <section id="pricing" class="sec-pad" aria-labelledby="prcH2">
+        <div class="wrap">
+          <header class="sec-head rv">
+            <div class="kicker">
+              <span class="k-tag">STAGE 06</span
+              ><span class="k-lbl" dir="ltr">THE FLEET — PRICING</span>
+            </div>
+            <h2 id="prcH2">ناوگان؛ کشتیِ مناسب مأموریتت را انتخاب کن</h2>
+            <p class="sec-sub">
+              سه کلاس در داک هست. یکی را انتخاب کن تا در فرم مأموریت ثبت شود؛
+              قیمت نهایی بعد از بریفینگ دقیق اعلام می‌شود.
+            </p>
+          </header>
+          <div class="fleet-grid">
+            <button
+              class="ship-card rv"
+              data-plan="SCOUT"
+              data-price="از ۱۵ میلیون تومان"
+              style="--st: var(--acc2)"
+              aria-pressed="false"
+            >
+              <span class="sc-bar" aria-hidden="true"></span>
+              <span class="ship-in">
+                <span class="s-lat" dir="ltr">CLASS 1 — SCOUT</span>
+                <h3>ناو کنجکاو؛ حضورِ سریع</h3>
+                <span class="s-price">از ۱۵ میلیون تومان</span>
+                <ul>
+                  <li>لندینگ تک‌صفحه‌ای اختصاصی</li>
+                  <li>طراحی ریسپانسیو کامل</li>
+                  <li>فرم تماس و اتصال به شبکه‌ها</li>
+                  <li>تحویل در ۷ روز کاری</li>
+                  <li>۲ مرحله اصلاح رایگان</li>
+                </ul>
+                <span class="pick">انتخاب این کلاس</span>
+              </span>
+            </button>
+            <button
+              class="ship-card rv sel"
+              data-plan="VOYAGER"
+              data-price="از ۴۰ میلیون تومان"
+              style="--st: var(--gold)"
+              aria-pressed="true"
+            >
+              <span class="sc-bar" aria-hidden="true"></span>
+              <span class="ship-in">
+                <span class="s-lat" dir="ltr">CLASS 2 — VOYAGER</span>
+                <h3>ناو کاوشگر؛ کسب‌وکار جدی</h3>
+                <span class="s-price">از ۴۰ میلیون تومان</span>
+                <ul>
+                  <li>سایت چندصفحه‌ای یا فروشگاهی</li>
+                  <li>پنل مدیریت محتوا</li>
+                  <li>بهینه‌سازی سرعت و سئوی پایه</li>
+                  <li>تحویل در ۳ هفته</li>
+                  <li>۴ اصلاح + پشتیبانی ۱ ماهه</li>
+                </ul>
+                <span class="pick">انتخاب این کلاس</span>
+              </span>
+            </button>
+            <button
+              class="ship-card rv"
+              data-plan="FLAGSHIP"
+              data-price="از ۹۵ میلیون تومان"
+              style="--st: var(--pink)"
+              aria-pressed="false"
+            >
+              <span class="sc-bar" aria-hidden="true"></span>
+              <span class="ship-in">
+                <span class="s-lat" dir="ltr">CLASS 3 — FLAGSHIP</span>
+                <h3>ناو پیشرفته؛ پلتفرم کامل</h3>
+                <span class="s-price">از ۹۵ میلیون تومان</span>
+                <ul>
+                  <li>وب‌اپ / پلتفرم کامل</li>
+                  <li>API و یکپارچه‌سازی سرویس‌ها</li>
+                  <li>معماری مقیاس‌پذیر و مستندسازی</li>
+                  <li>زمان‌بندی توافقی مرحله‌به‌مرحله</li>
+                  <li>اصلاح تا رضایت + پشتیبانی ۳ ماهه</li>
+                </ul>
+                <span class="pick">انتخاب این کلاس</span>
+              </span>
+            </button>
+          </div>
+          <div class="fleet-cta rv">
+            <button id="fleetGo" class="pxbtn">
+              ثبت سفارش در مرکز کنترل <span class="lat">ORDER</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <hr class="ditherline" />
+
+      <!-- ═════════ نظرات ═════════ -->
+      <section id="testimonials" class="sec-pad" aria-labelledby="txH">
+        <div class="wrap">
+          <header class="sec-head rv">
+            <div class="kicker">
+              <span class="k-tag">STAGE 07</span
+              ><span class="k-lbl" dir="ltr"
+                >INCOMING TRANSMISSIONS — REVIEWS</span
+              >
+            </div>
+            <h2 id="txH">پیام‌های رادیویی؛ صدای کهکشان</h2>
+            <p class="sec-sub">
+              هر پیام همان لحظه که به دستمان می‌رسد، روی صفحه تایپ می‌شود.
+              اسم‌ها مستعار است؛ حرف‌ها نه.
+            </p>
+          </header>
+          <div class="tx-list">
+            <article class="tx rv">
+              <div class="tx-head">
+                <span class="tx-freq" dir="ltr">CH-04 · 142.0 MHz</span
+                ><span class="tx-from" dir="ltr">FROM: DNG</span
+                ><span class="tx-rate">5/5</span>
+              </div>
+              <p
+                class="tx-msg"
+                data-type="«سه ماه از سایت جدیدمان گذشته و نرخ تبدیل دو برابر شده. دقت کار و گزارش‌گیری‌شان مثال‌زدنی بود.»"
+              ></p>
+              <span class="tx-src">— مدیر فروشگاه پیکسل‌مارکت</span>
+            </article>
+            <article class="tx rv">
+              <div class="tx-head">
+                <span class="tx-freq" dir="ltr">CH-07 · 88.5 MHz</span
+                ><span class="tx-from" dir="ltr">FROM: SKY</span
+                ><span class="tx-rate">5/5</span>
+              </div>
+              <p
+                class="tx-msg"
+                data-type="«برندینگ را از صفر شروع کردیم و حالا مشتری‌ها لوگو را از همان نگاه اول یادشان می‌ماند. پاسخ‌گویی سریع، دلتنگ‌کننده‌ترِ سریع‌تر.»"
+              ></p>
+              <span class="tx-src">— بنیان‌گذار کافه دارک‌روست</span>
+            </article>
+            <article class="tx rv">
+              <div class="tx-head">
+                <span class="tx-freq" dir="ltr">CH-02 · 121.5 MHz</span
+                ><span class="tx-from" dir="ltr">FROM: PIX</span
+                ><span class="tx-rate">4.5/5</span>
+              </div>
+              <p
+                class="tx-msg"
+                data-type="«وب‌اپ سلامت‌مان را بدون یک باگ بحرانی تحویل گرفتیم. مستندسازی‌شان آن‌قدر خوب بود که تیم داخلی سریع وارد شد.»"
+              ></p>
+              <span class="tx-src">— مدیر محصول استارتاپ ویتا</span>
+            </article>
+            <article class="tx rv">
+              <div class="tx-head">
+                <span class="tx-freq" dir="ltr">CH-09 · 76.8 MHz</span
+                ><span class="tx-from" dir="ltr">FROM: MEH</span
+                ><span class="tx-rate">5/5</span>
+              </div>
+              <p
+                class="tx-msg"
+                data-type="«شبکه‌های اجتماعی را سپردیم و در سه ماه اول تعامل واقعی چند برابر شد؛ بدون خرید فالوور، بدون شعبده‌بازی.»"
+              ></p>
+              <span class="tx-src">— مدیر بازاریابی آتلیه لمیز</span>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <hr class="ditherline" />
+
+      <!-- ═════════ پرسش‌های متداول ═════════ -->
+      <section id="faq" class="sec-pad" aria-labelledby="faqH">
+        <div class="wrap">
+          <header class="sec-head rv">
+            <div class="kicker">
+              <span class="k-tag">STAGE 08</span
+              ><span class="k-lbl" dir="ltr">MISSION CONTROL — FAQ</span>
+            </div>
+            <h2 id="faqH">مرکز فرماندهی؛ پرسش‌های پرتکرار</h2>
+          </header>
+          <div class="faq-l rv">
+            <details>
+              <summary>
+                پروژه‌ی من چقدر طول می‌کشد؟ <span class="qs" dir="ltr">Q1</span>
+              </summary>
+              <p
+                data-type="لندینگ تک‌صفحه‌ای حدود یک هفته، سایت چندصفحه‌ای سه تا پنج هفته و وب‌اپ‌های بزرگ بر اساس دامنه کار توافقی است. قبل از شروع، زمان‌بندی مرحله‌به‌مرحله تحویل می‌گیرید."
+              ></p>
+            </details>
+            <details>
+              <summary>
+                هزینه‌ها چطور محاسبه می‌شود؟
+                <span class="qs" dir="ltr">Q2</span>
+              </summary>
+              <p
+                data-type="بعد از جلسه‌ی اول و مشخص‌شدن دامنه‌ی دقیق، قیمت ثابت و بسته‌شده اعلام می‌شود. پرداخت معمولاً در دو یا سه مرحله‌ی مشخص انجام می‌شود."
+              ></p>
+            </details>
+            <details>
+              <summary>
+                اگر بعد از تحویل مشکلی پیش بیاید؟
+                <span class="qs" dir="ltr">Q3</span>
+              </summary>
+              <p
+                data-type="تمام پروژه‌ها با پشتیبانی رسمی تحویل می‌شوند (یک تا سه ماه بسته به پکیج). باگ احتمالی همیشه و در هر شرایطی رایگان رفع می‌شود."
+              ></p>
+            </details>
+            <details>
+              <summary>
+                تفاوت کلاس‌های SCOUT / VOYAGER / FLAGSHIP چیست؟
+                <span class="qs" dir="ltr">Q4</span>
+              </summary>
+              <p
+                data-type="SCOUT برای حضور سریع دیجیتال، VOYAGER برای کسب‌وکارهایی که به پنل مدیریت و فروش آنلاین نیاز دارند و FLAGSHIP برای پلتفرم‌هایی که ستون فقرات کسب‌وکار شما می‌شوند."
+              ></p>
+            </details>
+            <details>
+              <summary>
+                آیا محتوا و متن‌ها را هم شما می‌نویسید؟
+                <span class="qs" dir="ltr">Q5</span>
+              </summary>
+              <p
+                data-type="در پکیج‌های VOYAGER به بالا، بازنویسی متن‌های کلیدی و ساختار محتوایی بخش‌های اصلی را انجام می‌دهیم. برای تولید محتوای مستمر، سرویس شبکه‌های اجتماعی مناسب‌تر است."
+              ></p>
+            </details>
+          </div>
+        </div>
+      </section>
+
+      <hr class="ditherline" />
+
+      <!-- ═════════ آرکید: کنسول دستی + رکوردها ═════════ -->
+      <section id="arcade" class="sec-pad" aria-labelledby="arcH">
+        <div class="wrap">
+          <header class="sec-head rv">
+            <div class="kicker">
+              <span class="k-tag gold">STAGE 09</span
+              ><span class="k-lbl" dir="ltr"
+                >ARCADE BAY — PLAY &amp; RECORD</span
+              >
+            </div>
+            <h2 id="arcH">پایگاه بازی؛ آرکید دستی</h2>
+            <p class="sec-sub">
+              سه کارتریج، سه بازی کامل با کنترل کیبورد و لمسی. رکورد بزن و اسمت
+              را در جدول پنج‌نفره‌ی برتر ثبت کن — رکوردداران کد تخفیف می‌گیرند.
+            </p>
+          </header>
+          <div class="arcade-grid">
+            <div class="console rv">
+              <div class="con-top">
+                <span class="con-brand"><b>PIXEL·BOY</b> LR-01</span>
+                <div class="carts" role="tablist" aria-label="انتخاب بازی">
+                  <button
+                    class="cart-chip on"
+                    data-g="pac"
+                    role="tab"
+                    aria-selected="true"
+                    aria-label="بازی پک‌مان"
+                  >
+                    PAC
+                  </button>
+                  <button
+                    class="cart-chip"
+                    data-g="tank"
+                    role="tab"
+                    aria-selected="false"
+                    aria-label="بازی تانک"
+                  >
+                    TANK
+                  </button>
+                  <button
+                    class="cart-chip"
+                    data-g="tetris"
+                    role="tab"
+                    aria-selected="false"
+                    aria-label="بازی تتریس"
+                  >
+                    TETRIS
+                  </button>
+                </div>
+                <span class="con-leds" aria-hidden="true"><i></i><i></i></span>
+              </div>
+              <div class="lcd">
+                <canvas
+                  id="gameCanvas"
+                  width="320"
+                  height="224"
+                  aria-label="صفحه‌ی بازی کنسول"
+                ></canvas>
+                <div id="lcdOv" dir="rtl"></div>
+              </div>
+              <div class="con-ctl">
+                <div class="dpad" id="gDpad" aria-label="دی‌پد کنترل">
+                  <button class="d-u" data-d="u" aria-label="بالا">▲</button>
+                  <button class="d-l" data-d="l" aria-label="چپ">◀</button>
+                  <span class="d-c" aria-hidden="true"></span>
+                  <button class="d-r" data-d="r" aria-label="راست">▶</button>
+                  <button class="d-d" data-d="d" aria-label="پایین">▼</button>
+                </div>
+                <div class="mid-sw">
+                  <button id="gSelect" aria-label="روشن یا خاموش کردن صدا">
+                    SELECT·SND
+                  </button>
+                  <button id="gStart" aria-label="شروع یا مکث">START</button>
+                </div>
+                <div class="ab">
+                  <button id="gB" aria-label="دکمه‌ی B: بازگشت به منو">
+                    B
+                  </button>
+                  <button id="gA" aria-label="دکمه‌ی A: شلیک یا چرخش">A</button>
+                </div>
+              </div>
+            </div>
+            <aside class="arcade-side">
+              <div class="card rv">
+                <h3>جدول رکوردها</h3>
+                <span id="lbGame" dir="ltr">PAC-CORRIDOR</span>
+                <ol id="lbList"></ol>
+                <p class="lb-note">
+                  پنج رکورددار برترِ هر بازی، کد تخفیف اختصاصی دریافت می‌کنند.
+                  رکوردها در همین مرورگر ذخیره می‌شوند؛ برای ثبت رسمی، رتبه‌ات
+                  را در فرم تماس ذکر کن.
+                </p>
+              </div>
+              <div class="card rv">
+                <h3>راهنمای کنترل</h3>
+                <div class="help-keys" id="helpBody"></div>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      <hr class="ditherline" />
+
+      <!-- ═════════ تماس ═════════ -->
+      <section id="contact" class="sec-pad" aria-labelledby="ctH">
+        <div class="wrap">
+          <header class="sec-head rv">
+            <div class="kicker">
+              <span class="k-tag">STAGE 10</span
+              ><span class="k-lbl" dir="ltr">MISSION CONTROL — CONTACT</span>
+            </div>
+            <h2 id="ctH">مرکز کنترل مأموریت؛ تماس با ما</h2>
+            <p class="sec-sub">
+              فرم را پر کن و بفرست؛ حداکثر تا ۲۴ ساعت کاری پاسخ می‌دهیم. در همین
+              حین، پایین را نگاه کن — در حال فرود آمدنیم.
+            </p>
+          </header>
+          <div class="board-grid">
+            <form id="contactForm" class="card form-side rv" novalidate="">
+              <div class="fld">
+                <label for="fName">نام فرمانده</label>
+                <input
+                  id="fName"
+                  name="name"
+                  type="text"
+                  required
+                  autocomplete="name"
+                  placeholder="بازیکن شماره یک"
+                />
+              </div>
+              <div class="fld">
+                <label for="fMail">ایمیل</label>
+                <input
+                  id="fMail"
+                  name="email"
+                  type="email"
+                  required
+                  autocomplete="email"
+                  placeholder="player@brand.ir"
+                  dir="ltr"
+                  style="text-align: right"
+                />
+              </div>
+              <div class="fld">
+                <label for="fType">نوع مأموریت</label>
+                <select id="fType" name="ptype" required>
+                  <option value="">— انتخاب کن —</option>
+                  <option>طراحی سایت</option>
+                  <option>برنامه‌نویسی / وب‌اپ</option>
+                  <option>لوگو و برندینگ</option>
+                  <option>طراحی UI/UX</option>
+                  <option>مدیریت شبکه‌های اجتماعی</option>
+                </select>
+              </div>
+              <div class="fld">
+                <label for="fBudget">پاداش (بودجه)</label>
+                <select id="fBudget" name="budget" required>
+                  <option value="">— انتخاب کن —</option>
+                  <option>کمتر از ۲۰ میلیون تومان</option>
+                  <option>۲۰ تا ۶۰ میلیون تومان</option>
+                  <option>۶۰ تا ۱۲۰ میلیون تومان</option>
+                  <option>بیشتر از ۱۲۰ میلیون تومان</option>
+                </select>
+              </div>
+              <div class="fld">
+                <label for="fMsg">شرح مأموریت</label>
+                <textarea
+                  id="fMsg"
+                  name="msg"
+                  rows="4"
+                  required
+                  placeholder="درباره‌ی مقصدی که می‌خواهی به آن برسی بنویس…"
+                ></textarea>
+              </div>
+              <button type="submit" class="pxbtn w-full">
+                ارسال به پایگاه <span class="lat">TRANSMIT</span>
+              </button>
+            </form>
+            <aside class="card board-side rv">
+              <h3>جدول پاداش مأموریت</h3>
+              <ul class="reward-note">
+                <li><span>مشاوره‌ی اول</span><b>رایگان</b></li>
+                <li><span>برآورد زمان و قیمت</span><b>۴۸ ساعته</b></li>
+                <li><span>پاسخ اولیه به فرم</span><b>کمتر از ۲۴ ساعت</b></li>
+                <li><span>پشتیبانی بعد از تحویل</span><b>۱ تا ۳ ماه</b></li>
+              </ul>
+              <p id="planNote" role="status">—</p>
+              <p
+                style="
+                  margin: 14px 0 0;
+                  color: var(--dim);
+                  font-size: 0.78rem;
+                  line-height: 1.9;
+                "
+              >
+                نکته‌ی مرکز کنترل: هرچه شرح مأموریت دقیق‌تر باشد، برآورد ما
+                سریع‌تر و دقیق‌تر می‌شود.
+              </p>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═════════ فرود: سیاره‌ی مقصد ═════════ -->
+      <section id="arrived" aria-label="فرود روی سیاره‌ی مقصد">
+        <div class="wrap">
+          <div class="arrive-card rv">
+            <span class="px" dir="ltr">TOUCHDOWN CONFIRMED</span>
+            <h2>به پایگاه مقصد خوش آمدید</h2>
+            <p>
+              پرتاب، سفر و فرود نرم — مأموریت این صفحه همین‌جا کامل شد. مأموریت
+              پروژه‌ی شما کجاست؟
+            </p>
+            <div class="arrive-chips">
+              <span>فرود: <b>موفق</b></span>
+              <span>خدمه: <b>خارج شد</b></span>
+              <span>پایگاه: <b>فعال</b></span>
+            </div>
+            <button id="backTop" class="pxbtn ghost">
+              بازگشت به صفحه‌ی پرتاب <span class="lat">RELAUNCH</span>
+            </button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- ═════════ فوتر ═════════ -->
+    <footer aria-label="پایان صفحه">
+      <div class="wrap foot-in">
+        <div>
+          <p class="px m-0" dir="ltr">[BRAND]©2025 — LAUNCH SEQUENCE</p>
+          <p>
+            برند تو، مأموریت ما — تمام حقوق محفوظ است.
+            <span
+              class="px"
+              style="font-size: 0.42rem; color: var(--gold)"
+              dir="ltr"
+              >TIP: ↑↑↓↓←→←→BA</span
+            >
+          </p>
+        </div>
+        <nav class="foot-nav" aria-label="پیوندهای فوتر">
+          <a href="#services" data-scroll>خدمات</a>
+          <a href="#works" data-scroll>نمونه‌کارها</a>
+          <a href="#arcade" data-scroll>آرکید</a>
+          <a href="#contact" data-scroll>تماس</a>
+          <a href="index.html">کاتالوگ</a>
+        </nav>
+      </div>
+    </footer>
+
+    <!-- ═════════ مودال نمونه‌کار ═════════ -->
+    <div
+      id="workModal"
+      class="modal-root"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="wmTitle"
+    >
+      <div class="modal-bk" data-close></div>
+      <div class="card modal-panel">
+        <p class="m-cat" id="wmCat" dir="ltr">CAPSULE LOG</p>
+        <h3 id="wmTitle"></h3>
+        <canvas
+          id="wmCanvas"
+          width="96"
+          height="64"
+          aria-hidden="true"
+        ></canvas>
+        <p class="m-desc" id="wmDesc"></p>
+        <div class="tagrow" id="wmTags"></div>
+        <p
+          class="px m-0"
+          style="font-size: 0.55rem; color: var(--gold); margin-top: 12px"
+          id="wmPts"
+          dir="ltr"
+        ></p>
+        <button class="pxbtn" data-close style="margin-top: 14px">
+          بستن <span class="lat">CLOSE</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ═════════ توست ═════════ -->
+    <div id="toast" role="status" aria-live="polite">
+      <span class="t-ico" aria-hidden="true">◆</span
+      ><span id="toastText"></span>
+    </div>
+
+    <!-- ═════════ منطق صفحه ═════════ -->
+    <script type="module">
+      /* ═════════ ابزارهای پایه ═════════ */
+      const $ = (s) => document.querySelector(s);
+      const $$ = (s) => [...document.querySelectorAll(s)];
+      const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+      const lerp = (a, b, t) => a + (b - a) * t;
+      const sstep = (p, a, b) => {
+        const t = clamp((p - a) / (b - a), 0, 1);
+        return t * t * (3 - 2 * t);
+      };
+      const RM = matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const G = window.gsap || null;
+      if (G && window.ScrollTrigger)
+        G.registerPlugin(ScrollTrigger, window.ScrollToPlugin);
+      const store = {
+        get(k) {
+          try {
+            return localStorage.getItem(k);
+          } catch (e) {
+            return null;
+          }
+        },
+        set(k, v) {
+          try {
+            localStorage.setItem(k, v);
+          } catch (e) {}
+        },
+      };
+      const isDark = () => document.documentElement.classList.contains("dark");
+      const cssVar = (n) =>
+        getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+      function hexRGB(h) {
+        h = h.replace("#", "");
+        return [
+          parseInt(h.slice(0, 2), 16),
+          parseInt(h.slice(2, 4), 16),
+          parseInt(h.slice(4, 6), 16),
+        ];
+      }
+      function lerpC(c1, c2, t) {
+        const a = hexRGB(c1),
+          b = hexRGB(c2);
+        return `rgb(${Math.round(lerp(a[0], b[0], t))},${Math.round(lerp(a[1], b[1], t))},${Math.round(lerp(a[2], b[2], t))})`;
+      }
+      function escapeHtml(s) {
+        return String(s).replace(
+          /[&<>"']/g,
+          (c) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#39;",
+            })[c],
+        );
+      }
+      function shuffle(a) {
+        for (let i = a.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [a[i], a[j]] = [a[j], a[i]];
+        }
+      }
+      function scrollToId(id) {
+        const el = typeof id === "string" ? document.getElementById(id) : id;
+        if (!el) return;
+        if (G && window.ScrollToPlugin && !RM) {
+          G.to(window, {
+            scrollTo: { y: el, offsetY: 74 },
+            duration: 0.9,
+            ease: "power2.inOut",
+          });
+        } else el.scrollIntoView({ behavior: RM ? "auto" : "smooth" });
+      }
+      function mulberry32(a) {
+        return function () {
+          a |= 0;
+          a = (a + 0x6d2b79f5) | 0;
+          let t = Math.imul(a ^ (a >>> 15), 1 | a);
+          t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+          return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+        };
+      }
+
+      /* ═════════ صدا (پیش‌فرض خاموش) ═════════ */
+      const Sound = {
+        ctx: null,
+        on: false,
+        ensure() {
+          if (!this.ctx) {
+            const AC = window.AudioContext || window.webkitAudioContext;
+            if (AC) this.ctx = new AC();
+          }
+          if (this.ctx && this.ctx.state === "suspended") this.ctx.resume();
+        },
+        tone(f, d = 0.06, v = 0.07, s = 0) {
+          if (!this.on || !this.ctx) return;
+          const t0 = this.ctx.currentTime;
+          const o = this.ctx.createOscillator(),
+            g = this.ctx.createGain();
+          o.type = "square";
+          o.frequency.setValueAtTime(f, t0);
+          if (s) o.frequency.linearRampToValueAtTime(s, t0 + d);
+          g.gain.setValueAtTime(v, t0);
+          g.gain.exponentialRampToValueAtTime(0.0001, t0 + d);
+          o.connect(g);
+          g.connect(this.ctx.destination);
+          o.start(t0);
+          o.stop(t0 + d + 0.02);
+        },
+        key() {
+          this.tone(1500 + Math.random() * 300, 0.018, 0.024);
+        },
+        blip() {
+          this.tone(660, 0.05, 0.06);
+        },
+        ok() {
+          this.tone(784, 0.06);
+          setTimeout(() => this.tone(1175, 0.1), 55);
+        },
+        err() {
+          this.tone(200, 0.15, 0.08, 120);
+        },
+        eat() {
+          this.tone(520 + Math.random() * 180, 0.04, 0.05);
+        },
+        shoot() {
+          this.tone(900, 0.07, 0.05, 240);
+        },
+        hit() {
+          this.tone(220, 0.07, 0.08, 70);
+        },
+        boom() {
+          this.tone(120, 0.3, 0.1, 40);
+        },
+        jingle() {
+          [523, 659, 784, 1047].forEach((f, i) =>
+            setTimeout(() => this.tone(f, 0.09, 0.07), i * 95),
+          );
+        },
+      };
+      document.addEventListener("pointerdown", () => Sound.ensure(), {
+        once: true,
+      });
+
+      /* ═════════ اسپرایت‌ها ═════════ */
+      function pixSVG(rows, pal) {
+        const w = Math.max(...rows.map((r) => r.length));
+        let rects = "";
+        rows.forEach((r, y) => {
+          for (let x = 0; x < r.length; x++) {
+            const c = pal[r[x]];
+            if (c)
+              rects += `<rect x="${x}" y="${y}" width="1" height="1" fill="${c}"/>`;
+          }
+        });
+        return `<svg class="pixart" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${rows.length}" shape-rendering="crispEdges" aria-hidden="true" focusable="false">${rects}</svg>`;
+      }
+      function drawMat(ctx, rows, pal, x, y, s = 1) {
+        for (let r = 0; r < rows.length; r++) {
+          const row = rows[r];
+          for (let c = 0; c < row.length; c++) {
+            const col = pal[row[c]];
+            if (col) {
+              ctx.fillStyle = col;
+              ctx.fillRect(x + c * s, y + r * s, s, s);
+            }
+          }
+        }
+      }
+      const SPAL = {
+        K: "#241f1c",
+        W: "#f6f2e7",
+        A: "#9c3f66",
+        B: "#2e6e6a",
+        Y: "#c99a2e",
+        R: "#b8503d",
+        G: "#4a8a5f",
+      };
+      const SPRITES = {
+        browser: [
+          [
+            "KKKKKKKKKKKK",
+            "KAAAAAAAAAAK",
+            "KKKKKKKKKKKK",
+            "KWWWWWWWWWWK",
+            "KWWWKKKWWWWK",
+            "KWWWWWWWWWWK",
+            "KWWWWWKKKWWK",
+            "KWWWWWKKKWWK",
+            "KWWWWWWWWWWK",
+            "KKKKKKKKKKKK",
+            "............",
+            "............",
+          ],
+        ],
+        chip: [
+          [
+            "..K..K..K...",
+            ".KKKKKKKKK..",
+            ".KWWWWWWWK..",
+            "KKWKAAAKWKK.",
+            "KWKAKKKKAKWK",
+            "KWKAKKKKAKWK",
+            "KKWKAAAKWKK.",
+            ".KWWWWWWWK..",
+            ".KKKKKKKKK..",
+            "..K..K..K...",
+            "............",
+            "............",
+          ],
+        ],
+        brush: [
+          [
+            ".......KK...",
+            "......KWK...",
+            ".....KWK....",
+            "....KWK.....",
+            "...KWK......",
+            "..KWK.......",
+            ".KWK........",
+            ".KAAK.......",
+            ".KAAK.......",
+            ".KAAK.......",
+            "..KK........",
+            "............",
+          ],
+        ],
+        palette: [
+          [
+            "..KKKKK.....",
+            ".KWWWWWK....",
+            "KWRWKWYWK...",
+            "KWWWWWWWK...",
+            "KWKWWWKBK...",
+            ".KWWWWWWK...",
+            "..KKKWWK....",
+            ".....KK.....",
+            "............",
+            "............",
+            "............",
+            "............",
+          ],
+        ],
+        signal: [
+          [
+            "........KK..",
+            ".......KWK..",
+            "......KWK...",
+            ".....KWK....",
+            "....KWK.....",
+            "..KKWK......",
+            ".KWWKKKK....",
+            "KWWWWWWK....",
+            "KWWWWWWK....",
+            "KKKKKKKK....",
+            "............",
+            "............",
+          ],
+        ],
+      };
+      const IPAL = {
+        K: "#241f1c",
+        Y: "#c99a2e",
+        W: "#f6f2e7",
+        R: "#b8503d",
+        S: "#8a8a92",
+        T: "#4a8a5f",
+      };
+      const ICONS = {
+        coin: [
+          "..KKKK..",
+          ".KYYYYK.",
+          ".KYKKYK.",
+          ".KYKKYK.",
+          ".KYYYYK.",
+          "..KKKK..",
+        ],
+        map: [
+          "KKKKKKKK",
+          "KWWKWWWK",
+          "KWWKWKWK",
+          "KWWKWWWK",
+          "KWRRWWWK",
+          "KKKKKKKK",
+        ],
+        hammer: [
+          "..KKKK..",
+          ".KSSSSK.",
+          ".KSSSSK.",
+          "..KKKK..",
+          "...KWK..",
+          "...KWK..",
+          "...KWK..",
+          "...KKK..",
+        ],
+        bug: [
+          "K......K",
+          ".KTTTTK.",
+          "KKTWTTKK",
+          ".KTTTTK.",
+          "K.KTTK.K",
+          ".K.KK.K.",
+        ],
+        flag: [
+          ".KKKKKK.",
+          ".KRRRRK.",
+          ".KRRRK..",
+          ".KRRK...",
+          ".KRK....",
+          ".KK.....",
+          ".KWK....",
+          ".KKK....",
+        ],
+      };
+      /* موشک (۱۲×۲۴) */
+      const ROCKET = [
+        ".....RR.....",
+        "....RRRR....",
+        "....WWWW....",
+        "...WWWWWW...",
+        "...WWWWWW...",
+        "..WWWWWWWW..",
+        "..WWWWWWWW..",
+        ".WWWWWWWWWW.",
+        ".WWGGGGGGWW.",
+        ".WWGGGGGGWW.",
+        ".WWWWWWWWWW.",
+        ".WWWWWWWWWW.",
+        ".WWRWWWWRWW.",
+        ".WWWWWWWWWW.",
+        ".WWWWWWWWWW.",
+        "WW.WWWWWW.WW",
+        "WWW.WWWW.WWW",
+        "RWW.WWWW.WWR",
+        "RR.WW..WW.RR",
+        "RR.DDDDDD.RR",
+        "....DDDD....",
+        "....DDDD....",
+        ".....DD.....",
+        "............",
+      ];
+      const ROCKET_P = {
+        R: "#e2543e",
+        W: "#f4f6fb",
+        G: "#9adfff",
+        D: "#6a7390",
+      };
+      /* همراه: بیپ (۱۲×۱۲) */
+      const BEEP_A = [
+        ".....KK.....",
+        "....KRRK....",
+        ".....KK.....",
+        "..KKKKKKKK..",
+        ".KYYYYYYYYK.",
+        "KYYYYYYYYYYK",
+        "KYYWWYYWWYYK",
+        "KYYWKYYWKYYK",
+        "KYYYYYYYYYYK",
+        "KYYYKKKKYYYK",
+        ".KYYYYYYYYK.",
+        "..KKKKKKKK..",
+      ];
+      const BEEP_B = [
+        ".....KK.....",
+        "....KYYK....",
+        ".....KK.....",
+        "..KKKKKKKK..",
+        ".KYYYYYYYYK.",
+        "KYYYYYYYYYYK",
+        "KYYKKYYKKYYK",
+        "KYYYYYYYYYYK",
+        "KYYYYYYYYYYK",
+        "KYYKKKKKKYYK",
+        ".KYYYYYYYYK.",
+        "..KKKKKKKK..",
+      ];
+      const BEEP_P = { K: "#141a3a", Y: "#ffd23f", R: "#ff5252", W: "#141a3a" };
+      /* فضانورد (۱۰×۱۴) */
+      const AST_A = [
+        "...KKKK...",
+        "..KWWWWK..",
+        "..KWGGWK..",
+        "..KWGGWK..",
+        "...KWWK...",
+        "..KWWWWK..",
+        ".WKWWWWKW.",
+        ".WKWWWWKW.",
+        "..KWWWWK..",
+        "..KAWWAK..",
+        "..KWWWWK..",
+        "..KW..WK..",
+        "..KW..WK..",
+        "..KK..KK..",
+      ];
+      const AST_B = [
+        "...KKKK...",
+        "..KWWWWK..",
+        "..KWGGWK..",
+        "..KWGGWK..",
+        "...KWWK...",
+        "..KWWWWK..",
+        ".WKWWWWKW.",
+        ".WKWWWWKW.",
+        "..KWWWWK..",
+        "..KAWWAK..",
+        "..KWWWWK..",
+        ".KW....WK.",
+        ".KW....WK.",
+        ".KK....KK.",
+      ];
+      const AST_STAND = [
+        "...KKKK...",
+        "..KWWWWK..",
+        "..KWGGWK..",
+        "..KWGGWK..",
+        "...KWWK...",
+        "..KWWWWK..",
+        ".WKWWWWKW.",
+        ".WKWWWWKW.",
+        "..KWWWWK..",
+        "..KAWWAK..",
+        "..KWWWWK..",
+        "..KW..WK..",
+        "..KW..WK..",
+        "..KK..KK..",
+      ];
+      const AST_P = { K: "#141a3a", W: "#f2f5fb", G: "#8fd8ff", A: "#e2543e" };
+      /* نوش‌کروم (۱۲×۱۲) */
+      const CHOM_C = [
+        "....KKKK....",
+        "..KKYYYYKK..",
+        ".KYYYYYYYYK.",
+        "KYYKYYYYKYYK",
+        "KYYKYYYYKYYK",
+        "KYYYYYYYYYYK",
+        "KYYYYYYYYKKK",
+        "KYYYYYYYKKKK",
+        "KYYYYYYYKKKK",
+        "KYYYYYYYYKKK",
+        ".KYYYYYYYYK.",
+        "..KKYYYYKK..",
+      ];
+      const CHOM_O = [
+        "....KKKK....",
+        "..KKYYYYKK..",
+        ".KYYYYYYYYK.",
+        "KYYKYYYYKYYK",
+        "KYYKYYYYKYYK",
+        "KYYYYYYYYYYK",
+        "KYYYYYYYKKKK",
+        "KYYYYYYK....",
+        "KYYYYYYK....",
+        "KYYYYYYYKKKK",
+        ".KYYYYYYYYK.",
+        "..KKYYYYKK..",
+      ];
+      const CHOM_P = { K: "#141a3a", Y: "#e8b64c" };
+      /* روح‌ها (۱۰×۱۲) */
+      const GHOST_A = [
+        "...KKKK...",
+        "..KVVVVK..",
+        ".KVVVVVVK.",
+        "KVVVVVVVVK",
+        "KWWVVVVWWK",
+        "KWWVVVVWWK",
+        "KVVVVVVVVK",
+        "KVVVVVVVVK",
+        "KVVVVVVVVK",
+        "KVKVVVVKVK",
+        ".K.KVVK.K.",
+        "..........",
+      ];
+      const GHOST_B = [
+        "...KKKK...",
+        "..KVVVVK..",
+        ".KVVVVVVK.",
+        "KVVVVVVVVK",
+        "KWWVVVVWWK",
+        "KWWVVVVWWK",
+        "KVVVVVVVVK",
+        "KVVVVVVVVK",
+        "KVVVVVVVVK",
+        "KKKVVVVKKK",
+        "..KK..KK..",
+        "..........",
+      ];
+      const HEART = [
+        ".KK...KK.",
+        "KRRK.KRRK",
+        "KRRRKKRRK",
+        "KRRRRRRRK",
+        ".KRRRRRK.",
+        "..KRRRK..",
+        "...KRK...",
+        "....K....",
+      ];
+      const HEART_P = { K: "#141a3a", R: "#e05b4a" };
+      /* خورشید و ماه */
+      const SUN_M = [
+        "....YY....",
+        "..Y.YY.Y..",
+        "...YYYY...",
+        "..YYYYYY..",
+        ".YYYYYYYY.",
+        ".YYYYYYYY.",
+        ".YYYYYYYY.",
+        "..YYYYYY..",
+        "...YYYY...",
+        "..Y.YY.Y..",
+        "....YY....",
+      ];
+      const SUN_P = { Y: "#ffb347" };
+      const MOON_M = [
+        "....MMM....",
+        "..MMMMM....",
+        ".MMMM......",
+        ".MMC.......",
+        ".MMM.......",
+        ".MMC.......",
+        ".MMMM......",
+        "..MMMMM....",
+        "....MMM....",
+      ];
+      const MOON_P = { M: "#eaeef5", C: "#c3cbda" };
+
+      function injectSprites() {
+        $$("[data-sprite]").forEach((el) => {
+          el.innerHTML = pixSVG(SPRITES[el.dataset.sprite][0], SPAL);
+        });
+        $$("[data-ico]").forEach((el) => {
+          el.innerHTML = pixSVG(ICONS[el.dataset.ico], IPAL);
+        });
+        $("#preSprite").innerHTML = pixSVG(ROCKET, ROCKET_P);
+        $("#themeIco").innerHTML = isDark()
+          ? pixSVG(MOON_M, MOON_P)
+          : pixSVG(SUN_M, SUN_P);
+        const b = $("#railBuddy .b-in");
+        b.innerHTML = `<span class="f f1">${pixSVG(BEEP_A, BEEP_P)}</span><span class="f f2">${pixSVG(BEEP_B, BEEP_P)}</span>`;
+      }
+      /* تیک عمومی تعویض فریم */
+      setInterval(() => {
+        if (document.hidden || RM) return;
+        $$('.sprite[data-frames="2"]').forEach((el) =>
+          el.classList.toggle("fr"),
+        );
+      }, 420);
+
+      /* ═════════ توست ═════════ */
+      let toastTimer = null;
+      function toast(msg) {
+        $("#toastText").textContent = msg;
+        $("#toast").classList.add("show");
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(
+          () => $("#toast").classList.remove("show"),
+          3600,
+        );
+      }
+
+      /* ═════════ تم، LCD، صدا ═════════ */
+      let LCD = {},
+        LCDSH = [];
+      function refreshLCD() {
+        LCD = {
+          bg: cssVar("--lcd-bg"),
+          ink: cssVar("--lcd-ink"),
+          mid: cssVar("--lcd-mid"),
+          dim: cssVar("--lcd-dim"),
+        };
+        LCDSH = isDark()
+          ? ["#cdf08c", "#9fd66b", "#6fae4e", "#4e8a3d"]
+          : ["#33302a", "#5c5748", "#847c66", "#aaa289"];
+      }
+      refreshLCD();
+      function syncSoundBtns() {
+        const p = String(Sound.on);
+        $("#btnSound").setAttribute("aria-pressed", p);
+        $("#gSelect").setAttribute("aria-pressed", p);
+      }
+      function toggleSound() {
+        Sound.on = !Sound.on;
+        store.set("lr_sound", Sound.on ? "1" : "0");
+        syncSoundBtns();
+        if (Sound.on) {
+          Sound.ensure();
+          Sound.ok();
+          toast("صدا روشن شد — صدای تایپ و بازی فعال است.");
+        }
+      }
+      function setTheme(dark) {
+        document.documentElement.classList.toggle("dark", dark);
+        store.set("lr_theme", dark ? "dark" : "light");
+        $("#themeIco").innerHTML = dark
+          ? pixSVG(MOON_M, MOON_P)
+          : pixSVG(SUN_M, SUN_P);
+        refreshLCD();
+        Scene.theme();
+        Mocks.redrawAll();
+        Sound.ok();
+      }
+      function initControls() {
+        Sound.on = store.get("lr_sound") === "1";
+        syncSoundBtns();
+        $("#btnTheme").addEventListener("click", () => setTheme(!isDark()));
+        $("#btnSound").addEventListener("click", toggleSound);
+        $("#gSelect").addEventListener("pointerdown", (e) => {
+          e.preventDefault();
+          toggleSound();
+        });
+        $$("#topnav .nav-a").forEach((b) =>
+          b.addEventListener("click", () => {
+            Sound.blip();
+            scrollToId(b.dataset.go);
+          }),
+        );
+        $$("[data-scroll]").forEach((a) =>
+          a.addEventListener("click", (e) => {
+            e.preventDefault();
+            scrollToId(a.getAttribute("href").slice(1));
+          }),
+        );
+        $("#heroStart").addEventListener("click", () => {
+          Sound.ok();
+          scrollToId("services");
+        });
+        $("#heroArcade").addEventListener("click", () => {
+          Sound.ok();
+          scrollToId("arcade");
+        });
+        $("#backTop").addEventListener("click", () => {
+          Sound.ok();
+          scrollToId("hero");
+        });
+      }
+
+      /* ═════════ منوی پاپ‌آپ ═════════ */
+      const Menu = { open: false, idx: 0, items: [] };
+      function openMenu() {
+        Menu.open = true;
+        Menu.idx = 0;
+        $("#menuOverlay").classList.add("open");
+        Menu.items = $$("#menuList .menu-item");
+        Menu.items.forEach((it, i) => it.classList.toggle("sel", i === 0));
+        Sound.ok();
+      }
+      function closeMenu() {
+        Menu.open = false;
+        $("#menuOverlay").classList.remove("open");
+        Sound.blip();
+      }
+      function initMenu() {
+        $("#btnMenu").addEventListener("click", openMenu);
+        $("#menuClose").addEventListener("click", closeMenu);
+        $("#menuOverlay").addEventListener("click", (e) => {
+          if (e.target === e.currentTarget) closeMenu();
+        });
+        Menu.items = $$("#menuList .menu-item");
+        Menu.items.forEach((it, i) => {
+          it.addEventListener("click", () => {
+            closeMenu();
+            setTimeout(() => scrollToId(it.dataset.target), 60);
+          });
+          it.addEventListener("mouseenter", () => {
+            Menu.idx = i;
+            Menu.items.forEach((x, j) => x.classList.toggle("sel", i === j));
+          });
+        });
+        document.addEventListener("keydown", (e) => {
+          if (!Menu.open) return;
+          if (e.key === "Escape") closeMenu();
+          else if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+            e.preventDefault();
+            Menu.idx =
+              (Menu.idx +
+                (e.key === "ArrowDown" ? 1 : -1) +
+                Menu.items.length) %
+              Menu.items.length;
+            Menu.items.forEach((x, j) =>
+              x.classList.toggle("sel", j === Menu.idx),
+            );
+            Sound.blip();
+          } else if (e.key === "Enter") {
+            const it = Menu.items[Menu.idx];
+            closeMenu();
+            setTimeout(() => scrollToId(it.dataset.target), 60);
+          }
+        });
+      }
+
+      /* ═════════ ریل همراه (بیپ) ═════════ */
+      const BUDDY_PHRASES = [
+        "بیپ!",
+        "همین‌جا هستم",
+        "مسیر رو دوست داری؟",
+        "فضا قشنگه، نه؟",
+        "یه قدم دیگه...",
+        "سوخت کافیه!",
+        "نزدیک شدیم!",
+        "فرود نرم یادت نره",
+      ];
+      let buddyClicks = 0,
+        buddyTimer = null;
+      function updateRail(p) {
+        const usable = Math.max(0, window.innerHeight - 192 - 46);
+        const y = 96 + p * usable;
+        const b = $("#railBuddy");
+        if (b) b.style.transform = `translateY(${y}px)`;
+        $$(".rail-dot").forEach((d, i) =>
+          d.classList.toggle("on", p * 100 >= (i + 1) * 10),
+        );
+        $("#railAlt").textContent =
+          "ALT " + String(Math.round(p * 100)).padStart(2, "0") + "%";
+      }
+      function buddySay(txt) {
+        const s = $("#buddySay");
+        s.textContent = txt;
+        const y =
+          96 + Scene.target * Math.max(0, window.innerHeight - 192 - 46);
+        s.style.left = "64px";
+        s.style.top = Math.max(70, y - 4) + "px";
+        s.classList.add("show");
+        clearTimeout(buddySay._t);
+        buddySay._t = setTimeout(() => s.classList.remove("show"), 1500);
+      }
+      function initRail() {
+        const track = $("#railTrack");
+        for (let i = 0; i < 9; i++) {
+          const d = document.createElement("span");
+          d.className = "rail-dot";
+          d.style.top = 10 * (i + 1) + "%";
+          track.appendChild(d);
+        }
+        const b = $("#railBuddy");
+        b.addEventListener("click", () => {
+          Sound.blip();
+          if (G && !RM)
+            G.fromTo(
+              "#railBuddy .b-in",
+              { y: 0 },
+              { y: -12, duration: 0.09, ease: "none", yoyo: true, repeat: 1 },
+            );
+          buddyClicks++;
+          clearTimeout(buddyTimer);
+          buddyTimer = setTimeout(() => (buddyClicks = 0), 1500);
+          if (buddyClicks >= 10) {
+            buddyClicks = 0;
+            Sound.jingle();
+            toast("کد مخفی همراه: BUDDY-10 — ۱۰٪ روی اولین پروژه.");
+            buddySay("قلبم رو بردی!");
+          } else
+            buddySay(BUDDY_PHRASES[(buddyClicks - 1) % BUDDY_PHRASES.length]);
+        });
+      }
+
+      /* ═════════ صحنه‌ی پرتاب (Canvas) ═════════ */
+      const Scene = {
+        cv: null,
+        ctx: null,
+        w: 0,
+        h: 0,
+        p: 0,
+        target: 0,
+        last: 0,
+        fontReady: false,
+        TOTAL: 14000,
+        touchdown: false,
+        astroT: 0,
+        flagT: 0,
+        parts: [],
+        comets: [],
+        cometT: 5,
+        stars: [],
+        clouds: [],
+        pal: null,
+        PLANETS: [
+          { f: 0.3, xf: 0.76, yf: 0.3, r: 34, ring: false, tag: "ST-01 WEB" },
+          { f: 0.42, xf: 0.2, yf: 0.42, r: 46, ring: true, tag: "ST-02 CODE" },
+          {
+            f: 0.55,
+            xf: 0.78,
+            yf: 0.36,
+            r: 28,
+            ring: false,
+            tag: "ST-03 BRAND",
+          },
+          {
+            f: 0.68,
+            xf: 0.22,
+            yf: 0.4,
+            r: 40,
+            ring: false,
+            tag: "ST-04 UI/UX",
+          },
+          {
+            f: 0.79,
+            xf: 0.8,
+            yf: 0.44,
+            r: 30,
+            ring: false,
+            tag: "ST-05 SOCIAL",
+          },
+        ],
+        NEBS: [
+          { xf: 0.14, f: 0.35 },
+          { xf: 0.82, f: 0.48 },
+          { xf: 0.3, f: 0.63 },
+          { xf: 0.72, f: 0.76 },
+        ],
+
+        init() {
+          this.cv = $("#scene");
+          this.ctx = this.cv.getContext("2d");
+          this.theme();
+          this.resize();
+          window.addEventListener("resize", () => this.resize());
+          if (document.fonts && document.fonts.ready)
+            document.fonts.ready.then(() => {
+              this.fontReady = true;
+              if (RM) this.render(performance.now());
+            });
+          if (!RM) {
+            this.last = performance.now();
+            requestAnimationFrame((n) => this.loop(n));
+          } else {
+            window.addEventListener(
+              "scroll",
+              () => {
+                this.p = this.target;
+                this.checkTouchdown(false);
+                this.render(performance.now());
+              },
+              { passive: true },
+            );
+          }
+        },
+        resize() {
+          this.w = this.cv.width = window.innerWidth;
+          this.h = this.cv.height = window.innerHeight;
+          this.makeStars();
+          this.makeClouds();
+          this.render(performance.now());
+        },
+        makeStars() {
+          const PFS = [0.12, 0.25, 0.5],
+            NS = [80, 55, 36];
+          this.stars = PFS.map((pf, i) => {
+            const arr = [];
+            for (let k = 0; k < NS[i]; k++)
+              arr.push({
+                x: Math.random() * this.w,
+                y: Math.random() * (this.h + 40),
+                s: i === 2 ? 3 : 2,
+                ph: Math.random() * 6.28,
+              });
+            return { pf, arr };
+          });
+        },
+        makeClouds() {
+          this.clouds = [];
+          for (let k = 0; k < 8; k++)
+            this.clouds.push({
+              x: Math.random(),
+              yw: 500 + Math.random() * 2600,
+              s: 0.7 + Math.random() * 0.7,
+            });
+        },
+        theme() {
+          const d = isDark();
+          this.pal = d
+            ? {
+                skyT: "#0c1430",
+                skyB: "#1c2a4e",
+                spT: "#070b1c",
+                spB: "#0d1430",
+                star: "#cdd7ff",
+                star2: "#8fa0d8",
+                hillA: "#131c3a",
+                hillB: "#0e1630",
+                ground: "#18223f",
+                groundTop: "#2b3763",
+                pad: "#3b4870",
+                padD: "#262f52",
+                gantry: "#4a5986",
+                cloud: "#33406b",
+                flameY: "#ffd76e",
+                flameO: "#ff8a4d",
+                pl: ["#ff6b54", "#38d6bd", "#a98cff", "#ffd166", "#7bd0ff"],
+                plSh: ["#b34a3a", "#2a9d8b", "#7b5cb8", "#c99a3a", "#5a94b8"],
+                ring: "#9aa7d8",
+                destF: "#d9825b",
+                destSh: "#a55a3d",
+                destCap: "#ef9a6d",
+                base: "#8b97b8",
+                baseLit: "#ffd76e",
+                dust: "#c9b49a",
+              }
+            : {
+                skyT: "#b9d4ef",
+                skyB: "#e9f1f8",
+                spT: "#e3e8f2",
+                spB: "#d3dcf0",
+                star: "#8b96b8",
+                star2: "#a5b0cc",
+                hillA: "#b8d4a8",
+                hillB: "#a3c290",
+                ground: "#d3e2c4",
+                groundTop: "#b9cfa6",
+                pad: "#93a0ba",
+                padD: "#78849c",
+                gantry: "#8492ac",
+                cloud: "#ffffff",
+                flameY: "#ffd76e",
+                flameO: "#ff8a4d",
+                pl: ["#e2543e", "#2a9d8f", "#8f7bd6", "#d9822b", "#4f8fc0"],
+                plSh: ["#b84538", "#21867a", "#6f5cae", "#b06a24", "#3f78a0"],
+                ring: "#c3cade",
+                destF: "#d9825b",
+                destSh: "#c06744",
+                destCap: "#ef9a6d",
+                base: "#6f7f9e",
+                baseLit: "#d9822b",
+                dust: "#b8a488",
+              };
+          if (RM) this.render(performance.now());
+        },
+        alt(p) {
+          if (p <= 0.05) return 0;
+          if (p <= 0.2) {
+            const t = (p - 0.05) / 0.15;
+            return 0.18 * Math.pow(t, 1.25);
+          }
+          return 0.18 + ((Math.min(p, 0.88) - 0.2) / 0.68) * 0.72;
+        },
+        pxCircle(cx, cy, r, step, fill, shade, capCol) {
+          const ctx = this.ctx;
+          for (let dy = -r; dy < r; dy += step) {
+            const half = Math.sqrt(Math.max(0, r * r - dy * dy));
+            const x0 = Math.round((cx - half) / step) * step,
+              x1 = Math.round((cx + half) / step) * step;
+            let col = fill;
+            if (capCol) col = dy < 48 ? capCol : dy > r * 0.35 ? shade : fill;
+            else if (dy > r * 0.15) col = shade;
+            ctx.fillStyle = col;
+            ctx.fillRect(x0, cy + dy, Math.max(step, x1 - x0), step);
+          }
+        },
+        checkTouchdown(withBurst) {
+          if (this.touchdown || this.p < 0.952) return;
+          this.touchdown = true;
+          if (withBurst) {
+            for (let i = 0; i < 26; i++)
+              this.parts.push({
+                x: this.w * 0.5 + (Math.random() * 2 - 1) * 34,
+                y: this.h * 0.84 - 4,
+                vx: (Math.random() - 0.5) * 220,
+                vy: -(Math.random() * 160),
+                r: 4 + Math.random() * 4,
+                life: 0.7,
+                col: this.pal.dust,
+                pf: 0,
+              });
+            Sound.boom();
+          }
+        },
+        loop(now) {
+          requestAnimationFrame((n) => this.loop(n));
+          if (document.hidden) {
+            this.last = now;
+            return;
+          }
+          const dt = Math.min(0.05, (now - this.last) / 1000);
+          this.last = now;
+          const prevP = this.p;
+          this.p += (this.target - this.p) * Math.min(1, dt * 5);
+          const upPrev = this.alt(prevP) * this.TOTAL,
+            up = this.alt(this.p) * this.TOTAL;
+          this.checkTouchdown(true);
+          if (this.p >= 0.952) {
+            this.astroT += dt;
+            this.flagT = clamp((this.astroT - 1.6) / 0.9, 0, 1);
+          }
+          if (this.p < 0.9) {
+            this.astroT = 0;
+            this.flagT = 0;
+          }
+          this.updateAmbient(dt, up - upPrev, now);
+          this.render(now);
+        },
+        updateAmbient(dt, upDelta, now) {
+          for (const q of this.parts) {
+            q.x += q.vx * dt;
+            q.y += q.vy * dt;
+            q.life -= dt * (q.col === "smoke" ? 0.7 : 1.6);
+            if (q.pf) q.y += upDelta * q.pf;
+          }
+          this.parts = this.parts.filter((q) => q.life > 0);
+          if (this.parts.length > 240)
+            this.parts.splice(0, this.parts.length - 240);
+          /* دنباله‌دارها */
+          this.cometT -= dt;
+          if (this.cometT <= 0) {
+            this.cometT = 7 + Math.random() * 6;
+            const dir = Math.random() < 0.5 ? 1 : -1;
+            this.comets.push({
+              x: dir > 0 ? -20 : this.w + 20,
+              y: Math.random() * this.h * 0.4,
+              vx: dir * (240 + Math.random() * 90),
+              vy: 80 + Math.random() * 40,
+              life: 1,
+            });
+          }
+          for (const c of this.comets) {
+            c.x += c.vx * dt;
+            c.y += c.vy * dt;
+            c.life -= dt * 0.35;
+          }
+          this.comets = this.comets.filter(
+            (c) => c.life > 0 && c.x > -60 && c.x < this.w + 60,
+          );
+        },
+        render(now) {
+          const { ctx, w, h } = this;
+          const pal = this.pal;
+          if (!ctx || !w) return;
+          const p = this.p,
+            t = now;
+          const A = this.alt(p),
+            up = A * this.TOTAL;
+          const spaceA = sstep(A, 0.05, 0.3);
+          const lift = sstep(p, 0.05, 0.15);
+          const land = sstep(p, 0.88, 0.953);
+          const landed = p >= 0.952;
+          const groundY = h * 0.84;
+
+          /* آسمان */
+          const top = lerpC(pal.skyT, pal.spT, spaceA),
+            bot = lerpC(pal.skyB, pal.spB, spaceA);
+          const grad = ctx.createLinearGradient(0, 0, 0, h);
+          grad.addColorStop(0, top);
+          grad.addColorStop(1, bot);
+          ctx.fillStyle = grad;
+          ctx.fillRect(0, 0, w, h);
+
+          /* ستاره‌ها */
+          const starVis = Math.min(
+            1,
+            spaceA + (isDark() ? 0.4 * (1 - spaceA) : 0),
+          );
+          if (starVis > 0.02) {
+            for (const L of this.stars) {
+              const span = h + 40;
+              for (const s of L.arr) {
+                const sy =
+                  ((((s.y + up * L.pf + t * 0.012 * L.pf) % span) + span) %
+                    span) -
+                  20;
+                const tw = RM ? 1 : 0.55 + 0.45 * Math.sin(t * 0.002 + s.ph);
+                ctx.globalAlpha = starVis * tw * (L.pf === 0.5 ? 1 : 0.75);
+                ctx.fillStyle = L.pf === 0.5 ? pal.star : pal.star2;
+                ctx.fillRect(s.x | 0, sy | 0, s.s, s.s);
+              }
+            }
+            ctx.globalAlpha = 1;
+          }
+          /* سحابی‌ها */
+          if (spaceA > 0.4) {
+            for (let i = 0; i < this.NEBS.length; i++) {
+              const nb = this.NEBS[i];
+              const sy = h * 0.35 + (up - nb.f * this.TOTAL) * 0.22;
+              if (sy < -260 || sy > h + 260) continue;
+              const sx = w * nb.xf;
+              ctx.globalAlpha = 0.07 * spaceA;
+              ctx.fillStyle = pal.pl[i];
+              ctx.fillRect(sx - 150, sy - 40, 300, 90);
+              ctx.fillRect(sx - 90, sy - 90, 190, 70);
+              ctx.fillRect(sx - 60, sy + 20, 150, 60);
+              ctx.globalAlpha = 1;
+            }
+          }
+          /* سیاره‌ها */
+          for (let i = 0; i < this.PLANETS.length; i++) {
+            const pl = this.PLANETS[i];
+            const diff = up - pl.f * this.TOTAL;
+            const py = pl.yf * h + diff;
+            if (py < -260 || py > h + 260) continue;
+            const near = clamp(1 - Math.abs(diff) / 2400, 0, 1);
+            const r = pl.r * (1 + near * 0.8);
+            const px = w * pl.xf + Math.sin(up * 0.0003 + i * 2) * 24;
+            ctx.globalAlpha = clamp(0.35 + near * 0.65, 0, 1);
+            if (pl.ring) {
+              ctx.fillStyle = pal.ring;
+              ctx.fillRect(px - r * 1.25, py - r * 0.3, r * 2.5, 5);
+            }
+            this.pxCircle(px, py, r, 4, pal.pl[i], pal.plSh[i]);
+            this.pxCircle(
+              px - r * 0.3,
+              py - r * 0.2,
+              Math.max(4, r * 0.22),
+              3,
+              pal.plSh[i],
+              pal.plSh[i],
+            );
+            this.pxCircle(
+              px + r * 0.35,
+              py + r * 0.3,
+              Math.max(3, r * 0.15),
+              3,
+              pal.plSh[i],
+              pal.plSh[i],
+            );
+            if (pl.ring) {
+              ctx.fillStyle = pal.ring;
+              ctx.fillRect(px - r * 1.35, py + r * 0.18, r * 2.7, 5);
+            }
+            if (this.fontReady && near > 0.1) {
+              ctx.font = '8px "Press Start 2P",monospace';
+              ctx.textAlign = "center";
+              ctx.fillStyle = pal.star;
+              ctx.globalAlpha *= near;
+              ctx.fillText(pl.tag, px, py - r - 16);
+            }
+            ctx.globalAlpha = 1;
+          }
+          /* سیاره‌ی مقصد */
+          const sa = sstep(land, 0.78, 0.96);
+          if (land > 0) {
+            const R = Math.max(w, h) * 0.85;
+            const surfY = groundY + (1 - land) * (R * 1.4);
+            this.pxCircle(
+              w * 0.5,
+              surfY + R,
+              R,
+              6,
+              pal.destF,
+              pal.destSh,
+              pal.destCap,
+            );
+            this.pxCircle(
+              w * 0.5 - w * 0.3,
+              surfY + 90,
+              26,
+              4,
+              pal.destSh,
+              pal.destSh,
+            );
+            this.pxCircle(
+              w * 0.5 + w * 0.26,
+              surfY + 150,
+              34,
+              4,
+              pal.destSh,
+              pal.destSh,
+            );
+            if (sa > 0) {
+              ctx.globalAlpha = sa;
+              /* پرچم */
+              const fx = w * 0.5 - Math.min(210, w * 0.2);
+              ctx.fillStyle = pal.base;
+              ctx.fillRect(fx, surfY - 38, 3, 38);
+              ctx.fillStyle = pal.pl[0];
+              ctx.fillRect(fx + 3, surfY - 38, 22, Math.round(14 * this.flagT));
+              /* پایگاه */
+              const bx = w * 0.5 + Math.min(200, w * 0.24);
+              ctx.fillStyle = pal.base;
+              ctx.fillRect(bx - 46, surfY - 20, 92, 20);
+              for (let i = 0; i < 4; i++) {
+                const lit = RM || Math.floor(t / 700 + i) % 3 !== 0;
+                ctx.fillStyle = lit ? pal.baseLit : pal.base;
+                ctx.fillRect(bx - 38 + i * 20, surfY - 14, 10, 8);
+              }
+              this.pxCircle(bx + 72, surfY, 24, 3, pal.base, pal.base);
+              ctx.fillStyle = pal.base;
+              ctx.fillRect(bx - 62, surfY - 52, 3, 32);
+              const blink = RM ? 1 : Math.floor(t / 500) % 2;
+              ctx.fillStyle = blink ? pal.flameY : pal.base;
+              ctx.fillRect(bx - 63, surfY - 58, 5, 6);
+              ctx.globalAlpha = 1;
+            }
+          }
+          /* ابرها */
+          const clA = sstep(A, 0.02, 0.1) * (1 - sstep(A, 0.24, 0.36));
+          if (clA > 0.02) {
+            ctx.globalAlpha = clA;
+            ctx.fillStyle = pal.cloud;
+            for (const c of this.clouds) {
+              const sy = c.yw - up + h * 0.5;
+              if (sy < -90 || sy > h + 90) continue;
+              const xx =
+                ((((c.x * w + (RM ? 0 : t * 0.006)) % (w + 160)) + (w + 160)) %
+                  (w + 160)) -
+                80;
+              const s = c.s;
+              ctx.fillRect(xx, sy, Math.floor(90 * s), 16);
+              ctx.fillRect(xx + 16 * s, sy - 12, Math.floor(52 * s), 12);
+              ctx.fillRect(xx + 44 * s, sy - 7, Math.floor(34 * s), 7);
+            }
+            ctx.globalAlpha = 1;
+          }
+          /* زمین و سکو */
+          const gY = groundY + up;
+          if (gY < h + 320) {
+            this.pxCircle(w * 0.18, gY + 46, 110, 5, pal.hillB, pal.hillB);
+            this.pxCircle(w * 0.85, gY + 60, 150, 5, pal.hillA, pal.hillA);
+            ctx.fillStyle = pal.ground;
+            ctx.fillRect(0, gY, w, h - gY + 400);
+            ctx.fillStyle = pal.groundTop;
+            ctx.fillRect(0, gY, w, 6);
+            const px0 = w * 0.5;
+            ctx.fillStyle = pal.pad;
+            ctx.fillRect(px0 - 78, gY - 16, 156, 16);
+            ctx.fillStyle = pal.padD;
+            for (let i = 0; i < 13; i++)
+              ctx.fillRect(px0 - 78 + i * 12, gY - 16, 6, 16);
+            ctx.fillRect(px0 - 70, gY, 12, 14);
+            ctx.fillRect(px0 + 58, gY, 12, 14);
+            /* برج */
+            const gx = px0 + 96;
+            ctx.fillStyle = pal.gantry;
+            ctx.fillRect(gx - 6, gY - 170, 12, 170);
+            ctx.fillStyle = pal.padD;
+            for (let yy = gY - 160; yy < gY - 10; yy += 18)
+              ctx.fillRect(gx - 10, yy, 20, 3);
+            ctx.fillStyle = pal.gantry;
+            ctx.fillRect(px0 + 30, gY - 150, gx - px0 - 24, 6);
+            const bl = RM ? 1 : Math.floor(t / 600) % 2;
+            ctx.fillStyle = bl ? pal.flameY : pal.padD;
+            ctx.fillRect(gx - 4, gY - 178, 8, 8);
+            if (isDark()) {
+              ctx.globalAlpha = 0.09;
+              ctx.fillStyle = "#ffe9a8";
+              ctx.beginPath();
+              ctx.moveTo(px0 - 140, gY - 120);
+              ctx.lineTo(px0 - 30, gY - 20);
+              ctx.lineTo(px0 - 180, gY - 20);
+              ctx.closePath();
+              ctx.fill();
+              ctx.beginPath();
+              ctx.moveTo(gx + 50, gY - 130);
+              ctx.lineTo(px0 + 40, gY - 20);
+              ctx.lineTo(gx + 90, gY - 20);
+              ctx.closePath();
+              ctx.fill();
+              ctx.globalAlpha = 1;
+            }
+            /* بخار سکو */
+            if (p > 0.02 && p < 0.16 && !RM) {
+              for (let i = 0; i < 2; i++)
+                this.parts.push({
+                  x: px0 + (Math.random() * 2 - 1) * 46,
+                  y: gY - 6,
+                  vx: (Math.random() - 0.5) * 70,
+                  vy: -(10 + Math.random() * 26),
+                  r: 6 + Math.random() * 8,
+                  life: 0.9,
+                  col: "smoke",
+                  pf: 1,
+                });
+            }
+          }
+          /* موقعیت موشک */
+          const cruiseX = lerp(w * 0.5, w * 0.42, sstep(p, 0.15, 0.3));
+          const rx = lerp(cruiseX, w * 0.5, land);
+          let rb;
+          if (land > 0) rb = lerp(h * 0.42, groundY, land);
+          else rb = lerp(groundY, h * 0.55, lift);
+          const bobF = sstep(p, 0.18, 0.3) * (1 - land);
+          if (!landed && !RM) rb += Math.sin(t * 0.0011) * 4 * bobF;
+          const sway = landed || RM ? 0 : Math.sin(t * 0.0009) * 0.03 * bobF;
+          /* دود اگزوست */
+          const thrust = landed ? 0 : land > 0 ? 0.5 : 0.12 + lift * 0.88;
+          if (thrust > 0.3 && !RM && !landed) {
+            for (let i = 0; i < 2; i++)
+              this.parts.push({
+                x: rx + (Math.random() * 2 - 1) * 6,
+                y: rb + 10,
+                vx: (Math.random() - 0.5) * 36,
+                vy: 120 + Math.random() * 120,
+                r: 3 + Math.random() * 3,
+                life: 0.4 + Math.random() * 0.3,
+                col: "fire",
+                pf: 0,
+              });
+          }
+          /* سایه روی زمین */
+          if (lift < 0.4 && up < 40) {
+            ctx.globalAlpha = 0.22 * (1 - lift / 0.4);
+            ctx.fillStyle = "#000";
+            ctx.fillRect(rx - 20, gY - 3, 40, 4);
+            ctx.globalAlpha = 1;
+          }
+          if (landed) {
+            ctx.globalAlpha = 0.22;
+            ctx.fillStyle = "#000";
+            ctx.fillRect(rx - 22, groundY - 3, 44, 4);
+            ctx.globalAlpha = 1;
+          }
+          /* موشک */
+          this.drawRocket(rx, rb, thrust, t, sway);
+          /* فضانورد */
+          if (landed && sa > 0) {
+            const prog = RM ? 1 : clamp((this.astroT - 0.5) / 2.2, 0, 1);
+            const ax = lerp(rx + 26, rx + 96, prog);
+            const frame =
+              RM || prog >= 1
+                ? AST_STAND
+                : Math.floor(t / 150) % 2
+                  ? AST_B
+                  : AST_A;
+            drawMat(
+              ctx,
+              frame,
+              AST_P,
+              Math.floor(ax),
+              Math.floor(groundY - 28),
+              2,
+            );
+          }
+          /* دنباله‌دارها */
+          if (!RM && spaceA > 0.7) {
+            for (const c of this.comets) {
+              ctx.fillStyle = pal.star;
+              for (let k = 0; k < 5; k++) {
+                ctx.globalAlpha = c.life * (1 - k / 5) * spaceA;
+                ctx.fillRect(
+                  Math.floor(c.x - c.vx * 0.02 * k),
+                  Math.floor(c.y - c.vy * 0.02 * k),
+                  3,
+                  3,
+                );
+              }
+            }
+            ctx.globalAlpha = 1;
+          }
+          /* ذرات */
+          for (const q of this.parts) {
+            const a = clamp(q.life, 0, 1);
+            ctx.globalAlpha = a * (q.col === "smoke" ? 0.5 : 0.9);
+            if (q.col === "smoke")
+              ctx.fillStyle = isDark() ? "#7b86ad" : "#ffffff";
+            else if (q.col === "fire")
+              ctx.fillStyle = q.life > 0.25 ? pal.flameY : pal.flameO;
+            else ctx.fillStyle = q.col;
+            const r =
+              q.col === "smoke"
+                ? q.r * (1 + (1 - a) * 0.6)
+                : Math.max(2, q.r * a);
+            ctx.fillRect(
+              Math.floor(q.x - r / 2),
+              Math.floor(q.y - r / 2),
+              Math.max(2, Math.floor(r)),
+              Math.max(2, Math.floor(r)),
+            );
+          }
+          ctx.globalAlpha = 1;
+        },
+        drawRocket(x, yBottom, thrust, t, rot) {
+          const ctx = this.ctx,
+            pal = this.pal;
+          const s = this.w < 640 ? 3 : 4;
+          const rw = 12 * s,
+            rh = 23 * s;
+          ctx.save();
+          ctx.translate(Math.round(x), Math.round(yBottom));
+          if (rot) ctx.rotate(rot);
+          if (thrust > 0.05) {
+            const L =
+              (8 + thrust * 56) *
+              (RM ? 1 : 0.92 + (Math.floor(t / 55) % 2) * 0.16);
+            const n = Math.max(2, Math.floor(L / 4));
+            for (let i = 0; i < n; i++) {
+              const wr = Math.max(2, Math.round(((10 - i * 0.7) * s) / 4));
+              const f = i / n;
+              ctx.fillStyle =
+                f < 0.28 ? "#fff6d8" : f < 0.62 ? pal.flameY : pal.flameO;
+              ctx.fillRect(
+                Math.round(-wr / 2),
+                i * 4,
+                wr,
+                4 + (RM ? 0 : Math.floor(t / 70 + i) % 2),
+              );
+            }
+          }
+          drawMat(ctx, ROCKET, ROCKET_P, -rw / 2, -rh, s);
+          ctx.restore();
+        },
+      };
+
+      /* ═════════ افکت تایپ + صدا ═════════ */
+      function typeInto(el, text, speed = 24) {
+        if (el.dataset.done) return;
+        el.dataset.done = "1";
+        if (RM) {
+          el.textContent = text;
+          return;
+        }
+        el.textContent = "";
+        let i = 0;
+        el._iv = setInterval(() => {
+          i++;
+          el.textContent = text.slice(0, i);
+          if (i % 3 === 0) Sound.key();
+          if (i >= text.length) {
+            clearInterval(el._iv);
+            el.textContent = text;
+          }
+        }, speed);
+        const host =
+          el.closest("section, article, details, .lift-chip, .card") ||
+          el.parentElement;
+        if (host)
+          host.addEventListener(
+            "click",
+            function skip() {
+              clearInterval(el._iv);
+              el.textContent = text;
+            },
+            { once: true },
+          );
+      }
+      function initTyping() {
+        const io = new IntersectionObserver(
+          (ents) => {
+            ents.forEach((en) => {
+              if (!en.isIntersecting) return;
+              io.unobserve(en.target);
+              typeInto(en.target, en.target.dataset.type);
+            });
+          },
+          { threshold: 0.3 },
+        );
+        $$("[data-type]").forEach((el) => io.observe(el));
+        $$("#faq details").forEach((d) => {
+          d.addEventListener("toggle", () => {
+            if (d.open) {
+              const p = d.querySelector("p");
+              if (p && p.dataset.type) {
+                p.dataset.done = "";
+                typeInto(p, p.dataset.type);
+              }
+            }
+          });
+        });
+      }
+
+      /* ═════════ نمونه‌کارها ═════════ */
+      const WORKS = [
+        {
+          t: "فروشگاه پیکسل‌مارکت",
+          cat: "ONLINE SHOP — 1403",
+          seed: 11,
+          pts: "100",
+          desc: "فروشگاه آنلاین پوشاک با جست‌وجوی زنده و صفحه‌ی محصول قابل شخصی‌سازی؛ نرخ تبدیل پس از راه‌اندازی دو برابر شد.",
+          tags: ["طراحی UI", "فروشگاه", "بهینه‌سازی تبدیل"],
+        },
+        {
+          t: "آتلیه لمیز",
+          cat: "BRANDING — 1402",
+          seed: 23,
+          pts: "300",
+          desc: "هویت بصری کامل آتلیه‌ی عکاسی: لوگوتایپ سفارشی، پالت محدود و نظام نشانه‌گذاری چاپ و دیجیتال.",
+          tags: ["لوگوتایپ", "هویت بصری", "چاپ"],
+        },
+        {
+          t: "کافه دارک‌روست",
+          cat: "WEBSITE — 1403",
+          seed: 37,
+          pts: "500",
+          desc: "وب‌سایت معرفی کافه با منوی زنده، رزرو میز و فروش قهوه؛ به‌همراه پنل مدیریت ساده.",
+          tags: ["وب‌سایت", "رزرو", "پنل مدیریت"],
+        },
+        {
+          t: "استارتاپ ویتا",
+          cat: "WEB APP — 1404",
+          seed: 53,
+          pts: "700",
+          desc: "وب‌اپ سلامت با پروفایل کاربر، نمودارهای پیشرفت و اشتراک ماهانه؛ فرانت‌اند سبک روی API موجود.",
+          tags: ["وب‌اپ", "اشتراک", "داشبورد"],
+        },
+        {
+          t: "جشنواره بازی‌سازان",
+          cat: "EVENT — 1403",
+          seed: 71,
+          pts: "1000",
+          desc: "پلتفرم ثبت‌نام و رأی‌گیری جشنواره با پشتیبانی هم‌زمان هزاران کاربر در شب اختتامیه.",
+          tags: ["رویداد", "رأی‌گیری", "بار بالا"],
+        },
+        {
+          t: "پلتفرم کدکده",
+          cat: "EDTECH — 1404",
+          seed: 97,
+          pts: "5000",
+          desc: "پلتفرم آموزش برنامه‌نویسی با پخش‌کننده‌ی اختصاصی و تمرین تعاملی؛ میزبان بیش از ده هزار دانشجو.",
+          tags: ["پلتفرم", "آموزش", "ویدئو"],
+        },
+      ];
+      const Mocks = {
+        list: [],
+        draw(cv, seed) {
+          const ctx = cv.getContext("2d");
+          if (!ctx) return;
+          const W = cv.width,
+            H = cv.height;
+          const c = {
+            bg: cssVar("--panel"),
+            dim: cssVar("--panel2"),
+            mid: cssVar("--line2"),
+            ink: cssVar("--ink"),
+            acc: cssVar("--acc"),
+          };
+          const rnd = mulberry32(seed);
+          ctx.fillStyle = c.bg;
+          ctx.fillRect(0, 0, W, H);
+          ctx.fillStyle = c.ink;
+          ctx.fillRect(0, 0, W, 2);
+          ctx.fillRect(0, H - 2, W, 2);
+          ctx.fillRect(0, 0, 2, H);
+          ctx.fillRect(W - 2, 0, 2, H);
+          ctx.fillRect(2, 2, W - 4, 5);
+          ctx.fillStyle = c.bg;
+          for (let i = 0; i < 3; i++) ctx.fillRect(4 + i * 4, 3, 2, 3);
+          ctx.fillStyle = c.acc;
+          ctx.fillRect(2, 9, W - 4, 6);
+          const rows = [
+            [18, 8],
+            [29, 6],
+            [38, 10],
+          ];
+          rows.forEach(([y, h]) => {
+            let x = 3;
+            while (x < W - 5) {
+              const wd = 6 + Math.floor(rnd() * 16),
+                r = rnd();
+              ctx.fillStyle = r < 0.2 ? c.ink : r < 0.55 ? c.mid : c.dim;
+              ctx.fillRect(x, y, Math.min(wd, W - 5 - x), h);
+              x += wd + 2;
+            }
+          });
+          const cw = Math.floor((W - 8) / 4);
+          for (let i = 0; i < 4; i++) {
+            ctx.fillStyle = i === 1 ? c.acc : c.mid;
+            ctx.fillRect(3 + i * (cw + 1), H - 12, cw, 9);
+          }
+        },
+        redrawAll() {
+          this.list.forEach((o) => this.draw(o.cv, o.seed));
+        },
+        register(cv, seed) {
+          this.list.push({ cv, seed });
+          this.draw(cv, seed);
+        },
+      };
+      function initWorks() {
+        $$("#capGrid .cap").forEach((btn, i) => {
+          Mocks.register(btn.querySelector("canvas"), WORKS[i].seed);
+          btn.addEventListener("click", () => openWork(i));
+        });
+        const modal = $("#workModal");
+        function openWork(i) {
+          const wk = WORKS[i];
+          $("#wmCat").textContent = wk.cat;
+          $("#wmTitle").textContent = wk.t;
+          $("#wmDesc").textContent = wk.desc;
+          $("#wmTags").innerHTML = wk.tags
+            .map((t) => `<span>${t}</span>`)
+            .join("");
+          $("#wmPts").textContent = "SCORE +" + wk.pts;
+          Mocks.draw($("#wmCanvas"), wk.seed);
+          modal.classList.add("open");
+          document.body.style.overflow = "hidden";
+          modal.querySelector(".pxbtn").focus();
+          Sound.ok();
+          if (G && !RM)
+            G.fromTo(
+              ".modal-panel",
+              { scale: 0.94, opacity: 0 },
+              { scale: 1, opacity: 1, duration: 0.15, ease: "none" },
+            );
+        }
+        const close = () => {
+          modal.classList.remove("open");
+          document.body.style.overflow = "";
+          Sound.blip();
+        };
+        modal
+          .querySelectorAll("[data-close]")
+          .forEach((b) => b.addEventListener("click", close));
+        document.addEventListener("keydown", (e) => {
+          if (e.key === "Escape" && modal.classList.contains("open")) close();
+        });
+      }
+
+      /* ═════════ ابزارها/آمار/قیمت/تماس ═════════ */
+      const TECH = [
+        ["HTML5", "زبان ساختار وب؛ دیوارهای هر صحنه.", "#e2543e"],
+        ["CSS3", "استایل، انیمیشن و جان بصری صفحه.", "#2a9d8f"],
+        ["JavaScript", "مغز تعامل؛ همه‌چیزِ زنده اینجاست.", "#d9822b"],
+        ["TypeScript", "جاواسکریپتِ بزرگ‌شده و منظم.", "#b8503d"],
+        ["Python", "زبان مورد علاقه‌ی بک‌اند ما.", "#7a5cb8"],
+        ["Django", "چارچوب وبِ امن و سریع.", "#4a8a5f"],
+        ["Tailwind CSS", "استایل کارآمد و منسجم.", "#2a9d8f"],
+        ["Node.js", "جاواسکریپت سمت سرور.", "#4a8a5f"],
+        ["Three.js", "سه‌بعدیِ سبک در مرورگر.", "#e2543e"],
+        ["GSAP", "انیمیشن حرفه‌ای خط زمانی.", "#d9822b"],
+        ["Figma", "میز طراحی و همکاری تیمی.", "#7a5cb8"],
+        ["Docker", "بسته‌بندی و استقرار بی‌دردسر.", "#5d6b84"],
+      ];
+      function initTech() {
+        $("#arsGrid").innerHTML = TECH.map(
+          ([n, d, c]) => `
+    <div class="slot" tabindex="0" style="--slot:${c}" aria-label="${n}: ${d}">
+      <span class="s-ico" aria-hidden="true">${n[0]}</span>
+      <span class="s-n">${n}</span>
+      <span class="tip" role="tooltip">${d}</span>
+    </div>`,
+        ).join("");
+      }
+      function initStats() {
+        const io = new IntersectionObserver(
+          (en) => {
+            if (!en[0].isIntersecting) return;
+            io.disconnect();
+            $$("#teleGrid .t-n").forEach((el, i) => {
+              const target = +el.dataset.n,
+                suf = el.dataset.suf || "";
+              if (RM) {
+                el.textContent = target + suf;
+                return;
+              }
+              let cur = 0;
+              setTimeout(() => {
+                const iv = setInterval(() => {
+                  cur += Math.max(1, Math.ceil(target / 28));
+                  if (cur >= target) {
+                    cur = target;
+                    clearInterval(iv);
+                  }
+                  el.textContent = cur + suf;
+                }, 34);
+              }, i * 150);
+            });
+            Sound.ok();
+          },
+          { threshold: 0.35 },
+        );
+        io.observe($("#teleGrid"));
+      }
+      const Pricing = { plan: "VOYAGER" };
+      function initPricing() {
+        const cards = $$(".ship-card");
+        cards.forEach((c) =>
+          c.addEventListener("click", () => {
+            cards.forEach((x) => {
+              x.classList.toggle("sel", x === c);
+              x.setAttribute("aria-pressed", String(x === c));
+            });
+            Pricing.plan = c.dataset.plan;
+            const note = $("#planNote");
+            note.textContent = `کلاس انتخابی: ${Pricing.plan} — ${c.dataset.price}`;
+            note.classList.add("show");
+            Sound.blip();
+          }),
+        );
+        $("#fleetGo").addEventListener("click", () => {
+          Sound.ok();
+          toast(`کلاس ${Pricing.plan} در فرم مأموریت ثبت شد.`);
+          scrollToId("contact");
+        });
+      }
+      function initContact() {
+        $("#contactForm").addEventListener("submit", (e) => {
+          e.preventDefault();
+          const form = e.target;
+          if (!form.checkValidity()) {
+            form.reportValidity();
+            Sound.err();
+            toast("چند فیلدِ مأموریت خالی مانده!");
+            return;
+          }
+          Sound.ok();
+          toast("پیام به پایگاه رسید! حداکثر تا ۲۴ ساعتِ کاری پاسخ می‌دهیم.");
+          form.reset();
+        });
+      }
+
+      /* ═════════ جدول رکوردها ═════════ */
+      const LDB = {
+        data: { pac: [], tank: [], tetris: [] },
+        SEEDS: {
+          pac: [
+            ["آرش", 480],
+            ["نگار", 390],
+            ["سام", 300],
+            ["مینا", 220],
+            ["کیان", 140],
+          ],
+          tank: [
+            ["بردیا", 1250],
+            ["سارا", 900],
+            ["امیر", 650],
+            ["لیلا", 400],
+            ["پویا", 200],
+          ],
+          tetris: [
+            ["الهام", 7600],
+            ["راستی", 5100],
+            ["کاوه", 3400],
+            ["درسا", 1800],
+            ["یاسر", 900],
+          ],
+        },
+        load() {
+          for (const k of Object.keys(this.data)) {
+            let arr = null;
+            try {
+              arr = JSON.parse(store.get("lr_lb_" + k) || "null");
+            } catch (e) {}
+            if (!Array.isArray(arr) || !arr.length)
+              arr = this.SEEDS[k].map(([n, s]) => ({ n, s }));
+            this.data[k] = arr.slice(0, 5);
+          }
+        },
+        qualifies(k, s) {
+          const b = this.data[k];
+          return b.length < 5 || s > b[b.length - 1].s;
+        },
+        add(k, n, s) {
+          const b = this.data[k];
+          b.push({ n, s });
+          b.sort((a, b) => b.s - a.s);
+          const cut = b.slice(0, 5);
+          this.data[k] = cut;
+          try {
+            store.set("lr_lb_" + k, JSON.stringify(cut));
+          } catch (e) {}
+          for (let i = 0; i < cut.length; i++)
+            if (cut[i].n === n && cut[i].s === s) return i + 1;
+          return 5;
+        },
+        myName() {
+          return store.get("lr_name") || "";
+        },
+        saveName(n) {
+          store.set("lr_name", n);
+        },
+      };
+
+      /* ═════════ بازی ۱: پک‌کریدور ═════════ */
+      const PACMAP = [
+        "###############",
+        "#....#...#....#",
+        "#.##.#.#.#.##.#",
+        "#.#.........#.#",
+        "#.#.###.###.#.#",
+        "#G....#.#....G#",
+        "#.#.###.###.#.#",
+        "#.#.........#.#",
+        "#.##.#.#.#.##.#",
+        "#....#...#....#",
+        "###############",
+      ];
+      const Pac = {
+        key: "pac",
+        T: 14,
+        map: null,
+        dots: null,
+        total: 0,
+        eaten: 0,
+        player: null,
+        ghosts: null,
+        lives: 3,
+        score: 0,
+        elapsed: 0,
+        freeze: 0,
+        stepT: 0,
+        gstep: [0, 0],
+        reset(full) {
+          this.map = PACMAP.map((r) => r.split(""));
+          this.dots = new Set();
+          this.eaten = 0;
+          for (let r = 0; r < this.map.length; r++)
+            for (let c = 0; c < this.map[r].length; c++) {
+              if (this.map[r][c] === ".") this.dots.add(c + "," + r);
+              if (this.map[r][c] === "G") this.map[r][c] = " ";
+            }
+          this.total = this.dots.size;
+          this.ghosts = [
+            { c: 1, r: 5, px: 0, py: 0, col: "#e05b4a", stepT: 0, int: 0.16 },
+            { c: 13, r: 5, px: 0, py: 0, col: "#4f8fd0", stepT: 0, int: 0.13 },
+          ];
+          this.place();
+          if (full) {
+            this.lives = 3;
+            this.score = 0;
+          }
+          this.elapsed = 0;
+          this.freeze = 0;
+          this.stepT = 0;
+          this.gstep = [0, 0];
+        },
+        place() {
+          const p =
+            this.player ||
+            (this.player = { c: 7, r: 9, px: 0, py: 0, want: null, dir: null });
+          p.c = 7;
+          p.r = 9;
+          p.want = null;
+          p.dir = null;
+          p.px = p.c * this.T + 2;
+          p.py = p.r * this.T + 2;
+          for (const g of this.ghosts) {
+            g.px = g.c * this.T + 2;
+            g.py = g.r * this.T + 2;
+            g.dir = null;
+            g.stepT = 0;
+          }
+        },
+        walkable(c, r) {
+          if (r < 0 || r >= this.map.length || c < 0 || c >= this.map[r].length)
+            return false;
+          return this.map[r][c] !== "#";
+        },
+        key(k, down) {
+          if (!down) return;
+          const m = {
+            ArrowLeft: "l",
+            ArrowRight: "r",
+            ArrowUp: "u",
+            ArrowDown: "d",
+          };
+          if (m[k]) this.player.want = m[k];
+        },
+        action() {},
+        update(dt) {
+          if (this.freeze > 0) {
+            this.freeze -= dt;
+            return;
+          }
+          this.elapsed += dt;
+          const p = this.player;
+          this.stepT += dt;
+          while (this.stepT >= 0.115) {
+            this.stepT -= 0.115;
+            this.step(p);
+          }
+          this.gstep[0] += dt;
+          this.gstep[1] += dt;
+          while (this.gstep[0] >= this.ghosts[0].int) {
+            this.gstep[0] -= this.ghosts[0].int;
+            this.stepGhost(this.ghosts[0]);
+          }
+          while (this.gstep[1] >= this.ghosts[1].int) {
+            this.gstep[1] -= this.ghosts[1].int;
+            this.stepGhost(this.ghosts[1]);
+          }
+          const k = Math.min(1, dt * 16);
+          p.px += (p.c * this.T + 2 - p.px) * k;
+          p.py += (p.r * this.T + 2 - p.py) * k;
+          for (const g of this.ghosts) {
+            g.px += (g.c * this.T + 2 - g.px) * k;
+            g.py += (g.r * this.T + 2 - g.py) * k;
+          }
+          for (const g of this.ghosts) {
+            if (Math.hypot(g.px - p.px, g.py - p.py) < 10) {
+              this.caught();
+              break;
+            }
+          }
+        },
+        step(p) {
+          const D = { l: [-1, 0], r: [1, 0], u: [0, -1], d: [0, 1] };
+          if (p.want && this.walkable(p.c + D[p.want][0], p.r + D[p.want][1]))
+            p.dir = p.want;
+          if (p.dir && this.walkable(p.c + D[p.dir][0], p.r + D[p.dir][1])) {
+            p.c += D[p.dir][0];
+            p.r += D[p.dir][1];
+            const key = p.c + "," + p.r;
+            if (this.dots.has(key)) {
+              this.dots.delete(key);
+              this.eaten++;
+              this.score += 10;
+              Sound.eat();
+              if (this.eaten >= this.total) this.win();
+            }
+          }
+        },
+        stepGhost(g) {
+          const D = { l: [-1, 0], r: [1, 0], u: [0, -1], d: [0, 1] };
+          const opp = { l: "r", r: "l", u: "d", d: "u" };
+          const opts = Object.keys(D).filter(
+            (d) =>
+              this.walkable(g.c + D[d][0], g.r + D[d][1]) &&
+              d !== opp[g.dir || ""],
+          );
+          const all = Object.keys(D).filter((d) =>
+            this.walkable(g.c + D[d][0], g.r + D[d][1]),
+          );
+          let ch;
+          if (!opts.length && !all.length) return;
+          if (!opts.length) ch = all[0];
+          else if (Math.random() < 0.7) {
+            let bd = 1e9;
+            for (const d of opts) {
+              const dx = g.c + D[d][0] - this.player.c,
+                dy = g.r + D[d][1] - this.player.r;
+              const dist = dx * dx + dy * dy;
+              if (dist < bd) {
+                bd = dist;
+                ch = d;
+              }
+            }
+          } else ch = opts[Math.floor(Math.random() * opts.length)];
+          g.dir = ch;
+          g.c += D[ch][0];
+          g.r += D[ch][1];
+        },
+        caught() {
+          this.lives--;
+          Sound.err();
+          this.freeze = 0.9;
+          this.place();
+          if (this.lives <= 0) {
+            Arcade.gameEnd({ win: false });
+          }
+        },
+        win() {
+          Arcade.gameEnd({ win: true, time: this.elapsed });
+        },
+        press(b) {
+          if ("udlr".includes(b)) this.player.want = b;
+        },
+        draw(ctx, t) {
+          const T = this.T;
+          const OX = Math.floor((320 - 15 * T) / 2),
+            OY = 34;
+          ctx.fillStyle = LCD.bg;
+          ctx.fillRect(0, 0, 320, 224);
+          /* HUD */
+          ctx.fillStyle = LCD.ink;
+          ctx.font = '8px "Press Start 2P",monospace';
+          ctx.textAlign = "left";
+          ctx.fillText("SCORE " + String(this.score).padStart(4, "0"), 8, 12);
+          ctx.textAlign = "right";
+          ctx.fillText(
+            "DOTS " +
+              String(Math.max(0, this.total - this.eaten)).padStart(2, "0"),
+            312,
+            12,
+          );
+          for (let i = 0; i < this.lives; i++)
+            drawMat(ctx, HEART, HEART_P, 196 + i * 15, 4, 1.5);
+          /* دیوارها */
+          for (let r = 0; r < this.map.length; r++)
+            for (let c = 0; c < this.map[r].length; c++) {
+              if (this.map[r][c] === "#") {
+                const x = OX + c * T,
+                  y = OY + r * T;
+                ctx.fillStyle = LCD.mid;
+                ctx.fillRect(x, y, T, T);
+                ctx.fillStyle = LCD.dim;
+                ctx.fillRect(x, y, T, 3);
+                ctx.fillRect(x, y, 3, T);
+                ctx.fillStyle = LCD.bg;
+                ctx.fillRect(x + T - 3, y, 3, T);
+                ctx.fillRect(x, y + T - 3, T, 3);
+              }
+            }
+          /* نقطه‌ها */
+          ctx.fillStyle = LCD.ink;
+          for (const key of this.dots) {
+            const [c, r] = key.split(",").map(Number);
+            ctx.fillRect(OX + c * T + T / 2 - 2, OY + r * T + T / 2 - 2, 4, 4);
+          }
+          /* بازیکن: نوش‌کروم */
+          const p = this.player;
+          const open = p.dir && Math.floor(t / 140) % 2 === 0 ? CHOM_O : CHOM_C;
+          ctx.save();
+          ctx.translate(OX + p.px + 6, OY + p.py + 6);
+          if (p.dir === "l") ctx.scale(-1, 1);
+          else if (p.dir === "u") ctx.rotate(-Math.PI / 2);
+          else if (p.dir === "d") ctx.rotate(Math.PI / 2);
+          drawMat(ctx, open, CHOM_P, -6, -6, 1);
+          ctx.restore();
+          /* روح‌ها */
+          const gm = Math.floor(t / 210) % 2 === 0 ? GHOST_A : GHOST_B;
+          for (const g of this.ghosts) {
+            drawMat(
+              ctx,
+              gm,
+              { K: LCD.ink, V: g.col, W: "#ffffff" },
+              OX + g.px + 1,
+              OY + g.py + 1,
+              1,
+            );
+          }
+          /* فلاشِ گرفته‌شدن */
+          if (this.freeze > 0 && Math.floor(t / 90) % 2 === 0) {
+            ctx.globalAlpha = 0.12;
+            ctx.fillStyle = LCD.ink;
+            ctx.fillRect(0, 0, 320, 224);
+            ctx.globalAlpha = 1;
+          }
+        },
+      };
+
+      /* ═══════════════ بازی ۲: نبرد تانک (آتاری) ═══════════════ */
+      const Tank = {
+        key: "tank",
+        COLS: 20,
+        ROWS: 13,
+        map: null,
+        player: null,
+        enemies: [],
+        bullets: [],
+        parts: [],
+        score: 0,
+        lives: 3,
+        wave: 0,
+        toSpawn: 0,
+        spawnT: 0,
+        spawnCount: 0,
+        freeze: 0,
+
+        reset(full) {
+          this.map = this.buildMap();
+          this.player = { x: 9.5, y: 11.5, dir: "u", cool: 0, inv: 0 };
+          this.enemies = [];
+          this.bullets = [];
+          this.parts = [];
+          this.spawnCount = 0;
+          this.freeze = 0;
+          if (full) {
+            this.score = 0;
+            this.lives = 3;
+          }
+          this.startWave();
+        },
+        buildMap() {
+          const R = this.ROWS,
+            C = this.COLS;
+          const m = Array.from({ length: R }, () => Array(C).fill(0));
+          const brick = (c, r) => {
+            if (r >= 0 && r < R && c >= 0 && c < C) m[r][c] = 1;
+          };
+          const steel = (c, r) => {
+            if (r >= 0 && r < R && c >= 0 && c < C) m[r][c] = 2;
+          };
+          /* قلعه‌ی مرکزی فولادی */
+          steel(9, 5);
+          steel(10, 5);
+          steel(9, 6);
+          steel(10, 6);
+          /* خوشه‌های آجری */
+          for (let k = 0; k < 4; k++) {
+            const bx = 2 + k * 5,
+              by = 3 + (k % 2) * 3;
+            for (let i = 0; i < 3; i++) {
+              brick(bx + i, by);
+              brick(bx + i, by + 1);
+            }
+          }
+          /* دیوارهای کناری */
+          for (let r = 4; r < 9; r += 2) {
+            brick(0, r);
+            brick(19, r);
+            brick(1, r);
+            brick(18, r);
+          }
+          /* سنگر پایین */
+          brick(7, 10);
+          brick(8, 10);
+          brick(11, 10);
+          brick(12, 10);
+          brick(7, 9);
+          brick(12, 9);
+          /* پاشش متقارن تصادفی */
+          for (let i = 0; i < 8; i++) {
+            const c = 1 + Math.floor(Math.random() * 9),
+              r = 2 + Math.floor(Math.random() * 8);
+            brick(c, r);
+            brick(19 - c, r);
+          }
+          /* بازکردن ناحیه‌های ظهور */
+          const clear = (c, r) => {
+            for (let dy = -1; dy <= 1; dy++)
+              for (let dx = -1; dx <= 1; dx++) {
+                const cc = c + dx,
+                  rr = r + dy;
+                if (rr >= 0 && rr < R && cc >= 0 && cc < C) m[rr][cc] = 0;
+              }
+          };
+          clear(0, 0);
+          clear(9, 0);
+          clear(19, 0);
+          clear(9, 11);
+          return m;
+        },
+        startWave() {
+          this.wave++;
+          this.toSpawn = Math.min(3 + this.wave, 7);
+          this.spawnT = 0.6;
+        },
+        solid(c, r) {
+          if (r < 0 || r >= this.ROWS || c < 0 || c >= this.COLS) return true;
+          return this.map[r][c] > 0;
+        },
+        canBe(x, y) {
+          const cs = [Math.floor(x - 0.4), Math.floor(x + 0.4)];
+          const rs = [Math.floor(y - 0.4), Math.floor(y + 0.4)];
+          for (const c of cs)
+            for (const r of rs) if (this.solid(c, r)) return false;
+          return true;
+        },
+        tryMove(o, dx, dy) {
+          if (this.canBe(o.x + dx, o.y + dy)) {
+            o.x += dx;
+            o.y += dy;
+            return true;
+          }
+          if (dx && this.canBe(o.x + dx, o.y)) {
+            o.x += dx;
+            return true;
+          }
+          if (dy && this.canBe(o.x, o.y + dy)) {
+            o.y += dy;
+            return true;
+          }
+          return false;
+        },
+        pickDir(e) {
+          let opts;
+          if (Math.random() < 0.65) {
+            const dx = this.player.x - e.x,
+              dy = this.player.y - e.y;
+            opts =
+              Math.abs(dx) > Math.abs(dy)
+                ? dx > 0
+                  ? ["r", "d", "u", "l"]
+                  : ["l", "d", "u", "r"]
+                : dy > 0
+                  ? ["d", "r", "l", "u"]
+                  : ["u", "r", "l", "d"];
+          } else {
+            opts = ["u", "d", "l", "r"];
+            shuffle(opts);
+          }
+          const D = { u: [0, -1], d: [0, 1], l: [-1, 0], r: [1, 0] };
+          for (const d of opts) {
+            if (this.canBe(e.x + D[d][0] * 0.6, e.y + D[d][1] * 0.6)) {
+              e.dir = d;
+              return;
+            }
+          }
+        },
+        spawnBullet(o) {
+          const D = { u: [0, -1], d: [0, 1], l: [-1, 0], r: [1, 0] }[o.dir];
+          this.bullets.push({
+            x: o.x + D[0] * 0.55,
+            y: o.y + D[1] * 0.55,
+            dx: D[0] * 8.5,
+            dy: D[1] * 8.5,
+            from: o === this.player ? "p" : "e",
+          });
+        },
+        shoot() {
+          const p = this.player;
+          if (p.cool > 0) return;
+          if (this.bullets.filter((b) => b.from === "p").length >= 2) return;
+          this.spawnBullet(p);
+          p.cool = 0.3;
+          Sound.shoot();
+        },
+        hitPlayer() {
+          this.lives--;
+          Sound.boom();
+          this.burst(this.player.x, this.player.y, 0);
+          this.player.x = 9.5;
+          this.player.y = 11.5;
+          this.player.dir = "u";
+          this.player.inv = 1.8;
+          if (this.lives <= 0) {
+            Arcade.gameEnd({ win: false });
+          } else this.freeze = 0.6;
+        },
+        burst(x, y, ci) {
+          for (let i = 0; i < 7; i++)
+            this.parts.push({
+              x,
+              y,
+              vx: (Math.random() - 0.5) * 5,
+              vy: (Math.random() - 0.5) * 5,
+              life: 0.5 + Math.random() * 0.3,
+              ci: (ci + (Math.random() < 0.5 ? 1 : 0)) % 4,
+            });
+        },
+        press(b) {
+          if (b === "A" || b === "FIRE" || b === "B") {
+            this.shoot();
+            return;
+          }
+          if ("udlr".includes(b)) {
+            const D = { u: [0, -1], d: [0, 1], l: [-1, 0], r: [1, 0] }[b];
+            this.player.dir = b;
+            this.tryMove(this.player, D[0] * 0.34, D[1] * 0.34);
+          }
+        },
+        update(dt) {
+          if (this.freeze > 0) {
+            this.freeze -= dt;
+            return;
+          }
+          const p = this.player;
+          p.cool = Math.max(0, p.cool - dt);
+          p.inv = Math.max(0, p.inv - dt);
+          /* حرکت بازیکن */
+          const sp = 3.8;
+          const MV = { u: [0, -1], d: [0, 1], l: [-1, 0], r: [1, 0] };
+          for (const d of ["u", "d", "l", "r"]) {
+            if (Arcade.held[d]) {
+              p.dir = d;
+              this.tryMove(p, MV[d][0] * sp * dt, MV[d][1] * sp * dt);
+              break;
+            }
+          }
+          /* برخورد بدنه‌ی دشمن */
+          if (p.inv <= 0) {
+            for (const e of this.enemies) {
+              if (Math.abs(e.x - p.x) < 0.75 && Math.abs(e.y - p.y) < 0.75) {
+                this.hitPlayer();
+                return;
+              }
+            }
+          }
+          /* دشمن‌ها */
+          const esp = Math.min(3.4, 1.9 + this.wave * 0.14);
+          for (const e of this.enemies) {
+            const D = MV[e.dir];
+            const moved = this.tryMove(e, D[0] * esp * dt, D[1] * esp * dt);
+            if (!moved || Math.random() < dt * 0.5) this.pickDir(e);
+            e.fireT -= dt;
+            if (e.fireT <= 0) {
+              e.fireT = 1.3 + Math.random() * 1.9;
+              const aligned =
+                Math.abs(e.x - p.x) < 0.6 || Math.abs(e.y - p.y) < 0.6;
+              if (
+                (aligned || Math.random() < 0.4) &&
+                this.bullets.filter((b) => b.from === "e").length < 6
+              )
+                this.spawnBullet(e);
+            }
+          }
+          /* ظهور موج */
+          if (this.toSpawn > 0) {
+            this.spawnT -= dt;
+            if (this.spawnT <= 0 && this.enemies.length < 3) {
+              this.spawnT = 1.5;
+              this.toSpawn--;
+              const spots = [
+                [0.5, 0.5],
+                [this.COLS - 0.5, 0.5],
+                [9.5, 0.5],
+              ];
+              const s = spots[this.spawnCount++ % 3];
+              this.enemies.push({
+                x: s[0],
+                y: s[1],
+                dir: "d",
+                fireT: 0.8 + Math.random(),
+              });
+            }
+          } else if (this.enemies.length === 0) {
+            this.score += 100;
+            Sound.jingle();
+            this.freeze = 0.8;
+            this.startWave();
+            return;
+          }
+          /* گلوله‌ها */
+          for (const b of this.bullets) {
+            b.x += b.dx * dt;
+            b.y += b.dy * dt;
+            if (
+              b.x < -0.2 ||
+              b.x > this.COLS + 0.2 ||
+              b.y < -0.2 ||
+              b.y > this.ROWS + 0.2
+            ) {
+              b.dead = true;
+              continue;
+            }
+            const c = Math.floor(b.x),
+              r = Math.floor(b.y);
+            if (this.solid(c, r)) {
+              b.dead = true;
+              if (this.map[r][c] === 1) {
+                this.map[r][c] = 0;
+                this.burst(b.x, b.y, 1);
+                Sound.hit();
+              }
+              continue;
+            }
+            if (b.from === "p") {
+              for (const e of this.enemies) {
+                if (Math.abs(e.x - b.x) < 0.55 && Math.abs(e.y - b.y) < 0.55) {
+                  b.dead = true;
+                  e.dead = true;
+                  this.score += 50;
+                  this.burst(e.x, e.y, 2);
+                  Sound.boom();
+                  break;
+                }
+              }
+            } else if (
+              p.inv <= 0 &&
+              Math.abs(p.x - b.x) < 0.55 &&
+              Math.abs(p.y - b.y) < 0.55
+            ) {
+              b.dead = true;
+              this.hitPlayer();
+              return;
+            }
+          }
+          this.bullets = this.bullets.filter((b) => !b.dead);
+          this.enemies = this.enemies.filter((e) => !e.dead);
+          /* ذرات انفجار */
+          for (const q of this.parts) {
+            q.x += q.vx * dt;
+            q.y += q.vy * dt;
+            q.life -= dt * 1.7;
+          }
+          this.parts = this.parts.filter((q) => q.life > 0);
+        },
+        drawTank(ctx, tx, ty, dir, body, tread, frame) {
+          const x = Math.round(tx),
+            y = Math.round(ty);
+          /* زنجیرها */
+          ctx.fillStyle = tread;
+          ctx.fillRect(x, y + 1, 4, 14);
+          ctx.fillRect(x + 12, y + 1, 4, 14);
+          ctx.fillStyle = LCD.bg;
+          const off = frame ? 3 : 0;
+          for (let i = 0; i < 14; i += 4) {
+            ctx.fillRect(x, y + 1 + ((i + off) % 14), 4, 1);
+            ctx.fillRect(x + 12, y + 1 + ((i + off) % 14), 4, 1);
+          }
+          /* بدنه */
+          ctx.fillStyle = body;
+          ctx.fillRect(x + 4, y + 2, 8, 12);
+          ctx.fillStyle = LCD.bg;
+          ctx.fillRect(x + 6, y + 4, 4, 3);
+          /* لوله */
+          ctx.fillStyle = body;
+          if (dir === "u") ctx.fillRect(x + 6, y - 3, 4, 8);
+          else if (dir === "d") ctx.fillRect(x + 6, y + 11, 4, 8);
+          else if (dir === "l") ctx.fillRect(x - 3, y + 6, 8, 4);
+          else ctx.fillRect(x + 11, y + 6, 8, 4);
+        },
+        draw(ctx, t) {
+          ctx.fillStyle = LCD.bg;
+          ctx.fillRect(0, 0, 320, 224);
+          /* HUD */
+          ctx.fillStyle = LCD.ink;
+          ctx.font = '8px "Press Start 2P",monospace';
+          ctx.textAlign = "left";
+          ctx.fillText("SCORE " + String(this.score).padStart(4, "0"), 8, 11);
+          ctx.fillText("WAVE " + String(this.wave).padStart(2, "0"), 112, 11);
+          ctx.textAlign = "right";
+          ctx.fillText("LEFT " + (this.enemies.length + this.toSpawn), 238, 11);
+          for (let i = 0; i < this.lives; i++)
+            drawMat(ctx, HEART, HEART_P, 250 + i * 15, 3, 1.5);
+          /* پس‌زمینه‌ی میدان */
+          ctx.fillStyle = LCD.dim;
+          ctx.globalAlpha = 0.18;
+          ctx.fillRect(0, 16, 320, 208);
+          ctx.globalAlpha = 1;
+          /* کاشی‌ها */
+          for (let r = 0; r < this.ROWS; r++)
+            for (let c = 0; c < this.COLS; c++) {
+              const v = this.map[r][c];
+              if (!v) continue;
+              const x = c * 16,
+                y = 16 + r * 16;
+              if (v === 1) {
+                /* آجر */
+                ctx.fillStyle = LCDSH[1];
+                ctx.fillRect(x, y, 16, 16);
+                ctx.fillStyle = LCD.bg;
+                ctx.fillRect(x, y + 7, 16, 1);
+                ctx.fillRect(x + 3, y, 1, 7);
+                ctx.fillRect(x + 11, y, 1, 7);
+                ctx.fillRect(x + 7, y + 8, 1, 8);
+                ctx.fillRect(x + 15, y + 8, 1, 8);
+              } else {
+                /* فولاد */
+                ctx.fillStyle = LCDSH[3];
+                ctx.fillRect(x, y, 16, 16);
+                ctx.fillStyle = LCDSH[2];
+                ctx.fillRect(x + 2, y + 2, 12, 12);
+                ctx.fillStyle = LCDSH[3];
+                ctx.fillRect(x + 5, y + 5, 6, 6);
+              }
+            }
+          /* ذرات */
+          for (const q of this.parts) {
+            ctx.globalAlpha = clamp(q.life, 0, 1);
+            ctx.fillStyle = LCDSH[q.ci];
+            ctx.fillRect(
+              Math.round(q.x * 16 - 2),
+              Math.round(16 + q.y * 16 - 2),
+              4,
+              4,
+            );
+          }
+          ctx.globalAlpha = 1;
+          /* گلوله‌ها */
+          for (const b of this.bullets) {
+            if (b.from === "p") {
+              ctx.fillStyle = LCD.ink;
+              ctx.fillRect(
+                Math.round(b.x * 16 - 2),
+                Math.round(16 + b.y * 16 - 2),
+                4,
+                4,
+              );
+            } else {
+              ctx.fillStyle = LCDSH[2];
+              ctx.fillRect(
+                Math.round(b.x * 16 - 2),
+                Math.round(16 + b.y * 16 - 2),
+                5,
+                5,
+              );
+            }
+          }
+          /* تانک‌های دشمن */
+          for (const e of this.enemies)
+            this.drawTank(
+              ctx,
+              e.x * 16 - 8,
+              16 + e.y * 16 - 8,
+              e.dir,
+              LCDSH[2],
+              LCDSH[3],
+              Math.floor(t / 120 + e.x) % 2,
+            );
+          /* تانک بازیکن (چشمک هنگام جانِ مجدد) */
+          const p = this.player;
+          if (p.inv <= 0 || Math.floor(t / 100) % 2 === 0)
+            this.drawTank(
+              ctx,
+              p.x * 16 - 8,
+              16 + p.y * 16 - 8,
+              p.dir,
+              LCDSH[0],
+              LCDSH[1],
+              Math.floor(t / 120) % 2,
+            );
+          /* بنر موج */
+          if (this.freeze > 0) {
+            ctx.fillStyle = LCD.ink;
+            ctx.font = '14px "Press Start 2P",monospace';
+            ctx.textAlign = "center";
+            ctx.fillText("WAVE " + this.wave, 160, 122);
+          }
+        },
+      };
+
+      /* ═══════════════ بازی ۳: بلوک‌فال (تتریس) ═══════════════ */
+      const Tetris = {
+        key: "tetris",
+        COLS: 10,
+        ROWS: 20,
+        CELL: 11,
+        OX: 16,
+        OY: 2,
+        grid: null,
+        cur: null,
+        next: null,
+        bag: [],
+        score: 0,
+        lines: 0,
+        level: 1,
+        dropAcc: 0,
+        dasDir: 0,
+        dasT: 0,
+        dasAcc: 0,
+        SH: {
+          I: [[1, 1, 1, 1]],
+          O: [
+            [1, 1],
+            [1, 1],
+          ],
+          T: [
+            [1, 1, 1],
+            [0, 1, 0],
+          ],
+          S: [
+            [0, 1, 1],
+            [1, 1, 0],
+          ],
+          Z: [
+            [1, 1, 0],
+            [0, 1, 1],
+          ],
+          J: [
+            [1, 0, 0],
+            [1, 1, 1],
+          ],
+          L: [
+            [0, 0, 1],
+            [1, 1, 1],
+          ],
+        },
+        reset(full) {
+          this.grid = Array.from({ length: this.ROWS }, () =>
+            Array(this.COLS).fill(0),
+          );
+          this.bag = [];
+          this.next = this.pull();
+          this.cur = this.pull();
+          if (full) {
+            this.score = 0;
+            this.lines = 0;
+            this.level = 1;
+          }
+          this.dropAcc = 0;
+          this.dasDir = 0;
+          this.dasT = 0;
+          this.dasAcc = 0;
+        },
+        pull() {
+          if (!this.bag.length) {
+            this.bag = Object.keys(this.SH);
+            shuffle(this.bag);
+          }
+          const k = this.bag.pop();
+          return { k, m: this.SH[k].map((r) => r.slice()), x: 3, y: 0 };
+        },
+        collide(m, x, y) {
+          for (let r = 0; r < m.length; r++)
+            for (let c = 0; c < m[r].length; c++) {
+              if (!m[r][c]) continue;
+              const gx = x + c,
+                gy = y + r;
+              if (gx < 0 || gx >= this.COLS || gy >= this.ROWS) return true;
+              if (gy >= 0 && this.grid[gy][gx]) return true;
+            }
+          return false;
+        },
+        rotate() {
+          const m = this.cur.m;
+          const n = m[0].length,
+            rows = m.length;
+          const rm = Array.from({ length: n }, () => Array(rows).fill(0));
+          for (let r = 0; r < rows; r++)
+            for (let c = 0; c < n; c++) rm[c][rows - 1 - r] = m[r][c];
+          for (const off of [0, -1, 1, -2, 2]) {
+            if (!this.collide(rm, this.cur.x + off, this.cur.y)) {
+              this.cur.m = rm;
+              this.cur.x += off;
+              Sound.blip();
+              return;
+            }
+          }
+        },
+        move(d) {
+          if (!this.collide(this.cur.m, this.cur.x + d, this.cur.y)) {
+            this.cur.x += d;
+            Sound.key();
+          }
+        },
+        drop() {
+          if (!this.collide(this.cur.m, this.cur.x, this.cur.y + 1)) {
+            this.cur.y++;
+            return true;
+          }
+          this.lock();
+          return false;
+        },
+        hardDrop() {
+          let n = 0;
+          while (!this.collide(this.cur.m, this.cur.x, this.cur.y + 1)) {
+            this.cur.y++;
+            n++;
+          }
+          this.score += n * 2;
+          this.lock();
+        },
+        lock() {
+          const { m, x, y, k } = this.cur;
+          for (let r = 0; r < m.length; r++)
+            for (let c = 0; c < m[r].length; c++) {
+              if (!m[r][c]) continue;
+              const gy = y + r;
+              if (gy < 0) {
+                Arcade.gameEnd({ win: false });
+                return;
+              }
+              this.grid[gy][x + c] = this.shadeOf(k);
+            }
+          /* پاک‌کردن خط‌ها */
+          let cleared = 0;
+          for (let r = this.ROWS - 1; r >= 0; r--) {
+            if (this.grid[r].every((v) => v)) {
+              this.grid.splice(r, 1);
+              this.grid.unshift(Array(this.COLS).fill(0));
+              cleared++;
+              r++;
+            }
+          }
+          if (cleared) {
+            this.lines += cleared;
+            this.score += [0, 100, 300, 500, 800][cleared] * this.level;
+            this.level = 1 + Math.floor(this.lines / 8);
+            if (cleared === 4) Sound.jingle();
+            else Sound.ok();
+          }
+          this.cur = this.next;
+          this.next = this.pull();
+          this.dropAcc = 0;
+          if (this.collide(this.cur.m, this.cur.x, this.cur.y)) {
+            Arcade.gameEnd({ win: false });
+          }
+        },
+        shadeOf(k) {
+          return { I: 1, O: 2, T: 3, S: 2, Z: 1, J: 3, L: 2 }[k] || 1;
+        },
+        press(b) {
+          if (b === "l" || b === "r") {
+            const d = b === "l" ? -1 : 1;
+            this.move(d);
+            this.dasDir = d;
+            this.dasT = 0;
+            this.dasAcc = 0;
+          } else if (b === "u" || b === "A") this.rotate();
+          else if (b === "FIRE" || b === "B") this.hardDrop();
+        },
+        update(dt) {
+          /* تکرار خودکار چپ/راست (DAS) */
+          if (this.dasDir) {
+            const held = this.dasDir < 0 ? Arcade.held.l : Arcade.held.r;
+            if (!held) this.dasDir = 0;
+            else {
+              this.dasT += dt;
+              if (this.dasT > 0.17) {
+                this.dasAcc += dt;
+                while (this.dasAcc > 0.05) {
+                  this.dasAcc -= 0.05;
+                  this.move(this.dasDir);
+                }
+              }
+            }
+          }
+          const soft = Arcade.held.d;
+          const interval = soft
+            ? 0.045
+            : Math.max(0.08, 0.75 - (this.level - 1) * 0.07);
+          this.dropAcc += dt;
+          while (this.dropAcc >= interval) {
+            this.dropAcc -= interval;
+            this.drop();
+            if (soft) this.score += 1;
+            if (Arcade.state !== "play") return;
+          }
+        },
+        drawCell(ctx, x, y, shade, s) {
+          x = Math.round(x);
+          y = Math.round(y);
+          const b = Math.max(1, Math.round(s / 5));
+          ctx.fillStyle = LCDSH[shade] || LCD.ink;
+          ctx.fillRect(x, y, s, s);
+          ctx.fillStyle = "rgba(255,255,255,.28)";
+          ctx.fillRect(x, y, s, b);
+          ctx.fillRect(x, y, b, s);
+          ctx.fillStyle = "rgba(0,0,0,.28)";
+          ctx.fillRect(x, y + s - b, s, b);
+          ctx.fillRect(x + s - b, y, b, s);
+        },
+        draw(ctx, t) {
+          ctx.fillStyle = LCD.bg;
+          ctx.fillRect(0, 0, 320, 224);
+          const { OX, OY, CELL, COLS, ROWS } = this;
+          /* قاب میدان */
+          ctx.fillStyle = LCD.mid;
+          ctx.fillRect(OX - 3, OY - 3, COLS * CELL + 6, ROWS * CELL + 6);
+          ctx.fillStyle = LCD.bg;
+          ctx.fillRect(OX, OY, COLS * CELL, ROWS * CELL);
+          /* نقاط شبکه */
+          ctx.fillStyle = LCD.dim;
+          for (let r = 1; r < ROWS; r++)
+            for (let c = 1; c < COLS; c++)
+              ctx.fillRect(OX + c * CELL - 1, OY + r * CELL - 1, 1, 1);
+          /* بلوک‌های ثابت */
+          for (let r = 0; r < ROWS; r++)
+            for (let c = 0; c < COLS; c++)
+              if (this.grid[r][c])
+                this.drawCell(
+                  ctx,
+                  OX + c * CELL,
+                  OY + r * CELL,
+                  this.grid[r][c],
+                  CELL,
+                );
+          /* قطعه‌ی فعلی */
+          const { m, x, y } = this.cur;
+          for (let r = 0; r < m.length; r++)
+            for (let c = 0; c < m[r].length; c++)
+              if (m[r][c] && y + r >= 0)
+                this.drawCell(
+                  ctx,
+                  OX + (x + c) * CELL,
+                  OY + (y + r) * CELL,
+                  this.shadeOf(this.cur.k),
+                  CELL,
+                );
+          /* سایه‌ی فرود */
+          let gy = y;
+          while (!this.collide(m, x, gy + 1)) gy++;
+          if (gy > y) {
+            ctx.globalAlpha = 0.22;
+            for (let r = 0; r < m.length; r++)
+              for (let c = 0; c < m[r].length; c++)
+                if (m[r][c] && gy + r >= 0)
+                  this.drawCell(
+                    ctx,
+                    OX + (x + c) * CELL,
+                    OY + (gy + r) * CELL,
+                    this.shadeOf(this.cur.k),
+                    CELL,
+                  );
+            ctx.globalAlpha = 1;
+          }
+          /* پنل اطلاعات */
+          const px = OX + COLS * CELL + 18;
+          ctx.fillStyle = LCD.ink;
+          ctx.font = '8px "Press Start 2P",monospace';
+          ctx.textAlign = "left";
+          ctx.fillText("NEXT", px, 12);
+          ctx.fillStyle = LCD.mid;
+          ctx.fillRect(px - 4, 18, 48, 34);
+          ctx.fillStyle = LCD.bg;
+          ctx.fillRect(px - 3, 19, 46, 32);
+          const nm = this.next.m;
+          const nw = nm[0].length * 7,
+            nh = nm.length * 7;
+          for (let r = 0; r < nm.length; r++)
+            for (let c = 0; c < nm[r].length; c++)
+              if (nm[r][c])
+                this.drawCell(
+                  ctx,
+                  px - 3 + (48 - nw) / 2 + c * 7,
+                  19 + (34 - nh) / 2 + r * 7,
+                  this.shadeOf(this.next.k),
+                  7,
+                );
+          ctx.fillStyle = LCD.ink;
+          ctx.font = '8px "Press Start 2P",monospace';
+          ctx.fillText("SCORE", px, 76);
+          ctx.font = '18px "Jersey 10",monospace';
+          ctx.fillText(String(this.score), px, 94);
+          ctx.font = '8px "Press Start 2P",monospace';
+          ctx.fillText("LINES", px, 118);
+          ctx.font = '18px "Jersey 10",monospace';
+          ctx.fillText(String(this.lines), px, 136);
+          ctx.font = '8px "Press Start 2P",monospace';
+          ctx.fillText("LEVEL", px, 160);
+          ctx.font = '18px "Jersey 10",monospace';
+          ctx.fillText(String(this.level), px, 178);
+          ctx.font = '8px "Press Start 2P",monospace';
+          ctx.fillStyle = LCD.mid;
+          ctx.fillText("[BRAND]", px, 214);
+        },
+      };
+
+      /* ═══════════════ رندر جدول رکورد و راهنما ═══════════════ */
+      function renderLB() {
+        const key = Arcade.cur;
+        $("#lbGame").textContent = Arcade.META[key].lb;
+        $("#lbList").innerHTML = LDB.data[key]
+          .map(
+            (e, i) =>
+              `<li><span class="lb-rank r${i + 1}">${i + 1}</span><span class="lb-n">${escapeHtml(e.n)}</span><span class="lb-s">${e.s}</span></li>`,
+          )
+          .join("");
+      }
+      function renderHelp() {
+        $("#helpBody").innerHTML = Arcade.HELP[Arcade.cur]
+          .map((h) => `<span>${h}</span>`)
+          .join("");
+      }
+
+      /* ═══════════════ مدیریت کنسول آرکید ═══════════════ */
+      const Arcade = {
+        cur: "pac",
+        games: { pac: Pac, tank: Tank, tetris: Tetris },
+        state: "boot",
+        visible: false,
+        last: 0,
+        held: { u: 0, d: 0, l: 0, r: 0 },
+        cv: null,
+        ctx: null,
+        META: {
+          pac: {
+            title: "PAC-CORRIDOR",
+            name: "پک‌کریدور",
+            lb: "PAC-CORRIDOR",
+            desc: "همه‌ی نقطه‌ها را بخور و از دو روحِ شکارچی فرار کن.",
+            helpShort: "کلیدهای جهت یا دی‌پد · ۳ جان · هر نقطه ۱۰ امتیاز",
+          },
+          tank: {
+            title: "TANK BATTLE",
+            name: "نبرد تانک",
+            lb: "TANK-BATTLE",
+            desc: "تانک‌های دشمن را یکی‌یکی از پا درآور؛ موج‌ها سخت‌تر و شلوغ‌تر می‌شوند.",
+            helpShort: "جهت‌ها برای حرکت · Space یا A برای شلیک",
+          },
+          tetris: {
+            title: "BLOCKFALL",
+            name: "بلوک‌فال",
+            lb: "BLOCKFALL",
+            desc: "خط‌ها را بچین و پاک کن؛ هر سطح، سریع‌تر از قبل.",
+            helpShort: "→ ← حرکت · ↑ چرخش · Space سقوط فوری",
+          },
+        },
+        CODES: { pac: "PAC", tank: "TNK", tetris: "BLK" },
+        HELP: {
+          pac: [
+            "حرکت: <b>کلیدهای جهت</b>، دی‌پد یا کشیدن انگشت",
+            "هدف: خوردنِ <b>همه‌ی نقطه‌های</b> راهرو",
+            "خطر: دو <b>روح شکارچی</b> با هوشِ تعقیب",
+            "جان: <b>۳</b> — گرفته شدی، برمی‌گردی اول مسیر",
+            "هر نقطه: <b>۱۰ امتیاز</b> · پاک‌کردن کامل = برد",
+          ],
+          tank: [
+            "حرکت و نشانه‌گیری: <b>کلیدهای جهت</b> یا دی‌پد",
+            "شلیک: <b>Space</b> یا دکمه‌ی <b>A</b>",
+            "آجرها <b>خراب می‌شوند</b>؛ فولاد نه",
+            "هر تانک دشمن: <b>۵۰ امتیاز</b> · پاک‌کردن موج: <b>۱۰۰</b>",
+            "موج‌های بعدی <b>سریع‌تر و پرتعدادترند</b>",
+          ],
+          tetris: [
+            "حرکت: <b>→ ←</b> یا دی‌پد (نگه‌داشتن = تکرار)",
+            "چرخش: <b>↑</b> یا دکمه‌ی <b>A</b>",
+            "سقوط نرم: <b>↓</b> · سقوط فوری: <b>Space</b> یا <b>B</b>",
+            "هر خط: <b>۱۰۰×</b> سطح · چهار خط با هم: <b>۸۰۰×</b> سطح",
+            "هر ۸ خط، یک سطح بالاتر و سریع‌تر",
+          ],
+        },
+
+        init() {
+          this.cv = $("#gameCanvas");
+          this.ctx = this.cv.getContext("2d");
+          this.cv.style.touchAction = "none";
+          LDB.load();
+          /* کارتریج‌ها */
+          $$(".cart-chip").forEach((ch) =>
+            ch.addEventListener("click", () => this.switchGame(ch.dataset.g)),
+          );
+          /* دی‌پد */
+          $$("#gDpad button").forEach((b) => {
+            const d = b.dataset.d;
+            b.addEventListener("pointerdown", (e) => {
+              e.preventDefault();
+              this.held[d] = 1;
+              this.press(d);
+            });
+            const off = () => {
+              this.held[d] = 0;
+            };
+            ["pointerup", "pointerleave", "pointercancel"].forEach((ev) =>
+              b.addEventListener(ev, off),
+            );
+          });
+          $("#gA").addEventListener("pointerdown", (e) => {
+            e.preventDefault();
+            this.press("A");
+          });
+          $("#gB").addEventListener("pointerdown", (e) => {
+            e.preventDefault();
+            this.press("B");
+          });
+          $("#gStart").addEventListener("pointerdown", (e) => {
+            e.preventDefault();
+            this.press("START");
+          });
+          /* اکشن‌های اورلی LCD */
+          $("#lcdOv").addEventListener("click", (e) => {
+            const b = e.target.closest("[data-act]");
+            if (!b) return;
+            const a = b.dataset.act;
+            if (a === "start" || a === "retry") this.start();
+            else if (a === "resume") this.resume();
+            else if (a === "boot") this.showBoot();
+          });
+          $("#lcdOv").addEventListener("submit", (e) => {
+            e.preventDefault();
+            this.submitEntry(e.target);
+          });
+          /* سوایپ و تاپ روی LCD (موبایل) */
+          let sx = 0,
+            sy = 0,
+            sw = false,
+            mv = 0;
+          this.cv.addEventListener("pointerdown", (e) => {
+            sw = true;
+            mv = 0;
+            sx = e.clientX;
+            sy = e.clientY;
+            e.preventDefault();
+          });
+          this.cv.addEventListener("pointermove", (e) => {
+            if (!sw) return;
+            const dx = e.clientX - sx,
+              dy = e.clientY - sy;
+            mv += Math.abs(dx) + Math.abs(dy);
+            if (Math.abs(dx) > 26 || Math.abs(dy) > 26) {
+              this.press(
+                Math.abs(dx) > Math.abs(dy)
+                  ? dx > 0
+                    ? "r"
+                    : "l"
+                  : dy > 0
+                    ? "d"
+                    : "u",
+              );
+              sx = e.clientX;
+              sy = e.clientY;
+            }
+          });
+          ["pointerup", "pointercancel"].forEach((ev) =>
+            this.cv.addEventListener(ev, () => {
+              if (sw && mv < 12) this.press("A");
+              sw = false;
+            }),
+          );
+          /* توقف هنگام خروج از دید یا مخفی‌شدن تب */
+          new IntersectionObserver(
+            (en) => {
+              this.visible = en[0].isIntersecting;
+              if (!this.visible && this.state === "play") this.pause();
+            },
+            { threshold: 0.15 },
+          ).observe($("#arcade"));
+          document.addEventListener("visibilitychange", () => {
+            if (document.hidden && this.state === "play") this.pause();
+          });
+          this.initKeys();
+          renderLB();
+          renderHelp();
+          this.showBoot();
+          this.last = performance.now();
+          requestAnimationFrame((n) => this.loop(n));
+        },
+
+        initKeys() {
+          const isTyping = (t) =>
+            t &&
+            (t.tagName === "INPUT" ||
+              t.tagName === "TEXTAREA" ||
+              t.tagName === "SELECT");
+          window.addEventListener("keydown", (e) => {
+            if (isTyping(e.target) || !this.visible || Menu.open) return;
+            if (document.querySelector(".modal-root.open")) return;
+            const k = e.key;
+            const map = {
+              ArrowUp: "u",
+              ArrowDown: "d",
+              ArrowLeft: "l",
+              ArrowRight: "r",
+            };
+            if (map[k]) {
+              e.preventDefault();
+              this.held[map[k]] = 1;
+              if (!e.repeat) this.press(map[k]);
+            } else if (k === " ") {
+              e.preventDefault();
+              if (!e.repeat) this.press("FIRE");
+            } else if (k === "Enter") {
+              e.preventDefault();
+              if (!e.repeat) this.press("START");
+            } else if (k === "Escape") {
+              e.preventDefault();
+              if (!e.repeat) this.press("B");
+            }
+          });
+          window.addEventListener("keyup", (e) => {
+            const map = {
+              ArrowUp: "u",
+              ArrowDown: "d",
+              ArrowLeft: "l",
+              ArrowRight: "r",
+            };
+            if (map[e.key]) this.held[map[e.key]] = 0;
+          });
+        },
+
+        ovHTML(html) {
+          const o = $("#lcdOv");
+          o.innerHTML = html;
+          o.classList.add("show");
+        },
+        ovHide() {
+          const o = $("#lcdOv");
+          o.classList.remove("show");
+          o.innerHTML = "";
+        },
+        clearHeld() {
+          this.held = { u: 0, d: 0, l: 0, r: 0 };
+        },
+
+        switchGame(g) {
+          if (!this.games[g]) return;
+          Sound.blip();
+          if (g !== this.cur) {
+            this.cur = g;
+            $$(".cart-chip").forEach((c) => {
+              const on = c.dataset.g === g;
+              c.classList.toggle("on", on);
+              c.setAttribute("aria-selected", String(on));
+            });
+            renderLB();
+            renderHelp();
+          }
+          this.showBoot();
+        },
+
+        showBoot() {
+          const m = this.META[this.cur];
+          this.state = "boot";
+          this.clearHeld();
+          this.games[this.cur].reset(true);
+          this.ovHTML(`<div>
+      <p class="ov-title">${m.title}</p>
+      <p class="ov-sub">${m.desc}</p>
+      <p class="ov-sub dim">${m.helpShort}</p>
+      <div class="ov-row"><button class="ov-btn" data-act="start">شروع بازی</button></div>
+      <p class="ov-sub dim" style="margin-top:10px">Enter یا A برای شروع · START برای مکث</p>
+    </div>`);
+        },
+
+        start() {
+          if (this.state === "play") return;
+          this.games[this.cur].reset(true);
+          this.clearHeld();
+          this.state = "play";
+          this.ovHide();
+          Sound.ok();
+        },
+        resume() {
+          if (this.state !== "pause") return;
+          this.state = "play";
+          this.ovHide();
+          Sound.blip();
+        },
+        pause() {
+          if (this.state !== "play") return;
+          this.state = "pause";
+          this.clearHeld();
+          this.ovHTML(`<div>
+      <p class="ov-title warn">PAUSED</p>
+      <div class="ov-row">
+        <button class="ov-btn" data-act="resume">ادامه</button>
+        <button class="ov-btn ghost" data-act="boot">منوی بازی</button>
+      </div>
+      <p class="ov-sub dim" style="margin-top:8px">START برای ادامه</p>
+    </div>`);
+          Sound.blip();
+        },
+
+        press(b) {
+          if (this.state === "boot") {
+            if (b === "A" || b === "FIRE" || b === "START") this.start();
+            return;
+          }
+          if (this.state === "pause") {
+            if (b === "START" || b === "A" || b === "FIRE") this.resume();
+            else if (b === "B") this.showBoot();
+            return;
+          }
+          if (this.state !== "play") return;
+          if (b === "START") {
+            this.pause();
+            return;
+          }
+          const g = this.games[this.cur];
+          if (g.press) g.press(b);
+        },
+
+        gameEnd(res) {
+          if (this.state !== "play") return;
+          this.state = "over";
+          this.clearHeld();
+          const key = this.cur,
+            g = this.games[key],
+            meta = this.META[key];
+          const score = g.score || 0;
+          if (res && res.win) Sound.jingle();
+          else Sound.boom();
+          const extra =
+            res && res.win && res.time
+              ? ` — زمان: ${res.time.toFixed(1)} ثانیه`
+              : "";
+          if (score > 0 && LDB.qualifies(key, score)) {
+            this.state = "entry";
+            this.ovHTML(`<div>
+        <p class="ov-title">NEW RECORD!</p>
+        <p class="ov-sub">امتیاز: ${score}${extra}</p>
+        <p class="ov-sub dim">تو جزو پنج نفر اول ${meta.name} هستی. اسمت را بنویس تا کد تخفیف اختصاصی بگیرت.</p>
+        <form class="ov-form" data-entry>
+          <input maxlength="12" placeholder="اسمت" value="${escapeHtml(LDB.myName())}" autocomplete="off">
+          <button class="ov-btn" type="submit">ثبت رکورد</button>
+        </form>
+      </div>`);
+            setTimeout(() => {
+              const i = $("#lcdOv input");
+              if (i) i.focus();
+            }, 60);
+          } else {
+            const top = LDB.data[key][0];
+            this.ovHTML(`<div>
+        <p class="ov-title warn">${res && res.win ? "CORRIDOR CLEAR!" : "GAME OVER"}</p>
+        <p class="ov-sub">امتیاز: ${score}${extra}</p>
+        <p class="ov-sub dim">رکورد فعلی: ${top ? escapeHtml(top.n) + " — " + top.s : "—"}</p>
+        <div class="ov-row">
+          <button class="ov-btn" data-act="retry">دوباره</button>
+          <button class="ov-btn ghost" data-act="boot">منوی بازی</button>
+        </div>
+      </div>`);
+          }
+        },
+
+        submitEntry(form) {
+          if (this.state !== "entry" || !form.closest("#lcdOv")) return;
+          const inp = form.querySelector("input");
+          const name = ((inp && inp.value.trim()) || "بی‌نام").slice(0, 12);
+          const key = this.cur;
+          const score = this.games[key].score || 0;
+          const rank = LDB.add(key, name, score);
+          LDB.saveName(name);
+          renderLB();
+          const code = this.CODES[key] + "-" + rank;
+          this.state = "registered";
+          Sound.jingle();
+          this.ovHTML(`<div>
+      <p class="ov-title">REGISTERED!</p>
+      <p class="ov-sub">رتبه‌ی ${rank} در ${this.META[key].name} — ${escapeHtml(name)}</p>
+      <p class="ov-sub dim">کد تخفیف تو: <b dir="ltr" style="display:inline-block">${code}</b><br>در فرم تماس یا ایمیل یادت نرود.</p>
+      <div class="ov-row">
+        <button class="ov-btn" data-act="retry">دوباره بازی</button>
+        <button class="ov-btn ghost" data-act="boot">منوی بازی</button>
+      </div>
+    </div>`);
+          toast("رکورد ثبت شد! کد تخفیف: " + code);
+        },
+
+        loop(now) {
+          requestAnimationFrame((n) => this.loop(n));
+          if (document.hidden || !this.visible) {
+            this.last = now;
+            return;
+          }
+          const dt = Math.min(0.05, (now - this.last) / 1000);
+          this.last = now;
+          if (this.state === "play") this.games[this.cur].update(dt);
+          this.games[this.cur].draw(this.ctx, now);
+        },
+      };
+
+      /* ═══════════════ ایستر اگ: کد Konami ═══════════════ */
+      function initKonami() {
+        const seq = [
+          "ArrowUp",
+          "ArrowUp",
+          "ArrowDown",
+          "ArrowDown",
+          "ArrowLeft",
+          "ArrowRight",
+          "ArrowLeft",
+          "ArrowRight",
+          "b",
+          "a",
+        ];
+        let idx = 0;
+        document.addEventListener("keydown", (e) => {
+          const tag = (e.target && e.target.tagName) || "";
+          if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return;
+          const k = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+          idx = k === seq[idx] ? idx + 1 : k === seq[0] ? 1 : 0;
+          if (idx === seq.length) {
+            idx = 0;
+            Sound.jingle();
+            toast(
+              "CHEAT ACTIVATED — کد مخفی: KONAMI-15 (۱۵٪ تخفیف روی اولین پروژه)",
+            );
+          }
+        });
+      }
+
+      /* ═══════════════ پیش‌لودر ═══════════════ */
+      const PRE_LINES = [
+        "بررسی سیستم‌های حیاتی…",
+        "سوارکردن موشک روی سکو…",
+        "کالیبراسیون ژیروسکوپ‌ها…",
+        "بارگذاری کهکشان [BRAND]…",
+        "روشن‌کردن چراغ‌های سکو…",
+      ];
+      function initPreloader() {
+        const lines = $("#preLines"),
+          fill = $("#preFill"),
+          start = $("#preStart");
+        let i = 0,
+          p = 0;
+        const iv = setInterval(
+          () => {
+            if (i < PRE_LINES.length) {
+              const d = document.createElement("div");
+              d.textContent = "◆ " + PRE_LINES[i++];
+              lines.appendChild(d);
+              p = Math.min(88, p + 22);
+            } else {
+              p = 100;
+              clearInterval(iv);
+              start.classList.add("show");
+              setTimeout(() => dismiss(false), 4200);
+            }
+            fill.style.width = p + "%";
+          },
+          RM ? 30 : 330,
+        );
+        function dismiss(withSound) {
+          const pre = $("#pre");
+          if (!pre || pre.dataset.done) return;
+          pre.dataset.done = "1";
+          if (withSound) {
+            Sound.ensure();
+            Sound.jingle();
+          }
+          if (G && !RM) {
+            G.to(pre, {
+              opacity: 0,
+              duration: 0.3,
+              ease: "none",
+              onComplete() {
+                pre.remove();
+                heroIntro();
+              },
+            });
+          } else {
+            pre.remove();
+            heroIntro();
+          }
+        }
+        start.addEventListener("click", () => dismiss(true));
+        document.addEventListener("keydown", function once() {
+          if (!$("#pre")) return;
+          dismiss(true);
+          document.removeEventListener("keydown", once);
+        });
+      }
+      function heroIntro() {
+        typeInto(
+          $("#heroLead"),
+          "سکوی پرتاب آماده است: طراحی سایت، برنامه‌نویسی، برندینگ، UI/UX و شبکه‌های اجتماعی. اسکرول کن تا موتورها با فشارِ کامل روشن شوند و با هم تا سیاره‌ی مقصد پرواز کنیم — در میانه‌ی راه هم کمی بازی می‌کنیم.",
+        );
+        if (!Sound.on)
+          setTimeout(
+            () =>
+              toast(
+                "نکته: برای صدای تایپ و بازی، SND را در نوار بالا روشن کن.",
+              ),
+            1500,
+          );
+        if (!G || RM) return;
+        G.from("#hero .rv", {
+          y: 24,
+          opacity: 0,
+          duration: 0.45,
+          stagger: 0.09,
+          ease: "power2.out",
+        });
+      }
+
+      /* ═══════════════ ظاهرشدن سکشن‌ها ═══════════════ */
+      function initReveals() {
+        if (!G || !window.ScrollTrigger || RM) return;
+        $$(".rv")
+          .filter((el) => !el.closest("#hero"))
+          .forEach((el) => {
+            G.from(el, {
+              y: 22,
+              opacity: 0,
+              duration: 0.5,
+              ease: "power2.out",
+              scrollTrigger: { trigger: el, start: "top 90%", once: true },
+            });
+          });
+        ScrollTrigger.refresh();
+      }
+
+      /* ═══════════════ اسکرول مرکزی ═══════════════ */
+      function initScroll() {
+        const apply = () => {
+          const doc = document.documentElement;
+          const p = clamp(
+            window.scrollY / Math.max(1, doc.scrollHeight - window.innerHeight),
+            0,
+            1,
+          );
+          Scene.target = p;
+          updateRail(p);
+        };
+        window.addEventListener("scroll", apply, { passive: true });
+        apply();
+      }
+
+      /* ═══════════════ اجرا ═══════════════ */
+      injectSprites();
+      initControls();
+      initMenu();
+      initRail();
+      initScroll(); /* قبل از Scene تا در حالت reduced-motion مقدار تازه ست شود */
+      Scene.init();
+      initTyping();
+      initWorks();
+      initTech();
+      initStats();
+      initPricing();
+      initContact();
+      Arcade.init();
+      initKonami();
+      initReveals();
+      initPreloader();
+    </script>
+  </body>
+</html>
