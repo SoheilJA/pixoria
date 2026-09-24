@@ -1,448 +1,269 @@
+
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#0a101f" />
+    <title>پیکسوریا — استودیو طراحی سایت، برنامه‌نویسی و خدمات گرافیکی در مشهد</title>
+    <meta name="description" content="آژانس دیجیتال مارکتینگ" />
+    <script>
+      /* بوت تم قبل از رندر — بدون فلش */
+      (function () {
+        var d = null;
+        try {
+          d = localStorage.getItem("lr_theme");
+        } catch (e) {}
+        if (d === "dark" || (!d && matchMedia("(prefers-color-scheme: dark)").matches))
+          document.documentElement.classList.add("dark");
+      })();
+    </script>
+    <link rel="stylesheet" href="/public/static/fonts/font_urls.css" />
+    <link rel="stylesheet" href="/public/static/css/tailwind.css" />
+    <link rel="stylesheet" href="/public/static/css/site.css" />
+    
+  </head>
+  <body data-story="home">
+    <div id="toast" class="toast" role="status" aria-live="polite">
+  <span class="t-ico">▲</span><span id="toastText"></span>
+</div>
 
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>پیکسوریا — استودیوی خلاقیت</title>
+    <!-- هدر موبایل + منوی تمام‌صفحه — از مرجع index.html -->
+<header class="mobile-topbar">
+  <a href="/" class="mt-logo"><span class="mt-mark">P</span>پیکسوریا</a>
+  <button id="btnMenu" class="mt-toggle" aria-expanded="false" aria-controls="mobile-nav">
+    <span class="sr-only">باز کردن منو</span>
+    <span class="mt-line"></span><span class="mt-line"></span>
+  </button>
+</header>
+<nav id="mobile-nav" class="mobile-nav" aria-label="ناوبری موبایل">
+  <button id="menuClose" class="mt-close" aria-label="بستن منو">بستن ✕</button>
+  <a href="/">خانه</a>
+  <a href="/portfolio/">کارها</a>
+  <a href="/services/">خدمات</a>
+  <a href="/about/">درباره</a>
+  <a href="/contact/">تماس</a>
+</nav>
 
-    <!-- فونت‌ها: Vazirmatn (فارسی) + Rubik (تیتر) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-        href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600&family=Rubik:ital,wght@0,400;0,500;0,600;1,400&display=swap"
-        rel="stylesheet" />
 
-    <!-- تیلویند  -->
-    <link rel="stylesheet" href="src/output.css">
+    <main id="main" class="cinematic-main">
+      
+<div class="home-shell">
+  <!-- ریل کنار (دسکتاپ) -->
+  <aside class="rail-side">
+    <a href="/" class="rail-logo">
+      <span class="rail-mark">P</span>
+      <span class="rail-brand">پیکسوریا
+        <span class="rail-sub">استودیو طراحی سایت، برنامه‌نویسی و خدمات گرافیکی در مشهد</span>
+      </span>
+    </a>
+    <nav class="rail-nav" aria-label="ناوبری اصلی">
+      <a href="/" class="active"><span class="nav-num">01</span>خانه<span class="nav-dot"></span></a>
+      <a href="/portfolio/" class=""><span class="nav-num">02</span>کارها<span class="nav-dot"></span></a>
+      <a href="/services/" class=""><span class="nav-num">03</span>خدمات<span class="nav-dot"></span></a>
+      <a href="/about/" class=""><span class="nav-num">04</span>درباره<span class="nav-dot"></span></a>
+      <a href="/contact/" class=""><span class="nav-num">05</span>تماس<span class="nav-dot"></span></a>
+    </nav>
+    <div class="rail-foot">
+      <div class="rail-row"><span>ایران</span><span>GMT+3:30</span></div>
+      <div class="rail-row"><span>سال</span><span>1405</span></div>
+      <div class="rail-status"><span class="status-dot"></span>آماده همکاری</div>
+      <div class="rail-socials">
+        <a href="https://localhost/cocodood" target="_blank" rel="noopener">اینستاگرام</a><a href="https://localhost/cocodood" target="_blank" rel="noopener">لینکدین</a>
+      </div>
+    </div>
+  </aside>
 
-</head>
+  <!-- ستون محتوا -->
+  <div class="home-main">
+    <!-- HERO -->
+    <section class="home-hero">
+      <div class="home-kicker">
+        <div>پیکسوریا — استودیوی مستقل</div>
+        <div>از 1405</div>
+        <div class="hide-md">برندینگ / دیجیتال / محصول</div>
+        <div class="hide-md"><span class="k-badge">آماده همکاری</span></div>
+      </div>
+      <h1 class="home-h1">ایده‌ات را به <br> تصویر می‌کشیم.<span class="acc">.</span></h1>
+      <div class="home-hero-grid">
+        <p class="home-lead">طراحی سایت، برنامه‌نویسی <br> و هویت بصری برای کسب‌وکارهایی <br> که می‌خواهند دیده شوند.</p>
+        <div class="home-hero-cta">
+          <a href="/contact/" class="btn btn-ink">شروع پروژه <span class="arrow">↓</span></a>
+          <a href="/portfolio/" class="btn btn-ghost">دیدن کارها <span class="arrow">↓</span></a>
+        </div>
+      </div>
+      <div class="home-marquee">
+        <div class="home-marquee-in">
+          <span>طراحی سایت <span class="acc-s">✦</span></span><span>برنامه‌نویسی <span class="acc-s">✦</span></span><span>طراحی لوگو <span class="acc-s">✦</span></span><span>هویت بصری <span class="acc-s">✦</span></span><span>خدمات گرافیکی <span class="acc-s">✦</span></span><span>تجربه کاربری <span class="acc-s">✦</span></span>
+          <span>طراحی سایت <span class="acc-s">✦</span></span><span>برنامه‌نویسی <span class="acc-s">✦</span></span><span>طراحی لوگو <span class="acc-s">✦</span></span><span>هویت بصری <span class="acc-s">✦</span></span><span>خدمات گرافیکی <span class="acc-s">✦</span></span><span>تجربه کاربری <span class="acc-s">✦</span></span>
+        </div>
+      </div>
+    </section>
 
-<body>
-
-    <div class="grid min-h-screen grid-cols-1 md:grid-cols-[200px_minmax(0,1fr)] lg:grid-cols-[240px_minmax(0,1fr)]">
-
-        <!-- ═══ ریل کنار (فقط دسکتاپ) ═══ -->
-        <aside class="sticky top-0 z-40 hidden h-screen flex-col border-l border-ink-line bg-paper px-6 py-7 md:flex">
-
-            <a href="index.html"
-                class="flex items-center gap-2.5 font-display text-[1.4rem] font-semibold tracking-[-0.02em] text-ink">
-                <span
-                    class="grid h-[26px] w-[26px] place-items-center rounded-sm bg-ink font-mono text-[0.78rem] font-semibold text-lime">P</span>
-                <span class="leading-none">پیکسوریا
-                    <span
-                        class="mt-0.5 block font-mono text-[0.66rem] font-normal uppercase tracking-[0.12em] text-ink-dim">Axioma®</span>
-                </span>
-            </a>
-
-            <!-- کلاس rail-nav برای JS (لینک فعال) -->
-            <nav class="rail-nav mt-14 flex flex-col gap-0.5 font-mono text-[0.84rem]">
-                <a href="index.html"
-                    class="relative flex items-center gap-3.5 rounded-sm px-2 py-2.5 text-ink-soft transition-colors duration-200 ease-ax hover:bg-paper-soft hover:text-ink">
-                    <span class="text-[0.7rem] tracking-[0.04em] text-ink-dim">01</span>خانه
-                    <span
-                        class="nav-dot absolute left-2 top-1/2 h-1.5 w-1.5 -translate-y-1/2 rounded-full bg-lime opacity-0"></span>
-                </a>
-                <a href="work.html"
-                    class="relative flex items-center gap-3.5 rounded-sm px-2 py-2.5 text-ink-soft transition-colors duration-200 ease-ax hover:bg-paper-soft hover:text-ink">
-                    <span class="text-[0.7rem] tracking-[0.04em] text-ink-dim">02</span>کارها
-                    <span
-                        class="nav-dot absolute left-2 top-1/2 h-1.5 w-1.5 -translate-y-1/2 rounded-full bg-lime opacity-0"></span>
-                </a>
-                <a href="services.html"
-                    class="relative flex items-center gap-3.5 rounded-sm px-2 py-2.5 text-ink-soft transition-colors duration-200 ease-ax hover:bg-paper-soft hover:text-ink">
-                    <span class="text-[0.7rem] tracking-[0.04em] text-ink-dim">03</span>خدمات
-                    <span
-                        class="nav-dot absolute left-2 top-1/2 h-1.5 w-1.5 -translate-y-1/2 rounded-full bg-lime opacity-0"></span>
-                </a>
-                <a href="about.html"
-                    class="relative flex items-center gap-3.5 rounded-sm px-2 py-2.5 text-ink-soft transition-colors duration-200 ease-ax hover:bg-paper-soft hover:text-ink">
-                    <span class="text-[0.7rem] tracking-[0.04em] text-ink-dim">04</span>درباره
-                    <span
-                        class="nav-dot absolute left-2 top-1/2 h-1.5 w-1.5 -translate-y-1/2 rounded-full bg-lime opacity-0"></span>
-                </a>
-                <a href="contact.html"
-                    class="relative flex items-center gap-3.5 rounded-sm px-2 py-2.5 text-ink-soft transition-colors duration-200 ease-ax hover:bg-paper-soft hover:text-ink">
-                    <span class="text-[0.7rem] tracking-[0.04em] text-ink-dim">05</span>تماس
-                    <span
-                        class="nav-dot absolute left-2 top-1/2 h-1.5 w-1.5 -translate-y-1/2 rounded-full bg-lime opacity-0"></span>
-                </a>
-            </nav>
-
-            <div class="mt-auto flex flex-col gap-4 font-mono text-[0.72rem] tracking-[0.04em] text-ink-dim">
-                <div class="flex justify-between"><span>تهران</span><span>GMT+3:30</span></div>
-                <div class="flex justify-between"><span>سال</span><span data-year>2025</span></div>
-                <div class="inline-flex items-center gap-2.5 text-ink">
-                    <span class="h-1.5 w-1.5 rounded-full bg-ok shadow-[0_0_0_4px_rgba(42,157,62,0.18)]"></span>
-                    ظرفیت همکاری آزاد
-                </div>
-                <div class="flex gap-3.5">
-                    <a href="#" class="text-ink-soft transition-colors hover:text-ink">IG</a>
-                    <a href="#" class="text-ink-soft transition-colors hover:text-ink">BE</a>
-                    <a href="#" class="text-ink-soft transition-colors hover:text-ink">LI</a>
-                </div>
+    <!-- کارهای منتخب -->
+    <section class="home-sec">
+      <div class="sec-head rv">
+        <span class="eyebrow">کارهای منتخب<span class="dot"></span></span>
+        <h2>نمونه کارهای منتخب</h2>
+        <p>بخشی از پروژه‌هایی که با دقت و اشتیاق ساخته‌ایم.</p>
+      </div>
+      <div class="work-grid">
+        
+          <article class="work-card rv work-card-lg">
+            <a href="/portfolio/trh-st-bn-s/" class="work-media"><img src="/public/media/portfolio/images.jpg" alt="طراحی سایت آبان سا" loading="lazy" /></a>
+            <div class="work-body">
+              <div class="work-meta"><span>احمدی</span><span>1405</span></div>
+              <h3>طراحی سایت آبان سا</h3>
+              <a href="/portfolio/trh-st-bn-s/" class="work-more">مطالعه موردی <span>↖</span></a>
             </div>
-        </aside>
+          </article>
+        
+      </div>
+    </section>
 
-        <!-- ستون محتوا -->
-        <div class="min-w-0">
+    <!-- خدمات -->
+    <section class="home-sec">
+      <div class="sec-head rv">
+        <span class="eyebrow">خدمات<span class="dot"></span></span>
+        <h2>از ایده تا اجرا، <span class="lime-text">همه چیز</span> اینجاست.</h2>
+        <p>طیف کاملی از خدمات دیجیتال — از طراحی ظاهر تا پیاده‌سازی فنی — برای اینکه کسب‌وکار شما با قدرت آنلاین باشد.</p>
+      </div>
+      <div class="svc-list">
+        
+          
+            <a href="/services/web-design/" class="svc-row rv">
+              <span class="svc-num">01</span>
+              <h3>طراحی سایت</h3>
+              <p>وب‌سایت مدرن، سریع و ریسپانسیو که کسب‌وکار شما را حرفه‌ای نمایش می‌دهد و بازدیدکننده را به مشتری تبدیل می‌کند.</p>
+              <span class="svc-arrow">↖</span>
+            </a>
+          
+        
+          
+            <a href="/services/programming/" class="svc-row rv">
+              <span class="svc-num">02</span>
+              <h3>برنامه‌نویسی</h3>
+              <p>توسعه نرم‌افزار و وب‌اپلیکیشن با کدنویسی تمیز، معماری مقیاس‌پذیر و تمرکز بر عملکرد.</p>
+              <span class="svc-arrow">↖</span>
+            </a>
+          
+        
+          
+            <a href="/services/logo-design/" class="svc-row rv">
+              <span class="svc-num">03</span>
+              <h3>طراحی لوگو</h3>
+              <p>طراحی لوگوی منحصربه‌فرد که ماهیت کسب‌وکار شما را در یک نگاه منتقل کند و در هر اندازه‌ای درخشان بماند.</p>
+              <span class="svc-arrow">↖</span>
+            </a>
+          
+        
+          
+            <a href="/services/graphic-design/" class="svc-row rv">
+              <span class="svc-num">04</span>
+              <h3>خدمات گرافیکی</h3>
+              <p>طراحی گرافیک حرفه‌ای برای همه نیازهای بصری کسب‌وکار شما — از بنر و پوستر تا کاتالوگ و محتوای شبکه‌های اجتماعی.</p>
+              <span class="svc-arrow">↖</span>
+            </a>
+          
+        
+      </div>
+    </section>
 
-            <!-- ═══ topbar موبایل ═══ -->
-            <header
-                class="sticky top-0 z-50 flex items-center justify-between border-b border-ink-line bg-paper px-page py-3.5 md:hidden">
-                <a href="index.html" class="flex items-center gap-2 font-display font-semibold text-ink">
-                    <span
-                        class="grid h-[26px] w-[26px] place-items-center rounded-sm bg-ink font-mono text-[0.78rem] font-semibold leading-0 text-lime">P</span>
-                    پیکسوریا
-                </a>
-                <button
-                    class="menu-toggle flex cursor-pointer flex-col gap-1 rounded-sm bg-ink px-3.5 py-2.5 font-mono text-[0.8rem] text-lime"
-                    aria-expanded="false" aria-controls="mobile-nav">
-                    <span class="sr-only">باز کردن منو</span>
-                    <span class="block h-[2px] w-5 bg-lime"></span>
-                    <span class="block h-[2px] w-5 bg-lime"></span>
-                </button>
-            </header>
+    <!-- مشتری‌ها -->
+    
+      <div class="client-marquee">
+        <div class="client-marquee-in">
+          <span>آبانسا <span class="sep">·</span></span><span>دکتر ها <span class="sep">·</span></span><span>آرنیک وب <span class="sep">·</span></span>
+          <span>آبانسا <span class="sep">·</span></span><span>دکتر ها <span class="sep">·</span></span><span>آرنیک وب <span class="sep">·</span></span>
+        </div>
+      </div>
+    
 
-            <!-- ═══ منوی تمام‌صفحه موبایل — [&.open]:flex همان display:flex قبلی است ═══ -->
-            <nav id="mobile-nav"
-                class="mobile-nav fixed inset-0 z-[60] hidden flex-col gap-1 bg-ink px-page pb-8 pt-20 font-display text-[2rem] text-paper [&.open]:flex">
-                <button
-                    class="mobile-close absolute right-[18px] top-[18px] cursor-pointer bg-transparent font-mono text-[0.85rem] text-paper">بستن
-                    ✕</button>
-                <a href="index.html" class="border-b border-ink-soft py-3.5 transition-colors hover:text-lime">خانه</a>
-                <a href="work.html" class="border-b border-ink-soft py-3.5 transition-colors hover:text-lime">کارها</a>
-                <a href="services.html"
-                    class="border-b border-ink-soft py-3.5 transition-colors hover:text-lime">خدمات</a>
-                <a href="about.html"
-                    class="border-b border-ink-soft py-3.5 transition-colors hover:text-lime">درباره</a>
-                <a href="contact.html"
-                    class="border-b border-ink-soft py-3.5 transition-colors hover:text-lime">تماس</a>
-            </nav>
+    <!-- مانیفست -->
+    
+      <section class="manifesto">
+        <div class="manifesto-in">
+          <span class="manifesto-label">— فلسفه ما</span>
+          <div>
+            <h2>طراحی خوب، نتیجه می‌دهد. <span class="hl">نتیجه</span>.</h2>
+            <p>ما باور داریم که طراحی فقط زیبایی نیست — ابزاری‌ست برای حل مسئله. هر پروژه را با درک عمیق از کسب‌وکار شما شروع می‌کنیم و تا رسیدن به نتیجه‌ای ملموس کنارتان می‌مانیم.</p>
+            <p>از طراحی اولین صفحه تا آخرین خط کد، رویکرد ما ساده است: کار درست را با بهترین کیفیت انجام دهیم. پیکسوریا جایی‌ست که ایده شما شکل می‌گیرد.</p>
+            <div class="manifesto-sig"><span>تیم پیکسوریا</span><span>استودیو طراحی · مشهد</span><span>۱۳۹۸ — امروز</span></div>
+          </div>
+        </div>
+      </section>
+    
 
-            <main>
-                <!-- ▼▼▼ محتوای صفحه از اینجا شروع می‌شود (قطعه ۳) ▼▼▼ -->
-                <!-- ═══ HERO ═══ -->
-                <section
-                    class="grid min-h-screen grid-rows-[auto_1fr_auto] px-page pb-[clamp(40px,6vw,80px)] pt-[clamp(60px,10vw,140px)]">
+    <!-- CTA -->
+    
+      <section class="cta-band">
+        <div class="cta-in">
+          <h2>پروژه‌ات را شروع کنیم؟</h2>
+          <div>
+            <p>اگر ایده‌ای داری یا می‌خوای کسب‌وکارت را آنلاین ببری، یک پیام کافی‌ست. ما ظرف ۴۸ ساعت پاسخ می‌دهیم و اگر پروژه برای هر دو طرف مناسب باشد، مسیر را با هم طراحی می‌کنیم.</p>
+            <div class="cta-contact"><span>soheilahmadijalal.sj1378@gmail.com</span><span>09011016263</span></div>
+            <a href="/contact/" class="btn btn-ghost">تماس بگیرید <span class="arrow">↓</span></a>
+          </div>
+        </div>
+      </section>
+    
+  </div>
+</div>
 
-                    <div
-                        class="mb-[clamp(50px,7vw,100px)] grid grid-cols-2 gap-8 border-b border-ink-line pb-[18px] font-mono text-[0.74rem] uppercase tracking-[0.1em] text-ink-dim md:grid-cols-[1fr_auto_auto_auto]">
-                        <div>استودیوی مستقل — مشهد</div>
-                        <div>از ۱۳۹۸</div>
-                        <div class="hidden md:block">برندینگ / دیجیتال / محصول</div>
-                        <div class="hidden md:block"><span
-                                class="rounded-full bg-lime px-2.5 py-1 tracking-[0.08em] text-ink">ظرفیت بهار
-                                آزاد</span></div>
-                    </div>
+    </main>
 
-                    <!-- strike و lime-block که قبلاً ::after بودند، حالا المان واقعی هستند -->
-                    <h1 class="reveal max-w-[14ch] text-hero font-medium leading-[0.94] tracking-[-0.035em] text-ink">
-                        برندها را
-                        <span class="relative inline-block">قابلِ‌فراموش<span
-                                class="absolute inset-x-0 top-1/2 -rotate-2 border-t-[6px] border-lime"></span></span>
-                        <span class="inline-block bg-lime px-[0.16em]">فراموش‌نشدنی</span>
-                        می‌کنیم.
-                    </h1>
+    <footer class="cfooter">
+  <div class="cf-grid">
+    <div class="cf-brand">
+      <span class="logo"><span class="logo-mark inv">P</span>پیکسوریا</span>
+      <p>پیکسوریا یک استودیو خلاق در مشهد است. طراحی سایت، برنامه‌نویسی، طراحی لوگو و خدمات گرافیکی با رویکردی حرفه‌ای و نتیجه‌محور.</p>
+    </div>
+    <div class="cf-col">
+      <h4>نقشه‌ی سایت</h4>
+      <a href="/">خانه</a>
+      <a href="/services/">خدمات</a>
+      <a href="/portfolio/">نمونه‌کارها</a>
+      <a href="/blog/">بلاگ</a>
+      <a href="/about/">درباره‌ی ما</a>
+      <a href="/contact/">تماس با ما</a>
+    </div>
+    <div class="cf-col">
+      <h4>خدمات</h4>
+      
+        <a href="/services/web-design/">طراحی سایت</a>
+      
+        <a href="/services/programming/">برنامه‌نویسی</a>
+      
+        <a href="/services/logo-design/">طراحی لوگو</a>
+      
+        <a href="/services/graphic-design/">خدمات گرافیکی</a>
+      
+    </div>
+    <div class="cf-col">
+      <h4>ارتباط</h4>
+      <a href="mailto:soheilahmadijalal.sj1378@gmail.com">soheilahmadijalal.sj1378@gmail.com</a>
+      <a href="tel:09011016263">09011016263</a>
+      <span>خیابان سرشور ، بین سرشور 30 و 32 ، پلاک 452 واحد 2</span>
+      <div class="cf-socials">
+        
+          <a href="https://localhost/cocodood" target="_blank" rel="noopener">اینستاگرام</a>
+        
+          <a href="https://localhost/cocodood" target="_blank" rel="noopener">لینکدین</a>
+        
+      </div>
+    </div>
+  </div>
+  <div class="cf-bottom">
+    <span>© 1405 پیکسوریا</span>
+    <span>آماده همکاری</span>
+  </div>
+</footer>
 
-                    <div
-                        class="reveal mt-[clamp(40px,6vw,80px)] grid grid-cols-1 items-end gap-8 md:grid-cols-2 md:gap-16">
-                        <p class="m-0 max-w-[36ch] text-[1.18rem] leading-[1.5] text-ink-soft">
-                            پیکسوریا استودیویی مستقل است؛ استراتژی، هویت و محصول را زیر یک سقف جمع کرده‌ایم
-                            تا برند شما نه‌فقط دیده شود — در ذهن بماند.
-                        </p>
-                        <div class="flex flex-wrap justify-start gap-3.5 md:justify-end">
-                            <a href="contact.html" class="btn btn-ink group">شروع پروژه
-                                <span
-                                    class="arrow transition-transform duration-[250ms] ease-ax group-hover:translate-y-1">↓</span></a>
-                            <a href="work.html" class="btn btn-ghost group">دیدن کارها
-                                <span
-                                    class="arrow transition-transform duration-[250ms] ease-ax group-hover:translate-y-1">↓</span></a>
-                        </div>
-                    </div>
 
-                    <!-- مارکی (keyframes از کانفیگ) -->
-                    <div
-                        class="mt-20 flex gap-9 overflow-hidden whitespace-nowrap border-t border-ink-line pt-[18px] font-display text-[clamp(1.4rem,2.4vw,2rem)] tracking-[-0.02em] text-ink">
-                        <div class="flex animate-marq gap-9">
-                            <!-- هر آیتم ۲ بار تا حلقه بی‌درز باشد -->
-                            <span class="flex items-center gap-9">استراتژی برند <span
-                                    class="text-[0.7em] text-lime">✦</span></span>
-                            <span class="flex items-center gap-9">هویت بصری <span
-                                    class="text-[0.7em] text-lime">✦</span></span>
-                            <span class="flex items-center gap-9">طراحی محصول <span
-                                    class="text-[0.7em] text-lime">✦</span></span>
-                            <span class="flex items-center gap-9">تجربه کاربری <span
-                                    class="text-[0.7em] text-lime">✦</span></span>
-                            <span class="flex items-center gap-9">موشن‌گرافیک <span
-                                    class="text-[0.7em] text-lime">✦</span></span>
-                            <span class="flex items-center gap-9">کمپین‌سازی <span
-                                    class="text-[0.7em] text-lime">✦</span></span>
-                            <span class="flex items-center gap-9">استراتژی برند <span
-                                    class="text-[0.7em] text-lime">✦</span></span>
-                            <span class="flex items-center gap-9">هویت بصری <span
-                                    class="text-[0.7em] text-lime">✦</span></span>
-                            <span class="flex items-center gap-9">طراحی محصول <span
-                                    class="text-[0.7em] text-lime">✦</span></span>
-                            <span class="flex items-center gap-9">تجربه کاربری <span
-                                    class="text-[0.7em] text-lime">✦</span></span>
-                            <span class="flex items-center gap-9">موشن‌گرافیک <span
-                                    class="text-[0.7em] text-lime">✦</span></span>
-                            <span class="flex items-center gap-9">کمپین‌سازی <span
-                                    class="text-[0.7em] text-lime">✦</span></span>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- ═══ کارهای منتخب ═══ -->
-                <section class="px-page py-[clamp(64px,12vw,100px)] md:py-section">
-                    <div class="reveal mb-16 max-w-[880px]">
-                        <span class="eyebrow mb-6 inline-block">کارهای منتخب<span
-                                class="ml-2 inline-block h-1.5 w-1.5 rounded-full bg-lime align-[2px]"></span></span>
-                        <h2 class="mb-[18px]">امضای ما در جزئیات است</h2>
-                        <p class="m-0 max-w-[60ch] text-[1.15rem] leading-[1.5] text-ink-soft">گزیده‌ای از همکاری‌های
-                            اخیر؛ از استارتاپ‌های نوپا تا برندهای جاافتاده.</p>
-                    </div>
-
-                    <div class="grid grid-cols-1 gap-7 md:grid-cols-2 lg:grid-cols-[1.3fr_1fr_1fr]">
-                        <!-- کارت بزرگ -->
-                        <article
-                            class="reveal group flex flex-col overflow-hidden rounded-md border border-ink-line bg-paper transition-[transform,border-color] duration-300 ease-ax hover:-translate-y-1 hover:border-ink md:col-span-2 lg:col-span-1">
-                            <a href="work.html" class="block aspect-[5/6] overflow-hidden bg-paper-soft">
-                                <img src="https://picsum.photos/seed/axioma-nova/900/1080" alt="پروژه نوا"
-                                    loading="lazy"
-                                    class="h-full w-full object-cover transition-transform duration-[600ms] ease-ax group-hover:scale-[1.04]" />
-                            </a>
-                            <div class="flex flex-1 flex-col gap-2.5 p-[22px]">
-                                <div
-                                    class="flex gap-2.5 font-mono text-[0.74rem] uppercase tracking-[0.1em] text-ink-dim">
-                                    <span>هویت بصری</span><span>۱۴۰۳</span>
-                                </div>
-                                <h3 class="text-[1.45rem] leading-[1.1]">نوا — بازطراحی کامل برند</h3>
-                                <a href="work.html"
-                                    class="mt-auto inline-flex items-center gap-2 font-mono text-[0.78rem] uppercase tracking-[0.1em] text-ink transition-colors hover:text-lime-deep">مطالعه
-                                    موردی <span>↖</span></a>
-                            </div>
-                        </article>
-
-                        <article
-                            class="reveal group flex flex-col overflow-hidden rounded-md border border-ink-line bg-paper transition-[transform,border-color] duration-300 ease-ax hover:-translate-y-1 hover:border-ink">
-                            <a href="work.html" class="block aspect-[4/3] overflow-hidden bg-paper-soft">
-                                <img src="https://picsum.photos/seed/axioma-kavan/800/600" alt="پروژه کوان"
-                                    loading="lazy"
-                                    class="h-full w-full object-cover transition-transform duration-[600ms] ease-ax group-hover:scale-[1.04]" />
-                            </a>
-                            <div class="flex flex-1 flex-col gap-2.5 p-[22px]">
-                                <div
-                                    class="flex gap-2.5 font-mono text-[0.74rem] uppercase tracking-[0.1em] text-ink-dim">
-                                    <span>دیجیتال</span><span>۱۴۰۲</span>
-                                </div>
-                                <h3 class="text-[1.45rem] leading-[1.1]">کوان — فروشگاه آنلاین</h3>
-                                <a href="work.html"
-                                    class="mt-auto inline-flex items-center gap-2 font-mono text-[0.78rem] uppercase tracking-[0.1em] text-ink transition-colors hover:text-lime-deep">مطالعه
-                                    موردی <span>↖</span></a>
-                            </div>
-                        </article>
-
-                        <article
-                            class="reveal group flex flex-col overflow-hidden rounded-md border border-ink-line bg-paper transition-[transform,border-color] duration-300 ease-ax hover:-translate-y-1 hover:border-ink">
-                            <a href="work.html" class="block aspect-[4/3] overflow-hidden bg-paper-soft">
-                                <img src="https://picsum.photos/seed/axioma-rhythm/800/600" alt="پروژه ریتم"
-                                    loading="lazy"
-                                    class="h-full w-full object-cover transition-transform duration-[600ms] ease-ax group-hover:scale-[1.04]" />
-                            </a>
-                            <div class="flex flex-1 flex-col gap-2.5 p-[22px]">
-                                <div
-                                    class="flex gap-2.5 font-mono text-[0.74rem] uppercase tracking-[0.1em] text-ink-dim">
-                                    <span>موشن</span><span>۱۴۰۳</span>
-                                </div>
-                                <h3 class="text-[1.45rem] leading-[1.1]">ریتم — کمپین ویدیویی</h3>
-                                <a href="work.html"
-                                    class="mt-auto inline-flex items-center gap-2 font-mono text-[0.78rem] uppercase tracking-[0.1em] text-ink transition-colors hover:text-lime-deep">مطالعه
-                                    موردی <span>↖</span></a>
-                            </div>
-                        </article>
-                    </div>
-                </section>
-
-                <!-- ═══ خدمات ═══ -->
-                <section class="px-page py-[clamp(64px,12vw,100px)] md:py-section">
-                    <div class="reveal mb-16 max-w-[880px]">
-                        <span class="eyebrow mb-6 inline-block">خدمات<span
-                                class="ml-2 inline-block h-1.5 w-1.5 rounded-full bg-lime align-[2px]"></span></span>
-                        <h2 class="mb-[18px]">از استراتژی تا اجرا</h2>
-                        <p class="m-0 max-w-[60ch] text-[1.15rem] leading-[1.5] text-ink-soft">چهار تخصص، یک تیم — بدون
-                            واسطه.</p>
-                    </div>
-
-                    <div class="border-t border-ink">
-                        <div
-                            class="reveal group grid grid-cols-1 items-start gap-2 border-b border-ink-line py-6 transition-[padding,background-color] duration-300 ease-ax hover:bg-paper-soft hover:px-4 md:grid-cols-[60px_1fr_1fr_auto] md:gap-5 lg:grid-cols-[80px_1fr_1.4fr_auto] lg:gap-8 lg:py-9">
-                            <span class="font-mono text-[0.84rem] tracking-[0.06em] text-ink-dim">01</span>
-                            <h3 class="text-[clamp(1.4rem,2vw,2rem)] leading-[1.05] tracking-[-0.02em]">استراتژی برند
-                            </h3>
-                            <p class="m-0 max-w-[50ch] text-ink-soft">جایگاه‌یابی، معماری پیام و نقشه‌ی مسیر؛ قبل از هر
-                                پیکسلی، جهت را مشخص می‌کنیم.</p>
-                            <span
-                                class="hidden text-[1.4rem] text-ink transition-[transform,color] duration-300 ease-ax group-hover:rotate-45 group-hover:text-lime-deep md:inline-block">↖</span>
-                        </div>
-                        <div
-                            class="reveal group grid grid-cols-1 items-start gap-2 border-b border-ink-line py-6 transition-[padding,background-color] duration-300 ease-ax hover:bg-paper-soft hover:px-4 md:grid-cols-[60px_1fr_1fr_auto] md:gap-5 lg:grid-cols-[80px_1fr_1.4fr_auto] lg:gap-8 lg:py-9">
-                            <span class="font-mono text-[0.84rem] tracking-[0.06em] text-ink-dim">02</span>
-                            <h3 class="text-[clamp(1.4rem,2vw,2rem)] leading-[1.05] tracking-[-0.02em]">هویت بصری</h3>
-                            <p class="m-0 max-w-[50ch] text-ink-soft">از لوگوتایپ تا سیستم طراحی؛ هویتی که در همه‌ی نقاط
-                                تماس یک‌صدا حرف بزند.</p>
-                            <span
-                                class="hidden text-[1.4rem] text-ink transition-[transform,color] duration-300 ease-ax group-hover:rotate-45 group-hover:text-lime-deep md:inline-block">↖</span>
-                        </div>
-                        <div
-                            class="reveal group grid grid-cols-1 items-start gap-2 border-b border-ink-line py-6 transition-[padding,background-color] duration-300 ease-ax hover:bg-paper-soft hover:px-4 md:grid-cols-[60px_1fr_1fr_auto] md:gap-5 lg:grid-cols-[80px_1fr_1.4fr_auto] lg:gap-8 lg:py-9">
-                            <span class="font-mono text-[0.84rem] tracking-[0.06em] text-ink-dim">03</span>
-                            <h3 class="text-[clamp(1.4rem,2vw,2rem)] leading-[1.05] tracking-[-0.02em]">طراحی محصول</h3>
-                            <p class="m-0 max-w-[50ch] text-ink-soft">رابط‌هایی که کاربر را به تصمیم می‌رسانند، نه اینکه
-                                او را گم کنند.</p>
-                            <span
-                                class="hidden text-[1.4rem] text-ink transition-[transform,color] duration-300 ease-ax group-hover:rotate-45 group-hover:text-lime-deep md:inline-block">↖</span>
-                        </div>
-                        <div
-                            class="reveal group grid grid-cols-1 items-start gap-2 border-b border-ink-line py-6 transition-[padding,background-color] duration-300 ease-ax hover:bg-paper-soft hover:px-4 md:grid-cols-[60px_1fr_1fr_auto] md:gap-5 lg:grid-cols-[80px_1fr_1.4fr_auto] lg:gap-8 lg:py-9">
-                            <span class="font-mono text-[0.84rem] tracking-[0.06em] text-ink-dim">04</span>
-                            <h3 class="text-[clamp(1.4rem,2vw,2rem)] leading-[1.05] tracking-[-0.02em]">موشن و محتوا
-                            </h3>
-                            <p class="m-0 max-w-[50ch] text-ink-soft">حرکت، داستان می‌سازد؛ از موشن‌لوگو تا کمپین‌های
-                                ویدیویی.</p>
-                            <span
-                                class="hidden text-[1.4rem] text-ink transition-[transform,color] duration-300 ease-ax group-hover:rotate-45 group-hover:text-lime-deep md:inline-block">↖</span>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- ═══ مشتری‌ها ═══ -->
-                <div class="overflow-hidden whitespace-nowrap border-y border-ink-line bg-paper-soft py-[30px]">
-                    <div
-                        class="inline-flex animate-marq-slow gap-20 font-display text-[clamp(1.5rem,2.2vw,2.4rem)] font-medium text-ink-dim hover:[animation-play-state:paused]">
-                        <span class="inline-flex items-center gap-20">نوا <span class="text-ink-line">·</span></span>
-                        <span class="inline-flex items-center gap-20">کوان <span class="text-ink-line">·</span></span>
-                        <span class="inline-flex items-center gap-20">ریتم <span class="text-ink-line">·</span></span>
-                        <span class="inline-flex items-center gap-20">سپهر <span class="text-ink-line">·</span></span>
-                        <span class="inline-flex items-center gap-20">درین <span class="text-ink-line">·</span></span>
-                        <span class="inline-flex items-center gap-20">مانا <span class="text-ink-line">·</span></span>
-                        <span class="inline-flex items-center gap-20">نوا <span class="text-ink-line">·</span></span>
-                        <span class="inline-flex items-center gap-20">کوان <span class="text-ink-line">·</span></span>
-                        <span class="inline-flex items-center gap-20">ریتم <span class="text-ink-line">·</span></span>
-                        <span class="inline-flex items-center gap-20">سپهر <span class="text-ink-line">·</span></span>
-                        <span class="inline-flex items-center gap-20">درین <span class="text-ink-line">·</span></span>
-                        <span class="inline-flex items-center gap-20">مانا <span class="text-ink-line">·</span></span>
-                    </div>
-                </div>
-
-                <!-- ═══ مانیفست ═══ -->
-                <section class="bg-ink px-page py-[clamp(80px,9vw,140px)] text-paper">
-                    <div class="reveal grid grid-cols-1 items-start gap-10 md:grid-cols-[1fr_2fr] lg:gap-20">
-                        <span class="font-mono text-[0.78rem] uppercase tracking-[0.14em] text-lime">مانیفست</span>
-                        <div>
-                            <h2
-                                class="max-w-[22ch] text-[clamp(2rem,3.4vw,3.4rem)] font-normal leading-[1.06] tracking-[-0.02em] text-paper">
-                                طراحیِ خوب <span class="font-display italic text-lime">زیبا</span> نیست؛ درست است.
-                            </h2>
-                            <p class="mt-5 max-w-[56ch] text-[1.1rem] text-mist">ما به دکور باور نداریم. هر پیکسل باید
-                                کار مشخصی انجام دهد: توجه بگیرد، اعتماد بسازد یا تصمیم‌گیری را آسان کند.</p>
-                            <p class="max-w-[56ch] text-[1.1rem] text-mist">زیبایی نتیجه‌ی درست‌بودن است؛ نه هدفِ خودش.
-                            </p>
-                            <div
-                                class="mt-12 grid grid-cols-[auto_1fr_auto] items-center gap-6 border-t border-ink-line-dark pt-6 font-mono text-[0.8rem] uppercase tracking-[0.08em] text-mist-dim">
-                                <span>تهران</span><span class="text-center">استودیو پیکسوریا</span><span>۱۳۹۸ —
-                                    امروز</span>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- ═══ CTA ═══ -->
-                <section class="relative overflow-hidden bg-lime px-page py-[clamp(80px,9vw,140px)] text-ink">
-                    <div
-                        class="reveal mx-auto grid max-w-[1200px] grid-cols-1 items-end gap-8 md:grid-cols-[2fr_1fr] md:gap-16">
-                        <h2
-                            class="max-w-[14ch] text-[clamp(2.6rem,5vw,5.2rem)] font-medium leading-[0.96] tracking-[-0.03em] text-ink">
-                            ایده‌ای در <em class="font-display font-normal italic">ذهن</em> دارید؟
-                        </h2>
-                        <div>
-                            <p class="m-0 max-w-[32ch] text-[1.05rem] leading-[1.5]">دو خط برای ما بنویسید؛ جلسه‌ی اول
-                                رایگان است و اگر جور نشدیم، صادقانه می‌گوییم.</p>
-                            <div class="mt-[22px] grid gap-2 font-mono text-[0.78rem] uppercase tracking-[0.1em]">
-                                <span>hello@axioma.studio</span>
-                                <span>+98 21 0000 0000</span>
-                            </div>
-                            <a href="contact.html" class="btn btn-ghost group mt-8">تماس بگیرید
-                                <span
-                                    class="arrow transition-transform duration-[250ms] ease-ax group-hover:translate-y-1">↓</span></a>
-                        </div>
-                    </div>
-                </section>
-                <!-- ▲▲▲ پایان محتوای صفحه ▲▲▲ -->
-            </main>
-
-            <!-- ═══ فوتر ═══ -->
-            <footer class="bg-ink px-page pb-6 pt-[clamp(60px,7vw,100px)] text-[0.92rem] text-mist">
-                <div
-                    class="grid grid-cols-2 gap-8 border-b border-ink-line-dark pb-12 md:grid-cols-[1.4fr_1fr_1fr_1fr] md:gap-12">
-                    <div class="flex max-w-[36ch] flex-col gap-[18px]">
-                        <div class="flex items-center gap-2.5 font-display text-[1.6rem] font-semibold text-paper">
-                            <span
-                                class="grid h-7 w-7 place-items-center rounded-sm bg-lime font-mono text-[0.76rem] font-semibold text-ink">P</span>
-                            پیکسوریا
-                        </div>
-                        <p>استودیوی مستقل طراحی و استراتژی در تهران؛ ایده‌های بزرگ را به تجربه‌های فراموش‌نشدنی تبدیل
-                            می‌کنیم.</p>
-                    </div>
-                    <div>
-                        <h4 class="mb-3.5 font-mono text-[0.74rem] font-medium uppercase tracking-[0.14em] text-paper">
-                            فهرست</h4>
-                        <a class="block py-[5px] text-mist-soft transition-colors hover:text-lime"
-                            href="index.html">خانه</a>
-                        <a class="block py-[5px] text-mist-soft transition-colors hover:text-lime"
-                            href="work.html">کارها</a>
-                        <a class="block py-[5px] text-mist-soft transition-colors hover:text-lime"
-                            href="services.html">خدمات</a>
-                        <a class="block py-[5px] text-mist-soft transition-colors hover:text-lime"
-                            href="about.html">درباره</a>
-                        <a class="block py-[5px] text-mist-soft transition-colors hover:text-lime"
-                            href="contact.html">تماس</a>
-                    </div>
-                    <div>
-                        <h4 class="mb-3.5 font-mono text-[0.74rem] font-medium uppercase tracking-[0.14em] text-paper">
-                            خدمات</h4>
-                        <a class="block py-[5px] text-mist-soft transition-colors hover:text-lime"
-                            href="services.html">استراتژی برند</a>
-                        <a class="block py-[5px] text-mist-soft transition-colors hover:text-lime"
-                            href="services.html">هویت بصری</a>
-                        <a class="block py-[5px] text-mist-soft transition-colors hover:text-lime"
-                            href="services.html">طراحی محصول</a>
-                        <a class="block py-[5px] text-mist-soft transition-colors hover:text-lime"
-                            href="services.html">موشن و محتوا</a>
-                    </div>
-                    <div>
-                        <h4 class="mb-3.5 font-mono text-[0.74rem] font-medium uppercase tracking-[0.14em] text-paper">
-                            تماس</h4>
-                        <a class="block py-[5px] text-mist-soft transition-colors hover:text-lime"
-                            href="mailto:hello@axioma.studio">hello@axioma.studio</a>
-                        <a class="block py-[5px] text-mist-soft transition-colors hover:text-lime"
-                            href="tel:+982100000000">+98 21 0000 0000</a>
-                        <span class="block py-[5px] text-mist-soft">تهران، ایران</span>
-                    </div>
-                </div>
-                <div
-                    class="mt-6 grid grid-cols-1 items-center gap-2 font-mono text-[0.74rem] uppercase tracking-[0.08em] text-mist-dim md:grid-cols-3 md:gap-6">
-                    <div class="text-left md:text-right">© <span data-year></span> پیکسوریا</div>
-                    <div class="text-left md:text-center">ساخته‌شده در تهران</div>
-                    <div class="text-left"><a href="#" class="hover:text-lime">حریم خصوصی</a> · <a href="#"
-                            class="hover:text-lime">شرایط</a></div>
-                </div>
-            </footer>
-        </div><!-- /ستون محتوا -->
-    </div><!-- /shell -->
-
-    <script src="main.js" defer></script>
-</body>
-
+    <script src="/public/static/js/vendor/gsap.min.js"></script>
+    <script src="/public/static/js/vendor/ScrollTrigger.min.js"></script>
+    <script src="/public/static/js/vendor/ScrollToPlugin.min.js"></script>
+    <script type="module" src="/public/static/js/main-rocket.js"></script>
+    
+  </body>
 </html>
