@@ -10,6 +10,7 @@ import { initReveals } from "./core/reveal.js";
 import { initPreloader } from "./core/preloader.js";
 import { injectSprites } from "./core/sprites.js";
 import { initSceneEngine } from "./engine/scene-engine.js";
+import { initCarousels } from "./core/carousel.js";
 
 function initScroll() {
   const apply = () => {
@@ -38,6 +39,7 @@ async function boot() {
   initScroll();
   initTyping();
   initReveals();
+  initCarousels();
   initSceneEngine();
 
   const story = document.body.dataset.story;
@@ -50,9 +52,9 @@ async function boot() {
   }
 
   initPreloader(() => {
+    /* تایپ heroLead فقط همین‌جا — بدون تکرار (جلوگیری از صدای پیوسته) */
     const lead = $("#heroLead");
-    if (lead && lead.dataset.type) {
-      lead.dataset.done = "";
+    if (lead && lead.dataset.type && !lead.dataset.done) {
       import("./core/typewriter.js").then((m) =>
         m.typeInto(lead, lead.dataset.type),
       );

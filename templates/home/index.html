@@ -63,7 +63,8 @@
       <h2 id="work-head">{{ featured_work_section.title|safe }}</h2>
       <p>{{ featured_work_section.description|safe }}</p>
     </header>
-    <div class="works-grid">
+    <div class="carousel" id="works-carousel" data-carousel>
+      <div class="carousel-track">
       {% for work in featured_works %}
         <article class="st-card rv">
           <a href="{% url 'portfolio:detail' work.slug %}" class="st-media"><img src="{{ work.image.url }}" alt="{{ work.title }}" loading="lazy" /></a>
@@ -80,6 +81,7 @@
       {% empty %}
         <p>پروژه‌ای برای نمایش وجود ندارد.</p>
       {% endfor %}
+      </div>
     </div>
   </section>
 
@@ -112,8 +114,9 @@
         <span class="kicker">نظرات مشتریان<span class="dot"></span></span>
         <h2 id="testimonials-head">آن‌ها تجربه‌شان را گفتند.</h2>
       </header>
-      <div class="works-grid">
-        {% for t in testimonials %}
+      <div class="carousel" id="testimonials-carousel" data-carousel>
+        <div class="carousel-track">
+          {% for t in testimonials %}
           <article class="st-card rv">
             <div class="stars font-mono">★★★★★</div>
             <blockquote>{{ t.text }}</blockquote>
@@ -122,7 +125,8 @@
               <div><span>{{ t.author_name }}</span><span class="dim">{{ t.author_role }}</span></div>
             </div>
           </article>
-        {% endfor %}
+          {% endfor %}
+        </div>
       </div>
     </section>
   {% endif %}

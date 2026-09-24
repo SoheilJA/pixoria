@@ -14,7 +14,7 @@ export function typeInto(el, text, speed = 24) {
   el._iv = setInterval(() => {
     i++;
     el.textContent = text.slice(0, i);
-    if (i % 3 === 0) Sound.key();
+    if (i % 6 === 0) Sound.key();
     if (i >= text.length) {
       clearInterval(el._iv);
       el.textContent = text;

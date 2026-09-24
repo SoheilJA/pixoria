@@ -2018,3 +2018,40 @@
 .help-keys b{color:var(--ink)}
 .gold{background:var(--gold)}
 .k-tag.gold{background:var(--gold);color:#fff}
+
+/* ═════════ اصلاحات: منوی وسط، کاروسل، مارکی، تم دارک ═════════ */
+/* منوی اصلی وسط هدر */
+.topbar{position:fixed;inset-inline:0;top:0;z-index:50;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;padding:10px 18px}
+.topbar .logo{justify-self:start}
+.topbar .topnav{justify-self:center;display:none;gap:4px;margin:0}
+.topbar .topctl{justify-self:end;margin:0}
+@media(min-width:1000px){.topbar .topnav{display:flex}.topbar .menu-btn{display:none}}
+
+/* کاروسل */
+.carousel{position:relative;overflow:hidden}
+.carousel-track{display:flex;gap:18px;transition:transform .45s cubic-bezier(.2,.8,.2,1);will-change:transform}
+.carousel-track>*{flex:0 0 calc((100% - 36px)/3)}
+@media(max-width:999px){.carousel-track>*{flex-basis:calc((100% - 18px)/2)}}
+@media(max-width:699px){.carousel-track>*{flex-basis:100%}}
+.carousel-nav{display:flex;gap:8px;justify-content:center;margin-top:18px}
+.carousel-btn-prev,.carousel-btn-next{width:40px;height:40px;border-radius:10px;background:var(--panel);border:1px solid var(--line);color:var(--ink);font-size:1.1rem;cursor:pointer}
+.carousel-btn-prev:hover,.carousel-btn-next:hover{border-color:var(--acc);color:var(--acc)}
+.carousel-btn-prev:disabled,.carousel-btn-next:disabled{opacity:.35;cursor:default}
+.carousel-dots{display:flex;gap:6px;justify-content:center;margin-top:10px}
+.carousel-dot{width:9px;height:9px;border-radius:99px;border:0;background:var(--line);cursor:pointer;padding:0}
+.carousel-dot.on{background:var(--acc)}
+
+/* مارکی RTL — حرکت به سمت چپ، بدون پرش */
+.hero-marquee-in,.client-marquee-in{direction:ltr}
+.hero-marquee-in span,.client-marquee-in span{direction:rtl;unicode-bidi:isolate}
+@keyframes marqRTL{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.hero-marquee-in{animation:marqRTL 30s linear infinite}
+.client-marquee-in{animation:marqRTL 40s linear infinite}
+
+/* تم دارک: هیچ سکشنی پس‌زمینه‌ی روشن ثابت نداشته باشد */
+html.dark .manifesto{background:var(--panel2);border-block:1px solid var(--line)}
+html.dark .client-marquee{background:transparent;border-block:1px solid var(--line)}
+html.dark .st-card{background:var(--panel2)}
+html.dark .svc-row:hover{background:var(--panel2)}
+html.dark .console,html.dark .arcade-side .card{background:var(--panel2)}
+html.dark .pre{background:var(--bg)}

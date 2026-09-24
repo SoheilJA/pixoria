@@ -33,8 +33,7 @@ export function initPreloader(onDone) {
     fill = $("#preFill"),
     start = $("#preStart");
   let i = 0,
-    p = 0;
-  const iv = setInterval(
+    p = 0;  const iv = setInterval(
     () => {
       if (i < PRE_LINES.length) {
         const d = document.createElement("div");

@@ -66,9 +66,9 @@ export function createAmbient(opts = {}) {
       state.clouds.push({
         x: rnd() * w,
         y: (0.06 + rnd() * 0.22) * h,
-        s: 14 + layer * 10 + rnd() * 10,
+        s: 18 + layer * 12 + rnd() * 12,
         v: (4 + layer * 5 + rnd() * 6) * (layer === 0 ? 1 : layer === 1 ? 0.7 : 0.45),
-        a: 0.5 + layer * 0.2,
+        a: 0.95 - layer * 0.15,
       });
     }
     state.stars = [];
@@ -78,7 +78,7 @@ export function createAmbient(opts = {}) {
         y: rnd() * h * 0.6,
         ph: rnd() * 6,
         sp: 0.6 + rnd() * 1.6,
-        r: rnd() < 0.12 ? 2 : 1,
+        r: rnd() < 0.12 ? 3 : 2,
       });
     state.flies = [];
     for (let i = 0; i < 6; i++)
@@ -190,8 +190,8 @@ export function createAmbient(opts = {}) {
         ctx.fill();
         const sun = cachedSprite("sun", SUN_R, { Y: "#ffb347" }, 3);
         drawSprite(ctx, sun, sx - sun.width / 2, sy - sun.height / 2);
-        /* ابرها */
-        const cloudCol = "#eef2f8";
+        /* ابرها — رنگ پررنگ‌تر برای دیده‌شدن روی هر دو تم */
+        const cloudCol = day ? "#c6d2e4" : "#2e3c5c";
         for (const c of state.clouds) {
           c.x += (c.v + gustV) * dt;
           if (c.x > w + 120) c.x = -140;
@@ -221,9 +221,9 @@ export function createAmbient(opts = {}) {
         drawSprite(ctx, moon, mx - moon.width / 2, my - moon.height / 2);
         /* ستاره‌ها */
         for (const s of state.stars) {
-          const tw = RM ? 0.7 : 0.35 + 0.65 * Math.abs(Math.sin(state.t * s.sp + s.ph));
+          const tw = RM ? 0.9 : 0.55 + 0.45 * Math.abs(Math.sin(state.t * s.sp + s.ph));
           ctx.globalAlpha = tw;
-          ctx.fillStyle = "#dbe4f5";
+          ctx.fillStyle = "#ffffff";
           ctx.fillRect(s.x, s.y, s.r, s.r);
         }
         ctx.globalAlpha = 1;
