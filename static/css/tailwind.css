@@ -2548,6 +2548,35 @@
     transition-duration: 0.01ms !important;
   }
 }
+@layer components {
+  a, button, .svc-card, .work-card, article[class*="hover:-translate-y-1"] {
+    transition-property: transform, background-color, color, border-color, box-shadow, opacity;
+    transition-duration: 280ms;
+    transition-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .rail-nav a, footer a {
+    position: relative;
+  }
+  .rail-nav a::after {
+    content: "";
+    position: absolute;
+    inset-inline-start: 8px;
+    bottom: 6px;
+    height: 1px;
+    width: 0%;
+    background: var(--color-lime-deep);
+    transition: width 260ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .rail-nav a:hover::after {
+    width: calc(100% - 16px);
+  }
+  .svc-card:hover, article[class*="hover:-translate-y-1"]:hover {
+    box-shadow: 0 14px 34px rgba(14, 14, 14, 0.1);
+  }
+  .hover\:bg-paper-soft:hover {
+    transition-duration: 280ms;
+  }
+}
 @property --tw-translate-x {
   syntax: "*";
   inherits: false;
