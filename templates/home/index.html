@@ -63,7 +63,7 @@
       <p class="m-0 max-w-[60ch] text-[1.15rem] leading-[1.5] text-ink-soft">{{ featured_work_section.description|safe }}</p>
     </div>
 
-    <div class="grid grid-cols-1 gap-7 md:grid-cols-2 lg:grid-cols-[1.3fr_1fr_1fr]">
+    <div class="grid grid-cols-1 gap-7 sm:grid-cols-2 lg:grid-cols-4">
       {% for work in featured_works %}
         <article
           class="group flex flex-col overflow-hidden rounded-md border border-ink-line bg-paper transition-[transform,border-color] duration-300 ease-ax hover:-translate-y-1 hover:border-ink {% if forloop.first %}lg:col-span-1{% endif %}"
@@ -92,23 +92,32 @@
   <!-- ═══ خدمات ═══ -->
   <section class="px-page py-[clamp(64px,12vw,100px)] md:py-section" aria-labelledby="services-head">
     <div class="mb-16 max-w-[880px]" data-aos="fade-up">
-      <span class="eyebrow mb-6 inline-block">خدمات<span
+      <span class="eyebrow mb-6 inline-block">حوزه‌های کاری<span
         class="ml-2 inline-block h-1.5 w-1.5 rounded-full bg-lime align-[2px]"></span></span>
       <h2 id="services-head" class="mb-[18px]">{{ services_section.title|safe }}</h2>
       <p class="m-0 max-w-[60ch] text-[1.15rem] leading-[1.5] text-ink-soft">{{ services_section.description|safe }}</p>
     </div>
 
-    <div class="border-t border-ink">
+    <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
       {% for item in services_with_delay %}
         {% with service=item.service %}
           <a href="{% url 'services:detail' service.slug %}"
-            class="group grid grid-cols-1 items-start gap-2 border-b border-ink-line py-6 transition-[padding,background-color] duration-300 ease-ax hover:bg-paper-soft hover:px-4 md:grid-cols-[60px_1fr_1fr_auto] md:gap-5 lg:grid-cols-[80px_1fr_1.4fr_auto] lg:gap-8 lg:py-9"
+            class="svc-card group relative flex flex-col gap-4 overflow-hidden rounded-md border border-ink-line bg-paper p-[26px] transition-[transform,border-color] duration-300 ease-ax hover:-translate-y-1 hover:border-ink"
             data-aos="fade-up" data-aos-delay="{{ item.delay }}">
-            <span class="font-mono text-[0.84rem] tracking-[0.06em] text-ink-dim">{{ forloop.counter|stringformat:'02d' }}</span>
-            <h3 class="text-[clamp(1.4rem,2vw,2rem)] leading-[1.05] tracking-[-0.02em]">{{ service.title }}</h3>
+            <div class="flex items-start justify-between gap-4">
+              <span class="font-mono text-[0.8rem] tracking-[0.06em] text-ink-dim">{{ forloop.counter|stringformat:'02d' }}</span>
+              <span
+                class="text-[1.3rem] text-ink transition-[transform,color] duration-300 ease-ax group-hover:rotate-45 group-hover:text-lime-deep">↖</span>
+            </div>
+            <h3 class="text-[clamp(1.35rem,2vw,1.8rem)] leading-[1.05] tracking-[-0.02em]">{{ service.title }}</h3>
             <p class="m-0 max-w-[50ch] text-ink-soft">{{ service.excerpt }}</p>
-            <span
-              class="hidden text-[1.4rem] text-ink transition-[transform,color] duration-300 ease-ax group-hover:rotate-45 group-hover:text-lime-deep md:inline-block">↖</span>
+            {% if service.get_tags_list %}
+              <div class="mt-auto flex flex-wrap gap-1.5 pt-2">
+                {% for tag in service.get_tags_list %}
+                  <span class="rounded-full bg-paper-soft px-2.5 py-1 font-mono text-[0.72rem] text-ink-soft">{{ tag }}</span>
+                {% endfor %}
+              </div>
+            {% endif %}
           </a>
         {% endwith %}
       {% empty %}
@@ -155,33 +164,35 @@
   {% endif %}
 
   {% if testimonials %}
-    <section class="px-page py-[clamp(64px,12vw,100px)] md:py-section" aria-labelledby="testimonials-head">
-      <div class="mb-16 max-w-[880px]" data-aos="fade-up">
+    <section class="px-page pb-[clamp(32px,5vw,56px)] pt-[clamp(64px,12vw,100px)] md:pb-section-sm md:pt-section" aria-labelledby="testimonials-head">
+      <div class="mb-14 max-w-[880px]" data-aos="fade-up">
         <span class="eyebrow mb-6 inline-block">نظرات مشتریان<span
           class="ml-2 inline-block h-1.5 w-1.5 rounded-full bg-lime align-[2px]"></span></span>
         <h2 id="testimonials-head">آن‌ها تجربه‌شان را گفتند.</h2>
       </div>
-      <div class="carousel" id="testimonials-carousel">
-        <div class="carousel-track">
-          {% for t in testimonials %}
-            <article class="border-t border-ink-line pt-6" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
-              <div class="font-mono text-lime">★★★★★</div>
-              <blockquote class="my-5 text-[1.15rem] leading-[1.6] text-ink">{{ t.text }}</blockquote>
-              <div class="flex items-center gap-3">
-                {% if t.author_image %}
-                  <img src="{{ t.author_image.url }}" alt="{{ t.author_name }}" loading="lazy" class="h-10 w-10 rounded-full object-cover" />
-                {% endif %}
-                <div>
-                  <span class="block text-ink">{{ t.author_name }}</span><span class="text-[0.85rem] text-ink-dim">{{ t.author_role }}</span>
-                </div>
+      <div class="grid grid-cols-1 gap-5 md:grid-cols-3">
+        {% for t in testimonials %}
+          <article
+            class="flex flex-col gap-4 rounded-md border border-ink-line bg-paper p-[26px] transition-[transform,border-color] duration-300 ease-ax hover:-translate-y-1 hover:border-ink"
+            data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
+            <div class="flex items-center justify-between">
+              <div class="flex gap-0.5 text-lime" aria-label="۵ ستاره">★★★★★</div>
+              <span class="font-mono text-[0.72rem] text-ink-dim">{{ forloop.counter|stringformat:'02d' }}</span>
+            </div>
+            <blockquote class="m-0 text-[1.05rem] leading-[1.7] text-ink">{{ t.text }}</blockquote>
+            <div class="mt-auto flex items-center gap-3 border-t border-ink-line pt-4">
+              {% if t.author_image %}
+                <img src="{{ t.author_image.url }}" alt="{{ t.author_name }}" loading="lazy" class="h-10 w-10 rounded-full object-cover" />
+              {% else %}
+                <span class="grid h-10 w-10 place-items-center rounded-full bg-ink font-mono text-[0.8rem] font-semibold text-lime">{{ t.author_name|slice:":1" }}</span>
+              {% endif %}
+              <div>
+                <span class="block text-[0.95rem] text-ink">{{ t.author_name }}</span>
+                <span class="block text-[0.82rem] text-ink-dim">{{ t.author_role }}</span>
               </div>
-            </article>
-          {% endfor %}
-        </div>
-        <div class="carousel-nav">
-          <button type="button" class="carousel-btn-prev" aria-label="قبلی">←</button><button type="button" class="carousel-btn-next" aria-label="بعدی">→</button>
-        </div>
-        <div class="carousel-dots"></div>
+            </div>
+          </article>
+        {% endfor %}
       </div>
     </section>
   {% endif %}
