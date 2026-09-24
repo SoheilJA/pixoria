@@ -1,15 +1,12 @@
 /* نقطه‌ی ورود مشترک همه‌ی صفحه‌ها — بدون صدا */
 import { $ } from "./core/utils.js";
 import { initTheme, setTheme } from "./core/theme.js";
-import { initMode } from "./core/controls.js";
 import { initMenu } from "./core/menu.js";
 import { initRail, updateRail } from "./core/rail.js";
 import { initTyping } from "./core/typewriter.js";
 import { initReveals } from "./core/reveal.js";
-import { initPreloader } from "./core/preloader.js";
 import { injectSprites } from "./core/sprites.js";
 import { initCarousels } from "./core/carousel.js";
-import { initScrollProgress } from "./engine/background3d.js";
 
 function initScroll() {
   const apply = () => {
@@ -32,14 +29,30 @@ function initScroll() {
 async function boot() {
   injectSprites();
   initTheme();
-  initMode();
   initMenu();
   initRail();
   initScroll();
   initTyping();
   initReveals();
   initCarousels();
-  initScrollProgress();
+
+  /* هدر موبایل: باز/بستن منوی تمام‌صفحه */
+  const mtBtn = $("#btnMenu"),
+    mtNav = $("#mobile-nav"),
+    mtClose = $("#menuClose");
+  if (mtBtn && mtNav) {
+    const open = () => {
+      mtNav.classList.add("open");
+      mtBtn.setAttribute("aria-expanded", "true");
+    };
+    const close = () => {
+      mtNav.classList.remove("open");
+      mtBtn.setAttribute("aria-expanded", "false");
+    };
+    mtBtn.addEventListener("click", open);
+    if (mtClose) mtClose.addEventListener("click", close);
+    mtNav.querySelectorAll("a").forEach((a) => a.addEventListener("click", close));
+  }
 
   const story = document.body.dataset.story;
   if (story) {
@@ -50,15 +63,13 @@ async function boot() {
     }
   }
 
-  initPreloader(() => {
-    /* تایپ heroLead فقط همین‌جا — بدون تکرار */
-    const lead = $("#heroLead");
-    if (lead && lead.dataset.type && !lead.dataset.done) {
-      import("./core/typewriter.js").then((m) =>
-        m.typeInto(lead, lead.dataset.type),
-      );
-    }
-  });
+  /* تایپ heroLead */
+  const lead = $("#heroLead");
+  if (lead && lead.dataset.type && !lead.dataset.done) {
+    import("./core/typewriter.js").then((m) =>
+      m.typeInto(lead, lead.dataset.type),
+    );
+  }
 }
 
 if (document.readyState === "loading")

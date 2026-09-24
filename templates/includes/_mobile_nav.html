@@ -1,0 +1,16 @@
+<!-- هدر موبایل + منوی تمام‌صفحه — از مرجع index.html -->
+<header class="mobile-topbar">
+  <a href="{% url 'home:home' %}" class="mt-logo"><span class="mt-mark">P</span>{{ settings.site_name }}</a>
+  <button id="btnMenu" class="mt-toggle" aria-expanded="false" aria-controls="mobile-nav">
+    <span class="sr-only">باز کردن منو</span>
+    <span class="mt-line"></span><span class="mt-line"></span>
+  </button>
+</header>
+<nav id="mobile-nav" class="mobile-nav" aria-label="ناوبری موبایل">
+  <button id="menuClose" class="mt-close" aria-label="بستن منو">بستن ✕</button>
+  <a href="{% url 'home:home' %}">خانه</a>
+  <a href="{% url 'portfolio:list' %}">کارها</a>
+  <a href="{% url 'services:list' %}">خدمات</a>
+  <a href="{% url 'core:about' %}">درباره</a>
+  <a href="{% url 'contact:contact' %}">تماس</a>
+</nav>

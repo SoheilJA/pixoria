@@ -8,17 +8,14 @@
     <title>{% block title %}{{ settings.site_name }}{% endblock %}</title>
     <meta name="description" content="{% block description %}{% endblock %}" />
     <script>
-      /* بوت تم و مود قبل از رندر — بدون فلش */
+      /* بوت تم قبل از رندر — بدون فلش */
       (function () {
-        var d = null, m = null;
+        var d = null;
         try {
           d = localStorage.getItem("lr_theme");
-          m = localStorage.getItem("pixoria_mode");
         } catch (e) {}
         if (d === "dark" || (!d && matchMedia("(prefers-color-scheme: dark)").matches))
           document.documentElement.classList.add("dark");
-        /* پیش‌فرض: بیزینس (خوانا) */
-        if (m !== "game") document.documentElement.classList.add("biz");
       })();
     </script>
     <link rel="stylesheet" href="{% static 'fonts/font_urls.css' %}" />
@@ -27,11 +24,8 @@
     {% block extra_head %}{% endblock %}
   </head>
   <body data-story="{% block story %}{% endblock %}">
-    <canvas id="bg3d" class="bg3d" aria-hidden="true"></canvas>
-    <div class="page-veil" aria-hidden="true"></div>
-    {% include "includes/_preloader.html" %}
-    {% include "includes/_mini_controls.html" %}
     {% include "includes/_toast.html" %}
+    {% include "includes/_mobile_nav.html" %}
 
     <main id="main" class="cinematic-main">
       {% block content %}{% endblock %}
