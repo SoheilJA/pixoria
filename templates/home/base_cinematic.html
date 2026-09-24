@@ -8,14 +8,17 @@
     <title>{% block title %}{{ settings.site_name }}{% endblock %}</title>
     <meta name="description" content="{% block description %}{% endblock %}" />
     <script>
-      /* بوت تم قبل از رندر — بدون فلش */
+      /* بوت تم و مود قبل از رندر — بدون فلش */
       (function () {
-        var d = null;
+        var d = null, m = null;
         try {
           d = localStorage.getItem("lr_theme");
+          m = localStorage.getItem("pixoria_mode");
         } catch (e) {}
         if (d === "dark" || (!d && matchMedia("(prefers-color-scheme: dark)").matches))
           document.documentElement.classList.add("dark");
+        /* پیش‌فرض: بیزینس (خوانا) */
+        if (m !== "game") document.documentElement.classList.add("biz");
       })();
     </script>
     <link rel="stylesheet" href="{% static 'fonts/font_urls.css' %}" />

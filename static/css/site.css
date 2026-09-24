@@ -2071,3 +2071,14 @@ html.dark .bg3d{opacity:1}
 .hero-title{font-size:clamp(3rem,9vw,7.5rem);line-height:1;margin:6px 0;color:var(--ink);font-weight:800;letter-spacing:-.02em;text-shadow:0 2px 24px color-mix(in srgb,var(--bg) 70%,transparent)}
 .hero .rv{opacity:1}
 html.dark .silk{background:rgba(17,26,48,.8)}
+
+/* ═════════ مود بیزینس (از لندینگ ۵) — خوانایی محتوا روی پس‌زمینه ═════════ */
+html.biz #bg3d{opacity:.14;filter:saturate(.65)}
+html.biz .silk{background:var(--panel-a);backdrop-filter:blur(8px)}
+html.biz .hero-title{text-shadow:none}
+html.biz .sec,html.biz .cta-band{background:color-mix(in srgb,var(--bg) 82%,transparent)}
+html.biz .st-card,html.biz .console,html.biz .arcade-side .card{backdrop-filter:blur(8px)}
+html.biz .hero-marquee,html.biz .client-marquee{background:color-mix(in srgb,var(--bg) 86%,transparent)}
+html.biz .manifesto{background:color-mix(in srgb,var(--ink) 92%,transparent)}
+html.biz .svc-row:hover{background:color-mix(in srgb,var(--bg) 88%,transparent)}
+html.biz .cinematic-main{background:transparent}

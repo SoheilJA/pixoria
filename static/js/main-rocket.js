@@ -2,7 +2,7 @@
 import { $, isDark } from "./core/utils.js";
 import { Sound } from "./core/sound.js";
 import { initTheme, setTheme } from "./core/theme.js";
-import { initSound } from "./core/controls.js";
+import { initSound, initMode } from "./core/controls.js";
 import { initMenu } from "./core/menu.js";
 import { initRail, updateRail } from "./core/rail.js";
 import { initTyping } from "./core/typewriter.js";
@@ -33,6 +33,7 @@ function initScroll() {
 async function boot() {
   injectSprites();
   initTheme();
+  initMode();
   initSound();
   initMenu();
   initRail();
