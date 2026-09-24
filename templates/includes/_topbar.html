@@ -1,0 +1,20 @@
+{% load static %}
+<header id="topbar" class="topbar">
+  <a class="logo" href="{% url 'home:home' %}" aria-label="{{ settings.site_name }} — صفحه‌ی اصلی">
+    <span class="logo-mark">P</span><span class="logo-name">{{ settings.site_name }}</span>
+  </a>
+  <nav class="topnav" aria-label="ناوبری اصلی">
+    <a class="nav-a {% if request.resolver_match.app_name == 'home' %}cur{% endif %}" href="{% url 'home:home' %}">خانه</a>
+    <a class="nav-a {% if request.resolver_match.app_name == 'services' %}cur{% endif %}" href="{% url 'services:list' %}">خدمات</a>
+    <a class="nav-a {% if request.resolver_match.app_name == 'portfolio' %}cur{% endif %}" href="{% url 'portfolio:list' %}">نمونه‌کارها</a>
+    <a class="nav-a {% if request.resolver_match.app_name == 'blog' %}cur{% endif %}" href="{% url 'blog:list' %}">بلاگ</a>
+    <a class="nav-a {% if request.resolver_match.app_name == 'core' %}cur{% endif %}" href="{% url 'core:about' %}">درباره‌ی ما</a>
+    <a class="nav-a {% if request.resolver_match.app_name == 'contact' %}cur{% endif %}" href="{% url 'contact:contact' %}">تماس</a>
+  </nav>
+  <div class="topctl">
+    {% block hud %}{% endblock %}
+    <button id="btnTheme" class="tbtn" aria-label="تغییر تم روز/شب"><span id="themeIco"></span></button>
+    <button class="tbtn btn-sound" aria-pressed="false" aria-label="روشن/خاموش کردن صدا">SND</button>
+    <button id="btnMenu" class="tbtn menu-btn" aria-controls="menuOverlay" aria-expanded="false" aria-label="باز کردن منو">MENU</button>
+  </div>
+</header>

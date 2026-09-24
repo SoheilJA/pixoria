@@ -1827,3 +1827,71 @@
   font-display: swap;
   src: url("../fonts/jersey10-latin.woff2") format("woff2");
 }
+
+/* ═════════ مکمل‌های کیلو: topbar منو ریل توست پیش‌لودر فوتر ═════════ */
+.topbar{position:fixed;inset-inline:0;top:0;z-index:50;display:flex;align-items:center;gap:14px;padding:10px 18px;background:var(--backdrop);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.topbar .logo{display:flex;align-items:center;gap:8px;font-weight:800;color:var(--ink);text-decoration:none}
+.logo-mark{display:grid;place-items:center;width:26px;height:26px;background:var(--acc);color:#fff;font-weight:800;border-radius:6px;font-family:"Press Start 2P",monospace;font-size:.7rem}
+.logo-mark.inv{background:var(--acc);color:#fff}
+.topnav{display:none;gap:4px;margin-inline-start:auto}
+.topnav .nav-a{padding:6px 12px;border-radius:8px;color:var(--dim);text-decoration:none;font-size:.9rem;font-weight:700}
+.topnav .nav-a:hover{color:var(--ink);background:var(--panel2)}
+.topnav .nav-a.cur{color:var(--ink);background:var(--panel2)}
+.topctl{display:flex;align-items:center;gap:8px;margin-inline-start:auto}
+.topnav + .topctl{margin-inline-start:0}
+.tbtn{display:grid;place-items:center;min-width:38px;height:34px;padding:0 10px;background:var(--panel);border:1px solid var(--line);border-radius:9px;color:var(--ink);font-family:"Press Start 2P",monospace;font-size:.55rem;cursor:pointer}
+.tbtn:hover{border-color:var(--acc);color:var(--acc)}
+.tbtn[aria-pressed="true"]{border-color:var(--acc);color:var(--acc)}
+.tbtn .pixart{width:16px;height:16px}
+.menu-btn{display:grid}
+@media(min-width:1000px){.topnav{display:flex}.menu-btn{display:none}}
+.menu-overlay{position:fixed;inset:0;z-index:90;display:none;background:color-mix(in srgb,var(--bg) 55%,transparent);backdrop-filter:blur(4px)}
+.menu-overlay.open{display:grid;place-items:center}
+.menu-panel{width:min(92vw,420px);background:var(--panel);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:22px}
+.menu-close{position:absolute;margin:0;top:14px;inset-inline-end:14px;background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:6px 10px;color:var(--ink);font:inherit;cursor:pointer}
+.menu-panel{position:relative}
+.menu-title{font-family:"Press Start 2P",monospace;font-size:.8rem;color:var(--acc);margin-bottom:14px}
+.menu-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px}
+.menu-item{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:10px;color:var(--ink);text-decoration:none;font-weight:700;border:1px dashed transparent}
+.menu-item.sel{background:var(--panel2);border-color:var(--acc)}
+.mi-num{font-family:"Press Start 2P",monospace;font-size:.55rem;color:var(--dim)}
+.menu-foot{display:flex;justify-content:space-between;gap:10px;margin-top:16px;padding-top:14px;border-top:1px solid var(--line);color:var(--dim);font-size:.85rem}
+.menu-foot a{color:var(--dim);text-decoration:none}
+.rail{position:fixed;top:0;bottom:0;inset-inline-start:0;width:64px;z-index:40;display:none;flex-direction:column;align-items:center;pointer-events:none}
+@media(min-width:900px) and (hover:hover){.rail{display:flex}}
+.rail-track{position:relative;height:calc(100% - 238px);margin:96px 0;width:2px;background:repeating-linear-gradient(to bottom,var(--line) 0 6px,transparent 6px 12px);pointer-events:auto}
+.rail-dot{position:absolute;inset-inline-start:50%;width:6px;height:6px;transform:translate(50%,-50%);background:var(--line);border-radius:1px;transition:background .2s}
+.rail-dot.on{background:var(--acc)}
+.rail-buddy{position:absolute;top:96px;inset-inline-start:50%;transform:translate(50%,0);width:34px;height:34px;cursor:pointer;pointer-events:auto}
+.rail-buddy .pixart{width:100%;height:100%}
+.rail-buddy .f{display:none}.rail-buddy .f1{display:block}
+.sprite[data-frames="2"] .f2{display:none}
+.sprite[data-frames="2"].fr .f1{display:none}
+.sprite[data-frames="2"].fr .f2{display:block}
+.rail-alt{position:absolute;bottom:56px;font-family:"Press Start 2P",monospace;font-size:.5rem;color:var(--dim)}
+.buddy-say{position:fixed;z-index:41;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:6px 10px;font-size:.8rem;color:var(--ink);opacity:0;transition:opacity .2s;pointer-events:none}
+.buddy-say.show{opacity:1}
+.toast{position:fixed;bottom:22px;inset-inline-end:22px;z-index:100;display:flex;align-items:center;gap:10px;max-width:min(92vw,440px);padding:12px 16px;background:var(--ink);color:var(--bg);border-radius:12px;font-weight:700;font-size:.9rem;transform:translate(0,140%);transition:transform .25s}
+#toast{inset-inline-end:22px;transform:translate(0,140%)}
+#toast.show{transform:translate(0,0)}
+.toast .t-ico{color:var(--gold);font-family:"Jersey 10",monospace;font-size:1.2rem}
+.pre{position:fixed;inset:0;z-index:200;display:grid;place-items:center;background:var(--bg)}
+.pre-in{display:flex;flex-direction:column;align-items:center;gap:14px;width:min(92vw,420px)}
+.pre-sprite .pixart{width:64px;height:128px}
+.pre-title{font-family:"Press Start 2P",monospace;color:var(--acc);font-size:1rem}
+.pre-lines{min-height:110px;font-size:.85rem;color:var(--dim);width:100%}
+.pre-bar{width:100%;height:8px;background:var(--panel2);border:1px solid var(--line);border-radius:99px;overflow:hidden}
+.pre-fill{height:100%;width:0;background:var(--acc);transition:width .3s}
+.pre-start{opacity:0;pointer-events:none;background:var(--acc);color:#fff;border:0;border-radius:10px;padding:10px 18px;font-weight:800;font:inherit;cursor:pointer}
+.pre-start.show{opacity:1;pointer-events:auto}
+.cfooter{background:var(--panel2);border-top:1px solid var(--line);padding:40px 18px 18px}
+.cf-grid{display:grid;grid-template-columns:1fr;gap:28px;max-width:1200px;margin:0 auto}
+@media(min-width:800px){.cf-grid{grid-template-columns:1.4fr 1fr 1fr 1fr}}
+.cf-brand p{color:var(--dim);font-size:.92rem}
+.cf-col{display:flex;flex-direction:column;gap:6px}
+.cf-col h4{margin:0 0 6px;font-size:.8rem;color:var(--ink)}
+.cf-col a,.cf-col span{color:var(--dim);text-decoration:none;font-size:.92rem}
+.cf-col a:hover{color:var(--acc)}
+.cf-socials{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px}
+.cf-bottom{display:flex;justify-content:space-between;gap:10px;max-width:1200px;margin:26px auto 0;padding-top:14px;border-top:1px solid var(--line);color:var(--dim);font-size:.8rem}
+.cinematic-main{padding-top:54px}

@@ -1,0 +1,45 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#0a101f" />
+    <title>{% block title %}{{ settings.site_name }}{% endblock %}</title>
+    <meta name="description" content="{% block description %}{% endblock %}" />
+    <script>
+      /* بوت تم قبل از رندر — بدون فلش */
+      (function () {
+        var d = null;
+        try {
+          d = localStorage.getItem("lr_theme");
+        } catch (e) {}
+        if (d === "dark" || (!d && matchMedia("(prefers-color-scheme: dark)").matches))
+          document.documentElement.classList.add("dark");
+      })();
+    </script>
+    <link rel="stylesheet" href="{% static 'fonts/font_urls.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/tailwind.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/site.css' %}" />
+    {% block extra_head %}{% endblock %}
+  </head>
+  <body data-story="{% block story %}{% endblock %}">
+    {% include "includes/_preloader.html" %}
+    {% include "includes/_topbar.html" %}
+    {% include "includes/_menu_overlay.html" %}
+    {% include "includes/_rail.html" %}
+    {% include "includes/_toast.html" %}
+
+    <main id="main" class="cinematic-main">
+      {% block content %}{% endblock %}
+    </main>
+
+    {% include "includes/_footer.html" %}
+
+    <script src="{% static 'js/vendor/gsap.min.js' %}"></script>
+    <script src="{% static 'js/vendor/ScrollTrigger.min.js' %}"></script>
+    <script src="{% static 'js/vendor/ScrollToPlugin.min.js' %}"></script>
+    <script type="module" src="{% static 'js/main-rocket.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+  </body>
+</html>

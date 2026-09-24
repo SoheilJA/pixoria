@@ -1,0 +1,40 @@
+<footer class="cfooter">
+  <div class="cf-grid">
+    <div class="cf-brand">
+      <span class="logo"><span class="logo-mark inv">P</span>{{ settings.site_name }}</span>
+      <p>{{ settings.footer_description }}</p>
+    </div>
+    <div class="cf-col">
+      <h4>نقشه‌ی سایت</h4>
+      <a href="{% url 'home:home' %}">خانه</a>
+      <a href="{% url 'services:list' %}">خدمات</a>
+      <a href="{% url 'portfolio:list' %}">نمونه‌کارها</a>
+      <a href="{% url 'blog:list' %}">بلاگ</a>
+      <a href="{% url 'core:about' %}">درباره‌ی ما</a>
+      <a href="{% url 'contact:contact' %}">تماس با ما</a>
+    </div>
+    <div class="cf-col">
+      <h4>خدمات</h4>
+      {% for service in services_footer %}
+        <a href="{% url 'services:detail' service.slug %}">{{ service.title }}</a>
+      {% empty %}
+        <a href="{% url 'services:list' %}">مشاهده‌ی خدمات</a>
+      {% endfor %}
+    </div>
+    <div class="cf-col">
+      <h4>ارتباط</h4>
+      {% if settings.email %}<a href="mailto:{{ settings.email }}">{{ settings.email }}</a>{% endif %}
+      {% if settings.phone %}<a href="tel:{{ settings.phone }}">{{ settings.phone }}</a>{% endif %}
+      {% if settings.address %}<span>{{ settings.address }}</span>{% endif %}
+      <div class="cf-socials">
+        {% for social in socials %}
+          <a href="{{ social.url }}" target="_blank" rel="noopener">{{ social.name }}</a>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  <div class="cf-bottom">
+    <span>© {{ settings.established_year }} {{ settings.site_name }}</span>
+    <span>{{ settings.status|default:'آماده همکاری' }}</span>
+  </div>
+</footer>

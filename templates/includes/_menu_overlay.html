@@ -1,0 +1,18 @@
+<div id="menuOverlay" class="menu-overlay" role="dialog" aria-modal="true" aria-label="منو" aria-hidden="true">
+  <div class="menu-panel">
+    <button id="menuClose" class="menu-close" aria-label="بستن منو">بستن ✕</button>
+    <div class="menu-title pix">PIXORIA MENU</div>
+    <ul id="menuList" class="menu-list">
+      <li><a class="menu-item" href="{% url 'home:home' %}" data-target="{% url 'home:home' %}"><span class="mi-num">01</span>خانه</a></li>
+      <li><a class="menu-item" href="{% url 'services:list' %}" data-target="{% url 'services:list' %}"><span class="mi-num">02</span>خدمات</a></li>
+      <li><a class="menu-item" href="{% url 'portfolio:list' %}" data-target="{% url 'portfolio:list' %}"><span class="mi-num">03</span>نمونه‌کارها</a></li>
+      <li><a class="menu-item" href="{% url 'blog:list' %}" data-target="{% url 'blog:list' %}"><span class="mi-num">04</span>بلاگ</a></li>
+      <li><a class="menu-item" href="{% url 'core:about' %}" data-target="{% url 'core:about' %}"><span class="mi-num">05</span>درباره‌ی ما</a></li>
+      <li><a class="menu-item" href="{% url 'contact:contact' %}" data-target="{% url 'contact:contact' %}"><span class="mi-num">06</span>تماس با ما</a></li>
+    </ul>
+    <div class="menu-foot">
+      {% if settings.phone %}<a href="tel:{{ settings.phone }}">{{ settings.phone }}</a>{% endif %}
+      <span>© {{ settings.established_year }} {{ settings.site_name }}</span>
+    </div>
+  </div>
+</div>
