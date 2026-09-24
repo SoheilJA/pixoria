@@ -5,160 +5,142 @@
 {% block story %}home{% endblock %}
 
 {% block content %}
-  <section id="hero" aria-label="معرفی برند">
-    <div class="hero-in">
-      <span class="silk hero-top rv">A DIGITAL SERVICES ADVENTURE</span>
-      <h1 class="hero-title rv">{{ settings.site_name }}</h1>
-      <p id="heroLead" class="hero-lead rv" data-type="{{ hero.description|striptags }}">{{ hero.description|safe }}</p>
-      <div class="hero-cta rv">
-        <a class="pxbtn" href="{% url 'portfolio:list' %}">شروع مأموریت <span class="lat">START</span></a>
-        <a class="pxbtn ghost" href="{% url 'contact:contact' %}">شروع همکاری <span class="lat">MAP</span></a>
+<div class="home-shell">
+  <!-- ریل کنار (دسکتاپ) -->
+  <aside class="rail-side">
+    <a href="{% url 'home:home' %}" class="rail-logo">
+      <span class="rail-mark">P</span>
+      <span class="rail-brand">{{ settings.site_name }}
+        <span class="rail-sub">{{ settings.site_description }}</span>
+      </span>
+    </a>
+    <nav class="rail-nav" aria-label="ناوبری اصلی">
+      <a href="{% url 'home:home' %}" class="{% if request.resolver_match.app_name == 'home' %}active{% endif %}"><span class="nav-num">01</span>خانه<span class="nav-dot"></span></a>
+      <a href="{% url 'portfolio:list' %}" class="{% if request.resolver_match.app_name == 'portfolio' %}active{% endif %}"><span class="nav-num">02</span>کارها<span class="nav-dot"></span></a>
+      <a href="{% url 'services:list' %}" class="{% if request.resolver_match.app_name == 'services' %}active{% endif %}"><span class="nav-num">03</span>خدمات<span class="nav-dot"></span></a>
+      <a href="{% url 'core:about' %}" class="{% if request.resolver_match.app_name == 'core' %}active{% endif %}"><span class="nav-num">04</span>درباره<span class="nav-dot"></span></a>
+      <a href="{% url 'contact:contact' %}" class="{% if request.resolver_match.app_name == 'contact' %}active{% endif %}"><span class="nav-num">05</span>تماس<span class="nav-dot"></span></a>
+    </nav>
+    <div class="rail-foot">
+      <div class="rail-row"><span>ایران</span><span>GMT+3:30</span></div>
+      <div class="rail-row"><span>سال</span><span>{{ settings.established_year }}</span></div>
+      <div class="rail-status"><span class="status-dot"></span>{{ settings.status|default:'ظرفیت همکاری آزاد' }}</div>
+      <div class="rail-socials">
+        {% for social in socials %}<a href="{{ social.url }}" target="_blank" rel="noopener">{{ social.name }}</a>{% endfor %}
       </div>
-      <p class="silk scroll-hint blink rv">▼ برای سفر در فضا اسکرول کن ▼</p>
-      <div class="hero-marquee" aria-hidden="true">
-        <div class="hero-marquee-in">
-          {% for item in hero_marquee %}<span>{{ item.text }} <span class="acc">✦</span></span>{% endfor %}
-          {% for item in hero_marquee %}<span>{{ item.text }} <span class="acc">✦</span></span>{% endfor %}
+    </div>
+  </aside>
+
+  <!-- ستون محتوا -->
+  <div class="home-main">
+    <!-- HERO -->
+    <section class="home-hero">
+      <div class="home-kicker">
+        <div>{{ settings.site_name }} — استودیوی مستقل</div>
+        <div>از {{ settings.established_year }}</div>
+        <div class="hide-md">برندینگ / دیجیتال / محصول</div>
+        <div class="hide-md"><span class="k-badge">{{ settings.status|default:'ظرفیت همکاری آزاد' }}</span></div>
+      </div>
+      <h1 class="home-h1">{{ hero.title|safe }}<span class="acc">.</span></h1>
+      <div class="home-hero-grid">
+        <p class="home-lead">{{ hero.description|safe }}</p>
+        <div class="home-hero-cta">
+          <a href="{% url 'contact:contact' %}" class="btn btn-ink">شروع پروژه <span class="arrow">↓</span></a>
+          <a href="{% url 'portfolio:list' %}" class="btn btn-ghost">دیدن کارها <span class="arrow">↓</span></a>
         </div>
       </div>
-    </div>
-  </section>
-
-  <section id="services" class="sec" aria-labelledby="services-head">
-    <header class="sec-head rv">
-      <span class="kicker">حوزه‌های کاری<span class="dot"></span></span>
-      <h2 id="services-head">{{ services_section.title|safe }}</h2>
-      <p>{{ services_section.description|safe }}</p>
-    </header>
-    <div class="svc-list">
-      {% for item in services_with_delay %}
-        {% with service=item.service %}
-          <a href="{% url 'services:detail' service.slug %}" class="svc-row rv">
-            <span class="svc-num font-mono">{{ forloop.counter|stringformat:'02d' }} / {{ services|length|stringformat:'02d' }}</span>
-            <div>
-              <h3>{{ service.title }}</h3>
-              {% if service.get_tags_list %}
-                <div class="svc-tags">
-                  {% for tag in service.get_tags_list %}<span class="k-tag">{{ tag }}</span>{% endfor %}
-                </div>
-              {% endif %}
-            </div>
-            <p>{{ service.excerpt }}</p>
-            <span class="svc-arrow" aria-hidden="true">↖</span>
-          </a>
-        {% endwith %}
-      {% empty %}
-        <p>خدمتی ثبت نشده است.</p>
-      {% endfor %}
-    </div>
-  </section>
-
-  <section id="works" class="sec" aria-labelledby="work-head">
-    <header class="sec-head rv">
-      <span class="kicker">{{ featured_work_section.title|default:'کارهای منتخب' }}<span class="dot"></span></span>
-      <h2 id="work-head">{{ featured_work_section.title|safe }}</h2>
-      <p>{{ featured_work_section.description|safe }}</p>
-    </header>
-    <div class="carousel" id="works-carousel" data-carousel>
-      <div class="carousel-track">
-      {% for work in featured_works %}
-        <article class="st-card rv">
-          <a href="{% url 'portfolio:detail' work.slug %}" class="st-media"><img src="{{ work.image.url }}" alt="{{ work.title }}" loading="lazy" /></a>
-          <div class="st-body">
-            <div class="font-mono dim"><span>{{ work.client_name }}</span><span>{{ work.year }}</span></div>
-            <h3>{{ work.title }}</h3>
-            <p>{{ work.excerpt }}</p>
-            {% if work.categories.all %}
-              <div class="svc-tags">{% for cat in work.categories.all %}<span class="k-tag">{{ cat.name }}</span>{% endfor %}</div>
-            {% endif %}
-            <a href="{% url 'portfolio:detail' work.slug %}" class="st-more font-mono">مشاهده پروژه ←</a>
-          </div>
-        </article>
-      {% empty %}
-        <p>پروژه‌ای برای نمایش وجود ندارد.</p>
-      {% endfor %}
-      </div>
-    </div>
-  </section>
-
-  {% if clients %}
-    <section class="client-marquee" aria-label="مشتریان منتخب">
-      <div class="client-marquee-in">
-        {% for client in clients %}<span>{{ client.name }} <span class="sep">·</span></span>{% endfor %}
-        {% for client in clients %}<span>{{ client.name }} <span class="sep">·</span></span>{% endfor %}
-      </div>
-    </section>
-  {% endif %}
-
-  <section id="manifesto" class="manifesto" aria-labelledby="manifesto-head">
-    <div>
-      <span class="kicker acc-k">{{ manifesto.label }}</span>
-      <h2 id="manifesto-head">{{ manifesto.title }} <span class="hl">{{ manifesto.highlighted_word }}</span>.</h2>
-    </div>
-    <div>
-      <p>{{ manifesto.paragraph_one }}</p>
-      <p>{{ manifesto.paragraph_two }}</p>
-      <div class="manifesto-sig font-mono">
-        <span>{{ manifesto.signature_name }}</span><span>{{ manifesto.signature_title }}</span><span>۱۳۹۸ — امروز</span>
-      </div>
-    </div>
-  </section>
-
-  {% if testimonials %}
-    <section class="sec" aria-labelledby="testimonials-head">
-      <header class="sec-head rv">
-        <span class="kicker">نظرات مشتریان<span class="dot"></span></span>
-        <h2 id="testimonials-head">آن‌ها تجربه‌شان را گفتند.</h2>
-      </header>
-      <div class="carousel" id="testimonials-carousel" data-carousel>
-        <div class="carousel-track">
-          {% for t in testimonials %}
-          <article class="st-card rv">
-            <div class="stars font-mono">★★★★★</div>
-            <blockquote>{{ t.text }}</blockquote>
-            <div class="st-author">
-              {% if t.author_image %}<img src="{{ t.author_image.url }}" alt="{{ t.author_name }}" loading="lazy" />{% endif %}
-              <div><span>{{ t.author_name }}</span><span class="dim">{{ t.author_role }}</span></div>
-            </div>
-          </article>
-          {% endfor %}
+      <div class="home-marquee">
+        <div class="home-marquee-in">
+          {% for item in hero_marquee %}<span>{{ item.text }} <span class="acc-s">✦</span></span>{% endfor %}
+          {% for item in hero_marquee %}<span>{{ item.text }} <span class="acc-s">✦</span></span>{% endfor %}
         </div>
       </div>
     </section>
-  {% endif %}
 
-  {% if latest_articles %}
-    <section class="sec" aria-labelledby="latest-articles-head">
-      <header class="sec-head rv">
-        <span class="kicker">{{ latest_articles_section.subtitle|default:'آخرین مقالات' }}<span class="dot"></span></span>
-        <h2 id="latest-articles-head">{{ latest_articles_section.title|default:'مقالات اخیر'|safe }}</h2>
-        <p>{{ latest_articles_section.description|default:'مقالات محبوب و جدید سایت ما'|safe }}</p>
-        <a href="{% url 'blog:list' %}" class="pxbtn ghost">مشاهده همه مقالات ←</a>
-      </header>
-      <div class="works-grid">
-        {% for article in latest_articles %}
-          <article class="st-card rv">
-            <a href="{% url 'blog:detail' article.slug %}" class="st-media"><img src="{{ article.cover_image.url }}" alt="{{ article.cover_image_alt }}" loading="lazy" /></a>
-            <div class="st-body">
-              <div class="font-mono dim">
-                <span>{{ article.category.title }}</span><span>{{ article.published_at|date:'d F Y' }}</span><span>{{ article.reading_time }} دقیقه مطالعه</span>
-              </div>
-              <h3><a href="{% url 'blog:detail' article.slug %}">{{ article.title }}</a></h3>
-              <p>{{ article.excerpt }}</p>
-              <a class="st-more font-mono" href="{% url 'blog:detail' article.slug %}">خواندن مقاله ←</a>
+    <!-- کارهای منتخب -->
+    <section class="home-sec">
+      <div class="sec-head rv">
+        <span class="eyebrow">کارهای منتخب<span class="dot"></span></span>
+        <h2>{{ featured_work_section.title|safe }}</h2>
+        <p>{{ featured_work_section.description|safe }}</p>
+      </div>
+      <div class="work-grid">
+        {% for work in featured_works %}
+          <article class="work-card rv {% if forloop.first %}work-card-lg{% endif %}">
+            <a href="{% url 'portfolio:detail' work.slug %}" class="work-media"><img src="{{ work.image.url }}" alt="{{ work.title }}" loading="lazy" /></a>
+            <div class="work-body">
+              <div class="work-meta"><span>{{ work.client_name }}</span><span>{{ work.year }}</span></div>
+              <h3>{{ work.title }}</h3>
+              <a href="{% url 'portfolio:detail' work.slug %}" class="work-more">مطالعه موردی <span>↖</span></a>
             </div>
           </article>
+        {% empty %}
+          <p>پروژه‌ای برای نمایش وجود ندارد.</p>
         {% endfor %}
       </div>
     </section>
-  {% endif %}
 
-  <section id="cta" class="cta-band" aria-label="شروع همکاری">
-    {% if cta %}
-      <h2>{{ cta.title }}</h2>
-      <p>{{ cta.description }}</p>
-      <a class="pxbtn" href="{% url 'contact:contact' %}">شروع گفتگو ←</a>
-      <div class="font-mono dim"><span>{{ cta.email }}</span><span>{{ cta.phone }}</span></div>
+    <!-- خدمات -->
+    <section class="home-sec">
+      <div class="sec-head rv">
+        <span class="eyebrow">خدمات<span class="dot"></span></span>
+        <h2>{{ services_section.title|safe }}</h2>
+        <p>{{ services_section.description|safe }}</p>
+      </div>
+      <div class="svc-list">
+        {% for item in services_with_delay %}
+          {% with service=item.service %}
+            <a href="{% url 'services:detail' service.slug %}" class="svc-row rv">
+              <span class="svc-num">{{ forloop.counter|stringformat:'02d' }}</span>
+              <h3>{{ service.title }}</h3>
+              <p>{{ service.excerpt }}</p>
+              <span class="svc-arrow">↖</span>
+            </a>
+          {% endwith %}
+        {% empty %}
+          <p>خدمتی ثبت نشده است.</p>
+        {% endfor %}
+      </div>
+    </section>
+
+    <!-- مشتری‌ها -->
+    {% if clients %}
+      <div class="client-marquee">
+        <div class="client-marquee-in">
+          {% for client in clients %}<span>{{ client.name }} <span class="sep">·</span></span>{% endfor %}
+          {% for client in clients %}<span>{{ client.name }} <span class="sep">·</span></span>{% endfor %}
+        </div>
+      </div>
     {% endif %}
-  </section>
+
+    <!-- مانیفست -->
+    {% if manifesto %}
+      <section class="manifesto">
+        <div class="manifesto-in">
+          <span class="manifesto-label">{{ manifesto.label }}</span>
+          <div>
+            <h2>{{ manifesto.title }} <span class="hl">{{ manifesto.highlighted_word }}</span>.</h2>
+            <p>{{ manifesto.paragraph_one }}</p>
+            <p>{{ manifesto.paragraph_two }}</p>
+            <div class="manifesto-sig"><span>{{ manifesto.signature_name }}</span><span>{{ manifesto.signature_title }}</span><span>۱۳۹۸ — امروز</span></div>
+          </div>
+        </div>
+      </section>
+    {% endif %}
+
+    <!-- CTA -->
+    {% if cta %}
+      <section class="cta-band">
+        <div class="cta-in">
+          <h2>{{ cta.title }}</h2>
+          <div>
+            <p>{{ cta.description }}</p>
+            <div class="cta-contact"><span>{{ cta.email }}</span><span>{{ cta.phone }}</span></div>
+            <a href="{% url 'contact:contact' %}" class="btn btn-ghost">تماس بگیرید <span class="arrow">↓</span></a>
+          </div>
+        </div>
+      </section>
+    {% endif %}
+  </div>
+</div>
 {% endblock %}

@@ -28,10 +28,9 @@
   </head>
   <body data-story="{% block story %}{% endblock %}">
     <canvas id="bg3d" class="bg3d" aria-hidden="true"></canvas>
+    <div class="page-veil" aria-hidden="true"></div>
     {% include "includes/_preloader.html" %}
-    {% include "includes/_topbar.html" %}
-    {% include "includes/_menu_overlay.html" %}
-    {% include "includes/_rail.html" %}
+    {% include "includes/_mini_controls.html" %}
     {% include "includes/_toast.html" %}
 
     <main id="main" class="cinematic-main">
