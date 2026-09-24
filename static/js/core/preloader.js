@@ -1,7 +1,5 @@
-/* پیش‌لودر — از مرجع؛ فقط اولین ورود در هر نشست (sessionStorage) */
+/* پیش‌لودر — فقط اولین ورود در هر نشست (sessionStorage)؛ بدون صدا */
 import { $, G, RM } from "./utils.js";
-import { Sound } from "./sound.js";
-import { typeInto } from "./typewriter.js";
 
 export const PRE_LINES = [
   "بوت هسته‌ی پیکسوری…",
@@ -33,7 +31,8 @@ export function initPreloader(onDone) {
     fill = $("#preFill"),
     start = $("#preStart");
   let i = 0,
-    p = 0;  const iv = setInterval(
+    p = 0;
+  const iv = setInterval(
     () => {
       if (i < PRE_LINES.length) {
         const d = document.createElement("div");
@@ -44,19 +43,15 @@ export function initPreloader(onDone) {
         p = 100;
         clearInterval(iv);
         start.classList.add("show");
-        setTimeout(() => dismiss(false), 4200);
+        setTimeout(() => dismiss(), 4200);
       }
       if (fill) fill.style.width = p + "%";
     },
     RM ? 30 : 330,
   );
-  function dismiss(withSound) {
+  function dismiss() {
     if (!pre || pre.dataset.done) return;
     pre.dataset.done = "1";
-    if (withSound) {
-      Sound.ensure();
-      Sound.jingle();
-    }
     if (G && !RM) {
       G.to(pre, {
         opacity: 0,
@@ -72,12 +67,12 @@ export function initPreloader(onDone) {
       if (onDone) onDone();
     }
   }
-  start.addEventListener("click", () => dismiss(true));
+  start.addEventListener("click", () => dismiss());
   document.addEventListener(
     "keydown",
     function once() {
       if (!$("#pre")) return;
-      dismiss(true);
+      dismiss();
       document.removeEventListener("keydown", once);
     },
     { once: true },

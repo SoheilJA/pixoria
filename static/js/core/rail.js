@@ -1,19 +1,6 @@
-/* ریل چپ + بیپ (همراه) — از مرجع */
+/* ریل چپ + بیپ (همراه) — بدون صدا */
 import { $, $$, G, RM } from "./utils.js";
-import { Sound } from "./sound.js";
 import { toast } from "./toast.js";
-
-const BUDDY_PHRASES = [
-  "بیپ!",
-  "همین‌جا هستم",
-  "مسیر رو دوست داری؟",
-  "یک قدم دیگر...",
-  "نزدیک شدی!",
-  "کارت خوبه!",
-];
-
-let buddyClicks = 0,
-  buddyTimer = null;
 
 export function updateRail(p) {
   const usable = Math.max(0, window.innerHeight - 192 - 46);
@@ -46,22 +33,14 @@ export function initRail() {
     track.appendChild(d);
   }
   const b = $("#railBuddy");
-  b.addEventListener("click", () => {
-    Sound.blip();
-    if (G && !RM)
-      G.fromTo(
-        "#railBuddy .b-in",
-        { y: 0 },
-        { y: -12, duration: 0.09, ease: "none", yoyo: true, repeat: 1 },
-      );
-    buddyClicks++;
-    clearTimeout(buddyTimer);
-    buddyTimer = setTimeout(() => (buddyClicks = 0), 1500);
-    if (buddyClicks >= 10) {
-      buddyClicks = 0;
-      Sound.jingle();
-      toast("کد مخفی همکار: BUDDY-10 — نمونه/DEMO، تخفیف واقعی نیست.");
-      buddySay("قلبم رو بردی!");
-    } else buddySay(BUDDY_PHRASES[(buddyClicks - 1) % BUDDY_PHRASES.length]);
-  });
+  if (b)
+    b.addEventListener("click", () => {
+      buddySay("بیپ!");
+      if (G && !RM)
+        G.fromTo(
+          "#railBuddy .b-in",
+          { y: 0 },
+          { y: -12, duration: 0.09, ease: "none", yoyo: true, repeat: 1 },
+        );
+    });
 }

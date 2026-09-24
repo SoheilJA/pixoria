@@ -1,6 +1,5 @@
 /* کاروسل سبک برای نمونه‌کارها و نظرات — بدون وابستگی */
 import { $$ } from "./utils.js";
-import { Sound } from "./sound.js";
 
 export function initCarousel(wrap, { perView = 3, gap = 18 } = {}) {
   if (!wrap) return;
@@ -47,8 +46,8 @@ export function initCarousel(wrap, { perView = 3, gap = 18 } = {}) {
   }
   const prev = wrap.querySelector(".carousel-btn-prev");
   const next = wrap.querySelector(".carousel-btn-next");
-  if (prev) prev.addEventListener("click", () => { go(idx - 1); Sound.blip(); });
-  if (next) next.addEventListener("click", () => { go(idx + 1); Sound.blip(); });
+  if (prev) prev.addEventListener("click", () => go(idx - 1));
+  if (next) next.addEventListener("click", () => go(idx + 1));
 
   const dotsWrap = wrap.querySelector(".carousel-dots");
   if (dotsWrap) {

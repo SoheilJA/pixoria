@@ -1,8 +1,7 @@
-/* نقطه‌ی ورود مشترک همه‌ی صفحه‌های سینمایی */
-import { $, isDark } from "./core/utils.js";
-import { Sound } from "./core/sound.js";
+/* نقطه‌ی ورود مشترک همه‌ی صفحه‌ها — بدون صدا */
+import { $ } from "./core/utils.js";
 import { initTheme, setTheme } from "./core/theme.js";
-import { initSound, initMode } from "./core/controls.js";
+import { initMode } from "./core/controls.js";
 import { initMenu } from "./core/menu.js";
 import { initRail, updateRail } from "./core/rail.js";
 import { initTyping } from "./core/typewriter.js";
@@ -34,7 +33,6 @@ async function boot() {
   injectSprites();
   initTheme();
   initMode();
-  initSound();
   initMenu();
   initRail();
   initScroll();
@@ -53,19 +51,12 @@ async function boot() {
   }
 
   initPreloader(() => {
-    /* تایپ heroLead فقط همین‌جا — بدون تکرار (جلوگیری از صدای پیوسته) */
+    /* تایپ heroLead فقط همین‌جا — بدون تکرار */
     const lead = $("#heroLead");
     if (lead && lead.dataset.type && !lead.dataset.done) {
       import("./core/typewriter.js").then((m) =>
         m.typeInto(lead, lead.dataset.type),
       );
-    }
-    if (!Sound.on) {
-      setTimeout(() => {
-        import("./core/toast.js").then((m) =>
-          m.toast("نکته: برای صدای تایپ و بازی، SND را در نوار بالا روشن کن."),
-        );
-      }, 1500);
     }
   });
 }

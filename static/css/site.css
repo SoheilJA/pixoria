@@ -2198,3 +2198,30 @@ html.dark .home-sec,html.dark .home-hero,html.dark .rail-side{background:color-m
 /* ═════════ خوشه‌ی کنترل کوچک ثابت ═════════ */
 .mini-ctl{position:fixed;top:14px;inset-inline-end:14px;z-index:60;display:flex;gap:8px}
 .mini-ctl .tbtn{background:color-mix(in srgb,var(--panel) 88%,transparent);backdrop-filter:blur(8px)}
+
+/* ═════════ پس‌زمینه‌ی شیشه‌ای سکشن‌های محتوا (بهبود خوانایی روی سیارات) ═════════ */
+.glass{background:color-mix(in srgb,var(--panel) 62%,transparent);backdrop-filter:blur(14px) saturate(1.15);-webkit-backdrop-filter:blur(14px) saturate(1.15);border:1px solid color-mix(in srgb,var(--line) 70%,transparent);border-radius:16px;box-shadow:0 8px 32px color-mix(in srgb,var(--ink) 10%,transparent)}
+/* سکشن‌های محتوا روی شیشه */
+.home-sec{margin:24px clamp(12px,2.5vw,36px);border-radius:18px}
+.home-sec > .sec-head,.home-sec > .work-grid,.home-sec > .svc-list{padding-inline:clamp(8px,1.5vw,20px)}
+/* شیشه برای بخش‌های داده‌محور */
+.home-kicker,.sec-head,.work-card,.work-body,.svc-row,.rail-side,.home-marquee,.cta-contact{position:relative}
+.home-kicker,.home-marquee{background:color-mix(in srgb,var(--panel) 55%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-radius:14px;border:1px solid color-mix(in srgb,var(--line) 60%,transparent);padding-inline:16px}
+.sec-head{background:color-mix(in srgb,var(--panel) 58%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid color-mix(in srgb,var(--line) 60%,transparent);border-radius:16px;padding:20px 22px;margin-bottom:32px}
+.work-card{background:color-mix(in srgb,var(--panel) 74%,transparent);backdrop-filter:blur(14px) saturate(1.1);-webkit-backdrop-filter:blur(14px) saturate(1.1);border-radius:12px;overflow:hidden}
+.svc-row{border-radius:10px}
+.svc-row:hover{background:color-mix(in srgb,var(--panel) 70%,transparent);backdrop-filter:blur(8px)}
+.client-marquee{background:color-mix(in srgb,var(--panel) 55%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);margin:24px clamp(12px,2.5vw,36px);border-radius:14px;border:1px solid color-mix(in srgb,var(--line) 60%,transparent)}
+.manifesto{margin:24px clamp(12px,2.5vw,36px);border-radius:18px;background:color-mix(in srgb,var(--ink) 88%,transparent);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.cta-band{margin:24px clamp(12px,2.5vw,36px) 40px;border-radius:18px;background:color-mix(in srgb,var(--acc) 88%,transparent);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.rail-side{background:color-mix(in srgb,var(--panel) 65%,transparent);backdrop-filter:blur(16px) saturate(1.1);-webkit-backdrop-filter:blur(16px) saturate(1.1);border:0;border-inline-start:1px solid color-mix(in srgb,var(--line) 70%,transparent)}
+html.dark .work-card,html.dark .sec-head,html.dark .home-kicker,html.dark .home-marquee,html.dark .client-marquee{background:color-mix(in srgb,var(--panel2) 72%,transparent)}
+html.dark .manifesto{background:color-mix(in srgb,#0e1626 92%,transparent)}
+html.dark .cta-band{background:color-mix(in srgb,var(--acc) 80%,transparent)}
+@supports not (backdrop-filter:blur(1px)){
+  .sec-head,.work-card,.home-kicker,.home-marquee,.client-marquee,.manifesto,.cta-band,.rail-side{background:var(--panel)}
+  html.dark .sec-head,html.dark .work-card{background:var(--panel2)}
+}
+/* کارت‌های قدیمی سینمایی که دیگر استفاده نمی‌شوند */
+.scene-canvas,.topbar,.topnav,.topctl,.menu-overlay,.rail-buddy,.buddy-say{display:none!important}
+.st-card,.btn-sound{box-shadow:none}

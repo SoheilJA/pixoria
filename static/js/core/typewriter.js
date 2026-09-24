@@ -1,6 +1,5 @@
-/* تایپ‌رایتر با صدای کلید — از مرجع. متن کامل در HTML است؛ انیمیشن بهبود تدریجی */
+/* تایپ‌رایتر — بدون صدا. متن کامل در HTML است؛ انیمیشن بهبود تدریجی */
 import { $$, RM } from "./utils.js";
-import { Sound } from "./sound.js";
 
 export function typeInto(el, text, speed = 24) {
   if (el.dataset.done) return;
@@ -14,7 +13,6 @@ export function typeInto(el, text, speed = 24) {
   el._iv = setInterval(() => {
     i++;
     el.textContent = text.slice(0, i);
-    if (i % 6 === 0) Sound.key();
     if (i >= text.length) {
       clearInterval(el._iv);
       el.textContent = text;

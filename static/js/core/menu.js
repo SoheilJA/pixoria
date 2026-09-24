@@ -1,6 +1,5 @@
-/* منوی پاپ‌آپ موبایل — از مرجع (role=dialog، ↑↓ Enter Esc، focus trap) */
+/* منوی پاپ‌آپ موبایل — بدون صدا */
 import { $, $$, G, RM, scrollToId } from "./utils.js";
-import { Sound } from "./sound.js";
 
 const Menu = { open: false, idx: 0, items: [] };
 
@@ -13,7 +12,6 @@ function openMenu() {
   Menu.items = $$("#menuList .menu-item");
   Menu.items.forEach((it, i) => it.classList.toggle("sel", i === 0));
   $("#menuClose").focus();
-  Sound.ok();
 }
 
 function closeMenu() {
@@ -22,7 +20,6 @@ function closeMenu() {
   ov.classList.remove("open");
   ov.setAttribute("aria-hidden", "true");
   $("#btnMenu").focus();
-  Sound.blip();
 }
 
 function activate(it) {
@@ -63,7 +60,6 @@ export function initMenu() {
         Menu.items.length;
       Menu.items.forEach((x, j) => x.classList.toggle("sel", j === Menu.idx));
       Menu.items[Menu.idx].focus();
-      Sound.blip();
     } else if (e.key === "Enter") {
       const it = Menu.items[Menu.idx];
       if (it) activate(it);
