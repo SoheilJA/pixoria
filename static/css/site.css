@@ -1,0 +1,1829 @@
+
+      /* ═════════ توکن‌های تم (بیزینس ۶۰/۴۰) ═════════ */
+      :root {
+        --bg: #f4f7fb;
+        --panel: #ffffff;
+        --panel2: #f2f5fa;
+        --panel-a: rgba(255, 255, 255, 0.88);
+        --ink: #101a2e;
+        --dim: #5b6b84;
+        --line: #dfe6ef;
+        --line2: #e9eef5;
+        --acc: #e2543e;
+        --acc2: #1f8fa8;
+        --gold: #c07b21;
+        --pink: #c2337a;
+        --shadow: 0 8px 24px rgba(16, 26, 46, 0.09);
+        --backdrop: rgba(244, 247, 251, 0.94);
+        --lcd-bg: #f2edda;
+        --lcd-ink: #2b2a22;
+        --lcd-mid: #8f8873;
+        --lcd-dim: #ddd6bd;
+        --lcd-ov: rgba(242, 237, 218, 0.86);
+      }
+      html.dark {
+        --bg: #0a101f;
+        --panel: #111a30;
+        --panel2: #0d1426;
+        --panel-a: rgba(17, 26, 48, 0.84);
+        --ink: #e9edf7;
+        --dim: #8b97b4;
+        --line: #22304f;
+        --line2: #1a2540;
+        --acc: #ff6b54;
+        --acc2: #38d6bd;
+        --gold: #ffb85c;
+        --pink: #ff6ea6;
+        --shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
+        --backdrop: rgba(10, 16, 31, 0.94);
+        --lcd-bg: #0c2410;
+        --lcd-ink: #cdf08c;
+        --lcd-mid: #5f9a4a;
+        --lcd-dim: #1c3a1e;
+        --lcd-ov: rgba(12, 36, 16, 0.82);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: auto;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font-family: Vazirmatn, sans-serif;
+        overflow-x: hidden;
+        transition:
+          background-color 0.2s steps(3),
+          color 0.2s steps(3);
+      }
+      canvas,
+      svg.pixart {
+        image-rendering: pixelated;
+      }
+      ::selection {
+        background: var(--acc);
+        color: #fff;
+      }
+      :focus-visible {
+        outline: 3px solid var(--acc2);
+        outline-offset: 2px;
+      }
+      section {
+        scroll-margin-top: 86px;
+      }
+
+      .px {
+        font-family: "Press Start 2P", Vazirmatn, monospace;
+        -webkit-font-smoothing: none;
+        letter-spacing: 0.04em;
+        line-height: 1.9;
+      }
+      .j10 {
+        font-family: "Jersey 10", monospace;
+        -webkit-font-smoothing: none;
+      }
+
+      /* ═════════ صحنه‌ی پرتاب (Canvas پس‌زمینه) ═════════ */
+      #scene {
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+      }
+
+      /* ═════════ اسپرایت دوفریمی ═════════ */
+      .sprite {
+        display: inline-grid;
+        place-items: center;
+        line-height: 0;
+      }
+      .sprite .f {
+        grid-area: 1/1;
+        display: none;
+      }
+      .sprite .f1 {
+        display: block;
+      }
+      .sprite.fr .f1 {
+        display: none;
+      }
+      .sprite.fr .f2 {
+        display: block;
+      }
+      .sprite svg {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+
+      /* ═════════ چیدمان عمومی ═════════ */
+      .wrap {
+        max-width: 1040px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+      .sec-pad {
+        padding: 76px 0 64px;
+      }
+      .sec-head {
+        margin-bottom: 24px;
+      }
+      .kicker {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 10px;
+        flex-wrap: wrap;
+      }
+      .k-tag {
+        font-family: "Press Start 2P";
+        font-size: 0.5rem;
+        background: var(--acc);
+        color: #fff;
+        padding: 5px 9px;
+        border-radius: 8px;
+      }
+      .k-tag.gold {
+        background: var(--gold);
+        color: #241a06;
+      }
+      .k-lbl {
+        font-family: "Press Start 2P";
+        font-size: 0.5rem;
+        color: var(--dim);
+      }
+      .sec-head h2 {
+        font-size: clamp(1.35rem, 4.2vw, 2.1rem);
+        margin: 0;
+        font-weight: 900;
+      }
+      .sec-sub {
+        color: var(--dim);
+        line-height: 2.05;
+        max-width: 40rem;
+        margin: 8px 0 0;
+        font-size: 0.95rem;
+      }
+
+      .card {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        box-shadow: var(--shadow);
+      }
+      .pxbtn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.6rem;
+        font-family: Vazirmatn;
+        font-weight: 800;
+        font-size: 0.95rem;
+        padding: 13px 20px;
+        cursor: pointer;
+        user-select: none;
+        color: #fff;
+        background: var(--acc);
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 4px 14px var(--shadow);
+        transition:
+          transform 0.12s,
+          box-shadow 0.12s;
+      }
+      .pxbtn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px var(--shadow);
+      }
+      .pxbtn:active {
+        transform: translateY(1px);
+      }
+      .pxbtn.ghost {
+        background: var(--panel);
+        color: var(--ink);
+        border: 1px solid var(--line);
+      }
+      .pxbtn .lat {
+        font-family: "Press Start 2P";
+        font-size: 0.5rem;
+        opacity: 0.85;
+      }
+      .ditherline {
+        height: 1px;
+        border: none;
+        margin: 0;
+        background: var(--line);
+        background-image: repeating-conic-gradient(
+          var(--line2) 0% 25%,
+          transparent 0% 50%
+        );
+        background-size: 8px 8px;
+        opacity: 0.8;
+      }
+      @keyframes btx {
+        0%,
+        59% {
+          opacity: 1;
+        }
+        60%,
+        100% {
+          opacity: 0.25;
+        }
+      }
+      .blink {
+        animation: btx 1.1s steps(1) infinite;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+
+      /* ═════════ پیش‌لودر ═════════ */
+      #pre {
+        position: fixed;
+        inset: 0;
+        z-index: 200;
+        background: #0a101f;
+        color: #e9edf7;
+        display: grid;
+        place-items: center;
+        padding: 16px;
+      }
+      .pre-box {
+        width: min(470px, 94vw);
+        background: #111a30;
+        border: 1px solid #22304f;
+        border-radius: 18px;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        padding: 26px 28px;
+        text-align: center;
+      }
+      #preSprite {
+        width: 56px;
+        margin: 0 auto 12px;
+        display: block;
+      }
+      #preLines {
+        font-size: 0.92rem;
+        font-weight: 700;
+        text-align: right;
+        min-height: 7.2em;
+        margin: 0 0 16px;
+        line-height: 2.1;
+        color: #8b97b4;
+        direction: rtl;
+      }
+      #preBar {
+        height: 16px;
+        border: 2px solid #22304f;
+        border-radius: 8px;
+        background: #0d1426;
+        padding: 2px;
+        overflow: hidden;
+      }
+      #preFill {
+        display: block;
+        height: 100%;
+        width: 0;
+        background: #38d6bd;
+        background-image: repeating-linear-gradient(
+          90deg,
+          rgba(0, 0, 0, 0.16) 0 5px,
+          transparent 5px 10px
+        );
+      }
+      #preStart {
+        margin-top: 16px;
+        display: none;
+        font-family: "Press Start 2P";
+        font-size: 0.6rem;
+        background: #ff6b54;
+        color: #fff;
+        border: none;
+        border-radius: 10px;
+        padding: 13px 18px;
+        cursor: pointer;
+      }
+      #preStart.show {
+        display: inline-block;
+        animation: btx 1.1s steps(1) infinite;
+      }
+      .pre-tip {
+        color: #8b97b4;
+        font-size: 0.78rem;
+        margin: 12px 0 0;
+      }
+
+      /* ═════════ نوار بالا ═════════ */
+      #topbar {
+        position: fixed;
+        inset-inline: 0;
+        top: 0;
+        z-index: 70;
+        display: flex;
+        align-items: center;
+        gap: 10px 16px;
+        padding: 8px 16px;
+        background: var(--panel-a);
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid var(--line);
+      }
+      .brand {
+        display: flex;
+        flex-direction: column;
+        line-height: 1.2;
+      }
+      .brand .b1 {
+        font-family: "Press Start 2P";
+        font-size: 0.7rem;
+        color: var(--acc);
+      }
+      .brand .b1 b {
+        color: var(--ink);
+      }
+      .brand .b2 {
+        font-family: "Press Start 2P";
+        font-size: 0.4rem;
+        color: var(--dim);
+        margin-top: 4px;
+      }
+      #topnav {
+        display: flex;
+        gap: 2px;
+        overflow-x: auto;
+        scrollbar-width: none;
+      }
+      #topnav::-webkit-scrollbar {
+        display: none;
+      }
+      .nav-a {
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: var(--dim);
+        background: none;
+        border: none;
+        padding: 7px 10px;
+        cursor: pointer;
+        white-space: nowrap;
+        font-family: inherit;
+        border-radius: 8px;
+      }
+      .nav-a:hover {
+        color: var(--acc);
+        background: var(--panel2);
+      }
+      .spacer {
+        flex: 1;
+      }
+      .tbtn {
+        min-width: 36px;
+        height: 36px;
+        padding: 0 9px;
+        font-family: "Press Start 2P";
+        font-size: 0.5rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        background: var(--panel);
+        color: var(--ink);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        cursor: pointer;
+      }
+      .tbtn:hover {
+        border-color: var(--acc);
+        color: var(--acc);
+      }
+      .tbtn[aria-pressed="true"] {
+        background: var(--acc2);
+        color: #08251e;
+        border-color: var(--acc2);
+      }
+      #themeIco svg {
+        width: 16px;
+        height: 16px;
+        display: block;
+      }
+      #btnMenu {
+        background: var(--acc);
+        color: #fff;
+        border-color: var(--acc);
+      }
+      @media (max-width: 880px) {
+        #topnav {
+          display: none;
+        }
+        .brand .b2 {
+          display: none;
+        }
+      }
+
+      /* ═════════ منوی پاپ‌آپ (سبک لندینگ ۱) ═════════ */
+      #menuOverlay {
+        position: fixed;
+        inset: 0;
+        z-index: 100;
+        background: var(--backdrop);
+        backdrop-filter: blur(8px);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 18px;
+        overflow: auto;
+      }
+      #menuOverlay.open {
+        display: flex;
+      }
+      .menu-box {
+        width: min(430px, 100%);
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        box-shadow: var(--shadow);
+        padding: 24px;
+        position: relative;
+      }
+      .menu-box .m-cap {
+        font-family: "Press Start 2P";
+        font-size: 0.5rem;
+        color: var(--acc2);
+        margin: 0 0 6px;
+      }
+      .menu-box .m-title {
+        font-family: "Press Start 2P";
+        font-size: 1rem;
+        margin: 0 0 16px;
+        direction: ltr;
+        text-align: right;
+      }
+      .menu-item {
+        display: flex;
+        align-items: baseline;
+        gap: 12px;
+        width: 100%;
+        padding: 10px 12px;
+        background: none;
+        border: none;
+        border-radius: 10px;
+        color: var(--dim);
+        cursor: pointer;
+        text-align: right;
+        font-family: inherit;
+      }
+      .menu-item .mi-stage {
+        font-family: "Press Start 2P";
+        font-size: 0.52rem;
+        min-width: 5.4em;
+        flex: none;
+        direction: ltr;
+        text-align: left;
+      }
+      .menu-item .mi-fa {
+        font-size: 0.95rem;
+        font-weight: 700;
+      }
+      .menu-item:hover,
+      .menu-item.sel {
+        background: var(--ink);
+        color: var(--bg);
+      }
+      .menu-box .m-hint {
+        font-family: "Press Start 2P";
+        font-size: 0.42rem;
+        color: var(--dim);
+        margin: 14px 0 0;
+        direction: ltr;
+      }
+      #menuClose {
+        position: absolute;
+        top: 14px;
+        left: 14px;
+      }
+
+      /* ═════════ ریلِ همراه (سبک لندینگ ۱) ═════════ */
+      #rail {
+        position: fixed;
+        left: 12px;
+        top: 0;
+        bottom: 0;
+        width: 46px;
+        z-index: 40;
+        pointer-events: none;
+      }
+      #railTrack {
+        position: absolute;
+        left: 19px;
+        top: 92px;
+        bottom: 92px;
+        width: 4px;
+        border-radius: 2px;
+        background: repeating-linear-gradient(
+          180deg,
+          var(--line) 0 8px,
+          transparent 8px 16px
+        );
+      }
+      .rail-dot {
+        position: absolute;
+        left: -4px;
+        width: 12px;
+        height: 12px;
+        background: var(--panel);
+        border: 2px solid var(--line);
+        transform: rotate(45deg);
+        transition:
+          background 0.3s,
+          border-color 0.3s;
+      }
+      .rail-dot.on {
+        background: var(--acc);
+        border-color: var(--acc);
+      }
+      #railBuddy {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 46px;
+        pointer-events: auto;
+        background: none;
+        border: none;
+        padding: 0;
+        cursor: pointer;
+      }
+      #railBuddy .b-in {
+        display: block;
+        width: 100%;
+      }
+      #railAlt {
+        position: absolute;
+        bottom: 58px;
+        left: -4px;
+        width: 54px;
+        text-align: center;
+        font-family: "Press Start 2P";
+        font-size: 0.4rem;
+        color: var(--dim);
+        direction: ltr;
+      }
+      #buddySay {
+        position: fixed;
+        z-index: 60;
+        background: var(--ink);
+        color: var(--bg);
+        border-radius: 10px;
+        padding: 6px 10px;
+        font-size: 0.76rem;
+        font-weight: 800;
+        opacity: 0;
+        transform: translateY(6px);
+        transition:
+          opacity 0.12s steps(2),
+          transform 0.12s steps(2);
+        pointer-events: none;
+        white-space: nowrap;
+      }
+      #buddySay.show {
+        opacity: 1;
+        transform: none;
+      }
+      @media (max-width: 900px) {
+        #rail {
+          display: none;
+        }
+      }
+
+      /* ═════════ HERO ═════════ */
+      #hero {
+        min-height: 100svh;
+        display: flex;
+        align-items: flex-start;
+        padding-top: 104px;
+        padding-bottom: 180px;
+      }
+      .hero-in {
+        max-width: 40rem;
+        margin: 0 auto;
+        text-align: center;
+      }
+      .hero-kicker {
+        display: inline-block;
+        font-family: "Press Start 2P";
+        font-size: 0.55rem;
+        color: var(--ink);
+        background: var(--panel-a);
+        backdrop-filter: blur(8px);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 9px 13px;
+      }
+      #hero h1 {
+        font-size: clamp(2rem, 6.2vw, 3.4rem);
+        margin: 18px 0 14px;
+        direction: ltr;
+        font-weight: 900;
+        text-shadow: 0 6px 24px rgba(0, 0, 0, 0.18);
+      }
+      .hero-lead {
+        color: var(--ink);
+        background: var(--panel-a);
+        backdrop-filter: blur(8px);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        display: inline-block;
+        padding: 16px 20px;
+        line-height: 2.1;
+        margin: 0 0 24px;
+        font-size: 1rem;
+        min-height: 6.4em;
+        box-shadow: var(--shadow);
+      }
+      .hero-cta {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 12px;
+      }
+      .scroll-hint {
+        margin-top: 26px;
+        font-family: "Press Start 2P";
+        font-size: 0.5rem;
+        color: var(--dim);
+      }
+
+      /* ═════════ ناحیه‌ی پرتاب (فاصله‌ی خالی) ═════════ */
+      #lift {
+        min-height: 78vh;
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        padding-top: 16vh;
+      }
+      .lift-chip {
+        background: var(--panel-a);
+        backdrop-filter: blur(8px);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 14px 20px;
+        text-align: center;
+        box-shadow: var(--shadow);
+      }
+      .lift-chip .px {
+        font-size: 0.5rem;
+        color: var(--acc);
+        display: block;
+        margin-bottom: 8px;
+      }
+      .lift-chip p {
+        margin: 0;
+        font-weight: 700;
+        font-size: 0.92rem;
+        color: var(--dim);
+        min-height: 1.8em;
+      }
+
+      /* ═════════ خدمات ═════════ */
+      .st-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(196px, 1fr));
+        gap: 16px;
+        margin-top: 26px;
+      }
+      .st-card {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        box-shadow: var(--shadow);
+        padding: 20px 18px 16px;
+        text-align: right;
+        transition:
+          transform 0.15s,
+          box-shadow 0.15s;
+      }
+      .st-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 14px 32px var(--shadow);
+      }
+      .st-ico {
+        width: 42px;
+        display: block;
+        margin-bottom: 12px;
+      }
+      .st-lat {
+        font-family: "Press Start 2P";
+        font-size: 0.48rem;
+        color: var(--acc2);
+        display: block;
+        margin-bottom: 8px;
+        direction: ltr;
+      }
+      .st-card h3 {
+        margin: 0 0 6px;
+        font-size: 1rem;
+        font-weight: 900;
+      }
+      .st-card p {
+        margin: 0;
+        color: var(--dim);
+        font-size: 0.84rem;
+        line-height: 1.95;
+      }
+      .tagrow {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+        margin-top: 10px;
+      }
+      .tagrow span {
+        border: 1px solid var(--line2);
+        background: var(--panel2);
+        color: var(--dim);
+        border-radius: 7px;
+        padding: 2px 8px;
+        font-size: 0.68rem;
+        font-weight: 800;
+      }
+
+      /* ═════════ نمونه‌کارها ═════════ */
+      .cap-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+        gap: 16px;
+        margin-top: 26px;
+      }
+      .cap {
+        position: relative;
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 12px;
+        cursor: pointer;
+        text-align: center;
+        box-shadow: var(--shadow);
+        font-family: inherit;
+        transition:
+          transform 0.15s,
+          box-shadow 0.15s;
+      }
+      .cap:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 14px 32px var(--shadow);
+      }
+      .cap canvas {
+        width: 100%;
+        border-radius: 9px;
+        border: 1px solid var(--line);
+        display: block;
+      }
+      .cap .c-pts {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        font-family: "Press Start 2P";
+        font-size: 0.42rem;
+        color: var(--gold);
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 7px;
+        padding: 4px 6px;
+        direction: ltr;
+      }
+      .cap-t {
+        display: block;
+        margin-top: 10px;
+        font-weight: 900;
+        font-size: 0.95rem;
+      }
+      .cap-cat {
+        display: block;
+        font-family: "Press Start 2P";
+        font-size: 0.4rem;
+        color: var(--dim);
+        margin-top: 6px;
+        direction: ltr;
+      }
+
+      /* ═════════ نقشه‌ی پرواز ═════════ */
+      .jlist {
+        list-style: none;
+        margin: 0;
+        padding: 6px 18px;
+      }
+      .jlist li {
+        display: flex;
+        gap: 16px;
+        align-items: flex-start;
+        padding: 16px 0;
+        border-bottom: 1px dashed var(--line2);
+      }
+      .jlist li:last-child {
+        border-bottom: none;
+      }
+      .j-pin {
+        width: 48px;
+        height: 48px;
+        flex: none;
+        display: grid;
+        place-items: center;
+        background: var(--panel2);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+      }
+      .j-pin svg {
+        width: 26px;
+        height: auto;
+      }
+      .j-lbl {
+        font-family: "Press Start 2P";
+        font-size: 0.44rem;
+        color: var(--dim);
+        display: block;
+        margin-bottom: 5px;
+        direction: ltr;
+      }
+      .jlist h3 {
+        margin: 0 0 5px;
+        font-size: 1rem;
+        font-weight: 900;
+      }
+      .jlist p {
+        margin: 0;
+        color: var(--dim);
+        font-size: 0.88rem;
+        line-height: 2;
+        min-height: 2em;
+      }
+
+      /* ═════════ زرادخانه ═════════ */
+      .ars-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+        gap: 12px;
+        padding: 18px;
+      }
+      .slot {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 7px;
+        background: var(--panel2);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 12px 6px 9px;
+      }
+      .slot .s-ico {
+        width: 34px;
+        height: 34px;
+        display: grid;
+        place-items: center;
+        font-family: "Press Start 2P";
+        font-size: 0.85rem;
+        color: #fff;
+        background: var(--slot, var(--acc));
+        border-radius: 9px;
+      }
+      .slot .s-n {
+        font-size: 0.74rem;
+        font-weight: 800;
+      }
+      .slot .tip {
+        position: absolute;
+        bottom: calc(100% + 8px);
+        right: 50%;
+        transform: translate(50%, 5px);
+        width: 160px;
+        background: var(--ink);
+        color: var(--bg);
+        border-radius: 10px;
+        padding: 8px 10px;
+        font-size: 0.72rem;
+        font-weight: 700;
+        line-height: 1.8;
+        text-align: center;
+        opacity: 0;
+        pointer-events: none;
+        transition:
+          opacity 0.12s,
+          transform 0.12s;
+        z-index: 20;
+      }
+      .slot:hover .tip,
+      .slot:focus-visible .tip {
+        opacity: 1;
+        transform: translate(50%, 0);
+      }
+
+      /* ═════════ تله‌متری ═════════ */
+      .tele-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 14px;
+        padding: 20px;
+      }
+      .tele {
+        background: var(--panel2);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 18px 10px;
+        text-align: center;
+      }
+      .tele .t-n {
+        font-family: "Jersey 10";
+        font-size: clamp(2.2rem, 5vw, 3rem);
+        color: var(--acc);
+        display: block;
+        line-height: 1;
+      }
+      .tele .t-l {
+        font-size: 0.8rem;
+        font-weight: 800;
+        display: block;
+        margin-top: 8px;
+        line-height: 1.7;
+      }
+      @media (max-width: 640px) {
+        .tele-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      /* ═════════ ناوگان (قیمت) ═════════ */
+      .fleet-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+        align-items: stretch;
+        margin-top: 26px;
+      }
+      .ship-card {
+        display: flex;
+        flex-direction: column;
+        text-align: right;
+        cursor: pointer;
+        font-family: inherit;
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        box-shadow: var(--shadow);
+        transition:
+          transform 0.15s,
+          box-shadow 0.15s;
+      }
+      .ship-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 14px 32px var(--shadow);
+      }
+      .ship-card.sel {
+        outline: 3px solid var(--gold);
+        outline-offset: -3px;
+      }
+      .sc-bar {
+        height: 6px;
+        border-radius: 16px 16px 0 0;
+        background: var(--st, var(--acc));
+      }
+      .ship-in {
+        padding: 16px 16px 14px;
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+      }
+      .ship-in .s-lat {
+        font-family: "Press Start 2P";
+        font-size: 0.48rem;
+        color: var(--dim);
+        display: block;
+        direction: ltr;
+        margin-bottom: 5px;
+      }
+      .ship-in h3 {
+        margin: 0 0 8px;
+        font-size: 1.02rem;
+        font-weight: 900;
+      }
+      .ship-in .s-price {
+        font-family: "Jersey 10";
+        font-size: 1.5rem;
+        color: var(--gold);
+        display: block;
+        border-bottom: 1px dashed var(--line2);
+        padding-bottom: 8px;
+        margin-bottom: 10px;
+      }
+      .ship-in ul {
+        list-style: none;
+        margin: 0 0 12px;
+        padding: 0;
+        display: grid;
+        gap: 7px;
+        flex: 1;
+      }
+      .ship-in li {
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: var(--dim);
+        line-height: 1.8;
+      }
+      .ship-in .pick {
+        font-size: 0.74rem;
+        font-weight: 800;
+        text-align: center;
+        padding: 8px;
+        background: var(--panel2);
+        border: 1px solid var(--line);
+        border-radius: 9px;
+        color: var(--dim);
+      }
+      .ship-card.sel .pick {
+        background: var(--gold);
+        color: #241a06;
+        border-color: var(--gold);
+      }
+      .fleet-cta {
+        text-align: center;
+        margin-top: 24px;
+      }
+      @media (max-width: 820px) {
+        .fleet-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      /* ═════════ پیام‌های رادیویی ═════════ */
+      .tx-list {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        margin-top: 24px;
+      }
+      .tx {
+        position: relative;
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 16px 18px 14px;
+        box-shadow: var(--shadow);
+      }
+      .tx::before {
+        content: "";
+        position: absolute;
+        top: 14px;
+        bottom: 14px;
+        right: -1px;
+        width: 4px;
+        border-radius: 2px;
+        background: repeating-linear-gradient(
+          180deg,
+          var(--acc2) 0 8px,
+          transparent 8px 14px
+        );
+      }
+      .tx-head {
+        display: flex;
+        align-items: baseline;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-bottom: 8px;
+      }
+      .tx-freq {
+        font-family: "Press Start 2P";
+        font-size: 0.46rem;
+        color: var(--acc2);
+        direction: ltr;
+      }
+      .tx-from {
+        font-family: "Press Start 2P";
+        font-size: 0.52rem;
+        color: var(--gold);
+        direction: ltr;
+      }
+      .tx-rate {
+        font-family: "Jersey 10";
+        font-size: 1.2rem;
+        color: var(--pink);
+        margin-inline-start: auto;
+      }
+      .tx-msg {
+        margin: 0;
+        font-size: 0.92rem;
+        font-weight: 700;
+        line-height: 2.1;
+        min-height: 2em;
+      }
+      .tx-src {
+        display: block;
+        margin-top: 6px;
+        color: var(--dim);
+        font-size: 0.76rem;
+      }
+
+      /* ═════════ پرسش‌ها ═════════ */
+      .faq-l {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 24px;
+      }
+      .faq-l details {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        box-shadow: var(--shadow);
+      }
+      .faq-l summary {
+        cursor: pointer;
+        font-weight: 900;
+        font-size: 0.94rem;
+        padding: 14px 16px;
+        list-style: none;
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        align-items: center;
+      }
+      .faq-l summary::-webkit-details-marker {
+        display: none;
+      }
+      .faq-l summary .qs {
+        font-family: "Press Start 2P";
+        color: var(--acc2);
+        font-size: 0.5rem;
+        flex: none;
+        direction: ltr;
+      }
+      .faq-l details[open] summary .qs {
+        color: var(--acc);
+      }
+      .faq-l p {
+        margin: 0;
+        padding: 0 16px 14px;
+        color: var(--dim);
+        line-height: 2.05;
+        font-size: 0.88rem;
+        min-height: 2em;
+      }
+
+      /* ═════════ آرکید: کنسول دستی ═════════ */
+      .arcade-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.3fr) minmax(250px, 0.9fr);
+        gap: 20px;
+        align-items: start;
+        margin-top: 26px;
+      }
+      .console {
+        direction: ltr;
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 24px;
+        box-shadow: var(--shadow);
+        padding: 16px 18px 18px;
+      }
+      .con-top {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-bottom: 12px;
+      }
+      .con-brand {
+        font-family: "Press Start 2P";
+        font-size: 0.58rem;
+        color: var(--dim);
+      }
+      .con-brand b {
+        color: var(--acc);
+      }
+      .carts {
+        display: flex;
+        gap: 6px;
+        margin: 0 auto;
+      }
+      .cart-chip {
+        font-family: "Press Start 2P";
+        font-size: 0.48rem;
+        padding: 9px 11px;
+        border-radius: 10px;
+        background: var(--panel2);
+        color: var(--dim);
+        border: 1px solid var(--line);
+        cursor: pointer;
+      }
+      .cart-chip.on {
+        background: var(--acc);
+        color: #fff;
+        border-color: var(--acc);
+      }
+      .con-leds {
+        display: flex;
+        gap: 5px;
+        align-items: center;
+      }
+      .con-leds i {
+        width: 7px;
+        height: 7px;
+        border-radius: 2px;
+        background: var(--line);
+        display: block;
+      }
+      .con-leds i:first-child {
+        background: var(--acc);
+        animation: btx 2.6s steps(1) infinite;
+      }
+      .lcd {
+        position: relative;
+        border-radius: 14px;
+        overflow: hidden;
+        border: 2px solid var(--line);
+        background: var(--lcd-bg);
+      }
+      .lcd canvas {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+      #lcdOv {
+        position: absolute;
+        inset: 0;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        background: var(--lcd-ov);
+        padding: 14px;
+        text-align: center;
+      }
+      #lcdOv.show {
+        display: flex;
+      }
+      .ov-title {
+        font-family: "Press Start 2P";
+        font-size: 0.85rem;
+        color: var(--lcd-ink);
+        margin: 0 0 10px;
+        direction: ltr;
+      }
+      .ov-title.warn {
+        color: var(--pink);
+      }
+      .ov-sub {
+        color: var(--lcd-ink);
+        font-size: 0.85rem;
+        font-weight: 700;
+        line-height: 2;
+        margin: 0 0 8px;
+        direction: rtl;
+      }
+      .ov-sub.dim {
+        opacity: 0.75;
+        font-size: 0.78rem;
+      }
+      .ov-btn {
+        font-family: Vazirmatn;
+        font-weight: 800;
+        font-size: 0.85rem;
+        background: var(--lcd-ink);
+        color: var(--lcd-bg);
+        border: none;
+        border-radius: 9px;
+        padding: 10px 16px;
+        cursor: pointer;
+        margin-top: 6px;
+      }
+      .ov-btn.ghost {
+        background: transparent;
+        color: var(--lcd-ink);
+        border: 2px solid var(--lcd-ink);
+      }
+      .ov-form {
+        display: flex;
+        gap: 8px;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-top: 6px;
+      }
+      .ov-form input {
+        background: transparent;
+        border: 2px solid var(--lcd-ink);
+        border-radius: 9px;
+        color: var(--lcd-ink);
+        font-family: Vazirmatn;
+        font-weight: 800;
+        font-size: 0.9rem;
+        padding: 9px 12px;
+        width: 150px;
+        text-align: center;
+        direction: rtl;
+      }
+      .ov-form input:focus {
+        outline: none;
+      }
+      .ov-row {
+        display: flex;
+        gap: 8px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+      .con-ctl {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 16px;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .dpad {
+        display: grid;
+        grid-template-columns: repeat(3, 46px);
+        grid-template-rows: repeat(3, 46px);
+        gap: 5px;
+        touch-action: none;
+      }
+      .dpad button {
+        background: var(--panel2);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        cursor: pointer;
+        color: var(--ink);
+        font-size: 0.9rem;
+        user-select: none;
+        touch-action: none;
+      }
+      .dpad button:active {
+        background: var(--ink);
+        color: var(--bg);
+      }
+      .d-u {
+        grid-area: 1/2;
+      }
+      .d-l {
+        grid-area: 2/1;
+      }
+      .d-r {
+        grid-area: 2/3;
+      }
+      .d-d {
+        grid-area: 3/2;
+      }
+      .d-c {
+        grid-area: 2/2;
+        border: none !important;
+        background: none !important;
+        cursor: default;
+      }
+      .mid-sw {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .mid-sw button {
+        font-family: "Press Start 2P";
+        font-size: 0.44rem;
+        padding: 8px 12px;
+        border-radius: 999px;
+        background: var(--panel2);
+        border: 1px solid var(--line);
+        color: var(--dim);
+        cursor: pointer;
+      }
+      .mid-sw button:active {
+        background: var(--ink);
+        color: var(--bg);
+      }
+      .ab {
+        display: flex;
+        gap: 14px;
+      }
+      .ab button {
+        width: 54px;
+        height: 54px;
+        border-radius: 50%;
+        font-family: "Press Start 2P";
+        font-size: 0.9rem;
+        background: var(--panel2);
+        border: 1px solid var(--line);
+        color: var(--ink);
+        cursor: pointer;
+        user-select: none;
+        touch-action: none;
+      }
+      .ab button:active {
+        transform: translateY(2px);
+      }
+      .ab #gA {
+        background: var(--acc);
+        color: #fff;
+        border-color: var(--acc);
+      }
+      .arcade-side {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+      .arcade-side .card {
+        padding: 18px;
+      }
+      .arcade-side h3 {
+        margin: 0 0 4px;
+        font-size: 1rem;
+        font-weight: 900;
+      }
+      #lbGame {
+        font-family: "Press Start 2P";
+        font-size: 0.5rem;
+        color: var(--acc2);
+        display: block;
+        margin-bottom: 12px;
+        direction: ltr;
+        text-align: right;
+      }
+      #lbList {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+      }
+      #lbList li {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: var(--panel2);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 8px 12px;
+      }
+      .lb-rank {
+        font-family: "Press Start 2P";
+        font-size: 0.55rem;
+        width: 26px;
+        height: 26px;
+        display: grid;
+        place-items: center;
+        border-radius: 7px;
+        background: var(--line);
+        color: var(--ink);
+        flex: none;
+      }
+      .lb-rank.r1 {
+        background: var(--gold);
+        color: #241a06;
+      }
+      .lb-rank.r2 {
+        background: var(--acc2);
+        color: #08251e;
+      }
+      .lb-rank.r3 {
+        background: var(--pink);
+        color: #fff;
+      }
+      .lb-n {
+        font-weight: 800;
+        font-size: 0.9rem;
+        flex: 1;
+      }
+      .lb-s {
+        font-family: "Jersey 10";
+        font-size: 1.25rem;
+        color: var(--acc);
+      }
+      .lb-note {
+        margin: 12px 0 0;
+        font-size: 0.74rem;
+        color: var(--dim);
+        line-height: 1.9;
+      }
+      .help-keys {
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+        margin-top: 10px;
+      }
+      .help-keys span {
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: var(--dim);
+        border-bottom: 1px dashed var(--line2);
+        padding-bottom: 6px;
+      }
+      .help-keys b {
+        color: var(--acc);
+      }
+      @media (max-width: 900px) {
+        .arcade-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      /* ═════════ تماس ═════════ */
+      .board-grid {
+        display: grid;
+        grid-template-columns: 1.4fr 1fr;
+        gap: 18px;
+        align-items: start;
+        margin-top: 24px;
+      }
+      .form-side {
+        padding: 22px;
+      }
+      .fld {
+        margin-bottom: 13px;
+      }
+      .fld label {
+        display: block;
+        font-weight: 800;
+        font-size: 0.85rem;
+        margin-bottom: 5px;
+      }
+      .fld input,
+      .fld select,
+      .fld textarea {
+        width: 100%;
+        background: var(--panel2);
+        color: var(--ink);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 10px 12px;
+        font-family: Vazirmatn;
+        font-size: 0.92rem;
+      }
+      .fld input:focus,
+      .fld select:focus,
+      .fld textarea:focus {
+        outline: none;
+        border-color: var(--acc2);
+      }
+      .fld input::placeholder,
+      .fld textarea::placeholder {
+        color: var(--dim);
+      }
+      .fld select {
+        appearance: none;
+        -webkit-appearance: none;
+        padding-left: 2rem;
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 5 3.5' shape-rendering='crispEdges'><rect x='2' width='1' height='1' fill='gray'/><rect x='1' y='1' width='3' height='1' fill='gray'/><rect y='2' width='5' height='1' fill='gray'/></svg>");
+        background-repeat: no-repeat;
+        background-position: left 0.7rem center;
+      }
+      .board-side {
+        padding: 22px;
+      }
+      .board-side h3 {
+        margin: 0 0 12px;
+        font-size: 1rem;
+        font-weight: 900;
+      }
+      .reward-note {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: grid;
+        gap: 9px;
+      }
+      .reward-note li {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        font-size: 0.82rem;
+        font-weight: 700;
+        color: var(--dim);
+        border-bottom: 1px dashed var(--line2);
+        padding-bottom: 8px;
+      }
+      .reward-note b {
+        color: var(--gold);
+      }
+      #planNote {
+        display: none;
+        margin: 14px 0 0;
+        padding: 10px 12px;
+        background: var(--panel2);
+        border: 1px dashed var(--gold);
+        border-radius: 10px;
+        font-size: 0.8rem;
+        font-weight: 800;
+      }
+      #planNote.show {
+        display: block;
+      }
+      @media (max-width: 820px) {
+        .board-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      /* ═════════ فرود ═════════ */
+      #arrived {
+        min-height: 74svh;
+        display: flex;
+        align-items: flex-start;
+        padding-top: 12vh;
+      }
+      .arrive-card {
+        background: var(--panel-a);
+        backdrop-filter: blur(8px);
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        box-shadow: var(--shadow);
+        padding: 26px 28px;
+        text-align: center;
+        max-width: 30rem;
+        margin: 0 auto;
+      }
+      .arrive-card .px {
+        font-size: 0.5rem;
+        color: var(--acc2);
+        display: block;
+        margin-bottom: 10px;
+      }
+      .arrive-card h2 {
+        margin: 0 0 10px;
+        font-size: 1.4rem;
+        font-weight: 900;
+      }
+      .arrive-card p {
+        margin: 0 0 14px;
+        color: var(--dim);
+        line-height: 2;
+        font-size: 0.95rem;
+      }
+      .arrive-chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        justify-content: center;
+        margin-bottom: 18px;
+      }
+      .arrive-chips span {
+        border: 1px solid var(--line);
+        background: var(--panel);
+        border-radius: 999px;
+        padding: 7px 13px;
+        font-size: 0.78rem;
+        font-weight: 800;
+        color: var(--dim);
+      }
+      .arrive-chips b {
+        color: var(--acc2);
+      }
+
+      /* ═════════ فوتر / مودال / توست ═════════ */
+      footer {
+        border-top: 1px solid var(--line);
+        background: var(--panel);
+        padding: 30px 0 26px;
+      }
+      .foot-in {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+      }
+      .foot-in .px {
+        font-size: 0.6rem;
+        color: var(--acc);
+      }
+      .foot-in p {
+        margin: 4px 0 0;
+        color: var(--dim);
+        font-size: 0.82rem;
+      }
+      .foot-nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 14px;
+      }
+      .foot-nav a {
+        color: var(--dim);
+        font-weight: 700;
+        text-decoration: none;
+        font-size: 0.84rem;
+      }
+      .foot-nav a:hover {
+        color: var(--acc);
+      }
+      .modal-root {
+        position: fixed;
+        inset: 0;
+        z-index: 120;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 18px;
+      }
+      .modal-root.open {
+        display: flex;
+      }
+      .modal-bk {
+        position: absolute;
+        inset: 0;
+        background: rgba(5, 9, 20, 0.72);
+      }
+      .modal-panel {
+        position: relative;
+        width: min(560px, 100%);
+        max-height: 88vh;
+        overflow: auto;
+        padding: 24px;
+      }
+      .modal-panel h3 {
+        margin: 0 0 4px;
+        font-size: 1.2rem;
+        font-weight: 900;
+      }
+      .modal-panel .m-cat {
+        font-family: "Press Start 2P";
+        font-size: 0.5rem;
+        color: var(--acc2);
+        margin: 0 0 8px;
+        direction: ltr;
+      }
+      .modal-panel .m-desc {
+        color: var(--dim);
+        line-height: 2.05;
+        font-size: 0.9rem;
+        margin: 12px 0;
+      }
+      .modal-panel canvas {
+        width: 100%;
+        border-radius: 10px;
+        border: 1px solid var(--line);
+      }
+      #toast {
+        position: fixed;
+        bottom: 18px;
+        right: 50%;
+        transform: translate(50%, 170%);
+        z-index: 130;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        max-width: min(470px, 92vw);
+        padding: 12px 16px;
+        background: var(--ink);
+        color: var(--bg);
+        border-radius: 12px;
+        font-weight: 800;
+        font-size: 0.9rem;
+        transition: transform 0.18s steps(3);
+      }
+      #toast.show {
+        transform: translate(50%, 0);
+      }
+      #toast .t-ico {
+        color: var(--gold);
+        flex: none;
+        font-family: "Jersey 10";
+        font-size: 1.2rem;
+      }
+
+      /* ═════════ کرسر پیکسلی (دسکتاپ) ═════════ */
+      @media (hover: hover) and (pointer: fine) {
+        body {
+          cursor:
+            url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='15' height='15' viewBox='0 0 7.5 7.5' shape-rendering='crispEdges'><rect width='7' height='7' fill='%23e2543e'/><rect x='1' y='1' width='5' height='5' fill='%23ffffff'/><rect x='1' y='6' width='2' height='1' fill='%23e2543e'/><rect x='6' y='1' width='1' height='2' fill='%23e2543e'/></svg>")
+              2 2,
+            auto;
+        }
+        a,
+        button,
+        summary,
+        select,
+        label,
+        .slot,
+        .cap,
+        .ship-card,
+        .cart-chip {
+          cursor:
+            url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='17' height='17' viewBox='0 0 8.5 8.5' shape-rendering='crispEdges'><rect width='8' height='8' fill='%231f8fa8'/><rect x='2' y='2' width='4' height='4' fill='%23ffffff'/><rect x='3' y='3' width='1' height='1' fill='%231f8fa8'/></svg>")
+              4 4,
+            pointer;
+        }
+      }
+    
+/* فونت‌های پیکسلی لوکال */
+@font-face {
+  font-family: "Press Start 2P";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../fonts/press-start-2p-latin.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Jersey 10";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../fonts/jersey10-latin.woff2") format("woff2");
+}
