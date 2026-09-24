@@ -641,6 +641,9 @@
   .flex-1 {
     flex: 1;
   }
+  .shrink {
+    flex-shrink: 1;
+  }
   .shrink-0 {
     flex-shrink: 0;
   }
@@ -1883,9 +1886,6 @@
     }
     .md\:hidden {
       display: none;
-    }
-    .md\:inline {
-      display: inline;
     }
     .md\:inline-block {
       display: inline-block;

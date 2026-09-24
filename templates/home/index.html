@@ -5,20 +5,16 @@
 {% block story %}home{% endblock %}
 
 {% block content %}
-  <section id="hero" class="hero" aria-label="خوش‌آمدگویی">
-    <canvas id="sceneCanvas" class="scene-canvas" aria-hidden="true"></canvas>
+  <section id="hero" aria-label="معرفی برند">
     <div class="hero-in">
-      <div class="hero-kicker font-mono">
-        <span class="k-tag">● مشاوره رایگان</span>
-        <span>خدمات در سراسر ایران</span>
-        <span class="hidden md:inline">طراحی سایت و سئو</span>
+      <span class="silk hero-top rv">A DIGITAL SERVICES ADVENTURE</span>
+      <h1 class="hero-title rv">{{ settings.site_name }}</h1>
+      <p id="heroLead" class="hero-lead rv" data-type="{{ hero.description|striptags }}">{{ hero.description|safe }}</p>
+      <div class="hero-cta rv">
+        <a class="pxbtn" href="{% url 'portfolio:list' %}">شروع مأموریت <span class="lat">START</span></a>
+        <a class="pxbtn ghost" href="{% url 'contact:contact' %}">شروع همکاری <span class="lat">MAP</span></a>
       </div>
-      <h1 class="hero-title">{{ hero.title|safe }}<span class="acc">.</span></h1>
-      <p id="heroLead" class="hero-lead" data-type="{{ hero.description|striptags }}">{{ hero.description|safe }}</p>
-      <div class="hero-cta">
-        <a class="pxbtn" href="{% url 'portfolio:list' %}">مشاهده نمونه کارها ←</a>
-        <a class="pxbtn ghost" href="{% url 'contact:contact' %}">شروع همکاری</a>
-      </div>
+      <p class="silk scroll-hint blink rv">▼ برای سفر در فضا اسکرول کن ▼</p>
       <div class="hero-marquee" aria-hidden="true">
         <div class="hero-marquee-in">
           {% for item in hero_marquee %}<span>{{ item.text }} <span class="acc">✦</span></span>{% endfor %}

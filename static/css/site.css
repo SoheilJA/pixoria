@@ -2055,3 +2055,19 @@ html.dark .st-card{background:var(--panel2)}
 html.dark .svc-row:hover{background:var(--panel2)}
 html.dark .console,html.dark .arcade-side .card{background:var(--panel2)}
 html.dark .pre{background:var(--bg)}
+
+/* ═════════ پس‌زمینه‌ی ۳بعدی + Hero ماجراجویی (لندینگ ۴/۵) ═════════ */
+.bg3d{position:fixed;inset:0;width:100vw;height:100vh;z-index:-2;display:block}
+html.dark .bg3d{opacity:1}
+.scene-canvas{display:none}
+.hero{min-height:88vh;display:flex;align-items:center;position:relative;padding:90px 18px 40px}
+.hero-in{max-width:860px;margin:0 auto;width:100%;display:flex;flex-direction:column;gap:18px;align-items:flex-start}
+.silk{background:var(--panel-a);backdrop-filter:blur(6px);border:1px solid var(--line);border-radius:10px;padding:8px 14px;font-size:.82rem;color:var(--dim);font-weight:700}
+.hero-top{letter-spacing:.12em;font-size:.75rem}
+.scroll-hint{align-self:center;margin-top:10px}
+.blink{animation:blinksoft 1.6s steps(2) infinite}
+@keyframes blinksoft{0%,55%{opacity:1}56%,100%{opacity:.25}}
+.lat{font-family:"Press Start 2P",monospace;font-size:.5rem;opacity:.75;margin-inline-start:8px}
+.hero-title{font-size:clamp(3rem,9vw,7.5rem);line-height:1;margin:6px 0;color:var(--ink);font-weight:800;letter-spacing:-.02em;text-shadow:0 2px 24px color-mix(in srgb,var(--bg) 70%,transparent)}
+.hero .rv{opacity:1}
+html.dark .silk{background:rgba(17,26,48,.8)}
