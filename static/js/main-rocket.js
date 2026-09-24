@@ -1,5 +1,6 @@
 /* نقطه‌ی ورود مشترک همه‌ی صفحه‌های سینمایی */
-import { $, $$, isDark, Sound } from "./core/utils.js";
+import { $, isDark } from "./core/utils.js";
+import { Sound } from "./core/sound.js";
 import { initTheme, setTheme } from "./core/theme.js";
 import { initSound } from "./core/controls.js";
 import { initMenu } from "./core/menu.js";

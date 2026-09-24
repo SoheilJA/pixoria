@@ -1,5 +1,6 @@
 /* پیش‌لودر — از مرجع؛ فقط اولین ورود در هر نشست (sessionStorage) */
-import { $, G, RM, Sound, toast } from "./utils.js";
+import { $, G, RM } from "./utils.js";
+import { Sound } from "./sound.js";
 import { typeInto } from "./typewriter.js";
 
 export const PRE_LINES = [

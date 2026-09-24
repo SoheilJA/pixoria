@@ -2,7 +2,6 @@
    canvas ثابت پشت محتوا، DPR≤1.5، حلقه‌ی rAF واحد، lerp اسکرول،
    کش اسپرایت روی offscreen canvas، reduced-motion = رندر ثابت */
 import { $, clamp, lerp, RM, isDark, onThemeChange } from "../core/utils.js";
-
 const engine = {
   cv: null,
   ctx: null,

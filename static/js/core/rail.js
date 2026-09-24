@@ -1,5 +1,7 @@
 /* ریل چپ + بیپ (همراه) — از مرجع */
-import { $, $$, G, RM, Sound, toast } from "./utils.js";
+import { $, $$, G, RM } from "./utils.js";
+import { Sound } from "./sound.js";
+import { toast } from "./toast.js";
 
 const BUDDY_PHRASES = [
   "بیپ!",

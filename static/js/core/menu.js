@@ -1,5 +1,6 @@
 /* منوی پاپ‌آپ موبایل — از مرجع (role=dialog، ↑↓ Enter Esc، focus trap) */
-import { $, $$, G, RM, Sound, scrollToId } from "./utils.js";
+import { $, $$, G, RM, scrollToId } from "./utils.js";
+import { Sound } from "./sound.js";
 
 const Menu = { open: false, idx: 0, items: [] };
 

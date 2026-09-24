@@ -1,5 +1,5 @@
 /* تم روز/شب — از مرجع؛ کلید مشترک بین همه‌ی صفحه‌ها */
-import { $, $$, isDark, cssVar, store } from "./utils.js";
+import { $, isDark, cssVar, store, emitThemeChange } from "./utils.js";
 import { pixSVG, MOON_M, MOON_P, SUN_M, SUN_P } from "./sprites.js";
 
 export let LCD = {},
@@ -17,18 +17,13 @@ export function refreshLCD() {
     : ["#33302a", "#5c5748", "#847c66", "#aaa289"];
 }
 
-const listeners = [];
-export function onThemeChange(fn) {
-  listeners.push(fn);
-}
-
 export function setTheme(dark) {
   document.documentElement.classList.toggle("dark", dark);
   store.set("lr_theme", dark ? "dark" : "light");
   const th = $("#themeIco");
   if (th) th.innerHTML = dark ? pixSVG(MOON_M, MOON_P) : pixSVG(SUN_M, SUN_P);
   refreshLCD();
-  listeners.forEach((fn) => fn(dark));
+  emitThemeChange(dark);
 }
 
 export function initTheme() {

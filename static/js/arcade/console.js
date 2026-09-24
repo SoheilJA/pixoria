@@ -1,4 +1,5 @@
-import { $, $$, store, RM, Sound, escapeHtml } from '../core/utils.js';
+import { $, $$, store, RM, escapeHtml } from '../core/utils.js';
+import { Sound } from '../core/sound.js';
 import { toast } from '../core/toast.js';
 import { Menu } from '../core/menu.js';
 import Pac from './pac.js';
