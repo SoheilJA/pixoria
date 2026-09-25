@@ -48,7 +48,7 @@
           <button class="menu-toggle inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-sm bg-ink text-lime" aria-label="باز کردن منو" aria-controls="mobile-nav" aria-expanded="false"><i data-lucide="menu" class="h-6 w-6"></i></button>
         </header>
         <nav id="mobile-nav" class="mobile-nav fixed inset-0 z-[60] hidden flex-col gap-1 bg-ink px-page pb-8 pt-24 font-display text-[2rem] text-paper [&.open]:flex" aria-label="Mobile">
-          <button class="mobile-close inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-sm bg-ink text-lime border border-ink-line" aria-label="بستن منو"><i data-lucide="x" class="h-6 w-6"></i></button>
+          <button class="mobile-close absolute right-[18px] top-[18px] inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-sm bg-ink text-lime border border-ink-line" aria-label="بستن منو"><i data-lucide="x" class="h-6 w-6"></i></button>
           <a href="{% url 'home:home' %}" class="flex items-center gap-4 border-b border-ink-soft py-3.5 hover:text-lime"><i data-lucide="home" class="h-6 w-6 opacity-70"></i>خانه</a>
           <a href="{% url 'portfolio:list' %}" class="flex items-center gap-4 border-b border-ink-soft py-3.5 hover:text-lime"><i data-lucide="layout-grid" class="h-6 w-6 opacity-70"></i>نمونه کار ها</a>
           <a href="{% url 'services:list' %}" class="flex items-center gap-4 border-b border-ink-soft py-3.5 hover:text-lime"><i data-lucide="layers" class="h-6 w-6 opacity-70"></i>خدمات</a>
