@@ -54,7 +54,7 @@ export function initCarousel(wrap, { perView = 3, gap = 24, autoplay = false, in
     if (next) next.disabled = idx === maxIdx();
     const dots = wrap.querySelector(".carousel-dots");
     if (dots) {
-      [...dots.children].forEach((d, di) => d.classList.toggle("on", di === idx));
+      [...dots.children].forEach((d, di) => d.classList.toggle("active", di === idx));
     }
   }
 
