@@ -89,41 +89,42 @@
   </section>
 
   <!-- ═══ خدمات ═══ -->
-  <section class="px-page py-[clamp(64px,12vw,100px)] md:py-section" aria-labelledby="services-head">
-    <div class="mb-16 max-w-[880px]" data-aos="fade-up">
-      <span class="eyebrow mb-6 inline-block">حوزه‌های کاری<span
+  <section class="relative overflow-hidden bg-ink px-page py-[clamp(64px,12vw,100px)] text-paper md:py-section" aria-labelledby="services-head">
+    <div class="pointer-events-none absolute -left-40 top-[-20%] h-[420px] w-[420px] rounded-full bg-lime/10 blur-[120px]" aria-hidden="true"></div>
+    <div class="pointer-events-none absolute -right-32 bottom-[-30%] h-[380px] w-[380px] rounded-full bg-lime/5 blur-[100px]" aria-hidden="true"></div>
+
+    <div class="relative mb-16 max-w-[880px]" data-aos="fade-up">
+      <span class="eyebrow mb-6 inline-block !text-mist">حوزه‌های کاری<span
         class="ml-2 inline-block h-1.5 w-1.5 rounded-full bg-lime align-[2px]"></span></span>
-      <h2 id="services-head" class="mb-[18px]">{{ services_section.title|safe }}</h2>
-      <p class="m-0 max-w-[60ch] text-[1.15rem] leading-[1.5] text-ink-soft">{{ services_section.description|safe }}</p>
+      <h2 id="services-head" class="mb-[18px] !text-paper">{{ services_section.title|safe }}</h2>
+      <p class="m-0 max-w-[60ch] text-[1.15rem] leading-[1.5] text-mist">{{ services_section.description|safe }}</p>
     </div>
 
-    <div class="carousel" id="services-carousel">
-      <div class="carousel-track">
-        {% for item in services_with_delay %}
-          {% with service=item.service %}
-            <a href="{% url 'services:detail' service.slug %}"
-              class="svc-card group relative flex flex-col gap-4 overflow-hidden rounded-md border border-ink-line bg-paper p-[26px] transition-[transform,border-color] duration-300 ease-ax hover:-translate-y-1 hover:border-ink"
-              data-aos="fade-up" data-aos-delay="{{ item.delay }}">
-              <div class="flex items-start justify-between gap-4">
-                <span class="font-mono text-[0.8rem] tracking-[0.06em] text-ink-dim">{{ forloop.counter|stringformat:'02d' }}</span>
-                <span
-                  class="text-[1.3rem] text-ink transition-[transform,color] duration-300 ease-ax group-hover:rotate-45 group-hover:text-lime-deep">↖</span>
+    <div class="relative grid grid-cols-1 gap-px overflow-hidden rounded-md border border-ink-line-dark bg-ink-line-dark sm:grid-cols-2 lg:grid-cols-3">
+      {% for item in services_with_delay %}
+        {% with service=item.service %}
+          <a href="{% url 'services:detail' service.slug %}"
+            class="svc-card group relative flex flex-col gap-5 bg-ink p-[30px] transition-colors duration-300 hover:bg-[#161616]"
+            data-aos="fade-up" data-aos-delay="{{ item.delay }}">
+            <span class="absolute inset-x-0 top-0 h-[3px] origin-right scale-x-0 bg-lime transition-transform duration-500 ease-ax-out group-hover:scale-x-100" aria-hidden="true"></span>
+            <div class="flex items-start justify-between gap-4">
+              <span class="font-mono text-[0.8rem] tracking-[0.06em] text-mist-dim">/{{ forloop.counter|stringformat:'02d' }}</span>
+              <span class="grid h-10 w-10 place-items-center rounded-full border border-ink-line-dark text-[1.1rem] text-paper transition-all duration-300 ease-ax group-hover:border-lime group-hover:bg-lime group-hover:text-ink group-hover:rotate-45">↖</span>
+            </div>
+            <h3 class="text-[clamp(1.35rem,2vw,1.8rem)] leading-[1.05] tracking-[-0.02em] !text-paper">{{ service.title }}</h3>
+            <p class="m-0 max-w-[50ch] text-[0.98rem] leading-[1.6] text-mist">{{ service.excerpt }}</p>
+            {% if service.get_tags_list %}
+              <div class="mt-auto flex flex-wrap gap-1.5 pt-2">
+                {% for tag in service.get_tags_list %}
+                  <span class="rounded-full border border-ink-line-dark px-2.5 py-1 font-mono text-[0.72rem] text-mist-soft transition-colors duration-300 group-hover:border-lime-deep group-hover:text-lime">{{ tag }}</span>
+                {% endfor %}
               </div>
-              <h3 class="text-[clamp(1.35rem,2vw,1.8rem)] leading-[1.05] tracking-[-0.02em]">{{ service.title }}</h3>
-              <p class="m-0 max-w-[50ch] text-ink-soft">{{ service.excerpt }}</p>
-              {% if service.get_tags_list %}
-                <div class="mt-auto flex flex-wrap gap-1.5 pt-2">
-                  {% for tag in service.get_tags_list %}
-                    <span class="rounded-full bg-paper-soft px-2.5 py-1 font-mono text-[0.72rem] text-ink-soft">{{ tag }}</span>
-                  {% endfor %}
-                </div>
-              {% endif %}
-            </a>
-          {% endwith %}
-        {% empty %}
-          <p class="py-8">خدمتی ثبت نشده است.</p>
-        {% endfor %}
-      </div>
+            {% endif %}
+          </a>
+        {% endwith %}
+      {% empty %}
+        <p class="col-span-full py-8 text-mist">خدمتی ثبت نشده است.</p>
+      {% endfor %}
     </div>
   </section>
 
