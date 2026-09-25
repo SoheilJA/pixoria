@@ -14,7 +14,6 @@
       content="{% block description %}
       {% endblock %}" />
     <link rel="stylesheet" href="{% static 'fonts/font_urls.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/aos.css' %}" />
     <link rel="stylesheet" href="{% static 'css/tailwind.css' %}" />
     {# <link rel="stylesheet" href="{% static 'css/styles.css' %}" /> #}
     {% block extra_css %}
@@ -48,20 +47,28 @@
       </div>
     </nav>
     <div class="grid min-h-screen grid-cols-1 md:grid-cols-[200px_minmax(0,1fr)] lg:grid-cols-[240px_minmax(0,1fr)]">
-      <aside class="sticky top-0 z-40 hidden h-screen flex-col border-l border-ink-line bg-paper px-6 py-7 md:flex" aria-label="Primary" data-aos="fade-left">
-        <a href="{% url 'home:home' %}" class="flex flex-col gap-3 font-display text-[1.4rem] font-semibold text-ink" data-aos="fade-down"><span class="flex items-center gap-2.5"><span class="grid h-7 w-7 place-items-center rounded-sm bg-ink font-mono text-[0.76rem] font-semibold text-lime">P</span><span class="leading-none">{{ settings.site_name }}</span></span><small class="block font-mono text-[0.78rem] font-normal leading-[1.6] text-ink-dim">{{ settings.site_description }}</small></a><nav class="rail-nav mt-14 flex flex-col gap-0.5 font-mono text-[0.84rem]" aria-label="Sections">
-          <a href="{% url 'home:home' %}" class="flex gap-3.5 rounded-sm px-2 py-2.5 text-ink-soft hover:bg-paper-soft hover:text-ink {% if request.resolver_match.app_name == 'home' %}active text-ink{% endif %}"><span class="text-[0.7rem] text-ink-dim">01</span>خانه</a><a href="{% url 'portfolio:list' %}" class="flex gap-3.5 rounded-sm px-2 py-2.5 text-ink-soft hover:bg-paper-soft hover:text-ink {% if request.resolver_match.app_name == 'portfolio' %}active text-ink{% endif %}"><span class="text-[0.7rem] text-ink-dim">02</span>نمونه کار ها</a><a href="{% url 'services:list' %}" class="flex gap-3.5 rounded-sm px-2 py-2.5 text-ink-soft hover:bg-paper-soft hover:text-ink {% if request.resolver_match.app_name == 'services' %}active text-ink{% endif %}"><span class="text-[0.7rem] text-ink-dim">03</span>خدمات</a><a href="{% url 'blog:list' %}" class="flex gap-3.5 rounded-sm px-2 py-2.5 text-ink-soft hover:bg-paper-soft hover:text-ink {% if request.resolver_match.app_name == 'blog' %}active text-ink{% endif %}"><span class="text-[0.7rem] text-ink-dim">04</span>بلاگ</a><a href="{% url 'core:about' %}" class="flex gap-3.5 rounded-sm px-2 py-2.5 text-ink-soft hover:bg-paper-soft hover:text-ink {% if request.resolver_match.app_name == 'core' %}active text-ink{% endif %}"><span class="text-[0.7rem] text-ink-dim">05</span>درباره ما</a><a href="{% url 'contact:contact' %}" class="flex gap-3.5 rounded-sm px-2 py-2.5 text-ink-soft hover:bg-paper-soft hover:text-ink {% if request.resolver_match.app_name == 'contact' %}active text-ink{% endif %}"><span class="text-[0.7rem] text-ink-dim">06</span>تماس با ما</a>
+      <aside class="sticky top-0 z-40 hidden h-screen flex-col border-l border-ink-line bg-paper px-6 py-7 md:flex" aria-label="Primary">
+        <a href="{% url 'home:home' %}" class="group flex items-center gap-2.5 font-display text-[1.4rem] font-semibold text-ink">
+          <span class="grid h-8 w-8 place-items-center rounded-sm bg-ink font-mono text-[0.78rem] font-semibold text-lime transition-colors duration-300 group-hover:bg-lime group-hover:text-ink">P</span>
+          <span class="leading-none">{{ settings.site_name }}</span>
+        </a>
+        <small class="mt-2.5 block border-r-2 border-lime pr-3 font-mono text-[0.78rem] font-normal leading-[1.6] text-ink-dim">{{ settings.site_description }}</small>
+        <nav class="rail-nav mt-12 flex flex-col gap-0.5 font-mono text-[0.84rem]" aria-label="Sections">
+          <a href="{% url 'home:home' %}" class="group/nav flex items-center gap-3.5 rounded-sm border-r-2 border-transparent px-2 py-2.5 text-ink-soft transition-colors duration-300 hover:bg-paper-soft hover:text-ink {% if request.resolver_match.app_name == 'home' %}active text-ink{% endif %}"><span class="text-[0.7rem] text-ink-dim transition-colors group-hover/nav:text-lime-deep">01</span>خانه</a><a href="{% url 'portfolio:list' %}" class="group/nav flex items-center gap-3.5 rounded-sm border-r-2 border-transparent px-2 py-2.5 text-ink-soft transition-colors duration-300 hover:bg-paper-soft hover:text-ink {% if request.resolver_match.app_name == 'portfolio' %}active text-ink{% endif %}"><span class="text-[0.7rem] text-ink-dim transition-colors group-hover/nav:text-lime-deep">02</span>نمونه کار ها</a><a href="{% url 'services:list' %}" class="group/nav flex items-center gap-3.5 rounded-sm border-r-2 border-transparent px-2 py-2.5 text-ink-soft transition-colors duration-300 hover:bg-paper-soft hover:text-ink {% if request.resolver_match.app_name == 'services' %}active text-ink{% endif %}"><span class="text-[0.7rem] text-ink-dim transition-colors group-hover/nav:text-lime-deep">03</span>خدمات</a><a href="{% url 'blog:list' %}" class="group/nav flex items-center gap-3.5 rounded-sm border-r-2 border-transparent px-2 py-2.5 text-ink-soft transition-colors duration-300 hover:bg-paper-soft hover:text-ink {% if request.resolver_match.app_name == 'blog' %}active text-ink{% endif %}"><span class="text-[0.7rem] text-ink-dim transition-colors group-hover/nav:text-lime-deep">04</span>بلاگ</a><a href="{% url 'core:about' %}" class="group/nav flex items-center gap-3.5 rounded-sm border-r-2 border-transparent px-2 py-2.5 text-ink-soft transition-colors duration-300 hover:bg-paper-soft hover:text-ink {% if request.resolver_match.app_name == 'core' %}active text-ink{% endif %}"><span class="text-[0.7rem] text-ink-dim transition-colors group-hover/nav:text-lime-deep">05</span>درباره ما</a><a href="{% url 'contact:contact' %}" class="group/nav flex items-center gap-3.5 rounded-sm border-r-2 border-transparent px-2 py-2.5 text-ink-soft transition-colors duration-300 hover:bg-paper-soft hover:text-ink {% if request.resolver_match.app_name == 'contact' %}active text-ink{% endif %}"><span class="text-[0.7rem] text-ink-dim transition-colors group-hover/nav:text-lime-deep">06</span>تماس با ما</a>
         </nav>
+        <a href="{% url 'contact:contact' %}" class="mt-8 inline-flex items-center justify-center gap-2 rounded-sm bg-lime px-4 py-3 font-mono text-[0.8rem] font-medium text-ink transition-colors duration-300 hover:bg-ink hover:text-lime">شروع پروژه <span aria-hidden="true">←</span></a>
         <div class="mt-auto flex flex-col gap-4 font-mono text-[0.72rem] text-ink-dim" id="rail-foot">
+          <span class="inline-flex w-fit items-center gap-2 rounded-full border border-lime-deep/60 bg-lime/10 px-3 py-1.5 text-ink"><span class="h-1.5 w-1.5 animate-pulse rounded-full bg-lime-deep"></span>{{ settings.status|default:'آماده همکاری' }}</span>
           <div class="flex justify-between">
             <span>فصل تابستان</span><span>نسخه ۰۱</span>
-          </div><span class="text-ink">{{ settings.status|default:'آماده همکاری' }}</span><div class="flex gap-3.5">
+          </div>
+          <div class="flex gap-3.5">
             {% for social in socials|slice:':3' %}
-              <a href="{{ social.url }}" target="_blank" rel="noopener">{{ social.name }}</a>
+              <a href="{{ social.url }}" target="_blank" rel="noopener" class="transition-colors hover:text-lime-deep">{{ social.name }}</a>
             {% endfor %}
           </div>
-          <div class="flex justify-between">
-            <span>ایران</span><span>آنلاین</span>
+          <div class="flex justify-between border-t border-ink-line pt-4">
+            <span>ایران</span><span class="text-lime-deep">آنلاین</span>
           </div>
         </div>
       </aside>
@@ -126,7 +133,7 @@
     <script src="{% static 'js/main.js' %}" defer></script>
     <script type="module" src="{% static 'js/home-motion.js' %}"></script>
     <script src="{% static 'js/htmx.min.js' %}" defer></script>
-    <script src="{% static 'js/aos.js' %}" defer></script>
+    <script type="module" src="{% static 'js/site-reveal.js' %}"></script>
     <script>
       ;(function () {
         var p = document.getElementById('preloader')
@@ -164,15 +171,6 @@
         }, 1550)
         setTimeout(done, 4500)
       })()
-      document.addEventListener('DOMContentLoaded', function () {
-        if (window.AOS) {
-          AOS.init({ duration: 700, easing: 'ease-out', once: true, offset: 80 })
-          AOS.refresh()
-        }
-      })
-      document.addEventListener('htmx:afterSwap', function () {
-        if (window.AOS) AOS.refreshHard()
-      })
       var htmxBar = document.getElementById('htmx-progress')
       document.body.addEventListener('htmx:beforeRequest', function () {
         if (htmxBar) htmxBar.classList.add('is-loading')

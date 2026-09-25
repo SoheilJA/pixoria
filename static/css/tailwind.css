@@ -20,6 +20,7 @@
     --radius-sm: 0.25rem;
     --radius-md: 0.375rem;
     --ease-out: cubic-bezier(0, 0, 0.2, 1);
+    --animate-pulse: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
     --aspect-video: 16 / 9;
     --default-transition-duration: 150ms;
     --default-transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
@@ -353,6 +354,9 @@
   .mt-2 {
     margin-top: calc(var(--spacing) * 2);
   }
+  .mt-2\.5 {
+    margin-top: calc(var(--spacing) * 2.5);
+  }
   .mt-3 {
     margin-top: calc(var(--spacing) * 3);
   }
@@ -509,6 +513,9 @@
   .h-7 {
     height: calc(var(--spacing) * 7);
   }
+  .h-8 {
+    height: calc(var(--spacing) * 8);
+  }
   .h-10 {
     height: calc(var(--spacing) * 10);
   }
@@ -571,6 +578,9 @@
   }
   .w-\[60px\] {
     width: 60px;
+  }
+  .w-fit {
+    width: fit-content;
   }
   .w-full {
     width: 100%;
@@ -666,6 +676,9 @@
   }
   .animate-marq-slow {
     animation: var(--animate-marq-slow);
+  }
+  .animate-pulse {
+    animation: var(--animate-pulse);
   }
   .cursor-pointer {
     cursor: pointer;
@@ -837,6 +850,10 @@
     border-top-style: var(--tw-border-style);
     border-top-width: 1px;
   }
+  .border-r-2 {
+    border-right-style: var(--tw-border-style);
+    border-right-width: 2px;
+  }
   .border-b {
     border-bottom-style: var(--tw-border-style);
     border-bottom-width: 1px;
@@ -870,6 +887,15 @@
   .border-lime {
     border-color: var(--color-lime);
   }
+  .border-lime-deep\/60 {
+    border-color: color-mix(in srgb, #a3d130 60%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      border-color: color-mix(in oklab, var(--color-lime-deep) 60%, transparent);
+    }
+  }
+  .border-transparent {
+    border-color: transparent;
+  }
   .bg-\[\#fff0eb\] {
     background-color: #fff0eb;
   }
@@ -884,6 +910,15 @@
   }
   .bg-lime {
     background-color: var(--color-lime);
+  }
+  .bg-lime-deep {
+    background-color: var(--color-lime-deep);
+  }
+  .bg-lime\/10 {
+    background-color: color-mix(in srgb, #c8ff3d 10%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      background-color: color-mix(in oklab, var(--color-lime) 10%, transparent);
+    }
   }
   .bg-ok {
     background-color: var(--color-ok);
@@ -1092,6 +1127,9 @@
   .pt-\[clamp\(64px\,12vw\,100px\)\] {
     padding-top: clamp(64px, 12vw, 100px);
   }
+  .pr-3 {
+    padding-right: calc(var(--spacing) * 3);
+  }
   .pb-3 {
     padding-bottom: calc(var(--spacing) * 3);
   }
@@ -1179,9 +1217,6 @@
   }
   .text-\[0\.9rem\] {
     font-size: 0.9rem;
-  }
-  .text-\[0\.66rem\] {
-    font-size: 0.66rem;
   }
   .text-\[0\.68rem\] {
     font-size: 0.68rem;
@@ -1741,7 +1776,16 @@
     .group-hover\:bg-ink:is(:where(.group):hover *) {
       background-color: var(--color-ink);
     }
+    .group-hover\:bg-lime:is(:where(.group):hover *) {
+      background-color: var(--color-lime);
+    }
+    .group-hover\:text-ink:is(:where(.group):hover *) {
+      color: var(--color-ink);
+    }
     .group-hover\:text-lime-deep:is(:where(.group):hover *) {
+      color: var(--color-lime-deep);
+    }
+    .group-hover\/nav\:text-lime-deep:is(:where(.group\/nav):hover *) {
       color: var(--color-lime-deep);
     }
   }
@@ -2227,6 +2271,7 @@
     opacity: 100%;
   }
   .rail-nav a.active {
+    border-color: var(--color-lime);
     background-color: var(--color-ink);
     color: var(--color-lime);
   }
@@ -2779,6 +2824,11 @@
   syntax: "*";
   initial-value: "";
   inherits: false;
+}
+@keyframes pulse {
+  50% {
+    opacity: 0.5;
+  }
 }
 @layer properties {
   @supports ((-webkit-hyphens: none) and (not (margin-trim: inline))) or ((-moz-orient: inline) and (not (color:rgb(from red r g b)))) {

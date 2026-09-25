@@ -8,23 +8,46 @@
     <title>درباره ما — {{ settings.site_name }}</title>
     <meta name="description" content="{{ hero.description|striptags }}" />
     <link rel="stylesheet" href="{% static 'fonts/font_urls.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/aos.css' %}" />
     <link rel="stylesheet" href="{% static 'css/tailwind.css' %}" />
   </head>
   <body>
     <div class="grid min-h-screen grid-cols-1 md:grid-cols-[200px_minmax(0,1fr)] lg:grid-cols-[240px_minmax(0,1fr)]">
-      <aside class="sticky top-0 z-40 hidden h-screen flex-col border-l border-ink-line bg-paper px-6 py-7 md:flex" data-aos="fade-left">
-        <a href="{% url 'home:home' %}" class="flex items-center gap-2.5 font-display text-[1.4rem] font-semibold text-ink" data-aos="fade-down"><span class="grid h-[26px] w-[26px] place-items-center rounded-sm bg-ink font-mono text-[0.78rem] font-semibold text-lime">P</span><span>{{ settings.site_name|default:'پیکسوریا' }}<small class="mt-0.5 block font-mono text-[0.66rem] font-normal text-ink-dim">Pixoria</small></span></a><nav class="rail-nav mt-14 flex flex-col gap-0.5 font-mono text-[0.84rem]" aria-label="Primary">
-          <a href="{% url 'home:home' %}" class="px-2 py-2.5 text-ink-soft">01 خانه</a><a href="{% url 'portfolio:list' %}" class="px-2 py-2.5 text-ink-soft">02 نمونه کارها</a><a href="{% url 'services:list' %}" class="px-2 py-2.5 text-ink-soft">03 خدمات</a><a href="{% url 'core:about' %}" class="px-2 py-2.5 text-ink">04 درباره ما</a><a href="{% url 'contact:contact' %}" class="px-2 py-2.5 text-ink-soft">05 تماس با ما</a>
+      <aside class="sticky top-0 z-40 hidden h-screen flex-col border-l border-ink-line bg-paper px-6 py-7 md:flex" aria-label="Primary">
+        <a href="{% url 'home:home' %}" class="group flex items-center gap-2.5 font-display text-[1.4rem] font-semibold text-ink">
+          <span class="grid h-8 w-8 place-items-center rounded-sm bg-ink font-mono text-[0.78rem] font-semibold text-lime transition-colors duration-300 group-hover:bg-lime group-hover:text-ink">P</span>
+          <span class="leading-none">{{ settings.site_name|default:'پیکسوریا' }}</span>
+        </a>
+        <small class="mt-2.5 block border-r-2 border-lime pr-3 font-mono text-[0.78rem] font-normal leading-[1.6] text-ink-dim">{{ settings.site_description }}</small>
+        <nav class="rail-nav mt-12 flex flex-col gap-0.5 font-mono text-[0.84rem]" aria-label="Primary">
+          <a href="{% url 'home:home' %}" class="group/nav flex items-center gap-3.5 rounded-sm border-r-2 border-transparent px-2 py-2.5 text-ink-soft transition-colors duration-300 hover:bg-paper-soft hover:text-ink"><span class="text-[0.7rem] text-ink-dim transition-colors group-hover/nav:text-lime-deep">01</span>خانه</a>
+          <a href="{% url 'portfolio:list' %}" class="group/nav flex items-center gap-3.5 rounded-sm border-r-2 border-transparent px-2 py-2.5 text-ink-soft transition-colors duration-300 hover:bg-paper-soft hover:text-ink"><span class="text-[0.7rem] text-ink-dim transition-colors group-hover/nav:text-lime-deep">02</span>نمونه کار ها</a>
+          <a href="{% url 'services:list' %}" class="group/nav flex items-center gap-3.5 rounded-sm border-r-2 border-transparent px-2 py-2.5 text-ink-soft transition-colors duration-300 hover:bg-paper-soft hover:text-ink"><span class="text-[0.7rem] text-ink-dim transition-colors group-hover/nav:text-lime-deep">03</span>خدمات</a>
+          <a href="{% url 'blog:list' %}" class="group/nav flex items-center gap-3.5 rounded-sm border-r-2 border-transparent px-2 py-2.5 text-ink-soft transition-colors duration-300 hover:bg-paper-soft hover:text-ink"><span class="text-[0.7rem] text-ink-dim transition-colors group-hover/nav:text-lime-deep">04</span>بلاگ</a>
+          <a href="{% url 'core:about' %}" class="group/nav active flex items-center gap-3.5 rounded-sm border-r-2 border-lime px-2 py-2.5 text-ink" aria-current="page"><span class="text-[0.7rem] text-lime">05</span>درباره ما</a>
+          <a href="{% url 'contact:contact' %}" class="group/nav flex items-center gap-3.5 rounded-sm border-r-2 border-transparent px-2 py-2.5 text-ink-soft transition-colors duration-300 hover:bg-paper-soft hover:text-ink"><span class="text-[0.7rem] text-ink-dim transition-colors group-hover/nav:text-lime-deep">06</span>تماس با ما</a>
         </nav>
-        <div class="mt-auto font-mono text-[0.72rem] text-ink-dim">آماده همکاری</div>
+        <a href="{% url 'contact:contact' %}" class="mt-8 inline-flex items-center justify-center gap-2 rounded-sm bg-lime px-4 py-3 font-mono text-[0.8rem] font-medium text-ink transition-colors duration-300 hover:bg-ink hover:text-lime">شروع پروژه <span aria-hidden="true">←</span></a>
+        <div class="mt-auto flex flex-col gap-4 font-mono text-[0.72rem] text-ink-dim">
+          <span class="inline-flex w-fit items-center gap-2 rounded-full border border-lime-deep/60 bg-lime/10 px-3 py-1.5 text-ink"><span class="h-1.5 w-1.5 animate-pulse rounded-full bg-lime-deep"></span>{{ settings.status|default:'آماده همکاری' }}</span>
+          <div class="flex justify-between">
+            <span>فصل تابستان</span><span>نسخه ۰۱</span>
+          </div>
+          <div class="flex gap-3.5">
+            {% for social in socials|slice:':3' %}
+              <a href="{{ social.url }}" target="_blank" rel="noopener" class="transition-colors hover:text-lime-deep">{{ social.name }}</a>
+            {% endfor %}
+          </div>
+          <div class="flex justify-between border-t border-ink-line pt-4">
+            <span>ایران</span><span class="text-lime-deep">آنلاین</span>
+          </div>
+        </div>
       </aside>
       <div class="min-w-0">
         <header class="sticky top-0 z-50 flex items-center justify-between border-b border-ink-line bg-paper px-page py-3.5 md:hidden" data-aos="fade-down">
-          <a href="{% url 'home:home' %}" class="font-display font-semibold text-ink">پیکسوریا</a><button class="menu-toggle rounded-sm bg-ink px-3.5 py-2.5 font-mono text-[0.8rem] text-lime" aria-label="باز کردن منو" aria-controls="mobile-nav" aria-expanded="false">منو</button>
+          <a href="{% url 'home:home' %}" class="font-display font-semibold text-ink">پیکسوریا</a><button class="menu-toggle inline-flex cursor-pointer flex-col gap-1 rounded-sm bg-ink px-3.5 py-2.5 font-mono text-[0.8rem] text-lime" aria-label="باز کردن منو" aria-controls="mobile-nav" aria-expanded="false"><span class="block h-[2px] w-5 bg-lime"></span><span class="block h-[2px] w-5 bg-lime"></span></button>
         </header>
         <nav id="mobile-nav" class="mobile-nav fixed inset-0 z-[60] hidden flex-col gap-1 bg-ink px-page pb-8 pt-20 font-display text-[2rem] text-paper [&.open]:flex" aria-label="Mobile">
-          <button class="mobile-close absolute right-[18px] top-[18px] cursor-pointer bg-transparent font-mono text-[0.85rem] text-paper" aria-label="بستن منو">بستن ✕</button><a href="{% url 'home:home' %}" class="border-b border-ink-soft py-3.5 hover:text-lime">خانه</a><a href="{% url 'portfolio:list' %}" class="border-b border-ink-soft py-3.5 hover:text-lime">نمونه کار ها</a><a href="{% url 'services:list' %}" class="border-b border-ink-soft py-3.5 hover:text-lime">خدمات</a><a href="{% url 'core:about' %}" class="border-b border-ink-soft py-3.5 hover:text-lime">درباره ما</a><a href="{% url 'contact:contact' %}" class="border-b border-ink-soft py-3.5 hover:text-lime">تماس با ما</a>
+          <button class="mobile-close absolute right-[18px] top-[18px] cursor-pointer bg-transparent font-mono text-[0.85rem] text-paper" aria-label="بستن منو">بستن ✕</button><a href="{% url 'home:home' %}" class="border-b border-ink-soft py-3.5 hover:text-lime">خانه</a><a href="{% url 'portfolio:list' %}" class="border-b border-ink-soft py-3.5 hover:text-lime">نمونه کار ها</a><a href="{% url 'services:list' %}" class="border-b border-ink-soft py-3.5 hover:text-lime">خدمات</a><a href="{% url 'blog:list' %}" class="border-b border-ink-soft py-3.5 hover:text-lime">بلاگ</a><a href="{% url 'core:about' %}" class="border-b border-ink-soft py-3.5 hover:text-lime">درباره ما</a><a href="{% url 'contact:contact' %}" class="border-b border-ink-soft py-3.5 hover:text-lime">تماس با ما</a>
         </nav>
         <main>
           <section class="border-b border-ink-line px-page pb-[clamp(40px,5vw,80px)] pt-[clamp(64px,9vw,130px)]" data-aos="fade-up">
@@ -116,12 +139,10 @@
         </footer>
       </div>
     </div>
-    <script src="{% static 'js/aos.js' %}" defer></script>
+    <script src="{% static 'js/vendor/gsap.min.js' %}"></script>
+    <script src="{% static 'js/vendor/ScrollTrigger.min.js' %}"></script>
+    <script src="{% static 'js/main.js' %}" defer></script>
     <script src="{% static 'js/tailwind-main.js' %}" defer></script>
-    <script>
-      document.addEventListener('DOMContentLoaded', function () {
-        if (window.AOS) AOS.init({ once: true, duration: 700, easing: 'ease-out-cubic', offset: 80 })
-      })
-    </script>
+    <script type="module" src="{% static 'js/site-reveal.js' %}"></script>
   </body>
 </html>

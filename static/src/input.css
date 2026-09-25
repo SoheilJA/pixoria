@@ -150,7 +150,7 @@
   }
 
   .rail-nav a.active {
-    @apply bg-ink text-lime;
+    @apply border-lime bg-ink text-lime;
   }
 
   .rail-nav a.active span {

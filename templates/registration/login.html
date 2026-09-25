@@ -8,7 +8,6 @@
     <title>ورود — {{ settings.site_name|default:'پیکسوریا' }}</title>
     <meta name="robots" content="noindex" />
     <link rel="stylesheet" href="{% static 'fonts/font_urls.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/aos.css' %}" />
     <link rel="stylesheet" href="{% static 'css/tailwind.css' %}" />
   </head>
   <body class="min-h-screen bg-paper font-sans text-ink-soft antialiased">
@@ -65,11 +64,9 @@
         </div>
       </section>
     </div>
-    <script src="{% static 'js/aos.js' %}" defer></script>
-    <script>
-      document.addEventListener('DOMContentLoaded', function () {
-        if (window.AOS) AOS.init({ once: true, duration: 700, offset: 80 })
-      })
-    </script>
+    <script src="{% static 'js/vendor/gsap.min.js' %}"></script>
+    <script src="{% static 'js/vendor/ScrollTrigger.min.js' %}"></script>
+    <script src="{% static 'js/main.js' %}" defer></script>
+    <script type="module" src="{% static 'js/site-reveal.js' %}"></script>
   </body>
 </html>

@@ -19,29 +19,36 @@
     document.querySelectorAll('.reveal').forEach((el) => el.classList.add('in'));
   }
 
-  // ─── Mobile nav toggle ───
+  // ─── Mobile nav toggle — GSAP ───
   const toggle = document.querySelector('.menu-toggle');
   const nav = document.querySelector('.mobile-nav');
   const close = document.querySelector('.mobile-close');
   if (toggle && nav) {
-    toggle.addEventListener('click', () => {
-      const open = nav.classList.toggle('open');
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const G = window.gsap || null;
+    let open = false;
+
+    const setOpen = (state) => {
+      open = state;
+      nav.classList.toggle('open', open);
       toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
       document.body.style.overflow = open ? 'hidden' : '';
-    });
-    if (close) {
-      close.addEventListener('click', () => {
-        nav.classList.remove('open');
-        toggle.setAttribute('aria-expanded', 'false');
-        document.body.style.overflow = '';
-      });
-    }
+      if (G && !reduced) {
+        if (open) {
+          G.fromTo(nav, { xPercent: -100 }, { xPercent: 0, duration: 0.45, ease: 'power3.out' });
+          G.from(nav.querySelectorAll('a, button.mobile-close'), {
+            y: 26, opacity: 0, duration: 0.45, stagger: 0.06, ease: 'power2.out', delay: 0.1,
+          });
+        } else {
+          G.to(nav, { xPercent: -100, duration: 0.35, ease: 'power3.in', onComplete: () => G.set(nav, { clearProps: 'all' }) });
+        }
+      }
+    };
+
+    toggle.addEventListener('click', () => setOpen(!open));
+    if (close) close.addEventListener('click', () => setOpen(false));
     nav.querySelectorAll('a').forEach((a) =>
-      a.addEventListener('click', () => {
-        nav.classList.remove('open');
-        toggle.setAttribute('aria-expanded', 'false');
-        document.body.style.overflow = '';
-      })
+      a.addEventListener('click', () => setOpen(false))
     );
   }
 
