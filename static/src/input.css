@@ -149,12 +149,14 @@
     @apply translate-y-0 opacity-100;
   }
 
-  .rail-nav a.active {
-    @apply border-lime bg-ink text-lime;
+  .rail-nav a.active,
+  .rail-nav a.active:hover {
+    @apply border-lime bg-ink;
+    color: var(--color-lime) !important;
   }
 
   .rail-nav a.active span {
-    @apply text-lime;
+    color: var(--color-lime) !important;
   }
 
   .rail-nav a.active .nav-dot {

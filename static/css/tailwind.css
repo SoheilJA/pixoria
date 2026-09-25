@@ -2073,9 +2073,6 @@
     .lg\:top-8 {
       top: calc(var(--spacing) * 8);
     }
-    .lg\:col-span-1 {
-      grid-column: span 1 / span 1;
-    }
     .lg\:grid-cols-3 {
       grid-template-columns: repeat(3, minmax(0, 1fr));
     }
@@ -2270,13 +2267,13 @@
     translate: var(--tw-translate-x) var(--tw-translate-y);
     opacity: 100%;
   }
-  .rail-nav a.active {
+  .rail-nav a.active, .rail-nav a.active:hover {
     border-color: var(--color-lime);
     background-color: var(--color-ink);
-    color: var(--color-lime);
+    color: var(--color-lime) !important;
   }
   .rail-nav a.active span {
-    color: var(--color-lime);
+    color: var(--color-lime) !important;
   }
   .rail-nav a.active .nav-dot {
     opacity: 100%;
