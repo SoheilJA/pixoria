@@ -26,15 +26,15 @@ function varsFor(variant, { dur, delay }) {
   const base = { duration: dur, delay, ease: EASE, scrollTrigger: { trigger: null, start: "top 90%", once: true } };
   switch (variant) {
     case "headline":
-      return { ...base, y: 46, autoAlpha: 0, skewY: 3, filter: "blur(8px)", duration: Math.max(dur, 0.9) };
+      return { ...base, y: 0, autoAlpha: 1, skewY: 0, filter: "blur(0px)", duration: Math.max(dur, 0.9) };
     case "blind":
-      return { ...base, y: 18, autoAlpha: 0, clipPath: "inset(0 0 100% 0)", duration: Math.max(dur, 0.7), ease: "power4.out" };
+      return { ...base, y: 0, autoAlpha: 1, clipPath: "inset(-2% -2% -2% -2%)", duration: Math.max(dur, 0.7), ease: "power4.out" };
     case "clip":
-      return { ...base, clipPath: "inset(12% 8% 12% 8% round 8px)", scale: 1.04, autoAlpha: 0, filter: "blur(6px)", duration: Math.max(dur, 0.9), ease: "power2.out" };
+      return { ...base, clipPath: "inset(0% 0% 0% 0% round 8px)", scale: 1, autoAlpha: 1, filter: "blur(0px)", duration: Math.max(dur, 0.9), ease: "power2.out" };
     case "stagger-card":
-      return { ...base, y: 36, autoAlpha: 0, rotateX: 6, transformOrigin: "50% 100%", duration: Math.max(dur, 0.75) };
+      return { ...base, y: 0, autoAlpha: 1, rotateX: 0, duration: Math.max(dur, 0.75) };
     default:
-      return { ...base, y: 32, autoAlpha: 0, filter: "blur(4px)", duration: Math.max(dur, 0.75) };
+      return { ...base, y: 0, autoAlpha: 1, filter: "blur(0px)", duration: Math.max(dur, 0.75) };
   }
 }
 
@@ -67,7 +67,6 @@ function initAosElements() {
       else if (kind === "fade-left") { vars.x = -34; vars.y = 0; }
       vars.scrollTrigger.trigger = el;
       vars.immediateRender = false;
-      vars.autoAlpha = 1;
       G.fromTo(el, { ...stateFor(variant, kind) }, vars);
     }
   });
