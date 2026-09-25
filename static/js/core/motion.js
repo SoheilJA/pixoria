@@ -4,6 +4,19 @@ import { RM } from "./utils.js";
 
 const G = window.gsap || null;
 
+/* صحنه‌ی سه‌بعدی هیرو — Three.js لوکال */
+async function initHero3D(hero) {
+  if (!hero || RM) return;
+  try {
+    const THREE = await import("../vendor/three.module.js");
+    window.THREE = THREE;
+    const { initHeroScene } = await import("../engine/scene.js");
+    initHeroScene(hero);
+  } catch (e) {
+    /* Three در دسترس نیست — صحنه اختیاری است */
+  }
+}
+
 export function initHomeMotion() {
   if (!G || RM) {
     /* بدون انیمیشن — محتوا همیشه کامل و قابل‌مشاهده */
@@ -32,6 +45,7 @@ export function initHomeMotion() {
 
   /* ---- پارالاکس ماوس روی تیتر و مارکی ---- */
   const hero = document.querySelector("section[aria-label='معرفی برند']");
+  initHero3D(hero);
   if (hero && matchMedia("(hover: hover) and (pointer: fine)").matches) {
     const targets = [
       { el: hero.querySelector(".hero-title"), depth: 18 },
