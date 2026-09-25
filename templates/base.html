@@ -76,21 +76,22 @@
         <main id="content-start">
           {% block content %}
           {% endblock %}
-          {% if cta %}
-            <section class="bg-lime px-page py-[clamp(64px,9vw,130px)] text-ink" aria-labelledby="cta-head" data-aos="fade-up">
-              <div class="grid grid-cols-1 gap-10 md:grid-cols-[1fr_1.2fr] md:gap-20">
-                <h2 id="cta-head" class="text-ink font-display text-[clamp(2.6rem,5vw,5.2rem)] font-medium leading-[0.96] tracking-[-0.03em]" data-aos="fade-up">{{ cta.title }}</h2><div data-aos="fade-up" data-aos-delay="100">
-                  <p class="text-[1.05rem] leading-[1.6] text-ink-soft">{{ cta.description }}</p><a class="btn btn-ink mt-3" href="{% url 'contact:contact' %}">شروع گفتگو <span>←</span></a><div class="mt-6 flex flex-wrap gap-5 font-mono text-[0.78rem] text-ink-dim">
-                    <span>{{ cta.email }}</span><span>{{ cta.phone }}</span>
-                  </div>
+          <section class="bg-lime px-page pb-0 pt-[clamp(64px,9vw,110px)] text-ink" aria-labelledby="cta-head">
+            <div class="grid grid-cols-1 gap-10 md:grid-cols-[1fr_1.2fr] md:gap-20">
+              <h2 id="cta-head" class="text-ink font-display text-[clamp(2.6rem,5vw,5.2rem)] font-medium leading-[0.96] tracking-[-0.03em]" data-aos="fade-up">{{ cta.title|default:'پروژه‌ای در ذهن دارید؟' }}</h2>
+              <div data-aos="fade-up" data-aos-delay="100">
+                <p class="text-[1.05rem] leading-[1.6] text-ink-soft">{{ cta.description|default:'از ایده تا اجرا کنارتان هستیم. همین حالا گفتگو را شروع کنید.' }}</p>
+                <a class="btn mt-3 inline-flex border-ink bg-paper text-ink transition-colors duration-300 hover:bg-ink hover:text-lime" href="{% url 'contact:contact' %}">شروع گفتگو <span>←</span></a>
+                <div class="mt-6 flex flex-wrap gap-5 font-mono text-[0.78rem] text-ink-dim">
+                  <span>{{ cta.email|default:settings.email }}</span><span>{{ cta.phone|default:settings.phone }}</span>
                 </div>
               </div>
-            </section>
-          {% endif %}
+            </div>
+          </section>
           {% block afterPrefooter %}
           {% endblock %}
         </main>
-        <footer class="bg-ink px-page pb-6 pt-[clamp(60px,7vw,100px)] text-[0.92rem] text-mist" aria-labelledby="footer-head" data-aos="fade-up">
+        <footer class="bg-ink px-page pb-6 pt-[clamp(60px,7vw,100px)] text-[0.92rem] text-mist" aria-labelledby="footer-head">
           <h2 id="footer-head" class="sr-only">فوتر سایت</h2><div class="grid grid-cols-2 gap-8 border-b border-ink-line-dark pb-12 md:grid-cols-[1.4fr_1fr_1fr_1fr] md:gap-12">
             <div class="flex max-w-[36ch] flex-col gap-[18px]">
               <span class="flex items-center gap-2.5 font-display text-[1.6rem] font-semibold text-paper"><span class="grid h-7 w-7 place-items-center rounded-sm bg-lime font-mono text-[0.76rem] font-semibold text-ink">P</span>{{ settings.site_name }}</span><p class="m-0 leading-[1.55] text-mist-soft">{{ settings.footer_description }}</p>

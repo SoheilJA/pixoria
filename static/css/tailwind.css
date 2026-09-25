@@ -567,6 +567,9 @@
   .min-h-\[140px\] {
     min-height: 140px;
   }
+  .min-h-\[240px\] {
+    min-height: 240px;
+  }
   .min-h-screen {
     min-height: 100vh;
   }
@@ -1164,6 +1167,9 @@
   .pt-\[clamp\(60px\,10vw\,140px\)\] {
     padding-top: clamp(60px, 10vw, 140px);
   }
+  .pt-\[clamp\(64px\,9vw\,110px\)\] {
+    padding-top: clamp(64px, 9vw, 110px);
+  }
   .pt-\[clamp\(64px\,9vw\,130px\)\] {
     padding-top: clamp(64px, 9vw, 130px);
   }
@@ -1175,6 +1181,9 @@
   }
   .pr-3 {
     padding-right: calc(var(--spacing) * 3);
+  }
+  .pb-0 {
+    padding-bottom: 0px;
   }
   .pb-3 {
     padding-bottom: calc(var(--spacing) * 3);
@@ -2153,6 +2162,9 @@
     .lg\:top-8 {
       top: calc(var(--spacing) * 8);
     }
+    .lg\:grid-cols-2 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
     .lg\:grid-cols-3 {
       grid-template-columns: repeat(3, minmax(0, 1fr));
     }
@@ -2179,6 +2191,11 @@
       border-bottom-width: 0px;
     }
   }
+  @media (width >= 80rem) {
+    .xl\:grid-cols-3 {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
   .\[\&\.active\]\:text-ink.active {
     color: var(--color-ink);
   }
@@ -2188,6 +2205,11 @@
   }
   .\[\&\.open\]\:flex.open {
     display: flex;
+  }
+  @media (width >= 80rem) {
+    .\[\&\>\*\:nth-last-child\(1\)\]\:xl\:col-span-1 > :nth-last-child(1) {
+      grid-column: span 1 / span 1;
+    }
   }
   .\[\&\>p\]\:mb-\[1\.2em\] > p {
     margin-bottom: 1.2em;
@@ -2354,6 +2376,14 @@
   }
   .rail-nav a.active span {
     color: var(--color-lime) !important;
+  }
+  .rail-nav a:hover:not(.active) {
+    background-color: var(--color-paper-soft);
+    color: var(--color-ink);
+    border-right-color: var(--color-lime);
+  }
+  .rail-nav a:hover:not(.active) span {
+    color: var(--color-lime-deep);
   }
   .rail-nav a.active .nav-dot {
     opacity: 100%;

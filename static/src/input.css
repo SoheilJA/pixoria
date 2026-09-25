@@ -159,6 +159,15 @@
     color: var(--color-lime) !important;
   }
 
+  .rail-nav a:hover:not(.active) {
+    @apply bg-paper-soft text-ink;
+    border-right-color: var(--color-lime);
+  }
+
+  .rail-nav a:hover:not(.active) span {
+    color: var(--color-lime-deep);
+  }
+
   .rail-nav a.active .nav-dot {
     @apply opacity-100;
   }
