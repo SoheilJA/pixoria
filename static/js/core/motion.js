@@ -27,18 +27,14 @@ export function initHomeMotion() {
     return;
   }
 
-  /* ---- ورود هیرو: تیتر، lead، دکمه‌ها، مارکی ---- */
+  /* ---- ورود هیرو: تیتر، lead، دکمه‌ها، مارکی ----
+     (انیمیشن data-aosها با reveal.js انجام می‌شود تا تداخل پیش نیاید) */
   const tl = G.timeline({ defaults: { ease: "power3.out" } });
   tl.from(".hero-title", { y: 44, opacity: 0, duration: 0.85 })
     .from(
-      ".home-kicker, [data-aos='fade-down']",
-      { y: -16, opacity: 0, duration: 0.5 },
-      "-=0.6",
-    )
-    .from(
       ".home-hero-grid > *",
       { y: 26, opacity: 0, duration: 0.65, stagger: 0.12 },
-      "-=0.35",
+      "-=0.55",
     )
     .from(".home-hero-cta .btn", { y: 16, opacity: 0, duration: 0.45, stagger: 0.08 }, "-=0.3")
     .from(".home-marquee", { opacity: 0, duration: 0.7 }, "-=0.2");
@@ -68,21 +64,6 @@ export function initHomeMotion() {
     hero.addEventListener("mouseleave", () => {
       G.to(targets.map((t) => t.el), { x: 0, y: 0, duration: 0.6, ease: "power2.out" });
     });
-  }
-
-  /* ---- ظاهرشدن کارت‌ها با اسکرول (ScrollTrigger) ---- */
-  if (window.ScrollTrigger) {
-    document
-      .querySelectorAll(".svc-card, section .group.flex.flex-col, .carousel-track > *")
-      .forEach((el) => {
-        G.from(el, {
-          y: 30,
-          opacity: 0,
-          duration: 0.55,
-          ease: "power2.out",
-          scrollTrigger: { trigger: el, start: "top 92%", once: true },
-        });
-      });
   }
 
   /* ---- نفس کشیدن badge وضعیت همکاری ---- */
