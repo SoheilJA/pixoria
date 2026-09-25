@@ -165,6 +165,61 @@ class AboutPre(models.Model):
         super().save(*args, **kwargs)
 
 
+class AboutMission(models.Model):
+    """ماموریت و چشم‌انداز — تک‌سکشن"""
+
+    label = models.CharField(max_length=100, verbose_name="ساب تایتل", default="ماموریت ما")
+    title = models.CharField(max_length=200, verbose_name="عنوان")
+    description = models.TextField(verbose_name="توضیحات")
+    image = models.ImageField(
+        upload_to="about/mission/", verbose_name="تصویر", blank=True, null=True
+    )
+
+    class Meta:
+        verbose_name = "ماموریت ما"
+        verbose_name_plural = "ماموریت ما"
+
+    def __str__(self):
+        return self.title
+
+    def save(self, *args, **kwargs):
+        if not self.pk and AboutMission.objects.exists():
+            raise ValueError("فقط یک سکشن مجاز است")
+        super().save(*args, **kwargs)
+
+
+class AboutProcessStep(models.Model):
+    """مراحل همکاری"""
+
+    title = models.CharField(max_length=200, verbose_name="عنوان مرحله")
+    description = models.TextField(verbose_name="توضیحات")
+    order = models.PositiveIntegerField(default=0, verbose_name="ترتیب")
+
+    class Meta:
+        verbose_name = "مرحله همکاری"
+        verbose_name_plural = "مراحل همکاری"
+        ordering = ["order"]
+
+    def __str__(self):
+        return self.title
+
+
+class AboutFaq(models.Model):
+    """سوالات متداول درباره ما"""
+
+    question = models.CharField(max_length=300, verbose_name="سوال")
+    answer = models.TextField(verbose_name="پاسخ")
+    order = models.PositiveIntegerField(default=0, verbose_name="ترتیب")
+
+    class Meta:
+        verbose_name = "سوال متداول"
+        verbose_name_plural = "سوالات متداول"
+        ordering = ["order"]
+
+    def __str__(self):
+        return self.question
+
+
 """مدل های پروپوزال"""
 
 

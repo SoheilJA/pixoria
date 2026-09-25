@@ -6,6 +6,9 @@ from .models import (
     AboutValue,
     AboutStat,
     AboutPre,
+    AboutMission,
+    AboutProcessStep,
+    AboutFaq,
     Proposal,
 )
 
@@ -18,6 +21,9 @@ def about(request):
         "values": AboutValue.objects.all(),
         "stats": AboutStat.objects.all(),
         "pre": AboutPre.objects.first(),
+        "mission": AboutMission.objects.first(),
+        "process_steps": AboutProcessStep.objects.all(),
+        "faqs": AboutFaq.objects.all(),
     }
     return render(request, "core/about.html", context)
 

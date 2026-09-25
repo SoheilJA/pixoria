@@ -57,6 +57,26 @@ class AboutPreAdmin(admin.ModelAdmin):
         return not AboutPre.objects.exists()
 
 
+@admin.register(AboutMission)
+class AboutMissionAdmin(admin.ModelAdmin):
+    list_display = ["title"]
+
+    def has_add_permission(self, request):
+        return not AboutMission.objects.exists()
+
+
+@admin.register(AboutProcessStep)
+class AboutProcessStepAdmin(admin.ModelAdmin):
+    list_display = ["title", "order"]
+    list_editable = ["order"]
+
+
+@admin.register(AboutFaq)
+class AboutFaqAdmin(admin.ModelAdmin):
+    list_display = ["question", "order"]
+    list_editable = ["order"]
+
+
 class ProposalStatInline(admin.TabularInline):
     model = ProposalStat
     extra = 1
