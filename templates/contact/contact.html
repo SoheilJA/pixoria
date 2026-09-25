@@ -44,11 +44,18 @@
       </aside>
 
       <div class="min-w-0">
-        <header class="sticky top-0 z-50 flex items-center justify-between border-b border-ink-line bg-paper px-page py-3.5 md:hidden" data-aos="fade-down">
-          <a href="{% url 'home:home' %}" class="flex items-center gap-2 font-display font-semibold text-ink"><span class="grid h-[26px] w-[26px] place-items-center rounded-sm bg-ink font-mono text-[0.78rem] font-semibold leading-none text-lime">P</span>{{ settings.site_name|default:'پیکسوریا' }}</a><button class="menu-toggle inline-flex cursor-pointer flex-col gap-1 rounded-sm bg-ink px-3.5 py-2.5 font-mono text-[0.8rem] text-lime" aria-label="باز کردن منو" aria-controls="mobile-nav" aria-expanded="false"><span class="block h-[2px] w-5 bg-lime"></span><span class="block h-[2px] w-5 bg-lime"></span></button>
+        <header class="mobile-header fixed inset-x-0 top-0 z-50 flex items-center justify-between border-b border-ink-line bg-paper px-page py-3 md:hidden">
+          <a href="{% url 'home:home' %}" class="flex items-center gap-2 font-display font-semibold text-ink"><span class="grid h-[28px] w-[28px] place-items-center rounded-sm bg-ink font-mono text-[0.78rem] font-semibold leading-none text-lime">P</span>{{ settings.site_name|default:'پیکسوریا' }}</a>
+          <button class="menu-toggle inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-sm bg-ink text-lime" aria-label="باز کردن منو" aria-controls="mobile-nav" aria-expanded="false"><i data-lucide="menu" class="h-6 w-6"></i></button>
         </header>
-        <nav id="mobile-nav" class="mobile-nav fixed inset-0 z-[60] hidden flex-col gap-1 bg-ink px-page pb-8 pt-20 font-display text-[2rem] text-paper [&.open]:flex" aria-label="Mobile">
-          <button class="mobile-close absolute right-[18px] top-[18px] cursor-pointer bg-transparent font-mono text-[0.85rem] text-paper" aria-label="بستن منو">بستن ✕</button><a href="{% url 'home:home' %}" class="border-b border-ink-soft py-3.5 hover:text-lime">خانه</a><a href="{% url 'portfolio:list' %}" class="border-b border-ink-soft py-3.5 hover:text-lime">نمونه کار ها</a><a href="{% url 'services:list' %}" class="border-b border-ink-soft py-3.5 hover:text-lime">خدمات</a><a href="{% url 'core:about' %}" class="border-b border-ink-soft py-3.5 hover:text-lime">درباره ما</a><a href="{% url 'contact:contact' %}" class="border-b border-ink-soft py-3.5 hover:text-lime">تماس با ما</a>
+        <nav id="mobile-nav" class="mobile-nav fixed inset-0 z-[60] hidden flex-col gap-1 bg-ink px-page pb-8 pt-24 font-display text-[2rem] text-paper [&.open]:flex" aria-label="Mobile">
+          <button class="mobile-close absolute right-[18px] top-[18px] inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-sm bg-lime text-ink" aria-label="بستن منو"><i data-lucide="x" class="h-6 w-6"></i></button>
+          <a href="{% url 'home:home' %}" class="flex items-center gap-4 border-b border-ink-soft py-3.5 hover:text-lime"><i data-lucide="home" class="h-6 w-6 opacity-70"></i>خانه</a>
+          <a href="{% url 'portfolio:list' %}" class="flex items-center gap-4 border-b border-ink-soft py-3.5 hover:text-lime"><i data-lucide="layout-grid" class="h-6 w-6 opacity-70"></i>نمونه کار ها</a>
+          <a href="{% url 'services:list' %}" class="flex items-center gap-4 border-b border-ink-soft py-3.5 hover:text-lime"><i data-lucide="layers" class="h-6 w-6 opacity-70"></i>خدمات</a>
+          <a href="{% url 'blog:list' %}" class="flex items-center gap-4 border-b border-ink-soft py-3.5 hover:text-lime"><i data-lucide="newspaper" class="h-6 w-6 opacity-70"></i>بلاگ</a>
+          <a href="{% url 'core:about' %}" class="flex items-center gap-4 border-b border-ink-soft py-3.5 hover:text-lime"><i data-lucide="users" class="h-6 w-6 opacity-70"></i>درباره ما</a>
+          <a href="{% url 'contact:contact' %}" class="flex items-center gap-4 border-b border-ink-soft py-3.5 text-lime"><i data-lucide="mail" class="h-6 w-6 opacity-70"></i>تماس با ما</a>
         </nav>
 
         <main>
@@ -179,6 +186,7 @@
     </div>
     <script src="{% static 'js/vendor/gsap.min.js' %}"></script>
     <script src="{% static 'js/vendor/ScrollTrigger.min.js' %}"></script>
+    <script src="{% static 'js/vendor/lucide.min.js' %}" defer></script>
     <script src="{% static 'js/main.js' %}" defer></script>
     <script src="{% static 'js/htmx.min.js' %}" defer></script>
     <script type="module" src="{% static 'js/site-reveal.js' %}"></script>
