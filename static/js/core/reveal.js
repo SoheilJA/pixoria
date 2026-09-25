@@ -42,14 +42,17 @@ function initAosElements() {
   const els = $$("[data-aos]").filter((el) => !el.__aosDone);
   if (!els.length) return;
 
+  /* المان‌های داخل کاروسل را انیمیت نمی‌کنیم — با ترنسفورم والد تداخل دارد */
+  const animatable = els.filter((el) => !el.closest(".carousel-track"));
+  els.forEach((el) => (el.__aosDone = true));
+
   /* کارت‌های هم‌خانواده با stagger گروهی */
   const groups = new Map();
-  els.forEach((el) => {
-    el.__aosDone = true;
+  animatable.forEach((el) => {
     const { delay, dur } = aosVars(el);
     const kind = el.dataset.aos;
     if (kind === "fade-in") {
-      G.from(el, { opacity: 0, duration: dur, delay, ease: EASE, scrollTrigger: { trigger: el, start: "top 90%", once: true } });
+      G.fromTo(el, { autoAlpha: 0 }, { autoAlpha: 1, duration: dur, delay, ease: EASE, immediateRender: false, scrollTrigger: { trigger: el, start: "top 95%", once: true } });
       return;
     }
     const parent = pickVariant(el) === "stagger-card" ? el.parentElement : null;
@@ -63,25 +66,56 @@ function initAosElements() {
       else if (kind === "fade-right") { vars.x = 34; vars.y = 0; }
       else if (kind === "fade-left") { vars.x = -34; vars.y = 0; }
       vars.scrollTrigger.trigger = el;
-      G.from(el, vars);
+      vars.immediateRender = false;
+      vars.autoAlpha = 0;
+      if (vars.opacity !== undefined) delete vars.opacity;
+      G.fromTo(el, { ...stateFor(variant, kind) }, vars);
     }
   });
 
   groups.forEach((items, parent) => {
     const targets = items.map((i) => i.el);
     const durs = Math.max(...items.map((i) => i.dur));
-    G.from(targets, {
-      y: 38,
-      opacity: 0,
-      rotateX: 5,
-      transformOrigin: "50% 100%",
-      filter: "blur(4px)",
-      duration: Math.max(durs, 0.8),
-      ease: EASE,
-      stagger: { each: 0.09, from: "start" },
-      scrollTrigger: { trigger: parent, start: "top 88%", once: true },
-    });
+    G.fromTo(targets,
+      { y: 38, autoAlpha: 0, rotateX: 5, transformOrigin: "50% 100%", filter: "blur(4px)" },
+      {
+        y: 0, autoAlpha: 1, rotateX: 0, filter: "blur(0px)",
+        duration: Math.max(durs, 0.8),
+        ease: EASE,
+        immediateRender: false,
+        stagger: { each: 0.09, from: "start" },
+        scrollTrigger: { trigger: parent, start: "top 92%", once: true },
+      });
   });
+}
+
+/* حالت اولیه‌ی هر واریانت برای fromTo */
+function stateFor(variant, kind) {
+  switch (variant) {
+    case "headline": return { y: 46, autoAlpha: 0, skewY: 3, filter: "blur(8px)" };
+    case "blind": return { y: 18, autoAlpha: 0, clipPath: "inset(0 0 100% 0)" };
+    case "clip": return { clipPath: "inset(12% 8% 12% 8% round 8px)", scale: 1.04, autoAlpha: 0, filter: "blur(6px)" };
+    case "stagger-card": return { y: 36, autoAlpha: 0, rotateX: 6, transformOrigin: "50% 100%" };
+    default:
+      if (kind === "fade-down") return { y: -30, autoAlpha: 0 };
+      if (kind === "fade-right") return { x: 34, autoAlpha: 0 };
+      if (kind === "fade-left") return { x: -34, autoAlpha: 0 };
+      return { y: 32, autoAlpha: 0, filter: "blur(4px)" };
+  }
+}
+
+/* تور ایمنی: هر المانی که بعد از لود کامل هنوز مخفی ماند، نمایان می‌شود */
+function installSafetyNet() {
+  const show = () => {
+    $$("[data-aos], .rv").forEach((el) => {
+      if (el.__aosDone) return;
+      el.__aosDone = true;
+      G.set(el, { clearProps: "all", autoAlpha: 1 });
+    });
+    ScrollTrigger.refresh();
+  };
+  window.addEventListener("load", () => setTimeout(show, 1200));
+  setTimeout(show, 4000);
 }
 
 export function initReveals() {
@@ -90,18 +124,18 @@ export function initReveals() {
   initAosElements();
 
   $$(".rv")
-    .filter((el) => !el.closest("#hero"))
+    .filter((el) => !el.closest("#hero") && !el.closest(".carousel-track"))
     .forEach((el) => {
-      G.from(el, {
-        y: 24,
-        opacity: 0,
-        duration: 0.6,
-        ease: EASE,
-        scrollTrigger: { trigger: el, start: "top 90%", once: true },
-      });
+      G.fromTo(el,
+        { y: 24, autoAlpha: 0 },
+        {
+          y: 0, autoAlpha: 1, duration: 0.6, ease: EASE, immediateRender: false,
+          scrollTrigger: { trigger: el, start: "top 95%", once: true },
+        });
     });
 
   ScrollTrigger.refresh();
+  installSafetyNet();
 
   /* محتوای جدید htmx هم انیمیت شود */
   document.body.addEventListener("htmx:afterSwap", () => {
