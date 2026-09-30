@@ -23,52 +23,37 @@ export function initHeroScene(host) {
   host.prepend(canvas);
 
   /* پالت برند — اینک برای کنتراست روی پس‌زمینه‌ی روشن paper،
-     لایم/لایم‌دیپ برای تاکید. صحنه روی بک‌گراند روشن دیده می‌شود. */
+     لایم برای تاکید. صحنه تنک و ظریف است تا متن هیرو تمرکز اصلی بماند. */
   const lime = new THREE.Color(0xc8ff3d);
   const ink = new THREE.Color(0x0e0e0e);
   const group = new THREE.Group();
   scene.add(group);
 
-  /* شبکه‌ی نقاط متراکم — لایم‌دیپ روی paper کنتراست می‌دهد */
-  const COUNT = 340;
+  /* شبکه‌ی نقاط تنک — لایم‌دیپ روی paper کنتراست می‌دهد */
+  const COUNT = 170;
   const geo = new THREE.BufferGeometry();
   const pos = new Float32Array(COUNT * 3);
   const seed = new Float32Array(COUNT);
   for (let i = 0; i < COUNT; i++) {
-    pos[i * 3] = (Math.random() - 0.5) * 16;
-    pos[i * 3 + 1] = (Math.random() - 0.5) * 9;
+    pos[i * 3] = (Math.random() - 0.5) * 18;
+    pos[i * 3 + 1] = (Math.random() - 0.5) * 10;
     pos[i * 3 + 2] = (Math.random() - 0.5) * 8;
     seed[i] = Math.random() * Math.PI * 2;
   }
   geo.setAttribute("position", new THREE.BufferAttribute(pos, 3));
   const pointsMat = new THREE.PointsMaterial({
-    color: 0xa3d130, size: 0.085, transparent: true, opacity: 0, sizeAttenuation: true,
+    color: 0xa3d130, size: 0.06, transparent: true, opacity: 0, sizeAttenuation: true,
   });
   const points = new THREE.Points(geo, pointsMat);
   group.add(points);
 
-  /* درخش‌های لایم خالص — نقاط درشت‌تر به‌عنوان accent برند */
-  const SPARK_N = 26;
-  const sparkPos = new Float32Array(SPARK_N * 3);
-  for (let i = 0; i < SPARK_N; i++) {
-    sparkPos[i * 3] = (Math.random() - 0.5) * 14;
-    sparkPos[i * 3 + 1] = (Math.random() - 0.5) * 8;
-    sparkPos[i * 3 + 2] = (Math.random() - 0.5) * 6;
-  }
-  const sparkGeo = new THREE.BufferGeometry();
-  sparkGeo.setAttribute("position", new THREE.BufferAttribute(sparkPos, 3));
-  const sparkMat = new THREE.PointsMaterial({
-    color: lime, size: 0.17, transparent: true, opacity: 0, sizeAttenuation: true,
-  });
-  group.add(new THREE.Points(sparkGeo, sparkMat));
-
-  /* حلقه‌های وایرفریم اینک — روی پس‌زمینه‌ی روشن واضح و خوانا */
-  const RING_OP = [0.5, 0.4, 0.3];
+  /* حلقه‌های وایرفریم اینک — دو حلقه‌ی ظریف و نازک */
+  const RING_OP = [0.28, 0.18];
   const rings = [];
-  for (let i = 0; i < 3; i++) {
-    const r = 2.6 + i * 1.7;
+  for (let i = 0; i < 2; i++) {
+    const r = 3.2 + i * 1.9;
     const ring = new THREE.Mesh(
-      new THREE.TorusGeometry(r, 0.02, 10, 110),
+      new THREE.TorusGeometry(r, 0.008, 8, 120),
       new THREE.MeshBasicMaterial({ color: ink, transparent: true, opacity: 0 })
     );
     ring.rotation.x = Math.PI / 2.4 + i * 0.35;
@@ -76,13 +61,6 @@ export function initHeroScene(host) {
     rings.push(ring);
     group.add(ring);
   }
-
-  /* هسته‌ی مرکزی — ایکوزاهدرن وایرفریم لایم، کانون بصری صحنه */
-  const coreMat = new THREE.MeshBasicMaterial({
-    color: lime, wireframe: true, transparent: true, opacity: 0,
-  });
-  const core = new THREE.Mesh(new THREE.IcosahedronGeometry(1.05, 1), coreMat);
-  group.add(core);
 
   /* پارالاکس ماوس */
   const mouse = { x: 0, y: 0, tx: 0, ty: 0 };
@@ -134,10 +112,8 @@ export function initHeroScene(host) {
 
     /* ورود نرم: صحنه در ~۱.۲ ثانیه از شفاف به حالت نهایی می‌رسد */
     const intro = 1 - Math.pow(1 - Math.min(1, t / 1.2), 3);
-    pointsMat.opacity = 0.9 * intro;
-    sparkMat.opacity = 0.85 * intro;
+    pointsMat.opacity = 0.75 * intro;
     rings.forEach((r, i) => { r.material.opacity = RING_OP[i] * intro; });
-    coreMat.opacity = 0.4 * intro;
 
     mouse.x += (mouse.tx - mouse.x) * 0.05;
     mouse.y += (mouse.ty - mouse.y) * 0.05;
@@ -146,9 +122,6 @@ export function initHeroScene(host) {
     group.rotation.x = mouse.y * 0.1;
     group.position.y = scrollP * 2.2;
     camera.position.z = 9 + scrollP * 2;
-
-    core.rotation.y = t * 0.18;
-    core.rotation.x = t * 0.12;
 
     const arr = geo.attributes.position.array;
     for (let i = 0; i < COUNT; i++) {

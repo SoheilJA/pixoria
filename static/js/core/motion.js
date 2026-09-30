@@ -79,7 +79,7 @@ export function initHomeMotion() {
     });
 
   /* ---- موج ملایم آیکن‌های مارکی ---- */
-  document.querySelectorAll(".home-marquee .text-lime").forEach((s, i) => {
+  document.querySelectorAll(".home-marquee .text-lime-deep").forEach((s, i) => {
     G.to(s, {
       y: -5,
       duration: 0.9 + (i % 3) * 0.15,

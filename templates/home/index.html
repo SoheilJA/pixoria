@@ -10,42 +10,45 @@
 {% block content %}
   <!-- ═══ HERO ═══ -->
   <section
-    class="grid min-h-screen grid-rows-[auto_1fr_auto] px-page pb-[clamp(40px,6vw,80px)] pt-[clamp(60px,10vw,140px)]"
+    class="flex min-h-screen flex-col px-page pb-[clamp(32px,5vw,64px)] pt-[clamp(56px,9vw,120px)]"
     aria-label="معرفی برند">
 
+    <!-- ردیف بالایی: فقط دو سر، هواده -->
     <div
-      class="mb-[clamp(50px,7vw,100px)] grid grid-cols-2 gap-8 border-b border-ink-line pb-[18px] font-mono text-[0.74rem] uppercase tracking-[0.1em] text-ink-dim md:grid-cols-[1fr_auto_auto_auto]">
-      <div>{{ settings.site_name }} — استودیوی مستقل</div>
-      <div>از {{ settings.established_year }}</div>
-      <div class="hidden md:block">برندینگ / دیجیتال / محصول</div>
-      <div class="hidden md:block"><span
-        class="rounded-full bg-lime px-2.5 py-1 tracking-[0.08em] text-ink">{{ settings.status|default:'ظرفیت همکاری آزاد' }}</span></div>
+      class="hidden items-center justify-between gap-6 border-b border-ink-line pb-5 font-mono text-[0.72rem] uppercase tracking-[0.12em] text-ink-dim lg:flex">
+      <span>{{ settings.site_name }} — استودیوی مستقل · از {{ settings.established_year }}</span>
+      <span class="inline-flex items-center gap-2 rounded-full border border-ink-line px-3 py-1.5 normal-case tracking-[0.06em] text-ink">
+        <span class="h-1.5 w-1.5 animate-pulse rounded-full bg-lime-deep"></span>{{ settings.status|default:'ظرفیت همکاری آزاد' }}
+      </span>
     </div>
 
-    <h1 class="hero-title max-w-[14ch] text-hero font-medium leading-[0.94] tracking-[-0.035em] text-ink">
-      {{ hero.title|safe }}<span class="text-lime-deep">.</span>
-    </h1>
+    <!-- مرکز: تیتر با فضای تنفسی، تنک و متمرکز -->
+    <div class="flex flex-1 flex-col justify-center py-[clamp(40px,7vw,96px)]">
+      <h1 class="hero-title max-w-[15ch] text-hero font-medium leading-[0.95] tracking-[-0.035em] text-ink">
+        {{ hero.title|safe }}<span class="text-lime-deep">.</span>
+      </h1>
 
-    <div
-      class="home-hero-grid mt-[clamp(40px,6vw,80px)] grid grid-cols-1 items-end gap-8 md:grid-cols-2 md:gap-16">
-      <p class="m-0 max-w-[36ch] text-[1.18rem] leading-[1.5] text-ink-soft">{{ hero.description|safe }}</p>
-      <div class="home-hero-cta flex flex-wrap justify-start gap-3.5 md:justify-end">
-        <a href="{% url 'contact:contact' %}" class="btn btn-ink group">شروع پروژه
-          <span class="arrow transition-transform duration-[250ms] ease-ax group-hover:translate-y-1">↓</span></a>
-        <a href="{% url 'portfolio:list' %}" class="btn btn-ghost group">دیدن کارها
-          <span class="arrow transition-transform duration-[250ms] ease-ax group-hover:translate-y-1">↓</span></a>
+      <div
+        class="home-hero-grid mt-[clamp(28px,3.4vw,48px)] grid max-w-[640px] grid-cols-1 gap-[clamp(20px,2.4vw,32px)]">
+        <p class="m-0 max-w-[46ch] text-[1.12rem] leading-[1.6] text-ink-soft">{{ hero.description|safe }}</p>
+        <div class="home-hero-cta flex flex-wrap gap-3.5">
+          <a href="{% url 'contact:contact' %}" class="btn btn-ink group">شروع پروژه
+            <span class="arrow transition-transform duration-[250ms] ease-ax group-hover:translate-y-1">↓</span></a>
+          <a href="{% url 'portfolio:list' %}" class="btn btn-ghost group">دیدن کارها
+            <span class="arrow transition-transform duration-[250ms] ease-ax group-hover:translate-y-1">↓</span></a>
+        </div>
       </div>
     </div>
 
-    <!-- مارکی خدمات -->
+    <!-- مارکی خدمات: تیکر آرام و ظریف به‌جای بنر شلوغ -->
     <div
-      class="home-marquee mt-20 flex gap-9 overflow-hidden whitespace-nowrap border-t border-ink-line pt-[18px] font-display text-[clamp(1.4rem,2.4vw,2rem)] tracking-[-0.02em] text-ink">
-      <div class="flex animate-marq gap-9">
+      class="home-marquee flex gap-8 overflow-hidden whitespace-nowrap border-t border-ink-line pt-5 font-mono text-[0.86rem] uppercase tracking-[0.14em] text-ink-dim">
+      <div class="flex animate-marq gap-8">
         {% for item in hero_marquee %}
-          <span class="flex items-center gap-9">{{ item.text }} <span class="text-[0.7em] text-lime">✦</span></span>
+          <span class="flex items-center gap-8">{{ item.text }} <span class="text-[0.8em] text-lime-deep">✦</span></span>
         {% endfor %}
         {% for item in hero_marquee %}
-          <span class="flex items-center gap-9">{{ item.text }} <span class="text-[0.7em] text-lime">✦</span></span>
+          <span class="flex items-center gap-8">{{ item.text }} <span class="text-[0.8em] text-lime-deep">✦</span></span>
         {% endfor %}
       </div>
     </div>
