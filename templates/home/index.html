@@ -10,45 +10,53 @@
 {% block content %}
   <!-- ═══ HERO ═══ -->
   <section
-    class="flex min-h-screen flex-col px-page pb-[clamp(32px,5vw,64px)] pt-[clamp(56px,9vw,120px)]"
+    class="relative flex min-h-screen flex-col overflow-hidden bg-ink px-page pb-[clamp(32px,5vw,64px)] pt-[clamp(56px,9vw,120px)] text-paper"
     aria-label="معرفی برند">
 
-    <!-- ردیف بالایی: فقط دو سر، هواده -->
+    <!-- درخشش لایم پشت سیاره -->
     <div
-      class="hidden items-center justify-between gap-6 border-b border-ink-line pb-5 font-mono text-[0.72rem] uppercase tracking-[0.12em] text-ink-dim lg:flex">
+      class="pointer-events-none absolute left-1/2 top-[42%] aspect-square w-[clamp(320px,60vw,760px)] max-h-[80vh] -translate-x-1/2 -translate-y-1/2 rounded-full bg-lime/[0.07] blur-[110px]"
+      aria-hidden="true"></div>
+
+    <!-- ردیف بالایی: دو سر هواده -->
+    <div
+      class="relative z-10 hidden items-center justify-between gap-6 border-b border-paper/15 pb-5 font-mono text-[0.72rem] uppercase tracking-[0.12em] text-paper/60 lg:flex">
       <span>{{ settings.site_name }} — استودیوی مستقل · از {{ settings.established_year }}</span>
-      <span class="inline-flex items-center gap-2 rounded-full border border-ink-line px-3 py-1.5 normal-case tracking-[0.06em] text-ink">
-        <span class="h-1.5 w-1.5 animate-pulse rounded-full bg-lime-deep"></span>{{ settings.status|default:'ظرفیت همکاری آزاد' }}
+      <span class="inline-flex items-center gap-2 rounded-full border border-lime/40 px-3 py-1.5 normal-case tracking-[0.06em] text-paper">
+        <span class="h-1.5 w-1.5 animate-pulse rounded-full bg-lime"></span>{{ settings.status|default:'ظرفیت همکاری آزاد' }}
       </span>
     </div>
 
-    <!-- مرکز: تیتر با فضای تنفسی، تنک و متمرکز -->
-    <div class="flex flex-1 flex-col justify-center py-[clamp(40px,7vw,96px)]">
-      <h1 class="hero-title max-w-[15ch] text-hero font-medium leading-[0.95] tracking-[-0.035em] text-ink">
-        {{ hero.title|safe }}<span class="text-lime-deep">.</span>
+    <!-- مرکز: تیتر با فضای تنفسی روی تم تیره -->
+    <div class="relative z-10 flex flex-1 flex-col justify-center py-[clamp(40px,7vw,96px)]">
+      <span class="mb-[clamp(18px,2vw,28px)] inline-flex items-center gap-2.5 font-mono text-[0.78rem] uppercase tracking-[0.14em] text-lime">
+        <span class="h-px w-8 bg-lime/60"></span>برندینگ · دیجیتال · محصول
+      </span>
+      <h1 class="hero-title max-w-[15ch] text-hero font-medium leading-[0.95] tracking-[-0.035em] text-paper">
+        {{ hero.title|safe }}<span class="text-lime">.</span>
       </h1>
 
       <div
         class="home-hero-grid mt-[clamp(28px,3.4vw,48px)] grid max-w-[640px] grid-cols-1 gap-[clamp(20px,2.4vw,32px)]">
-        <p class="m-0 max-w-[46ch] text-[1.12rem] leading-[1.6] text-ink-soft">{{ hero.description|safe }}</p>
+        <p class="m-0 max-w-[46ch] text-[1.12rem] leading-[1.6] text-paper/70">{{ hero.description|safe }}</p>
         <div class="home-hero-cta flex flex-wrap gap-3.5">
-          <a href="{% url 'contact:contact' %}" class="btn btn-ink group">شروع پروژه
+          <a href="{% url 'contact:contact' %}" class="btn btn-lime group">شروع پروژه
             <span class="arrow transition-transform duration-[250ms] ease-ax group-hover:translate-y-1">↓</span></a>
-          <a href="{% url 'portfolio:list' %}" class="btn btn-ghost group">دیدن کارها
+          <a href="{% url 'portfolio:list' %}" class="btn btn-ghost-light group">دیدن کارها
             <span class="arrow transition-transform duration-[250ms] ease-ax group-hover:translate-y-1">↓</span></a>
         </div>
       </div>
     </div>
 
-    <!-- مارکی خدمات: تیکر آرام و ظریف به‌جای بنر شلوغ -->
+    <!-- مارکی خدمات: تیکر آرام و ظریف روی تم تیره -->
     <div
-      class="home-marquee flex gap-8 overflow-hidden whitespace-nowrap border-t border-ink-line pt-5 font-mono text-[0.86rem] uppercase tracking-[0.14em] text-ink-dim">
+      class="home-marquee relative z-10 flex gap-8 overflow-hidden whitespace-nowrap border-t border-paper/15 pt-5 font-mono text-[0.86rem] uppercase tracking-[0.14em] text-paper/55">
       <div class="flex animate-marq gap-8">
         {% for item in hero_marquee %}
-          <span class="flex items-center gap-8">{{ item.text }} <span class="text-[0.8em] text-lime-deep">✦</span></span>
+          <span class="flex items-center gap-8">{{ item.text }} <span class="text-[0.8em] text-lime">✦</span></span>
         {% endfor %}
         {% for item in hero_marquee %}
-          <span class="flex items-center gap-8">{{ item.text }} <span class="text-[0.8em] text-lime-deep">✦</span></span>
+          <span class="flex items-center gap-8">{{ item.text }} <span class="text-[0.8em] text-lime">✦</span></span>
         {% endfor %}
       </div>
     </div>

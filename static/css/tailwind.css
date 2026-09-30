@@ -274,6 +274,9 @@
   .top-\[18px\] {
     top: 18px;
   }
+  .top-\[42\%\] {
+    top: 42%;
+  }
   .-right-24 {
     right: calc(var(--spacing) * -24);
   }
@@ -312,6 +315,9 @@
   }
   .left-\[-3rem\] {
     left: -3rem;
+  }
+  .left-\[18px\] {
+    left: 18px;
   }
   .z-10 {
     z-index: 10;
@@ -418,6 +424,9 @@
   .mt-\[3em\] {
     margin-top: 3em;
   }
+  .mt-\[clamp\(28px\,3\.4vw\,48px\)\] {
+    margin-top: clamp(28px, 3.4vw, 48px);
+  }
   .mt-\[clamp\(40px\,6vw\,80px\)\] {
     margin-top: clamp(40px, 6vw, 80px);
   }
@@ -478,6 +487,9 @@
   .mb-\[18px\] {
     margin-bottom: 18px;
   }
+  .mb-\[clamp\(18px\,2vw\,28px\)\] {
+    margin-bottom: clamp(18px, 2vw, 28px);
+  }
   .mb-\[clamp\(50px\,7vw\,100px\)\] {
     margin-bottom: clamp(50px, 7vw, 100px);
   }
@@ -528,6 +540,9 @@
   }
   .aspect-\[21\/9\] {
     aspect-ratio: 21/9;
+  }
+  .aspect-square {
+    aspect-ratio: 1 / 1;
   }
   .aspect-video {
     aspect-ratio: var(--aspect-video);
@@ -601,6 +616,9 @@
   .h-screen {
     height: 100vh;
   }
+  .max-h-\[80vh\] {
+    max-height: 80vh;
+  }
   .min-h-\[140px\] {
     min-height: 140px;
   }
@@ -664,6 +682,9 @@
   .w-\[420px\] {
     width: 420px;
   }
+  .w-\[clamp\(320px\,60vw\,760px\)\] {
+    width: clamp(320px, 60vw, 760px);
+  }
   .w-fit {
     width: fit-content;
   }
@@ -675,6 +696,9 @@
   }
   .max-w-\[14ch\] {
     max-width: 14ch;
+  }
+  .max-w-\[15ch\] {
+    max-width: 15ch;
   }
   .max-w-\[16ch\] {
     max-width: 16ch;
@@ -699,6 +723,9 @@
   }
   .max-w-\[44ch\] {
     max-width: 44ch;
+  }
+  .max-w-\[46ch\] {
+    max-width: 46ch;
   }
   .max-w-\[48ch\] {
     max-width: 48ch;
@@ -756,6 +783,10 @@
   }
   .-translate-x-1\/2 {
     --tw-translate-x: calc(calc(1 / 2 * 100%) * -1);
+    translate: var(--tw-translate-x) var(--tw-translate-y);
+  }
+  .-translate-y-1\/2 {
+    --tw-translate-y: calc(calc(1 / 2 * 100%) * -1);
     translate: var(--tw-translate-x) var(--tw-translate-y);
   }
   .-translate-y-\[55\%\] {
@@ -910,6 +941,9 @@
   .gap-\[18px\] {
     gap: 18px;
   }
+  .gap-\[clamp\(20px\,2\.4vw\,32px\)\] {
+    gap: clamp(20px, 2.4vw, 32px);
+  }
   .gap-px {
     gap: 1px;
   }
@@ -917,6 +951,11 @@
     --tw-space-y-reverse: 0;
     margin-block-start: calc(calc(var(--spacing) * 3) * var(--tw-space-y-reverse));
     margin-block-end: calc(calc(var(--spacing) * 3) * calc(1 - var(--tw-space-y-reverse)));
+  }
+  :where(.space-y-4 > :not(:last-child)) {
+    --tw-space-y-reverse: 0;
+    margin-block-start: calc(calc(var(--spacing) * 4) * var(--tw-space-y-reverse));
+    margin-block-end: calc(calc(var(--spacing) * 4) * calc(1 - var(--tw-space-y-reverse)));
   }
   .gap-x-6 {
     column-gap: calc(var(--spacing) * 6);
@@ -1017,6 +1056,18 @@
       border-color: color-mix(in oklab, var(--color-lime-deep) 60%, transparent);
     }
   }
+  .border-lime\/40 {
+    border-color: color-mix(in srgb, #c8ff3d 40%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      border-color: color-mix(in oklab, var(--color-lime) 40%, transparent);
+    }
+  }
+  .border-paper\/15 {
+    border-color: color-mix(in srgb, #f5f4f0 15%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      border-color: color-mix(in oklab, var(--color-paper) 15%, transparent);
+    }
+  }
   .border-transparent {
     border-color: transparent;
   }
@@ -1063,6 +1114,18 @@
     background-color: color-mix(in srgb, #c8ff3d 10%, transparent);
     @supports (color: color-mix(in lab, red, red)) {
       background-color: color-mix(in oklab, var(--color-lime) 10%, transparent);
+    }
+  }
+  .bg-lime\/60 {
+    background-color: color-mix(in srgb, #c8ff3d 60%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      background-color: color-mix(in oklab, var(--color-lime) 60%, transparent);
+    }
+  }
+  .bg-lime\/\[0\.07\] {
+    background-color: color-mix(in srgb, #c8ff3d 7.000000000000001%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      background-color: color-mix(in oklab, var(--color-lime) 7.000000000000001%, transparent);
     }
   }
   .bg-ok {
@@ -1209,6 +1272,9 @@
   .py-\[clamp\(36px\,5vw\,64px\)\] {
     padding-block: clamp(36px, 5vw, 64px);
   }
+  .py-\[clamp\(40px\,7vw\,96px\)\] {
+    padding-block: clamp(40px, 7vw, 96px);
+  }
   .py-\[clamp\(48px\,6vw\,80px\)\] {
     padding-block: clamp(48px, 6vw, 80px);
   }
@@ -1269,6 +1335,9 @@
   .pt-\[clamp\(48px\,8vw\,80px\)\] {
     padding-top: clamp(48px, 8vw, 80px);
   }
+  .pt-\[clamp\(56px\,9vw\,120px\)\] {
+    padding-top: clamp(56px, 9vw, 120px);
+  }
   .pt-\[clamp\(60px\,7vw\,100px\)\] {
     padding-top: clamp(60px, 7vw, 100px);
   }
@@ -1310,6 +1379,9 @@
   }
   .pb-\[clamp\(32px\,5vw\,56px\)\] {
     padding-bottom: clamp(32px, 5vw, 56px);
+  }
+  .pb-\[clamp\(32px\,5vw\,64px\)\] {
+    padding-bottom: clamp(32px, 5vw, 64px);
   }
   .pb-\[clamp\(40px\,5vw\,72px\)\] {
     padding-bottom: clamp(40px, 5vw, 72px);
@@ -1369,11 +1441,11 @@
     font-size: var(--text-xl);
     line-height: var(--tw-leading, var(--text-xl--line-height));
   }
-  .text-\[0\.7em\] {
-    font-size: 0.7em;
-  }
   .text-\[0\.7rem\] {
     font-size: 0.7rem;
+  }
+  .text-\[0\.8em\] {
+    font-size: 0.8em;
   }
   .text-\[0\.8rem\] {
     font-size: 0.8rem;
@@ -1404,6 +1476,9 @@
   }
   .text-\[0\.85rem\] {
     font-size: 0.85rem;
+  }
+  .text-\[0\.86rem\] {
+    font-size: 0.86rem;
   }
   .text-\[0\.88rem\] {
     font-size: 0.88rem;
@@ -1564,6 +1639,10 @@
   .leading-\[0\.94\] {
     --tw-leading: 0.94;
     line-height: 0.94;
+  }
+  .leading-\[0\.95\] {
+    --tw-leading: 0.95;
+    line-height: 0.95;
   }
   .leading-\[0\.96\] {
     --tw-leading: 0.96;
@@ -1763,6 +1842,24 @@
   .text-paper {
     color: var(--color-paper);
   }
+  .text-paper\/55 {
+    color: color-mix(in srgb, #f5f4f0 55%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      color: color-mix(in oklab, var(--color-paper) 55%, transparent);
+    }
+  }
+  .text-paper\/60 {
+    color: color-mix(in srgb, #f5f4f0 60%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      color: color-mix(in oklab, var(--color-paper) 60%, transparent);
+    }
+  }
+  .text-paper\/70 {
+    color: color-mix(in srgb, #f5f4f0 70%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      color: color-mix(in oklab, var(--color-paper) 70%, transparent);
+    }
+  }
   .text-transparent {
     color: transparent;
   }
@@ -1833,6 +1930,10 @@
   }
   .blur-\[100px\] {
     --tw-blur: blur(100px);
+    filter: var(--tw-blur,) var(--tw-brightness,) var(--tw-contrast,) var(--tw-grayscale,) var(--tw-hue-rotate,) var(--tw-invert,) var(--tw-saturate,) var(--tw-sepia,) var(--tw-drop-shadow,);
+  }
+  .blur-\[110px\] {
+    --tw-blur: blur(110px);
     filter: var(--tw-blur,) var(--tw-brightness,) var(--tw-contrast,) var(--tw-grayscale,) var(--tw-hue-rotate,) var(--tw-invert,) var(--tw-saturate,) var(--tw-sepia,) var(--tw-drop-shadow,);
   }
   .blur-\[120px\] {
@@ -2314,6 +2415,9 @@
     .md\:pt-16 {
       padding-top: calc(var(--spacing) * 16);
     }
+    .md\:pt-\[clamp\(64px\,9vw\,130px\)\] {
+      padding-top: clamp(64px, 9vw, 130px);
+    }
     .md\:pt-section {
       padding-top: var(--spacing-section);
     }
@@ -2333,6 +2437,9 @@
     }
     .lg\:top-8 {
       top: calc(var(--spacing) * 8);
+    }
+    .lg\:flex {
+      display: flex;
     }
     .lg\:grid-cols-2 {
       grid-template-columns: repeat(2, minmax(0, 1fr));

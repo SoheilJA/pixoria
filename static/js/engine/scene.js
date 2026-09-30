@@ -1,4 +1,5 @@
-/* صحنه‌ی سه‌بعدی هیرو — Three.js، پارالاکس ماوس + اسکرول
+/* صحنه‌ی هیرو — سیاره‌ی دیجیتال: کره‌ی وایرفریم لایم با هاله‌ی نرم،
+   حلقه‌های مداری ظریف و میدان ستاره‌ای روی پس‌زمینه‌ی اینک.
    canvas تزئینی است (aria-hidden)؛ reduced-motion یا خطا = بدون صحنه */
 import { RM } from "../core/utils.js";
 
@@ -18,49 +19,67 @@ export function initHeroScene(host) {
 
   const canvas = renderer.domElement;
   canvas.setAttribute("aria-hidden", "true");
-  canvas.style.cssText = "position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:-1;";
+  canvas.style.cssText = "position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;";
   host.style.position = host.style.position || "relative";
   host.prepend(canvas);
 
-  /* پالت برند — اینک برای کنتراست روی پس‌زمینه‌ی روشن paper،
-     لایم برای تاکید. صحنه تنک و ظریف است تا متن هیرو تمرکز اصلی بماند. */
+  /* پالت برند — لایم روی اینک: کنتراست بالا و حس لوکس */
   const lime = new THREE.Color(0xc8ff3d);
-  const ink = new THREE.Color(0x0e0e0e);
-  const group = new THREE.Group();
-  scene.add(group);
+  const limeDeep = new THREE.Color(0xa3d130);
 
-  /* شبکه‌ی نقاط تنک — لایم‌دیپ روی paper کنتراست می‌دهد */
-  const COUNT = 170;
-  const geo = new THREE.BufferGeometry();
-  const pos = new Float32Array(COUNT * 3);
-  const seed = new Float32Array(COUNT);
-  for (let i = 0; i < COUNT; i++) {
-    pos[i * 3] = (Math.random() - 0.5) * 18;
-    pos[i * 3 + 1] = (Math.random() - 0.5) * 10;
-    pos[i * 3 + 2] = (Math.random() - 0.5) * 8;
-    seed[i] = Math.random() * Math.PI * 2;
-  }
-  geo.setAttribute("position", new THREE.BufferAttribute(pos, 3));
-  const pointsMat = new THREE.PointsMaterial({
-    color: 0xa3d130, size: 0.06, transparent: true, opacity: 0, sizeAttenuation: true,
+  const planet = new THREE.Group();
+  scene.add(planet);
+
+  /* هاله‌ی نرم دور سیاره — BackSide برای درخشش لبه‌ها */
+  const haloMat = new THREE.MeshBasicMaterial({
+    color: lime, transparent: true, opacity: 0, side: THREE.BackSide,
   });
-  const points = new THREE.Points(geo, pointsMat);
-  group.add(points);
+  const halo = new THREE.Mesh(new THREE.IcosahedronGeometry(2.6, 2), haloMat);
+  planet.add(halo);
 
-  /* حلقه‌های وایرفریم اینک — دو حلقه‌ی ظریف و نازک */
-  const RING_OP = [0.28, 0.18];
+  /* کره‌ی اصلی — وایرفریم لایم، ساختار هندسی سیاره */
+  const wireMat = new THREE.MeshBasicMaterial({
+    color: lime, wireframe: true, transparent: true, opacity: 0,
+  });
+  const wire = new THREE.Mesh(new THREE.IcosahedronGeometry(2.1, 3), wireMat);
+  planet.add(wire);
+
+  /* نقاط رأس‌ها — دُرات دیجیتال روی سطح کره */
+  const dotMat = new THREE.PointsMaterial({
+    color: lime, size: 0.06, transparent: true, opacity: 0, sizeAttenuation: true,
+  });
+  const dots = new THREE.Points(wire.geometry, dotMat);
+  planet.add(dots);
+
+  /* حلقه‌های مداری ظریف — لایم به‌جای اینک خاکستری */
+  const RING_OP = [0.42, 0.26];
   const rings = [];
   for (let i = 0; i < 2; i++) {
-    const r = 3.2 + i * 1.9;
     const ring = new THREE.Mesh(
-      new THREE.TorusGeometry(r, 0.008, 8, 120),
-      new THREE.MeshBasicMaterial({ color: ink, transparent: true, opacity: 0 })
+      new THREE.TorusGeometry(3.1 + i * 0.9, 0.008, 8, 140),
+      new THREE.MeshBasicMaterial({ color: i ? limeDeep : lime, transparent: true, opacity: 0 })
     );
-    ring.rotation.x = Math.PI / 2.4 + i * 0.35;
-    ring.rotation.y = i * 0.5;
+    ring.rotation.x = Math.PI / 2.2 + i * 0.5;
+    ring.rotation.y = i * 0.7;
     rings.push(ring);
-    group.add(ring);
+    planet.add(ring);
   }
+
+  /* میدان ستاره‌ای تنک در پس‌زمینه */
+  const STAR_N = 90;
+  const starPos = new Float32Array(STAR_N * 3);
+  for (let i = 0; i < STAR_N; i++) {
+    starPos[i * 3] = (Math.random() - 0.5) * 20;
+    starPos[i * 3 + 1] = (Math.random() - 0.5) * 12;
+    starPos[i * 3 + 2] = (Math.random() - 0.5) * 10 - 2;
+  }
+  const starGeo = new THREE.BufferGeometry();
+  starGeo.setAttribute("position", new THREE.BufferAttribute(starPos, 3));
+  const starMat = new THREE.PointsMaterial({
+    color: 0xf5f4f0, size: 0.03, transparent: true, opacity: 0, sizeAttenuation: true,
+  });
+  const stars = new THREE.Points(starGeo, starMat);
+  scene.add(stars);
 
   /* پارالاکس ماوس */
   const mouse = { x: 0, y: 0, tx: 0, ty: 0 };
@@ -110,27 +129,25 @@ export function initHeroScene(host) {
     raf = requestAnimationFrame(tick);
     const t = clock.getElapsedTime();
 
-    /* ورود نرم: صحنه در ~۱.۲ ثانیه از شفاف به حالت نهایی می‌رسد */
+    /* ورود نرم: عناصر در ~۱.۲ ثانیه ظاهر می‌شوند */
     const intro = 1 - Math.pow(1 - Math.min(1, t / 1.2), 3);
-    pointsMat.opacity = 0.75 * intro;
+    haloMat.opacity = 0.07 * intro;
+    wireMat.opacity = 0.45 * intro;
+    dotMat.opacity = 0.9 * intro;
+    starMat.opacity = 0.5 * intro;
     rings.forEach((r, i) => { r.material.opacity = RING_OP[i] * intro; });
 
     mouse.x += (mouse.tx - mouse.x) * 0.05;
     mouse.y += (mouse.ty - mouse.y) * 0.05;
 
-    group.rotation.y = t * 0.05 + mouse.x * 0.16;
-    group.rotation.x = mouse.y * 0.1;
-    group.position.y = scrollP * 2.2;
+    planet.rotation.y = t * 0.08 + mouse.x * 0.2;
+    planet.rotation.x = mouse.y * 0.12;
+    stars.rotation.y = t * 0.012;
+    planet.position.y = scrollP * 2.2;
     camera.position.z = 9 + scrollP * 2;
 
-    const arr = geo.attributes.position.array;
-    for (let i = 0; i < COUNT; i++) {
-      arr[i * 3 + 1] += Math.sin(t * 0.6 + seed[i]) * 0.0016;
-    }
-    geo.attributes.position.needsUpdate = true;
-
     rings.forEach((r, i) => {
-      r.rotation.z = t * (0.06 + i * 0.035) * (i % 2 ? -1 : 1);
+      r.rotation.z = t * (0.05 + i * 0.03) * (i % 2 ? -1 : 1);
     });
 
     renderer.render(scene, camera);

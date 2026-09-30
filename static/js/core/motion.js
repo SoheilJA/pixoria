@@ -67,7 +67,7 @@ export function initHomeMotion() {
   }
 
   /* ---- نفس کشیدن badge وضعیت همکاری ---- */
-  const badge = document.querySelector(".rounded-full.bg-lime");
+  const badge = document.querySelector("section[aria-label='معرفی برند'] .rounded-full.border-lime\\/40");
   if (badge)
     G.to(badge, {
       scale: 1.06,
@@ -79,7 +79,7 @@ export function initHomeMotion() {
     });
 
   /* ---- موج ملایم آیکن‌های مارکی ---- */
-  document.querySelectorAll(".home-marquee .text-lime-deep").forEach((s, i) => {
+  document.querySelectorAll(".home-marquee .text-lime").forEach((s, i) => {
     G.to(s, {
       y: -5,
       duration: 0.9 + (i % 3) * 0.15,
