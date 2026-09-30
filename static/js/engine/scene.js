@@ -1,6 +1,6 @@
 /* صحنه‌ی سه‌بعدی هیرو — Three.js، پارالاکس ماوس + اسکرول
    canvas تزئینی است (aria-hidden)؛ reduced-motion یا خطا = بدون صحنه */
-import { RM } from "../utils.js";
+import { RM } from "../core/utils.js";
 
 export function initHeroScene(host) {
   if (!host || RM || !window.THREE) return null;
@@ -18,7 +18,7 @@ export function initHeroScene(host) {
 
   const canvas = renderer.domElement;
   canvas.setAttribute("aria-hidden", "true");
-  canvas.style.cssText = "position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;";
+  canvas.style.cssText = "position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:-1;";
   host.style.position = host.style.position || "relative";
   host.prepend(canvas);
 
