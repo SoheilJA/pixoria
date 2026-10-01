@@ -111,8 +111,9 @@
           {% block afterPrefooter %}
           {% endblock %}
         </main>
-        <footer class="bg-ink px-page pb-6 pt-[clamp(60px,7vw,100px)] text-[0.92rem] text-mist" aria-labelledby="footer-head">
-          <h2 id="footer-head" class="sr-only">فوتر سایت</h2><div class="grid grid-cols-2 gap-8 border-b border-ink-line-dark pb-12 md:grid-cols-[1.4fr_1fr_1fr_1fr] md:gap-12">
+        <footer class="cfooter-stars relative overflow-hidden bg-ink px-page pb-6 pt-[clamp(60px,7vw,100px)] text-[0.92rem] text-mist" aria-labelledby="footer-head">
+          <div class="pointer-events-none absolute inset-0 z-[1] bg-gradient-to-b from-ink via-transparent to-ink/85" aria-hidden="true"></div>
+          <h2 id="footer-head" class="sr-only">فوتر سایت</h2><div class="relative z-10 grid grid-cols-2 gap-8 border-b border-ink-line-dark pb-12 md:grid-cols-[1.4fr_1fr_1fr_1fr] md:gap-12">
             <div class="flex max-w-[36ch] flex-col gap-[18px]">
               <span class="flex items-center gap-2.5 font-display text-[1.6rem] font-semibold text-paper"><span class="grid h-7 w-7 place-items-center rounded-sm bg-lime font-mono text-[0.76rem] font-semibold text-ink">P</span>{{ settings.site_name }}</span><p class="m-0 leading-[1.55] text-mist-soft">{{ settings.footer_description }}</p>
             </div>
@@ -143,7 +144,7 @@
               </div>
             </div>
           </div>
-          <div class="mt-6 grid grid-cols-1 gap-2 font-mono text-[0.74rem] text-mist-dim md:grid-cols-3 md:gap-6">
+          <div class="relative z-10 mt-6 grid grid-cols-1 gap-2 font-mono text-[0.74rem] text-mist-dim md:grid-cols-3 md:gap-6">
             <span>© {{ settings.established_year }} {{ settings.site_name }}</span><span class="md:text-center">{{ settings.address|default:'ایران' }}</span><span class="md:text-left">{{ settings.status|default:'آماده همکاری' }}</span>
           </div>
         </footer>
@@ -154,6 +155,7 @@
     <script src="{% static 'js/vendor/lucide.min.js' %}" defer></script>
     <script src="{% static 'js/main.js' %}" defer></script>
     <script type="module" src="{% static 'js/home-motion.js' %}"></script>
+    <script type="module" src="{% static 'js/footer-stars.js' %}"></script>
     <script src="{% static 'js/htmx.min.js' %}" defer></script>
     <script type="module" src="{% static 'js/site-reveal.js' %}"></script>
     <script>
