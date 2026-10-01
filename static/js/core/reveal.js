@@ -135,8 +135,9 @@ export function initReveals() {
   ScrollTrigger.refresh();
   installSafetyNet();
 
-  /* محتوای جدید htmx هم انیمیت شود */
-  document.body.addEventListener("htmx:afterSwap", () => {
+  /* محتوای جدید htmx هم انیمیت شود — روی document ثبت می‌شود
+     چون htmx با hx-boost کل body را جایگزین می‌کند */
+  document.addEventListener("htmx:afterSwap", () => {
     initAosElements();
     ScrollTrigger.refresh();
   });

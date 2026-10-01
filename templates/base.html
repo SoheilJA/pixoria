@@ -28,60 +28,97 @@
       </div>
     </div>
     <div id="htmx-progress" class="htmx-progress" aria-hidden="true"></div>
-    <header class="mobile-header fixed inset-x-0 top-0 z-50 flex items-center justify-between border-b border-ink-line bg-paper px-page py-3 md:hidden">
-      <a href="{% url 'home:home' %}" class="flex items-center gap-2 font-display font-semibold text-ink"><span class="grid h-[28px] w-[28px] place-items-center rounded-sm bg-ink font-mono text-[0.78rem] font-semibold leading-none text-lime">P</span>{{ settings.site_name }}</a>
-      <button class="menu-toggle inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-sm bg-ink text-lime" aria-label="باز کردن منو" aria-controls="mobile-nav" aria-expanded="false"><i data-lucide="menu" class="h-6 w-6"></i></button>
+    <header id="site-header" class="site-header fixed inset-x-0 top-0 z-50 transition-[background-color,border-color,box-shadow,backdrop-filter] duration-300 ease-ax">
+      <div class="mx-auto flex h-[var(--header-h,72px)] max-w-[1600px] items-center justify-between gap-4 px-page md:px-[clamp(20px,4vw,56px)]">
+        <!-- لوگو -->
+        <a href="{% url 'home:home' %}" class="group flex shrink-0 items-center gap-2.5 font-display text-[1.15rem] font-semibold text-paper">
+          <span class="grid h-8 w-8 place-items-center rounded-sm bg-lime font-mono text-[0.78rem] font-semibold text-ink transition-transform duration-300 ease-ax group-hover:rotate-[18deg]">P</span>
+          <span class="leading-none">{{ settings.site_name }}</span>
+        </a>
+
+        <!-- ناوبری دسکتاپ -->
+        <nav class="hidden items-center gap-1 lg:flex" aria-label="Primary">
+          <a href="{% url 'home:home' %}" class="nav-link {% if request.resolver_match.app_name == 'home' %}active{% endif %}">خانه</a>
+          <a href="{% url 'portfolio:list' %}" class="nav-link {% if request.resolver_match.app_name == 'portfolio' %}active{% endif %}">نمونه‌کارها</a>
+
+          <!-- مگامنو خدمات -->
+          <div class="megamenu relative" data-megamenu>
+            <button type="button" class="nav-link flex items-center gap-1.5" data-mm-trigger aria-expanded="false" aria-controls="mm-services">
+              خدمات
+              <i data-lucide="chevron-down" class="mm-chevron h-3.5 w-3.5 transition-transform duration-300"></i>
+            </button>
+            <div id="mm-services" class="megamenu-panel absolute inset-x-0 top-full pt-3" data-mm-panel role="group" aria-label="خدمات">
+              <div class="overflow-hidden rounded-lg border border-ink-line-dark bg-ink/95 shadow-2xl shadow-black/40 backdrop-blur-md">
+                <div class="grid grid-cols-[1.35fr_1fr]">
+                  <!-- لیست خدمات -->
+                  <div class="border-l border-ink-line-dark p-5">
+                    <span class="mb-3 block font-mono text-[0.68rem] uppercase tracking-[0.16em] text-lime">حوزه‌های کاری</span>
+                    <div class="grid grid-cols-1 gap-0.5">
+                      {% for service in services_footer %}
+                        <a href="{% url 'services:detail' service.slug %}" class="mm-item group flex items-center justify-between gap-3 rounded-sm px-3 py-2.5 transition-colors duration-200 hover:bg-white/5">
+                          <span class="text-[0.94rem] text-mist transition-colors duration-200 group-hover:text-paper">{{ service.title }}</span>
+                          <span class="font-mono text-[0.7rem] text-mist-dim opacity-0 transition-all duration-200 group-hover:translate-x-[-3px] group-hover:opacity-100 group-hover:text-lime">↖</span>
+                        </a>
+                      {% empty %}
+                        <a href="{% url 'services:list' %}" class="mm-item block rounded-sm px-3 py-2.5 text-mist hover:text-lime">مشاهده‌ی همه‌ی خدمات</a>
+                      {% endfor %}
+                    </div>
+                  </div>
+                  <!-- ستون دعوت -->
+                  <div class="relative flex flex-col justify-between gap-6 bg-gradient-to-b from-white/[0.03] to-transparent p-5">
+                    <div>
+                      <span class="mb-3 block font-mono text-[0.68rem] uppercase tracking-[0.16em] text-mist-dim">چطور کار می‌کنیم</span>
+                      <p class="m-0 text-[0.9rem] leading-[1.65] text-mist-soft">از ایده تا اجرا، کنارتان هستیم. فرآیند شفاف، تحویل به‌موقع و پشتیبانی واقعی.</p>
+                    </div>
+                    <a href="{% url 'contact:contact' %}" class="btn btn-lime group w-full justify-center text-[0.78rem]">شروع پروژه
+                      <span class="arrow transition-transform duration-[250ms] ease-ax group-hover:translate-y-1">↓</span></a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <a href="{% url 'blog:list' %}" class="nav-link {% if request.resolver_match.app_name == 'blog' %}active{% endif %}">بلاگ</a>
+          <a href="{% url 'core:about' %}" class="nav-link {% if request.resolver_match.app_name == 'core' %}active{% endif %}">درباره ما</a>
+          <a href="{% url 'contact:contact' %}" class="nav-link {% if request.resolver_match.app_name == 'contact' %}active{% endif %}">تماس</a>
+        </nav>
+
+        <!-- سمت چپ: CTA + موبایل -->
+        <div class="flex shrink-0 items-center gap-2.5">
+          <a href="{% url 'contact:contact' %}" class="btn btn-lime hidden text-[0.78rem] sm:inline-flex">شروع پروژه</a>
+          <button type="button" class="menu-toggle inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-sm bg-lime text-ink lg:hidden" aria-label="باز کردن منو" aria-controls="mobile-nav" aria-expanded="false"><i data-lucide="menu" class="h-5 w-5"></i></button>
+        </div>
+      </div>
     </header>
+
+    <!-- منوی موبایل -->
     <nav id="mobile-nav" class="mobile-nav fixed inset-0 z-[60] hidden flex-col gap-1 bg-ink px-page pb-8 pt-24 font-display text-[2rem] text-paper [&.open]:flex" aria-label="Mobile">
-      <button class="mobile-close absolute right-[18px] top-[18px] inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-sm bg-ink text-lime border border-ink-line" aria-label="بستن منو"><i data-lucide="x" class="h-6 w-6"></i></button>
+      <button class="mobile-close absolute left-[18px] top-[18px] inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-sm bg-lime text-ink" aria-label="بستن منو"><i data-lucide="x" class="h-6 w-6"></i></button>
       <a href="{% url 'home:home' %}" class="flex items-center gap-4 border-b border-ink-soft py-3.5 transition-colors hover:text-lime {% if request.resolver_match.app_name == 'home' %}text-lime{% endif %}"><i data-lucide="home" class="h-6 w-6 text-[1.2rem] opacity-70"></i>خانه</a>
       <a href="{% url 'portfolio:list' %}" class="flex items-center gap-4 border-b border-ink-soft py-3.5 transition-colors hover:text-lime {% if request.resolver_match.app_name == 'portfolio' %}text-lime{% endif %}"><i data-lucide="layout-grid" class="h-6 w-6 text-[1.2rem] opacity-70"></i>نمونه کار ها</a>
       <a href="{% url 'services:list' %}" class="flex items-center gap-4 border-b border-ink-soft py-3.5 transition-colors hover:text-lime {% if request.resolver_match.app_name == 'services' %}text-lime{% endif %}"><i data-lucide="layers" class="h-6 w-6 text-[1.2rem] opacity-70"></i>خدمات</a>
       <a href="{% url 'blog:list' %}" class="flex items-center gap-4 border-b border-ink-soft py-3.5 transition-colors hover:text-lime {% if request.resolver_match.app_name == 'blog' %}text-lime{% endif %}"><i data-lucide="newspaper" class="h-6 w-6 text-[1.2rem] opacity-70"></i>بلاگ</a>
       <a href="{% url 'core:about' %}" class="flex items-center gap-4 border-b border-ink-soft py-3.5 transition-colors hover:text-lime {% if request.resolver_match.app_name == 'core' %}text-lime{% endif %}"><i data-lucide="users" class="h-6 w-6 text-[1.2rem] opacity-70"></i>درباره ما</a>
       <a href="{% url 'contact:contact' %}" class="flex items-center gap-4 border-b border-ink-soft py-3.5 transition-colors hover:text-lime {% if request.resolver_match.app_name == 'contact' %}text-lime{% endif %}"><i data-lucide="mail" class="h-6 w-6 text-[1.2rem] opacity-70"></i>تماس با ما</a>
-      <div class="mt-auto border-t border-ink-soft pt-6 font-mono text-[0.78rem] text-mist-soft">
-        {% if settings.phone %}
-          <a href="tel:{{ settings.phone }}" class="flex items-center gap-3 py-2"><i data-lucide="phone" class="h-4 w-4"></i>{{ settings.phone }}</a>
-        {% endif %}
-        <div class="flex flex-wrap gap-3">
-          {% for social in socials %}
-            <a href="{{ social.url }}" target="_blank" rel="noopener" class="inline-flex items-center gap-2"><i data-lucide="globe" class="h-4 w-4"></i>{{ social.name }}</a>
-          {% endfor %}
-        </div>
-        <div class="mt-4 flex justify-between">
-          <span>آماده همکاری</span><span>© {{ settings.established_year }} {{ settings.site_name }}</span>
+      <div class="mt-auto space-y-4 pt-6 border-t border-ink-soft">
+        <a href="{% url 'contact:contact' %}" class="inline-flex w-full items-center justify-center gap-2 rounded-sm bg-lime px-4 py-3.5 font-mono text-[0.8rem] font-medium text-ink transition-colors duration-300 hover:bg-paper hover:text-ink"><i data-lucide="arrow-up-left" class="h-4 w-4"></i>شروع پروژه</a>
+        <div class="flex flex-col gap-3 font-mono text-[0.78rem] text-mist-soft">
+          {% if settings.phone %}
+            <a href="tel:{{ settings.phone }}" class="flex items-center gap-3 py-2"><i data-lucide="phone" class="h-4 w-4"></i>{{ settings.phone }}</a>
+          {% endif %}
+          <div class="flex flex-wrap gap-3">
+            {% for social in socials %}
+              <a href="{{ social.url }}" target="_blank" rel="noopener" class="inline-flex items-center gap-2"><i data-lucide="globe" class="h-4 w-4"></i>{{ social.name }}</a>
+            {% endfor %}
+          </div>
+          <div class="flex justify-between border-t border-ink-soft pt-4">
+            <span>آماده همکاری</span><span>© {{ settings.established_year }} {{ settings.site_name }}</span>
+          </div>
         </div>
       </div>
     </nav>
-    <div class="grid min-h-screen grid-cols-1 md:grid-cols-[200px_minmax(0,1fr)] lg:grid-cols-[240px_minmax(0,1fr)]">
-      <aside class="sticky top-0 z-40 hidden h-screen flex-col border-l border-ink-line bg-paper px-6 py-7 md:flex" aria-label="Primary">
-        <a href="{% url 'home:home' %}" class="group flex items-center gap-2.5 font-display text-[1.4rem] font-semibold text-ink">
-          <span class="grid h-8 w-8 place-items-center rounded-sm bg-ink font-mono text-[0.78rem] font-semibold text-lime transition-colors duration-300 group-hover:bg-lime group-hover:text-ink">P</span>
-          <span class="leading-none">{{ settings.site_name }}</span>
-        </a>
-        <small class="mt-2.5 block border-r-2 border-lime pr-3 font-mono text-[0.78rem] font-normal leading-[1.6] text-ink-dim">{{ settings.site_description }}</small>
-        <nav class="rail-nav mt-12 flex flex-col gap-0.5 font-mono text-[0.84rem]" aria-label="Sections">
-          <a href="{% url 'home:home' %}" class="group/nav flex items-center gap-3.5 rounded-sm border-r-2 border-transparent px-2 py-2.5 text-ink-soft transition-colors duration-300 hover:bg-paper-soft hover:text-ink {% if request.resolver_match.app_name == 'home' %}active{% endif %}"><span class="text-[0.7rem] text-ink-dim transition-colors group-hover/nav:text-lime-deep">01</span>خانه</a><a href="{% url 'portfolio:list' %}" class="group/nav flex items-center gap-3.5 rounded-sm border-r-2 border-transparent px-2 py-2.5 text-ink-soft transition-colors duration-300 hover:bg-paper-soft hover:text-ink {% if request.resolver_match.app_name == 'portfolio' %}active{% endif %}"><span class="text-[0.7rem] text-ink-dim transition-colors group-hover/nav:text-lime-deep">02</span>نمونه کار ها</a><a href="{% url 'services:list' %}" class="group/nav flex items-center gap-3.5 rounded-sm border-r-2 border-transparent px-2 py-2.5 text-ink-soft transition-colors duration-300 hover:bg-paper-soft hover:text-ink {% if request.resolver_match.app_name == 'services' %}active{% endif %}"><span class="text-[0.7rem] text-ink-dim transition-colors group-hover/nav:text-lime-deep">03</span>خدمات</a><a href="{% url 'blog:list' %}" class="group/nav flex items-center gap-3.5 rounded-sm border-r-2 border-transparent px-2 py-2.5 text-ink-soft transition-colors duration-300 hover:bg-paper-soft hover:text-ink {% if request.resolver_match.app_name == 'blog' %}active{% endif %}"><span class="text-[0.7rem] text-ink-dim transition-colors group-hover/nav:text-lime-deep">04</span>بلاگ</a><a href="{% url 'core:about' %}" class="group/nav flex items-center gap-3.5 rounded-sm border-r-2 border-transparent px-2 py-2.5 text-ink-soft transition-colors duration-300 hover:bg-paper-soft hover:text-ink {% if request.resolver_match.app_name == 'core' %}active{% endif %}"><span class="text-[0.7rem] text-ink-dim transition-colors group-hover/nav:text-lime-deep">05</span>درباره ما</a><a href="{% url 'contact:contact' %}" class="group/nav flex items-center gap-3.5 rounded-sm border-r-2 border-transparent px-2 py-2.5 text-ink-soft transition-colors duration-300 hover:bg-paper-soft hover:text-ink {% if request.resolver_match.app_name == 'contact' %}active{% endif %}"><span class="text-[0.7rem] text-ink-dim transition-colors group-hover/nav:text-lime-deep">06</span>تماس با ما</a>
-        </nav>
-        <a href="{% url 'contact:contact' %}" class="mt-8 inline-flex items-center justify-center gap-2 rounded-sm bg-lime px-4 py-3 font-mono text-[0.8rem] font-medium text-ink transition-colors duration-300 hover:bg-ink hover:text-lime">شروع پروژه <span aria-hidden="true">←</span></a>
-        <div class="mt-auto flex flex-col gap-4 font-mono text-[0.72rem] text-ink-dim" id="rail-foot">
-          <span class="inline-flex w-fit items-center gap-2 rounded-full border border-lime-deep/60 bg-lime/10 px-3 py-1.5 text-ink"><span class="h-1.5 w-1.5 animate-pulse rounded-full bg-lime-deep"></span>{{ settings.status|default:'آماده همکاری' }}</span>
-          <div class="flex justify-between">
-            <span>فصل تابستان</span><span>نسخه ۰۱</span>
-          </div>
-          <div class="flex gap-3.5">
-            {% for social in socials|slice:':3' %}
-              <a href="{{ social.url }}" target="_blank" rel="noopener" class="transition-colors hover:text-lime-deep">{{ social.name }}</a>
-            {% endfor %}
-          </div>
-          <div class="flex justify-between border-t border-ink-line pt-4">
-            <span>ایران</span><span class="text-lime-deep">آنلاین</span>
-          </div>
-        </div>
-      </aside>
-      <div class="min-w-0">
-        <main id="content-start">
+    <div class="min-w-0">
+      <main id="content-start" class="pt-[var(--header-h,72px)]">
           {% block content %}
           {% endblock %}
           <section class="relative overflow-hidden bg-lime text-ink" aria-labelledby="cta-head">
@@ -149,12 +186,12 @@
           </div>
         </footer>
       </div>
-    </div>
     <script src="{% static 'js/vendor/gsap.min.js' %}"></script>
     <script src="{% static 'js/vendor/ScrollTrigger.min.js' %}"></script>
     <script src="{% static 'js/vendor/lucide.min.js' %}" defer></script>
     <script src="{% static 'js/main.js' %}" defer></script>
     <script type="module" src="{% static 'js/home-motion.js' %}"></script>
+    <script type="module" src="{% static 'js/header-motion.js' %}"></script>
     <script type="module" src="{% static 'js/footer-stars.js' %}"></script>
     <script src="{% static 'js/htmx.min.js' %}" defer></script>
     <script type="module" src="{% static 'js/site-reveal.js' %}"></script>
@@ -204,10 +241,10 @@
       })
       function syncActiveNav() {
         var path = window.location.pathname
-        document.querySelectorAll('.rail-nav a, #mobile-nav a[href^="/"]').forEach(function (a) {
+        document.querySelectorAll('#site-header .nav-link[href], #mobile-nav a[href^="/"]').forEach(function (a) {
           var href = a.getAttribute('href').replace(/\/$/, '')
           var isActive = href !== '' && (path === href || (href !== '/' && path.indexOf(href) === 0))
-          if (a.closest('.rail-nav')) {
+          if (a.closest('#site-header')) {
             a.classList.toggle('active', isActive)
           }
           if (a.closest('#mobile-nav')) {
@@ -216,8 +253,8 @@
         })
       }
       document.addEventListener('DOMContentLoaded', syncActiveNav)
-      document.body.addEventListener('htmx:pushedIntoHistory', syncActiveNav)
-      document.body.addEventListener('htmx:afterSettle', syncActiveNav)
+      document.addEventListener('htmx:pushedIntoHistory', syncActiveNav)
+      document.addEventListener('htmx:afterSettle', syncActiveNav)
     </script>
     {% block extra_js %}
     {% endblock %}

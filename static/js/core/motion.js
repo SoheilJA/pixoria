@@ -27,6 +27,11 @@ export function initHomeMotion() {
     return;
   }
 
+  /* جلوگیری از راه‌اندازی دوباره روی همان هیرو (htmx:afterSwap) */
+  const hero = document.querySelector("section[aria-label='معرفی برند']");
+  if (hero && hero.dataset.motionInit) return;
+  if (hero) hero.dataset.motionInit = "1";
+
   /* ---- ورود هیرو: تیتر، lead، دکمه‌ها، مارکی ----
      (انیمیشن data-aosها با reveal.js انجام می‌شود تا تداخل پیش نیاید) */
   const tl = G.timeline({ defaults: { ease: "power3.out" } });
@@ -40,7 +45,6 @@ export function initHomeMotion() {
     .from(".home-marquee", { opacity: 0, duration: 0.7 }, "-=0.2");
 
   /* ---- پارالاکس ماوس روی تیتر و مارکی ---- */
-  const hero = document.querySelector("section[aria-label='معرفی برند']");
   initHero3D(hero);
   if (hero && matchMedia("(hover: hover) and (pointer: fine)").matches) {
     const targets = [

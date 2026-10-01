@@ -16,3 +16,7 @@ async function initFooterStars() {
 if (document.readyState === "loading")
   document.addEventListener("DOMContentLoaded", initFooterStars);
 else initFooterStars();
+
+/* htmx: بعد از جابجایی صفحه، فوتر دوباره راه می‌افتد.
+   روی document ثبت می‌شود چون htmx با hx-boost کل body را جایگزین می‌کند. */
+document.addEventListener("htmx:afterSwap", initFooterStars);
