@@ -51,7 +51,7 @@ The current project primary is **lime `#c8ff3d`** (`--color-lime` in `input.css`
 ## Task Checklist (simple → complex)
 
 - [x] 1. Repo audit + create `AGENT.md` (architecture summary, checklist, conventions)
-- [ ] 2. Vendor all libraries locally (GSAP + ScrollTrigger, Three.js + needed addons, Lenis, HTMX, Alpine, Lucide, fonts) into `static/`; remove CDN links; verify the site still works
+- [x] 2. Vendor all libraries locally (GSAP + ScrollTrigger, Three.js + needed addons, Lenis, HTMX, Alpine, Lucide, fonts) into `static/`; remove CDN links; verify the site still works — *all already local; added Lenis; no CDN links exist anywhere in the repo*
 - [ ] 3. Design tokens + global dark theme using the existing primary green (CSS variables + Tailwind config); fix every light-theme leftover
 - [ ] 4. Lucide icon system (`{% icon %}` tag) + replace all HTML-entity/emoji icons + icon-name fields in models/admin
 - [ ] 5. Pixel wordmark logo (SVG) + remove the "P" icon everywhere + new favicon set/manifest + admin-replaceable logo/favicon (`SiteSettings`)
@@ -87,11 +87,14 @@ The current project primary is **lime `#c8ff3d`** (`--color-lime` in `input.css`
 
 | Library | Version | Path |
 | --- | --- | --- |
-| GSAP + ScrollTrigger | (existing local files) | `static/js/vendor/` |
-| Three.js | (existing local module) | `static/js/vendor/three.module.js` |
-| HTMX | (existing local file) | `static/js/htmx.min.js` |
-| Lucide | (existing local file) | `static/js/vendor/lucide.min.js` |
+| GSAP + ScrollTrigger | 3.12.5 | `static/js/vendor/gsap.min.js`, `ScrollTrigger.min.js` |
+| Three.js | r160 | `static/js/vendor/three.module.js` |
+| HTMX | 1.9.10 | `static/js/htmx.min.js` |
+| Lucide | full icon bundle (UMD) | `static/js/vendor/lucide.min.js` |
+| Lenis | 1.1.13 | `static/js/vendor/lenis.mjs` |
 | Vazirmatn / Rubik | self-hosted woff2 | `static/fonts/` |
+
+**CDN audit:** zero external `http(s)://` script/style/font links in templates, JS, CSS or Python. Every library is served from `static/`. Alpine.js intentionally not added (vanilla ES modules cover all interactions).
 
 ## Known Issues / Follow-ups
 
