@@ -23,6 +23,8 @@
     {# <link rel="stylesheet" href="{% static 'css/styles.css' %}" /> #}
     {% block extra_css %}
     {% endblock %}
+    {% block extra_head %}
+    {% endblock %}
   </head>
   <body class="overflow-x-hidden bg-night font-sans text-body text-ink-soft antialiased" hx-boost="true">
     {# Displacement filter used by .liquid-glass (feTurbulence + feDisplacementMap) #}

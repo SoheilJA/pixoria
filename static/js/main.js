@@ -85,14 +85,6 @@
     });
   }
 
-  // ─── Active mobile nav ───
-  document.querySelectorAll('.rail-nav a.active').forEach((activeLink) => {
-    const href = activeLink.getAttribute('href');
-    document.querySelectorAll('.mobile-nav a').forEach((mLink) => {
-      if (mLink.getAttribute('href') === href) mLink.classList.add('active');
-    });
-  });
-
   // ─── Year stamp ───
   document.querySelectorAll('[data-year]').forEach((el) => {
     el.textContent = String(new Date().getFullYear());

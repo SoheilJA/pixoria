@@ -638,6 +638,9 @@
   .max-h-\[80vh\] {
     max-height: 80vh;
   }
+  .min-h-\[70vh\] {
+    min-height: 70vh;
+  }
   .min-h-\[140px\] {
     min-height: 140px;
   }
@@ -1427,6 +1430,9 @@
   .pt-24 {
     padding-top: calc(var(--spacing) * 24);
   }
+  .pt-\[clamp\(32px\,5vw\,64px\)\] {
+    padding-top: clamp(32px, 5vw, 64px);
+  }
   .pt-\[clamp\(48px\,8vw\,80px\)\] {
     padding-top: clamp(48px, 8vw, 80px);
   }
@@ -2134,6 +2140,9 @@
   }
   .\[-webkit-text-stroke\:1px_var\(--color-ink-line\)\] {
     -webkit-text-stroke: 1px var(--color-ink-line);
+  }
+  .\[-webkit-text-stroke\:1px_var\(--color-line-strong\)\] {
+    -webkit-text-stroke: 1px var(--color-line-strong);
   }
   .group-open\:rotate-45:is(:where(.group):is([open], :popover-open, :open) *) {
     rotate: 45deg;

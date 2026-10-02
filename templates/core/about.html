@@ -1,241 +1,152 @@
-{% load static icon_tags brand_tags %}
-<!DOCTYPE html>
-<html lang="fa" dir="rtl">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <meta name="theme-color" content="#04070a" />
-    <title>درباره ما — {{ settings.site_name }}</title>
-    <meta name="description" content="{{ hero.description|striptags }}" />
-    <link rel="stylesheet" href="{% static 'fonts/font_urls.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/tailwind.css' %}" />
-  </head>
-  <body>
-    <div class="grid min-h-screen grid-cols-1 md:grid-cols-[200px_minmax(0,1fr)] lg:grid-cols-[240px_minmax(0,1fr)]">
-      <aside class="sticky top-0 z-40 hidden h-screen flex-col border-l border-line bg-paper px-6 py-7 md:flex" aria-label="Primary">
-        <a href="{% url 'home:home' %}" class="wordmark-link group flex items-center gap-2.5 font-display text-[1.4rem] font-semibold text-ink">
-          {% pixel_wordmark "full" class="wordmark h-[20px] w-auto text-ink" %}
-        </a>
-        <small class="mt-2.5 block border-r-2 border-lime pr-3 font-mono text-[0.78rem] font-normal leading-[1.6] text-ink-dim">{{ settings.site_description }}</small>
-        <nav class="rail-nav mt-12 flex flex-col gap-0.5 font-mono text-[0.84rem]" aria-label="Primary">
-          <a href="{% url 'home:home' %}" class="group/nav flex items-center gap-3.5 rounded-sm border-r-2 border-transparent px-2 py-2.5 text-ink-soft transition-colors duration-300 hover:bg-paper-soft hover:text-ink"><span class="text-[0.7rem] text-ink-dim transition-colors group-hover/nav:text-lime-deep">01</span>خانه</a>
-          <a href="{% url 'portfolio:list' %}" class="group/nav flex items-center gap-3.5 rounded-sm border-r-2 border-transparent px-2 py-2.5 text-ink-soft transition-colors duration-300 hover:bg-paper-soft hover:text-ink"><span class="text-[0.7rem] text-ink-dim transition-colors group-hover/nav:text-lime-deep">02</span>نمونه کار ها</a>
-          <a href="{% url 'services:list' %}" class="group/nav flex items-center gap-3.5 rounded-sm border-r-2 border-transparent px-2 py-2.5 text-ink-soft transition-colors duration-300 hover:bg-paper-soft hover:text-ink"><span class="text-[0.7rem] text-ink-dim transition-colors group-hover/nav:text-lime-deep">03</span>خدمات</a>
-          <a href="{% url 'blog:list' %}" class="group/nav flex items-center gap-3.5 rounded-sm border-r-2 border-transparent px-2 py-2.5 text-ink-soft transition-colors duration-300 hover:bg-paper-soft hover:text-ink"><span class="text-[0.7rem] text-ink-dim transition-colors group-hover/nav:text-lime-deep">04</span>بلاگ</a>
-          <a href="{% url 'core:about' %}" class="group/nav active flex items-center gap-3.5 rounded-sm border-r-2 border-lime px-2 py-2.5 text-ink" aria-current="page"><span class="text-[0.7rem] text-lime">05</span>درباره ما</a>
-          <a href="{% url 'contact:contact' %}" class="group/nav flex items-center gap-3.5 rounded-sm border-r-2 border-transparent px-2 py-2.5 text-ink-soft transition-colors duration-300 hover:bg-paper-soft hover:text-ink"><span class="text-[0.7rem] text-ink-dim transition-colors group-hover/nav:text-lime-deep">06</span>تماس با ما</a>
-        </nav>
-        <a href="{% url 'contact:contact' %}" class="mt-8 inline-flex items-center justify-center gap-2 rounded-sm bg-lime px-4 py-3 font-mono text-[0.8rem] font-medium text-ink transition-colors duration-300 hover:bg-night hover:text-lime">شروع پروژه {% icon "arrow-left" class="inline-block h-4 w-4" %}</a>
-        <div class="mt-auto flex flex-col gap-4 font-mono text-[0.72rem] text-ink-dim">
-          <span class="inline-flex w-fit items-center gap-2 rounded-full border border-lime-deep/60 bg-lime/10 px-3 py-1.5 text-ink"><span class="h-1.5 w-1.5 animate-pulse rounded-full bg-lime-deep"></span>{{ settings.status|default:'آماده همکاری' }}</span>
-          <div class="flex justify-between">
-            <span>فصل تابستان</span><span>نسخه ۰۱</span>
-          </div>
-          <div class="flex gap-3.5">
-            {% for social in socials|slice:':3' %}
-              <a href="{{ social.url }}" target="_blank" rel="noopener" class="transition-colors hover:text-lime-deep">{{ social.name }}</a>
-            {% endfor %}
-          </div>
-          <div class="flex justify-between border-t border-line pt-4">
-            <span>ایران</span><span class="text-lime-deep">آنلاین</span>
-          </div>
+{% extends 'base.html' %}
+{% load static icon_tags %}
+
+{% block title %}
+  درباره ما — {{ settings.site_name }}
+{% endblock %}
+{% block description %}
+  {{ hero.description|striptags }}
+{% endblock %}
+
+{% block content %}
+  <!-- ─── هیرو ─── -->
+  <section class="border-b border-line px-page pb-[clamp(40px,5vw,80px)] pt-[clamp(64px,9vw,130px)]" data-aos="fade-up">
+    <p class="mb-4 font-mono text-[0.74rem] text-ink-dim" data-aos="fade-down">
+      خانه {% icon "chevron-left" class="inline-block h-3.5 w-3.5 shrink-0 opacity-50 align-middle" %} <span class="text-ink">استودیو</span>
+    </p>
+    <h1 class="mb-6 max-w-[18ch] text-[clamp(2.6rem,5.4vw,6rem)] leading-[0.98]" data-aos="fade-up" data-aos-delay="100">{{ hero.title|safe }}</h1>
+    <div class="max-w-[60ch] text-[1.18rem] leading-[1.5] text-ink-soft" data-aos="fade-up" data-aos-delay="200">{{ hero.description|safe }}</div>
+  </section>
+
+  <!-- ─── ماموریت ─── -->
+  {% if mission %}
+  <section class="px-page py-[clamp(64px,9vw,120px)]" data-aos="fade-up">
+    <div class="grid grid-cols-1 gap-12 md:grid-cols-[1.1fr_1fr] md:items-center">
+      <div>
+        <span class="eyebrow mb-6 inline-block">{{ mission.label }}<span class="mr-2 inline-block h-1.5 w-1.5 rounded-full bg-lime align-[2px]"></span></span>
+        <h2 class="mb-5 max-w-[22ch] font-display text-[clamp(2.2rem,4vw,3.6rem)] leading-[1.05] tracking-[-0.02em]">{{ mission.title }}</h2>
+        <div class="max-w-[60ch] text-[1.1rem] leading-[1.7] text-ink-soft">{{ mission.description|safe }}</div>
+      </div>
+      {% if mission.image %}
+      <div class="relative aspect-[4/3] overflow-hidden rounded-xl">
+        <img src="{{ mission.image.url }}" alt="{{ mission.title }}" loading="lazy" class="h-full w-full object-cover transition-transform duration-700 ease-ax hover:scale-[1.02]" />
+      </div>
+      {% endif %}
+    </div>
+  </section>
+  {% endif %}
+
+  <!-- ─── داستان ─── -->
+  <section class="px-page py-16" data-aos="fade-up">
+    <div class="grid grid-cols-1 items-start gap-8 md:grid-cols-[1fr_1.4fr] md:gap-20">
+      <div class="flex aspect-[4/3] items-center justify-center overflow-hidden rounded-md bg-paper-soft md:sticky md:top-8 md:aspect-[4/5]" data-aos="fade-up">
+        <img src="{% static 'img/about.svg' %}" alt="{{ settings.site_name }}" loading="lazy" class="h-full w-full object-cover" />
+      </div>
+      <div class="text-[1.1rem] leading-[1.65] text-ink-soft" data-aos="fade-up" data-aos-delay="100">{{ story.description|safe }}</div>
+    </div>
+  </section>
+
+  <!-- ─── مراحل کار ─── -->
+  {% if process_steps %}
+  <section class="bg-night px-page py-[clamp(64px,9vw,120px)] text-ink" data-aos="fade-up">
+    <div class="mb-14 max-w-[880px]">
+      <span class="eyebrow mb-6 inline-block">روش کار<span class="mr-2 inline-block h-1.5 w-1.5 rounded-full bg-lime align-[2px]"></span></span>
+      <h2 class="max-w-[20ch]">چطور با هم پیش می‌رویم؟</h2>
+    </div>
+    <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+      {% for step in process_steps %}
+      <article class="group relative flex flex-col gap-4 rounded-xl border border-line bg-[#131313] p-7 transition-colors duration-300 hover:border-lime/30" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
+        <span class="absolute -top-3 left-6 h-6 w-6 rounded-full bg-lime flex items-center justify-center font-mono text-[0.85rem] font-bold text-ink">{{ forloop.counter }}</span>
+        <h3 class="mt-4 text-[1.4rem] leading-[1.2]">{{ step.title }}</h3>
+        <div class="text-[1rem] leading-[1.65] text-mist">{{ step.description|safe }}</div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+
+  <!-- ─── تیم ─── -->
+  <section class="px-page py-12 md:py-16" aria-label="تیم">
+    <div class="mb-12 max-w-[880px]" data-aos="fade-up">
+      <span class="eyebrow mb-6 inline-block">تیم<span class="mr-2 inline-block h-1.5 w-1.5 rounded-full bg-lime align-[2px]"></span></span><h2>آدم‌های پشت کارها</h2>
+    </div>
+    <div class="grid grid-cols-2 gap-6 md:gap-8 lg:grid-cols-4">
+      {% for member in team %}
+        <article class="flex flex-col gap-3.5" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
+          <div class="aspect-[4/5] overflow-hidden rounded-md bg-paper-soft">
+            <img src="{{ member.image.url }}" alt="{{ member.name }}" loading="lazy" class="h-full w-full object-cover" />
+          </div><h3 class="text-[1.3rem] leading-[1.1]">{{ member.name }}</h3><div class="font-mono text-[0.74rem] text-ink-dim">{{ member.role|safe }}</div>
+          <div class="text-[0.94rem] text-ink-soft">{{ member.bio|safe }}</div>
+        </article>
+      {% empty %}
+        <p data-aos="fade-up">اطلاعات اعضای تیم به‌زودی اضافه می‌شود.</p>
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- ─── ارزش‌ها ─── -->
+  <section class="border-t border-line px-page py-16" aria-labelledby="values-title">
+    <div class="mb-12 max-w-[880px]" data-aos="fade-up">
+      <span class="eyebrow mb-6 inline-block">ارزش‌ها<span class="mr-2 inline-block h-1.5 w-1.5 rounded-full bg-lime align-[2px]"></span></span><h2 id="values-title">چند چیز که به آن‌ها باور داریم.</h2>
+    </div>
+    <div class="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-8 lg:grid-cols-3">
+      {% for value in values %}
+        <div class="flex flex-col gap-2.5 border-t border-line pt-6" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}0">
+          <span class="font-mono text-[0.74rem] text-ink-dim">{{ forloop.counter|stringformat:'02d' }}</span><h3 class="text-[1.3rem]">{{ value.title|safe }}</h3><div class="text-[0.96rem] text-ink-soft">{{ value.description|safe }}</div>
         </div>
-      </aside>
-      <div class="min-w-0">
-        <header class="mobile-header fixed inset-x-0 top-0 z-50 flex items-center justify-between border-b border-line bg-paper px-page py-3 md:hidden">
-          <a href="{% url 'home:home' %}" class="wordmark-link flex items-center gap-2 font-display font-semibold text-ink">{% pixel_wordmark "full" class="wordmark h-[19px] w-auto text-ink" %}</a>
-          <button class="menu-toggle inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-sm bg-night text-lime" aria-label="باز کردن منو" aria-controls="mobile-nav" aria-expanded="false">{% icon "menu" class="h-6 w-6" %}</button>
-        </header>
-        <nav id="mobile-nav" class="mobile-nav fixed inset-0 z-[60] hidden flex-col gap-1 bg-night px-page pb-8 pt-24 font-display text-[2rem] text-ink [&.open]:flex" aria-label="Mobile">
-          <button class="mobile-close absolute left-[18px] top-[18px] inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-sm bg-lime text-ink" aria-label="بستن منو">{% icon "x" class="h-6 w-6" %}</button>
-          <a href="{% url 'home:home' %}" class="flex items-center gap-4 border-b border-night-soft py-3.5 hover:text-lime">{% icon "home" class="h-6 w-6 opacity-70" %}خانه</a>
-          <a href="{% url 'portfolio:list' %}" class="flex items-center gap-4 border-b border-night-soft py-3.5 hover:text-lime">{% icon "layout-grid" class="h-6 w-6 opacity-70" %}نمونه کار ها</a>
-          <a href="{% url 'services:list' %}" class="flex items-center gap-4 border-b border-night-soft py-3.5 hover:text-lime">{% icon "layers" class="h-6 w-6 opacity-70" %}خدمات</a>
-          <a href="{% url 'blog:list' %}" class="flex items-center gap-4 border-b border-night-soft py-3.5 hover:text-lime">{% icon "newspaper" class="h-6 w-6 opacity-70" %}بلاگ</a>
-          <a href="{% url 'core:about' %}" class="flex items-center gap-4 border-b border-night-soft py-3.5 text-lime">{% icon "users" class="h-6 w-6 opacity-70" %}درباره ما</a>
-          <a href="{% url 'contact:contact' %}" class="flex items-center gap-4 border-b border-night-soft py-3.5 hover:text-lime">{% icon "mail" class="h-6 w-6 opacity-70" %}تماس با ما</a>
-          <div class="mt-auto space-y-4 pt-6 border-t border-night-soft">
-            <a href="{% url 'contact:contact' %}" class="inline-flex w-full items-center justify-center gap-2 rounded-sm bg-lime px-4 py-3.5 font-mono text-[0.8rem] font-medium text-ink transition-colors duration-300 hover:bg-night hover:text-lime">{% icon "arrow-up-left" class="h-4 w-4" %}شروع پروژه</a>
-            <div class="flex flex-col gap-3 font-mono text-[0.78rem] text-mist-soft">
-              {% if settings.phone %}
-                <a href="tel:{{ settings.phone }}" class="flex items-center gap-3 py-2">{% icon "phone" class="h-4 w-4" %}{{ settings.phone }}</a>
-              {% endif %}
-              <div class="flex flex-wrap gap-3">
-                {% for social in socials %}
-                  <a href="{{ social.url }}" target="_blank" rel="noopener" class="inline-flex items-center gap-2">{% icon "globe" class="h-4 w-4" %}{{ social.name }}</a>
-                {% endfor %}
-              </div>
-              <div class="flex justify-between border-t border-night-soft pt-4">
-                <span>آماده همکاری</span><span>© {{ settings.established_year }} {{ settings.site_name }}</span>
-              </div>
-            </div>
-          </div>
-        </nav>
-        <main>
-          <!-- HERO -->
-          <section class="border-b border-line px-page pb-[clamp(40px,5vw,80px)] pt-12 md:pt-[clamp(64px,9vw,130px)]" data-aos="fade-up">
-            <p class="mb-4 font-mono text-[0.74rem] text-ink-dim" data-aos="fade-down">
-              خانه {% icon "chevron-left" class="inline-block h-3.5 w-3.5 shrink-0 opacity-50 align-middle" %} <span class="text-ink">استودیو</span>
-            </p><h1 class="mb-6 max-w-[18ch] text-[clamp(2.6rem,5.4vw,6rem)] leading-[0.98]" data-aos="fade-up" data-aos-delay="100">{{ hero.title|safe }}</h1><div class="max-w-[60ch] text-[1.18rem] leading-[1.5] text-ink-soft" data-aos="fade-up" data-aos-delay="200">{{ hero.description|safe }}</div>
-          </section>
+      {% empty %}
+        <p data-aos="fade-up">ارزش‌های ما به‌زودی منتشر می‌شوند.</p>
+      {% endfor %}
+    </div>
+  </section>
 
-          <!-- MISSION -->
-          {% if mission %}
-          <section class="px-page py-[clamp(64px,9vw,120px)]" data-aos="fade-up">
-            <div class="grid grid-cols-1 gap-12 md:grid-cols-[1.1fr_1fr] md:items-center">
-              <div>
-                <span class="eyebrow mb-6 inline-block">{{ mission.label }}<span class="mr-2 inline-block h-1.5 w-1.5 rounded-full bg-lime align-[2px]"></span></span>
-                <h2 class="mb-5 max-w-[22ch] font-display text-[clamp(2.2rem,4vw,3.6rem)] leading-[1.05] tracking-[-0.02em]">{{ mission.title }}</h2>
-                <div class="max-w-[60ch] text-[1.1rem] leading-[1.7] text-ink-soft">{{ mission.description|safe }}</div>
-              </div>
-              {% if mission.image %}
-              <div class="relative aspect-[4/3] overflow-hidden rounded-xl">
-                <img src="{{ mission.image.url }}" alt="{{ mission.title }}" loading="lazy" class="h-full w-full object-cover transition-transform duration-700 ease-ax hover:scale-[1.02]" />
-              </div>
-              {% endif %}
-            </div>
-          </section>
+  <!-- ─── آمار ─── -->
+  <section class="border-t border-line px-page py-16" aria-label="آمار و ارقام">
+    <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+      {% for stat in stats %}
+        <div class="border-t border-line pt-5" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
+          <span class="block font-display text-[clamp(2.8rem,5vw,5rem)] leading-none text-ink">{{ stat.number }}</span><span class="mt-3 block font-mono text-[0.8rem] text-ink-dim">{{ stat.label }}</span>{% if stat.description %}
+            <span class="mt-2 block text-[0.9rem] text-ink-soft">{{ stat.description }}</span>
           {% endif %}
+        </div>
+      {% empty %}
+        <p data-aos="fade-up">آمار به‌زودی اضافه می‌شود.</p>
+      {% endfor %}
+    </div>
+  </section>
 
-          <!-- STORY -->
-          <section class="px-page py-16" data-aos="fade-up">
-            <div class="grid grid-cols-1 items-start gap-8 md:grid-cols-[1fr_1.4fr] md:gap-20">
-              <div class="flex aspect-[4/3] items-center justify-center overflow-hidden rounded-md bg-paper-soft md:sticky md:top-8 md:aspect-[4/5]" data-aos="fade-up">
-                <img src="{% static 'img/about.svg' %}" alt="{{ settings.site_name }}" loading="lazy" class="h-full w-full object-cover" />
-              </div>
-              <div class="text-[1.1rem] leading-[1.65] text-ink-soft" data-aos="fade-up" data-aos-delay="100">{{ story.description|safe }}</div>
-            </div>
-          </section>
+  <!-- ─── سوالات متداول ─── -->
+  {% if faqs %}
+  <section class="px-page py-[clamp(64px,9vw,120px)]" data-aos="fade-up">
+    <div class="mb-12 max-w-[880px]">
+      <span class="eyebrow mb-6 inline-block">سوالات متداول<span class="mr-2 inline-block h-1.5 w-1.5 rounded-full bg-lime align-[2px]"></span></span>
+      <h2>سوالاتی که معمولاً پرسیده می‌شوند</h2>
+    </div>
+    <div class="max-w-3xl space-y-3">
+      {% for faq in faqs %}
+      <details class="group border border-line rounded-xl overflow-hidden transition-colors duration-300 hover:border-lime/30" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}50">
+        <summary class="flex items-center justify-between gap-4 p-5 cursor-pointer list-none">
+          <h3 class="text-[1.1rem] leading-[1.4]">{{ faq.question }}</h3>
+          {% icon "chevron-down" class="h-5 w-5 text-lime shrink-0 transition-transform duration-300 group-open:rotate-180" %}
+        </summary>
+        <div class="px-5 pb-5 border-t border-line text-ink-soft leading-[1.7]">{{ faq.answer|safe }}</div>
+      </details>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
 
-          <!-- PROCESS STEPS -->
-          {% if process_steps %}
-          <section class="bg-night px-page py-[clamp(64px,9vw,120px)] text-ink" data-aos="fade-up">
-            <div class="mb-14 max-w-[880px]">
-              <span class="eyebrow mb-6 inline-block">روش کار<span class="mr-2 inline-block h-1.5 w-1.5 rounded-full bg-lime align-[2px]"></span></span>
-              <h2 class="max-w-[20ch]">چطور با هم پیش می‌رویم؟</h2>
-            </div>
-            <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {% for step in process_steps %}
-              <article class="group relative flex flex-col gap-4 rounded-xl border border-line bg-[#131313] p-7 transition-colors duration-300 hover:border-lime/30" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
-                <span class="absolute -top-3 left-6 h-6 w-6 rounded-full bg-lime flex items-center justify-center font-mono text-[0.85rem] font-bold text-ink">{{ forloop.counter }}</span>
-                <h3 class="mt-4 text-[1.4rem] leading-[1.2]">{{ step.title }}</h3>
-                <div class="text-[1rem] leading-[1.65] text-mist">{{ step.description|safe }}</div>
-              </article>
-              {% endfor %}
-            </div>
-          </section>
-          {% endif %}
-
-          <!-- TEAM -->
-          <section class="px-page py-12 md:py-16" aria-label="تیم">
-            <div class="mb-12 max-w-[880px]" data-aos="fade-up">
-              <span class="eyebrow mb-6 inline-block">تیم<span class="mr-2 inline-block h-1.5 w-1.5 rounded-full bg-lime align-[2px]"></span></span><h2>آدم‌های پشت کارها</h2>
-            </div>
-            <div class="grid grid-cols-2 gap-6 md:gap-8 lg:grid-cols-4">
-              {% for member in team %}
-                <article class="flex flex-col gap-3.5" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
-                  <div class="aspect-[4/5] overflow-hidden rounded-md bg-paper-soft">
-                    <img src="{{ member.image.url }}" alt="{{ member.name }}" loading="lazy" class="h-full w-full object-cover" />
-                  </div><h3 class="text-[1.3rem] leading-[1.1]">{{ member.name }}</h3><div class="font-mono text-[0.74rem] text-ink-dim">{{ member.role|safe }}</div>
-                  <div class="text-[0.94rem] text-ink-soft">{{ member.bio|safe }}</div>
-                </article>
-              {% empty %}
-                <p data-aos="fade-up">اطلاعات اعضای تیم به‌زودی اضافه می‌شود.</p>
-              {% endfor %}
-            </div>
-          </section>
-
-          <!-- VALUES -->
-          <section class="border-t border-line px-page py-16" aria-labelledby="values-title">
-            <div class="mb-12 max-w-[880px]" data-aos="fade-up">
-              <span class="eyebrow mb-6 inline-block">ارزش‌ها<span class="mr-2 inline-block h-1.5 w-1.5 rounded-full bg-lime align-[2px]"></span></span><h2 id="values-title">چند چیز که به آن‌ها باور داریم.</h2>
-            </div>
-            <div class="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-8 lg:grid-cols-3">
-              {% for value in values %}
-                <div class="flex flex-col gap-2.5 border-t border-line pt-6" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}0">
-                  <span class="font-mono text-[0.74rem] text-ink-dim">{{ forloop.counter|stringformat:'02d' }}</span><h3 class="text-[1.3rem]">{{ value.title|safe }}</h3><div class="text-[0.96rem] text-ink-soft">{{ value.description|safe }}</div>
-                </div>
-              {% empty %}
-                <p data-aos="fade-up">ارزش‌های ما به‌زودی منتشر می‌شوند.</p>
-              {% endfor %}
-            </div>
-          </section>
-
-          <!-- STATS -->
-          <section class="border-t border-line px-page py-16" aria-label="آمار و ارقام">
-            <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
-              {% for stat in stats %}
-                <div class="border-t border-line pt-5" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
-                  <span class="block font-display text-[clamp(2.8rem,5vw,5rem)] leading-none text-ink">{{ stat.number }}</span><span class="mt-3 block font-mono text-[0.8rem] text-ink-dim">{{ stat.label }}</span>{% if stat.description %}
-                    <span class="mt-2 block text-[0.9rem] text-ink-soft">{{ stat.description }}</span>
-                  {% endif %}
-                </div>
-              {% empty %}
-                <p data-aos="fade-up">آمار به‌زودی اضافه می‌شود.</p>
-              {% endfor %}
-            </div>
-          </section>
-
-          <!-- FAQ -->
-          {% if faqs %}
-          <section class="px-page py-[clamp(64px,9vw,120px)]" data-aos="fade-up">
-            <div class="mb-12 max-w-[880px]">
-              <span class="eyebrow mb-6 inline-block">سوالات متداول<span class="mr-2 inline-block h-1.5 w-1.5 rounded-full bg-lime align-[2px]"></span></span>
-              <h2>سوالاتی که معمولاً پرسیده می‌شوند</h2>
-            </div>
-            <div class="max-w-3xl space-y-3">
-              {% for faq in faqs %}
-              <details class="group border border-line rounded-xl overflow-hidden transition-colors duration-300 hover:border-lime/30" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}50">
-                <summary class="flex items-center justify-between gap-4 p-5 cursor-pointer list-none">
-                  <h3 class="text-[1.1rem] leading-[1.4]">{{ faq.question }}</h3>
-                  {% icon "chevron-down" class="h-5 w-5 text-lime shrink-0 transition-transform duration-300 group-open:rotate-180" %}
-                </summary>
-                <div class="px-5 pb-5 border-t border-line text-ink-soft leading-[1.7]">{{ faq.answer|safe }}</div>
-              </details>
-              {% endfor %}
-            </div>
-          </section>
-          {% endif %}
-
-          <!-- PRE-FOOTER -->
-          {% if pre %}
-          <section class="bg-night px-page py-[clamp(64px,9vw,130px)] text-ink" aria-labelledby="manifesto-title">
-            <div class="grid grid-cols-1 gap-10 md:grid-cols-[1fr_1.2fr] md:gap-20">
-              <div data-aos="fade-up">
-                <span class="font-mono text-[0.8rem] text-lime">{{ pre.label|safe }}</span><h2 id="manifesto-title" class="mt-5 text-ink">{{ pre.title|safe }}</h2>
-              </div>
-              <div class="text-[1.05rem] leading-[1.65] text-mist" data-aos="fade-up" data-aos-delay="100">
-                {{ pre.description|safe }}<a class="btn btn-lime mt-5" href="{{ pre.button_url }}">{{ pre.button_text }} {% icon "arrow-left" class="inline-block h-4 w-4 align-middle" %}</a>
-              </div>
-            </div>
-          </section>
-          {% endif %}
-        </main>
-        <footer class="bg-night px-page pb-6 pt-12 text-[0.92rem] text-mist" data-aos="fade-up">
-          <div class="grid grid-cols-2 gap-8 border-t border-line-strong pt-10 md:grid-cols-3 md:gap-12">
-            <div data-aos="fade-up">
-              <span class="font-display text-[1.5rem] font-semibold text-ink">{{ settings.site_name|default:'پیکسوریا' }}</span><p class="mt-4 leading-[1.55] text-mist-soft">{{ settings.footer_description|default:settings.site_description }}</p>
-            </div>
-            <div data-aos="fade-up" data-aos-delay="100">
-              <h4 class="mb-3.5 font-mono text-[0.74rem] text-ink">نقشه سایت</h4><a href="{% url 'home:home' %}" class="block py-1.5 text-mist-soft hover:text-lime">خانه</a><a href="{% url 'portfolio:list' %}" class="block py-1.5 text-mist-soft hover:text-lime">نمونه کارها</a><a href="{% url 'services:list' %}" class="block py-1.5 text-mist-soft hover:text-lime">خدمات</a><a href="{% url 'contact:contact' %}" class="block py-1.5 text-mist-soft hover:text-lime">تماس</a>
-            </div>
-            <div data-aos="fade-up" data-aos-delay="150">
-              <h4 class="mb-3.5 font-mono text-[0.74rem] text-ink">ارتباط</h4>{% if settings.email %}
-                <a href="mailto:{{ settings.email }}" class="block py-1.5 text-mist-soft hover:text-lime">{{ settings.email }}</a>
-              {% endif %}
-              {% if settings.phone %}
-                <a href="tel:{{ settings.phone }}" class="block py-1.5 text-mist-soft hover:text-lime">{{ settings.phone }}</a>
-              {% endif %}<span class="block py-1.5 text-mist-soft">{{ settings.address|default:'ایران' }}</span>
-            </div>
-          </div>
-          <div class="mt-8 border-t border-line-strong pt-5 font-mono text-[0.74rem] text-mist-dim">© {{ settings.established_year }} {{ settings.site_name }}</div>
-        </footer>
+  <!-- ─── مانیفست پیش از فوتر ─── -->
+  {% if pre %}
+  <section class="bg-night px-page py-[clamp(64px,9vw,130px)] text-ink" aria-labelledby="manifesto-title">
+    <div class="grid grid-cols-1 gap-10 md:grid-cols-[1fr_1.2fr] md:gap-20">
+      <div data-aos="fade-up">
+        <span class="font-mono text-[0.8rem] text-lime">{{ pre.label|safe }}</span><h2 id="manifesto-title" class="mt-5 text-ink">{{ pre.title|safe }}</h2>
+      </div>
+      <div class="text-[1.05rem] leading-[1.65] text-mist" data-aos="fade-up" data-aos-delay="100">
+        {{ pre.description|safe }}<a class="btn btn-lime mt-5" href="{{ pre.button_url }}">{{ pre.button_text }} {% icon "arrow-left" class="inline-block h-4 w-4 align-middle" %}</a>
       </div>
     </div>
-    <script src="{% static 'js/vendor/gsap.min.js' %}"></script>
-    <script src="{% static 'js/vendor/ScrollTrigger.min.js' %}"></script>
-    <script src="{% static 'js/main.js' %}" defer></script>
-
-    <script type="module" src="{% static 'js/site-reveal.js' %}"></script>
-  </body>
-</html>
+  </section>
+  {% endif %}
+{% endblock %}
