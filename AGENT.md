@@ -55,7 +55,7 @@ The current project primary is **lime `#c8ff3d`** (`--color-lime` in `input.css`
 - [x] 3. Design tokens + global dark theme using the existing primary green (CSS variables + Tailwind config); fix every light-theme leftover
 - [x] 4. Lucide icon system (`{% icon %}` tag) + replace all HTML-entity/emoji icons + icon-name fields in models/admin — *sprite built from local lucide-static v1.49.0 (2121 icons, 716 KB, cached); `{% icon %}` fixed to emit real SVG (was auto-escaped); `ServiceWhyUs.icon` migrated emoji → Lucide names; dead `lucide.min.js` UMD removed*
 - [x] 5. Pixel wordmark logo (SVG) + remove the "P" icon everywhere + new favicon set/manifest + admin-replaceable logo/favicon (`SiteSettings`) — *wordmark generated from the self-hosted Vazirmatn 600 by `scripts/build_pixel_wordmark.py`; the "P" is gone from header/footer/preloader/admin/404/contact/about/login; `templates/admin/login.html` was also re-saved (it was corrupted cp1256 with its Persian text lost to literal `?`)*
-- [ ] 6. Glass & liquid-glass utility classes/components
+- [x] 6. Glass & liquid-glass utility classes/components — *`.glass` / `.glass-strong` / `.glass-card` / `.liquid-glass` in `input.css` + `feTurbulence` displacement filter in `base.html` + cursor sheen in `static/js/core/glass.js`; first applied to the services mega-menu*
 - [ ] 7. Reusable template components (`templates/components/…`): section header, buttons, cards, badges, etc.
 - [ ] 8. Reusable **Carousel component** (+ portfolio / testimonial / blog cards) and refactor all existing carousels to use it
 - [ ] 9. Global motion layer (`data-*`-driven scroll reveals, hover tilt/magnetic/glow, scroll progress, counters) + `prefers-reduced-motion` support
@@ -120,6 +120,20 @@ Verified: all pages 200, computed body bg `rgb(4,7,10)`, zero light surfaces rem
 - **Admin-replaceable:** `SiteSettings.logo` / `.favicon` / `.apple_touch_icon` (`FileField`, `upload_to="brand/"`, blank allowed). Templates fall back to the generated assets when blank, so the pixel wordmark is the default and uploads override it.
 - **Animation:** `.wordmark rect` gets a staggered `pixel-in` keyframe — on `.wordmark-link` hover and once when the preloader activates (`static/js/core/wordmark.js`, `htmx:afterSwap`-aware, skipped under `prefers-reduced-motion`).
 - **Preloader** panels switched from lime to `--color-night` so the white+lime wordmark stays legible on them (task 14 will rebuild the preloader fully).
+
+### Glass system (Task 6)
+
+| Class | Blur | Surface | Use for |
+| --- | --- | --- | --- |
+| `.glass` | 14px | paper 58% translucent | base panels, chips, badges |
+| `.glass-strong` | 26px | paper 80% translucent | menus, overlays, modals (small text) |
+| `.glass-card` | 16px | paper 58% + lime glow on hover | cards |
+| `.liquid-glass` | 26px | paper 66% + refraction + cursor sheen | hero surfaces, buttons, feature cards |
+
+- All four share a translucent top-lit gradient, a 1px inner highlight on the **top-left** edge (`inset 1px 1px 0 rgba(255,255,255,.10)`), an inner bottom-right shadow and a soft outer shadow. `.glass-card:hover` adds a lime border + `--color-lime-glow`.
+- **Liquid glass** = `feTurbulence` + `feDisplacementMap` filter `#pixoria-glass` (defined inline in `base.html`, ~200 B) applied to a `::before` specular streak, plus a `::after` radial sheen tracking the pointer through `--gx/--gy` (set by `static/js/core/glass.js`, `pointermove`, passive). Both pseudos sit at `z-index: -1` behind the content, so **pair `.liquid-glass` with a `relative z-10` content wrapper**.
+- **Fallbacks:** `@supports not (backdrop-filter)` swaps to a solid `--color-paper` background; an unresolved `filter: url(#…)` is dropped by the browser so liquid glass degrades to frosted glass on the standalone pages that don't carry the filter def. The cursor sheen is disabled on `(hover: none)` and `prefers-reduced-motion`, and transitions are killed under reduced motion.
+- **Perf:** the displacement filter is only on `.liquid-glass` elements, never on full-screen or huge areas (the mobile menu keeps a solid `--color-night` until task 11 rebuilds it).
 
 
 - **Primary accent:** lime `#c8ff3d` (existing). Scale derived from it: 50 `#f6ffe0` … 950 `#3d5a00`, glow `rgba(200,255,61,…)`, gradient lime → `#d8ff7a` (cyan-shifted lighter).

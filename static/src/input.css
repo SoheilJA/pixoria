@@ -191,6 +191,113 @@
     @apply translate-y-0 opacity-100;
   }
 
+  /* ═════════════════════════════════════════════════════════════════
+     Glass & liquid-glass surfaces
+     `.glass` is the base frosted panel; combine it with `.glass-strong`
+     (denser blur + more opaque), `.glass-card` (radius, padding, lime glow
+     on hover) or `.liquid-glass` (SVG refraction + cursor sheen).
+     The inner highlight sits on the top-left edge; readability stays AA
+     because every variant sits on a near-black translucent base.
+     Pair `.liquid-glass` markup with a `relative z-10` content wrapper —
+     the sheen pseudo-elements paint behind it (isolation: isolate).
+     ═════════════════════════════════════════════════════════════════ */
+  .glass,
+  .glass-strong,
+  .glass-card,
+  .liquid-glass {
+    position: relative;
+    backdrop-filter: blur(var(--glass-blur, 14px)) saturate(165%);
+    -webkit-backdrop-filter: blur(var(--glass-blur, 14px)) saturate(165%);
+    border: 1px solid color-mix(in srgb, var(--color-ink) 9%, transparent);
+    background:
+      linear-gradient(150deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.012) 55%),
+      color-mix(in srgb, var(--color-paper) 58%, transparent);
+    box-shadow:
+      inset 1px 1px 0 0 rgba(255, 255, 255, 0.10),
+      inset -1px -1px 0 0 rgba(0, 0, 0, 0.28),
+      0 14px 34px -18px rgba(0, 0, 0, 0.75);
+  }
+  .glass-strong {
+    --glass-blur: 26px;
+    background:
+      linear-gradient(150deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.018) 55%),
+      color-mix(in srgb, var(--color-paper) 80%, transparent);
+  }
+  .glass-card {
+    --glass-blur: 16px;
+    border-radius: var(--radius-lg);
+    padding: clamp(20px, 2.4vw, 32px);
+    transition: box-shadow 0.35s var(--ease-ax), border-color 0.35s var(--ease-ax), transform 0.35s var(--ease-ax-out);
+  }
+  .glass-card:hover {
+    border-color: color-mix(in srgb, var(--color-lime) 28%, transparent);
+    box-shadow:
+      inset 1px 1px 0 0 rgba(255, 255, 255, 0.13),
+      inset -1px -1px 0 0 rgba(0, 0, 0, 0.28),
+      0 18px 42px -18px rgba(0, 0, 0, 0.8),
+      0 0 26px -10px var(--color-lime-glow);
+  }
+
+  /* Liquid glass — refracted specular streak (feTurbulence displacement,
+     filter defined in base.html) plus a sheen that follows the cursor
+     (--gx/--gy are set by static/js/core/glass.js). Kept off huge areas
+     for performance; falls back to plain frosted glass when the filter or
+     backdrop-filter is unsupported. */
+  .liquid-glass {
+    --glass-blur: 26px;
+    isolation: isolate;
+    background:
+      linear-gradient(150deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02) 55%),
+      color-mix(in srgb, var(--color-paper) 66%, transparent);
+  }
+  .liquid-glass::before,
+  .liquid-glass::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    pointer-events: none;
+  }
+  .liquid-glass::before {
+    background:
+      linear-gradient(150deg, rgba(255, 255, 255, 0.22), transparent 42%),
+      radial-gradient(120% 90% at 88% 8%, rgba(200, 255, 61, 0.10), transparent 60%);
+    filter: url(#pixoria-glass) blur(1px);
+    mix-blend-mode: soft-light;
+    opacity: 0.85;
+  }
+  .liquid-glass::after {
+    background: radial-gradient(
+      240px circle at var(--gx, 28%) var(--gy, 22%),
+      rgba(255, 255, 255, 0.18),
+      transparent 62%
+    );
+    mix-blend-mode: soft-light;
+    opacity: 0;
+    transition: opacity 0.4s var(--ease-ax);
+  }
+  @media (hover: hover) {
+    .liquid-glass:hover::after { opacity: 1; }
+  }
+
+  /* No backdrop-filter support → solid surfaces instead of muddy translucent ones. */
+  @supports not ((-webkit-backdrop-filter: blur(2px)) or (backdrop-filter: blur(2px))) {
+    .glass,
+    .glass-strong,
+    .glass-card,
+    .liquid-glass {
+      background: var(--color-paper);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .glass-card,
+    .liquid-glass::after {
+      transition: none;
+    }
+  }
+
+
   /* ═══ Site header ═══ */
   .site-header {
     --header-h: 72px;
