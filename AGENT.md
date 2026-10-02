@@ -134,6 +134,6 @@ Verified: all pages 200, computed body bg `rgb(4,7,10)`, zero light surfaces rem
 ## Known Issues / Follow-ups
 
 - `static/css/site.css` is a 2.2k-line legacy stylesheet from a previous pixel-art design; most of it is dead. Will be trimmed/removed as the new system lands.
-- **Dead template trees still on disk, unreferenced by any view or template:** `templates/_legacy/` (old-design snapshot), `templates/includes/_*.html` + `templates/home/base_cinematic.html` (cinematic leftovers, only referenced by each other). They still contain the old entity/glyph icons (`←`, `★`, `✕`, `▲`) — safe to delete (recoverable from git), pending a delete approval.
+- **Dead template trees deleted** (unreferenced by any view, recoverable from git): `templates/_legacy/`, `templates/includes/_*.html`, `templates/home/base_cinematic.html`, and the unused 444 KB `static/js/vendor/lucide.min.js` UMD bundle.
 - **Persian code comments:** the previous pass wrote Persian comments inside `static/js/**/*.js` (11 files). Per the project rules comments must be English — to be translated in a follow-up commit.
 - `django-unfold` is in `requirements.txt` but commented out — admin stays stock Django for now.
