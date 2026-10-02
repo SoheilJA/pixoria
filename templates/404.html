@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <meta name="theme-color" content="#0e0e0e" />
+    <meta name="theme-color" content="#04070a" />
     <title>۴۰۴ — صفحه پیدا نشد · پیکسوریا</title>
     <meta name="description" content="این صفحه وجود ندارد یا جابجا شده." />
     <meta name="robots" content="noindex" />
@@ -14,9 +14,9 @@
 
   <body>
     <div class="grid min-h-screen grid-cols-1 md:grid-cols-[200px_minmax(0,1fr)] lg:grid-cols-[240px_minmax(0,1fr)]">
-      <aside class="sticky top-0 z-40 hidden h-screen flex-col border-l border-ink-line bg-paper px-6 py-7 md:flex">
+      <aside class="sticky top-0 z-40 hidden h-screen flex-col border-l border-line bg-paper px-6 py-7 md:flex">
         <a href="{% url 'home:home' %}" class="flex items-center gap-2.5 font-display text-[1.4rem] font-semibold tracking-[-0.02em] text-ink">
-          <span class="grid h-[26px] w-[26px] place-items-center rounded-sm bg-ink font-mono text-[0.78rem] font-semibold text-lime">P</span>
+          <span class="grid h-[26px] w-[26px] place-items-center rounded-sm bg-night font-mono text-[0.78rem] font-semibold text-lime">P</span>
           <span class="leading-none">{{ settings.site_name|default:'پیکسوریا' }}</span>
         </a>
 
@@ -43,18 +43,18 @@
       </aside>
 
       <div class="min-w-0">
-        <header class="sticky top-0 z-50 flex items-center justify-between border-b border-ink-line bg-paper px-page py-3.5 md:hidden">
-          <a href="{% url 'home:home' %}" class="flex items-center gap-2 font-display font-semibold text-ink"><span class="grid h-[26px] w-[26px] place-items-center rounded-sm bg-ink font-mono text-[0.78rem] font-semibold leading-none text-lime">P</span>پیکسوریا</a>
-          <button class="menu-toggle inline-flex cursor-pointer flex-col gap-1 rounded-sm bg-ink px-3.5 py-2.5 font-mono text-[0.8rem] text-lime" aria-label="Open menu" aria-expanded="false">منو</button>
+        <header class="sticky top-0 z-50 flex items-center justify-between border-b border-line bg-paper px-page py-3.5 md:hidden">
+          <a href="{% url 'home:home' %}" class="flex items-center gap-2 font-display font-semibold text-ink"><span class="grid h-[26px] w-[26px] place-items-center rounded-sm bg-night font-mono text-[0.78rem] font-semibold leading-none text-lime">P</span>پیکسوریا</a>
+          <button class="menu-toggle inline-flex cursor-pointer flex-col gap-1 rounded-sm bg-night px-3.5 py-2.5 font-mono text-[0.8rem] text-lime" aria-label="Open menu" aria-expanded="false">منو</button>
         </header>
 
-        <nav class="mobile-nav fixed inset-0 z-[60] hidden flex-col gap-1 bg-ink px-page pb-8 pt-20 font-display text-[2rem] text-paper [&.open]:flex" aria-label="Mobile">
-          <button class="mobile-close absolute right-[18px] top-[18px] cursor-pointer bg-transparent font-mono text-[0.85rem] text-paper" aria-label="Close menu">بستن ✕</button>
-          <a href="{% url 'home:home' %}" class="border-b border-ink-soft py-3.5 transition-colors hover:text-lime">خانه</a>
-          <a href="{% url 'portfolio:list' %}" class="border-b border-ink-soft py-3.5 transition-colors hover:text-lime">نمونه کار ها</a>
-          <a href="{% url 'services:list' %}" class="border-b border-ink-soft py-3.5 transition-colors hover:text-lime">خدمات</a>
-          <a href="{% url 'core:about' %}" class="border-b border-ink-soft py-3.5 transition-colors hover:text-lime">درباره ما</a>
-          <a href="{% url 'contact:contact' %}" class="border-b border-ink-soft py-3.5 transition-colors hover:text-lime">تماس با ما</a>
+        <nav class="mobile-nav fixed inset-0 z-[60] hidden flex-col gap-1 bg-night px-page pb-8 pt-20 font-display text-[2rem] text-ink [&.open]:flex" aria-label="Mobile">
+          <button class="mobile-close absolute right-[18px] top-[18px] cursor-pointer bg-transparent font-mono text-[0.85rem] text-ink" aria-label="Close menu">بستن ✕</button>
+          <a href="{% url 'home:home' %}" class="border-b border-night-soft py-3.5 transition-colors hover:text-lime">خانه</a>
+          <a href="{% url 'portfolio:list' %}" class="border-b border-night-soft py-3.5 transition-colors hover:text-lime">نمونه کار ها</a>
+          <a href="{% url 'services:list' %}" class="border-b border-night-soft py-3.5 transition-colors hover:text-lime">خدمات</a>
+          <a href="{% url 'core:about' %}" class="border-b border-night-soft py-3.5 transition-colors hover:text-lime">درباره ما</a>
+          <a href="{% url 'contact:contact' %}" class="border-b border-night-soft py-3.5 transition-colors hover:text-lime">تماس با ما</a>
         </nav>
 
         <main>
@@ -71,14 +71,14 @@
               </div>
             </div>
 
-            <div class="relative z-[2] grid grid-cols-[auto_1fr] items-start gap-8 border-t border-ink-line pt-10 max-md:grid-cols-1 max-md:gap-4">
+            <div class="relative z-[2] grid grid-cols-[auto_1fr] items-start gap-8 border-t border-line pt-10 max-md:grid-cols-1 max-md:gap-4">
               <span class="whitespace-nowrap pt-1 font-mono text-[0.74rem] uppercase tracking-[0.12em] text-ink-dim">شاید دنبال این بودی</span>
               <div class="flex flex-wrap gap-2">
-                <a href="{% url 'portfolio:list' %}" class="rounded-full border border-ink-line px-4 py-2 font-mono text-[0.8rem] text-ink-soft transition-colors duration-200 ease-ax hover:border-ink hover:bg-paper-soft hover:text-ink">نمونه کار ها</a>
-                <a href="{% url 'services:list' %}" class="rounded-full border border-ink-line px-4 py-2 font-mono text-[0.8rem] text-ink-soft transition-colors duration-200 ease-ax hover:border-ink hover:bg-paper-soft hover:text-ink">خدمات</a>
-                <a href="{% url 'core:about' %}" class="rounded-full border border-ink-line px-4 py-2 font-mono text-[0.8rem] text-ink-soft transition-colors duration-200 ease-ax hover:border-ink hover:bg-paper-soft hover:text-ink">درباره ما</a>
-                <a href="{% url 'contact:contact' %}" class="rounded-full border border-ink-line px-4 py-2 font-mono text-[0.8rem] text-ink-soft transition-colors duration-200 ease-ax hover:border-ink hover:bg-paper-soft hover:text-ink">تماس با ما</a>
-                <a href="{% url 'home:home' %}" class="rounded-full border border-ink-line px-4 py-2 font-mono text-[0.8rem] text-ink-soft transition-colors duration-200 ease-ax hover:border-ink hover:bg-paper-soft hover:text-ink">صفحه اصلی</a>
+                <a href="{% url 'portfolio:list' %}" class="rounded-full border border-line px-4 py-2 font-mono text-[0.8rem] text-ink-soft transition-colors duration-200 ease-ax hover:border-night hover:bg-paper-soft hover:text-ink">نمونه کار ها</a>
+                <a href="{% url 'services:list' %}" class="rounded-full border border-line px-4 py-2 font-mono text-[0.8rem] text-ink-soft transition-colors duration-200 ease-ax hover:border-night hover:bg-paper-soft hover:text-ink">خدمات</a>
+                <a href="{% url 'core:about' %}" class="rounded-full border border-line px-4 py-2 font-mono text-[0.8rem] text-ink-soft transition-colors duration-200 ease-ax hover:border-night hover:bg-paper-soft hover:text-ink">درباره ما</a>
+                <a href="{% url 'contact:contact' %}" class="rounded-full border border-line px-4 py-2 font-mono text-[0.8rem] text-ink-soft transition-colors duration-200 ease-ax hover:border-night hover:bg-paper-soft hover:text-ink">تماس با ما</a>
+                <a href="{% url 'home:home' %}" class="rounded-full border border-line px-4 py-2 font-mono text-[0.8rem] text-ink-soft transition-colors duration-200 ease-ax hover:border-night hover:bg-paper-soft hover:text-ink">صفحه اصلی</a>
               </div>
             </div>
           </div>

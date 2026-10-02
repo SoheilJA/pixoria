@@ -4,19 +4,19 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <meta name="theme-color" content="#0e0e0e" />
+    <meta name="theme-color" content="#04070a" />
     <title>ورود — {{ settings.site_name|default:'پیکسوریا' }}</title>
     <meta name="robots" content="noindex" />
     <link rel="stylesheet" href="{% static 'fonts/font_urls.css' %}" />
     <link rel="stylesheet" href="{% static 'css/tailwind.css' %}" />
   </head>
-  <body class="min-h-screen bg-paper font-sans text-ink-soft antialiased">
+  <body class="min-h-screen bg-night font-sans text-ink-soft antialiased">
     <div class="grid min-h-screen grid-cols-1 md:grid-cols-2">
-      <section class="relative flex flex-col justify-between overflow-hidden bg-ink px-[clamp(32px,6vw,72px)] py-[clamp(32px,6vw,72px)]" data-aos="fade-left">
+      <section class="relative flex flex-col justify-between overflow-hidden bg-night px-[clamp(32px,6vw,72px)] py-[clamp(32px,6vw,72px)]" data-aos="fade-left">
         <span aria-hidden="true" class="pointer-events-none absolute bottom-[-6rem] left-[-3rem] select-none font-display text-[32rem] font-bold leading-none text-transparent [-webkit-text-stroke:1px_#2a2a28]">P</span>
-        <a href="{% url 'home:home' %}" class="relative z-10 inline-flex items-center gap-2.5 font-display text-[1.3rem] font-semibold text-paper" data-aos="fade-down"><span class="grid h-7 w-7 place-items-center rounded-sm bg-lime font-mono text-[0.8rem] font-bold text-ink">P</span>{{ settings.site_name|default:'پیکسوریا' }}</a>
+        <a href="{% url 'home:home' %}" class="relative z-10 inline-flex items-center gap-2.5 font-display text-[1.3rem] font-semibold text-ink" data-aos="fade-down"><span class="grid h-7 w-7 place-items-center rounded-sm bg-lime font-mono text-[0.8rem] font-bold text-ink">P</span>{{ settings.site_name|default:'پیکسوریا' }}</a>
         <div class="relative z-10 my-16" data-aos="fade-up">
-          <p class="mb-5 font-mono text-[0.74rem] text-lime">پنل کاربری</p><h2 class="max-w-[18ch] font-display text-[clamp(1.8rem,3vw,3rem)] font-medium leading-[1.1] text-paper">به <em class="font-display italic text-lime">داشبورد</em> خوش آمدید.</h2>
+          <p class="mb-5 font-mono text-[0.74rem] text-lime">پنل کاربری</p><h2 class="max-w-[18ch] font-display text-[clamp(1.8rem,3vw,3rem)] font-medium leading-[1.1] text-ink">به <em class="font-display italic text-lime">داشبورد</em> خوش آمدید.</h2>
         </div>
         {% if stats %}
           <div class="relative z-10 hidden flex-col gap-3.5 md:flex" data-aos="fade-up" data-aos-delay="100">
@@ -34,7 +34,7 @@
             <p class="mb-3.5 font-mono text-[0.74rem] text-ink-dim">
               {{ settings.site_name|default:'پیکسوریا' }} ← <span class="text-ink">ورود</span>
             </p><h1 class="mb-2 font-display text-[clamp(1.8rem,3vw,2.6rem)] text-ink">ورود به حساب</h1><p class="m-0 text-[0.98rem] text-ink-soft">
-              حساب ندارید؟ <a href="#" onclick="return false" class="border-b border-ink-line font-medium text-ink">ثبت‌نام کنید</a>
+              حساب ندارید؟ <a href="#" onclick="return false" class="border-b border-line font-medium text-ink">ثبت‌نام کنید</a>
             </p>
           </div>
           <form class="flex flex-col gap-4" method="post" novalidate>
@@ -58,7 +58,7 @@
             </div>
             <button type="submit" class="btn btn-ink mt-2 w-full justify-center px-6 py-[15px] text-[0.88rem]">ورود <span>←</span></button>
           </form>
-          <div class="mt-10 flex flex-wrap justify-between gap-4 border-t border-ink-line pt-6 font-mono text-[0.7rem] text-ink-dim">
+          <div class="mt-10 flex flex-wrap justify-between gap-4 border-t border-line pt-6 font-mono text-[0.7rem] text-ink-dim">
             <span>© {{ settings.established_year|default:'۱۴۰۵' }} {{ settings.site_name|default:'پیکسوریا' }}</span><a href="{% url 'contact:contact' %}" class="hover:text-ink">تماس</a>
           </div>
         </div>

@@ -1,34 +1,61 @@
 @import "tailwindcss";
 
+/* ════════════════════════════════════════════════
+   PIXORIA design tokens — deep-space dark theme.
+   Primary accent: lime #c8ff3d (existing brand green).
+   Layered surfaces: night (recessed) < paper < paper-soft < paper-deep.
+   ════════════════════════════════════════════════ */
 @theme {
-  /* رنگ‌ها */
-  --color-paper: #f5f4f0;
-  --color-paper-soft: #ecebe6;
-  --color-paper-deep: #e0dfd8;
+  /* ── Surfaces (near-black, faint cool/green tint) ── */
+  --color-night: #04070a;        /* page base + recessed sections */
+  --color-night-soft: #070b0f;   /* alt recessed */
+  --color-paper: #0b1116;        /* raised surface 1 (cards/panels) */
+  --color-paper-soft: #0f161c;   /* raised surface 2 */
+  --color-paper-deep: #141d24;   /* raised surface 3 (inputs, code) */
 
-  --color-ink: #0e0e0e;
-  --color-ink-soft: #2a2a28;
-  --color-ink-dim: #6b6b66;
-  --color-ink-line: #cfcec7;
-  --color-ink-line-dark: #2a2a27;
+  /* ── Foreground text ── */
+  --color-ink: #eaf2e8;          /* headings / high emphasis */
+  --color-ink-soft: #b6c2b8;     /* body text */
+  --color-ink-dim: #7f8c82;      /* meta / captions */
 
+  /* ── Muted text variants (on glass / dark) ── */
+  --color-mist: #c6d1c7;
+  --color-mist-soft: #9ba89d;
+  --color-mist-dim: #6f7c72;
+
+  /* ── Hairline borders ── */
+  --color-line: #1e2925;
+  --color-line-strong: #2c3a33;
+
+  /* ── Primary: lime (brand green) full scale ── */
+  --color-lime-50: #f7ffe6;
+  --color-lime-100: #ecffc4;
+  --color-lime-200: #ddff90;
+  --color-lime-300: #cdff5c;
+  --color-lime-400: #c8ff3d;     /* brand base */
+  --color-lime-500: #a9e020;
+  --color-lime-600: #8bba15;
+  --color-lime-700: #6f9410;
+  --color-lime-800: #54700d;
+  --color-lime-900: #3a4f09;
+  --color-lime-950: #203004;
+
+  /* aliases kept for existing markup */
   --color-lime: #c8ff3d;
   --color-lime-deep: #a3d130;
+  --color-lime-soft: rgba(200, 255, 61, 0.10);
+  --color-lime-glow: rgba(200, 255, 61, 0.35);
 
-  --color-mist: #c8c7c2;
-  --color-mist-soft: #b0afaa;
-  --color-mist-dim: #8b8a85;
+  /* ── Status ── */
+  --color-warn: #ff6b54;
+  --color-ok: #3ddc84;
 
-  --color-warn: #c64926;
-  --color-ok: #2a9d3e;
-
-  /* فونت‌ها */
+  /* ── Fonts ── */
   --font-display: "Rubik", "Bricolage Grotesque", system-ui, sans-serif;
-  --font-sans:
-    "Vazirmatn", "Geist", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-sans: "Vazirmatn", "Geist", -apple-system, BlinkMacSystemFont, sans-serif;
   --font-mono: "Vazirmatn", ui-monospace, monospace;
 
-  /* سایز فونت‌ها — line-height با پسوند --line-height ست می‌شه */
+  /* ── Type scale (line-height via --*--line-height) ── */
   --text-body: clamp(1.05rem, 1rem + 0.3vw, 1.2rem);
   --text-body--line-height: 1.55;
   --text-h1: clamp(2.2rem, 1.5rem + 3vw, 4rem);
@@ -36,104 +63,120 @@
   --text-h3: clamp(1.3rem, 1.1rem + 0.8vw, 1.7rem);
   --text-hero: clamp(3.6rem, 1rem + 9vw, 10rem);
 
-  /* اسپیسینگ سفارشی */
+  /* ── Spacing rhythm ── */
   --spacing-page: clamp(20px, 4vw, 56px);
   --spacing-section: clamp(80px, 9vw, 160px);
+  --spacing-section-sm: clamp(56px, 6vw, 100px);
 
-  /* easing */
+  /* ── Radii ── */
+  --radius-sm: 4px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+  --radius-pill: 999px;
+
+  /* ── Shadows / glows ── */
+  --shadow-card: 0 12px 40px -14px rgba(0, 0, 0, 0.6);
+  --shadow-glow: 0 0 0 1px rgba(200, 255, 61, 0.22), 0 14px 50px -12px rgba(200, 255, 61, 0.28);
+
+  /* ── Easing ── */
   --ease-ax: cubic-bezier(0.2, 0.8, 0.2, 1);
   --ease-ax-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
 
-  /* انیمیشن‌ها */
+  /* ── Animations ── */
   --animate-marq: marq 32s linear infinite;
   --animate-marq-slow: marq 38s linear infinite;
 }
 
 @keyframes marq {
-  from {
-    transform: translateX(0);
-  }
-
-  to {
-    transform: translateX(50%);
-  }
+  from { transform: translateX(0); }
+  to { transform: translateX(50%); }
 }
 
 @layer base {
+  :root {
+    color-scheme: dark;
+  }
+
   html {
     scroll-behavior: smooth;
+    scrollbar-color: var(--color-line-strong) var(--color-night);
   }
 
   body {
-    @apply overflow-x-hidden bg-paper font-sans text-body text-ink-soft antialiased;
+    @apply overflow-x-hidden bg-night font-sans text-body text-ink-soft antialiased;
     text-rendering: optimizeLegibility;
   }
 
-  h1,
-  h2,
-  h3,
-  h4 {
+  h1, h2, h3, h4 {
     @apply font-display font-medium leading-[1.02] tracking-[-0.025em] text-ink;
     font-feature-settings: "ss01" on;
   }
-
-  h1 {
-    @apply text-h1;
-  }
-
-  h2 {
-    @apply text-h2;
-  }
-
-  h3 {
-    @apply text-h3 leading-[1.2] tracking-[-0.01em];
-  }
-
-  p {
-    margin: 0 0 1em;
-  }
+  h1 { @apply text-h1; }
+  h2 { @apply text-h2; }
+  h3 { @apply text-h3 leading-[1.2] tracking-[-0.01em]; }
+  p { margin: 0 0 1em; }
 
   ::selection {
-    @apply bg-lime text-ink;
+    background: var(--color-lime);
+    color: var(--color-night);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-lime);
+    outline-offset: 2px;
+    border-radius: 3px;
+  }
+
+  /* ── Custom scrollbar (lime accent) ── */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--color-night);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-line-strong);
+    border-radius: var(--radius-pill);
+    border: 2px solid var(--color-night);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-lime-deep);
   }
 }
 
 @layer components {
+  /* ── Buttons ── */
   .btn {
     @apply inline-flex cursor-pointer items-center gap-2.5 whitespace-nowrap rounded-full border border-transparent px-[22px] py-3.5 font-mono text-[0.84rem] font-medium uppercase tracking-[0.06em] duration-200 ease-ax;
-    transition-property: transform, background-color, color, border-color;
+    transition-property: transform, background-color, color, border-color, box-shadow;
   }
-
-  .btn-ink {
-    @apply bg-ink text-paper;
-  }
-
-  .btn-ink:hover {
-    @apply bg-lime text-ink;
-  }
-
   .btn-lime {
-    @apply bg-lime text-ink;
+    @apply bg-lime text-night;
   }
-
   .btn-lime:hover {
-    @apply bg-ink text-lime;
+    @apply bg-lime-deep;
+    box-shadow: 0 8px 30px -10px var(--color-lime-glow);
   }
-
+  .btn-ink {
+    @apply border-line-strong bg-night text-ink;
+  }
+  .btn-ink:hover {
+    @apply border-lime bg-lime text-night;
+  }
   .btn-ghost {
-    @apply border-ink bg-transparent text-ink;
+    @apply border-line-strong bg-transparent text-ink;
   }
-
   .btn-ghost:hover {
-    @apply bg-ink text-paper;
+    @apply border-lime bg-lime text-night;
   }
-
   .btn-ghost-light {
-    @apply border-paper bg-transparent text-paper;
+    @apply border-ink/30 bg-transparent text-ink;
   }
-
   .btn-ghost-light:hover {
-    @apply border-lime bg-lime text-ink;
+    @apply border-lime bg-lime text-night;
   }
 
   .eyebrow {
@@ -144,32 +187,30 @@
     @apply translate-y-[18px] opacity-0 duration-700 ease-ax-out;
     transition-property: opacity, transform;
   }
-
   .reveal.in {
     @apply translate-y-0 opacity-100;
   }
 
-  /* ═══ هدر بالای سایت ═══ */
+  /* ═══ Site header ═══ */
   .site-header {
     --header-h: 72px;
-    background-color: color-mix(in srgb, var(--color-ink) 78%, transparent);
-    backdrop-filter: blur(14px) saturate(140%);
+    background-color: color-mix(in srgb, var(--color-night) 62%, transparent);
+    backdrop-filter: blur(16px) saturate(150%);
+    -webkit-backdrop-filter: blur(16px) saturate(150%);
     border-bottom: 1px solid transparent;
     will-change: transform, background-color;
   }
-
   .site-header.is-scrolled {
     --header-h: 60px;
-    background-color: color-mix(in srgb, var(--color-ink) 92%, transparent);
-    border-bottom-color: var(--color-ink-line-dark);
-    box-shadow: 0 10px 30px -18px rgba(0, 0, 0, 0.7);
+    background-color: color-mix(in srgb, var(--color-night) 88%, transparent);
+    border-bottom-color: var(--color-line);
+    box-shadow: 0 10px 30px -18px rgba(0, 0, 0, 0.8);
   }
-
   .site-header.is-hidden {
     transform: translateY(calc(-1 * var(--header-h) - 2px));
   }
 
-  /* لینک‌های ناوبری — خط زیر متحرک */
+  /* Nav links — animated underline */
   .nav-link {
     position: relative;
     display: inline-flex;
@@ -182,7 +223,6 @@
     text-decoration: none;
     transition: color 220ms var(--ease-ax), background-color 220ms var(--ease-ax);
   }
-
   .nav-link::after {
     content: "";
     position: absolute;
@@ -194,112 +234,92 @@
     border-radius: 2px;
     transition: width 280ms var(--ease-ax-out);
   }
-
   .nav-link:hover,
   .nav-link.active {
-    color: var(--color-paper);
+    color: var(--color-ink);
   }
-
   .nav-link:hover::after,
   .nav-link.active::after {
     width: calc(100% - 28px);
   }
-
   .nav-link.active {
     color: var(--color-lime);
   }
 
-  .nav-link.active::after {
-    background: var(--color-lime);
-  }
-
-  /* مگامنو */
+  /* Megamenu */
   .megamenu-panel {
     display: none;
     width: 640px;
     max-width: calc(100vw - 32px);
   }
-
   .megamenu-panel.is-open {
     display: block;
   }
 
   .hero-title span:not(.text-lime-deep) {
     background-color: var(--color-lime);
-    color: var(--color-ink);
+    color: var(--color-night);
     padding: 0 0.12em;
     border-radius: 0.15em;
     box-decoration-break: clone;
     -webkit-box-decoration-break: clone;
   }
 
+  /* ═══ Carousel ═══ */
   .carousel {
     position: relative;
   }
-
   .carousel-track {
     display: flex;
     overflow: hidden;
     will-change: transform;
   }
-
   .carousel-track > * {
     transition: transform 0.35s var(--ease-ax-out);
   }
-
   .carousel-nav {
     display: flex;
     justify-content: flex-end;
     gap: 10px;
     margin-top: 20px;
   }
-
   .carousel-btn-prev,
   .carousel-btn-next {
-    @apply inline-flex h-[42px] w-[42px] items-center justify-center rounded-full border border-ink-line bg-transparent text-ink;
+    @apply inline-flex h-[42px] w-[42px] items-center justify-center rounded-full border border-line bg-transparent text-ink;
     cursor: pointer;
-    transition:
-      background-color 0.2s var(--ease-ax),
-      color 0.2s var(--ease-ax),
-      border-color 0.2s var(--ease-ax);
+    transition: background-color 0.2s var(--ease-ax), color 0.2s var(--ease-ax), border-color 0.2s var(--ease-ax);
   }
-
   .carousel-btn-prev:hover:not(:disabled),
   .carousel-btn-next:hover:not(:disabled) {
-    @apply border-ink bg-ink text-lime;
+    @apply border-lime bg-lime text-night;
   }
-
   .carousel-btn-prev:disabled,
   .carousel-btn-next:disabled {
     opacity: 0.3;
     cursor: not-allowed;
   }
-
   .carousel-dots {
     display: flex;
     justify-content: center;
     gap: 8px;
     margin-top: 24px;
   }
-
   .carousel-dots button {
     width: 8px;
     height: 8px;
     padding: 0;
     border: none;
     border-radius: 999px;
-    background: var(--color-ink-line);
+    background: var(--color-line-strong);
     cursor: pointer;
-    transition:
-      background-color 0.25s var(--ease-ax),
-      width 0.25s var(--ease-ax);
+    transition: background-color 0.25s var(--ease-ax), width 0.25s var(--ease-ax);
   }
-
   .carousel-dots button.active {
     width: 22px;
-    background: var(--color-ink);
+    background: var(--color-lime);
   }
 
+  /* ═══ HTMX top progress bar ═══ */
   .htmx-progress {
     position: fixed;
     inset-inline: 0;
@@ -310,20 +330,15 @@
     transform: scaleX(0);
     transform-origin: right;
     opacity: 0;
-    transition:
-      transform 0.25s var(--ease-ax),
-      opacity 0.2s ease;
+    transition: transform 0.25s var(--ease-ax), opacity 0.2s ease;
   }
-
   .htmx-progress.is-loading {
     opacity: 1;
     transform: scaleX(1);
-    transition:
-      transform 4s var(--ease-ax-out),
-      opacity 0.2s ease;
+    transition: transform 4s var(--ease-ax-out), opacity 0.2s ease;
   }
 
-  /* preloader */
+  /* ═══ Preloader (first visit) ═══ */
   .preloader {
     position: fixed;
     inset: 0;
@@ -331,14 +346,8 @@
     display: none;
     pointer-events: none;
   }
-
-  .preloader.is-active {
-    display: block;
-  }
-
-  .preloader.is-done {
-    display: none;
-  }
+  .preloader.is-active { display: block; }
+  .preloader.is-done { display: none; }
 
   html.preloader-lock,
   html.preloader-lock body {
@@ -351,36 +360,28 @@
     bottom: 0;
     width: 50%;
     background: var(--color-lime);
-    transition:
-      transform 0.55s cubic-bezier(0.65, 0, 0.35, 1),
-      opacity 0.55s var(--ease-ax);
+    transition: transform 0.55s cubic-bezier(0.65, 0, 0.35, 1), opacity 0.55s var(--ease-ax);
     will-change: transform, opacity;
   }
-
   .preloader__panel--left {
     left: 0;
     transform: translateX(-101%);
   }
-
   .preloader__panel--right {
     right: 0;
     transform: translateX(101%);
   }
-
   .preloader.is-covered .preloader__panel {
     transform: translateX(0);
   }
-
   .preloader.is-leaving .preloader__panel--left {
     transform: translateX(-101%);
     opacity: 0;
   }
-
   .preloader.is-leaving .preloader__panel--right {
     transform: translateX(101%);
     opacity: 0;
   }
-
   .preloader__title {
     position: absolute;
     inset: 0;
@@ -390,123 +391,95 @@
     gap: 16px;
     opacity: 0;
     transform: translateY(18px) scale(0.96);
-    transition:
-      opacity 0.4s var(--ease-ax),
-      transform 0.4s var(--ease-ax-out);
+    transition: opacity 0.4s var(--ease-ax), transform 0.4s var(--ease-ax-out);
   }
-
   .preloader.is-title-in .preloader__title {
     opacity: 1;
     transform: translateY(0) scale(1);
   }
-
   .preloader.is-title-out .preloader__title {
     opacity: 0;
     transform: translateY(-12px) scale(0.98);
   }
-
   .preloader__mark {
     width: clamp(44px, 8vw, 60px);
     height: clamp(44px, 8vw, 60px);
     display: grid;
     place-items: center;
-    background: var(--color-ink);
-    color: var(--color-paper);
+    background: var(--color-night);
+    color: var(--color-ink);
     font-family: var(--font-mono);
     font-weight: 700;
     font-size: clamp(1.1rem, 3vw, 1.5rem);
     line-height: 1;
   }
-
   .preloader__name {
     font-family: var(--font-sans);
     font-weight: 700;
     font-size: clamp(1.6rem, 6vw, 2.8rem);
     letter-spacing: -0.02em;
-    color: var(--color-ink);
+    color: var(--color-night);
   }
 
-  /* article body typography — for raw TinyMCE-authored HTML (content_html) */
+  /* ═══ Article body — dark prose for TinyMCE content ═══ */
   .post-body h2 {
     @apply mb-[0.5em] mt-[1.4em] font-display text-[clamp(1.5rem,2vw,2rem)] leading-[1.1] tracking-[-0.025em] text-ink;
   }
-
   .post-body h3 {
     @apply mb-[0.4em] mt-[1.2em] font-display text-[clamp(1.15rem,1.5vw,1.45rem)] leading-[1.2] tracking-[-0.015em] text-ink;
   }
-
   .post-body p {
     @apply mb-[1.2em] text-[1.08rem] leading-[1.75] text-ink-soft;
   }
-
   .post-body ul,
   .post-body ol {
     @apply mb-[1.2em] flex flex-col gap-2 pr-[1.4em];
   }
-
   .post-body li {
     @apply text-[1.05rem] leading-[1.65] text-ink-soft;
   }
-
   .post-body strong {
     @apply font-semibold text-ink;
   }
-
   .post-body a {
-    @apply text-ink underline decoration-ink-line underline-offset-2 hover:text-lime-deep;
+    @apply text-lime underline decoration-lime/50 underline-offset-2 hover:text-lime-deep hover:decoration-lime;
   }
-
   .post-body code {
-    @apply inline-block rounded bg-paper-deep px-[7px] py-[2px] font-mono text-[0.88em] text-ink;
+    @apply inline-block rounded bg-paper-deep px-[7px] py-[2px] font-mono text-[0.88em] text-lime;
   }
-
   .post-body pre {
-    @apply my-[1.6em] overflow-x-auto rounded-[6px] bg-ink px-7 py-6 font-mono text-[0.9rem] leading-[1.7] text-lime;
+    @apply my-[1.6em] overflow-x-auto rounded-md border border-line bg-night px-7 py-6 font-mono text-[0.9rem] leading-[1.7] text-lime;
   }
-
   .post-body pre code {
     @apply bg-transparent p-0 text-inherit;
   }
-
   .post-body blockquote {
-    @apply my-[1.6em] rounded-[6px] border-r-[3px] border-lime bg-paper-soft px-6 py-5 text-[1rem] leading-[1.65] text-ink-soft;
+    @apply my-[1.6em] rounded-md border-r-[3px] border-lime bg-paper-soft px-6 py-5 text-[1rem] leading-[1.65] text-ink-soft;
   }
-
   .post-body img {
-    @apply my-[1.6em] w-full rounded-[6px];
+    @apply my-[1.6em] w-full rounded-md border border-line;
   }
 
+  /* ═══ Misc ═══ */
   .bar {
-    @apply h-1.5 flex-1 rounded-full bg-ink-line transition-colors duration-300;
+    @apply h-1.5 flex-1 rounded-full bg-line transition-colors duration-300;
   }
-
-  .bar.active-1 {
-    @apply bg-warn;
-  }
-
-  .bar.active-2 {
-    @apply bg-lime-deep;
-  }
-
-  .bar.active-3 {
-    @apply bg-lime;
-  }
+  .bar.active-1 { @apply bg-warn; }
+  .bar.active-2 { @apply bg-lime-deep; }
+  .bar.active-3 { @apply bg-lime; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
   }
-
   .reveal {
     @apply translate-y-0 opacity-100 transition-none;
   }
-
   .preloader__panel,
   .preloader__title {
     transition-duration: 0.01ms !important;
   }
-
   *,
   *::before,
   *::after {
@@ -515,14 +488,13 @@
   }
 }
 
-/* ═══ ترنزیشن‌های hover نرم‌تر برای همه‌ی المان‌های تعاملی ═══ */
+/* ═══ Softer transitions on interactive elements + footer underline ═══ */
 @layer components {
   a, button, .svc-card, .work-card, article[class*="hover:-translate-y-1"] {
     transition-property: transform, background-color, color, border-color, box-shadow, opacity;
     transition-duration: 280ms;
     transition-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
   }
-  /* لینک‌های فوتر: خط زیر متحرک */
   footer a {
     position: relative;
   }
@@ -537,10 +509,8 @@
     transition: width 260ms cubic-bezier(0.2, 0.8, 0.2, 1);
   }
   footer a:hover::after { width: 100%; }
-  /* کارت‌ها: سایه‌ی نرم روی hover */
-  .svc-card:hover, article[class*="hover:-translate-y-1"]:hover {
-    box-shadow: 0 14px 34px rgba(14, 14, 14, 0.1);
+  .svc-card:hover,
+  article[class*="hover:-translate-y-1"]:hover {
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.5);
   }
-  /* ردیف‌های خدمات قدیمی اگر جایی ماندند */
-  .hover\:bg-paper-soft:hover { transition-duration: 280ms; }
 }

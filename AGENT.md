@@ -52,7 +52,7 @@ The current project primary is **lime `#c8ff3d`** (`--color-lime` in `input.css`
 
 - [x] 1. Repo audit + create `AGENT.md` (architecture summary, checklist, conventions)
 - [x] 2. Vendor all libraries locally (GSAP + ScrollTrigger, Three.js + needed addons, Lenis, HTMX, Alpine, Lucide, fonts) into `static/`; remove CDN links; verify the site still works — *all already local; added Lenis; no CDN links exist anywhere in the repo*
-- [ ] 3. Design tokens + global dark theme using the existing primary green (CSS variables + Tailwind config); fix every light-theme leftover
+- [x] 3. Design tokens + global dark theme using the existing primary green (CSS variables + Tailwind config); fix every light-theme leftover
 - [ ] 4. Lucide icon system (`{% icon %}` tag) + replace all HTML-entity/emoji icons + icon-name fields in models/admin
 - [ ] 5. Pixel wordmark logo (SVG) + remove the "P" icon everywhere + new favicon set/manifest + admin-replaceable logo/favicon (`SiteSettings`)
 - [ ] 6. Glass & liquid-glass utility classes/components
@@ -77,6 +77,33 @@ The current project primary is **lime `#c8ff3d`** (`--color-lime` in `input.css`
 ---
 
 ## Decisions & Notes
+
+### Design tokens (Task 3) — `static/src/input.css`
+
+| Token | Value | Role |
+| --- | --- | --- |
+| `--color-night` | `#04070a` | page base + recessed sections |
+| `--color-night-soft` | `#070b0f` | alt recessed |
+| `--color-paper` | `#0b1116` | raised surface (cards) |
+| `--color-paper-soft` | `#0f161c` | raised surface 2 |
+| `--color-paper-deep` | `#141d24` | raised surface 3 (inputs/code) |
+| `--color-ink` | `#eaf2e8` | headings |
+| `--color-ink-soft` | `#b6c2b8` | body text |
+| `--color-ink-dim` | `#7f8c82` | meta/captions |
+| `--color-mist` / `-soft` / `-dim` | `#c6d1c7` / `#9ba89d` / `#6f7c72` | muted text on dark |
+| `--color-line` | `#1e2925` | hairline border |
+| `--color-line-strong` | `#2c3a33` | stronger border |
+| `--color-lime-50…950` | `#f7ffe6` → `#203004` | primary scale (400 = `#c8ff3d` brand) |
+| `--color-lime` / `--color-lime-deep` | `#c8ff3d` / `#a3d130` | aliases for existing markup |
+| `--color-lime-soft` / `--color-lime-glow` | `rgba(200,255,61,.10)` / `rgba(200,255,61,.35)` | glass tint / glow |
+| radii | `--radius-sm 4` / `md 10` / `lg 14` / `xl 20` / `pill 999` | |
+| shadows | `--shadow-card`, `--shadow-glow` | depth + lime glow |
+| easing | `--ease-ax`, `--ease-ax-out`, `--ease-spring` | |
+
+Class renames done in templates (mechanical, script-applied): `bg-ink*` → `bg-night*`, `border-ink-line*` → `border-line*`, `text-paper` → `text-ink`, `border-paper` → `border-ink`, `from/to/via-ink` → `…-night`, `bg-white/5` → `bg-ink/5`, `theme-color` → `#04070a`. Body now `bg-night`. Header/megamenu/preloader/carousel/prose restyled for dark in `input.css`. Lime-on-lime hover states corrected to `text-night`.
+
+Verified: all pages 200, computed body bg `rgb(4,7,10)`, zero light surfaces remaining on home/about.
+
 
 - **Primary accent:** lime `#c8ff3d` (existing). Scale derived from it: 50 `#f6ffe0` … 950 `#3d5a00`, glow `rgba(200,255,61,…)`, gradient lime → `#d8ff7a` (cyan-shifted lighter).
 - **JS stack:** vanilla ES modules + GSAP/ScrollTrigger + Three.js + HTMX. **Alpine.js intentionally not added** (vanilla covers the interaction layer; one less library). Lenis added locally in Task 2 for smooth scroll.

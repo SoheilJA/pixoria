@@ -8,7 +8,7 @@
 {% block content %}
 
   <!-- ─── هیرو ─── -->
-  <section class="border-b border-ink-line px-page pb-[clamp(40px,5vw,80px)] pt-[clamp(64px,9vw,130px)]" aria-labelledby="service-title">
+  <section class="border-b border-line px-page pb-[clamp(40px,5vw,80px)] pt-[clamp(64px,9vw,130px)]" aria-labelledby="service-title">
     <p class="mb-6 font-mono text-[0.76rem] uppercase tracking-[0.12em] text-ink-dim" data-aos="fade-down">
       <a href="{% url 'home:home' %}" class="transition-colors hover:text-ink">خانه</a> ←
       <a href="{% url 'services:list' %}" class="transition-colors hover:text-ink">خدمات</a> ←
@@ -25,7 +25,7 @@
 
     <h1 id="service-title" class="mb-8 max-w-[22ch] font-display text-[clamp(2.4rem,5vw,5.6rem)] leading-[0.96] tracking-[-0.03em]" data-aos="fade-up" data-aos-delay="100">{{ service.title }}</h1>
 
-    <div class="grid grid-cols-1 items-end gap-16 border-t border-ink-line pt-8 md:grid-cols-[1.4fr_1fr]" data-aos="fade-up" data-aos-delay="200">
+    <div class="grid grid-cols-1 items-end gap-16 border-t border-line pt-8 md:grid-cols-[1.4fr_1fr]" data-aos="fade-up" data-aos-delay="200">
       <div>
         <p class="m-0 max-w-[56ch] text-[1.18rem] leading-[1.55] text-ink-soft">{{ service.excerpt }}</p>
       </div>
@@ -42,10 +42,10 @@
 
   <!-- ─── آمار ─── -->
   {% if stats %}
-  <section class="border-b border-ink-line">
+  <section class="border-b border-line">
     <div class="grid grid-cols-2 lg:grid-cols-4">
       {% for stat in stats %}
-        <div class="border-b border-l border-ink-line px-page py-[clamp(32px,4vw,56px)] text-center last:border-l-0 lg:border-b-0" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|stagger:100 }}">
+        <div class="border-b border-l border-line px-page py-[clamp(32px,4vw,56px)] text-center last:border-l-0 lg:border-b-0" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|stagger:100 }}">
           <div class="font-display text-[clamp(2.4rem,4vw,4rem)] font-semibold leading-none tracking-[-0.04em] text-ink">{{ stat.number }}</div>
           <div class="mt-2 font-mono text-[0.76rem] uppercase tracking-[0.1em] text-ink-dim">{{ stat.label }}</div>
           {% if stat.description %}<div class="mt-1.5 text-[0.88rem] text-ink-soft">{{ stat.description }}</div>{% endif %}
@@ -57,7 +57,7 @@
 
   <!-- ─── توضیحات کامل ─── -->
   {% if service.description %}
-  <div class="grid grid-cols-1 items-start gap-20 border-b border-ink-line px-page py-[clamp(56px,7vw,100px)] md:grid-cols-[1fr_1.8fr]">
+  <div class="grid grid-cols-1 items-start gap-20 border-b border-line px-page py-[clamp(56px,7vw,100px)] md:grid-cols-[1fr_1.8fr]">
     <div class="md:sticky md:top-8" data-aos="fade-up">
       <span class="eyebrow mb-3.5 block"><span class="ml-2 inline-block h-1.5 w-1.5 rounded-full bg-lime align-middle"></span>درباره این خدمت</span>
       <h2 class="font-display text-[clamp(1.8rem,2.6vw,2.6rem)] leading-[1.08] tracking-[-0.025em]">{{ service.title }} چیست؟</h2>
@@ -70,9 +70,9 @@
 
   <!-- ─── خروجی‌ها و فرآیند ─── -->
   {% if deliverables or processes %}
-  <div class="grid grid-cols-1 border-b border-ink-line md:grid-cols-2">
+  <div class="grid grid-cols-1 border-b border-line md:grid-cols-2">
     {% if deliverables %}
-    <div class="px-page py-[clamp(48px,6vw,80px)] md:border-l md:border-ink-line" data-aos="fade-up">
+    <div class="px-page py-[clamp(48px,6vw,80px)] md:border-l md:border-line" data-aos="fade-up">
       <span class="eyebrow mb-5 block"><span class="ml-2 inline-block h-1.5 w-1.5 rounded-full bg-lime align-middle"></span>چه چیزی تحویل می‌گیرید</span>
       <h3 class="mb-6 font-display text-[clamp(1.5rem,2.2vw,2rem)] leading-[1.1]">خروجی‌های معمول</h3>
       <ul class="m-0 flex list-none flex-col gap-3 p-0">
@@ -98,12 +98,12 @@
 
   <!-- ─── چرا ما ─── -->
   {% if why_us %}
-  <section class="border-b border-ink-line px-page py-[clamp(56px,7vw,100px)]">
+  <section class="border-b border-line px-page py-[clamp(56px,7vw,100px)]">
     <header class="mb-12 max-w-[880px]" data-aos="fade-up">
       <span class="eyebrow mb-6 inline-block"><span class="ml-2 inline-block h-1.5 w-1.5 rounded-full bg-lime align-middle"></span>مزیت رقابتی</span>
       <h2>چرا {{ settings.site_name }}؟</h2>
     </header>
-    <div class="grid grid-cols-1 overflow-hidden rounded-[6px] border border-ink-line bg-ink-line sm:grid-cols-2 lg:grid-cols-3" style="gap:1px">
+    <div class="grid grid-cols-1 overflow-hidden rounded-[6px] border border-line bg-line sm:grid-cols-2 lg:grid-cols-3" style="gap:1px">
       {% for item in why_us %}
         <div class="flex flex-col gap-3 bg-paper p-[clamp(28px,3vw,40px)] transition-colors hover:bg-paper-soft" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|stagger:100 }}">
           <span class="text-[1.6rem] leading-none">{{ item.icon }}</span>
@@ -117,7 +117,7 @@
 
   <!-- ─── قیمت‌گذاری ─── -->
   {% if plans %}
-  <section id="pricing" class="border-b border-ink-line px-page py-[clamp(56px,7vw,100px)]">
+  <section id="pricing" class="border-b border-line px-page py-[clamp(56px,7vw,100px)]">
     <div class="mb-14 max-w-[60ch]" data-aos="fade-up">
       <span class="eyebrow mb-6 inline-block"><span class="ml-2 inline-block h-1.5 w-1.5 rounded-full bg-lime align-middle"></span>قیمت‌گذاری شفاف</span>
       <h2 class="mb-4 font-display text-[clamp(1.8rem,2.8vw,2.8rem)]">پلن مناسب خودتان را انتخاب کنید.</h2>
@@ -126,7 +126,7 @@
     <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
       {% for plan in plans %}
         {% if plan.is_featured %}
-        <article class="relative flex flex-col gap-5 rounded-[6px] border border-ink bg-ink p-7" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|stagger:100 }}">
+        <article class="relative flex flex-col gap-5 rounded-[6px] border border-night bg-night p-7" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|stagger:100 }}">
           <span class="absolute -top-3 right-5 rounded-full bg-lime px-3 py-1 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.12em] text-ink">پیشنهادی</span>
           <div>
             <span class="mb-2.5 block font-mono text-[0.74rem] uppercase tracking-[0.14em] text-mist-dim">{{ plan.name }}</span>
@@ -137,7 +137,7 @@
             </div>
             {% if plan.discount_label %}<div class="mt-1.5 font-mono text-[0.72rem] text-lime">{{ plan.discount_label }}</div>{% endif %}
           </div>
-          <div class="h-px bg-ink-line-dark"></div>
+          <div class="h-px bg-line-strong"></div>
           <ul class="m-0 flex flex-1 list-none flex-col gap-2 p-0">
             {% for feature in plan.features.all %}
               {% if feature.included %}
@@ -150,7 +150,7 @@
           <a class="btn btn-lime text-[0.9rem]" href="{% url 'contact:contact' %}">شروع کنید <span>←</span></a>
         </article>
         {% else %}
-        <article class="flex flex-col gap-5 rounded-[6px] border border-ink-line p-7 transition-[border-color,box-shadow] hover:border-ink hover:shadow-[0_4px_24px_rgba(0,0,0,0.08)]" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|stagger:100 }}">
+        <article class="flex flex-col gap-5 rounded-[6px] border border-line p-7 transition-[border-color,box-shadow] hover:border-night hover:shadow-[0_4px_24px_rgba(0,0,0,0.08)]" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|stagger:100 }}">
           <div>
             <span class="mb-2.5 block font-mono text-[0.74rem] uppercase tracking-[0.14em] text-ink-dim">{{ plan.name }}</span>
             <div class="flex flex-wrap items-baseline gap-1.5">
@@ -160,7 +160,7 @@
             </div>
             {% if plan.discount_label %}<div class="mt-1.5 font-mono text-[0.72rem] text-lime-deep">{{ plan.discount_label }}</div>{% endif %}
           </div>
-          <div class="h-px bg-ink-line"></div>
+          <div class="h-px bg-line"></div>
           <ul class="m-0 flex flex-1 list-none flex-col gap-2 p-0">
             {% for feature in plan.features.all %}
               {% if feature.included %}
@@ -177,14 +177,14 @@
     </div>
 
     {% if custom_items %}
-    <div class="mt-6 rounded-[6px] border border-ink-line p-[clamp(28px,3vw,40px)]" data-aos="fade-up">
+    <div class="mt-6 rounded-[6px] border border-line p-[clamp(28px,3vw,40px)]" data-aos="fade-up">
       <div class="mb-8 grid grid-cols-1 items-start gap-8 lg:grid-cols-[1fr_auto]">
         <div>
           <span class="eyebrow mb-4 inline-block"><span class="ml-2 inline-block h-1.5 w-1.5 rounded-full bg-lime align-middle"></span>پلن دلخواه</span>
           <h2 class="mb-3 font-display text-[clamp(1.5rem,2.4vw,2.2rem)]">فقط چیزی که نیاز دارید.</h2>
           <p class="max-w-[56ch] text-[0.98rem] text-ink-soft">آیتم‌های موردنظر را انتخاب کنید — قیمت نهایی به‌صورت خودکار محاسبه می‌شود.</p>
         </div>
-        <div class="flex items-baseline gap-2.5 rounded-[6px] bg-ink px-6 py-5 text-paper">
+        <div class="flex items-baseline gap-2.5 rounded-[6px] bg-night px-6 py-5 text-ink">
           <span class="font-mono text-[0.72rem] uppercase tracking-[0.1em] text-mist-dim">مجموع تخمینی</span>
           <span class="font-display text-[clamp(1.8rem,2.6vw,2.6rem)] font-semibold leading-none text-lime" id="custom-total-amount">۰</span>
           <span class="font-mono text-[0.74rem] text-mist-dim">میلیون تومان</span>
@@ -192,7 +192,7 @@
       </div>
       <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
         {% for item in custom_items %}
-          <label class="custom-item flex cursor-pointer items-center justify-between gap-4 rounded-[6px] border border-ink-line px-5 py-4 transition-[border-color,background-color] hover:border-ink has-[:checked]:border-ink has-[:checked]:bg-paper-soft" for="ci-{{ item.id }}"
+          <label class="custom-item flex cursor-pointer items-center justify-between gap-4 rounded-[6px] border border-line px-5 py-4 transition-[border-color,background-color] hover:border-night has-[:checked]:border-night has-[:checked]:bg-paper-soft" for="ci-{{ item.id }}"
                  data-aos="fade-up" data-aos-delay="{{ forloop.counter0|stagger:60 }}">
             <span class="flex items-center gap-3.5">
               <input type="checkbox" id="ci-{{ item.id }}" data-price="{{ item.price }}" class="h-4 w-4 shrink-0 accent-[#a3d130]" />
@@ -205,7 +205,7 @@
           </label>
         {% endfor %}
       </div>
-      <div class="mt-8 flex flex-col items-start justify-between gap-5 border-t border-ink-line pt-6 sm:flex-row sm:items-center" data-aos="fade-up">
+      <div class="mt-8 flex flex-col items-start justify-between gap-5 border-t border-line pt-6 sm:flex-row sm:items-center" data-aos="fade-up">
         <p class="m-0 text-[0.88rem] text-ink-dim">قیمت‌ها تخمینی هستند. برآورد دقیق بعد از جلسه اولیه ارائه می‌شود.</p>
         <a class="btn btn-ink" href="{% url 'contact:contact' %}">
           درخواست مشاوره <span>←</span>
@@ -218,17 +218,17 @@
 
   <!-- ─── نظرات مشتریان ─── -->
   {% if testimonials %}
-  <section class="border-b border-ink-line px-page py-[clamp(56px,7vw,100px)]">
+  <section class="border-b border-line px-page py-[clamp(56px,7vw,100px)]">
     <header class="mb-12" data-aos="fade-up">
       <span class="eyebrow mb-6 inline-block"><span class="ml-2 inline-block h-1.5 w-1.5 rounded-full bg-lime align-middle"></span>نظرات مشتریان</span>
       <h2>آن‌ها تجربه‌شان را گفتند.</h2>
     </header>
     <div class="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
       {% for t in testimonials %}
-        <article class="flex flex-col gap-4 rounded-[6px] border border-ink-line p-7" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|stagger:100 }}">
+        <article class="flex flex-col gap-4 rounded-[6px] border border-line p-7" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|stagger:100 }}">
           <div class="font-mono text-[0.85rem] tracking-[0.2em] text-lime-deep">★★★★★</div>
           <blockquote class="m-0 flex-1 text-[1rem] leading-[1.7] text-ink-soft">{{ t.text }}</blockquote>
-          <footer class="flex items-center gap-3.5 border-t border-ink-line pt-4">
+          <footer class="flex items-center gap-3.5 border-t border-line pt-4">
             {% if t.author_image %}
             <img src="{{ t.author_image.url }}" alt="{{ t.author_name }}" loading="lazy" class="h-10 w-10 rounded-full object-cover" />
             {% endif %}
@@ -245,7 +245,7 @@
 
   <!-- ─── سوالات متداول ─── -->
   {% if faqs %}
-  <section class="border-b border-ink-line px-page py-[clamp(56px,7vw,100px)]">
+  <section class="border-b border-line px-page py-[clamp(56px,7vw,100px)]">
     <div class="grid grid-cols-1 items-start gap-20 lg:grid-cols-[1fr_2fr]">
       <div class="lg:sticky lg:top-8" data-aos="fade-up">
         <span class="eyebrow mb-6 inline-block"><span class="ml-2 inline-block h-1.5 w-1.5 rounded-full bg-lime align-middle"></span>سوالات متداول</span>
@@ -253,7 +253,7 @@
       </div>
       <div>
         {% for faq in faqs %}
-          <details class="group border-t border-ink-line last:border-b" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|stagger:50 }}">
+          <details class="group border-t border-line last:border-b" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|stagger:50 }}">
             <summary class="flex cursor-pointer list-none items-center justify-between gap-6 py-6">
               <h3 class="m-0 text-[1.1rem] font-medium leading-[1.3] text-ink">{{ faq.question }}</h3>
               <span class="shrink-0 font-mono text-[1.4rem] font-light text-ink-dim transition-transform duration-300 group-open:rotate-45">+</span>
@@ -275,7 +275,7 @@
     </header>
     <div>
       {% for s in other_services %}
-        <a href="{% url 'services:detail' s.slug %}" class="group grid grid-cols-1 items-start gap-2 border-b border-ink-line py-7 transition-colors duration-300 hover:bg-paper-soft md:grid-cols-[80px_1fr_1.4fr_auto] md:gap-8 md:py-9"
+        <a href="{% url 'services:detail' s.slug %}" class="group grid grid-cols-1 items-start gap-2 border-b border-line py-7 transition-colors duration-300 hover:bg-paper-soft md:grid-cols-[80px_1fr_1.4fr_auto] md:gap-8 md:py-9"
            data-aos="fade-up" data-aos-delay="{{ forloop.counter0|stagger:50 }}">
           <span class="font-mono text-[0.8rem] text-ink-dim">{{ forloop.counter|stringformat:'02d' }}</span>
           <h3 class="m-0 font-display text-[clamp(1.3rem,2vw,1.8rem)] text-ink">{{ s.title }}</h3>

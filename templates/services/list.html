@@ -8,7 +8,7 @@
 {% endblock %}
 
 {% block content %}
-  <section class="border-b border-ink-line px-page pb-[clamp(40px,5vw,80px)] pt-[clamp(64px,9vw,130px)]" aria-labelledby="services-head" data-aos="fade-up">
+  <section class="border-b border-line px-page pb-[clamp(40px,5vw,80px)] pt-[clamp(64px,9vw,130px)]" aria-labelledby="services-head" data-aos="fade-up">
     <p class="mb-4 font-mono text-[0.74rem] text-ink-dim" data-aos="fade-down">
       خانه ← <span class="text-ink">خدمات</span>
     </p>
@@ -27,7 +27,7 @@
   <section class="px-page pt-8 md:pt-16" aria-label="فهرست خدمات">
     {% for item in services_with_delay %}
       {% with service=item.service delay=item.delay %}
-        <article class="grid grid-cols-1 items-start gap-8 border-b border-ink-line py-10 md:grid-cols-[80px_1fr_1.4fr_auto] md:gap-8 md:py-14" data-aos="fade-up" data-aos-duration="500" data-aos-delay="{{ delay }}" data-aos-anchor-placement="top-bottom">
+        <article class="grid grid-cols-1 items-start gap-8 border-b border-line py-10 md:grid-cols-[80px_1fr_1.4fr_auto] md:gap-8 md:py-14" data-aos="fade-up" data-aos-duration="500" data-aos-delay="{{ delay }}" data-aos-anchor-placement="top-bottom">
           <span class="font-mono text-[0.84rem] text-ink-dim">{{ forloop.counter|stringformat:'02d' }} / {{ services|length|stringformat:'02d' }}</span>
           <div>
             <h2 class="mb-3.5 text-[clamp(1.6rem,2.4vw,2.4rem)]"><a href="{% url 'services:detail' service.slug %}" class="text-ink hover:text-ink-soft">{{ service.title }}</a></h2>

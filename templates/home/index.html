@@ -10,7 +10,7 @@
 {% block content %}
   <!-- ═══ HERO ═══ -->
   <section
-    class="relative flex min-h-screen flex-col overflow-hidden bg-ink px-page pb-[clamp(32px,5vw,64px)] pt-[clamp(56px,9vw,120px)] text-paper"
+    class="relative flex min-h-screen flex-col overflow-hidden bg-night px-page pb-[clamp(32px,5vw,64px)] pt-[clamp(56px,9vw,120px)] text-ink"
     aria-label="معرفی برند">
 
     <!-- درخشش لایم پشت سیاره -->
@@ -20,9 +20,9 @@
 
     <!-- ردیف بالایی: دو سر هواده -->
     <div
-      class="relative z-10 hidden items-center justify-between gap-6 border-b border-paper/15 pb-5 font-mono text-[0.72rem] uppercase tracking-[0.12em] text-paper/60 lg:flex">
+      class="relative z-10 hidden items-center justify-between gap-6 border-b border-ink/15 pb-5 font-mono text-[0.72rem] uppercase tracking-[0.12em] text-ink/60 lg:flex">
       <span>{{ settings.site_name }} — استودیوی مستقل · از {{ settings.established_year }}</span>
-      <span class="inline-flex items-center gap-2 rounded-full border border-lime/40 px-3 py-1.5 normal-case tracking-[0.06em] text-paper">
+      <span class="inline-flex items-center gap-2 rounded-full border border-lime/40 px-3 py-1.5 normal-case tracking-[0.06em] text-ink">
         <span class="h-1.5 w-1.5 animate-pulse rounded-full bg-lime"></span>{{ settings.status|default:'ظرفیت همکاری آزاد' }}
       </span>
     </div>
@@ -32,13 +32,13 @@
       <span class="mb-[clamp(18px,2vw,28px)] inline-flex items-center gap-2.5 font-mono text-[0.78rem] uppercase tracking-[0.14em] text-lime">
         <span class="h-px w-8 bg-lime/60"></span>برندینگ · دیجیتال · محصول
       </span>
-      <h1 class="hero-title max-w-[15ch] text-hero font-medium leading-[0.95] tracking-[-0.035em] text-paper">
+      <h1 class="hero-title max-w-[15ch] text-hero font-medium leading-[0.95] tracking-[-0.035em] text-ink">
         {{ hero.title|safe }}<span class="text-lime">.</span>
       </h1>
 
       <div
         class="home-hero-grid mt-[clamp(28px,3.4vw,48px)] grid max-w-[640px] grid-cols-1 gap-[clamp(20px,2.4vw,32px)]">
-        <p class="m-0 max-w-[46ch] text-[1.12rem] leading-[1.6] text-paper/70">{{ hero.description|safe }}</p>
+        <p class="m-0 max-w-[46ch] text-[1.12rem] leading-[1.6] text-ink/70">{{ hero.description|safe }}</p>
         <div class="home-hero-cta flex flex-wrap gap-3.5">
           <a href="{% url 'contact:contact' %}" class="btn btn-lime group">شروع پروژه
             <span class="arrow transition-transform duration-[250ms] ease-ax group-hover:translate-y-1">↓</span></a>
@@ -50,7 +50,7 @@
 
     <!-- مارکی خدمات: تیکر آرام و ظریف روی تم تیره -->
     <div
-      class="home-marquee relative z-10 flex gap-8 overflow-hidden whitespace-nowrap border-t border-paper/15 pt-5 font-mono text-[0.86rem] uppercase tracking-[0.14em] text-paper/55">
+      class="home-marquee relative z-10 flex gap-8 overflow-hidden whitespace-nowrap border-t border-ink/15 pt-5 font-mono text-[0.86rem] uppercase tracking-[0.14em] text-ink/55">
       <div class="flex animate-marq gap-8">
         {% for item in hero_marquee %}
           <span class="flex items-center gap-8">{{ item.text }} <span class="text-[0.8em] text-lime">✦</span></span>
@@ -75,7 +75,7 @@
       <div class="carousel-track">
         {% for work in featured_works %}
           <article
-            class="group flex flex-col overflow-hidden rounded-md border border-ink-line bg-paper transition-[transform,border-color] duration-300 ease-ax hover:-translate-y-1 hover:border-ink"
+            class="group flex flex-col overflow-hidden rounded-md border border-line bg-paper transition-[transform,border-color] duration-300 ease-ax hover:-translate-y-1 hover:border-night"
             data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
             <a href="{% url 'portfolio:detail' work.slug %}" class="block aspect-[4/3] overflow-hidden bg-paper-soft">
               <img src="{{ work.image.url }}" alt="{{ work.title }}" loading="lazy"
@@ -100,34 +100,34 @@
   </section>
 
   <!-- ═══ خدمات ═══ -->
-  <section class="relative overflow-hidden bg-ink px-page py-[clamp(64px,12vw,100px)] text-paper md:py-section" aria-labelledby="services-head">
+  <section class="relative overflow-hidden bg-night px-page py-[clamp(64px,12vw,100px)] text-ink md:py-section" aria-labelledby="services-head">
     <div class="pointer-events-none absolute -left-40 top-[-20%] h-[420px] w-[420px] rounded-full bg-lime/10 blur-[120px]" aria-hidden="true"></div>
     <div class="pointer-events-none absolute -right-32 bottom-[-30%] h-[380px] w-[380px] rounded-full bg-lime/5 blur-[100px]" aria-hidden="true"></div>
 
     <div class="relative mb-16 max-w-[880px]" data-aos="fade-up">
       <span class="eyebrow mb-6 inline-block !text-mist">حوزه‌های کاری<span
         class="ml-2 inline-block h-1.5 w-1.5 rounded-full bg-lime align-[2px]"></span></span>
-      <h2 id="services-head" class="mb-[18px] !text-paper">{{ services_section.title|safe }}</h2>
+      <h2 id="services-head" class="mb-[18px] !text-ink">{{ services_section.title|safe }}</h2>
       <p class="m-0 max-w-[60ch] text-[1.15rem] leading-[1.5] text-mist">{{ services_section.description|safe }}</p>
     </div>
 
-    <div class="relative grid grid-cols-1 gap-px overflow-hidden rounded-md border border-ink-line-dark bg-ink-line-dark sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 [&>*:nth-last-child(1)]:xl:col-span-1">
+    <div class="relative grid grid-cols-1 gap-px overflow-hidden rounded-md border border-line-strong bg-line-strong sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 [&>*:nth-last-child(1)]:xl:col-span-1">
       {% for item in services_with_delay %}
         {% with service=item.service %}
           <a href="{% url 'services:detail' service.slug %}"
-            class="svc-card group relative flex h-full min-h-[240px] flex-col gap-5 bg-ink p-[30px] transition-colors duration-300 hover:bg-[#161616]"
+            class="svc-card group relative flex h-full min-h-[240px] flex-col gap-5 bg-night p-[30px] transition-colors duration-300 hover:bg-[#161616]"
             data-aos="fade-up" data-aos-delay="{{ item.delay }}">
             <span class="absolute inset-x-0 top-0 h-[3px] origin-right scale-x-0 bg-lime transition-transform duration-500 ease-ax-out group-hover:scale-x-100" aria-hidden="true"></span>
             <div class="flex items-start justify-between gap-4">
               <span class="font-mono text-[0.8rem] tracking-[0.06em] text-mist-dim">/{{ forloop.counter|stringformat:'02d' }}</span>
-              <span class="grid h-10 w-10 place-items-center rounded-full border border-ink-line-dark text-[1.1rem] text-paper transition-all duration-300 ease-ax group-hover:border-lime group-hover:bg-lime group-hover:text-ink group-hover:rotate-45">↖</span>
+              <span class="grid h-10 w-10 place-items-center rounded-full border border-line-strong text-[1.1rem] text-ink transition-all duration-300 ease-ax group-hover:border-lime group-hover:bg-lime group-hover:text-night group-hover:rotate-45">↖</span>
             </div>
-            <h3 class="text-[clamp(1.35rem,2vw,1.8rem)] leading-[1.05] tracking-[-0.02em] !text-paper">{{ service.title }}</h3>
+            <h3 class="text-[clamp(1.35rem,2vw,1.8rem)] leading-[1.05] tracking-[-0.02em] !text-ink">{{ service.title }}</h3>
             <p class="m-0 max-w-[50ch] text-[0.98rem] leading-[1.6] text-mist">{{ service.excerpt }}</p>
             {% if service.get_tags_list %}
               <div class="mt-auto flex flex-wrap gap-1.5 pt-2">
                 {% for tag in service.get_tags_list %}
-                  <span class="rounded-full border border-ink-line-dark px-2.5 py-1 font-mono text-[0.72rem] text-mist-soft transition-colors duration-300 group-hover:border-lime-deep group-hover:text-lime">{{ tag }}</span>
+                  <span class="rounded-full border border-line-strong px-2.5 py-1 font-mono text-[0.72rem] text-mist-soft transition-colors duration-300 group-hover:border-lime-deep group-hover:text-lime">{{ tag }}</span>
                 {% endfor %}
               </div>
             {% endif %}
@@ -141,7 +141,7 @@
 
   <!-- ═══ مشتری‌ها ═══ -->
   {% if clients %}
-    <div class="overflow-hidden whitespace-nowrap border-y border-ink-line bg-paper-soft py-[30px]" aria-label="مشتریان منتخب" data-aos="fade-in">
+    <div class="overflow-hidden whitespace-nowrap border-y border-line bg-paper-soft py-[30px]" aria-label="مشتریان منتخب" data-aos="fade-in">
       <div
         class="inline-flex animate-marq-slow gap-20 font-display text-[clamp(1.5rem,2.2vw,2.4rem)] font-medium text-ink-dim hover:[animation-play-state:paused]">
         {% for client in clients %}
@@ -156,18 +156,18 @@
 
   <!-- ═══ مانیفست ═══ -->
   {% if manifesto %}
-    <section class="bg-ink px-page py-[clamp(80px,9vw,140px)] text-paper" aria-labelledby="manifesto-head">
+    <section class="bg-night px-page py-[clamp(80px,9vw,140px)] text-ink" aria-labelledby="manifesto-head">
       <div class="grid grid-cols-1 items-start gap-10 md:grid-cols-[1fr_2fr] lg:gap-20">
         <span class="font-mono text-[0.78rem] uppercase tracking-[0.14em] text-lime" data-aos="fade-up">{{ manifesto.label }}</span>
         <div data-aos="fade-up" data-aos-delay="100">
           <h2 id="manifesto-head"
-            class="max-w-[22ch] text-[clamp(2rem,3.4vw,3.4rem)] font-normal leading-[1.06] tracking-[-0.02em] text-paper">
+            class="max-w-[22ch] text-[clamp(2rem,3.4vw,3.4rem)] font-normal leading-[1.06] tracking-[-0.02em] text-ink">
             {{ manifesto.title }} <span class="font-display italic text-lime">{{ manifesto.highlighted_word }}</span>.
           </h2>
           <p class="mt-5 max-w-[56ch] text-[1.1rem] text-mist">{{ manifesto.paragraph_one }}</p>
           <p class="max-w-[56ch] text-[1.1rem] text-mist">{{ manifesto.paragraph_two }}</p>
           <div
-            class="mt-12 grid grid-cols-[auto_1fr_auto] items-center gap-6 border-t border-ink-line-dark pt-6 font-mono text-[0.8rem] uppercase tracking-[0.08em] text-mist-dim">
+            class="mt-12 grid grid-cols-[auto_1fr_auto] items-center gap-6 border-t border-line-strong pt-6 font-mono text-[0.8rem] uppercase tracking-[0.08em] text-mist-dim">
             <span>{{ manifesto.signature_name }}</span><span class="text-center">{{ manifesto.signature_title }}</span><span>۱۳۹۸ —
               امروز</span>
           </div>
@@ -187,18 +187,18 @@
         <div class="carousel-track">
           {% for t in testimonials %}
             <article
-              class="flex flex-col gap-4 rounded-md border border-ink-line bg-paper p-[26px] transition-[transform,border-color] duration-300 ease-ax hover:-translate-y-1 hover:border-ink"
+              class="flex flex-col gap-4 rounded-md border border-line bg-paper p-[26px] transition-[transform,border-color] duration-300 ease-ax hover:-translate-y-1 hover:border-night"
               data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
               <div class="flex items-center justify-between">
                 <div class="flex gap-0.5 text-lime" aria-label="۵ ستاره">★★★★★</div>
                 <span class="font-mono text-[0.72rem] text-ink-dim">{{ forloop.counter|stringformat:'02d' }}</span>
               </div>
               <blockquote class="m-0 text-[1.05rem] leading-[1.7] text-ink">{{ t.text }}</blockquote>
-              <div class="mt-auto flex items-center gap-3 border-t border-ink-line pt-4">
+              <div class="mt-auto flex items-center gap-3 border-t border-line pt-4">
                 {% if t.author_image %}
                   <img src="{{ t.author_image.url }}" alt="{{ t.author_name }}" loading="lazy" class="h-10 w-10 rounded-full object-cover" />
                 {% else %}
-                  <span class="grid h-10 w-10 place-items-center rounded-full bg-ink font-mono text-[0.8rem] font-semibold text-lime">{{ t.author_name|slice:":1" }}</span>
+                  <span class="grid h-10 w-10 place-items-center rounded-full bg-night font-mono text-[0.8rem] font-semibold text-lime">{{ t.author_name|slice:":1" }}</span>
                 {% endif %}
                 <div>
                   <span class="block text-[0.95rem] text-ink">{{ t.author_name }}</span>
@@ -224,7 +224,7 @@
       <div class="carousel" id="latest-articles-carousel">
         <div class="carousel-track">
           {% for article in latest_articles %}
-            <article class="group flex flex-col overflow-hidden rounded-md border border-ink-line bg-paper" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
+            <article class="group flex flex-col overflow-hidden rounded-md border border-line bg-paper" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
               <a href="{% url 'blog:detail' article.slug %}" class="block aspect-[4/3] overflow-hidden bg-paper-soft"><img src="{{ article.cover_image.url }}" alt="{{ article.cover_image_alt }}" loading="lazy" class="h-full w-full object-cover transition duration-500 group-hover:scale-105" /></a>
               <div class="flex flex-1 flex-col gap-2.5 p-[22px]">
                 <div class="flex flex-wrap gap-2 font-mono text-[0.72rem] text-ink-dim">

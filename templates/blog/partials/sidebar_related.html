@@ -1,7 +1,7 @@
 {% comment %}sidebar: related articles from same category{% endcomment %}
 {% if related_articles %}
-  <div class="rounded-[6px] border border-ink-line p-6" data-aos="fade-up" data-aos-delay="200" data-aos-duration="700">
-    <div class="mb-4 border-b border-ink-line pb-3 font-mono text-[0.72rem] uppercase tracking-[0.14em] text-ink-dim">مقالات مرتبط</div>
+  <div class="rounded-[6px] border border-line p-6" data-aos="fade-up" data-aos-delay="200" data-aos-duration="700">
+    <div class="mb-4 border-b border-line pb-3 font-mono text-[0.72rem] uppercase tracking-[0.14em] text-ink-dim">مقالات مرتبط</div>
     <div class="flex flex-col gap-4">
       {% for rel in related_articles %}
         <a href="{% url 'blog:detail' rel.slug %}" class="group flex items-start gap-3.5" title="{{ rel.title }}">

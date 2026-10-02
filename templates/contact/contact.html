@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <meta name="theme-color" content="#0e0e0e" />
+    <meta name="theme-color" content="#04070a" />
     <title>تماس با ما — {{ settings.site_name }}</title>
     <meta name="description" content="{{ page_section.description }}" />
     <link rel="stylesheet" href="{% static 'fonts/font_urls.css' %}" />
@@ -12,9 +12,9 @@
   </head>
   <body>
     <div class="grid min-h-screen grid-cols-1 md:grid-cols-[200px_minmax(0,1fr)] lg:grid-cols-[240px_minmax(0,1fr)]">
-      <aside class="sticky top-0 z-40 hidden h-screen flex-col border-l border-ink-line bg-paper px-6 py-7 md:flex" aria-label="Primary">
+      <aside class="sticky top-0 z-40 hidden h-screen flex-col border-l border-line bg-paper px-6 py-7 md:flex" aria-label="Primary">
         <a href="{% url 'home:home' %}" class="group flex items-center gap-2.5 font-display text-[1.4rem] font-semibold text-ink">
-          <span class="grid h-8 w-8 place-items-center rounded-sm bg-ink font-mono text-[0.78rem] font-semibold text-lime transition-colors duration-300 group-hover:bg-lime group-hover:text-ink">P</span>
+          <span class="grid h-8 w-8 place-items-center rounded-sm bg-night font-mono text-[0.78rem] font-semibold text-lime transition-colors duration-300 group-hover:bg-lime group-hover:text-night">P</span>
           <span class="leading-none">{{ settings.site_name|default:'پیکسوریا' }}</span>
         </a>
         <small class="mt-2.5 block border-r-2 border-lime pr-3 font-mono text-[0.78rem] font-normal leading-[1.6] text-ink-dim">{{ settings.site_description }}</small>
@@ -26,7 +26,7 @@
           <a href="{% url 'core:about' %}" class="group/nav flex items-center gap-3.5 rounded-sm border-r-2 border-transparent px-2 py-2.5 text-ink-soft transition-colors duration-300 hover:bg-paper-soft hover:text-ink"><span class="text-[0.7rem] text-ink-dim transition-colors group-hover/nav:text-lime-deep">05</span>درباره ما</a>
           <a href="{% url 'contact:contact' %}" class="group/nav active flex items-center gap-3.5 rounded-sm border-r-2 border-lime px-2 py-2.5 text-ink" aria-current="page"><span class="text-[0.7rem] text-lime">06</span>تماس با ما</a>
         </nav>
-        <a href="mailto:{{ settings.email }}" class="mt-8 inline-flex items-center justify-center gap-2 rounded-sm bg-lime px-4 py-3 font-mono text-[0.8rem] font-medium text-ink transition-colors duration-300 hover:bg-ink hover:text-lime">شروع پروژه <span aria-hidden="true">←</span></a>
+        <a href="mailto:{{ settings.email }}" class="mt-8 inline-flex items-center justify-center gap-2 rounded-sm bg-lime px-4 py-3 font-mono text-[0.8rem] font-medium text-ink transition-colors duration-300 hover:bg-night hover:text-lime">شروع پروژه <span aria-hidden="true">←</span></a>
         <div class="mt-auto flex flex-col gap-4 font-mono text-[0.72rem] text-ink-dim">
           <span class="inline-flex w-fit items-center gap-2 rounded-full border border-lime-deep/60 bg-lime/10 px-3 py-1.5 text-ink"><span class="h-1.5 w-1.5 animate-pulse rounded-full bg-lime-deep"></span>{{ settings.status|default:'آماده همکاری' }}</span>
           <div class="flex justify-between">
@@ -37,27 +37,27 @@
               <a href="{{ social.url }}" target="_blank" rel="noopener noreferrer" class="transition-colors hover:text-lime-deep">{{ social.name }}</a>
             {% endfor %}
           </div>
-          <div class="flex justify-between border-t border-ink-line pt-4">
+          <div class="flex justify-between border-t border-line pt-4">
             <span>ایران</span><span class="text-lime-deep">آنلاین</span>
           </div>
         </div>
       </aside>
 
       <div class="min-w-0">
-        <header class="mobile-header fixed inset-x-0 top-0 z-50 flex items-center justify-between border-b border-ink-line bg-paper px-page py-3 md:hidden">
-          <a href="{% url 'home:home' %}" class="flex items-center gap-2 font-display font-semibold text-ink"><span class="grid h-[28px] w-[28px] place-items-center rounded-sm bg-ink font-mono text-[0.78rem] font-semibold leading-none text-lime">P</span>{{ settings.site_name|default:'پیکسوریا' }}</a>
-          <button class="menu-toggle inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-sm bg-ink text-lime" aria-label="باز کردن منو" aria-controls="mobile-nav" aria-expanded="false"><i data-lucide="menu" class="h-6 w-6"></i></button>
+        <header class="mobile-header fixed inset-x-0 top-0 z-50 flex items-center justify-between border-b border-line bg-paper px-page py-3 md:hidden">
+          <a href="{% url 'home:home' %}" class="flex items-center gap-2 font-display font-semibold text-ink"><span class="grid h-[28px] w-[28px] place-items-center rounded-sm bg-night font-mono text-[0.78rem] font-semibold leading-none text-lime">P</span>{{ settings.site_name|default:'پیکسوریا' }}</a>
+          <button class="menu-toggle inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-sm bg-night text-lime" aria-label="باز کردن منو" aria-controls="mobile-nav" aria-expanded="false"><i data-lucide="menu" class="h-6 w-6"></i></button>
         </header>
-        <nav id="mobile-nav" class="mobile-nav fixed inset-0 z-[60] hidden flex-col gap-1 bg-ink px-page pb-8 pt-24 font-display text-[2rem] text-paper [&.open]:flex" aria-label="Mobile">
+        <nav id="mobile-nav" class="mobile-nav fixed inset-0 z-[60] hidden flex-col gap-1 bg-night px-page pb-8 pt-24 font-display text-[2rem] text-ink [&.open]:flex" aria-label="Mobile">
           <button class="mobile-close absolute left-[18px] top-[18px] inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-sm bg-lime text-ink" aria-label="بستن منو"><i data-lucide="x" class="h-6 w-6"></i></button>
-          <a href="{% url 'home:home' %}" class="flex items-center gap-4 border-b border-ink-soft py-3.5 hover:text-lime"><i data-lucide="home" class="h-6 w-6 opacity-70"></i>خانه</a>
-          <a href="{% url 'portfolio:list' %}" class="flex items-center gap-4 border-b border-ink-soft py-3.5 hover:text-lime"><i data-lucide="layout-grid" class="h-6 w-6 opacity-70"></i>نمونه کار ها</a>
-          <a href="{% url 'services:list' %}" class="flex items-center gap-4 border-b border-ink-soft py-3.5 hover:text-lime"><i data-lucide="layers" class="h-6 w-6 opacity-70"></i>خدمات</a>
-          <a href="{% url 'blog:list' %}" class="flex items-center gap-4 border-b border-ink-soft py-3.5 hover:text-lime"><i data-lucide="newspaper" class="h-6 w-6 opacity-70"></i>بلاگ</a>
-          <a href="{% url 'core:about' %}" class="flex items-center gap-4 border-b border-ink-soft py-3.5 hover:text-lime"><i data-lucide="users" class="h-6 w-6 opacity-70"></i>درباره ما</a>
-          <a href="{% url 'contact:contact' %}" class="flex items-center gap-4 border-b border-ink-soft py-3.5 text-lime"><i data-lucide="mail" class="h-6 w-6 opacity-70"></i>تماس با ما</a>
-          <div class="mt-auto space-y-4 pt-6 border-t border-ink-soft">
-            <a href="{% url 'contact:contact' %}" class="inline-flex w-full items-center justify-center gap-2 rounded-sm bg-lime px-4 py-3.5 font-mono text-[0.8rem] font-medium text-ink transition-colors duration-300 hover:bg-ink hover:text-lime"><i data-lucide="arrow-up-left" class="h-4 w-4"></i>شروع پروژه</a>
+          <a href="{% url 'home:home' %}" class="flex items-center gap-4 border-b border-night-soft py-3.5 hover:text-lime"><i data-lucide="home" class="h-6 w-6 opacity-70"></i>خانه</a>
+          <a href="{% url 'portfolio:list' %}" class="flex items-center gap-4 border-b border-night-soft py-3.5 hover:text-lime"><i data-lucide="layout-grid" class="h-6 w-6 opacity-70"></i>نمونه کار ها</a>
+          <a href="{% url 'services:list' %}" class="flex items-center gap-4 border-b border-night-soft py-3.5 hover:text-lime"><i data-lucide="layers" class="h-6 w-6 opacity-70"></i>خدمات</a>
+          <a href="{% url 'blog:list' %}" class="flex items-center gap-4 border-b border-night-soft py-3.5 hover:text-lime"><i data-lucide="newspaper" class="h-6 w-6 opacity-70"></i>بلاگ</a>
+          <a href="{% url 'core:about' %}" class="flex items-center gap-4 border-b border-night-soft py-3.5 hover:text-lime"><i data-lucide="users" class="h-6 w-6 opacity-70"></i>درباره ما</a>
+          <a href="{% url 'contact:contact' %}" class="flex items-center gap-4 border-b border-night-soft py-3.5 text-lime"><i data-lucide="mail" class="h-6 w-6 opacity-70"></i>تماس با ما</a>
+          <div class="mt-auto space-y-4 pt-6 border-t border-night-soft">
+            <a href="{% url 'contact:contact' %}" class="inline-flex w-full items-center justify-center gap-2 rounded-sm bg-lime px-4 py-3.5 font-mono text-[0.8rem] font-medium text-ink transition-colors duration-300 hover:bg-night hover:text-lime"><i data-lucide="arrow-up-left" class="h-4 w-4"></i>شروع پروژه</a>
             <div class="flex flex-col gap-3 font-mono text-[0.78rem] text-mist-soft">
               {% if settings.phone %}
                 <a href="tel:{{ settings.phone }}" class="flex items-center gap-3 py-2"><i data-lucide="phone" class="h-4 w-4"></i>{{ settings.phone }}</a>
@@ -67,7 +67,7 @@
                   <a href="{{ social.url }}" target="_blank" rel="noopener" class="inline-flex items-center gap-2"><i data-lucide="globe" class="h-4 w-4"></i>{{ social.name }}</a>
                 {% endfor %}
               </div>
-              <div class="flex justify-between border-t border-ink-soft pt-4">
+              <div class="flex justify-between border-t border-night-soft pt-4">
                 <span>آماده همکاری</span><span>© {{ settings.established_year }} {{ settings.site_name }}</span>
               </div>
             </div>
@@ -75,7 +75,7 @@
         </nav>
 
         <main>
-          <section class="border-b border-ink-line px-page pb-[clamp(40px,5vw,80px)] pt-12 md:pt-[clamp(64px,9vw,130px)]" data-aos="fade-up">
+          <section class="border-b border-line px-page pb-[clamp(40px,5vw,80px)] pt-12 md:pt-[clamp(64px,9vw,130px)]" data-aos="fade-up">
             <p class="mb-4 font-mono text-[0.74rem] text-ink-dim" data-aos="fade-down">
               خانه ← <span class="text-ink">تماس</span>
             </p><h1 class="mb-6 max-w-[18ch] text-[clamp(2.6rem,5.4vw,6rem)] leading-[0.98]" data-aos="fade-up" data-aos-delay="100">{{ page_section.title }}</h1><p class="m-0 max-w-[60ch] text-[1.18rem] leading-[1.5] text-ink-soft" data-aos="fade-up" data-aos-delay="200">{{ page_section.description }}</p>
@@ -86,26 +86,26 @@
               {% if contact_info.tagline %}
                 <p class="mb-8 text-[1.25rem] leading-[1.6] text-ink" data-aos="fade-up">{{ contact_info.tagline }}</p>
               {% endif %}
-              <div class="border-t border-ink-line py-6" data-aos="fade-up" data-aos-delay="100">
+              <div class="border-t border-line py-6" data-aos="fade-up" data-aos-delay="100">
                 <div class="mb-1.5 font-mono text-[0.78rem] text-ink-dim">دفتر — {{ contact_info.office_title }}</div>
                 <address class="not-italic leading-[1.5] text-ink-soft">{{ contact_info.office_address|linebreaksbr }}</address>
               </div>
-              <div class="border-y border-ink-line py-6" data-aos="fade-up" data-aos-delay="150">
+              <div class="border-y border-line py-6" data-aos="fade-up" data-aos-delay="150">
                 <div class="mb-3.5 font-mono text-[0.78rem] text-ink-dim">اطلاعات تماس</div>
                 <div class="grid gap-3">
                   {% if contact_info.phone %}
-                    <a href="tel:{{ contact_info.phone }}" class="flex items-baseline gap-3 border-b border-dashed border-ink-line py-1.5"><span class="min-w-[90px] font-mono text-[0.74rem] text-ink-dim">تلفن</span><span>{{ contact_info.phone }}</span></a>
+                    <a href="tel:{{ contact_info.phone }}" class="flex items-baseline gap-3 border-b border-dashed border-line py-1.5"><span class="min-w-[90px] font-mono text-[0.74rem] text-ink-dim">تلفن</span><span>{{ contact_info.phone }}</span></a>
                   {% endif %}
                   {% if contact_info.working_hours %}
-                    <div class="flex items-baseline gap-3 border-b border-dashed border-ink-line py-1.5">
+                    <div class="flex items-baseline gap-3 border-b border-dashed border-line py-1.5">
                       <span class="min-w-[90px] font-mono text-[0.74rem] text-ink-dim">ساعات کاری</span><span>{{ contact_info.working_hours }}</span>
                     </div>
                   {% endif %}
                   {% if contact_info.email_press %}
-                    <a href="mailto:{{ contact_info.email_press }}" class="flex items-baseline gap-3 border-b border-dashed border-ink-line py-1.5"><span class="min-w-[90px] font-mono text-[0.74rem] text-ink-dim">رسانه</span><span dir="ltr">{{ contact_info.email_press }}</span></a>
+                    <a href="mailto:{{ contact_info.email_press }}" class="flex items-baseline gap-3 border-b border-dashed border-line py-1.5"><span class="min-w-[90px] font-mono text-[0.74rem] text-ink-dim">رسانه</span><span dir="ltr">{{ contact_info.email_press }}</span></a>
                   {% endif %}
                   {% if contact_info.email_career %}
-                    <a href="mailto:{{ contact_info.email_career }}" class="flex items-baseline gap-3 border-b border-dashed border-ink-line py-1.5"><span class="min-w-[90px] font-mono text-[0.74rem] text-ink-dim">فرصت‌های شغلی</span><span dir="ltr">{{ contact_info.email_career }}</span></a>
+                    <a href="mailto:{{ contact_info.email_career }}" class="flex items-baseline gap-3 border-b border-dashed border-line py-1.5"><span class="min-w-[90px] font-mono text-[0.74rem] text-ink-dim">فرصت‌های شغلی</span><span dir="ltr">{{ contact_info.email_career }}</span></a>
                   {% endif %}
                 </div>
               </div>
@@ -114,7 +114,7 @@
                   <div class="mb-3.5 font-mono text-[0.78rem] text-ink-dim">شبکه‌های اجتماعی</div>
                   <div class="flex flex-wrap gap-2">
                     {% for social in socials %}
-                      <a href="{{ social.url }}" target="_blank" rel="noopener noreferrer" class="rounded-full border border-ink-line px-4 py-2 font-mono text-[0.8rem] text-ink-soft hover:border-ink hover:bg-paper-soft">{{ social.name }}</a>
+                      <a href="{{ social.url }}" target="_blank" rel="noopener noreferrer" class="rounded-full border border-line px-4 py-2 font-mono text-[0.8rem] text-ink-soft hover:border-night hover:bg-paper-soft">{{ social.name }}</a>
                     {% endfor %}
                   </div>
                 </div>
@@ -123,7 +123,7 @@
                 <div class="mb-3.5 font-mono text-[0.78rem] text-ink-dim">خدمات ما</div>
                 <div class="grid">
                   {% for service in contact_services %}
-                    <a href="{% url 'services:detail' service.slug %}" class="flex items-center justify-between border-b border-dashed border-ink-line py-3 text-ink-soft hover:text-ink"><span>{{ service.title }}</span><span class="text-xl">←</span></a>
+                    <a href="{% url 'services:detail' service.slug %}" class="flex items-center justify-between border-b border-dashed border-line py-3 text-ink-soft hover:text-ink"><span>{{ service.title }}</span><span class="text-xl">←</span></a>
                   {% endfor %}
                 </div>
               </div>
@@ -135,19 +135,19 @@
                 <h2 class="mb-1.5 text-[1.4rem]">درخواست پروژه</h2><p class="m-0 font-mono text-[0.74rem] text-ink-dim">همه فیلدها به جز پیام اجباری هستند</p>
               </div>
               <div class="grid grid-cols-1 gap-[18px] md:grid-cols-2" data-aos="fade-up" data-aos-delay="100">
-                <label class="flex flex-col gap-1.5 font-mono text-[0.74rem] text-ink-dim" for="contact-name">نام شما<input id="contact-name" type="text" name="name" autocomplete="name" required class="rounded-sm border border-ink-line bg-paper px-3.5 py-3 font-sans text-base text-ink focus:border-ink focus:outline-none focus:ring-[3px] focus:ring-lime/45" /></label><label class="flex flex-col gap-1.5 font-mono text-[0.74rem] text-ink-dim" for="contact-phone">شماره تماس<input id="contact-phone" type="tel" name="phone" autocomplete="tel" required class="rounded-sm border border-ink-line bg-paper px-3.5 py-3 font-sans text-base text-ink focus:border-ink focus:outline-none focus:ring-[3px] focus:ring-lime/45" /></label>
+                <label class="flex flex-col gap-1.5 font-mono text-[0.74rem] text-ink-dim" for="contact-name">نام شما<input id="contact-name" type="text" name="name" autocomplete="name" required class="rounded-sm border border-line bg-paper px-3.5 py-3 font-sans text-base text-ink focus:border-night focus:outline-none focus:ring-[3px] focus:ring-lime/45" /></label><label class="flex flex-col gap-1.5 font-mono text-[0.74rem] text-ink-dim" for="contact-phone">شماره تماس<input id="contact-phone" type="tel" name="phone" autocomplete="tel" required class="rounded-sm border border-line bg-paper px-3.5 py-3 font-sans text-base text-ink focus:border-night focus:outline-none focus:ring-[3px] focus:ring-lime/45" /></label>
               </div>
-              <label class="flex flex-col gap-1.5 font-mono text-[0.74rem] text-ink-dim" for="contact-company" data-aos="fade-up" data-aos-delay="150">شرکت / سازمان<input id="contact-company" type="text" name="company" autocomplete="organization" class="rounded-sm border border-ink-line bg-paper px-3.5 py-3 font-sans text-base text-ink focus:border-ink focus:outline-none focus:ring-[3px] focus:ring-lime/45" /></label>
+              <label class="flex flex-col gap-1.5 font-mono text-[0.74rem] text-ink-dim" for="contact-company" data-aos="fade-up" data-aos-delay="150">شرکت / سازمان<input id="contact-company" type="text" name="company" autocomplete="organization" class="rounded-sm border border-line bg-paper px-3.5 py-3 font-sans text-base text-ink focus:border-night focus:outline-none focus:ring-[3px] focus:ring-lime/45" /></label>
               <div class="grid grid-cols-1 gap-[18px] md:grid-cols-2" data-aos="fade-up" data-aos-delay="200">
                 <label class="flex flex-col gap-1.5 font-mono text-[0.74rem] text-ink-dim" for="contact-project-type">
-                  نوع پروژه<select id="contact-project-type" name="project_type" required class="rounded-sm border border-ink-line bg-paper px-3.5 py-3 font-sans text-base text-ink focus:border-ink focus:outline-none focus:ring-[3px] focus:ring-lime/45">
+                  نوع پروژه<select id="contact-project-type" name="project_type" required class="rounded-sm border border-line bg-paper px-3.5 py-3 font-sans text-base text-ink focus:border-night focus:outline-none focus:ring-[3px] focus:ring-lime/45">
                     <option value="">انتخاب کنید…</option>
                     {% for item in project_types %}
                       <option value="{{ item.label }}">{{ item.label }}</option>
                     {% endfor %}
                   </select>
                 </label><label class="flex flex-col gap-1.5 font-mono text-[0.74rem] text-ink-dim" for="contact-budget">
-                  بودجه تقریبی<select id="contact-budget" name="budget" required class="rounded-sm border border-ink-line bg-paper px-3.5 py-3 font-sans text-base text-ink focus:border-ink focus:outline-none focus:ring-[3px] focus:ring-lime/45">
+                  بودجه تقریبی<select id="contact-budget" name="budget" required class="rounded-sm border border-line bg-paper px-3.5 py-3 font-sans text-base text-ink focus:border-night focus:outline-none focus:ring-[3px] focus:ring-lime/45">
                     <option value="">انتخاب کنید…</option>
                     {% for item in budgets %}
                       <option value="{{ item.label }}">{{ item.label }}</option>
@@ -156,14 +156,14 @@
                 </label>
               </div>
               <label class="flex flex-col gap-1.5 font-mono text-[0.74rem] text-ink-dim" for="contact-start-time" data-aos="fade-up" data-aos-delay="250">
-                زمان شروع<select id="contact-start-time" name="start_time" required class="rounded-sm border border-ink-line bg-paper px-3.5 py-3 font-sans text-base text-ink focus:border-ink focus:outline-none focus:ring-[3px] focus:ring-lime/45">
+                زمان شروع<select id="contact-start-time" name="start_time" required class="rounded-sm border border-line bg-paper px-3.5 py-3 font-sans text-base text-ink focus:border-night focus:outline-none focus:ring-[3px] focus:ring-lime/45">
                   <option value="">انتخاب کنید…</option>
                   {% for item in start_times %}
                     <option value="{{ item.label }}">{{ item.label }}</option>
                   {% endfor %}
                 </select>
               </label>
-              <label class="flex flex-col gap-1.5 font-mono text-[0.74rem] text-ink-dim" for="contact-message" data-aos="fade-up" data-aos-delay="300">درباره پروژه کمی توضیح بدهید<textarea id="contact-message" name="message" placeholder="روی چه چیزی کار می‌کنید، موفقیت برای شما چه معنی دارد، چرا سراغ ما آمدید…" class="min-h-[140px] resize-y rounded-sm border border-ink-line bg-paper px-3.5 py-3 font-sans text-base text-ink focus:border-ink focus:outline-none focus:ring-[3px] focus:ring-lime/45"></textarea></label>
+              <label class="flex flex-col gap-1.5 font-mono text-[0.74rem] text-ink-dim" for="contact-message" data-aos="fade-up" data-aos-delay="300">درباره پروژه کمی توضیح بدهید<textarea id="contact-message" name="message" placeholder="روی چه چیزی کار می‌کنید، موفقیت برای شما چه معنی دارد، چرا سراغ ما آمدید…" class="min-h-[140px] resize-y rounded-sm border border-line bg-paper px-3.5 py-3 font-sans text-base text-ink focus:border-night focus:outline-none focus:ring-[3px] focus:ring-lime/45"></textarea></label>
               <div class="flex flex-wrap items-center justify-between gap-[18px]" data-aos="fade-up" data-aos-delay="350">
                 <p class="m-0 text-[0.84rem] text-ink-dim">ما فقط برای پاسخ به شما از این اطلاعات استفاده می‌کنیم.</p><button type="submit" class="btn btn-ink group">ارسال درخواست <span class="group-hover:translate-y-1">←</span></button>
               </div>
@@ -172,21 +172,21 @@
           </section>
         </main>
 
-        <footer class="bg-ink px-page pb-6 pt-[clamp(60px,7vw,100px)] text-[0.92rem] text-mist" data-aos="fade-up">
-          <div class="grid grid-cols-2 gap-8 border-b border-ink-line-dark pb-12 md:grid-cols-[1.4fr_1fr_1fr_1fr] md:gap-12">
+        <footer class="bg-night px-page pb-6 pt-[clamp(60px,7vw,100px)] text-[0.92rem] text-mist" data-aos="fade-up">
+          <div class="grid grid-cols-2 gap-8 border-b border-line-strong pb-12 md:grid-cols-[1.4fr_1fr_1fr_1fr] md:gap-12">
             <div class="flex max-w-[36ch] flex-col gap-[18px]" data-aos="fade-up">
-              <span class="flex items-center gap-2.5 font-display text-[1.6rem] font-semibold text-paper"><span class="grid h-7 w-7 place-items-center rounded-sm bg-lime font-mono text-[0.76rem] font-semibold text-ink">P</span>{{ settings.site_name|default:'پیکسوریا' }}</span><p class="m-0 leading-[1.55] text-mist-soft">{{ settings.site_description|default:'یک استودیو خلاق مستقل در حوزه هویت برند، طراحی وب و کارگردانی هنری.' }}</p>
+              <span class="flex items-center gap-2.5 font-display text-[1.6rem] font-semibold text-ink"><span class="grid h-7 w-7 place-items-center rounded-sm bg-lime font-mono text-[0.76rem] font-semibold text-ink">P</span>{{ settings.site_name|default:'پیکسوریا' }}</span><p class="m-0 leading-[1.55] text-mist-soft">{{ settings.site_description|default:'یک استودیو خلاق مستقل در حوزه هویت برند، طراحی وب و کارگردانی هنری.' }}</p>
             </div>
             <div data-aos="fade-up" data-aos-delay="100">
-              <h4 class="mb-3.5 font-mono text-[0.74rem] font-medium text-paper">استودیو</h4><a href="{% url 'home:home' %}" class="block py-[5px] text-mist-soft hover:text-lime">خانه</a><a href="{% url 'portfolio:list' %}" class="block py-[5px] text-mist-soft hover:text-lime">نمونه کار ها</a><a href="{% url 'services:list' %}" class="block py-[5px] text-mist-soft hover:text-lime">خدمات</a><a href="{% url 'core:about' %}" class="block py-[5px] text-mist-soft hover:text-lime">درباره ما</a><a href="{% url 'contact:contact' %}" class="block py-[5px] text-mist-soft hover:text-lime">تماس</a>
+              <h4 class="mb-3.5 font-mono text-[0.74rem] font-medium text-ink">استودیو</h4><a href="{% url 'home:home' %}" class="block py-[5px] text-mist-soft hover:text-lime">خانه</a><a href="{% url 'portfolio:list' %}" class="block py-[5px] text-mist-soft hover:text-lime">نمونه کار ها</a><a href="{% url 'services:list' %}" class="block py-[5px] text-mist-soft hover:text-lime">خدمات</a><a href="{% url 'core:about' %}" class="block py-[5px] text-mist-soft hover:text-lime">درباره ما</a><a href="{% url 'contact:contact' %}" class="block py-[5px] text-mist-soft hover:text-lime">تماس</a>
             </div>
             <div data-aos="fade-up" data-aos-delay="150">
-              <h4 class="mb-3.5 font-mono text-[0.74rem] font-medium text-paper">خدمات</h4>{% for service in contact_services|slice:':5' %}
+              <h4 class="mb-3.5 font-mono text-[0.74rem] font-medium text-ink">خدمات</h4>{% for service in contact_services|slice:':5' %}
                 <a href="{% url 'services:detail' service.slug %}" class="block py-[5px] text-mist-soft hover:text-lime">{{ service.title }}</a>
               {% endfor %}
             </div>
             <div data-aos="fade-up" data-aos-delay="200">
-              <h4 class="mb-3.5 font-mono text-[0.74rem] font-medium text-paper">تماس</h4>{% if contact_info.email_press %}
+              <h4 class="mb-3.5 font-mono text-[0.74rem] font-medium text-ink">تماس</h4>{% if contact_info.email_press %}
                 <a href="mailto:{{ contact_info.email_press }}" class="block py-[5px] text-mist-soft hover:text-lime">{{ contact_info.email_press }}</a>
               {% endif %}
               {% if contact_info.phone %}

@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <meta name="theme-color" content="#0e0e0e" />
+    <meta name="theme-color" content="#04070a" />
     <title>درباره ما — {{ settings.site_name }}</title>
     <meta name="description" content="{{ hero.description|striptags }}" />
     <link rel="stylesheet" href="{% static 'fonts/font_urls.css' %}" />
@@ -12,9 +12,9 @@
   </head>
   <body>
     <div class="grid min-h-screen grid-cols-1 md:grid-cols-[200px_minmax(0,1fr)] lg:grid-cols-[240px_minmax(0,1fr)]">
-      <aside class="sticky top-0 z-40 hidden h-screen flex-col border-l border-ink-line bg-paper px-6 py-7 md:flex" aria-label="Primary">
+      <aside class="sticky top-0 z-40 hidden h-screen flex-col border-l border-line bg-paper px-6 py-7 md:flex" aria-label="Primary">
         <a href="{% url 'home:home' %}" class="group flex items-center gap-2.5 font-display text-[1.4rem] font-semibold text-ink">
-          <span class="grid h-8 w-8 place-items-center rounded-sm bg-ink font-mono text-[0.78rem] font-semibold text-lime transition-colors duration-300 group-hover:bg-lime group-hover:text-ink">P</span>
+          <span class="grid h-8 w-8 place-items-center rounded-sm bg-night font-mono text-[0.78rem] font-semibold text-lime transition-colors duration-300 group-hover:bg-lime group-hover:text-night">P</span>
           <span class="leading-none">{{ settings.site_name|default:'پیکسوریا' }}</span>
         </a>
         <small class="mt-2.5 block border-r-2 border-lime pr-3 font-mono text-[0.78rem] font-normal leading-[1.6] text-ink-dim">{{ settings.site_description }}</small>
@@ -26,7 +26,7 @@
           <a href="{% url 'core:about' %}" class="group/nav active flex items-center gap-3.5 rounded-sm border-r-2 border-lime px-2 py-2.5 text-ink" aria-current="page"><span class="text-[0.7rem] text-lime">05</span>درباره ما</a>
           <a href="{% url 'contact:contact' %}" class="group/nav flex items-center gap-3.5 rounded-sm border-r-2 border-transparent px-2 py-2.5 text-ink-soft transition-colors duration-300 hover:bg-paper-soft hover:text-ink"><span class="text-[0.7rem] text-ink-dim transition-colors group-hover/nav:text-lime-deep">06</span>تماس با ما</a>
         </nav>
-        <a href="{% url 'contact:contact' %}" class="mt-8 inline-flex items-center justify-center gap-2 rounded-sm bg-lime px-4 py-3 font-mono text-[0.8rem] font-medium text-ink transition-colors duration-300 hover:bg-ink hover:text-lime">شروع پروژه <span aria-hidden="true">←</span></a>
+        <a href="{% url 'contact:contact' %}" class="mt-8 inline-flex items-center justify-center gap-2 rounded-sm bg-lime px-4 py-3 font-mono text-[0.8rem] font-medium text-ink transition-colors duration-300 hover:bg-night hover:text-lime">شروع پروژه <span aria-hidden="true">←</span></a>
         <div class="mt-auto flex flex-col gap-4 font-mono text-[0.72rem] text-ink-dim">
           <span class="inline-flex w-fit items-center gap-2 rounded-full border border-lime-deep/60 bg-lime/10 px-3 py-1.5 text-ink"><span class="h-1.5 w-1.5 animate-pulse rounded-full bg-lime-deep"></span>{{ settings.status|default:'آماده همکاری' }}</span>
           <div class="flex justify-between">
@@ -37,26 +37,26 @@
               <a href="{{ social.url }}" target="_blank" rel="noopener" class="transition-colors hover:text-lime-deep">{{ social.name }}</a>
             {% endfor %}
           </div>
-          <div class="flex justify-between border-t border-ink-line pt-4">
+          <div class="flex justify-between border-t border-line pt-4">
             <span>ایران</span><span class="text-lime-deep">آنلاین</span>
           </div>
         </div>
       </aside>
       <div class="min-w-0">
-        <header class="mobile-header fixed inset-x-0 top-0 z-50 flex items-center justify-between border-b border-ink-line bg-paper px-page py-3 md:hidden">
-          <a href="{% url 'home:home' %}" class="flex items-center gap-2 font-display font-semibold text-ink"><span class="grid h-[28px] w-[28px] place-items-center rounded-sm bg-ink font-mono text-[0.78rem] font-semibold leading-none text-lime">P</span>پیکسوریا</a>
-          <button class="menu-toggle inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-sm bg-ink text-lime" aria-label="باز کردن منو" aria-controls="mobile-nav" aria-expanded="false"><i data-lucide="menu" class="h-6 w-6"></i></button>
+        <header class="mobile-header fixed inset-x-0 top-0 z-50 flex items-center justify-between border-b border-line bg-paper px-page py-3 md:hidden">
+          <a href="{% url 'home:home' %}" class="flex items-center gap-2 font-display font-semibold text-ink"><span class="grid h-[28px] w-[28px] place-items-center rounded-sm bg-night font-mono text-[0.78rem] font-semibold leading-none text-lime">P</span>پیکسوریا</a>
+          <button class="menu-toggle inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-sm bg-night text-lime" aria-label="باز کردن منو" aria-controls="mobile-nav" aria-expanded="false"><i data-lucide="menu" class="h-6 w-6"></i></button>
         </header>
-        <nav id="mobile-nav" class="mobile-nav fixed inset-0 z-[60] hidden flex-col gap-1 bg-ink px-page pb-8 pt-24 font-display text-[2rem] text-paper [&.open]:flex" aria-label="Mobile">
+        <nav id="mobile-nav" class="mobile-nav fixed inset-0 z-[60] hidden flex-col gap-1 bg-night px-page pb-8 pt-24 font-display text-[2rem] text-ink [&.open]:flex" aria-label="Mobile">
           <button class="mobile-close absolute left-[18px] top-[18px] inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-sm bg-lime text-ink" aria-label="بستن منو"><i data-lucide="x" class="h-6 w-6"></i></button>
-          <a href="{% url 'home:home' %}" class="flex items-center gap-4 border-b border-ink-soft py-3.5 hover:text-lime"><i data-lucide="home" class="h-6 w-6 opacity-70"></i>خانه</a>
-          <a href="{% url 'portfolio:list' %}" class="flex items-center gap-4 border-b border-ink-soft py-3.5 hover:text-lime"><i data-lucide="layout-grid" class="h-6 w-6 opacity-70"></i>نمونه کار ها</a>
-          <a href="{% url 'services:list' %}" class="flex items-center gap-4 border-b border-ink-soft py-3.5 hover:text-lime"><i data-lucide="layers" class="h-6 w-6 opacity-70"></i>خدمات</a>
-          <a href="{% url 'blog:list' %}" class="flex items-center gap-4 border-b border-ink-soft py-3.5 hover:text-lime"><i data-lucide="newspaper" class="h-6 w-6 opacity-70"></i>بلاگ</a>
-          <a href="{% url 'core:about' %}" class="flex items-center gap-4 border-b border-ink-soft py-3.5 text-lime"><i data-lucide="users" class="h-6 w-6 opacity-70"></i>درباره ما</a>
-          <a href="{% url 'contact:contact' %}" class="flex items-center gap-4 border-b border-ink-soft py-3.5 hover:text-lime"><i data-lucide="mail" class="h-6 w-6 opacity-70"></i>تماس با ما</a>
-          <div class="mt-auto space-y-4 pt-6 border-t border-ink-soft">
-            <a href="{% url 'contact:contact' %}" class="inline-flex w-full items-center justify-center gap-2 rounded-sm bg-lime px-4 py-3.5 font-mono text-[0.8rem] font-medium text-ink transition-colors duration-300 hover:bg-ink hover:text-lime"><i data-lucide="arrow-up-left" class="h-4 w-4"></i>شروع پروژه</a>
+          <a href="{% url 'home:home' %}" class="flex items-center gap-4 border-b border-night-soft py-3.5 hover:text-lime"><i data-lucide="home" class="h-6 w-6 opacity-70"></i>خانه</a>
+          <a href="{% url 'portfolio:list' %}" class="flex items-center gap-4 border-b border-night-soft py-3.5 hover:text-lime"><i data-lucide="layout-grid" class="h-6 w-6 opacity-70"></i>نمونه کار ها</a>
+          <a href="{% url 'services:list' %}" class="flex items-center gap-4 border-b border-night-soft py-3.5 hover:text-lime"><i data-lucide="layers" class="h-6 w-6 opacity-70"></i>خدمات</a>
+          <a href="{% url 'blog:list' %}" class="flex items-center gap-4 border-b border-night-soft py-3.5 hover:text-lime"><i data-lucide="newspaper" class="h-6 w-6 opacity-70"></i>بلاگ</a>
+          <a href="{% url 'core:about' %}" class="flex items-center gap-4 border-b border-night-soft py-3.5 text-lime"><i data-lucide="users" class="h-6 w-6 opacity-70"></i>درباره ما</a>
+          <a href="{% url 'contact:contact' %}" class="flex items-center gap-4 border-b border-night-soft py-3.5 hover:text-lime"><i data-lucide="mail" class="h-6 w-6 opacity-70"></i>تماس با ما</a>
+          <div class="mt-auto space-y-4 pt-6 border-t border-night-soft">
+            <a href="{% url 'contact:contact' %}" class="inline-flex w-full items-center justify-center gap-2 rounded-sm bg-lime px-4 py-3.5 font-mono text-[0.8rem] font-medium text-ink transition-colors duration-300 hover:bg-night hover:text-lime"><i data-lucide="arrow-up-left" class="h-4 w-4"></i>شروع پروژه</a>
             <div class="flex flex-col gap-3 font-mono text-[0.78rem] text-mist-soft">
               {% if settings.phone %}
                 <a href="tel:{{ settings.phone }}" class="flex items-center gap-3 py-2"><i data-lucide="phone" class="h-4 w-4"></i>{{ settings.phone }}</a>
@@ -66,7 +66,7 @@
                   <a href="{{ social.url }}" target="_blank" rel="noopener" class="inline-flex items-center gap-2"><i data-lucide="globe" class="h-4 w-4"></i>{{ social.name }}</a>
                 {% endfor %}
               </div>
-              <div class="flex justify-between border-t border-ink-soft pt-4">
+              <div class="flex justify-between border-t border-night-soft pt-4">
                 <span>آماده همکاری</span><span>© {{ settings.established_year }} {{ settings.site_name }}</span>
               </div>
             </div>
@@ -74,7 +74,7 @@
         </nav>
         <main>
           <!-- HERO -->
-          <section class="border-b border-ink-line px-page pb-[clamp(40px,5vw,80px)] pt-12 md:pt-[clamp(64px,9vw,130px)]" data-aos="fade-up">
+          <section class="border-b border-line px-page pb-[clamp(40px,5vw,80px)] pt-12 md:pt-[clamp(64px,9vw,130px)]" data-aos="fade-up">
             <p class="mb-4 font-mono text-[0.74rem] text-ink-dim" data-aos="fade-down">
               خانه ← <span class="text-ink">استودیو</span>
             </p><h1 class="mb-6 max-w-[18ch] text-[clamp(2.6rem,5.4vw,6rem)] leading-[0.98]" data-aos="fade-up" data-aos-delay="100">{{ hero.title|safe }}</h1><div class="max-w-[60ch] text-[1.18rem] leading-[1.5] text-ink-soft" data-aos="fade-up" data-aos-delay="200">{{ hero.description|safe }}</div>
@@ -110,14 +110,14 @@
 
           <!-- PROCESS STEPS -->
           {% if process_steps %}
-          <section class="bg-ink px-page py-[clamp(64px,9vw,120px)] text-paper" data-aos="fade-up">
+          <section class="bg-night px-page py-[clamp(64px,9vw,120px)] text-ink" data-aos="fade-up">
             <div class="mb-14 max-w-[880px]">
               <span class="eyebrow mb-6 inline-block">روش کار<span class="mr-2 inline-block h-1.5 w-1.5 rounded-full bg-lime align-[2px]"></span></span>
               <h2 class="max-w-[20ch]">چطور با هم پیش می‌رویم؟</h2>
             </div>
             <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
               {% for step in process_steps %}
-              <article class="group relative flex flex-col gap-4 rounded-xl border border-ink-line bg-[#131313] p-7 transition-colors duration-300 hover:border-lime/30" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
+              <article class="group relative flex flex-col gap-4 rounded-xl border border-line bg-[#131313] p-7 transition-colors duration-300 hover:border-lime/30" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
                 <span class="absolute -top-3 left-6 h-6 w-6 rounded-full bg-lime flex items-center justify-center font-mono text-[0.85rem] font-bold text-ink">{{ forloop.counter }}</span>
                 <h3 class="mt-4 text-[1.4rem] leading-[1.2]">{{ step.title }}</h3>
                 <div class="text-[1rem] leading-[1.65] text-mist">{{ step.description|safe }}</div>
@@ -147,13 +147,13 @@
           </section>
 
           <!-- VALUES -->
-          <section class="border-t border-ink-line px-page py-16" aria-labelledby="values-title">
+          <section class="border-t border-line px-page py-16" aria-labelledby="values-title">
             <div class="mb-12 max-w-[880px]" data-aos="fade-up">
               <span class="eyebrow mb-6 inline-block">ارزش‌ها<span class="mr-2 inline-block h-1.5 w-1.5 rounded-full bg-lime align-[2px]"></span></span><h2 id="values-title">چند چیز که به آن‌ها باور داریم.</h2>
             </div>
             <div class="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-8 lg:grid-cols-3">
               {% for value in values %}
-                <div class="flex flex-col gap-2.5 border-t border-ink-line pt-6" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}0">
+                <div class="flex flex-col gap-2.5 border-t border-line pt-6" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}0">
                   <span class="font-mono text-[0.74rem] text-ink-dim">{{ forloop.counter|stringformat:'02d' }}</span><h3 class="text-[1.3rem]">{{ value.title|safe }}</h3><div class="text-[0.96rem] text-ink-soft">{{ value.description|safe }}</div>
                 </div>
               {% empty %}
@@ -163,10 +163,10 @@
           </section>
 
           <!-- STATS -->
-          <section class="border-t border-ink-line px-page py-16" aria-label="آمار و ارقام">
+          <section class="border-t border-line px-page py-16" aria-label="آمار و ارقام">
             <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
               {% for stat in stats %}
-                <div class="border-t border-ink-line pt-5" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
+                <div class="border-t border-line pt-5" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
                   <span class="block font-display text-[clamp(2.8rem,5vw,5rem)] leading-none text-ink">{{ stat.number }}</span><span class="mt-3 block font-mono text-[0.8rem] text-ink-dim">{{ stat.label }}</span>{% if stat.description %}
                     <span class="mt-2 block text-[0.9rem] text-ink-soft">{{ stat.description }}</span>
                   {% endif %}
@@ -186,12 +186,12 @@
             </div>
             <div class="max-w-3xl space-y-3">
               {% for faq in faqs %}
-              <details class="group border border-ink-line rounded-xl overflow-hidden transition-colors duration-300 hover:border-lime/30" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}50">
+              <details class="group border border-line rounded-xl overflow-hidden transition-colors duration-300 hover:border-lime/30" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}50">
                 <summary class="flex items-center justify-between gap-4 p-5 cursor-pointer list-none">
                   <h3 class="text-[1.1rem] leading-[1.4]">{{ faq.question }}</h3>
                   <i data-lucide="chevron-down" class="h-5 w-5 text-lime shrink-0 transition-transform duration-300 group-open:rotate-180"></i>
                 </summary>
-                <div class="px-5 pb-5 border-t border-ink-line text-ink-soft leading-[1.7]">{{ faq.answer|safe }}</div>
+                <div class="px-5 pb-5 border-t border-line text-ink-soft leading-[1.7]">{{ faq.answer|safe }}</div>
               </details>
               {% endfor %}
             </div>
@@ -200,10 +200,10 @@
 
           <!-- PRE-FOOTER -->
           {% if pre %}
-          <section class="bg-ink px-page py-[clamp(64px,9vw,130px)] text-paper" aria-labelledby="manifesto-title">
+          <section class="bg-night px-page py-[clamp(64px,9vw,130px)] text-ink" aria-labelledby="manifesto-title">
             <div class="grid grid-cols-1 gap-10 md:grid-cols-[1fr_1.2fr] md:gap-20">
               <div data-aos="fade-up">
-                <span class="font-mono text-[0.8rem] text-lime">{{ pre.label|safe }}</span><h2 id="manifesto-title" class="mt-5 text-paper">{{ pre.title|safe }}</h2>
+                <span class="font-mono text-[0.8rem] text-lime">{{ pre.label|safe }}</span><h2 id="manifesto-title" class="mt-5 text-ink">{{ pre.title|safe }}</h2>
               </div>
               <div class="text-[1.05rem] leading-[1.65] text-mist" data-aos="fade-up" data-aos-delay="100">
                 {{ pre.description|safe }}<a class="btn btn-lime mt-5" href="{{ pre.button_url }}">{{ pre.button_text }} <span>←</span></a>
@@ -212,16 +212,16 @@
           </section>
           {% endif %}
         </main>
-        <footer class="bg-ink px-page pb-6 pt-12 text-[0.92rem] text-mist" data-aos="fade-up">
-          <div class="grid grid-cols-2 gap-8 border-t border-ink-line-dark pt-10 md:grid-cols-3 md:gap-12">
+        <footer class="bg-night px-page pb-6 pt-12 text-[0.92rem] text-mist" data-aos="fade-up">
+          <div class="grid grid-cols-2 gap-8 border-t border-line-strong pt-10 md:grid-cols-3 md:gap-12">
             <div data-aos="fade-up">
-              <span class="font-display text-[1.5rem] font-semibold text-paper">{{ settings.site_name|default:'پیکسوریا' }}</span><p class="mt-4 leading-[1.55] text-mist-soft">{{ settings.footer_description|default:settings.site_description }}</p>
+              <span class="font-display text-[1.5rem] font-semibold text-ink">{{ settings.site_name|default:'پیکسوریا' }}</span><p class="mt-4 leading-[1.55] text-mist-soft">{{ settings.footer_description|default:settings.site_description }}</p>
             </div>
             <div data-aos="fade-up" data-aos-delay="100">
-              <h4 class="mb-3.5 font-mono text-[0.74rem] text-paper">نقشه سایت</h4><a href="{% url 'home:home' %}" class="block py-1.5 text-mist-soft hover:text-lime">خانه</a><a href="{% url 'portfolio:list' %}" class="block py-1.5 text-mist-soft hover:text-lime">نمونه کارها</a><a href="{% url 'services:list' %}" class="block py-1.5 text-mist-soft hover:text-lime">خدمات</a><a href="{% url 'contact:contact' %}" class="block py-1.5 text-mist-soft hover:text-lime">تماس</a>
+              <h4 class="mb-3.5 font-mono text-[0.74rem] text-ink">نقشه سایت</h4><a href="{% url 'home:home' %}" class="block py-1.5 text-mist-soft hover:text-lime">خانه</a><a href="{% url 'portfolio:list' %}" class="block py-1.5 text-mist-soft hover:text-lime">نمونه کارها</a><a href="{% url 'services:list' %}" class="block py-1.5 text-mist-soft hover:text-lime">خدمات</a><a href="{% url 'contact:contact' %}" class="block py-1.5 text-mist-soft hover:text-lime">تماس</a>
             </div>
             <div data-aos="fade-up" data-aos-delay="150">
-              <h4 class="mb-3.5 font-mono text-[0.74rem] text-paper">ارتباط</h4>{% if settings.email %}
+              <h4 class="mb-3.5 font-mono text-[0.74rem] text-ink">ارتباط</h4>{% if settings.email %}
                 <a href="mailto:{{ settings.email }}" class="block py-1.5 text-mist-soft hover:text-lime">{{ settings.email }}</a>
               {% endif %}
               {% if settings.phone %}
@@ -229,7 +229,7 @@
               {% endif %}<span class="block py-1.5 text-mist-soft">{{ settings.address|default:'ایران' }}</span>
             </div>
           </div>
-          <div class="mt-8 border-t border-ink-line-dark pt-5 font-mono text-[0.74rem] text-mist-dim">© {{ settings.established_year }} {{ settings.site_name }}</div>
+          <div class="mt-8 border-t border-line-strong pt-5 font-mono text-[0.74rem] text-mist-dim">© {{ settings.established_year }} {{ settings.site_name }}</div>
         </footer>
       </div>
     </div>
