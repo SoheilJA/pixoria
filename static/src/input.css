@@ -359,7 +359,7 @@
     top: 0;
     bottom: 0;
     width: 50%;
-    background: var(--color-lime);
+    background: var(--color-night);
     transition: transform 0.55s cubic-bezier(0.65, 0, 0.35, 1), opacity 0.55s var(--ease-ax);
     will-change: transform, opacity;
   }
@@ -401,24 +401,29 @@
     opacity: 0;
     transform: translateY(-12px) scale(0.98);
   }
-  .preloader__mark {
-    width: clamp(44px, 8vw, 60px);
-    height: clamp(44px, 8vw, 60px);
-    display: grid;
-    place-items: center;
-    background: var(--color-night);
-    color: var(--color-ink);
-    font-family: var(--font-mono);
-    font-weight: 700;
-    font-size: clamp(1.1rem, 3vw, 1.5rem);
-    line-height: 1;
+  /* Pixel wordmark — assembled rect by rect (JS assigns the staggered delays).
+     The SVG is emitted inline by {% pixel_wordmark %} and paints its ink from
+     currentColor, so text-* utilities tint it. */
+  .wordmark {
+    display: block;
   }
-  .preloader__name {
-    font-family: var(--font-sans);
-    font-weight: 700;
-    font-size: clamp(1.6rem, 6vw, 2.8rem);
-    letter-spacing: -0.02em;
-    color: var(--color-night);
+  .wordmark rect {
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+  .wordmark.is-assembling rect {
+    animation: pixel-in 0.5s both;
+  }
+  @keyframes pixel-in {
+    from { opacity: 0; transform: translateY(-3px) scale(0.4); }
+    to   { opacity: 1; transform: none; }
+  }
+  .preloader__wordmark {
+    color: var(--color-ink);
+    filter: drop-shadow(0 0 18px rgba(200, 255, 61, 0.28));
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .wordmark rect { animation: none !important; }
   }
 
   /* ═══ Article body — dark prose for TinyMCE content ═══ */

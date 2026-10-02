@@ -1,4 +1,4 @@
-{% load icon_tags %}
+{% load icon_tags brand_tags %}
 {% load static %}
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
@@ -14,8 +14,8 @@
   <body class="min-h-screen bg-night font-sans text-ink-soft antialiased">
     <div class="grid min-h-screen grid-cols-1 md:grid-cols-2">
       <section class="relative flex flex-col justify-between overflow-hidden bg-night px-[clamp(32px,6vw,72px)] py-[clamp(32px,6vw,72px)]" data-aos="fade-left">
-        <span aria-hidden="true" class="pointer-events-none absolute bottom-[-6rem] left-[-3rem] select-none font-display text-[32rem] font-bold leading-none text-transparent [-webkit-text-stroke:1px_#2a2a28]">P</span>
-        <a href="{% url 'home:home' %}" class="relative z-10 inline-flex items-center gap-2.5 font-display text-[1.3rem] font-semibold text-ink" data-aos="fade-down"><span class="grid h-7 w-7 place-items-center rounded-sm bg-lime font-mono text-[0.8rem] font-bold text-ink">P</span>{{ settings.site_name|default:'پیکسوریا' }}</a>
+        {% pixel_wordmark "mono" class="pointer-events-none absolute bottom-[-3rem] left-[-2rem] h-[14rem] w-auto text-lime opacity-[0.05]" %}
+        <a href="{% url 'home:home' %}" class="wordmark-link relative z-10 inline-flex items-center gap-2.5 font-display text-[1.3rem] font-semibold text-ink" data-aos="fade-down">{% pixel_wordmark "full" class="wordmark h-[24px] w-auto text-ink" %}</a>
         <div class="relative z-10 my-16" data-aos="fade-up">
           <p class="mb-5 font-mono text-[0.74rem] text-lime">پنل کاربری</p><h2 class="max-w-[18ch] font-display text-[clamp(1.8rem,3vw,3rem)] font-medium leading-[1.1] text-ink">به <em class="font-display italic text-lime">داشبورد</em> خوش آمدید.</h2>
         </div>

@@ -14,6 +14,33 @@ class SiteSettings(models.Model):
     status = models.CharField(
         max_length=50, verbose_name="وضعیت", default="آماده همکاری"
     )
+    logo = models.FileField(
+        verbose_name="لوگوی سایت",
+        upload_to="brand/",
+        blank=True,
+        help_text=(
+            "فایل لوگوی دلخواه (SVG یا PNG با پس‌زمینه شفاف). "
+            "در صورت خالی گذاشتن، وردمارک پیکسلی «پیکسوریا» نمایش داده می‌شود."
+        ),
+    )
+    favicon = models.FileField(
+        verbose_name="فاوآیکون",
+        upload_to="brand/",
+        blank=True,
+        help_text=(
+            "فاوآیکون دلخواه (حداقل ۴۸×۴۸ پیکسل). "
+            "در صورت خالی گذاشتن، فاوآیکون پیش‌فرضِ وردمارک پیکسلی استفاده می‌شود."
+        ),
+    )
+    apple_touch_icon = models.FileField(
+        verbose_name="آیکون صفحهٔ اصلی iOS",
+        upload_to="brand/",
+        blank=True,
+        help_text=(
+            "آیکون ۱۸۰×۱۸۰ پیکسل برای Home Screen در iOS. "
+            "در صورت خالی گذاشتن، آیکون پیش‌فرض استفاده می‌شود."
+        ),
+    )
 
     class Meta:
         verbose_name = "تنظیمات سایت"

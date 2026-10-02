@@ -1,4 +1,4 @@
-{% load static icon_tags %}
+{% load static icon_tags brand_tags %}
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
   <head>
@@ -13,6 +13,11 @@
     <meta name="description"
       content="{% block description %}
       {% endblock %}" />
+    {# Favicon set — generated from the pixel wordmark; replaceable via SiteSettings #}
+    <link rel="icon" href="{% if settings.favicon %}{{ settings.favicon.url }}{% else %}{% static 'brand/favicon.ico' %}{% endif %}" sizes="any" />
+    {% if not settings.favicon %}<link rel="icon" type="image/png" sizes="48x48" href="{% static 'brand/favicon-48.png' %}" />{% endif %}
+    <link rel="apple-touch-icon" href="{% if settings.apple_touch_icon %}{{ settings.apple_touch_icon.url }}{% else %}{% static 'brand/apple-touch-icon.png' %}{% endif %}" />
+    <link rel="manifest" href="{% static 'brand/site.webmanifest' %}" />
     <link rel="stylesheet" href="{% static 'fonts/font_urls.css' %}" />
     <link rel="stylesheet" href="{% static 'css/tailwind.css' %}" />
     {# <link rel="stylesheet" href="{% static 'css/styles.css' %}" /> #}
@@ -24,16 +29,19 @@
       <div class="preloader__panel preloader__panel--left"></div>
       <div class="preloader__panel preloader__panel--right"></div>
       <div class="preloader__title">
-        <span class="preloader__mark">P</span><span class="preloader__name">{{ settings.site_name }}</span>
+        {% pixel_wordmark "full" class="wordmark preloader__wordmark h-[34px] w-auto text-ink" %}
       </div>
     </div>
     <div id="htmx-progress" class="htmx-progress" aria-hidden="true"></div>
     <header id="site-header" class="site-header fixed inset-x-0 top-0 z-50 transition-[background-color,border-color,box-shadow,backdrop-filter] duration-300 ease-ax">
       <div class="mx-auto flex h-[var(--header-h,72px)] max-w-[1600px] items-center justify-between gap-4 px-page md:px-[clamp(20px,4vw,56px)]">
         <!-- لوگو -->
-        <a href="{% url 'home:home' %}" class="group flex shrink-0 items-center gap-2.5 font-display text-[1.15rem] font-semibold text-ink">
-          <span class="grid h-8 w-8 place-items-center rounded-sm bg-lime font-mono text-[0.78rem] font-semibold text-ink transition-transform duration-300 ease-ax group-hover:rotate-[18deg]">P</span>
-          <span class="leading-none">{{ settings.site_name }}</span>
+        <a href="{% url 'home:home' %}" class="wordmark-link group flex shrink-0 items-center" aria-label="{{ settings.site_name }}">
+          {% if settings.logo %}
+            <img src="{{ settings.logo.url }}" alt="{{ settings.site_name }}" class="h-6 w-auto max-w-[14rem]" />
+          {% else %}
+            {% pixel_wordmark "full" class="wordmark h-[22px] w-auto text-ink" %}
+          {% endif %}
         </a>
 
         <!-- ناوبری دسکتاپ -->
@@ -152,7 +160,7 @@
           <div class="pointer-events-none absolute inset-0 z-[1] bg-gradient-to-b from-night via-transparent to-night/85" aria-hidden="true"></div>
           <h2 id="footer-head" class="sr-only">فوتر سایت</h2><div class="relative z-10 grid grid-cols-2 gap-8 border-b border-line-strong pb-12 md:grid-cols-[1.4fr_1fr_1fr_1fr] md:gap-12">
             <div class="flex max-w-[36ch] flex-col gap-[18px]">
-              <span class="flex items-center gap-2.5 font-display text-[1.6rem] font-semibold text-ink"><span class="grid h-7 w-7 place-items-center rounded-sm bg-lime font-mono text-[0.76rem] font-semibold text-ink">P</span>{{ settings.site_name }}</span><p class="m-0 leading-[1.55] text-mist-soft">{{ settings.footer_description }}</p>
+              <span class="flex items-center gap-2.5">{% if settings.logo %}<img src="{{ settings.logo.url }}" alt="{{ settings.site_name }}" class="h-7 w-auto" />{% else %}{% pixel_wordmark "full" class="wordmark h-[26px] w-auto text-ink" %}{% endif %}</span><p class="m-0 leading-[1.55] text-mist-soft">{{ settings.footer_description }}</p>
             </div>
             <div>
               <h4 class="mb-3.5 font-mono text-[0.74rem] text-ink">نقشه سایت</h4><a href="{% url 'home:home' %}" class="block py-1.5 text-mist-soft hover:text-lime">خانه</a><a href="{% url 'portfolio:list' %}" class="block py-1.5 text-mist-soft hover:text-lime">نمونه‌کارها</a><a href="{% url 'services:list' %}" class="block py-1.5 text-mist-soft hover:text-lime">خدمات</a><a href="{% url 'blog:list' %}" class="block py-1.5 text-mist-soft hover:text-lime">بلاگ</a><a href="{% url 'core:about' %}" class="block py-1.5 text-mist-soft hover:text-lime">درباره ما</a><a href="{% url 'contact:contact' %}" class="block py-1.5 text-mist-soft hover:text-lime">تماس با ما</a>
@@ -192,6 +200,7 @@
     <script type="module" src="{% static 'js/home-motion.js' %}"></script>
     <script type="module" src="{% static 'js/header-motion.js' %}"></script>
     <script type="module" src="{% static 'js/footer-stars.js' %}"></script>
+    <script type="module" src="{% static 'js/core/wordmark.js' %}"></script>
     <script src="{% static 'js/htmx.min.js' %}" defer></script>
     <script type="module" src="{% static 'js/site-reveal.js' %}"></script>
     <script>

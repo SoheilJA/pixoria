@@ -1,4 +1,4 @@
-{% load static icon_tags %}
+{% load static icon_tags brand_tags %}
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
   <head>
@@ -13,9 +13,8 @@
   <body>
     <div class="grid min-h-screen grid-cols-1 md:grid-cols-[200px_minmax(0,1fr)] lg:grid-cols-[240px_minmax(0,1fr)]">
       <aside class="sticky top-0 z-40 hidden h-screen flex-col border-l border-line bg-paper px-6 py-7 md:flex" aria-label="Primary">
-        <a href="{% url 'home:home' %}" class="group flex items-center gap-2.5 font-display text-[1.4rem] font-semibold text-ink">
-          <span class="grid h-8 w-8 place-items-center rounded-sm bg-night font-mono text-[0.78rem] font-semibold text-lime transition-colors duration-300 group-hover:bg-lime group-hover:text-night">P</span>
-          <span class="leading-none">{{ settings.site_name|default:'پیکسوریا' }}</span>
+        <a href="{% url 'home:home' %}" class="wordmark-link group flex items-center gap-2.5 font-display text-[1.4rem] font-semibold text-ink">
+          {% pixel_wordmark "full" class="wordmark h-[20px] w-auto text-ink" %}
         </a>
         <small class="mt-2.5 block border-r-2 border-lime pr-3 font-mono text-[0.78rem] font-normal leading-[1.6] text-ink-dim">{{ settings.site_description }}</small>
         <nav class="rail-nav mt-12 flex flex-col gap-0.5 font-mono text-[0.84rem]" aria-label="Primary">
@@ -44,7 +43,7 @@
       </aside>
       <div class="min-w-0">
         <header class="mobile-header fixed inset-x-0 top-0 z-50 flex items-center justify-between border-b border-line bg-paper px-page py-3 md:hidden">
-          <a href="{% url 'home:home' %}" class="flex items-center gap-2 font-display font-semibold text-ink"><span class="grid h-[28px] w-[28px] place-items-center rounded-sm bg-night font-mono text-[0.78rem] font-semibold leading-none text-lime">P</span>پیکسوریا</a>
+          <a href="{% url 'home:home' %}" class="wordmark-link flex items-center gap-2 font-display font-semibold text-ink">{% pixel_wordmark "full" class="wordmark h-[19px] w-auto text-ink" %}</a>
           <button class="menu-toggle inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-sm bg-night text-lime" aria-label="باز کردن منو" aria-controls="mobile-nav" aria-expanded="false">{% icon "menu" class="h-6 w-6" %}</button>
         </header>
         <nav id="mobile-nav" class="mobile-nav fixed inset-0 z-[60] hidden flex-col gap-1 bg-night px-page pb-8 pt-24 font-display text-[2rem] text-ink [&.open]:flex" aria-label="Mobile">

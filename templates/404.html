@@ -1,4 +1,4 @@
-{% load icon_tags %}
+{% load icon_tags brand_tags %}
 {% load static %}
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
@@ -16,9 +16,8 @@
   <body>
     <div class="grid min-h-screen grid-cols-1 md:grid-cols-[200px_minmax(0,1fr)] lg:grid-cols-[240px_minmax(0,1fr)]">
       <aside class="sticky top-0 z-40 hidden h-screen flex-col border-l border-line bg-paper px-6 py-7 md:flex">
-        <a href="{% url 'home:home' %}" class="flex items-center gap-2.5 font-display text-[1.4rem] font-semibold tracking-[-0.02em] text-ink">
-          <span class="grid h-[26px] w-[26px] place-items-center rounded-sm bg-night font-mono text-[0.78rem] font-semibold text-lime">P</span>
-          <span class="leading-none">{{ settings.site_name|default:'پیکسوریا' }}</span>
+        <a href="{% url 'home:home' %}" class="wordmark-link flex items-center gap-2.5 font-display text-[1.4rem] font-semibold tracking-[-0.02em] text-ink">
+          {% pixel_wordmark "full" class="wordmark h-[20px] w-auto text-ink" %}
         </a>
 
         <nav class="rail-nav mt-14 flex flex-col gap-0.5 font-mono text-[0.84rem]" aria-label="Primary">
@@ -45,7 +44,7 @@
 
       <div class="min-w-0">
         <header class="sticky top-0 z-50 flex items-center justify-between border-b border-line bg-paper px-page py-3.5 md:hidden">
-          <a href="{% url 'home:home' %}" class="flex items-center gap-2 font-display font-semibold text-ink"><span class="grid h-[26px] w-[26px] place-items-center rounded-sm bg-night font-mono text-[0.78rem] font-semibold leading-none text-lime">P</span>پیکسوریا</a>
+          <a href="{% url 'home:home' %}" class="wordmark-link flex items-center gap-2 font-display font-semibold text-ink">{% pixel_wordmark "full" class="wordmark h-[18px] w-auto text-ink" %}</a>
           <button class="menu-toggle inline-flex cursor-pointer flex-col gap-1 rounded-sm bg-night px-3.5 py-2.5 font-mono text-[0.8rem] text-lime" aria-label="Open menu" aria-expanded="false">منو</button>
         </header>
 

@@ -54,7 +54,7 @@ The current project primary is **lime `#c8ff3d`** (`--color-lime` in `input.css`
 - [x] 2. Vendor all libraries locally (GSAP + ScrollTrigger, Three.js + needed addons, Lenis, HTMX, Alpine, Lucide, fonts) into `static/`; remove CDN links; verify the site still works — *all already local; added Lenis; no CDN links exist anywhere in the repo*
 - [x] 3. Design tokens + global dark theme using the existing primary green (CSS variables + Tailwind config); fix every light-theme leftover
 - [x] 4. Lucide icon system (`{% icon %}` tag) + replace all HTML-entity/emoji icons + icon-name fields in models/admin — *sprite built from local lucide-static v1.49.0 (2121 icons, 716 KB, cached); `{% icon %}` fixed to emit real SVG (was auto-escaped); `ServiceWhyUs.icon` migrated emoji → Lucide names; dead `lucide.min.js` UMD removed*
-- [ ] 5. Pixel wordmark logo (SVG) + remove the "P" icon everywhere + new favicon set/manifest + admin-replaceable logo/favicon (`SiteSettings`)
+- [x] 5. Pixel wordmark logo (SVG) + remove the "P" icon everywhere + new favicon set/manifest + admin-replaceable logo/favicon (`SiteSettings`) — *wordmark generated from the self-hosted Vazirmatn 600 by `scripts/build_pixel_wordmark.py`; the "P" is gone from header/footer/preloader/admin/404/contact/about/login; `templates/admin/login.html` was also re-saved (it was corrupted cp1256 with its Persian text lost to literal `?`)*
 - [ ] 6. Glass & liquid-glass utility classes/components
 - [ ] 7. Reusable template components (`templates/components/…`): section header, buttons, cards, badges, etc.
 - [ ] 8. Reusable **Carousel component** (+ portfolio / testimonial / blog cards) and refactor all existing carousels to use it
@@ -111,6 +111,15 @@ Verified: all pages 200, computed body bg `rgb(4,7,10)`, zero light surfaces rem
 - **Icon-name validation & admin preview:** `apps/core/icon_utils.py` exposes `available_icons()` (cached parse of the sprite), `validate_icon_name()` (field validator — rejects names missing from the sprite with a Persian message + lucide.dev link) and `DEFAULT_ICON`. `ServiceWhyUsAdmin`-style inlines get a read-only `icon_preview` column rendering the live SVG.
 - **`ServiceWhyUs.icon`** was an emoji `CharField(max_length=10)`; now `max_length=64`, `default="sparkles"`, Persian `help_text` with a link to the icon list, and the validator. Existing rows were converted by a data migration (`0004_servicewhyus_emoji_to_lucide`): ⚡→`zap`, 📱→`smartphone`, 🎨→`palette`, 🔒→`shield-check` (+ a 40-entry fallback map for other common emoji).
 - **Cleanup:** the unused 444 KB `lucide.min.js` UMD bundle was removed (the site uses the sprite, not the runtime JS API); the last entity/emoji glyphs in live templates (`✕`, `↗`, `←`, `🔗`, `✓`) were replaced with `{% icon %}`.
+
+### Pixel wordmark & brand (Task 5)
+
+- **Generator:** `scripts/build_pixel_wordmark.py` rasterizes «پیکسوریا» with the self-hosted **Vazirmatn 600** (OFL) via Pillow, pixelates the *ink* onto a 14-row grid and emits crisp square pixels. Without libraqm, Pillow cannot shape/join Arabic, so letters are laid out individually in visual order — isolated letterforms are the intended pixel-font look. Re-run it after touching the font/text/accent.
+- **Assets** (all in `static/brand/`): `wordmark-full.svg` (ink via `currentColor` + lime accent on the «ک»), `wordmark-mono.svg` (single colour, tinted by CSS), `mark-compact.svg` (pixel «پ»), `favicon-{16,32,48,192,512}.png`, `apple-touch-icon.png` (180), multi-size `favicon.ico`, `favicon.svg`, `site.webmanifest` (RTL, `lang: fa`, lime-on-night).
+- **Template tag:** `{% load brand_tags %}` → `{% pixel_wordmark "full" class="h-6 text-ink" %}` inlines the SVG (needed for the rect-level animation). Variants: `full` / `mono` / `compact`.
+- **Admin-replaceable:** `SiteSettings.logo` / `.favicon` / `.apple_touch_icon` (`FileField`, `upload_to="brand/"`, blank allowed). Templates fall back to the generated assets when blank, so the pixel wordmark is the default and uploads override it.
+- **Animation:** `.wordmark rect` gets a staggered `pixel-in` keyframe — on `.wordmark-link` hover and once when the preloader activates (`static/js/core/wordmark.js`, `htmx:afterSwap`-aware, skipped under `prefers-reduced-motion`).
+- **Preloader** panels switched from lime to `--color-night` so the white+lime wordmark stays legible on them (task 14 will rebuild the preloader fully).
 
 
 - **Primary accent:** lime `#c8ff3d` (existing). Scale derived from it: 50 `#f6ffe0` … 950 `#3d5a00`, glow `rgba(200,255,61,…)`, gradient lime → `#d8ff7a` (cyan-shifted lighter).

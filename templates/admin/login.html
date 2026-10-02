@@ -1,91 +1,108 @@
-{% load static %}
-{% load cache %}
+{% load static brand_tags %}
 <!doctype html>
 <html lang="fa" dir="rtl">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <meta name="theme-color" content="#04070a" />
-    <title>???? � {{ settings.site_name|default:"???????" }}</title>
+    <title>ورود مدیریت — {{ settings.site_name|default:"پیکسوریا" }}</title>
     <meta name="robots" content="noindex" />
 
-    <!-- ???????? ???? (?????? base.html) -->
+    {# استایل‌های مشترک (بدون هدر و فوتر سایت) #}
     <link rel="stylesheet" href="{% static 'fonts/font_urls.css' %}" />
-
-    {# <link rel="stylesheet" href="{% static 'css/styles.css' %}" /> #}
+    <link rel="stylesheet" href="{% static 'css/tailwind.css' %}" />
+    <link rel="icon" href="{% static 'brand/favicon.ico' %}" sizes="any" />
+    <style>
+      body { background: var(--color-night); }
+      form input[type="text"], form input[type="password"], form input[type="email"] {
+        width: 100%;
+        background: var(--color-paper-deep);
+        border: 1px solid var(--color-line);
+        border-radius: var(--radius-md);
+        color: var(--color-ink);
+        padding: 0.7rem 0.9rem;
+        outline: none;
+        transition: border-color .2s;
+      }
+      form input:focus { border-color: var(--color-lime); box-shadow: 0 0 0 3px rgba(200,255,61,.15); }
+    </style>
   </head>
-  <body>
-    <div class="auth-shell">
-      <!-- --- ??? ???? --- -->
-      <div class="auth-brand">
-        <div class="top">
-          <a class="logo" href="/">
-            <span class="mark">P</span>
-            {{ settings.site_name|default:"???????" }}
-          </a>
-        </div>
+  <body class="min-h-screen font-sans text-ink-soft antialiased">
+    <div class="mx-auto flex min-h-screen max-w-[1100px] flex-col gap-10 px-6 py-10 lg:flex-row lg:items-stretch lg:gap-16">
+      {# ─── برند سمت راست ─── #}
+      <section class="flex flex-col justify-between gap-10 lg:w-[42%]">
+        <a href="{% url 'home:home' %}" class="wordmark-link inline-flex items-center" aria-label="{{ settings.site_name|default:'پیکسوریا' }}">
+          {% if settings.logo %}
+            <img src="{{ settings.logo.url }}" alt="{{ settings.site_name }}" class="h-7 w-auto" />
+          {% else %}
+            {% pixel_wordmark "full" class="wordmark h-[26px] w-auto text-ink" %}
+          {% endif %}
+        </a>
 
-        <div class="middle">
-          <p class="label">??? ??????</p>
-          <h2>?? <em>???????</em> ??? ?????.</h2>
+        <div class="max-w-[34ch]">
+          <p class="mb-4 font-mono text-[0.74rem] uppercase tracking-[0.14em] text-lime">پنل مدیریت</p>
+          <h2 class="font-display text-[clamp(1.8rem,4vw,2.6rem)] leading-[1.1] text-ink">
+            محتوای سایت از همین‌جا editable است.
+          </h2>
+          <p class="mt-4 leading-[1.7]">
+            هر متن و تصویری که بازدیدکننده می‌بیند از مدیریت پیکسوریا ویرایش می‌شود.
+          </p>
         </div>
 
         {% if stats %}
-        <div class="bottom">
-          {% for stat in stats %}
-          <div class="stat">
-            <span class="num">{{ stat.number }}</span>
-            <span class="desc">{{ stat.label }}</span>
+          <div class="grid grid-cols-3 gap-4 border-t border-line pt-6">
+            {% for stat in stats %}
+              <div>
+                <div class="font-display text-[1.4rem] text-lime">{{ stat.number }}</div>
+                <div class="font-mono text-[0.7rem] text-ink-dim">{{ stat.label }}</div>
+              </div>
+            {% endfor %}
           </div>
-          {% endfor %}
-        </div>
         {% endif %}
-      </div>
+      </section>
 
-      <!-- --- ??? ??? --- -->
-      <div class="auth-form-panel">
-        <div class="auth-form-wrap">
-          <div class="form-head">
-            <p class="crumb">
-              {{ settings.site_name|default:"???????" }} ? <span style="color: var(--ink)">????</span>
+      {# ─── فرم ورود ─── #}
+      <section class="flex flex-1 items-center">
+        <div class="w-full max-w-[440px] rounded-[var(--radius-lg)] border border-line bg-paper p-[clamp(24px,4vw,40px)]">
+          <div class="mb-7">
+            <p class="mb-3 font-mono text-[0.74rem] text-ink-dim">
+              {{ settings.site_name|default:"پیکسوریا" }} <span class="mx-1.5">›</span> <span class="text-ink">ورود</span>
             </p>
-            <h1>???? ?? ????</h1>
-            <p>
-              ???? ???????
-              <a href="{% url 'admin:index' %}">?? ??? ?????</a>
+            <h1 class="font-display text-[1.7rem] leading-[1.15] text-ink">ورود به حساب</h1>
+            <p class="mt-2 text-[0.92rem]">
+              مدیر سیستم هستید؟
+              <a href="{% url 'admin:index' %}" class="text-lime underline-offset-4 hover:underline">ورود مستقیم</a>
             </p>
           </div>
 
-          <form class="auth-form" method="post" action="{% url 'admin:login' %}">
+          <form method="post" action="{% url 'admin:login' %}" class="flex flex-col gap-5">
             {% csrf_token %}
             <input type="hidden" name="next" value="{{ next }}" />
 
             {% if form.errors %}
-            <div class="auth-error">
-              ??? ?????? ?? ??? ???? ?????? ???.
-            </div>
+              <div class="rounded-[var(--radius-md)] border border-lime/40 bg-lime/10 px-4 py-3 text-[0.88rem] text-lime">
+                نام کاربری یا گذرواژه اشتباه است. دوباره تلاش کنید.
+              </div>
             {% endif %}
 
             {% for field in form %}
-            <label>
-              {{ field.label }}
-              {{ field }}
-              {% if field.help_text %}
-              <small>{{ field.help_text }}</small>
-              {% endif %}
-            </label>
+              <label class="flex flex-col gap-2 text-[0.88rem]">
+                <span class="font-medium text-ink">{{ field.label }}</span>
+                {{ field }}
+                {% if field.help_text %}<small class="text-ink-dim">{{ field.help_text }}</small>{% endif %}
+              </label>
             {% endfor %}
 
-            <button type="submit" class="btn btn-ink btn-submit">
-              ???? <span class="arrow">?</span>
+            <button type="submit" class="mt-1 inline-flex items-center justify-center gap-2 rounded-[var(--radius-md)] bg-lime px-5 py-3 font-medium text-night transition-colors duration-300 hover:bg-night hover:text-lime">
+              ورود
             </button>
           </form>
 
-          <div class="auth-footer">
-            <span>� {{ settings.established_year|default:"????" }} {{ settings.site_name|default:"???????" }}</span>
-          </div>
+          <p class="mt-7 border-t border-line pt-5 text-center font-mono text-[0.74rem] text-ink-dim">
+            © {{ settings.established_year|default:"۱۴۰۳" }} {{ settings.site_name|default:"پیکسوریا" }}
+          </p>
         </div>
-      </div>
+      </section>
     </div>
   </body>
 </html>
