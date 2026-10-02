@@ -1,3 +1,4 @@
+{% load icon_tags %}
 {% comment %}محتوای اصلی مقاله + اشتراک‌گذاری{% endcomment %}
 <article class="post-body max-w-[72ch]" data-aos="fade-up" data-aos-delay="100" data-aos-duration="700">
   {# lead paragraph (excerpt) #}
@@ -12,6 +13,6 @@
     <a href="https://twitter.com/intent/tweet?url={{ request.build_absolute_uri }}" target="_blank" rel="noopener noreferrer" title="اشتراک‌گذاری در توییتر" aria-label="اشتراک‌گذاری در توییتر" class="inline-flex items-center gap-[7px] rounded-full border border-line px-4 py-2 text-ink-soft transition-[background,border-color,color] duration-200 hover:border-night hover:bg-night hover:text-ink">TW</a>
     <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ request.build_absolute_uri }}" target="_blank" rel="noopener noreferrer" title="اشتراک‌گذاری در لینکدین" aria-label="اشتراک‌گذاری در لینکدین" class="inline-flex items-center gap-[7px] rounded-full border border-line px-4 py-2 text-ink-soft transition-[background,border-color,color] duration-200 hover:border-night hover:bg-night hover:text-ink">LI</a>
     <a href="https://t.me/share/url?url={{ request.build_absolute_uri }}&text={{ article.title|urlencode }}" target="_blank" rel="noopener noreferrer" title="اشتراک‌گذاری در تلگرام" aria-label="اشتراک‌گذاری در تلگرام" class="inline-flex items-center gap-[7px] rounded-full border border-line px-4 py-2 text-ink-soft transition-[background,border-color,color] duration-200 hover:border-night hover:bg-night hover:text-ink">TG</a>
-    <a href="#" id="copy-link-btn" title="کپی لینک صفحه" aria-label="کپی لینک صفحه" class="inline-flex items-center gap-[7px] rounded-full border border-line px-4 py-2 text-ink-soft transition-[background,border-color,color] duration-200 hover:border-night hover:bg-night hover:text-ink">🔗 کپی لینک</a>
+    <a href="#" id="copy-link-btn" title="کپی لینک صفحه" aria-label="کپی لینک صفحه" class="inline-flex items-center gap-[7px] rounded-full border border-line px-4 py-2 text-ink-soft transition-[background,border-color,color] duration-200 hover:border-night hover:bg-night hover:text-ink">{% icon "link" class="h-4 w-4" %} کپی لینک</a>
   </div>
 </article>

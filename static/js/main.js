@@ -99,8 +99,7 @@
   });
 })();
 
-// ─── Lucide icons ───
-if (window.lucide) window.lucide.createIcons();
+// ─── Lucide icons are rendered server-side via {% icon %} (local SVG sprite) ───
 
 // ─── Password strength ───
 function updateStrength(val) {

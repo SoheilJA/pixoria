@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load icon_tags %}
 
 {% block title %}
   خدمات — {{ settings.site_name }}
@@ -10,7 +11,7 @@
 {% block content %}
   <section class="border-b border-line px-page pb-[clamp(40px,5vw,80px)] pt-[clamp(64px,9vw,130px)]" aria-labelledby="services-head" data-aos="fade-up">
     <p class="mb-4 font-mono text-[0.74rem] text-ink-dim" data-aos="fade-down">
-      خانه ← <span class="text-ink">خدمات</span>
+      خانه {% icon "chevron-left" class="inline-block h-3.5 w-3.5 shrink-0 opacity-50 align-middle" %} <span class="text-ink">خدمات</span>
     </p>
     <h1 id="services-head" class="mb-6 max-w-[18ch] text-[clamp(2.6rem,5.4vw,6rem)] leading-[0.98]" data-aos="fade-up" data-aos-delay="50">
       {% if page_section %}
@@ -40,7 +41,7 @@
             {% endif %}
           </div>
           <p class="m-0 text-[1rem] leading-[1.6] text-ink-soft" data-aos="fade-up" data-aos-delay="{{ delay|add:110 }}">{{ service.excerpt }}</p>
-          <a class="group inline-flex items-center gap-3 whitespace-nowrap font-mono text-[0.78rem] text-ink" href="{% url 'services:detail' service.slug %}" data-aos="fade-up" data-aos-delay="{{ delay|add:150 }}"><span class="transition-transform duration-200 group-hover:-translate-x-1">مشاهده خدمت</span><span class="text-lg transition-transform duration-200 group-hover:-translate-x-1">←</span></a>
+          <a class="group inline-flex items-center gap-3 whitespace-nowrap font-mono text-[0.78rem] text-ink" href="{% url 'services:detail' service.slug %}" data-aos="fade-up" data-aos-delay="{{ delay|add:150 }}"><span class="transition-transform duration-200 group-hover:-translate-x-1">مشاهده خدمت</span>{% icon "arrow-left" class="inline-block h-5 w-5 transition-transform duration-200 group-hover:-translate-x-1" %}</a>
         </article>
       {% endwith %}
     {% empty %}

@@ -1,4 +1,8 @@
 from django.contrib import admin
+from django.contrib.admin import display
+from django.templatetags.static import static
+from django.utils.html import format_html
+
 from .models import (
     ServicesPageSection,
     Service,
@@ -30,6 +34,23 @@ class ServiceStatInline(admin.TabularInline):
 class ServiceWhyUsInline(admin.TabularInline):
     model = ServiceWhyUs
     extra = 1
+    fields = ["icon", "icon_preview", "title", "description", "order"]
+    readonly_fields = ["icon_preview"]
+
+    @display(description="پیش‌نمایش")
+    def icon_preview(self, obj):
+        if not obj.icon:
+            return "—"
+        return format_html(
+            '<svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" '
+            'fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" '
+            'stroke-linejoin="round" style="color:#c8ff3d">'
+            '<use href="{}#i-{}" xlink:href="{}#i-{}"></use></svg>',
+            static("icons/lucide.sprite.svg"),
+            obj.icon,
+            static("icons/lucide.sprite.svg"),
+            obj.icon,
+        )
 
 
 class ServiceDeliverableInline(admin.TabularInline):

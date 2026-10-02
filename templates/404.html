@@ -1,3 +1,4 @@
+{% load icon_tags %}
 {% load static %}
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
@@ -49,7 +50,7 @@
         </header>
 
         <nav class="mobile-nav fixed inset-0 z-[60] hidden flex-col gap-1 bg-night px-page pb-8 pt-20 font-display text-[2rem] text-ink [&.open]:flex" aria-label="Mobile">
-          <button class="mobile-close absolute right-[18px] top-[18px] cursor-pointer bg-transparent font-mono text-[0.85rem] text-ink" aria-label="Close menu">بستن ✕</button>
+          <button class="mobile-close absolute right-[18px] top-[18px] cursor-pointer bg-transparent font-mono text-[0.85rem] text-ink" aria-label="Close menu">بستن {% icon "x" class="inline-block h-4 w-4 align-middle" %}</button>
           <a href="{% url 'home:home' %}" class="border-b border-night-soft py-3.5 transition-colors hover:text-lime">خانه</a>
           <a href="{% url 'portfolio:list' %}" class="border-b border-night-soft py-3.5 transition-colors hover:text-lime">نمونه کار ها</a>
           <a href="{% url 'services:list' %}" class="border-b border-night-soft py-3.5 transition-colors hover:text-lime">خدمات</a>
@@ -62,12 +63,12 @@
             <span aria-hidden="true" class="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[55%] select-none whitespace-nowrap font-display text-[clamp(18rem,40vw,38rem)] font-semibold leading-none tracking-[-0.06em] text-transparent [-webkit-text-stroke:1px_var(--color-ink-line)] max-md:top-[20%] max-md:translate-y-0 max-md:text-[52vw]">۴۰۴</span>
             <div class="relative z-[2] flex max-w-[640px] flex-col justify-center gap-8">
               <p class="font-mono text-[0.76rem] uppercase tracking-[0.12em] text-ink-dim">
-                خطا ← <span class="text-ink">صفحه پیدا نشد</span>
+                خطا {% icon "chevron-left" class="inline-block h-3.5 w-3.5 shrink-0 opacity-50 align-middle" %} <span class="text-ink">صفحه پیدا نشد</span>
               </p>
               <h1 class="m-0 text-[clamp(2.4rem,5vw,5.2rem)] leading-[0.98] tracking-[-0.03em]">اینجا <em class="font-display font-normal italic">چیزی</em><br />نیست.</h1>
               <p class="m-0 max-w-[44ch] text-[1.12rem] leading-[1.6] text-ink-soft">صفحه‌ای که دنبالش می‌گردی یا حذف شده، یا آدرسش عوض شده، یا اصلاً وجود نداشته. از لینک‌های زیر برگرد.</p>
               <div class="mt-2 flex flex-wrap gap-3">
-                <a class="btn btn-ink group" href="{% url 'home:home' %}">برگشت به خانه <span class="arrow transition-transform duration-[250ms] ease-ax group-hover:translate-y-1">←</span></a><a class="btn btn-ghost" href="{% url 'contact:contact' %}">تماس با ما</a>
+                <a class="btn btn-ink group" href="{% url 'home:home' %}">برگشت به خانه {% icon "arrow-left" class="arrow h-4 w-4 transition-transform duration-[250ms] ease-ax group-hover:translate-y-1" %}</a><a class="btn btn-ghost" href="{% url 'contact:contact' %}">تماس با ما</a>
               </div>
             </div>
 

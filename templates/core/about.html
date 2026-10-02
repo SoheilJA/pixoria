@@ -1,4 +1,4 @@
-{% load static %}
+{% load static icon_tags %}
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
   <head>
@@ -26,7 +26,7 @@
           <a href="{% url 'core:about' %}" class="group/nav active flex items-center gap-3.5 rounded-sm border-r-2 border-lime px-2 py-2.5 text-ink" aria-current="page"><span class="text-[0.7rem] text-lime">05</span>درباره ما</a>
           <a href="{% url 'contact:contact' %}" class="group/nav flex items-center gap-3.5 rounded-sm border-r-2 border-transparent px-2 py-2.5 text-ink-soft transition-colors duration-300 hover:bg-paper-soft hover:text-ink"><span class="text-[0.7rem] text-ink-dim transition-colors group-hover/nav:text-lime-deep">06</span>تماس با ما</a>
         </nav>
-        <a href="{% url 'contact:contact' %}" class="mt-8 inline-flex items-center justify-center gap-2 rounded-sm bg-lime px-4 py-3 font-mono text-[0.8rem] font-medium text-ink transition-colors duration-300 hover:bg-night hover:text-lime">شروع پروژه <span aria-hidden="true">←</span></a>
+        <a href="{% url 'contact:contact' %}" class="mt-8 inline-flex items-center justify-center gap-2 rounded-sm bg-lime px-4 py-3 font-mono text-[0.8rem] font-medium text-ink transition-colors duration-300 hover:bg-night hover:text-lime">شروع پروژه {% icon "arrow-left" class="inline-block h-4 w-4" %}</a>
         <div class="mt-auto flex flex-col gap-4 font-mono text-[0.72rem] text-ink-dim">
           <span class="inline-flex w-fit items-center gap-2 rounded-full border border-lime-deep/60 bg-lime/10 px-3 py-1.5 text-ink"><span class="h-1.5 w-1.5 animate-pulse rounded-full bg-lime-deep"></span>{{ settings.status|default:'آماده همکاری' }}</span>
           <div class="flex justify-between">
@@ -45,25 +45,25 @@
       <div class="min-w-0">
         <header class="mobile-header fixed inset-x-0 top-0 z-50 flex items-center justify-between border-b border-line bg-paper px-page py-3 md:hidden">
           <a href="{% url 'home:home' %}" class="flex items-center gap-2 font-display font-semibold text-ink"><span class="grid h-[28px] w-[28px] place-items-center rounded-sm bg-night font-mono text-[0.78rem] font-semibold leading-none text-lime">P</span>پیکسوریا</a>
-          <button class="menu-toggle inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-sm bg-night text-lime" aria-label="باز کردن منو" aria-controls="mobile-nav" aria-expanded="false"><i data-lucide="menu" class="h-6 w-6"></i></button>
+          <button class="menu-toggle inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-sm bg-night text-lime" aria-label="باز کردن منو" aria-controls="mobile-nav" aria-expanded="false">{% icon "menu" class="h-6 w-6" %}</button>
         </header>
         <nav id="mobile-nav" class="mobile-nav fixed inset-0 z-[60] hidden flex-col gap-1 bg-night px-page pb-8 pt-24 font-display text-[2rem] text-ink [&.open]:flex" aria-label="Mobile">
-          <button class="mobile-close absolute left-[18px] top-[18px] inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-sm bg-lime text-ink" aria-label="بستن منو"><i data-lucide="x" class="h-6 w-6"></i></button>
-          <a href="{% url 'home:home' %}" class="flex items-center gap-4 border-b border-night-soft py-3.5 hover:text-lime"><i data-lucide="home" class="h-6 w-6 opacity-70"></i>خانه</a>
-          <a href="{% url 'portfolio:list' %}" class="flex items-center gap-4 border-b border-night-soft py-3.5 hover:text-lime"><i data-lucide="layout-grid" class="h-6 w-6 opacity-70"></i>نمونه کار ها</a>
-          <a href="{% url 'services:list' %}" class="flex items-center gap-4 border-b border-night-soft py-3.5 hover:text-lime"><i data-lucide="layers" class="h-6 w-6 opacity-70"></i>خدمات</a>
-          <a href="{% url 'blog:list' %}" class="flex items-center gap-4 border-b border-night-soft py-3.5 hover:text-lime"><i data-lucide="newspaper" class="h-6 w-6 opacity-70"></i>بلاگ</a>
-          <a href="{% url 'core:about' %}" class="flex items-center gap-4 border-b border-night-soft py-3.5 text-lime"><i data-lucide="users" class="h-6 w-6 opacity-70"></i>درباره ما</a>
-          <a href="{% url 'contact:contact' %}" class="flex items-center gap-4 border-b border-night-soft py-3.5 hover:text-lime"><i data-lucide="mail" class="h-6 w-6 opacity-70"></i>تماس با ما</a>
+          <button class="mobile-close absolute left-[18px] top-[18px] inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-sm bg-lime text-ink" aria-label="بستن منو">{% icon "x" class="h-6 w-6" %}</button>
+          <a href="{% url 'home:home' %}" class="flex items-center gap-4 border-b border-night-soft py-3.5 hover:text-lime">{% icon "home" class="h-6 w-6 opacity-70" %}خانه</a>
+          <a href="{% url 'portfolio:list' %}" class="flex items-center gap-4 border-b border-night-soft py-3.5 hover:text-lime">{% icon "layout-grid" class="h-6 w-6 opacity-70" %}نمونه کار ها</a>
+          <a href="{% url 'services:list' %}" class="flex items-center gap-4 border-b border-night-soft py-3.5 hover:text-lime">{% icon "layers" class="h-6 w-6 opacity-70" %}خدمات</a>
+          <a href="{% url 'blog:list' %}" class="flex items-center gap-4 border-b border-night-soft py-3.5 hover:text-lime">{% icon "newspaper" class="h-6 w-6 opacity-70" %}بلاگ</a>
+          <a href="{% url 'core:about' %}" class="flex items-center gap-4 border-b border-night-soft py-3.5 text-lime">{% icon "users" class="h-6 w-6 opacity-70" %}درباره ما</a>
+          <a href="{% url 'contact:contact' %}" class="flex items-center gap-4 border-b border-night-soft py-3.5 hover:text-lime">{% icon "mail" class="h-6 w-6 opacity-70" %}تماس با ما</a>
           <div class="mt-auto space-y-4 pt-6 border-t border-night-soft">
-            <a href="{% url 'contact:contact' %}" class="inline-flex w-full items-center justify-center gap-2 rounded-sm bg-lime px-4 py-3.5 font-mono text-[0.8rem] font-medium text-ink transition-colors duration-300 hover:bg-night hover:text-lime"><i data-lucide="arrow-up-left" class="h-4 w-4"></i>شروع پروژه</a>
+            <a href="{% url 'contact:contact' %}" class="inline-flex w-full items-center justify-center gap-2 rounded-sm bg-lime px-4 py-3.5 font-mono text-[0.8rem] font-medium text-ink transition-colors duration-300 hover:bg-night hover:text-lime">{% icon "arrow-up-left" class="h-4 w-4" %}شروع پروژه</a>
             <div class="flex flex-col gap-3 font-mono text-[0.78rem] text-mist-soft">
               {% if settings.phone %}
-                <a href="tel:{{ settings.phone }}" class="flex items-center gap-3 py-2"><i data-lucide="phone" class="h-4 w-4"></i>{{ settings.phone }}</a>
+                <a href="tel:{{ settings.phone }}" class="flex items-center gap-3 py-2">{% icon "phone" class="h-4 w-4" %}{{ settings.phone }}</a>
               {% endif %}
               <div class="flex flex-wrap gap-3">
                 {% for social in socials %}
-                  <a href="{{ social.url }}" target="_blank" rel="noopener" class="inline-flex items-center gap-2"><i data-lucide="globe" class="h-4 w-4"></i>{{ social.name }}</a>
+                  <a href="{{ social.url }}" target="_blank" rel="noopener" class="inline-flex items-center gap-2">{% icon "globe" class="h-4 w-4" %}{{ social.name }}</a>
                 {% endfor %}
               </div>
               <div class="flex justify-between border-t border-night-soft pt-4">
@@ -76,7 +76,7 @@
           <!-- HERO -->
           <section class="border-b border-line px-page pb-[clamp(40px,5vw,80px)] pt-12 md:pt-[clamp(64px,9vw,130px)]" data-aos="fade-up">
             <p class="mb-4 font-mono text-[0.74rem] text-ink-dim" data-aos="fade-down">
-              خانه ← <span class="text-ink">استودیو</span>
+              خانه {% icon "chevron-left" class="inline-block h-3.5 w-3.5 shrink-0 opacity-50 align-middle" %} <span class="text-ink">استودیو</span>
             </p><h1 class="mb-6 max-w-[18ch] text-[clamp(2.6rem,5.4vw,6rem)] leading-[0.98]" data-aos="fade-up" data-aos-delay="100">{{ hero.title|safe }}</h1><div class="max-w-[60ch] text-[1.18rem] leading-[1.5] text-ink-soft" data-aos="fade-up" data-aos-delay="200">{{ hero.description|safe }}</div>
           </section>
 
@@ -189,7 +189,7 @@
               <details class="group border border-line rounded-xl overflow-hidden transition-colors duration-300 hover:border-lime/30" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}50">
                 <summary class="flex items-center justify-between gap-4 p-5 cursor-pointer list-none">
                   <h3 class="text-[1.1rem] leading-[1.4]">{{ faq.question }}</h3>
-                  <i data-lucide="chevron-down" class="h-5 w-5 text-lime shrink-0 transition-transform duration-300 group-open:rotate-180"></i>
+                  {% icon "chevron-down" class="h-5 w-5 text-lime shrink-0 transition-transform duration-300 group-open:rotate-180" %}
                 </summary>
                 <div class="px-5 pb-5 border-t border-line text-ink-soft leading-[1.7]">{{ faq.answer|safe }}</div>
               </details>
@@ -206,7 +206,7 @@
                 <span class="font-mono text-[0.8rem] text-lime">{{ pre.label|safe }}</span><h2 id="manifesto-title" class="mt-5 text-ink">{{ pre.title|safe }}</h2>
               </div>
               <div class="text-[1.05rem] leading-[1.65] text-mist" data-aos="fade-up" data-aos-delay="100">
-                {{ pre.description|safe }}<a class="btn btn-lime mt-5" href="{{ pre.button_url }}">{{ pre.button_text }} <span>←</span></a>
+                {{ pre.description|safe }}<a class="btn btn-lime mt-5" href="{{ pre.button_url }}">{{ pre.button_text }} {% icon "arrow-left" class="inline-block h-4 w-4 align-middle" %}</a>
               </div>
             </div>
           </section>
@@ -235,7 +235,6 @@
     </div>
     <script src="{% static 'js/vendor/gsap.min.js' %}"></script>
     <script src="{% static 'js/vendor/ScrollTrigger.min.js' %}"></script>
-    <script src="{% static 'js/vendor/lucide.min.js' %}" defer></script>
     <script src="{% static 'js/main.js' %}" defer></script>
 
     <script type="module" src="{% static 'js/site-reveal.js' %}"></script>

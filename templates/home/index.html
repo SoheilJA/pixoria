@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load icon_tags %}
 
 {% block title %}
   {{ settings.site_name }} — {{ settings.site_description }}
@@ -41,9 +42,9 @@
         <p class="m-0 max-w-[46ch] text-[1.12rem] leading-[1.6] text-ink/70">{{ hero.description|safe }}</p>
         <div class="home-hero-cta flex flex-wrap gap-3.5">
           <a href="{% url 'contact:contact' %}" class="btn btn-lime group">شروع پروژه
-            <span class="arrow transition-transform duration-[250ms] ease-ax group-hover:translate-y-1">↓</span></a>
+            {% icon "arrow-down" class="arrow h-4 w-4 transition-transform duration-[250ms] ease-ax group-hover:translate-y-1" %}</a>
           <a href="{% url 'portfolio:list' %}" class="btn btn-ghost-light group">دیدن کارها
-            <span class="arrow transition-transform duration-[250ms] ease-ax group-hover:translate-y-1">↓</span></a>
+            {% icon "arrow-down" class="arrow h-4 w-4 transition-transform duration-[250ms] ease-ax group-hover:translate-y-1" %}</a>
         </div>
       </div>
     </div>
@@ -53,10 +54,10 @@
       class="home-marquee relative z-10 flex gap-8 overflow-hidden whitespace-nowrap border-t border-ink/15 pt-5 font-mono text-[0.86rem] uppercase tracking-[0.14em] text-ink/55">
       <div class="flex animate-marq gap-8">
         {% for item in hero_marquee %}
-          <span class="flex items-center gap-8">{{ item.text }} <span class="text-[0.8em] text-lime">✦</span></span>
+          <span class="flex items-center gap-8">{{ item.text }} {% icon "sparkle" class="h-3.5 w-3.5 shrink-0 text-lime" %}</span>
         {% endfor %}
         {% for item in hero_marquee %}
-          <span class="flex items-center gap-8">{{ item.text }} <span class="text-[0.8em] text-lime">✦</span></span>
+          <span class="flex items-center gap-8">{{ item.text }} {% icon "sparkle" class="h-3.5 w-3.5 shrink-0 text-lime" %}</span>
         {% endfor %}
       </div>
     </div>
@@ -89,7 +90,7 @@
               {% if work.excerpt %}<p class="text-ink-soft">{{ work.excerpt }}</p>{% endif %}
               <a href="{% url 'portfolio:detail' work.slug %}"
                 class="mt-auto inline-flex items-center gap-2 font-mono text-[0.78rem] uppercase tracking-[0.1em] text-ink transition-colors hover:text-lime-deep">مطالعه
-                موردی <span>↖</span></a>
+                موردی {% icon "arrow-up-left" class="inline-block h-3.5 w-3.5 align-middle" %}</a>
             </div>
           </article>
         {% empty %}
@@ -120,7 +121,7 @@
             <span class="absolute inset-x-0 top-0 h-[3px] origin-right scale-x-0 bg-lime transition-transform duration-500 ease-ax-out group-hover:scale-x-100" aria-hidden="true"></span>
             <div class="flex items-start justify-between gap-4">
               <span class="font-mono text-[0.8rem] tracking-[0.06em] text-mist-dim">/{{ forloop.counter|stringformat:'02d' }}</span>
-              <span class="grid h-10 w-10 place-items-center rounded-full border border-line-strong text-[1.1rem] text-ink transition-all duration-300 ease-ax group-hover:border-lime group-hover:bg-lime group-hover:text-night group-hover:rotate-45">↖</span>
+              <span class="grid h-10 w-10 place-items-center rounded-full border border-line-strong text-ink transition-all duration-300 ease-ax group-hover:border-lime group-hover:bg-lime group-hover:text-night group-hover:rotate-45">{% icon "arrow-up-left" class="h-5 w-5" %}</span>
             </div>
             <h3 class="text-[clamp(1.35rem,2vw,1.8rem)] leading-[1.05] tracking-[-0.02em] !text-ink">{{ service.title }}</h3>
             <p class="m-0 max-w-[50ch] text-[0.98rem] leading-[1.6] text-mist">{{ service.excerpt }}</p>
@@ -190,7 +191,7 @@
               class="flex flex-col gap-4 rounded-md border border-line bg-paper p-[26px] transition-[transform,border-color] duration-300 ease-ax hover:-translate-y-1 hover:border-night"
               data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
               <div class="flex items-center justify-between">
-                <div class="flex gap-0.5 text-lime" aria-label="۵ ستاره">★★★★★</div>
+                <div class="flex gap-0.5 text-lime" aria-label="۵ ستاره">{% icon "star" class="h-4 w-4 fill-current" %}{% icon "star" class="h-4 w-4 fill-current" %}{% icon "star" class="h-4 w-4 fill-current" %}{% icon "star" class="h-4 w-4 fill-current" %}{% icon "star" class="h-4 w-4 fill-current" %}</div>
                 <span class="font-mono text-[0.72rem] text-ink-dim">{{ forloop.counter|stringformat:'02d' }}</span>
               </div>
               <blockquote class="m-0 text-[1.05rem] leading-[1.7] text-ink">{{ t.text }}</blockquote>
@@ -219,7 +220,7 @@
           class="ml-2 inline-block h-1.5 w-1.5 rounded-full bg-lime align-[2px]"></span></span>
         <h2 id="latest-articles-head" class="mb-[18px]">{{ latest_articles_section.title|default:'مقالات اخیر'|safe }}</h2>
         <p class="m-0 max-w-[60ch] text-[1.15rem] leading-[1.5] text-ink-soft">{{ latest_articles_section.description|default:'مقالات محبوب و جدید سایت ما'|safe }}</p>
-        <a href="{% url 'blog:list' %}" class="btn btn-ghost mt-6 inline-flex">مشاهده همه مقالات <span>←</span></a>
+        <a href="{% url 'blog:list' %}" class="btn btn-ghost mt-6 inline-flex">مشاهده همه مقالات {% icon "arrow-left" class="inline-block h-4 w-4 align-middle" %}</a>
       </div>
       <div class="carousel" id="latest-articles-carousel">
         <div class="carousel-track">
@@ -232,13 +233,13 @@
                 </div>
                 <h3 class="mt-1 text-[1.3rem]"><a href="{% url 'blog:detail' article.slug %}">{{ article.title }}</a></h3>
                 <p class="text-ink-soft">{{ article.excerpt }}</p>
-                <a class="mt-auto inline-flex items-center gap-2 font-mono text-[0.78rem] text-ink hover:text-lime-deep" href="{% url 'blog:detail' article.slug %}">خواندن مقاله ←</a>
+                <a class="mt-auto inline-flex items-center gap-2 font-mono text-[0.78rem] text-ink hover:text-lime-deep" href="{% url 'blog:detail' article.slug %}">خواندن مقاله {% icon "arrow-left" class="inline-block h-3.5 w-3.5 align-middle" %}</a>
               </div>
             </article>
           {% endfor %}
         </div>
         <div class="carousel-nav">
-          <button type="button" class="carousel-btn-prev" aria-label="قبلی">←</button><button type="button" class="carousel-btn-next" aria-label="بعدی">→</button>
+          <button type="button" class="carousel-btn-prev" aria-label="قبلی">{% icon "arrow-left" class="h-5 w-5" %}</button><button type="button" class="carousel-btn-next" aria-label="بعدی">{% icon "arrow-right" class="h-5 w-5" %}</button>
         </div>
       </div>
     </section>

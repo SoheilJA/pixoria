@@ -25,6 +25,7 @@
     "tailwindcss": "^4.3.3"
   },
   "dependencies": {
-    "lenis": "^1.1.13"
+    "lenis": "^1.1.13",
+    "lucide-static": "^1.49.0"
   }
 }

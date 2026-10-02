@@ -1,3 +1,4 @@
+{% load icon_tags %}
 {% load static %}
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
@@ -32,7 +33,7 @@
         <div class="w-full max-w-[400px]" data-aos="fade-up">
           <div class="mb-10">
             <p class="mb-3.5 font-mono text-[0.74rem] text-ink-dim">
-              {{ settings.site_name|default:'پیکسوریا' }} ← <span class="text-ink">ورود</span>
+              {{ settings.site_name|default:'پیکسوریا' }} {% icon "chevron-left" class="inline-block h-3.5 w-3.5 shrink-0 opacity-50 align-middle" %} <span class="text-ink">ورود</span>
             </p><h1 class="mb-2 font-display text-[clamp(1.8rem,3vw,2.6rem)] text-ink">ورود به حساب</h1><p class="m-0 text-[0.98rem] text-ink-soft">
               حساب ندارید؟ <a href="#" onclick="return false" class="border-b border-line font-medium text-ink">ثبت‌نام کنید</a>
             </p>
@@ -56,7 +57,7 @@
             <div class="flex justify-end">
               <a href="#" onclick="return false" class="font-mono text-[0.72rem] text-ink-dim hover:text-ink">رمز عبور را فراموش کردم</a>
             </div>
-            <button type="submit" class="btn btn-ink mt-2 w-full justify-center px-6 py-[15px] text-[0.88rem]">ورود <span>←</span></button>
+            <button type="submit" class="btn btn-ink mt-2 w-full justify-center px-6 py-[15px] text-[0.88rem]">ورود {% icon "arrow-left" class="inline-block h-4 w-4 align-middle" %}</button>
           </form>
           <div class="mt-10 flex flex-wrap justify-between gap-4 border-t border-line pt-6 font-mono text-[0.7rem] text-ink-dim">
             <span>© {{ settings.established_year|default:'۱۴۰۵' }} {{ settings.site_name|default:'پیکسوریا' }}</span><a href="{% url 'contact:contact' %}" class="hover:text-ink">تماس</a>
@@ -66,7 +67,6 @@
     </div>
     <script src="{% static 'js/vendor/gsap.min.js' %}"></script>
     <script src="{% static 'js/vendor/ScrollTrigger.min.js' %}"></script>
-    <script src="{% static 'js/vendor/lucide.min.js' %}" defer></script>
     <script src="{% static 'js/main.js' %}" defer></script>
     <script type="module" src="{% static 'js/site-reveal.js' %}"></script>
   </body>

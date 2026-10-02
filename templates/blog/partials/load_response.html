@@ -1,3 +1,4 @@
+{% load icon_tags %}
 {% include "blog/partials/article_cards.html" %}
 
 <div id="load-more-wrapper" hx-swap-oob="true" style="text-align:center;margin-top:56px">
@@ -5,7 +6,7 @@
   <button class="btn btn-ghost" id="load-more-btn"
     hx-get="{% url 'blog:load' %}?category={{ current_category }}&page={{ next_page }}"
     hx-target="#blog-grid" hx-swap="beforeend">
-    مقالات بیشتر <span class="arrow">↓</span>
+    مقالات بیشتر {% icon "arrow-down" class="arrow h-4 w-4" %}
   </button>
   {% endif %}
 </div>

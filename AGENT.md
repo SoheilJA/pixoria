@@ -53,7 +53,7 @@ The current project primary is **lime `#c8ff3d`** (`--color-lime` in `input.css`
 - [x] 1. Repo audit + create `AGENT.md` (architecture summary, checklist, conventions)
 - [x] 2. Vendor all libraries locally (GSAP + ScrollTrigger, Three.js + needed addons, Lenis, HTMX, Alpine, Lucide, fonts) into `static/`; remove CDN links; verify the site still works — *all already local; added Lenis; no CDN links exist anywhere in the repo*
 - [x] 3. Design tokens + global dark theme using the existing primary green (CSS variables + Tailwind config); fix every light-theme leftover
-- [ ] 4. Lucide icon system (`{% icon %}` tag) + replace all HTML-entity/emoji icons + icon-name fields in models/admin
+- [x] 4. Lucide icon system (`{% icon %}` tag) + replace all HTML-entity/emoji icons + icon-name fields in models/admin — *sprite built from local lucide-static v1.49.0 (2121 icons, 716 KB, cached); `{% icon %}` fixed to emit real SVG (was auto-escaped); `ServiceWhyUs.icon` migrated emoji → Lucide names; dead `lucide.min.js` UMD removed*
 - [ ] 5. Pixel wordmark logo (SVG) + remove the "P" icon everywhere + new favicon set/manifest + admin-replaceable logo/favicon (`SiteSettings`)
 - [ ] 6. Glass & liquid-glass utility classes/components
 - [ ] 7. Reusable template components (`templates/components/…`): section header, buttons, cards, badges, etc.
@@ -104,6 +104,14 @@ Class renames done in templates (mechanical, script-applied): `bg-ink*` → `bg-
 
 Verified: all pages 200, computed body bg `rgb(4,7,10)`, zero light surfaces remaining on home/about.
 
+### Lucide icon system (Task 4)
+
+- **Sprite:** `static/icons/lucide.sprite.svg` — one `<symbol id="i-<name>">` per icon, generated from the pinned `lucide-static@1.49.0` (ISC) npm package by `node scripts/build_icon_sprite.js` (regenerate after `npm update lucide-static`). 2121 icons, ~716 KB, served once and browser-cached — a single external `<use>` reference per icon keeps every page body small. A subset sprite is a possible future optimization (only ~25 distinct icons are currently used) but was skipped: the full sprite lets the admin pick any icon without a rebuild step.
+- **Template tag:** `{% load icon_tags %}` then `{% icon "zap" class="h-6 w-6 text-lime" size="24" %}` in `apps/core/templatetags/icon_tags.py`. Renders an inline `<svg>` that references the local sprite via `<use href>` (works with `currentColor`, no CDN). **The tag output must be `mark_safe`** — a first attempt returned the raw string, which Django auto-escaped, so every icon rendered as visible literal `<svg …>` text (caught by inspecting the rendered HTML, not by the 200 status).
+- **Icon-name validation & admin preview:** `apps/core/icon_utils.py` exposes `available_icons()` (cached parse of the sprite), `validate_icon_name()` (field validator — rejects names missing from the sprite with a Persian message + lucide.dev link) and `DEFAULT_ICON`. `ServiceWhyUsAdmin`-style inlines get a read-only `icon_preview` column rendering the live SVG.
+- **`ServiceWhyUs.icon`** was an emoji `CharField(max_length=10)`; now `max_length=64`, `default="sparkles"`, Persian `help_text` with a link to the icon list, and the validator. Existing rows were converted by a data migration (`0004_servicewhyus_emoji_to_lucide`): ⚡→`zap`, 📱→`smartphone`, 🎨→`palette`, 🔒→`shield-check` (+ a 40-entry fallback map for other common emoji).
+- **Cleanup:** the unused 444 KB `lucide.min.js` UMD bundle was removed (the site uses the sprite, not the runtime JS API); the last entity/emoji glyphs in live templates (`✕`, `↗`, `←`, `🔗`, `✓`) were replaced with `{% icon %}`.
+
 
 - **Primary accent:** lime `#c8ff3d` (existing). Scale derived from it: 50 `#f6ffe0` … 950 `#3d5a00`, glow `rgba(200,255,61,…)`, gradient lime → `#d8ff7a` (cyan-shifted lighter).
 - **JS stack:** vanilla ES modules + GSAP/ScrollTrigger + Three.js + HTMX. **Alpine.js intentionally not added** (vanilla covers the interaction layer; one less library). Lenis added locally in Task 2 for smooth scroll.
@@ -126,6 +134,6 @@ Verified: all pages 200, computed body bg `rgb(4,7,10)`, zero light surfaces rem
 ## Known Issues / Follow-ups
 
 - `static/css/site.css` is a 2.2k-line legacy stylesheet from a previous pixel-art design; most of it is dead. Will be trimmed/removed as the new system lands.
-- `templates/includes/_*.html` and `home/base_cinematic.html` are leftovers from the cinematic design; unused.
+- **Dead template trees still on disk, unreferenced by any view or template:** `templates/_legacy/` (old-design snapshot), `templates/includes/_*.html` + `templates/home/base_cinematic.html` (cinematic leftovers, only referenced by each other). They still contain the old entity/glyph icons (`←`, `★`, `✕`, `▲`) — safe to delete (recoverable from git), pending a delete approval.
+- **Persian code comments:** the previous pass wrote Persian comments inside `static/js/**/*.js` (11 files). Per the project rules comments must be English — to be translated in a follow-up commit.
 - `django-unfold` is in `requirements.txt` but commented out — admin stays stock Django for now.
-- `ServiceWhyUs.icon` is an emoji CharField — migrated to a Lucide icon name in Task 4.

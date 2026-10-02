@@ -1,5 +1,7 @@
 from django.db import models
 
+from apps.core.icon_utils import validate_icon_name
+
 
 class ServicesPageSection(models.Model):
     """هیرو صفحه همه خدمات"""
@@ -78,7 +80,15 @@ class ServiceWhyUs(models.Model):
         Service, on_delete=models.CASCADE, related_name="why_us", verbose_name="خدمت"
     )
     icon = models.CharField(
-        max_length=10, verbose_name="آیکون", help_text="یک ایموجی. مثلاً ⚡"
+        max_length=64,
+        default="sparkles",
+        verbose_name="آیکون",
+        help_text=(
+            "نام انگلیسی یک آیکون Lucide، بدون فاصله. "
+            "مثال: zap، palette، shield-check. "
+            "لیست کامل آیکون‌ها: lucide.dev/icons"
+        ),
+        validators=[validate_icon_name],
     )
     title = models.CharField(max_length=100, verbose_name="عنوان")
     description = models.TextField(verbose_name="توضیحات")

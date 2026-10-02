@@ -1,9 +1,10 @@
+{% load icon_tags %}
 {% comment %}final CTA section{% endcomment %}
 <section class="relative overflow-hidden bg-lime px-page py-[clamp(80px,9vw,140px)]" aria-labelledby="cta-head">
   <div class="mx-auto grid max-w-[1200px] grid-cols-1 items-end gap-16 md:grid-cols-[2fr_1fr]">
     <h2 id="cta-head" class="m-0 max-w-[14ch] font-display text-[clamp(2.6rem,5vw,5.2rem)] font-medium leading-[0.96] tracking-[-0.03em] text-ink">پروژه ای داری که <em class="font-display font-normal italic">باید</em> ساخته شود؟</h2>
     <div>
-      <p class="max-w-[32ch] text-[1.05rem] leading-[1.5] text-ink">ما مدل‌های کسب‌وکار پیچیده را به محصولات دیجیتالی قابل اجرا تبدیل می‌کنیم.</p><a class="btn btn-ink mt-6 inline-flex" href="{% url 'contact:contact' %}" title="شروع یک پروژه جدید">شروع کنیم <span class="arrow">←</span></a>
+      <p class="max-w-[32ch] text-[1.05rem] leading-[1.5] text-ink">ما مدل‌های کسب‌وکار پیچیده را به محصولات دیجیتالی قابل اجرا تبدیل می‌کنیم.</p><a class="btn btn-ink mt-6 inline-flex" href="{% url 'contact:contact' %}" title="شروع یک پروژه جدید">شروع کنیم {% icon "arrow-left" class="arrow h-4 w-4" %}</a>
     </div>
   </div>
 </section>

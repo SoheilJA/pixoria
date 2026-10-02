@@ -11,8 +11,6 @@
     --container-3xl: 48rem;
     --text-base: 1rem;
     --text-base--line-height: calc(1.5 / 1);
-    --text-lg: 1.125rem;
-    --text-lg--line-height: calc(1.75 / 1.125);
     --text-xl: 1.25rem;
     --text-xl--line-height: calc(1.75 / 1.25);
     --font-weight-light: 300;
@@ -49,6 +47,7 @@
     --color-line-strong: #2c3a33;
     --color-lime: #c8ff3d;
     --color-lime-deep: #a3d130;
+    --color-lime-soft: rgba(200, 255, 61, 0.10);
     --color-lime-glow: rgba(200, 255, 61, 0.35);
     --color-warn: #ff6b54;
     --color-ok: #3ddc84;
@@ -63,8 +62,11 @@
     --spacing-section: clamp(80px, 9vw, 160px);
     --spacing-section-sm: clamp(56px, 6vw, 100px);
     --radius-pill: 999px;
+    --shadow-card: 0 12px 40px -14px rgba(0, 0, 0, 0.6);
+    --shadow-glow: 0 0 0 1px rgba(200, 255, 61, 0.22), 0 14px 50px -12px rgba(200, 255, 61, 0.28);
     --ease-ax: cubic-bezier(0.2, 0.8, 0.2, 1);
     --ease-ax-out: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
     --animate-marq: marq 32s linear infinite;
     --animate-marq-slow: marq 38s linear infinite;
   }
@@ -1098,6 +1100,9 @@
       border-color: color-mix(in oklab, var(--color-night) 20%, transparent);
     }
   }
+  .border-paper {
+    border-color: var(--color-paper);
+  }
   .border-transparent {
     border-color: transparent;
   }
@@ -1109,6 +1114,12 @@
   }
   .bg-ink {
     background-color: var(--color-ink);
+  }
+  .bg-ink\/5 {
+    background-color: color-mix(in srgb, #eaf2e8 5%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      background-color: color-mix(in oklab, var(--color-ink) 5%, transparent);
+    }
   }
   .bg-lime {
     background-color: var(--color-lime);
@@ -1182,6 +1193,12 @@
   .bg-transparent {
     background-color: transparent;
   }
+  .bg-white\/5 {
+    background-color: color-mix(in srgb, #fff 5%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      background-color: color-mix(in oklab, var(--color-white) 5%, transparent);
+    }
+  }
   .bg-gradient-to-b {
     --tw-gradient-position: to bottom in oklab;
     background-image: linear-gradient(var(--tw-gradient-stops));
@@ -1212,6 +1229,9 @@
   .to-transparent {
     --tw-gradient-to: transparent;
     --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));
+  }
+  .fill-current {
+    fill: currentcolor;
   }
   .object-cover {
     object-fit: cover;
@@ -1509,19 +1529,12 @@
     font-size: var(--text-body);
     line-height: var(--tw-leading, var(--text-body--line-height));
   }
-  .text-lg {
-    font-size: var(--text-lg);
-    line-height: var(--tw-leading, var(--text-lg--line-height));
-  }
   .text-xl {
     font-size: var(--text-xl);
     line-height: var(--tw-leading, var(--text-xl--line-height));
   }
   .text-\[0\.7rem\] {
     font-size: 0.7rem;
-  }
-  .text-\[0\.8em\] {
-    font-size: 0.8em;
   }
   .text-\[0\.8rem\] {
     font-size: 0.8rem;
@@ -1928,6 +1941,9 @@
   .text-mist-soft {
     color: var(--color-mist-soft);
   }
+  .text-night {
+    color: var(--color-night);
+  }
   .text-paper {
     color: var(--color-paper);
   }
@@ -1970,6 +1986,9 @@
   }
   .opacity-40 {
     opacity: 40%;
+  }
+  .opacity-50 {
+    opacity: 50%;
   }
   .opacity-70 {
     opacity: 70%;
