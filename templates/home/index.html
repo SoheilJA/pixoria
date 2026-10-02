@@ -41,10 +41,8 @@
         class="home-hero-grid mt-[clamp(28px,3.4vw,48px)] grid max-w-[640px] grid-cols-1 gap-[clamp(20px,2.4vw,32px)]">
         <p class="m-0 max-w-[46ch] text-[1.12rem] leading-[1.6] text-ink/70">{{ hero.description|safe }}</p>
         <div class="home-hero-cta flex flex-wrap gap-3.5">
-          <a href="{% url 'contact:contact' %}" class="btn btn-lime group">شروع پروژه
-            {% icon "arrow-down" class="arrow h-4 w-4 transition-transform duration-[250ms] ease-ax group-hover:translate-y-1" %}</a>
-          <a href="{% url 'portfolio:list' %}" class="btn btn-ghost-light group">دیدن کارها
-            {% icon "arrow-down" class="arrow h-4 w-4 transition-transform duration-[250ms] ease-ax group-hover:translate-y-1" %}</a>
+          {% include 'components/button.html' with text='شروع پروژه' href=contact_url variant='lime' arrow='down' %}
+          {% include 'components/button.html' with text='دیدن کارها' href=portfolio_url variant='ghost-light' arrow='down' %}
         </div>
       </div>
     </div>
@@ -65,34 +63,12 @@
 
   <!-- ═══ کارهای منتخب ═══ -->
   <section class="px-page py-[clamp(64px,12vw,100px)] md:py-section" aria-labelledby="work-head">
-    <div class="mb-16 max-w-[880px]" data-aos="fade-up">
-      <span class="eyebrow mb-6 inline-block">{{ featured_work_section.title|default:'کارهای منتخب' }}<span
-        class="ml-2 inline-block h-1.5 w-1.5 rounded-full bg-lime align-[2px]"></span></span>
-      <h2 id="work-head" class="mb-[18px]">{{ featured_work_section.title|safe }}</h2>
-      <p class="m-0 max-w-[60ch] text-[1.15rem] leading-[1.5] text-ink-soft">{{ featured_work_section.description|safe }}</p>
-    </div>
+    {% include 'components/section_header.html' with eyebrow='کارهای منتخب' title=featured_work_section.title|safe title_id='work-head' subtitle=featured_work_section.description|safe %}
 
-    <div class="carousel" id="works-carousel">
+    <div class="carousel mt-16" id="works-carousel">
       <div class="carousel-track">
         {% for work in featured_works %}
-          <article
-            class="group flex flex-col overflow-hidden rounded-md border border-line bg-paper transition-[transform,border-color] duration-300 ease-ax hover:-translate-y-1 hover:border-night"
-            data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
-            <a href="{% url 'portfolio:detail' work.slug %}" class="block aspect-[4/3] overflow-hidden bg-paper-soft">
-              <img src="{{ work.image.url }}" alt="{{ work.title }}" loading="lazy"
-                class="h-full w-full object-cover transition-transform duration-[600ms] ease-ax group-hover:scale-[1.04]" />
-            </a>
-            <div class="flex flex-1 flex-col gap-2.5 p-[22px]">
-              <div class="flex gap-2.5 font-mono text-[0.74rem] uppercase tracking-[0.1em] text-ink-dim">
-                <span>{{ work.client_name }}</span><span>{{ work.year }}</span>
-              </div>
-              <h3 class="text-[1.45rem] leading-[1.1]">{{ work.title }}</h3>
-              {% if work.excerpt %}<p class="text-ink-soft">{{ work.excerpt }}</p>{% endif %}
-              <a href="{% url 'portfolio:detail' work.slug %}"
-                class="mt-auto inline-flex items-center gap-2 font-mono text-[0.78rem] uppercase tracking-[0.1em] text-ink transition-colors hover:text-lime-deep">مطالعه
-                موردی {% icon "arrow-up-left" class="inline-block h-3.5 w-3.5 align-middle" %}</a>
-            </div>
-          </article>
+          {% include 'components/cards/portfolio_card.html' with work=work %}
         {% empty %}
           <p data-aos="fade-up">پروژه‌ای برای نمایش وجود ندارد.</p>
         {% endfor %}
@@ -106,34 +82,14 @@
     <div class="pointer-events-none absolute -right-32 bottom-[-30%] h-[380px] w-[380px] rounded-full bg-lime/5 blur-[100px]" aria-hidden="true"></div>
 
     <div class="relative mb-16 max-w-[880px]" data-aos="fade-up">
-      <span class="eyebrow mb-6 inline-block !text-mist">حوزه‌های کاری<span
-        class="ml-2 inline-block h-1.5 w-1.5 rounded-full bg-lime align-[2px]"></span></span>
+      <span class="eyebrow mb-6 inline-block !text-mist">حوزه‌های کاری<span class="ml-2 inline-block h-1.5 w-1.5 rounded-full bg-lime align-[2px]"></span></span>
       <h2 id="services-head" class="mb-[18px] !text-ink">{{ services_section.title|safe }}</h2>
       <p class="m-0 max-w-[60ch] text-[1.15rem] leading-[1.5] text-mist">{{ services_section.description|safe }}</p>
     </div>
 
     <div class="relative grid grid-cols-1 gap-px overflow-hidden rounded-md border border-line-strong bg-line-strong sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 [&>*:nth-last-child(1)]:xl:col-span-1">
       {% for item in services_with_delay %}
-        {% with service=item.service %}
-          <a href="{% url 'services:detail' service.slug %}"
-            class="svc-card group relative flex h-full min-h-[240px] flex-col gap-5 bg-night p-[30px] transition-colors duration-300 hover:bg-[#161616]"
-            data-aos="fade-up" data-aos-delay="{{ item.delay }}">
-            <span class="absolute inset-x-0 top-0 h-[3px] origin-right scale-x-0 bg-lime transition-transform duration-500 ease-ax-out group-hover:scale-x-100" aria-hidden="true"></span>
-            <div class="flex items-start justify-between gap-4">
-              <span class="font-mono text-[0.8rem] tracking-[0.06em] text-mist-dim">/{{ forloop.counter|stringformat:'02d' }}</span>
-              <span class="grid h-10 w-10 place-items-center rounded-full border border-line-strong text-ink transition-all duration-300 ease-ax group-hover:border-lime group-hover:bg-lime group-hover:text-night group-hover:rotate-45">{% icon "arrow-up-left" class="h-5 w-5" %}</span>
-            </div>
-            <h3 class="text-[clamp(1.35rem,2vw,1.8rem)] leading-[1.05] tracking-[-0.02em] !text-ink">{{ service.title }}</h3>
-            <p class="m-0 max-w-[50ch] text-[0.98rem] leading-[1.6] text-mist">{{ service.excerpt }}</p>
-            {% if service.get_tags_list %}
-              <div class="mt-auto flex flex-wrap gap-1.5 pt-2">
-                {% for tag in service.get_tags_list %}
-                  <span class="rounded-full border border-line-strong px-2.5 py-1 font-mono text-[0.72rem] text-mist-soft transition-colors duration-300 group-hover:border-lime-deep group-hover:text-lime">{{ tag }}</span>
-                {% endfor %}
-              </div>
-            {% endif %}
-          </a>
-        {% endwith %}
+        {% include 'components/cards/service_card.html' with service=item.service %}
       {% empty %}
         <p class="col-span-full py-8 text-mist">خدمتی ثبت نشده است.</p>
       {% endfor %}
@@ -179,34 +135,11 @@
 
   {% if testimonials %}
     <section class="px-page pb-[clamp(32px,5vw,56px)] pt-[clamp(64px,12vw,100px)] md:pb-section-sm md:pt-section" aria-labelledby="testimonials-head">
-      <div class="mb-14 max-w-[880px]" data-aos="fade-up">
-        <span class="eyebrow mb-6 inline-block">نظرات مشتریان<span
-          class="ml-2 inline-block h-1.5 w-1.5 rounded-full bg-lime align-[2px]"></span></span>
-        <h2 id="testimonials-head">آن‌ها تجربه‌شان را گفتند.</h2>
-      </div>
-      <div class="carousel" id="testimonials-carousel">
+      {% include 'components/section_header.html' with eyebrow='نظرات مشتریان' title='آن‌ها تجربه‌شان را گفتند.' title_id='testimonials-head' %}
+      <div class="carousel mt-14" id="testimonials-carousel">
         <div class="carousel-track">
           {% for t in testimonials %}
-            <article
-              class="flex flex-col gap-4 rounded-md border border-line bg-paper p-[26px] transition-[transform,border-color] duration-300 ease-ax hover:-translate-y-1 hover:border-night"
-              data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
-              <div class="flex items-center justify-between">
-                <div class="flex gap-0.5 text-lime" aria-label="۵ ستاره">{% icon "star" class="h-4 w-4 fill-current" %}{% icon "star" class="h-4 w-4 fill-current" %}{% icon "star" class="h-4 w-4 fill-current" %}{% icon "star" class="h-4 w-4 fill-current" %}{% icon "star" class="h-4 w-4 fill-current" %}</div>
-                <span class="font-mono text-[0.72rem] text-ink-dim">{{ forloop.counter|stringformat:'02d' }}</span>
-              </div>
-              <blockquote class="m-0 text-[1.05rem] leading-[1.7] text-ink">{{ t.text }}</blockquote>
-              <div class="mt-auto flex items-center gap-3 border-t border-line pt-4">
-                {% if t.author_image %}
-                  <img src="{{ t.author_image.url }}" alt="{{ t.author_name }}" loading="lazy" class="h-10 w-10 rounded-full object-cover" />
-                {% else %}
-                  <span class="grid h-10 w-10 place-items-center rounded-full bg-night font-mono text-[0.8rem] font-semibold text-lime">{{ t.author_name|slice:":1" }}</span>
-                {% endif %}
-                <div>
-                  <span class="block text-[0.95rem] text-ink">{{ t.author_name }}</span>
-                  <span class="block text-[0.82rem] text-ink-dim">{{ t.author_role }}</span>
-                </div>
-              </div>
-            </article>
+            {% include 'components/cards/testimonial_card.html' with t=t %}
           {% endfor %}
         </div>
       </div>
@@ -215,27 +148,11 @@
 
   {% if latest_articles %}
     <section class="px-page py-[clamp(64px,12vw,100px)] md:py-section" aria-labelledby="latest-articles-head">
-      <div class="mb-16 max-w-[880px]" data-aos="fade-up">
-        <span class="eyebrow mb-6 inline-block">{{ latest_articles_section.subtitle|default:'آخرین مقالات' }}<span
-          class="ml-2 inline-block h-1.5 w-1.5 rounded-full bg-lime align-[2px]"></span></span>
-        <h2 id="latest-articles-head" class="mb-[18px]">{{ latest_articles_section.title|default:'مقالات اخیر'|safe }}</h2>
-        <p class="m-0 max-w-[60ch] text-[1.15rem] leading-[1.5] text-ink-soft">{{ latest_articles_section.description|default:'مقالات محبوب و جدید سایت ما'|safe }}</p>
-        <a href="{% url 'blog:list' %}" class="btn btn-ghost mt-6 inline-flex">مشاهده همه مقالات {% icon "arrow-left" class="inline-block h-4 w-4 align-middle" %}</a>
-      </div>
-      <div class="carousel" id="latest-articles-carousel">
+      {% include 'components/section_header.html' with eyebrow=latest_articles_section.subtitle title=latest_articles_section.title|default:'مقالات اخیر'|safe title_id='latest-articles-head' subtitle=latest_articles_section.description|safe cta_text='مشاهده همه مقالات' cta_href=blog_url %}
+      <div class="carousel mt-16" id="latest-articles-carousel">
         <div class="carousel-track">
           {% for article in latest_articles %}
-            <article class="group flex flex-col overflow-hidden rounded-md border border-line bg-paper" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
-              <a href="{% url 'blog:detail' article.slug %}" class="block aspect-[4/3] overflow-hidden bg-paper-soft"><img src="{{ article.cover_image.url }}" alt="{{ article.cover_image_alt }}" loading="lazy" class="h-full w-full object-cover transition duration-500 group-hover:scale-105" /></a>
-              <div class="flex flex-1 flex-col gap-2.5 p-[22px]">
-                <div class="flex flex-wrap gap-2 font-mono text-[0.72rem] text-ink-dim">
-                  <span>{{ article.category.title }}</span><span>{{ article.published_at|date:'d F Y' }}</span><span>{{ article.reading_time }} دقیقه مطالعه</span>
-                </div>
-                <h3 class="mt-1 text-[1.3rem]"><a href="{% url 'blog:detail' article.slug %}">{{ article.title }}</a></h3>
-                <p class="text-ink-soft">{{ article.excerpt }}</p>
-                <a class="mt-auto inline-flex items-center gap-2 font-mono text-[0.78rem] text-ink hover:text-lime-deep" href="{% url 'blog:detail' article.slug %}">خواندن مقاله {% icon "arrow-left" class="inline-block h-3.5 w-3.5 align-middle" %}</a>
-              </div>
-            </article>
+            {% include 'components/cards/blog_card.html' with article=article %}
           {% endfor %}
         </div>
         <div class="carousel-nav">

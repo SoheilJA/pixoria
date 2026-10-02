@@ -9,21 +9,7 @@
 {% endblock %}
 
 {% block content %}
-  <section class="border-b border-line px-page pb-[clamp(40px,5vw,80px)] pt-[clamp(64px,9vw,130px)]" aria-labelledby="services-head" data-aos="fade-up">
-    <p class="mb-4 font-mono text-[0.74rem] text-ink-dim" data-aos="fade-down">
-      خانه {% icon "chevron-left" class="inline-block h-3.5 w-3.5 shrink-0 opacity-50 align-middle" %} <span class="text-ink">خدمات</span>
-    </p>
-    <h1 id="services-head" class="mb-6 max-w-[18ch] text-[clamp(2.6rem,5.4vw,6rem)] leading-[0.98]" data-aos="fade-up" data-aos-delay="50">
-      {% if page_section %}
-        {{ page_section.title|safe }}
-      {% else %}
-        خدمات ما
-      {% endif %}
-    </h1>
-    {% if page_section %}
-      <div class="m-0 max-w-[60ch] text-[1.18rem] leading-[1.5] text-ink-soft" data-aos="fade-up" data-aos-delay="150">{{ page_section.description|safe }}</div>
-    {% endif %}
-  </section>
+  {% include 'components/page_hero.html' with crumbs=crumbs title=page_section.title|safe title_id='services-head' description=page_section.description|safe %}
 
   <section class="px-page pt-8 md:pt-16" aria-label="فهرست خدمات">
     {% for item in services_with_delay %}
@@ -31,7 +17,7 @@
         <article class="grid grid-cols-1 items-start gap-8 border-b border-line py-10 md:grid-cols-[80px_1fr_1.4fr_auto] md:gap-8 md:py-14" data-aos="fade-up" data-aos-duration="500" data-aos-delay="{{ delay }}" data-aos-anchor-placement="top-bottom">
           <span class="font-mono text-[0.84rem] text-ink-dim">{{ forloop.counter|stringformat:'02d' }} / {{ services|length|stringformat:'02d' }}</span>
           <div>
-            <h2 class="mb-3.5 text-[clamp(1.6rem,2.4vw,2.4rem)]"><a href="{% url 'services:detail' service.slug %}" class="text-ink hover:text-ink-soft">{{ service.title }}</a></h2>
+            <h2 class="mb-3.5 text-[clamp(1.6rem,2.4vw,2.4rem)]"><a href="{% url 'services:detail' service.slug %}" class="text-ink transition-colors hover:text-ink-soft">{{ service.title }}</a></h2>
             {% if service.tags %}
               <div class="flex flex-wrap gap-1.5" data-aos="fade-up" data-aos-delay="{{ delay|add:80 }}">
                 {% for tag in service.get_tags_list %}

@@ -57,7 +57,7 @@ The current project primary is **lime `#c8ff3d`** (`--color-lime` in `input.css`
 - [x] 5. Pixel wordmark logo (SVG) + remove the "P" icon everywhere + new favicon set/manifest + admin-replaceable logo/favicon (`SiteSettings`) — *wordmark generated from the self-hosted Vazirmatn 600 by `scripts/build_pixel_wordmark.py`; the "P" is gone from header/footer/preloader/admin/404/contact/about/login; `templates/admin/login.html` was also re-saved (it was corrupted cp1256 with its Persian text lost to literal `?`)*
 - [x] 6. Glass & liquid-glass utility classes/components — *`.glass` / `.glass-strong` / `.glass-card` / `.liquid-glass` in `input.css` + `feTurbulence` displacement filter in `base.html` + cursor sheen in `static/js/core/glass.js`; first applied to the services mega-menu*
 - [x] 6b. Single shared layout — *`core/about.html`, `contact/contact.html` and `404.html` were fully standalone pages, each carrying its own `<head>`, sidebar rail, mobile header, mobile nav and footer; they now `{% extends 'base.html' %}` so the header, mega-menu, mobile menu, CTA band and footer render from one place. Fixed along the way: dead `static/js/tailwind-main.js` reference and expired `--color-ink-line` var on the 404 page, duplicate `id="content-start"` in `blog/list.html`, dead `.rail-nav` sync block in `main.js`, and a new `{% block extra_head %}` in `base.html` for per-page `<head>` tags (used by the 404 `noindex`)*
-- [ ] 7. Reusable template components (`templates/components/…`): section header, buttons, cards, badges, etc.
+- [x] 7. Reusable template components (`templates/components/…`): section header, buttons, cards, badges, etc. — *see "Component library (task 7)" below*
 - [ ] 8. Reusable **Carousel component** (+ portfolio / testimonial / blog cards) and refactor all existing carousels to use it
 - [ ] 9. Global motion layer (`data-*`-driven scroll reveals, hover tilt/magnetic/glow, scroll progress, counters) + `prefers-reduced-motion` support
 - [ ] 10. New header (glass, services mega-menu, scroll behavior) — admin-editable
@@ -136,7 +136,28 @@ Verified: all pages 200, computed body bg `rgb(4,7,10)`, zero light surfaces rem
 - **Fallbacks:** `@supports not (backdrop-filter)` swaps to a solid `--color-paper` background; an unresolved `filter: url(#…)` is dropped by the browser so liquid glass degrades to frosted glass on the standalone pages that don't carry the filter def. The cursor sheen is disabled on `(hover: none)` and `prefers-reduced-motion`, and transitions are killed under reduced motion.
 - **Perf:** the displacement filter is only on `.liquid-glass` elements, never on full-screen or huge areas (the mobile menu keeps a solid `--color-night` until task 11 rebuilds it).
 
-### Shared layout consolidation (task 6b)
+### Component library (task 7)
+
+`templates/components/` — plain Django partials, `{% include … with … %}`, no custom tags beyond the existing `{% icon %}`. Props are documented in a comment at the top of each file and summarised in `templates/components/README.md`.
+
+| Component | Replaces | Consumed by |
+| --- | --- | --- |
+| `page_hero.html` | the six near-identical inner-page hero blocks (padding, breadcrumb, title rhythm differed per page) | about, contact, services list, portfolio list, blog list |
+| `breadcrumb.html` | the five inline `خانه › …` trails | page_hero, blog detail hero, portfolio/service detail heroes |
+| `section_header.html` | the ~12 duplicated `eyebrow + h2 [+ subtitle]` header blocks | home (4 sections), about (4), services detail (5) |
+| `button.html` | raw `.btn .btn-*` anchors/buttons (21 call sites) | home hero, blog list, services detail, blog sidebar CTA |
+| `badge.html` | the three ad-hoc pill variants (solid lime / bordered / soft) | service tags, portfolio categories, blog category + tags |
+| `cta_banner.html` | the pre-footer CTA band that was inline in `base.html` | base.html (once, for every page) |
+| `cards/blog_card.html` | two inline article-card markups (home carousel + blog grid) | home latest-articles carousel, `blog/partials/article_cards.html` |
+| `cards/portfolio_card.html` | the inline featured-work card | home works carousel |
+| `cards/testimonial_card.html` | two inline testimonial cards (home + services detail) | both |
+| `cards/service_card.html` | the inline bento service tile | home services grid |
+
+Supporting code: `apps/core/context_utils.py` adds `crumbs(*items)` so views build breadcrumb trails as `("خانه", "home:home"), ("درباره ما", None)` tuples (the last entry is the current page). Every page view now passes `crumbs`; `Category.filter_url` was added so portfolio category pills can ask the model for their filtered archive URL instead of concatenating it in the template.
+
+**Verified:** all nine page routes (home, about, contact, services list/detail, portfolio list/detail, blog list/detail) return 200; each renders exactly one header, one breadcrumb trail, one CTA band and one footer; the contact form still POSTs and returns the Persian success fragment; `manage.py check` clean.
+
+**Gotcha worth remembering:** a literal `{% include 'components/breadcrumb.html' with items=crumbs %}` written inside a `{# … #}` documentation comment is *not* a comment to the template engine — Django parses tags there, so the file included itself and the page died with `RecursionError: maximum recursion depth exceeded`. Keep tag syntax out of template comments (document usage in prose, or in `components/README.md`).
 
 Before this pass, three page templates were entirely standalone documents instead of extending the base shell:
 

@@ -1,0 +1,23 @@
+{# Button / link component (props documented at top of file).
+   text:     str  required — button label (Persian)
+   href:     str  optional — renders an <a>; omit to render a <button>
+   variant:  str  optional — "lime" (default) | "ink" | "ghost" | "ghost-light"
+   icon:     str  optional — Lucide icon name placed BEFORE the label
+   icon_after: str optional — Lucide icon name placed AFTER the label (static)
+   arrow:    str  optional — "left" | "down": animated trailing arrow that
+                             nudges on hover (left = forward in RTL)
+   class:    str  optional — extra classes, e.g. "w-full justify-center"
+   id:       str  optional
+   type:     str  optional — button type (default "button")
+   hx_get:   str  optional — HTMX endpoint (rendered as hx-get)
+   hx_target: str optional — HTMX target (rendered as hx-target)
+   hx_swap:  str  optional — HTMX swap strategy (rendered as hx-swap)
+#}
+{% load icon_tags %}
+<{% if href %}a href="{{ href }}"{% else %}button type="{{ type|default:'button' }}"{% endif %} class="btn btn-{{ variant|default:'lime' }} {{ class }}"{% if id %} id="{{ id }}"{% endif %}{% if hx_get %} hx-get="{{ hx_get }}"{% endif %}{% if hx_target %} hx-target="{{ hx_target }}"{% endif %}{% if hx_swap %} hx-swap="{{ hx_swap }}"{% endif %}>
+  {% if icon %}{% icon icon class="h-4 w-4 shrink-0" %}{% endif %}
+  {{ text }}
+  {% if arrow == "down" %}{% icon "arrow-down" class="arrow h-4 w-4 shrink-0 transition-transform duration-[250ms] ease-ax group-hover:translate-y-1" %}{% endif %}
+  {% if arrow == "left" %}{% icon "arrow-left" class="arrow h-4 w-4 shrink-0 transition-transform duration-[250ms] ease-ax group-hover:translate-y-1" %}{% endif %}
+  {% if icon_after %}{% icon icon_after class="h-4 w-4 shrink-0 align-middle" %}{% endif %}
+</{% if href %}a{% else %}button{% endif %}>

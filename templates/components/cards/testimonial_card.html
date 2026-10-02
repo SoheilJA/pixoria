@@ -1,0 +1,26 @@
+{# Testimonial card: 5-star rating, quote, author with avatar fallback.
+   t:      obj  required — testimonial with author_name, author_role,
+                            author_image (optional) and text
+   class:  str  optional — extra classes on the <article>
+#}
+{% load icon_tags %}
+<article class="flex flex-col gap-4 rounded-md border border-line bg-paper p-[26px] transition-[transform,border-color] duration-300 ease-ax hover:-translate-y-1 hover:border-night {{ class }}" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:'50' }}" data-aos-duration="700">
+  <div class="flex items-center justify-between">
+    <div class="flex gap-0.5 text-lime" aria-label="۵ ستاره">
+      {% icon "star" class="h-4 w-4 fill-current" %}{% icon "star" class="h-4 w-4 fill-current" %}{% icon "star" class="h-4 w-4 fill-current" %}{% icon "star" class="h-4 w-4 fill-current" %}{% icon "star" class="h-4 w-4 fill-current" %}
+    </div>
+    <span class="font-mono text-[0.72rem] text-ink-dim">{{ forloop.counter|stringformat:'02d' }}</span>
+  </div>
+  <blockquote class="m-0 text-[1.05rem] leading-[1.7] text-ink">{{ t.text }}</blockquote>
+  <div class="mt-auto flex items-center gap-3 border-t border-line pt-4">
+    {% if t.author_image %}
+      <img src="{{ t.author_image.url }}" alt="{{ t.author_name }}" loading="lazy" class="h-10 w-10 rounded-full object-cover" />
+    {% else %}
+      <span class="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-night font-mono text-[0.8rem] font-semibold text-lime">{{ t.author_name|slice:":1" }}</span>
+    {% endif %}
+    <div>
+      <span class="block text-[0.95rem] text-ink">{{ t.author_name }}</span>
+      {% if t.author_role %}<span class="block text-[0.82rem] text-ink-dim">{{ t.author_role }}</span>{% endif %}
+    </div>
+  </div>
+</article>

@@ -1,0 +1,27 @@
+{# Breadcrumb trail (RTL). Renders a <nav aria-label="breadcrumb"> with
+   chevron separators. The last item is marked aria-current="page".
+   items: list required — each item is a dict {"label": str, "url": str?};
+          an item without "url" is treated as the current page.
+   Build the list with apps.core.context_utils.crumbs() in the view:
+     crumbs(("خانه", "home:home"), ("بلاگ", "blog:list"), (article.title, None))
+   and pass it with `with items=crumbs`.
+   NOTE: never write a literal template tag inside a {# #} comment — Django
+   parses tags there too, which once made this file load itself recursively.
+#}
+{% load icon_tags %}
+<nav aria-label="مسیر صفحه" class="font-mono text-[0.76rem] uppercase tracking-[0.12em] text-ink-dim" data-aos="fade-down">
+  <ol class="flex flex-wrap items-center gap-x-2 gap-y-1">
+    {% for item in items %}
+      <li class="flex items-center gap-2">
+        {% if not forloop.first %}{% icon "chevron-left" class="h-3.5 w-3.5 shrink-0 opacity-50 align-middle" %}{% endif %}
+        {% if item.url %}
+          <a href="{{ item.url }}" class="transition-colors hover:text-ink">{{ item.label }}</a>
+        {% elif forloop.last %}
+          <span aria-current="page" class="text-ink">{{ item.label }}</span>
+        {% else %}
+          <span>{{ item.label }}</span>
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ol>
+</nav>

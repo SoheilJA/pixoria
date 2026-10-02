@@ -425,6 +425,9 @@
   .mt-14 {
     margin-top: calc(var(--spacing) * 14);
   }
+  .mt-16 {
+    margin-top: calc(var(--spacing) * 16);
+  }
   .mt-\[2px\] {
     margin-top: 2px;
   }
@@ -988,8 +991,14 @@
     margin-block-start: calc(calc(var(--spacing) * 4) * var(--tw-space-y-reverse));
     margin-block-end: calc(calc(var(--spacing) * 4) * calc(1 - var(--tw-space-y-reverse)));
   }
+  .gap-x-2 {
+    column-gap: calc(var(--spacing) * 2);
+  }
   .gap-x-6 {
     column-gap: calc(var(--spacing) * 6);
+  }
+  .gap-y-1 {
+    row-gap: var(--spacing);
   }
   .gap-y-2 {
     row-gap: calc(var(--spacing) * 2);

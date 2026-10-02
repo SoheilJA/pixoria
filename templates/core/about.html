@@ -10,13 +10,7 @@
 
 {% block content %}
   <!-- ─── هیرو ─── -->
-  <section class="border-b border-line px-page pb-[clamp(40px,5vw,80px)] pt-[clamp(64px,9vw,130px)]" data-aos="fade-up">
-    <p class="mb-4 font-mono text-[0.74rem] text-ink-dim" data-aos="fade-down">
-      خانه {% icon "chevron-left" class="inline-block h-3.5 w-3.5 shrink-0 opacity-50 align-middle" %} <span class="text-ink">استودیو</span>
-    </p>
-    <h1 class="mb-6 max-w-[18ch] text-[clamp(2.6rem,5.4vw,6rem)] leading-[0.98]" data-aos="fade-up" data-aos-delay="100">{{ hero.title|safe }}</h1>
-    <div class="max-w-[60ch] text-[1.18rem] leading-[1.5] text-ink-soft" data-aos="fade-up" data-aos-delay="200">{{ hero.description|safe }}</div>
-  </section>
+  {% include 'components/page_hero.html' with crumbs=crumbs title=hero.title|safe description=hero.description|safe title_id='about-hero-title' %}
 
   <!-- ─── ماموریت ─── -->
   {% if mission %}
@@ -49,11 +43,8 @@
   <!-- ─── مراحل کار ─── -->
   {% if process_steps %}
   <section class="bg-night px-page py-[clamp(64px,9vw,120px)] text-ink" data-aos="fade-up">
-    <div class="mb-14 max-w-[880px]">
-      <span class="eyebrow mb-6 inline-block">روش کار<span class="mr-2 inline-block h-1.5 w-1.5 rounded-full bg-lime align-[2px]"></span></span>
-      <h2 class="max-w-[20ch]">چطور با هم پیش می‌رویم؟</h2>
-    </div>
-    <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+    {% include 'components/section_header.html' with eyebrow='روش کار' title='چطور با هم پیش می‌رویم؟' title_id='process-head' %}
+    <div class="mt-14 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
       {% for step in process_steps %}
       <article class="group relative flex flex-col gap-4 rounded-xl border border-line bg-[#131313] p-7 transition-colors duration-300 hover:border-lime/30" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
         <span class="absolute -top-3 left-6 h-6 w-6 rounded-full bg-lime flex items-center justify-center font-mono text-[0.85rem] font-bold text-ink">{{ forloop.counter }}</span>
@@ -67,10 +58,8 @@
 
   <!-- ─── تیم ─── -->
   <section class="px-page py-12 md:py-16" aria-label="تیم">
-    <div class="mb-12 max-w-[880px]" data-aos="fade-up">
-      <span class="eyebrow mb-6 inline-block">تیم<span class="mr-2 inline-block h-1.5 w-1.5 rounded-full bg-lime align-[2px]"></span></span><h2>آدم‌های پشت کارها</h2>
-    </div>
-    <div class="grid grid-cols-2 gap-6 md:gap-8 lg:grid-cols-4">
+    {% include 'components/section_header.html' with eyebrow='تیم' title='آدم‌های پشت کارها' title_id='team-head' %}
+    <div class="mt-12 grid grid-cols-2 gap-6 md:gap-8 lg:grid-cols-4">
       {% for member in team %}
         <article class="flex flex-col gap-3.5" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
           <div class="aspect-[4/5] overflow-hidden rounded-md bg-paper-soft">
@@ -86,10 +75,8 @@
 
   <!-- ─── ارزش‌ها ─── -->
   <section class="border-t border-line px-page py-16" aria-labelledby="values-title">
-    <div class="mb-12 max-w-[880px]" data-aos="fade-up">
-      <span class="eyebrow mb-6 inline-block">ارزش‌ها<span class="mr-2 inline-block h-1.5 w-1.5 rounded-full bg-lime align-[2px]"></span></span><h2 id="values-title">چند چیز که به آن‌ها باور داریم.</h2>
-    </div>
-    <div class="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-8 lg:grid-cols-3">
+    {% include 'components/section_header.html' with eyebrow='ارزش‌ها' title='چند چیز که به آن‌ها باور داریم.' title_id='values-title' %}
+    <div class="mt-12 grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-8 lg:grid-cols-3">
       {% for value in values %}
         <div class="flex flex-col gap-2.5 border-t border-line pt-6" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}0">
           <span class="font-mono text-[0.74rem] text-ink-dim">{{ forloop.counter|stringformat:'02d' }}</span><h3 class="text-[1.3rem]">{{ value.title|safe }}</h3><div class="text-[0.96rem] text-ink-soft">{{ value.description|safe }}</div>
@@ -118,11 +105,8 @@
   <!-- ─── سوالات متداول ─── -->
   {% if faqs %}
   <section class="px-page py-[clamp(64px,9vw,120px)]" data-aos="fade-up">
-    <div class="mb-12 max-w-[880px]">
-      <span class="eyebrow mb-6 inline-block">سوالات متداول<span class="mr-2 inline-block h-1.5 w-1.5 rounded-full bg-lime align-[2px]"></span></span>
-      <h2>سوالاتی که معمولاً پرسیده می‌شوند</h2>
-    </div>
-    <div class="max-w-3xl space-y-3">
+    {% include 'components/section_header.html' with eyebrow='سوالات متداول' title='سوالاتی که معمولاً پرسیده می‌شوند' title_id='faq-head' %}
+    <div class="mt-12 max-w-3xl space-y-3">
       {% for faq in faqs %}
       <details class="group border border-line rounded-xl overflow-hidden transition-colors duration-300 hover:border-lime/30" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}50">
         <summary class="flex items-center justify-between gap-4 p-5 cursor-pointer list-none">

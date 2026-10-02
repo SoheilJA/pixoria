@@ -3,11 +3,13 @@ from django.core.files.storage import default_storage
 from django.core.paginator import Paginator
 from django.http import JsonResponse, HttpResponseBadRequest
 from django.shortcuts import render, get_object_or_404
+from django.urls import reverse
 from django.utils import timezone
 from django.views.decorators.http import require_POST
 
 from .models import Article, Category, BlogPageSettings
 from .utils import process_content_toc
+from apps.core.context_utils import crumbs
 
 PAGE_SIZE = 9
 
@@ -24,12 +26,14 @@ def article_list(request):
     paginator = Paginator(qs, PAGE_SIZE)
     page_obj = paginator.get_page(1)
     context = {
+        "crumbs": crumbs(("خانه", "home:home"), ("بلاگ", None)),
         "page_settings": BlogPageSettings.objects.first(),
         "categories": Category.objects.all(),
         "articles": page_obj.object_list,
         "has_next": page_obj.has_next(),
         "next_page": 2,
         "current_category": "all",
+        "load_more_url": f"{reverse('blog:load')}?category=all&page=2",
     }
     return render(request, "blog/list.html", context)
 
@@ -91,6 +95,11 @@ def article_detail(request, slug):
     )
 
     context = {
+        "crumbs": crumbs(
+            ("خانه", "home:home"),
+            ("بلاگ", "blog:list"),
+            (article.category.title, None),
+        ),
         "article": article,
         "content_html": content_html,
         "toc": toc,

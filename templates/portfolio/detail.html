@@ -8,16 +8,11 @@
 
   <!-- ─── هیرو پروژه ─── -->
   <section class="border-b border-line px-page pb-[clamp(40px,5vw,80px)] pt-[clamp(64px,9vw,130px)]">
-    <p class="mb-6 font-mono text-[0.76rem] uppercase tracking-[0.12em] text-ink-dim" data-aos="fade-down">
-      <a href="{% url 'home:home' %}" class="transition-colors hover:text-ink">خانه</a> {% icon "chevron-left" class="inline-block h-3.5 w-3.5 shrink-0 opacity-50 align-middle" %}
-      <a href="{% url 'portfolio:list' %}" class="transition-colors hover:text-ink">نمونه کارها</a> {% icon "chevron-left" class="inline-block h-3.5 w-3.5 shrink-0 opacity-50 align-middle" %}
-      <span class="text-ink">{{ portfolio.title }}</span>
-    </p>
+    {% include 'components/breadcrumb.html' with items=crumbs %}
 
-    <div class="mb-7 flex flex-wrap gap-2" data-aos="fade-up" data-aos-delay="50">
+    <div class="mt-6 mb-7 flex flex-wrap gap-2" data-aos="fade-up" data-aos-delay="50">
       {% for cat in portfolio.categories.all %}
-        <a href="{% url 'portfolio:list' %}?category={{ cat.slug }}"
-           class="rounded-full border border-line px-3.5 py-[5px] font-mono text-[0.76rem] uppercase tracking-[0.1em] text-ink-dim transition-[border-color,color] duration-200 hover:border-night hover:text-ink">{{ cat.name }}</a>
+        {% include 'components/badge.html' with text=cat.name href=cat.filter_url %}
       {% endfor %}
     </div>
 

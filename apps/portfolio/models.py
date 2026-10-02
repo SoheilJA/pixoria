@@ -33,6 +33,13 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
+    @property
+    def filter_url(self):
+        """آدرس فیلترشده‌ی آرشیو نمونه‌کارها برای این دسته."""
+        from django.urls import reverse
+
+        return f"{reverse('portfolio:list')}?category={self.slug}"
+
 
 class Portfolio(models.Model):
     """نمونه کار"""

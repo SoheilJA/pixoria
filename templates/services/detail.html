@@ -10,32 +10,26 @@
 
   <!-- ─── هیرو ─── -->
   <section class="border-b border-line px-page pb-[clamp(40px,5vw,80px)] pt-[clamp(64px,9vw,130px)]" aria-labelledby="service-title">
-    <p class="mb-6 font-mono text-[0.76rem] uppercase tracking-[0.12em] text-ink-dim" data-aos="fade-down">
-      <a href="{% url 'home:home' %}" class="transition-colors hover:text-ink">خانه</a> {% icon "chevron-left" class="inline-block h-3.5 w-3.5 shrink-0 opacity-50 align-middle" %}
-      <a href="{% url 'services:list' %}" class="transition-colors hover:text-ink">خدمات</a> {% icon "chevron-left" class="inline-block h-3.5 w-3.5 shrink-0 opacity-50 align-middle" %}
-      <span aria-current="page" class="text-ink">{{ service.title }}</span>
-    </p>
+    {% include 'components/breadcrumb.html' with items=crumbs %}
 
     {% if service.tags %}
-    <div class="mb-6 flex flex-wrap gap-2" data-aos="fade-up" data-aos-delay="50">
+    <div class="mt-6 mb-6 flex flex-wrap gap-2" data-aos="fade-up" data-aos-delay="50">
       {% for tag in service.get_tags_list %}
-        <span class="rounded-full bg-paper-soft px-3 py-[5px] font-mono text-[0.72rem] uppercase tracking-[0.08em] text-ink-soft">{{ tag }}</span>
+        {% include 'components/badge.html' with text=tag variant='soft' %}
       {% endfor %}
     </div>
     {% endif %}
 
-    <h1 id="service-title" class="mb-8 max-w-[22ch] font-display text-[clamp(2.4rem,5vw,5.6rem)] leading-[0.96] tracking-[-0.03em]" data-aos="fade-up" data-aos-delay="100">{{ service.title }}</h1>
+    <h1 id="service-title" class="mt-6 mb-8 max-w-[22ch] font-display text-[clamp(2.4rem,5vw,5.6rem)] leading-[0.96] tracking-[-0.03em]" data-aos="fade-up" data-aos-delay="100">{{ service.title }}</h1>
 
     <div class="grid grid-cols-1 items-end gap-16 border-t border-line pt-8 md:grid-cols-[1.4fr_1fr]" data-aos="fade-up" data-aos-delay="200">
       <div>
         <p class="m-0 max-w-[56ch] text-[1.18rem] leading-[1.55] text-ink-soft">{{ service.excerpt }}</p>
       </div>
       <div class="flex flex-col items-start gap-3">
-        <a class="btn btn-ink" href="{% url 'contact:contact' %}">
-          مشاوره رایگان {% icon "arrow-left" class="inline-block h-4 w-4 align-middle" %}
-        </a>
+        {% include 'components/button.html' with text='مشاوره رایگان' href=contact_url variant='ink' arrow='left' %}
         {% if plans %}
-        <a class="btn btn-ghost" href="#pricing">مشاهده قیمت‌ها</a>
+          {% include 'components/button.html' with text='مشاهده قیمت‌ها' href='#pricing' variant='ghost' %}
         {% endif %}
       </div>
     </div>
@@ -100,11 +94,8 @@
   <!-- ─── چرا ما ─── -->
   {% if why_us %}
   <section class="border-b border-line px-page py-[clamp(56px,7vw,100px)]">
-    <header class="mb-12 max-w-[880px]" data-aos="fade-up">
-      <span class="eyebrow mb-6 inline-block"><span class="ml-2 inline-block h-1.5 w-1.5 rounded-full bg-lime align-middle"></span>مزیت رقابتی</span>
-      <h2>چرا {{ settings.site_name }}؟</h2>
-    </header>
-    <div class="grid grid-cols-1 overflow-hidden rounded-[6px] border border-line bg-line sm:grid-cols-2 lg:grid-cols-3" style="gap:1px">
+    {% include 'components/section_header.html' with eyebrow='مزیت رقابتی' title='چرا '|add:settings.site_name|add:'؟' title_id='why-us-head' %}
+    <div class="mt-12 grid grid-cols-1 overflow-hidden rounded-[6px] border border-line bg-line sm:grid-cols-2 lg:grid-cols-3" style="gap:1px">
       {% for item in why_us %}
         <div class="flex flex-col gap-3 bg-paper p-[clamp(28px,3vw,40px)] transition-colors hover:bg-paper-soft" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|stagger:100 }}">
           <span class="text-lime">{% icon item.icon class="h-7 w-7" %}</span>
@@ -119,12 +110,8 @@
   <!-- ─── قیمت‌گذاری ─── -->
   {% if plans %}
   <section id="pricing" class="border-b border-line px-page py-[clamp(56px,7vw,100px)]">
-    <div class="mb-14 max-w-[60ch]" data-aos="fade-up">
-      <span class="eyebrow mb-6 inline-block"><span class="ml-2 inline-block h-1.5 w-1.5 rounded-full bg-lime align-middle"></span>قیمت‌گذاری شفاف</span>
-      <h2 class="mb-4 font-display text-[clamp(1.8rem,2.8vw,2.8rem)]">پلن مناسب خودتان را انتخاب کنید.</h2>
-      <p class="text-[1.05rem] text-ink-soft">قیمت‌ها شامل مالیات نیستند. برای پروژه‌های سازمانی با ما تماس بگیرید.</p>
-    </div>
-    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    {% include 'components/section_header.html' with eyebrow='قیمت‌گذاری شفاف' title='پلن مناسب خودتان را انتخاب کنید.' title_id='pricing-head' subtitle='قیمت‌ها شامل مالیات نیستند. برای پروژه‌های سازمانی با ما تماس بگیرید.' %}
+    <div class="mt-14 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
       {% for plan in plans %}
         {% if plan.is_featured %}
         <article class="relative flex flex-col gap-5 rounded-[6px] border border-night bg-night p-7" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|stagger:100 }}">
@@ -220,25 +207,10 @@
   <!-- ─── نظرات مشتریان ─── -->
   {% if testimonials %}
   <section class="border-b border-line px-page py-[clamp(56px,7vw,100px)]">
-    <header class="mb-12" data-aos="fade-up">
-      <span class="eyebrow mb-6 inline-block"><span class="ml-2 inline-block h-1.5 w-1.5 rounded-full bg-lime align-middle"></span>نظرات مشتریان</span>
-      <h2>آن‌ها تجربه‌شان را گفتند.</h2>
-    </header>
-    <div class="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
+    {% include 'components/section_header.html' with eyebrow='نظرات مشتریان' title='آن‌ها تجربه‌شان را گفتند.' title_id='testimonials-head' %}
+    <div class="mt-12 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
       {% for t in testimonials %}
-        <article class="flex flex-col gap-4 rounded-[6px] border border-line p-7" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|stagger:100 }}">
-          <div class="flex gap-0.5 font-mono text-[0.85rem] tracking-[0.2em] text-lime-deep">{% icon "star" class="h-4 w-4 fill-current" %}{% icon "star" class="h-4 w-4 fill-current" %}{% icon "star" class="h-4 w-4 fill-current" %}{% icon "star" class="h-4 w-4 fill-current" %}{% icon "star" class="h-4 w-4 fill-current" %}</div>
-          <blockquote class="m-0 flex-1 text-[1rem] leading-[1.7] text-ink-soft">{{ t.text }}</blockquote>
-          <footer class="flex items-center gap-3.5 border-t border-line pt-4">
-            {% if t.author_image %}
-            <img src="{{ t.author_image.url }}" alt="{{ t.author_name }}" loading="lazy" class="h-10 w-10 rounded-full object-cover" />
-            {% endif %}
-            <div class="flex flex-col">
-              <span class="text-[0.95rem] font-medium text-ink">{{ t.author_name }}</span>
-              <span class="mt-[2px] font-mono text-[0.76rem] text-ink-dim">{{ t.author_role }}</span>
-            </div>
-          </footer>
-        </article>
+        {% include 'components/cards/testimonial_card.html' with t=t %}
       {% endfor %}
     </div>
   </section>
@@ -270,11 +242,8 @@
   <!-- ─── سایر خدمات ─── -->
   {% if other_services %}
   <section class="px-page py-[clamp(56px,7vw,100px)]">
-    <header class="mb-12" data-aos="fade-up">
-      <span class="eyebrow mb-6 inline-block"><span class="ml-2 inline-block h-1.5 w-1.5 rounded-full bg-lime align-middle"></span>سایر خدمات</span>
-      <h2>خدمات دیگر ما را هم ببینید.</h2>
-    </header>
-    <div>
+    {% include 'components/section_header.html' with eyebrow='سایر خدمات' title='خدمات دیگر ما را هم ببینید.' title_id='other-services-head' %}
+    <div class="mt-12">
       {% for s in other_services %}
         <a href="{% url 'services:detail' s.slug %}" class="group grid grid-cols-1 items-start gap-2 border-b border-line py-7 transition-colors duration-300 hover:bg-paper-soft md:grid-cols-[80px_1fr_1.4fr_auto] md:gap-8 md:py-9"
            data-aos="fade-up" data-aos-delay="{{ forloop.counter0|stagger:50 }}">

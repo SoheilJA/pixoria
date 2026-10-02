@@ -1,4 +1,5 @@
 from django.shortcuts import render, get_object_or_404
+from apps.core.context_utils import crumbs
 from .models import Portfolio, Category, PortfolioPageSection
 
 
@@ -14,6 +15,7 @@ def portfolio_list(request):
         portfolios = list(Portfolio.objects.all())
 
     context = {
+        "crumbs": crumbs(("خانه", "home:home"), ("نمونه‌کارها", None)),
         "portfolios": portfolios,
         "portfolios_with_delay": [
             {"portfolio": portfolio, "delay": (index % 4) * 100}
@@ -38,6 +40,11 @@ def portfolio_detail(request, slug):
     )
 
     context = {
+        "crumbs": crumbs(
+            ("خانه", "home:home"),
+            ("نمونه‌کارها", "portfolio:list"),
+            (portfolio.title, None),
+        ),
         "portfolio": portfolio,
         "stats": stats,
         "prev_portfolio": prev_portfolio,

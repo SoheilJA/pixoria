@@ -1,0 +1,22 @@
+{# Service card for the home bento grid and service lists.
+   service:  obj  required — Service model instance
+   index:    int  optional — 1-based number shown as /01 (defaults to forloop.counter)
+   class:    str  optional — extra classes on the <a>
+#}
+{% load icon_tags %}
+<a href="{% url 'services:detail' service.slug %}" class="svc-card group relative flex h-full min-h-[240px] flex-col gap-5 bg-night p-[30px] transition-colors duration-300 hover:bg-[#161616] {{ class }}" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:'50' }}">
+  <span class="absolute inset-x-0 top-0 h-[3px] origin-right scale-x-0 bg-lime transition-transform duration-500 ease-ax-out group-hover:scale-x-100" aria-hidden="true"></span>
+  <div class="flex items-start justify-between gap-4">
+    <span class="font-mono text-[0.8rem] tracking-[0.06em] text-mist-dim">/{{ index|default:forloop.counter|stringformat:'02d' }}</span>
+    <span class="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-line-strong text-ink transition-all duration-300 ease-ax group-hover:border-lime group-hover:bg-lime group-hover:text-night group-hover:rotate-45">{% icon "arrow-up-left" class="h-5 w-5" %}</span>
+  </div>
+  <h3 class="text-[clamp(1.35rem,2vw,1.8rem)] leading-[1.05] tracking-[-0.02em] !text-ink">{{ service.title }}</h3>
+  {% if service.excerpt %}<p class="m-0 max-w-[50ch] text-[0.98rem] leading-[1.6] text-mist">{{ service.excerpt }}</p>{% endif %}
+  {% if service.get_tags_list %}
+    <div class="mt-auto flex flex-wrap gap-1.5 pt-2">
+      {% for tag in service.get_tags_list %}
+        <span class="rounded-full border border-line-strong px-2.5 py-1 font-mono text-[0.72rem] text-mist-soft transition-colors duration-300 group-hover:border-lime-deep group-hover:text-lime">{{ tag }}</span>
+      {% endfor %}
+    </div>
+  {% endif %}
+</a>

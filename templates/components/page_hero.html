@@ -1,0 +1,28 @@
+{# Inner-page hero: breadcrumb + big title + optional description/tags/cta.
+   Used by services, portfolio, blog, about, contact — keeps page-top
+   rhythm, padding and animation identical everywhere.
+   crumbs:        list optional — see components/breadcrumb.html
+   title:         str  required — page h1
+   title_highlight: str optional — accent word appended in display italic
+   title_id:      str  optional — id for aria-labelledby
+   description:  str  optional — supporting text
+   tags:         list optional — iterable of strings rendered as badges
+   cta_*:        see components/button.html (renders one primary button)
+   class:        str  optional — extra classes on the <section>
+#}
+{% load icon_tags %}
+<section class="border-b border-line px-page pb-[clamp(40px,5vw,80px)] pt-[clamp(64px,9vw,130px)] {{ class }}" {% if title_id %}aria-labelledby="{{ title_id }}"{% endif %} data-aos="fade-up">
+  {% if crumbs %}<div class="mb-5">{% include 'components/breadcrumb.html' with items=crumbs %}</div>{% endif %}
+  {% if tags %}
+    <div class="mb-6 flex flex-wrap gap-2" data-aos="fade-up" data-aos-delay="50">
+      {% for tag in tags %}{% include 'components/badge.html' with text=tag %}{% endfor %}
+    </div>
+  {% endif %}
+  <h1 id="{{ title_id|default:'page-hero-title' }}" class="mb-6 max-w-[18ch] text-[clamp(2.6rem,5.4vw,6rem)] leading-[0.98]" data-aos="fade-up" data-aos-delay="100">{% if title %}{{ title|safe }}{% endif %}{% if title_highlight %} <em class="font-display font-normal italic text-lime-deep">{{ title_highlight }}</em>{% endif %}</h1>
+  {% if description %}<p class="m-0 max-w-[60ch] text-[1.18rem] leading-[1.5] text-ink-soft" data-aos="fade-up" data-aos-delay="150">{{ description|safe }}</p>{% endif %}
+  {% if cta_text %}
+    <div class="mt-8 flex flex-wrap gap-3" data-aos="fade-up" data-aos-delay="200">
+      {% include 'components/button.html' with text=cta_text href=cta_href variant=cta_variant|default:'ink' arrow='left' %}
+    </div>
+  {% endif %}
+</section>

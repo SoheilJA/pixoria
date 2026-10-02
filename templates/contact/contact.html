@@ -10,13 +10,7 @@
 
 {% block content %}
   <!-- ─── هیرو ─── -->
-  <section class="border-b border-line px-page pb-[clamp(40px,5vw,80px)] pt-[clamp(64px,9vw,130px)]" data-aos="fade-up">
-    <p class="mb-4 font-mono text-[0.74rem] text-ink-dim" data-aos="fade-down">
-      خانه {% icon "chevron-left" class="inline-block h-3.5 w-3.5 shrink-0 opacity-50 align-middle" %} <span class="text-ink">تماس</span>
-    </p>
-    <h1 class="mb-6 max-w-[18ch] text-[clamp(2.6rem,5.4vw,6rem)] leading-[0.98]" data-aos="fade-up" data-aos-delay="100">{{ page_section.title }}</h1>
-    <p class="m-0 max-w-[60ch] text-[1.18rem] leading-[1.5] text-ink-soft" data-aos="fade-up" data-aos-delay="200">{{ page_section.description }}</p>
-  </section>
+  {% include 'components/page_hero.html' with crumbs=crumbs title=page_section.title description=page_section.description title_id='contact-hero-title' %}
 
   <!-- ─── اطلاعات تماس + فرم ─── -->
   <section class="grid grid-cols-1 gap-8 px-page py-12 md:grid-cols-[1fr_1.2fr] md:gap-20 md:py-16" aria-label="اطلاعات تماس">

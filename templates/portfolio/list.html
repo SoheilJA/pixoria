@@ -6,13 +6,7 @@
 
 {% block content %}
 
-  <section class="border-b border-line px-page pb-[clamp(40px,5vw,80px)] pt-[clamp(64px,9vw,130px)]" aria-labelledby="ph">
-    <p class="mb-4 font-mono text-[0.74rem] uppercase tracking-[0.12em] text-ink-dim" data-aos="fade-down">
-      خانه / <span class="text-ink">کارها</span>
-    </p>
-    <h1 id="ph" class="mb-6 max-w-[18ch] text-[clamp(2.6rem,5.4vw,6rem)] leading-[0.98] tracking-[-0.03em]" data-aos="fade-up" data-aos-delay="50">{{ page_section.title }}</h1>
-    <p class="m-0 max-w-[60ch] text-[1.18rem] leading-[1.5] text-ink-soft" data-aos="fade-up" data-aos-delay="150">{{ page_section.description }}</p>
-  </section>
+  {% include 'components/page_hero.html' with crumbs=crumbs title=page_section.title title_id='ph' description=page_section.description %}
 
   <div class="work-filters flex flex-wrap gap-2 border-b border-line px-page py-6 font-mono text-[0.78rem] uppercase tracking-[0.06em]" role="toolbar" aria-label="فیلتر کارها" data-aos="fade-up" data-aos-delay="200">
     <button type="button"

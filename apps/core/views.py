@@ -1,4 +1,5 @@
 from django.shortcuts import render, get_object_or_404
+from .context_utils import crumbs
 from .models import (
     AboutPageHero,
     AboutStory,
@@ -15,6 +16,7 @@ from .models import (
 
 def about(request):
     context = {
+        "crumbs": crumbs(("خانه", "home:home"), ("درباره ما", None)),
         "hero": AboutPageHero.objects.first(),
         "story": AboutStory.objects.first(),
         "team": TeamMember.objects.all(),

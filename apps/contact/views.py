@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from apps.core.context_utils import crumbs
 from .models import (
     ContactPageSection,
     ContactInfo,
@@ -56,6 +57,7 @@ def contact(request):
         """)
 
     context = {
+        "crumbs": crumbs(("خانه", "home:home"), ("تماس با ما", None)),
         "page_section": ContactPageSection.objects.first(),
         "contact_info": ContactInfo.objects.first(),
         "project_types": ProjectTypeChoice.objects.all(),

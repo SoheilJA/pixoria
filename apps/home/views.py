@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.urls import reverse
 from django.utils import timezone
 from .models import (
     HeroSection,
@@ -18,6 +19,9 @@ from apps.blog.models import Article
 def home(request):
     featured_services = list(Service.objects.filter(featured=True))
     context = {
+        "contact_url": reverse("contact:contact"),
+        "portfolio_url": reverse("portfolio:list"),
+        "blog_url": reverse("blog:list"),
         "hero": HeroSection.objects.first(),
         "hero_marquee": HeroMarqueeItem.objects.all(),
         "featured_work_section": FeaturedWorkSection.objects.first(),

@@ -1,4 +1,6 @@
 from django.shortcuts import render, get_object_or_404
+from django.urls import reverse
+from apps.core.context_utils import crumbs
 from .models import Service, ServicesPageSection
 
 
@@ -9,6 +11,7 @@ def services_list(request):
         for index, service in enumerate(services)
     ]
     context = {
+        "crumbs": crumbs(("خانه", "home:home"), ("خدمات", None)),
         "page_section": ServicesPageSection.objects.first(),
         "services": services,
         "services_with_delay": services_with_delay,
@@ -19,6 +22,11 @@ def services_list(request):
 def services_detail(request, slug):
     service = get_object_or_404(Service, slug=slug)
     context = {
+        "crumbs": crumbs(
+            ("خانه", "home:home"),
+            ("خدمات", "services:list"),
+            (service.title, None),
+        ),
         "service": service,
         "stats": service.stats.all(),
         "why_us": service.why_us.all(),
@@ -29,5 +37,6 @@ def services_detail(request, slug):
         "faqs": service.faqs.all(),
         "testimonials": service.testimonials.all(),
         "other_services": Service.objects.exclude(slug=slug)[:4],
+        "contact_url": reverse("contact:contact"),
     }
     return render(request, "services/detail.html", context)
