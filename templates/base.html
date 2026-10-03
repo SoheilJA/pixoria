@@ -171,6 +171,20 @@
           <div class="relative z-10 mt-6 grid grid-cols-1 gap-2 font-mono text-[0.74rem] text-mist-dim md:grid-cols-3 md:gap-6">
             <span>© {{ settings.established_year }} {{ settings.site_name }}</span><span class="md:text-center">{{ settings.address|default:'ایران' }}</span><span class="md:text-left">{{ settings.status|default:'آماده همکاری' }}</span>
           </div>
+
+          {# واترمارک پیکسلی بزرگ — امضای برند در پایین صفحه #}
+          <div class="relative z-10 mt-10" aria-hidden="true">
+            <div class="pixel-divider mb-8 opacity-25"></div>
+            {% pixel_wordmark "mono" class="wordmark h-[clamp(52px,11vw,132px)] w-auto text-ink/[0.05] transition-colors duration-700 hover:text-ink/10" %}
+          </div>
+
+          {# بازگشت به بالا #}
+          <a href="#content-start"
+             class="group absolute bottom-5 left-page z-20 inline-flex items-center gap-2 rounded-full border border-line-strong bg-paper-soft/80 px-4 py-2 font-mono text-[0.72rem] text-mist-soft backdrop-blur-sm transition-colors duration-300 hover:border-lime hover:text-lime"
+             aria-label="بازگشت به ابتدای صفحه">
+            <span class="transition-transform duration-300 ease-ax group-hover:-translate-y-1" aria-hidden="true">↑</span>
+            بازگشت به بالا
+          </a>
         </footer>
       </div>
   <script src="{% static 'js/vendor/gsap.min.js' %}"></script>
