@@ -52,6 +52,7 @@ RENDERED_SECTIONS = {
     "why",
     "tech",
     "packages",
+    "faq",
     "manifesto",
     "testimonials",
     "articles",

@@ -1,6 +1,9 @@
 from django.shortcuts import render
 from django.urls import reverse
 from django.utils import timezone
+from django.utils.safestring import mark_safe
+
+import json
 
 from .models import (
     ContactSection,
@@ -89,4 +92,29 @@ def home(request):
         "contact_section": ContactSection.objects.first() if "contact" in keys else None,
         "contact_services": Service.objects.filter(featured=True) if "contact" in keys else [],
     }
+
+    # ── دادهٔ ساختاریافتهٔ FAQ برای موتورهای جستجو (schema.org/FAQPage) ──
+    if "faq" in keys:
+        faq_items = context["faq_items"]
+        context["faq_json"] = faq_structured_data(faq_items)
+
     return render(request, "home/index.html", context)
+
+
+def faq_structured_data(faq_items):
+    """FAQPage JSON-LD. `</` is escaped so a scripted string can never close
+    the tag early, and mark_safe keeps the JSON inside the ld+json script."""
+
+    payload = {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": item.question,
+                "acceptedAnswer": {"@type": "Answer", "text": item.answer},
+            }
+            for item in faq_items
+        ],
+    }
+    return mark_safe(json.dumps(payload, ensure_ascii=False).replace("</", "<\\/"))

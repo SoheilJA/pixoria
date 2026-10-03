@@ -1,0 +1,59 @@
+{# سوالات متداول — آکاردئون Alpine + دادهٔ ساختاریافتهٔ FAQPage #}
+{# داده‌ها: faq_section (FaqSection)، faq_items (FaqItem)، faq_json (JSON-LD) #}
+{% load icon_tags %}
+{% if faq_section and faq_items %}
+  <section class="relative px-page py-[clamp(64px,9vw,128px)]"
+           aria-labelledby="faq-head"
+           data-bg-intensity="0.7" data-bg-glow="0.7" data-bg-swirl="0.85" data-bg-hue="0.05">
+
+    <div class="grid grid-cols-1 gap-[clamp(32px,4vw,56px)] lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)]">
+      <div class="lg:sticky lg:top-28 lg:self-start" data-reveal="fade-up">
+        <span class="eyebrow mb-6 inline-block">{{ faq_section.subtitle }}<span class="ml-2 inline-block h-1.5 w-1.5 rounded-full bg-lime align-[2px]"></span></span>
+        <h2 id="faq-head" class="mb-[18px] max-w-[18ch]">{{ faq_section.title|safe }}</h2>
+        <p class="m-0 max-w-[44ch] text-[1.06rem] leading-[1.6] text-ink-soft">{{ faq_section.description|safe }}</p>
+        <div class="mt-8 flex flex-wrap gap-3">
+          {% include 'components/button.html' with text='تماس مستقیم' href=contact_url variant='ghost' icon_after='arrow-left' %}
+        </div>
+      </div>
+
+      {# آکاردئون — کلید هر سوال در Alpine ذخیره می‌شود #}
+      <div class="flex flex-col" x-data="{ open: 0 }" data-reveal="fade-up" data-reveal-delay="100">
+        {% for item in faq_items %}
+          <div class="border-b border-line">
+            <h3 class="m-0">
+              <button type="button"
+                      class="group flex w-full items-center gap-4 py-5 text-right"
+                      :aria-expanded="open === {{ forloop.counter }}"
+                      aria-controls="faq-panel-{{ forloop.counter }}"
+                      @click="open === {{ forloop.counter }} ? open = 0 : open = {{ forloop.counter }}">
+                <span class="font-pixel text-[0.58rem] text-lime/70" aria-hidden="true">{% if forloop.counter < 10 %}0{% endif %}{{ forloop.counter }}</span>
+                <span class="flex-1 text-[clamp(1rem,1.2vw,1.15rem)] font-medium leading-[1.4] text-ink transition-colors duration-200 group-hover:text-lime">{{ item.question }}</span>
+                <span class="grid h-7 w-7 shrink-0 place-items-center rounded-full border border-line-strong text-ink transition-all duration-300 ease-ax group-hover:border-lime group-hover:text-lime"
+                      :class="open === {{ forloop.counter }} ? 'rotate-45 border-lime bg-lime text-night' : ''"
+                      aria-hidden="true">
+                  {% icon "plus" class="h-3.5 w-3.5" %}
+                </span>
+              </button>
+            </h3>
+
+            {# گرید 0fr→1fr: بازشوی نرم بدون پلاگین #}
+            <div id="faq-panel-{{ forloop.counter }}"
+                 role="region"
+                 class="grid transition-all duration-300 ease-ax-out"
+                 :class="open === {{ forloop.counter }} ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'"
+                 x-cloak>
+              <div class="overflow-hidden">
+                <p class="m-0 max-w-[56ch] pb-6 pr-11 text-[0.98rem] leading-[1.7] text-ink-soft">{{ item.answer }}</p>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    {# دادهٔ ساختاریافته برای موتورهای جستجو #}
+    {% if faq_json %}
+      <script type="application/ld+json">{{ faq_json }}</script>
+    {% endif %}
+  </section>
+{% endif %}
