@@ -11,7 +11,7 @@
 
 {% block content %}
   <!-- ─── هیرو پروپوزال ─── -->
-  <section class="proposal-hero" data-aos="fade-up">
+  <section class="proposal-hero" data-reveal="fade-up">
     <p class="tag-line">
       <span class="dot"></span>پیشنهاد اختصاصی · تهیه‌شده برای {{ proposal.client_name }}
     </p>
@@ -25,11 +25,11 @@
   <!-- ─── تصاویر (اسکرین‌شات / لایت‌هاوس / اینسپکت) ─── -->
   {% if proposal.website_screenshot or proposal.lighthouse_screenshot or proposal.inspect_screenshot %}
     <section class="proposal-shots" aria-labelledby="shots-head">
-      <header class="section-head" data-aos="fade-up">
+      <header class="section-head" data-reveal="fade-up">
         <span class="eyebrow"><span class="dot"></span>بررسی فنی</span>
         <h2 id="shots-head">این چیزی است که الان می‌بینیم.</h2>
       </header>
-      <div class="shots-grid" data-aos="fade-up" data-aos-delay="100">
+      <div class="shots-grid" data-reveal="fade-up" data-reveal-delay="100">
         {% if proposal.website_screenshot %}
           <figure class="shot-figure">
             <img src="{{ proposal.website_screenshot.url }}" alt="اسکرین‌شات سایت {{ proposal.client_name }}" loading="lazy" />
@@ -55,11 +55,11 @@
   <!-- ─── آمار: الان در برابر هدف ─── -->
   {% if stats %}
     <section class="proposal-stats" aria-labelledby="stats-head">
-      <header class="section-head" data-aos="fade-up">
+      <header class="section-head" data-reveal="fade-up">
         <span class="eyebrow"><span class="dot"></span>وضعیت فعلی در برابر هدف</span>
         <h2 id="stats-head">بعد از بهینه‌سازی به کجا می‌رسیم؟</h2>
       </header>
-      <div class="stats-cards" data-aos="fade-up" data-aos-delay="100">
+      <div class="stats-cards" data-reveal="fade-up" data-reveal-delay="100">
         {% for stat in stats %}
           <div class="proposal-stat-card">
             <span class="stat-label">{{ stat.label }}</span>
@@ -83,11 +83,11 @@
   <!-- ─── مشکلات و راهکارها ─── -->
   {% if problems %}
     <section class="proposal-problems" aria-labelledby="problems-head">
-      <header class="section-head" data-aos="fade-up">
+      <header class="section-head" data-reveal="fade-up">
         <span class="eyebrow"><span class="dot"></span>یافته‌های ما</span>
         <h2 id="problems-head">چیزهایی که پیدا کردیم و می‌توانیم بهتر کنیم.</h2>
       </header>
-      <div class="problems-list" data-aos="fade-up" data-aos-delay="100">
+      <div class="problems-list" data-reveal="fade-up" data-reveal-delay="100">
         {% for problem in problems %}
           <article class="problem-card sev-{{ problem.severity }}">
             <div class="problem-top">
@@ -115,13 +115,13 @@
   <!-- ─── خدمات پیشنهادی ─── -->
   {% if essential_services or optional_services %}
     <section class="proposal-services" aria-labelledby="services-head">
-      <header class="section-head" data-aos="fade-up">
+      <header class="section-head" data-reveal="fade-up">
         <span class="eyebrow"><span class="dot"></span>راه‌حل پیشنهادی</span>
         <h2 id="services-head">این کارها را برای شما انجام می‌دهیم.</h2>
       </header>
 
       {% if essential_services %}
-        <div class="service-group" data-aos="fade-up" data-aos-delay="100">
+        <div class="service-group" data-reveal="fade-up" data-reveal-delay="100">
           <h3>در این پیشنهاد گنجانده شده</h3>
           {% for s in essential_services %}
             <div class="service-item-row">
@@ -140,7 +140,7 @@
       {% endif %}
 
       {% if optional_services %}
-        <div class="service-group" data-aos="fade-up" data-aos-delay="150">
+        <div class="service-group" data-reveal="fade-up" data-reveal-delay="150">
           <h3>پیشنهادهای تکمیلی</h3>
           <p class="group-note">این موارد ضروری نیستند، ولی می‌توانند نتیجه را قوی‌تر کنند.</p>
           {% for s in optional_services %}
@@ -163,7 +163,7 @@
 
   <!-- ─── سرمایه‌گذاری پیشنهادی ─── -->
   {% if proposal.price %}
-    <section class="proposal-price" aria-labelledby="price-head" data-aos="fade-up">
+    <section class="proposal-price" aria-labelledby="price-head" data-reveal="fade-up">
       <div class="price-card">
         <span class="eyebrow"><span class="dot"></span>سرمایه‌گذاری پیشنهادی</span>
         <h2 id="price-head">هزینه اجرای این پروژه</h2>

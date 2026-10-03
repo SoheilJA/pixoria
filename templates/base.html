@@ -106,6 +106,7 @@
           <button type="button" class="menu-toggle inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-sm bg-lime text-ink lg:hidden" aria-label="باز کردن منو" aria-controls="mobile-nav" aria-expanded="false">{% icon "menu" class="h-5 w-5" %}</button>
         </div>
       </div>
+      <div id="scroll-progress" class="scroll-progress" aria-hidden="true"></div>
     </header>
 
     <!-- منوی موبایل -->
@@ -189,7 +190,7 @@
     <script type="module" src="{% static 'js/core/wordmark.js' %}"></script>
     <script type="module" src="{% static 'js/core/glass.js' %}"></script>
     <script src="{% static 'js/htmx.min.js' %}" defer></script>
-    <script type="module" src="{% static 'js/site-reveal.js' %}"></script>
+    <script type="module" src="{% static 'js/motion.js' %}"></script>
     <script>
       ;(function () {
         var p = document.getElementById('preloader')

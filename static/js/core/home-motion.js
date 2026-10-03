@@ -1,10 +1,12 @@
-/* موشن صفحه‌ی خانه — GSAP + پارالاکس ماوس، ورود هیرو، شمارنده‌ها
-   reduced-motion: همه‌ی حرکت‌ها غیرفعال و محتوا کامل نمایش داده می‌شود */
+/* Home page motion — GSAP: hero intro timeline, mouse parallax, the optional
+   Three.js hero scene, marquee icon wave.
+   Under prefers-reduced-motion every animation is skipped and the content is
+   left fully visible. */
 import { RM } from "./utils.js";
 
 const G = window.gsap || null;
 
-/* صحنه‌ی سه‌بعدی هیرو — Three.js لوکال */
+/* Hero 3D scene — locally served Three.js, loaded on demand. */
 async function initHero3D(hero) {
   if (!hero || RM) return;
   try {
@@ -13,13 +15,13 @@ async function initHero3D(hero) {
     const { initHeroScene } = await import("../engine/scene.js");
     initHeroScene(hero);
   } catch (e) {
-    /* Three در دسترس نیست — صحنه اختیاری است */
+    /* Three.js unavailable — the scene is optional, fail silently. */
   }
 }
 
 export function initHomeMotion() {
   if (!G || RM) {
-    /* بدون انیمیشن — محتوا همیشه کامل و قابل‌مشاهده */
+    /* No animation — keep the content visible and untouched. */
     document.querySelectorAll(".hm-anim").forEach((el) => {
       el.style.opacity = "1";
       el.style.transform = "none";
@@ -27,13 +29,14 @@ export function initHomeMotion() {
     return;
   }
 
-  /* جلوگیری از راه‌اندازی دوباره روی همان هیرو (htmx:afterSwap) */
+  /* Guard against re-initialising the same hero (htmx:afterSwap). */
   const hero = document.querySelector("section[aria-label='معرفی برند']");
   if (hero && hero.dataset.motionInit) return;
   if (hero) hero.dataset.motionInit = "1";
 
-  /* ---- ورود هیرو: تیتر، lead، دکمه‌ها، مارکی ----
-     (انیمیشن data-aosها با reveal.js انجام می‌شود تا تداخل پیش نیاید) */
+  /* ---- Hero entrance: title, grid, CTAs, marquee.
+     (The data-reveal entrance animations are handled by core/reveal.js so the
+     two never fight over the same elements.) ---- */
   const tl = G.timeline({ defaults: { ease: "power3.out" } });
   tl.from(".hero-title", { y: 44, opacity: 0, duration: 0.85 })
     .from(
@@ -44,7 +47,7 @@ export function initHomeMotion() {
     .from(".home-hero-cta .btn", { y: 16, opacity: 0, duration: 0.45, stagger: 0.08 }, "-=0.3")
     .from(".home-marquee", { opacity: 0, duration: 0.7 }, "-=0.2");
 
-  /* ---- پارالاکس ماوس روی تیتر و مارکی ---- */
+  /* ---- Mouse parallax on the title and the marquee ---- */
   initHero3D(hero);
   if (hero && matchMedia("(hover: hover) and (pointer: fine)").matches) {
     const targets = [
@@ -70,8 +73,10 @@ export function initHomeMotion() {
     });
   }
 
-  /* ---- نفس کشیدن badge وضعیت همکاری ---- */
-  const badge = document.querySelector("section[aria-label='معرفی برند'] .rounded-full.border-lime\\/40");
+  /* ---- Breathing availability badge ---- */
+  const badge = document.querySelector(
+    "section[aria-label='معرفی برند'] .rounded-full.border-lime\\/40",
+  );
   if (badge)
     G.to(badge, {
       scale: 1.06,
@@ -82,7 +87,7 @@ export function initHomeMotion() {
       ease: "sine.inOut",
     });
 
-  /* ---- موج ملایم آیکن‌های مارکی ---- */
+  /* ---- Gentle wave on the marquee lime accents ---- */
   document.querySelectorAll(".home-marquee .text-lime").forEach((s, i) => {
     G.to(s, {
       y: -5,

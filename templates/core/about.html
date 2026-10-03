@@ -14,7 +14,7 @@
 
   <!-- ─── ماموریت ─── -->
   {% if mission %}
-  <section class="px-page py-[clamp(64px,9vw,120px)]" data-aos="fade-up">
+  <section class="px-page py-[clamp(64px,9vw,120px)]" data-reveal="fade-up">
     <div class="grid grid-cols-1 gap-12 md:grid-cols-[1.1fr_1fr] md:items-center">
       <div>
         <span class="eyebrow mb-6 inline-block">{{ mission.label }}<span class="mr-2 inline-block h-1.5 w-1.5 rounded-full bg-lime align-[2px]"></span></span>
@@ -31,22 +31,22 @@
   {% endif %}
 
   <!-- ─── داستان ─── -->
-  <section class="px-page py-16" data-aos="fade-up">
+  <section class="px-page py-16" data-reveal="fade-up">
     <div class="grid grid-cols-1 items-start gap-8 md:grid-cols-[1fr_1.4fr] md:gap-20">
-      <div class="flex aspect-[4/3] items-center justify-center overflow-hidden rounded-md bg-paper-soft md:sticky md:top-8 md:aspect-[4/5]" data-aos="fade-up">
+      <div class="flex aspect-[4/3] items-center justify-center overflow-hidden rounded-md bg-paper-soft md:sticky md:top-8 md:aspect-[4/5]" data-reveal="fade-up">
         <img src="{% static 'img/about.svg' %}" alt="{{ settings.site_name }}" loading="lazy" class="h-full w-full object-cover" />
       </div>
-      <div class="text-[1.1rem] leading-[1.65] text-ink-soft" data-aos="fade-up" data-aos-delay="100">{{ story.description|safe }}</div>
+      <div class="text-[1.1rem] leading-[1.65] text-ink-soft" data-reveal="fade-up" data-reveal-delay="100">{{ story.description|safe }}</div>
     </div>
   </section>
 
   <!-- ─── مراحل کار ─── -->
   {% if process_steps %}
-  <section class="bg-night px-page py-[clamp(64px,9vw,120px)] text-ink" data-aos="fade-up">
+  <section class="bg-night px-page py-[clamp(64px,9vw,120px)] text-ink" data-reveal="fade-up">
     {% include 'components/section_header.html' with eyebrow='روش کار' title='چطور با هم پیش می‌رویم؟' title_id='process-head' %}
     <div class="mt-14 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
       {% for step in process_steps %}
-      <article class="group relative flex flex-col gap-4 rounded-xl border border-line bg-[#131313] p-7 transition-colors duration-300 hover:border-lime/30" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
+      <article class="group relative flex flex-col gap-4 rounded-xl border border-line bg-[#131313] p-7 transition-colors duration-300 hover:border-lime/30" data-reveal="fade-up" data-reveal-delay="{{ forloop.counter0 }}00">
         <span class="absolute -top-3 left-6 h-6 w-6 rounded-full bg-lime flex items-center justify-center font-mono text-[0.85rem] font-bold text-ink">{{ forloop.counter }}</span>
         <h3 class="mt-4 text-[1.4rem] leading-[1.2]">{{ step.title }}</h3>
         <div class="text-[1rem] leading-[1.65] text-mist">{{ step.description|safe }}</div>
@@ -61,14 +61,14 @@
     {% include 'components/section_header.html' with eyebrow='تیم' title='آدم‌های پشت کارها' title_id='team-head' %}
     <div class="mt-12 grid grid-cols-2 gap-6 md:gap-8 lg:grid-cols-4">
       {% for member in team %}
-        <article class="flex flex-col gap-3.5" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
+        <article class="flex flex-col gap-3.5" data-reveal="fade-up" data-reveal-delay="{{ forloop.counter0 }}00">
           <div class="aspect-[4/5] overflow-hidden rounded-md bg-paper-soft">
             <img src="{{ member.image.url }}" alt="{{ member.name }}" loading="lazy" class="h-full w-full object-cover" />
           </div><h3 class="text-[1.3rem] leading-[1.1]">{{ member.name }}</h3><div class="font-mono text-[0.74rem] text-ink-dim">{{ member.role|safe }}</div>
           <div class="text-[0.94rem] text-ink-soft">{{ member.bio|safe }}</div>
         </article>
       {% empty %}
-        <p data-aos="fade-up">اطلاعات اعضای تیم به‌زودی اضافه می‌شود.</p>
+        <p data-reveal="fade-up">اطلاعات اعضای تیم به‌زودی اضافه می‌شود.</p>
       {% endfor %}
     </div>
   </section>
@@ -78,11 +78,11 @@
     {% include 'components/section_header.html' with eyebrow='ارزش‌ها' title='چند چیز که به آن‌ها باور داریم.' title_id='values-title' %}
     <div class="mt-12 grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-8 lg:grid-cols-3">
       {% for value in values %}
-        <div class="flex flex-col gap-2.5 border-t border-line pt-6" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}0">
+        <div class="flex flex-col gap-2.5 border-t border-line pt-6" data-reveal="fade-up" data-reveal-delay="{{ forloop.counter0 }}0">
           <span class="font-mono text-[0.74rem] text-ink-dim">{{ forloop.counter|stringformat:'02d' }}</span><h3 class="text-[1.3rem]">{{ value.title|safe }}</h3><div class="text-[0.96rem] text-ink-soft">{{ value.description|safe }}</div>
         </div>
       {% empty %}
-        <p data-aos="fade-up">ارزش‌های ما به‌زودی منتشر می‌شوند.</p>
+        <p data-reveal="fade-up">ارزش‌های ما به‌زودی منتشر می‌شوند.</p>
       {% endfor %}
     </div>
   </section>
@@ -91,24 +91,24 @@
   <section class="border-t border-line px-page py-16" aria-label="آمار و ارقام">
     <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
       {% for stat in stats %}
-        <div class="border-t border-line pt-5" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
+        <div class="border-t border-line pt-5" data-reveal="fade-up" data-reveal-delay="{{ forloop.counter0 }}00">
           <span class="block font-display text-[clamp(2.8rem,5vw,5rem)] leading-none text-ink">{{ stat.number }}</span><span class="mt-3 block font-mono text-[0.8rem] text-ink-dim">{{ stat.label }}</span>{% if stat.description %}
             <span class="mt-2 block text-[0.9rem] text-ink-soft">{{ stat.description }}</span>
           {% endif %}
         </div>
       {% empty %}
-        <p data-aos="fade-up">آمار به‌زودی اضافه می‌شود.</p>
+        <p data-reveal="fade-up">آمار به‌زودی اضافه می‌شود.</p>
       {% endfor %}
     </div>
   </section>
 
   <!-- ─── سوالات متداول ─── -->
   {% if faqs %}
-  <section class="px-page py-[clamp(64px,9vw,120px)]" data-aos="fade-up">
+  <section class="px-page py-[clamp(64px,9vw,120px)]" data-reveal="fade-up">
     {% include 'components/section_header.html' with eyebrow='سوالات متداول' title='سوالاتی که معمولاً پرسیده می‌شوند' title_id='faq-head' %}
     <div class="mt-12 max-w-3xl space-y-3">
       {% for faq in faqs %}
-      <details class="group border border-line rounded-xl overflow-hidden transition-colors duration-300 hover:border-lime/30" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}50">
+      <details class="group border border-line rounded-xl overflow-hidden transition-colors duration-300 hover:border-lime/30" data-reveal="fade-up" data-reveal-delay="{{ forloop.counter0 }}50">
         <summary class="flex items-center justify-between gap-4 p-5 cursor-pointer list-none">
           <h3 class="text-[1.1rem] leading-[1.4]">{{ faq.question }}</h3>
           {% icon "chevron-down" class="h-5 w-5 text-lime shrink-0 transition-transform duration-300 group-open:rotate-180" %}
@@ -124,10 +124,10 @@
   {% if pre %}
   <section class="bg-night px-page py-[clamp(64px,9vw,130px)] text-ink" aria-labelledby="manifesto-title">
     <div class="grid grid-cols-1 gap-10 md:grid-cols-[1fr_1.2fr] md:gap-20">
-      <div data-aos="fade-up">
+      <div data-reveal="fade-up">
         <span class="font-mono text-[0.8rem] text-lime">{{ pre.label|safe }}</span><h2 id="manifesto-title" class="mt-5 text-ink">{{ pre.title|safe }}</h2>
       </div>
-      <div class="text-[1.05rem] leading-[1.65] text-mist" data-aos="fade-up" data-aos-delay="100">
+      <div class="text-[1.05rem] leading-[1.65] text-mist" data-reveal="fade-up" data-reveal-delay="100">
         {{ pre.description|safe }}<a class="btn btn-lime mt-5" href="{{ pre.button_url }}">{{ pre.button_text }} {% icon "arrow-left" class="inline-block h-4 w-4 align-middle" %}</a>
       </div>
     </div>

@@ -14,15 +14,15 @@
 
   <!-- ─── اطلاعات تماس + فرم ─── -->
   <section class="grid grid-cols-1 gap-8 px-page py-12 md:grid-cols-[1fr_1.2fr] md:gap-20 md:py-16" aria-label="اطلاعات تماس">
-    <aside data-aos="fade-left">
+    <aside data-reveal="fade-left">
       {% if contact_info.tagline %}
-        <p class="mb-8 text-[1.25rem] leading-[1.6] text-ink" data-aos="fade-up">{{ contact_info.tagline }}</p>
+        <p class="mb-8 text-[1.25rem] leading-[1.6] text-ink" data-reveal="fade-up">{{ contact_info.tagline }}</p>
       {% endif %}
-      <div class="border-t border-line py-6" data-aos="fade-up" data-aos-delay="100">
+      <div class="border-t border-line py-6" data-reveal="fade-up" data-reveal-delay="100">
         <div class="mb-1.5 font-mono text-[0.78rem] text-ink-dim">دفتر — {{ contact_info.office_title }}</div>
         <address class="not-italic leading-[1.5] text-ink-soft">{{ contact_info.office_address|linebreaksbr }}</address>
       </div>
-      <div class="border-y border-line py-6" data-aos="fade-up" data-aos-delay="150">
+      <div class="border-y border-line py-6" data-reveal="fade-up" data-reveal-delay="150">
         <div class="mb-3.5 font-mono text-[0.78rem] text-ink-dim">اطلاعات تماس</div>
         <div class="grid gap-3">
           {% if contact_info.phone %}
@@ -42,7 +42,7 @@
         </div>
       </div>
       {% if socials %}
-        <div class="mt-8" data-aos="fade-up" data-aos-delay="200">
+        <div class="mt-8" data-reveal="fade-up" data-reveal-delay="200">
           <div class="mb-3.5 font-mono text-[0.78rem] text-ink-dim">شبکه‌های اجتماعی</div>
           <div class="flex flex-wrap gap-2">
             {% for social in socials %}
@@ -51,7 +51,7 @@
           </div>
         </div>
       {% endif %}
-      <div class="mt-8" data-aos="fade-up" data-aos-delay="250">
+      <div class="mt-8" data-reveal="fade-up" data-reveal-delay="250">
         <div class="mb-3.5 font-mono text-[0.78rem] text-ink-dim">خدمات ما</div>
         <div class="grid">
           {% for service in contact_services %}
@@ -61,16 +61,16 @@
       </div>
     </aside>
 
-    <form class="grid gap-[18px] rounded-md bg-paper-soft p-7 md:p-10" aria-label="فرم درخواست پروژه" novalidate data-aos="fade-right" data-aos-delay="100" hx-post="{% url 'contact:contact' %}" hx-target="#form-result" hx-swap="innerHTML" hx-on::after-request="if(event.detail.successful) this.reset()">
+    <form class="grid gap-[18px] rounded-md bg-paper-soft p-7 md:p-10" aria-label="فرم درخواست پروژه" novalidate data-reveal="fade-right" data-reveal-delay="100" hx-post="{% url 'contact:contact' %}" hx-target="#form-result" hx-swap="innerHTML" hx-on::after-request="if(event.detail.successful) this.reset()">
       {% csrf_token %}
-      <div data-aos="fade-up">
+      <div data-reveal="fade-up">
         <h2 class="mb-1.5 text-[1.4rem]">درخواست پروژه</h2><p class="m-0 font-mono text-[0.74rem] text-ink-dim">همه فیلدها به جز پیام اجباری هستند</p>
       </div>
-      <div class="grid grid-cols-1 gap-[18px] md:grid-cols-2" data-aos="fade-up" data-aos-delay="100">
+      <div class="grid grid-cols-1 gap-[18px] md:grid-cols-2" data-reveal="fade-up" data-reveal-delay="100">
         <label class="flex flex-col gap-1.5 font-mono text-[0.74rem] text-ink-dim" for="contact-name">نام شما<input id="contact-name" type="text" name="name" autocomplete="name" required class="rounded-sm border border-line bg-paper px-3.5 py-3 font-sans text-base text-ink focus:border-night focus:outline-none focus:ring-[3px] focus:ring-lime/45" /></label><label class="flex flex-col gap-1.5 font-mono text-[0.74rem] text-ink-dim" for="contact-phone">شماره تماس<input id="contact-phone" type="tel" name="phone" autocomplete="tel" required class="rounded-sm border border-line bg-paper px-3.5 py-3 font-sans text-base text-ink focus:border-night focus:outline-none focus:ring-[3px] focus:ring-lime/45" /></label>
       </div>
-      <label class="flex flex-col gap-1.5 font-mono text-[0.74rem] text-ink-dim" for="contact-company" data-aos="fade-up" data-aos-delay="150">شرکت / سازمان<input id="contact-company" type="text" name="company" autocomplete="organization" class="rounded-sm border border-line bg-paper px-3.5 py-3 font-sans text-base text-ink focus:border-night focus:outline-none focus:ring-[3px] focus:ring-lime/45" /></label>
-      <div class="grid grid-cols-1 gap-[18px] md:grid-cols-2" data-aos="fade-up" data-aos-delay="200">
+      <label class="flex flex-col gap-1.5 font-mono text-[0.74rem] text-ink-dim" for="contact-company" data-reveal="fade-up" data-reveal-delay="150">شرکت / سازمان<input id="contact-company" type="text" name="company" autocomplete="organization" class="rounded-sm border border-line bg-paper px-3.5 py-3 font-sans text-base text-ink focus:border-night focus:outline-none focus:ring-[3px] focus:ring-lime/45" /></label>
+      <div class="grid grid-cols-1 gap-[18px] md:grid-cols-2" data-reveal="fade-up" data-reveal-delay="200">
         <label class="flex flex-col gap-1.5 font-mono text-[0.74rem] text-ink-dim" for="contact-project-type">
           نوع پروژه<select id="contact-project-type" name="project_type" required class="rounded-sm border border-line bg-paper px-3.5 py-3 font-sans text-base text-ink focus:border-night focus:outline-none focus:ring-[3px] focus:ring-lime/45">
             <option value="">انتخاب کنید…</option>
@@ -87,7 +87,7 @@
           </select>
         </label>
       </div>
-      <label class="flex flex-col gap-1.5 font-mono text-[0.74rem] text-ink-dim" for="contact-start-time" data-aos="fade-up" data-aos-delay="250">
+      <label class="flex flex-col gap-1.5 font-mono text-[0.74rem] text-ink-dim" for="contact-start-time" data-reveal="fade-up" data-reveal-delay="250">
         زمان شروع<select id="contact-start-time" name="start_time" required class="rounded-sm border border-line bg-paper px-3.5 py-3 font-sans text-base text-ink focus:border-night focus:outline-none focus:ring-[3px] focus:ring-lime/45">
           <option value="">انتخاب کنید…</option>
           {% for item in start_times %}
@@ -95,8 +95,8 @@
           {% endfor %}
         </select>
       </label>
-      <label class="flex flex-col gap-1.5 font-mono text-[0.74rem] text-ink-dim" for="contact-message" data-aos="fade-up" data-aos-delay="300">درباره پروژه کمی توضیح بدهید<textarea id="contact-message" name="message" placeholder="روی چه چیزی کار می‌کنید، موفقیت برای شما چه معنی دارد، چرا سراغ ما آمدید…" class="min-h-[140px] resize-y rounded-sm border border-line bg-paper px-3.5 py-3 font-sans text-base text-ink focus:border-night focus:outline-none focus:ring-[3px] focus:ring-lime/45"></textarea></label>
-      <div class="flex flex-wrap items-center justify-between gap-[18px]" data-aos="fade-up" data-aos-delay="350">
+      <label class="flex flex-col gap-1.5 font-mono text-[0.74rem] text-ink-dim" for="contact-message" data-reveal="fade-up" data-reveal-delay="300">درباره پروژه کمی توضیح بدهید<textarea id="contact-message" name="message" placeholder="روی چه چیزی کار می‌کنید، موفقیت برای شما چه معنی دارد، چرا سراغ ما آمدید…" class="min-h-[140px] resize-y rounded-sm border border-line bg-paper px-3.5 py-3 font-sans text-base text-ink focus:border-night focus:outline-none focus:ring-[3px] focus:ring-lime/45"></textarea></label>
+      <div class="flex flex-wrap items-center justify-between gap-[18px]" data-reveal="fade-up" data-reveal-delay="350">
         <p class="m-0 text-[0.84rem] text-ink-dim">ما فقط برای پاسخ به شما از این اطلاعات استفاده می‌کنیم.</p><button type="submit" class="btn btn-ink group">ارسال درخواست {% icon "arrow-left" class="inline-block h-4 w-4 transition-transform group-hover:translate-y-1" %}</button>
       </div>
       <div id="form-result" class="mt-2" role="status" aria-live="polite"></div>

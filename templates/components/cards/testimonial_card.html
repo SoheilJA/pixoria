@@ -4,7 +4,7 @@
    class:  str  optional — extra classes on the <article>
 #}
 {% load icon_tags %}
-<article class="flex flex-col gap-4 rounded-md border border-line bg-paper p-[26px] transition-[transform,border-color] duration-300 ease-ax hover:-translate-y-1 hover:border-night {{ class }}" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:'50' }}" data-aos-duration="700">
+<article class="flex flex-col gap-4 rounded-md border border-line bg-paper p-[26px] transition-[transform,border-color] duration-300 ease-ax hover:-translate-y-1 hover:border-night {{ class }}" data-reveal="fade-up" data-reveal-delay="{{ forloop.counter0|add:'50' }}" data-reveal-duration="700">
   <div class="flex items-center justify-between">
     <div class="flex gap-0.5 text-lime" aria-label="۵ ستاره">
       {% icon "star" class="h-4 w-4 fill-current" %}{% icon "star" class="h-4 w-4 fill-current" %}{% icon "star" class="h-4 w-4 fill-current" %}{% icon "star" class="h-4 w-4 fill-current" %}{% icon "star" class="h-4 w-4 fill-current" %}

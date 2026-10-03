@@ -11,7 +11,7 @@
 {% block content %}
   {% include 'components/page_hero.html' with crumbs=crumbs title=page_settings.title|safe title_id='blog-head' description=page_settings.description|safe title_highlight=page_settings.title_highlight %}
 
-  <div class="flex flex-wrap gap-2.5 border-b border-line px-page py-6" id="blog-filters" role="toolbar" aria-label="دسته‌بندی مقالات" data-aos="fade-up" data-aos-delay="150">
+  <div class="flex flex-wrap gap-2.5 border-b border-line px-page py-6" id="blog-filters" role="toolbar" aria-label="دسته‌بندی مقالات" data-reveal="fade-up" data-reveal-delay="150">
     <button type="button" class="filter-btn rounded-full border border-night px-3.5 py-2 font-mono text-[0.78rem] uppercase tracking-[0.06em] text-ink transition-colors duration-200 aria-pressed:bg-night aria-pressed:text-lime" aria-pressed="true" hx-get="{% url 'blog:load' %}?category=all&page=1" hx-target="#blog-grid" hx-swap="innerHTML">همه</button>
     {% for cat in categories %}
       <button type="button" class="filter-btn rounded-full border border-line px-3.5 py-2 font-mono text-[0.78rem] uppercase tracking-[0.06em] text-ink-soft transition-colors duration-200 hover:border-night hover:text-ink aria-pressed:border-night aria-pressed:bg-night aria-pressed:text-lime" aria-pressed="false" hx-get="{% url 'blog:load' %}?category={{ cat.slug }}&page=1" hx-target="#blog-grid" hx-swap="innerHTML">{{ cat.title }}</button>

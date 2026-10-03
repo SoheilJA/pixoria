@@ -59,7 +59,7 @@ The current project primary is **lime `#c8ff3d`** (`--color-lime` in `input.css`
 - [x] 6b. Single shared layout — *`core/about.html`, `contact/contact.html` and `404.html` were fully standalone pages, each carrying its own `<head>`, sidebar rail, mobile header, mobile nav and footer; they now `{% extends 'base.html' %}` so the header, mega-menu, mobile menu, CTA band and footer render from one place. Fixed along the way: dead `static/js/tailwind-main.js` reference and expired `--color-ink-line` var on the 404 page, duplicate `id="content-start"` in `blog/list.html`, dead `.rail-nav` sync block in `main.js`, and a new `{% block extra_head %}` in `base.html` for per-page `<head>` tags (used by the 404 `noindex`)*
 - [x] 7. Reusable template components (`templates/components/…`): section header, buttons, cards, badges, etc. — *see "Component library (task 7)" below*
 - [x] 8. Reusable **Carousel component** (+ portfolio / testimonial / blog cards) and refactor all existing carousels to use it — *`{% carousel %}…{% endcarousel %}` block tag (`apps/core/templatetags/component_tags.py`) wraps any card partial into `templates/components/carousel.html`; the three home carousels (works / testimonials / latest articles) are the only carousels in the site and all use it. Options moved from JS config to `data-*` attributes, so `initCarousels()` is now one id-agnostic pass that also runs on `htmx:afterSwap`. Arrows are server-rendered Lucide icons (the JS fallback builds the same SVG from the sprite URL it reads off the page); keyboard (←/→/Home/End), `aria-current` dots, reduced-motion autoplay suppression and swap cleanup were added along the way*
-- [ ] 9. Global motion layer (`data-*`-driven scroll reveals, hover tilt/magnetic/glow, scroll progress, counters) + `prefers-reduced-motion` support
+- [x] 9. Global motion layer (`data-*`-driven scroll reveals, hover tilt/magnetic/glow, scroll progress, counters) + `prefers-reduced-motion` support — *`static/js/motion.js` is the one motion entry point for every page: reveals (`data-reveal`, migrated from the old `data-aos` markup — 201 attributes across 26 templates), Persian-safe word-split heading reveals (`data-split`), scroll parallax (`data-parallax`), pointer tilt + glare (`data-tilt`), magnetic pull (`data-magnetic`), Persian-locale number counters (`data-counter`) and the `#scroll-progress` header bar. Pointer effects are fine-pointer-only, everything no-ops under reduced motion, and the whole layer re-scans after `htmx:afterSwap`*
 - [ ] 10. New header (glass, services mega-menu, scroll behavior) — admin-editable
 - [ ] 11. New mobile menu (liquid-glass full-screen overlay, animations, HTMX-aware)
 - [ ] 12. New footer
@@ -169,6 +169,30 @@ One carousel for the whole site: a `{% carousel %}…{% endcarousel %}` block ta
 
 **Verified:** `manage.py check` clean; home renders exactly three `.carousel` wrappers, each with one nav (two Lucide arrow buttons) and one dot strip; all nine page routes (incl. service/portfolio/article details) return 200; `node --input-type=module --check` passes on the JS.
 
+### Global motion layer (task 9)
+
+`static/js/motion.js` — one entry point, loaded once in `base.html` (it replaced `static/js/site-reveal.js`) and re-scanned on `htmx:afterSwap`. Everything is `data-*` driven so templates stay declarative:
+
+| Attribute | Effect |
+| --- | --- |
+| `data-reveal="up\|down\|left\|right\|fade\|blur"` | scroll reveal, once (`data-reveal-delay` / `data-reveal-duration` in ms) |
+| `data-split` | word-by-word heading reveal — split on whitespace only, never per letter, so Arabic-script joining stays intact |
+| `data-parallax="0.2"` | scroll-linked vertical drift over the viewport height (negative inverts); decorative layers only |
+| `data-tilt` (+ `data-tilt-max`) | pointer 3D tilt + specular glare pseudo-element; writes only `--rx/--ry/--gx/--gy` |
+| `data-magnetic="12"` | pointer magnetic pull on buttons, elastic release |
+| `data-counter="1234"` | count-up on scroll; `data-counter-decimals`, `-prefix`, `-suffix`, `-locale="en"` (defaults to Persian digits via `fa-IR`) |
+| `#scroll-progress` | brand-green scroll progress bar inside the header (`transform-origin: right` — the RTL page starts at the right edge) |
+
+Behaviour notes:
+
+- **Reveal system, unified:** the old `data-aos*` markup is gone from every template (201 attributes across 26 files renamed, plus the dead AOS `data-aos-anchor-placement` attribute removed). `core/reveal.js` still *reads* `data-aos*` as a legacy alias, so a stray attribute elsewhere degrades to the new system instead of silently doing nothing. Card siblings share one staggered group; `.rv` class support and the 4-second safety net (show anything still hidden) are kept.
+- **`data-tilt` composes with `data-reveal`:** the tilt writes CSS custom properties, and `core/reveal.js` adds `clearProps: "transform"` when the revealed element also carries `data-tilt`, so GSAP's inline transform steps aside once the reveal lands. `data-magnetic` still owns the transform, so it must not be combined with `data-reveal` (documented in the module header).
+- **Reduced motion / touch:** under `prefers-reduced-motion` no effect animates and counters jump to their final value; tilt and magnetic are skipped entirely on coarse pointers (`(hover: hover) and (pointer: fine)`).
+- **HTMX hygiene:** after a swap, stale ScrollTriggers whose trigger element left the DOM are killed before the new content is scanned, so page-to-page navigation does not pile up tweens.
+- **Renamed `core/motion.js` → `core/home-motion.js`** (home hero only) so the global layer could take the `motion.js` name; the home loader and its Persian comments were translated at the same time.
+
+**Verified:** all six main routes return 200 with zero `data-aos` left in the rendered HTML, the `#scroll-progress` element and `motion.js` are present on every page, `npm run build` succeeds and the new component classes are in `static/css/tailwind.css`, and `node --input-type=module --check` passes on every touched JS file.
+
 **Verified:** all nine page routes (home, about, contact, services list/detail, portfolio list/detail, blog list/detail) return 200; each renders exactly one header, one breadcrumb trail, one CTA band and one footer; the contact form still POSTs and returns the Persian success fragment; `manage.py check` clean.
 
 **Gotcha worth remembering:** a literal `{% include 'components/breadcrumb.html' with items=crumbs %}` written inside a `{# … #}` documentation comment is *not* a comment to the template engine — Django parses tags there, so the file included itself and the page died with `RecursionError: maximum recursion depth exceeded`. Keep tag syntax out of template comments (document usage in prose, or in `components/README.md`).
@@ -205,5 +229,5 @@ Verified: `manage.py check` clean; home/about/contact return 200 and render exac
 
 - `static/css/site.css` is a 2.2k-line legacy stylesheet from a previous pixel-art design; most of it is dead. Will be trimmed/removed as the new system lands.
 - **Dead template trees deleted** (unreferenced by any view, recoverable from git): `templates/_legacy/`, `templates/includes/_*.html`, `templates/home/base_cinematic.html`, and the unused 444 KB `static/js/vendor/lucide.min.js` UMD bundle.
-- **Persian code comments:** the previous pass wrote Persian comments inside `static/js/**/*.js` (11 files). Per the project rules comments must be English — to be translated in a follow-up commit.
+- **Persian code comments:** the previous pass wrote Persian comments inside `static/js/**/*.js`. `core/reveal.js`, `core/carousel.js` and `core/home-motion.js` are now English (done while task 8/9 touched them); `js/footer-stars.js`, `js/header-motion.js`, `core/header.js` and `engine/{scene,footer-stars}.js` still carry Persian comments — to be translated in a follow-up commit.
 - `django-unfold` is in `requirements.txt` but commented out — admin stays stock Django for now.

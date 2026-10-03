@@ -13,16 +13,16 @@
     {% include 'components/breadcrumb.html' with items=crumbs %}
 
     {% if service.tags %}
-    <div class="mt-6 mb-6 flex flex-wrap gap-2" data-aos="fade-up" data-aos-delay="50">
+    <div class="mt-6 mb-6 flex flex-wrap gap-2" data-reveal="fade-up" data-reveal-delay="50">
       {% for tag in service.get_tags_list %}
         {% include 'components/badge.html' with text=tag variant='soft' %}
       {% endfor %}
     </div>
     {% endif %}
 
-    <h1 id="service-title" class="mt-6 mb-8 max-w-[22ch] font-display text-[clamp(2.4rem,5vw,5.6rem)] leading-[0.96] tracking-[-0.03em]" data-aos="fade-up" data-aos-delay="100">{{ service.title }}</h1>
+    <h1 id="service-title" class="mt-6 mb-8 max-w-[22ch] font-display text-[clamp(2.4rem,5vw,5.6rem)] leading-[0.96] tracking-[-0.03em]" data-reveal="fade-up" data-reveal-delay="100">{{ service.title }}</h1>
 
-    <div class="grid grid-cols-1 items-end gap-16 border-t border-line pt-8 md:grid-cols-[1.4fr_1fr]" data-aos="fade-up" data-aos-delay="200">
+    <div class="grid grid-cols-1 items-end gap-16 border-t border-line pt-8 md:grid-cols-[1.4fr_1fr]" data-reveal="fade-up" data-reveal-delay="200">
       <div>
         <p class="m-0 max-w-[56ch] text-[1.18rem] leading-[1.55] text-ink-soft">{{ service.excerpt }}</p>
       </div>
@@ -40,7 +40,7 @@
   <section class="border-b border-line">
     <div class="grid grid-cols-2 lg:grid-cols-4">
       {% for stat in stats %}
-        <div class="border-b border-l border-line px-page py-[clamp(32px,4vw,56px)] text-center last:border-l-0 lg:border-b-0" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|stagger:100 }}">
+        <div class="border-b border-l border-line px-page py-[clamp(32px,4vw,56px)] text-center last:border-l-0 lg:border-b-0" data-reveal="fade-up" data-reveal-delay="{{ forloop.counter0|stagger:100 }}">
           <div class="font-display text-[clamp(2.4rem,4vw,4rem)] font-semibold leading-none tracking-[-0.04em] text-ink">{{ stat.number }}</div>
           <div class="mt-2 font-mono text-[0.76rem] uppercase tracking-[0.1em] text-ink-dim">{{ stat.label }}</div>
           {% if stat.description %}<div class="mt-1.5 text-[0.88rem] text-ink-soft">{{ stat.description }}</div>{% endif %}
@@ -53,11 +53,11 @@
   <!-- ─── توضیحات کامل ─── -->
   {% if service.description %}
   <div class="grid grid-cols-1 items-start gap-20 border-b border-line px-page py-[clamp(56px,7vw,100px)] md:grid-cols-[1fr_1.8fr]">
-    <div class="md:sticky md:top-8" data-aos="fade-up">
+    <div class="md:sticky md:top-8" data-reveal="fade-up">
       <span class="eyebrow mb-3.5 block"><span class="ml-2 inline-block h-1.5 w-1.5 rounded-full bg-lime align-middle"></span>درباره این خدمت</span>
       <h2 class="font-display text-[clamp(1.8rem,2.6vw,2.6rem)] leading-[1.08] tracking-[-0.025em]">{{ service.title }} چیست؟</h2>
     </div>
-    <div class="reveal max-w-none text-[1.1rem] leading-[1.65] text-ink-soft [&>p]:mb-[1.4em]" data-aos="fade-up" data-aos-delay="100">
+    <div class="reveal max-w-none text-[1.1rem] leading-[1.65] text-ink-soft [&>p]:mb-[1.4em]" data-reveal="fade-up" data-reveal-delay="100">
       {{ service.description|safe }}
     </div>
   </div>
@@ -67,23 +67,23 @@
   {% if deliverables or processes %}
   <div class="grid grid-cols-1 border-b border-line md:grid-cols-2">
     {% if deliverables %}
-    <div class="px-page py-[clamp(48px,6vw,80px)] md:border-l md:border-line" data-aos="fade-up">
+    <div class="px-page py-[clamp(48px,6vw,80px)] md:border-l md:border-line" data-reveal="fade-up">
       <span class="eyebrow mb-5 block"><span class="ml-2 inline-block h-1.5 w-1.5 rounded-full bg-lime align-middle"></span>چه چیزی تحویل می‌گیرید</span>
       <h3 class="mb-6 font-display text-[clamp(1.5rem,2.2vw,2rem)] leading-[1.1]">خروجی‌های معمول</h3>
       <ul class="m-0 flex list-none flex-col gap-3 p-0">
         {% for item in deliverables %}
-          <li class="flex items-baseline gap-2.5 text-[0.98rem] text-ink-soft" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|stagger:60 }}">{% icon "check" class="h-4 w-4 shrink-0 font-bold text-lime-deep" %}{{ item.title }}</li>
+          <li class="flex items-baseline gap-2.5 text-[0.98rem] text-ink-soft" data-reveal="fade-up" data-reveal-delay="{{ forloop.counter0|stagger:60 }}">{% icon "check" class="h-4 w-4 shrink-0 font-bold text-lime-deep" %}{{ item.title }}</li>
         {% endfor %}
       </ul>
     </div>
     {% endif %}
     {% if processes %}
-    <div class="px-page py-[clamp(48px,6vw,80px)]" data-aos="fade-up" data-aos-delay="100">
+    <div class="px-page py-[clamp(48px,6vw,80px)]" data-reveal="fade-up" data-reveal-delay="100">
       <span class="eyebrow mb-5 block"><span class="ml-2 inline-block h-1.5 w-1.5 rounded-full bg-lime align-middle"></span>چطور پیش می‌رویم</span>
       <h3 class="mb-6 font-display text-[clamp(1.5rem,2.2vw,2rem)] leading-[1.1]">فرآیند کار</h3>
       <ol class="m-0 flex list-none flex-col gap-3 p-0" style="counter-reset: step;">
         {% for step in processes %}
-          <li class="grid grid-cols-[36px_1fr] items-baseline gap-3 text-[0.98rem] text-ink-soft" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|stagger:60 }}"><span class="font-mono text-[0.8rem] text-lime-deep">{{ forloop.counter|stringformat:'02d' }}</span>{{ step.title }}</li>
+          <li class="grid grid-cols-[36px_1fr] items-baseline gap-3 text-[0.98rem] text-ink-soft" data-reveal="fade-up" data-reveal-delay="{{ forloop.counter0|stagger:60 }}"><span class="font-mono text-[0.8rem] text-lime-deep">{{ forloop.counter|stringformat:'02d' }}</span>{{ step.title }}</li>
         {% endfor %}
       </ol>
     </div>
@@ -97,7 +97,7 @@
     {% include 'components/section_header.html' with eyebrow='مزیت رقابتی' title='چرا '|add:settings.site_name|add:'؟' title_id='why-us-head' %}
     <div class="mt-12 grid grid-cols-1 overflow-hidden rounded-[6px] border border-line bg-line sm:grid-cols-2 lg:grid-cols-3" style="gap:1px">
       {% for item in why_us %}
-        <div class="flex flex-col gap-3 bg-paper p-[clamp(28px,3vw,40px)] transition-colors hover:bg-paper-soft" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|stagger:100 }}">
+        <div class="flex flex-col gap-3 bg-paper p-[clamp(28px,3vw,40px)] transition-colors hover:bg-paper-soft" data-reveal="fade-up" data-reveal-delay="{{ forloop.counter0|stagger:100 }}">
           <span class="text-lime">{% icon item.icon class="h-7 w-7" %}</span>
           <h3 class="m-0 font-display text-[clamp(1.2rem,1.8vw,1.6rem)]">{{ item.title }}</h3>
           <p class="m-0 text-[0.96rem] leading-[1.6] text-ink-soft">{{ item.description }}</p>
@@ -114,7 +114,7 @@
     <div class="mt-14 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
       {% for plan in plans %}
         {% if plan.is_featured %}
-        <article class="relative flex flex-col gap-5 rounded-[6px] border border-night bg-night p-7" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|stagger:100 }}">
+        <article class="relative flex flex-col gap-5 rounded-[6px] border border-night bg-night p-7" data-reveal="fade-up" data-reveal-delay="{{ forloop.counter0|stagger:100 }}">
           <span class="absolute -top-3 right-5 rounded-full bg-lime px-3 py-1 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.12em] text-ink">پیشنهادی</span>
           <div>
             <span class="mb-2.5 block font-mono text-[0.74rem] uppercase tracking-[0.14em] text-mist-dim">{{ plan.name }}</span>
@@ -138,7 +138,7 @@
           <a class="btn btn-lime text-[0.9rem]" href="{% url 'contact:contact' %}">شروع کنید {% icon "arrow-left" class="inline-block h-4 w-4 align-middle" %}</a>
         </article>
         {% else %}
-        <article class="flex flex-col gap-5 rounded-[6px] border border-line p-7 transition-[border-color,box-shadow] hover:border-night hover:shadow-[0_4px_24px_rgba(0,0,0,0.08)]" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|stagger:100 }}">
+        <article class="flex flex-col gap-5 rounded-[6px] border border-line p-7 transition-[border-color,box-shadow] hover:border-night hover:shadow-[0_4px_24px_rgba(0,0,0,0.08)]" data-reveal="fade-up" data-reveal-delay="{{ forloop.counter0|stagger:100 }}">
           <div>
             <span class="mb-2.5 block font-mono text-[0.74rem] uppercase tracking-[0.14em] text-ink-dim">{{ plan.name }}</span>
             <div class="flex flex-wrap items-baseline gap-1.5">
@@ -165,7 +165,7 @@
     </div>
 
     {% if custom_items %}
-    <div class="mt-6 rounded-[6px] border border-line p-[clamp(28px,3vw,40px)]" data-aos="fade-up">
+    <div class="mt-6 rounded-[6px] border border-line p-[clamp(28px,3vw,40px)]" data-reveal="fade-up">
       <div class="mb-8 grid grid-cols-1 items-start gap-8 lg:grid-cols-[1fr_auto]">
         <div>
           <span class="eyebrow mb-4 inline-block"><span class="ml-2 inline-block h-1.5 w-1.5 rounded-full bg-lime align-middle"></span>پلن دلخواه</span>
@@ -181,7 +181,7 @@
       <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
         {% for item in custom_items %}
           <label class="custom-item flex cursor-pointer items-center justify-between gap-4 rounded-[6px] border border-line px-5 py-4 transition-[border-color,background-color] hover:border-night has-[:checked]:border-night has-[:checked]:bg-paper-soft" for="ci-{{ item.id }}"
-                 data-aos="fade-up" data-aos-delay="{{ forloop.counter0|stagger:60 }}">
+                 data-reveal="fade-up" data-reveal-delay="{{ forloop.counter0|stagger:60 }}">
             <span class="flex items-center gap-3.5">
               <input type="checkbox" id="ci-{{ item.id }}" data-price="{{ item.price }}" class="h-4 w-4 shrink-0 accent-[#a3d130]" />
               <span class="flex flex-col">
@@ -193,7 +193,7 @@
           </label>
         {% endfor %}
       </div>
-      <div class="mt-8 flex flex-col items-start justify-between gap-5 border-t border-line pt-6 sm:flex-row sm:items-center" data-aos="fade-up">
+      <div class="mt-8 flex flex-col items-start justify-between gap-5 border-t border-line pt-6 sm:flex-row sm:items-center" data-reveal="fade-up">
         <p class="m-0 text-[0.88rem] text-ink-dim">قیمت‌ها تخمینی هستند. برآورد دقیق بعد از جلسه اولیه ارائه می‌شود.</p>
         <a class="btn btn-ink" href="{% url 'contact:contact' %}">
           درخواست مشاوره {% icon "arrow-left" class="inline-block h-4 w-4 align-middle" %}
@@ -220,13 +220,13 @@
   {% if faqs %}
   <section class="border-b border-line px-page py-[clamp(56px,7vw,100px)]">
     <div class="grid grid-cols-1 items-start gap-20 lg:grid-cols-[1fr_2fr]">
-      <div class="lg:sticky lg:top-8" data-aos="fade-up">
+      <div class="lg:sticky lg:top-8" data-reveal="fade-up">
         <span class="eyebrow mb-6 inline-block"><span class="ml-2 inline-block h-1.5 w-1.5 rounded-full bg-lime align-middle"></span>سوالات متداول</span>
         <h2 class="font-display text-[clamp(1.8rem,2.6vw,2.6rem)]">چیزی که معمولاً می‌پرسند.</h2>
       </div>
       <div>
         {% for faq in faqs %}
-          <details class="group border-t border-line last:border-b" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|stagger:50 }}">
+          <details class="group border-t border-line last:border-b" data-reveal="fade-up" data-reveal-delay="{{ forloop.counter0|stagger:50 }}">
             <summary class="flex cursor-pointer list-none items-center justify-between gap-6 py-6">
               <h3 class="m-0 text-[1.1rem] font-medium leading-[1.3] text-ink">{{ faq.question }}</h3>
               <span class="shrink-0 font-mono text-[1.4rem] font-light text-ink-dim transition-transform duration-300 group-open:rotate-45">+</span>
@@ -246,7 +246,7 @@
     <div class="mt-12">
       {% for s in other_services %}
         <a href="{% url 'services:detail' s.slug %}" class="group grid grid-cols-1 items-start gap-2 border-b border-line py-7 transition-colors duration-300 hover:bg-paper-soft md:grid-cols-[80px_1fr_1.4fr_auto] md:gap-8 md:py-9"
-           data-aos="fade-up" data-aos-delay="{{ forloop.counter0|stagger:50 }}">
+           data-reveal="fade-up" data-reveal-delay="{{ forloop.counter0|stagger:50 }}">
           <span class="font-mono text-[0.8rem] text-ink-dim">{{ forloop.counter|stringformat:'02d' }}</span>
           <h3 class="m-0 font-display text-[clamp(1.3rem,2vw,1.8rem)] text-ink">{{ s.title }}</h3>
           <p class="m-0 text-ink-soft">{{ s.excerpt }}</p>

@@ -10,15 +10,15 @@
   <section class="border-b border-line px-page pb-[clamp(40px,5vw,80px)] pt-[clamp(64px,9vw,130px)]">
     {% include 'components/breadcrumb.html' with items=crumbs %}
 
-    <div class="mt-6 mb-7 flex flex-wrap gap-2" data-aos="fade-up" data-aos-delay="50">
+    <div class="mt-6 mb-7 flex flex-wrap gap-2" data-reveal="fade-up" data-reveal-delay="50">
       {% for cat in portfolio.categories.all %}
         {% include 'components/badge.html' with text=cat.name href=cat.filter_url %}
       {% endfor %}
     </div>
 
-    <h1 class="mb-10 max-w-[22ch] font-display text-[clamp(2.4rem,5vw,5.5rem)] leading-[0.98] tracking-[-0.03em] text-ink" data-aos="fade-up" data-aos-delay="100">{{ portfolio.title }}</h1>
+    <h1 class="mb-10 max-w-[22ch] font-display text-[clamp(2.4rem,5vw,5.5rem)] leading-[0.98] tracking-[-0.03em] text-ink" data-reveal="fade-up" data-reveal-delay="100">{{ portfolio.title }}</h1>
 
-    <div class="grid grid-cols-1 items-end gap-12 border-t border-line pt-8 md:grid-cols-2" data-aos="fade-up" data-aos-delay="200">
+    <div class="grid grid-cols-1 items-end gap-12 border-t border-line pt-8 md:grid-cols-2" data-reveal="fade-up" data-reveal-delay="200">
       <p class="m-0 max-w-[52ch] text-[1.12rem] leading-[1.55] text-ink-soft">{{ portfolio.excerpt }}</p>
       <div class="grid grid-cols-2 gap-5">
         <div class="flex flex-col gap-[5px]">
@@ -46,17 +46,17 @@
   </section>
 
   <!-- ─── تصویر اصلی پروژه ─── -->
-  <div class="w-full overflow-hidden border-b border-line bg-paper-soft" style="aspect-ratio:16/7" data-aos="fade-in" data-aos-duration="800">
+  <div class="w-full overflow-hidden border-b border-line bg-paper-soft" style="aspect-ratio:16/7" data-reveal="fade-in" data-reveal-duration="800">
     <img src="{{ portfolio.image.url }}" alt="{{ portfolio.title }}" loading="eager" class="h-full w-full object-cover" />
   </div>
 
   <!-- ─── توضیحات کامل پروژه ─── -->
   <div class="grid grid-cols-1 items-start gap-20 border-b border-line px-page py-[clamp(56px,7vw,100px)] md:grid-cols-[1fr_1.8fr]">
-    <div class="md:sticky md:top-8" data-aos="fade-up">
+    <div class="md:sticky md:top-8" data-reveal="fade-up">
       <span class="eyebrow mb-3.5 block"><span class="mr-2 inline-block h-1.5 w-1.5 rounded-full bg-lime align-middle"></span>درباره پروژه</span>
       <h2 class="font-display text-[clamp(1.8rem,2.6vw,2.6rem)] leading-[1.08] tracking-[-0.025em]">ماجرا چه بود؟</h2>
     </div>
-    <div class="reveal max-w-none text-[1.1rem] leading-[1.65] text-ink-soft [&>p]:mb-[1.4em]" data-aos="fade-up" data-aos-delay="100">
+    <div class="reveal max-w-none text-[1.1rem] leading-[1.65] text-ink-soft [&>p]:mb-[1.4em]" data-reveal="fade-up" data-reveal-delay="100">
       {{ portfolio.description|linebreaks }}
     </div>
   </div>
@@ -65,7 +65,7 @@
   {% if stats %}
   <div class="flex border-b border-line-strong bg-night max-md:flex-col">
     {% for stat in stats %}
-      <div class="flex flex-1 flex-col gap-2.5 border-l border-line-strong px-page py-[clamp(36px,5vw,64px)] last:border-l-0 max-md:border-l-0 max-md:border-t max-md:first:border-t-0" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
+      <div class="flex flex-1 flex-col gap-2.5 border-l border-line-strong px-page py-[clamp(36px,5vw,64px)] last:border-l-0 max-md:border-l-0 max-md:border-t max-md:first:border-t-0" data-reveal="fade-up" data-reveal-delay="{{ forloop.counter0 }}00">
         <span class="font-display text-[clamp(2.8rem,4.5vw,5rem)] font-semibold leading-none tracking-[-0.04em] text-lime">{{ stat.number }}</span>
         <span class="font-mono text-[0.76rem] uppercase tracking-[0.12em] text-mist-dim">{{ stat.label }}</span>
         {% if stat.description %}<span class="mt-1 max-w-[28ch] text-[0.92rem] leading-[1.5] text-mist">{{ stat.description }}</span>{% endif %}
@@ -78,7 +78,7 @@
   {% if portfolio.challenge or portfolio.solution %}
   <div class="grid grid-cols-1 border-b border-line md:grid-cols-2">
     {% if portfolio.challenge %}
-    <div class="reveal px-page py-[clamp(48px,6vw,80px)] md:border-l md:border-line" data-aos="fade-up">
+    <div class="reveal px-page py-[clamp(48px,6vw,80px)] md:border-l md:border-line" data-reveal="fade-up">
       <span class="eyebrow mb-5 block"><span class="mr-2 inline-block h-1.5 w-1.5 rounded-full bg-lime align-middle"></span>چالش</span>
       <h3 class="mb-5 font-display text-[clamp(1.5rem,2.2vw,2rem)] leading-[1.1]">مشکل کجا بود؟</h3>
       <div class="[&>p]:mb-[1.2em] [&>p]:text-[1.05rem] [&>p]:leading-[1.65] [&>p]:text-ink-soft">
@@ -87,7 +87,7 @@
     </div>
     {% endif %}
     {% if portfolio.solution %}
-    <div class="reveal px-page py-[clamp(48px,6vw,80px)]" data-aos="fade-up" data-aos-delay="100">
+    <div class="reveal px-page py-[clamp(48px,6vw,80px)]" data-reveal="fade-up" data-reveal-delay="100">
       <span class="eyebrow mb-5 block"><span class="mr-2 inline-block h-1.5 w-1.5 rounded-full bg-lime align-middle"></span>راهکار</span>
       <h3 class="mb-5 font-display text-[clamp(1.5rem,2.2vw,2rem)] leading-[1.1]">چطور حلش کردیم؟</h3>
       <div class="[&>p]:mb-[1.2em] [&>p]:text-[1.05rem] [&>p]:leading-[1.65] [&>p]:text-ink-soft">
@@ -99,7 +99,7 @@
   {% endif %}
 
   <!-- ─── ناوبری پروژه قبلی / بعدی ─── -->
-  <nav class="grid grid-cols-1 border-t border-line md:grid-cols-2" aria-label="پروژه‌های دیگر" data-aos="fade-up">
+  <nav class="grid grid-cols-1 border-t border-line md:grid-cols-2" aria-label="پروژه‌های دیگر" data-reveal="fade-up">
     {% if prev_portfolio %}
       <a href="{% url 'portfolio:detail' prev_portfolio.slug %}" class="group relative flex flex-col gap-2 overflow-hidden border-b border-line px-page py-[clamp(32px,5vw,56px)] transition-colors duration-200 hover:bg-paper-soft md:border-l">
         <span class="absolute left-6 top-6 text-ink-dim transition-transform duration-300 group-hover:-translate-y-1 group-hover:translate-x-1 group-hover:text-lime-deep">{% icon "arrow-up-right" class="h-6 w-6" %}</span>

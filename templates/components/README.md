@@ -76,6 +76,6 @@ Document usage here in prose instead.
   documented props (an `{% include %}` with `only` is not used because
   `forloop` is needed by card staggered animations — pass an explicit `index`
   when you need a stable number outside a loop).
-- `data-aos` reveal attributes live on the component root, not the call site.
+- `data-reveal` attributes live on the component root, not the call site.
 - Text that can contain rich text uses `|safe`; plain strings do not.
 - When a new component lands, add it to this table and to AGENT.md.

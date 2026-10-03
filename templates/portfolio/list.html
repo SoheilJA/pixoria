@@ -8,7 +8,7 @@
 
   {% include 'components/page_hero.html' with crumbs=crumbs title=page_section.title title_id='ph' description=page_section.description %}
 
-  <div class="work-filters flex flex-wrap gap-2 border-b border-line px-page py-6 font-mono text-[0.78rem] uppercase tracking-[0.06em]" role="toolbar" aria-label="فیلتر کارها" data-aos="fade-up" data-aos-delay="200">
+  <div class="work-filters flex flex-wrap gap-2 border-b border-line px-page py-6 font-mono text-[0.78rem] uppercase tracking-[0.06em]" role="toolbar" aria-label="فیلتر کارها" data-reveal="fade-up" data-reveal-delay="200">
     <button type="button"
             data-filter="all"
             aria-pressed="{% if not selected_category %}true{% else %}false{% endif %}"
@@ -30,10 +30,10 @@
       {% with portfolio=item.portfolio delay=item.delay %}
       <article class="reveal group flex flex-col gap-4"
                data-category="{% for cat in portfolio.categories.all %}{{ cat.slug }}{% if not forloop.last %},{% endif %}{% endfor %}"
-               data-aos="fade-up"
-               data-aos-duration="500"
-               data-aos-delay="{{ delay }}"
-               data-aos-anchor-placement="top-bottom">
+               data-reveal="fade-up"
+               data-reveal-duration="500"
+               data-reveal-delay="{{ delay }}"
+              >
         <a href="{% url 'portfolio:detail' portfolio.slug %}" class="flex flex-col gap-4 text-inherit no-underline">
           <div class="relative aspect-[4/3] overflow-hidden rounded-md bg-paper-soft">
             <span class="absolute right-4 top-4 z-[1] font-mono text-[0.74rem] text-ink-dim">{{ forloop.counter|stringformat:'02d' }}</span>

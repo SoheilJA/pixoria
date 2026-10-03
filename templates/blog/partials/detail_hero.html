@@ -1,11 +1,11 @@
 {% load icon_tags %}
 {% comment %}بخش بالای صفحه مقاله (hero section){% endcomment %}
-<section class="reveal max-w-[900px] border-b border-line px-page pb-[clamp(40px,5vw,72px)] pt-[clamp(64px,9vw,130px)]" data-aos="fade-up" data-aos-duration="700">
+<section class="reveal max-w-[900px] border-b border-line px-page pb-[clamp(40px,5vw,72px)] pt-[clamp(64px,9vw,130px)]" data-reveal="fade-up" data-reveal-duration="700">
   {# breadcrumb navigation #}
   {% include 'components/breadcrumb.html' with items=crumbs %}
 
   {# category and tags #}
-  <div class="mt-7 mb-7 flex flex-wrap gap-2" data-aos="fade-up" data-aos-delay="100">
+  <div class="mt-7 mb-7 flex flex-wrap gap-2" data-reveal="fade-up" data-reveal-delay="100">
     {% include 'components/badge.html' with text=article.category.title variant='solid' %}
     {% for tag in article.tags.all %}
       {% include 'components/badge.html' with text=tag.title %}
@@ -13,10 +13,10 @@
   </div>
 
   {# title #}
-  <h1 class="mb-8 max-w-none font-display text-[clamp(2.2rem,4.5vw,5rem)] leading-[0.98] tracking-[-0.03em] text-ink" data-aos="fade-up" data-aos-delay="150">{{ article.title }}</h1>
+  <h1 class="mb-8 max-w-none font-display text-[clamp(2.2rem,4.5vw,5rem)] leading-[0.98] tracking-[-0.03em] text-ink" data-reveal="fade-up" data-reveal-delay="150">{{ article.title }}</h1>
 
   {# metadata bar: author, date, reading time, update info #}
-  <div class="flex flex-wrap items-center gap-8 border-t border-line pt-7 font-mono text-[0.78rem] uppercase tracking-[0.08em] text-ink-dim" data-aos="fade-up" data-aos-delay="200">
+  <div class="flex flex-wrap items-center gap-8 border-t border-line pt-7 font-mono text-[0.78rem] uppercase tracking-[0.08em] text-ink-dim" data-reveal="fade-up" data-reveal-delay="200">
     {% if article.author %}
       <div class="flex items-center gap-3">
         <div class="grid h-[38px] w-[38px] place-items-center overflow-hidden rounded-full border border-line bg-paper-soft font-display text-[0.9rem] text-ink">

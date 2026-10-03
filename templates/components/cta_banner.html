@@ -8,12 +8,12 @@
   <div class="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-night/5 blur-3xl" aria-hidden="true"></div>
   <div class="pointer-events-none absolute -left-16 bottom-0 h-56 w-56 rounded-full bg-night/10 blur-2xl" aria-hidden="true"></div>
   <div class="relative px-page pb-[clamp(48px,8vw,80px)] pt-[clamp(48px,8vw,80px)]">
-    <div class="mb-8 flex items-center gap-3 font-mono text-[0.78rem] font-medium uppercase tracking-[0.14em] text-ink/70" data-aos="fade-up">
+    <div class="mb-8 flex items-center gap-3 font-mono text-[0.78rem] font-medium uppercase tracking-[0.14em] text-ink/70" data-reveal="fade-up">
       {% icon "sparkles" class="h-4 w-4" %}شروع همکاری
     </div>
     <div class="grid grid-cols-1 gap-8 md:grid-cols-[1.2fr_1fr] md:items-end md:gap-12">
-      <h2 id="cta-head" class="font-display text-[clamp(2rem,4.5vw,3.8rem)] font-medium leading-[1.05] tracking-[-0.02em]" data-aos="fade-up">{{ cta.title|default:'پروژه‌ای در ذهن دارید؟' }}</h2>
-      <div data-aos="fade-up" data-aos-delay="100">
+      <h2 id="cta-head" class="font-display text-[clamp(2rem,4.5vw,3.8rem)] font-medium leading-[1.05] tracking-[-0.02em]" data-reveal="fade-up">{{ cta.title|default:'پروژه‌ای در ذهن دارید؟' }}</h2>
+      <div data-reveal="fade-up" data-reveal-delay="100">
         <p class="mb-6 text-[1rem] leading-[1.6] text-ink-soft">{{ cta.description|default:'از ایده تا اجرا کنارتان هستیم. همین حالا گفتگو را شروع کنید.' }}</p>
         <div class="flex flex-col items-stretch gap-3 sm:flex-row sm:items-center">
           <a class="btn inline-flex items-center justify-center gap-2.5 border-night bg-night text-lime transition-colors duration-300 hover:bg-paper hover:text-ink" href="{% url 'contact:contact' %}">{% icon "arrow-up-left" class="h-4 w-4" %}شروع گفتگو</a>

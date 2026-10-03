@@ -10,7 +10,7 @@
    The dot inside the eyebrow uses the brand lime.
 #}
 {% load icon_tags %}
-<div class="max-w-[880px] {{ class }}{% if align == 'center' %} mx-auto text-center{% endif %}" data-aos="fade-up">
+<div class="max-w-[880px] {{ class }}{% if align == 'center' %} mx-auto text-center{% endif %}" data-reveal="fade-up">
   {% if eyebrow %}<span class="eyebrow mb-6 inline-block">{{ eyebrow }}<span class="ml-2 inline-block h-1.5 w-1.5 rounded-full bg-lime align-[2px]"></span></span>{% endif %}
   <h2 id="{{ title_id|default:'section-head' }}">{% if title %}{{ title|safe }}{% endif %}</h2>
   {% if subtitle %}<p class="m-0 max-w-[60ch] text-[1.15rem] leading-[1.5] text-ink-soft">{{ subtitle|safe }}</p>{% endif %}

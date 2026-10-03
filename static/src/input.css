@@ -426,6 +426,54 @@
     background: var(--color-lime);
   }
 
+  /* ═══ Motion layer (static/js/motion.js) ═══ */
+  .scroll-progress {
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    height: 2px;
+    transform: scaleX(0);
+    transform-origin: right; /* RTL: the page starts at the right edge */
+    background: linear-gradient(90deg, var(--color-lime-deep), var(--color-lime));
+    box-shadow: 0 0 10px var(--color-lime-glow);
+    pointer-events: none;
+  }
+
+  /* data-split: words must be inline-block to animate, and Persian needs the
+     whitespace kept between them so the heading still wraps. */
+  .split-word {
+    display: inline-block;
+  }
+
+  /* data-tilt: rotation comes from --rx/--ry (set by JS on pointermove) so it
+     never fights a GSAP transform on the same element. The glare is a pseudo
+     so callers don't have to add markup. */
+  [data-tilt] {
+    position: relative;
+    transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+    transform-style: preserve-3d;
+    transition: transform 0.25s var(--ease-ax-out);
+    will-change: transform;
+  }
+  [data-tilt]::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: 0;
+    background: radial-gradient(
+      240px circle at var(--gx, 50%) var(--gy, 50%),
+      rgba(255, 255, 255, 0.16),
+      transparent 55%
+    );
+    transition: opacity 0.25s var(--ease-ax);
+  }
+  [data-tilt]:hover::after {
+    opacity: 1;
+  }
+
   /* ═══ HTMX top progress bar ═══ */
   .htmx-progress {
     position: fixed;

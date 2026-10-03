@@ -13,14 +13,14 @@
   </head>
   <body class="min-h-screen bg-night font-sans text-ink-soft antialiased">
     <div class="grid min-h-screen grid-cols-1 md:grid-cols-2">
-      <section class="relative flex flex-col justify-between overflow-hidden bg-night px-[clamp(32px,6vw,72px)] py-[clamp(32px,6vw,72px)]" data-aos="fade-left">
+      <section class="relative flex flex-col justify-between overflow-hidden bg-night px-[clamp(32px,6vw,72px)] py-[clamp(32px,6vw,72px)]" data-reveal="fade-left">
         {% pixel_wordmark "mono" class="pointer-events-none absolute bottom-[-3rem] left-[-2rem] h-[14rem] w-auto text-lime opacity-[0.05]" %}
-        <a href="{% url 'home:home' %}" class="wordmark-link relative z-10 inline-flex items-center gap-2.5 font-display text-[1.3rem] font-semibold text-ink" data-aos="fade-down">{% pixel_wordmark "full" class="wordmark h-[24px] w-auto text-ink" %}</a>
-        <div class="relative z-10 my-16" data-aos="fade-up">
+        <a href="{% url 'home:home' %}" class="wordmark-link relative z-10 inline-flex items-center gap-2.5 font-display text-[1.3rem] font-semibold text-ink" data-reveal="fade-down">{% pixel_wordmark "full" class="wordmark h-[24px] w-auto text-ink" %}</a>
+        <div class="relative z-10 my-16" data-reveal="fade-up">
           <p class="mb-5 font-mono text-[0.74rem] text-lime">پنل کاربری</p><h2 class="max-w-[18ch] font-display text-[clamp(1.8rem,3vw,3rem)] font-medium leading-[1.1] text-ink">به <em class="font-display italic text-lime">داشبورد</em> خوش آمدید.</h2>
         </div>
         {% if stats %}
-          <div class="relative z-10 hidden flex-col gap-3.5 md:flex" data-aos="fade-up" data-aos-delay="100">
+          <div class="relative z-10 hidden flex-col gap-3.5 md:flex" data-reveal="fade-up" data-reveal-delay="100">
             {% for stat in stats %}
               <div class="flex items-baseline gap-2.5 border-t border-[#2a2a28] pt-3.5">
                 <span class="font-display text-[1.6rem] font-semibold leading-none text-lime">{{ stat.number }}</span><span class="font-mono text-[0.74rem] text-mist-dim">{{ stat.label }}</span>
@@ -29,8 +29,8 @@
           </div>
         {% endif %}
       </section>
-      <section class="flex flex-col justify-center bg-paper px-[clamp(28px,6vw,72px)] py-10" data-aos="fade-right">
-        <div class="w-full max-w-[400px]" data-aos="fade-up">
+      <section class="flex flex-col justify-center bg-paper px-[clamp(28px,6vw,72px)] py-10" data-reveal="fade-right">
+        <div class="w-full max-w-[400px]" data-reveal="fade-up">
           <div class="mb-10">
             <p class="mb-3.5 font-mono text-[0.74rem] text-ink-dim">
               {{ settings.site_name|default:'پیکسوریا' }} {% icon "chevron-left" class="inline-block h-3.5 w-3.5 shrink-0 opacity-50 align-middle" %} <span class="text-ink">ورود</span>

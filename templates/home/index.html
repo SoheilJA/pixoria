@@ -69,7 +69,7 @@
       {% for work in featured_works %}
         {% include 'components/cards/portfolio_card.html' with work=work %}
       {% empty %}
-        <p data-aos="fade-up">پروژه‌ای برای نمایش وجود ندارد.</p>
+        <p data-reveal="fade-up">پروژه‌ای برای نمایش وجود ندارد.</p>
       {% endfor %}
     {% endcarousel %}
   </section>
@@ -79,7 +79,7 @@
     <div class="pointer-events-none absolute -left-40 top-[-20%] h-[420px] w-[420px] rounded-full bg-lime/10 blur-[120px]" aria-hidden="true"></div>
     <div class="pointer-events-none absolute -right-32 bottom-[-30%] h-[380px] w-[380px] rounded-full bg-lime/5 blur-[100px]" aria-hidden="true"></div>
 
-    <div class="relative mb-16 max-w-[880px]" data-aos="fade-up">
+    <div class="relative mb-16 max-w-[880px]" data-reveal="fade-up">
       <span class="eyebrow mb-6 inline-block !text-mist">حوزه‌های کاری<span class="ml-2 inline-block h-1.5 w-1.5 rounded-full bg-lime align-[2px]"></span></span>
       <h2 id="services-head" class="mb-[18px] !text-ink">{{ services_section.title|safe }}</h2>
       <p class="m-0 max-w-[60ch] text-[1.15rem] leading-[1.5] text-mist">{{ services_section.description|safe }}</p>
@@ -96,7 +96,7 @@
 
   <!-- ═══ مشتری‌ها ═══ -->
   {% if clients %}
-    <div class="overflow-hidden whitespace-nowrap border-y border-line bg-paper-soft py-[30px]" aria-label="مشتریان منتخب" data-aos="fade-in">
+    <div class="overflow-hidden whitespace-nowrap border-y border-line bg-paper-soft py-[30px]" aria-label="مشتریان منتخب" data-reveal="fade-in">
       <div
         class="inline-flex animate-marq-slow gap-20 font-display text-[clamp(1.5rem,2.2vw,2.4rem)] font-medium text-ink-dim hover:[animation-play-state:paused]">
         {% for client in clients %}
@@ -113,8 +113,8 @@
   {% if manifesto %}
     <section class="bg-night px-page py-[clamp(80px,9vw,140px)] text-ink" aria-labelledby="manifesto-head">
       <div class="grid grid-cols-1 items-start gap-10 md:grid-cols-[1fr_2fr] lg:gap-20">
-        <span class="font-mono text-[0.78rem] uppercase tracking-[0.14em] text-lime" data-aos="fade-up">{{ manifesto.label }}</span>
-        <div data-aos="fade-up" data-aos-delay="100">
+        <span class="font-mono text-[0.78rem] uppercase tracking-[0.14em] text-lime" data-reveal="fade-up">{{ manifesto.label }}</span>
+        <div data-reveal="fade-up" data-reveal-delay="100">
           <h2 id="manifesto-head"
             class="max-w-[22ch] text-[clamp(2rem,3.4vw,3.4rem)] font-normal leading-[1.06] tracking-[-0.02em] text-ink">
             {{ manifesto.title }} <span class="font-display italic text-lime">{{ manifesto.highlighted_word }}</span>.
