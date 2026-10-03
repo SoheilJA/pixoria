@@ -73,7 +73,7 @@ The current project primary is **lime `#c8ff3d`** (`--color-lime` in `input.css`
 - [ ] 20. Expand the **About page** with many diverse sections (models, admin, seed)
 - [ ] 21. Align all remaining pages (portfolio, blog list/detail incl. dark prose, contact, FAQ, 404/500, etc.) with the new design system
 - [ ] 22. Extra premium touches I decide to add (scroll-snap moments, cursor follower, easter egg, page-specific space "regions", etc.) — list them in `AGENT.md`
-- [ ] 23. Full QA pass: `manage.py check`, migrations, admin editability audit, RTL audit, mobile audit, performance check, console errors, HTMX navigation, reduced-motion, no-JS fallback, no remaining CDN links, no remaining entity icons → final commit `Final QA and polish`
+- [ ] 23. Full QA pass: `manage.py check`, migrations, admin editability audit (every visible text/image editable), RTL audit, mobile audit, performance check, console errors, HTMX navigation, reduced-motion, no-JS fallback, no remaining CDN links, no remaining entity icons, no multi-line `{# #}` comments (see the task-7 gotcha) → final commit `Final QA and polish`
 
 ---
 
