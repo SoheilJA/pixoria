@@ -27,6 +27,12 @@
     {% endblock %}
   </head>
   <body class="overflow-x-hidden bg-night font-sans text-body text-ink-soft antialiased" hx-boost="true">
+    {# Background canvas shell — one fixed WebGL layer behind all content.
+       hx-preserve keeps it alive across HTMX navigations (the whole <body> is
+       swapped), so the background never restarts on a page change. #}
+    <div id="bg-shell" class="bg-shell" hx-preserve aria-hidden="true">
+      <div class="bg-fallback"></div>
+    </div>
     {# Displacement filter used by .liquid-glass (feTurbulence + feDisplacementMap) #}
     <svg class="sr-only" aria-hidden="true" focusable="false" width="0" height="0" style="position:absolute;width:0;height:0">
       <filter id="pixoria-glass" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB">

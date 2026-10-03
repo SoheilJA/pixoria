@@ -40,6 +40,11 @@
   --color-lime-900: #3a4f09;
   --color-lime-950: #203004;
 
+  /* ── Ribbon tints (blue/teal/cyan threads beside the lime) ── */
+  --color-cyan: #57e3f5;
+  --color-teal: #3fd4c0;
+  --color-azure: #5aa2ff;
+
   /* aliases kept for existing markup */
   --color-lime: #c8ff3d;
   --color-lime-deep: #a3d130;
@@ -54,6 +59,8 @@
   --font-display: "Rubik", "Bricolage Grotesque", system-ui, sans-serif;
   --font-sans: "Vazirmatn", "Geist", -apple-system, BlinkMacSystemFont, sans-serif;
   --font-mono: "Vazirmatn", ui-monospace, monospace;
+  /* 8-bit display font — Latin/digits only, never for Persian body text */
+  --font-pixel: "Press Start 2P", "Jersey 10", ui-monospace, monospace;
 
   /* ── Type scale (line-height via --*--line-height) ── */
   --text-body: clamp(1.05rem, 1rem + 0.3vw, 1.2rem);
@@ -627,6 +634,153 @@
   .bar.active-1 { @apply bg-warn; }
   .bar.active-2 { @apply bg-lime-deep; }
   .bar.active-3 { @apply bg-lime; }
+
+  /* ═══════════════════════════════════════════════════════════════
+     Background canvas shell — one fixed full-viewport WebGL layer behind
+     everything (static/js/pixoria-bg/). `hx-preserve` on the wrapper keeps it
+     alive across HTMX navigations. `.bg-fallback` is the static CSS-gradient
+     twin shown when WebGL is unavailable or motion is reduced.
+     ═══════════════════════════════════════════════════════════════ */
+  .bg-shell {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    overflow: hidden;
+    background: var(--color-night);
+  }
+  .bg-shell canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+  /* Readability veil over the ribbons so Persian text always has contrast */
+  .bg-shell::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(120% 90% at 50% 0%, transparent 30%, rgba(4, 7, 10, 0.45) 100%),
+      linear-gradient(180deg, rgba(4, 7, 10, 0.28), rgba(4, 7, 10, 0.12) 30%, rgba(4, 7, 10, 0.55));
+  }
+  /* Static gradient twin of the ribbon look (no WebGL / reduced motion).
+     Lives inside .bg-shell as an absolute layer; pixoria-bg swaps it out when
+     the WebGL canvas is ready. */
+  .bg-fallback {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(60% 50% at 50% 8%, rgba(200, 255, 61, 0.14), transparent 70%),
+      radial-gradient(45% 40% at 78% 62%, rgba(87, 227, 245, 0.08), transparent 75%),
+      radial-gradient(50% 45% at 18% 78%, rgba(90, 162, 255, 0.07), transparent 75%),
+      linear-gradient(180deg, #04070a, #060a0c 55%, #04070a);
+  }
+
+  /* ═══ Pixel accent utilities (8-bit flavour, ~30% of the UI) ═══ */
+  .font-pixel {
+    font-family: var(--font-pixel);
+    font-weight: 400;
+    letter-spacing: 0;
+  }
+  /* Notched corner — one square cut top-right (RTL leading corner) */
+  .pixel-corner {
+    clip-path: polygon(0 0, calc(100% - var(--pixel-size, 10px)) 0, 100% var(--pixel-size, 10px), 100% 100%, 0 100%);
+  }
+  .pixel-corner-2 {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, var(--pixel-size, 10px) 100%, 0 calc(100% - var(--pixel-size, 10px)));
+  }
+  /* Stepped pixel divider: square dots instead of a hairline */
+  .pixel-divider {
+    height: 6px;
+    background-image: repeating-linear-gradient(90deg, var(--color-lime) 0 6px, transparent 6px 12px);
+    opacity: 0.5;
+  }
+  /* Small 8-bit label chip */
+  .pixel-badge {
+    @apply inline-flex items-center gap-2 border border-lime/35 bg-lime/[0.07] px-3 py-1.5 font-pixel text-[0.6rem] uppercase tracking-[0.1em] text-lime;
+  }
+  /* Pixel drop-shadow glow for hero elements */
+  .pixel-glow {
+    filter: drop-shadow(0 0 14px rgba(200, 255, 61, 0.35));
+  }
+
+  /* ═══ Custom cursor (desktop pointers only; static/js/cursor.js) ═══ */
+  .cursor-dot,
+  .cursor-ring {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 99999;
+    pointer-events: none;
+    border-radius: 999px;
+    will-change: transform;
+  }
+  .cursor-dot {
+    width: 7px;
+    height: 7px;
+    margin: -3.5px 0 0 -3.5px;
+    background: var(--color-lime);
+    box-shadow: 0 0 10px rgba(200, 255, 61, 0.8);
+  }
+  .cursor-ring {
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    margin: -19px 0 0 -19px;
+    border: 1.5px solid color-mix(in srgb, var(--color-lime) 60%, transparent);
+    transition: width 0.28s var(--ease-ax), height 0.28s var(--ease-ax), margin 0.28s var(--ease-ax), border-color 0.28s var(--ease-ax), background-color 0.28s var(--ease-ax);
+  }
+  .cursor-ring span {
+    font-family: var(--font-pixel);
+    font-size: 0.52rem;
+    color: var(--color-night);
+    opacity: 0;
+    transform: scale(0.6);
+    transition: opacity 0.2s ease, transform 0.2s var(--ease-ax-out);
+  }
+  /* Hovering a link/button — ring tightens and turns solid lime */
+  body.cursor-hover .cursor-ring {
+    width: 26px;
+    height: 26px;
+    margin: -13px 0 0 -13px;
+    background: var(--color-lime);
+    border-color: var(--color-lime);
+    mix-blend-mode: normal;
+  }
+  /* Hovering a card/media — ring grows and shows a label */
+  body.cursor-view .cursor-ring {
+    width: 74px;
+    height: 74px;
+    margin: -37px 0 0 -37px;
+    background: var(--color-lime);
+    border-color: var(--color-lime);
+  }
+  body.cursor-view .cursor-ring span {
+    opacity: 1;
+    transform: scale(1);
+  }
+  body.cursor-text .cursor-ring {
+    width: 4px;
+    height: 26px;
+    margin: -13px 0 0 -2px;
+    border-radius: 2px;
+    background: var(--color-lime);
+    border-color: transparent;
+  }
+  body.cursor-down .cursor-dot {
+    transform: scale(0.5);
+  }
+  body.cursor-ready,
+  body.cursor-ready * {
+    cursor: none !important;
+  }
+  @media (hover: none), (pointer: coarse), (prefers-reduced-motion: reduce) {
+    .cursor-dot,
+    .cursor-ring {
+      display: none !important;
+    }
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
