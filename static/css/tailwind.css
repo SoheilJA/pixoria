@@ -772,6 +772,9 @@
   .shrink-0 {
     flex-shrink: 0;
   }
+  .border-collapse {
+    border-collapse: collapse;
+  }
   .origin-right {
     transform-origin: 100%;
   }
@@ -2932,55 +2935,60 @@
   .preloader.is-done {
     display: none;
   }
+  .bg-shell.is-pre {
+    z-index: 99998;
+  }
   html.preloader-lock, html.preloader-lock body {
     overflow: hidden !important;
-  }
-  .preloader__panel {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 50%;
-    background: var(--color-night);
-    transition: transform 0.55s cubic-bezier(0.65, 0, 0.35, 1), opacity 0.55s var(--ease-ax);
-    will-change: transform, opacity;
-  }
-  .preloader__panel--left {
-    left: 0;
-    transform: translateX(-101%);
-  }
-  .preloader__panel--right {
-    right: 0;
-    transform: translateX(101%);
-  }
-  .preloader.is-covered .preloader__panel {
-    transform: translateX(0);
-  }
-  .preloader.is-leaving .preloader__panel--left {
-    transform: translateX(-101%);
-    opacity: 0;
-  }
-  .preloader.is-leaving .preloader__panel--right {
-    transform: translateX(101%);
-    opacity: 0;
   }
   .preloader__title {
     position: absolute;
     inset: 0;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 16px;
+    gap: clamp(20px, 3vw, 34px);
     opacity: 0;
     transform: translateY(18px) scale(0.96);
     transition: opacity 0.4s var(--ease-ax), transform 0.4s var(--ease-ax-out);
   }
-  .preloader.is-title-in .preloader__title {
+  .preloader.is-active .preloader__title {
     opacity: 1;
     transform: translateY(0) scale(1);
   }
-  .preloader.is-title-out .preloader__title {
+  .preloader.is-leaving .preloader__title {
     opacity: 0;
-    transform: translateY(-12px) scale(0.98);
+    transform: translateY(-14px) scale(0.98);
+    transition-duration: 0.5s;
+  }
+  .preloader__progress {
+    width: clamp(180px, 26vw, 280px);
+    height: 10px;
+    background: color-mix(in srgb, #eaf2e8 10%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      background: color-mix(in srgb, var(--color-ink) 10%, transparent);
+    }
+    border: 1px solid color-mix(in srgb, #c8ff3d 35%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      border: 1px solid color-mix(in srgb, var(--color-lime) 35%, transparent);
+    }
+    padding: 2px;
+    overflow: hidden;
+  }
+  .preloader__bar {
+    display: block;
+    height: 100%;
+    width: 0%;
+    background: var(--color-lime);
+    box-shadow: 0 0 12px var(--color-lime-glow);
+    transition: width 0.18s linear;
+  }
+  .preloader__pct {
+    font-family: var(--font-pixel);
+    font-size: 0.6rem;
+    letter-spacing: 0.08em;
+    color: var(--color-mist);
   }
   .wordmark {
     display: block;
@@ -3301,7 +3309,7 @@
     opacity: 100%;
     transition-property: none;
   }
-  .preloader__panel, .preloader__title {
+  .preloader__title {
     transition-duration: 0.01ms !important;
   }
   *, *::before, *::after {

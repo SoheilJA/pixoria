@@ -25,6 +25,8 @@
     {% endblock %}
     {% block extra_head %}
     {% endblock %}
+    {# Background engine config — preset per page; read by static/js/pixoria-bg/boot.js #}
+    {{ preset|default:'home'|json_script:'bg-config' }}
   </head>
   <body class="overflow-x-hidden bg-night font-sans text-body text-ink-soft antialiased" hx-boost="true">
     {# Background canvas shell — one fixed WebGL layer behind all content.
@@ -41,10 +43,12 @@
       </filter>
     </svg>
     <div id="preloader" class="preloader" aria-hidden="true">
-      <div class="preloader__panel preloader__panel--left"></div>
-      <div class="preloader__panel preloader__panel--right"></div>
       <div class="preloader__title">
         {% pixel_wordmark "full" class="wordmark preloader__wordmark h-[34px] w-auto text-ink" %}
+        <div class="preloader__progress" role="progressbar" aria-label="بارگذاری">
+          <span class="preloader__bar"></span>
+        </div>
+        <span class="preloader__pct">۰٪</span>
       </div>
     </div>
     <div id="htmx-progress" class="htmx-progress" aria-hidden="true"></div>
@@ -149,7 +153,7 @@
           {% block afterPrefooter %}
           {% endblock %}
         </main>
-        <footer class="cfooter-stars relative overflow-hidden bg-night px-page pb-6 pt-[clamp(60px,7vw,100px)] text-[0.92rem] text-mist" aria-labelledby="footer-head">
+        <footer class="cfooter-stars relative overflow-hidden bg-night px-page pb-6 pt-[clamp(60px,7vw,100px)] text-[0.92rem] text-mist" aria-labelledby="footer-head" data-bg-rest>
           <div class="pointer-events-none absolute inset-0 z-[1] bg-gradient-to-b from-night via-transparent to-night/85" aria-hidden="true"></div>
           <h2 id="footer-head" class="sr-only">فوتر سایت</h2><div class="relative z-10 grid grid-cols-2 gap-8 border-b border-line-strong pb-12 md:grid-cols-[1.4fr_1fr_1fr_1fr] md:gap-12">
             <div class="flex max-w-[36ch] flex-col gap-[18px]">
@@ -190,6 +194,7 @@
   <script src="{% static 'js/vendor/gsap.min.js' %}"></script>
   <script src="{% static 'js/vendor/ScrollTrigger.min.js' %}"></script>
     <script src="{% static 'js/main.js' %}" defer></script>
+    <script type="module" src="{% static 'js/pixoria-bg/boot.js' %}"></script>
     <script type="module" src="{% static 'js/home-motion.js' %}"></script>
     <script type="module" src="{% static 'js/header-motion.js' %}"></script>
     <script type="module" src="{% static 'js/footer-stars.js' %}"></script>
@@ -199,42 +204,7 @@
     <script type="module" src="{% static 'js/motion.js' %}"></script>
     <script>
       ;(function () {
-        var p = document.getElementById('preloader')
-        if (!p) return
-        var r = document.documentElement,
-          s = null
-        try {
-          s = sessionStorage.getItem('pixoriaPreloaded')
-        } catch (e) {}
-        if (s || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-          p.classList.add('is-skip')
-          return
-        }
-        p.classList.add('is-active')
-        r.classList.add('preloader-lock')
-        function done() {
-          r.classList.remove('preloader-lock')
-          p.classList.add('is-done')
-          try {
-            sessionStorage.setItem('pixoriaPreloaded', '1')
-          } catch (e) {}
-        }
-        setTimeout(function () {
-          p.classList.add('is-covered')
-        }, 50)
-        setTimeout(function () {
-          p.classList.add('is-title-in')
-        }, 500)
-        setTimeout(function () {
-          p.classList.add('is-title-out')
-        }, 1350)
-        setTimeout(function () {
-          p.classList.add('is-leaving')
-          setTimeout(done, 620)
-        }, 1550)
-        setTimeout(done, 4500)
-      })()
-      var htmxBar = document.getElementById('htmx-progress')
+        var htmxBar = document.getElementById('htmx-progress')
       document.body.addEventListener('htmx:beforeRequest', function () {
         if (htmxBar) htmxBar.classList.add('is-loading')
       })

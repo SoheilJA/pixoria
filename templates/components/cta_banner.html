@@ -3,7 +3,7 @@
 {# site_context processor, with SiteSettings (`settings`) fallbacks — no #}
 {# props needed. Rendered once, in base.html, so every page shares it. #}
 {% load icon_tags %}
-<section class="relative overflow-hidden bg-lime text-ink" aria-labelledby="cta-head">
+<section class="relative overflow-hidden bg-lime text-ink cta-banner" aria-labelledby="cta-head" data-bg-rest>
   <div class="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-night/5 blur-3xl" aria-hidden="true"></div>
   <div class="pointer-events-none absolute -left-16 bottom-0 h-56 w-56 rounded-full bg-night/10 blur-2xl" aria-hidden="true"></div>
   <div class="relative px-page pb-[clamp(48px,8vw,80px)] pt-[clamp(48px,8vw,80px)]">
