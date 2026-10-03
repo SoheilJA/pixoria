@@ -1,0 +1,22 @@
+{# مانیفست برند — حرف استودیو #}
+{# داده‌ها: manifesto (ManifestoSection) #}
+{% if manifesto %}
+  <section class="px-page py-[clamp(80px,9vw,140px)] text-ink"
+           aria-labelledby="manifesto-head"
+           data-bg-intensity="0.75" data-bg-glow="0.7" data-bg-hue="0.05">
+    <div class="grid grid-cols-1 items-start gap-10 md:grid-cols-[1fr_2fr] lg:gap-20">
+      <span class="font-mono text-[0.78rem] uppercase tracking-[0.14em] text-lime" data-reveal="fade-up">{{ manifesto.label }}</span>
+      <div data-reveal="fade-up" data-reveal-delay="100">
+        <h2 id="manifesto-head"
+          class="max-w-[22ch] text-[clamp(2rem,3.4vw,3.4rem)] font-normal leading-[1.06] tracking-[-0.02em] text-ink">
+          {{ manifesto.title }} <span class="font-display italic text-lime">{{ manifesto.highlighted_word }}</span>.
+        </h2>
+        <p class="mt-5 max-w-[56ch] text-[1.1rem] text-ink-soft">{{ manifesto.paragraph_one }}</p>
+        <p class="max-w-[56ch] text-[1.1rem] text-ink-soft">{{ manifesto.paragraph_two }}</p>
+        <div class="mt-12 grid grid-cols-[auto_1fr_auto] items-center gap-6 border-t border-line-strong pt-6 font-mono text-[0.8rem] uppercase tracking-[0.08em] text-mist-dim">
+          <span>{{ manifesto.signature_name }}</span><span class="text-center">{{ manifesto.signature_title }}</span><span>۱۳۹۸ — امروز</span>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endif %}

@@ -1,0 +1,15 @@
+{# نمونه‌کارهای منتخب — کاروسل #}
+{# داده‌ها: featured_work_section، featured_works #}
+<section class="relative px-page py-[clamp(64px,11vw,120px)]"
+         aria-labelledby="work-head"
+         data-bg-intensity="0.7" data-bg-glow="0.7" data-bg-swirl="0.8" data-bg-hue="0.1">
+  {% include 'components/section_header.html' with eyebrow='کارهای منتخب' title=featured_work_section.title|safe title_id='work-head' subtitle=featured_work_section.description|safe %}
+
+  {% carousel id='works-carousel' per_view=4 class='mt-16' %}
+    {% for work in featured_works %}
+      {% include 'components/cards/portfolio_card.html' with work=work %}
+    {% empty %}
+      <p data-reveal="fade-up">پروژه‌ای برای نمایش وجود ندارد.</p>
+    {% endfor %}
+  {% endcarousel %}
+</section>

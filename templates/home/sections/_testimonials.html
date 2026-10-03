@@ -1,0 +1,14 @@
+{# نظرات مشتریان — کاروسل #}
+{# داده‌ها: testimonials (ServiceTestimonial با show_on_home) #}
+{% if testimonials %}
+  <section class="px-page pb-[clamp(32px,5vw,56px)] pt-[clamp(64px,11vw,120px)]"
+           aria-labelledby="testimonials-head"
+           data-bg-intensity="0.8" data-bg-glow="0.8" data-bg-hue="0.12">
+    {% include 'components/section_header.html' with eyebrow='نظرات مشتریان' title='آن‌ها تجربه‌شان را گفتند.' title_id='testimonials-head' %}
+    {% carousel id='testimonials-carousel' per_view=3 gap=20 autoplay=true interval=6000 class='mt-14' %}
+      {% for t in testimonials %}
+        {% include 'components/cards/testimonial_card.html' with t=t %}
+      {% endfor %}
+    {% endcarousel %}
+  </section>
+{% endif %}

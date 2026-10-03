@@ -1,0 +1,20 @@
+{# خدمات — گرید کارت‌ها #}
+{# داده‌ها: services_section، services_with_delay #}
+<section class="relative overflow-hidden px-page py-[clamp(64px,11vw,120px)] text-ink"
+         aria-labelledby="services-head"
+         data-bg-intensity="0.9" data-bg-glow="0.9" data-bg-swirl="1.0" data-bg-hue="0.18">
+
+  <div class="relative mb-16 max-w-[880px]" data-reveal="fade-up">
+    <span class="eyebrow mb-6 inline-block">حوزه‌های کاری<span class="ml-2 inline-block h-1.5 w-1.5 rounded-full bg-lime align-[2px]"></span></span>
+    <h2 id="services-head" class="mb-[18px]">{{ services_section.title|safe }}</h2>
+    <p class="m-0 max-w-[60ch] text-[1.15rem] leading-[1.5] text-ink-soft">{{ services_section.description|safe }}</p>
+  </div>
+
+  <div class="relative grid grid-cols-1 gap-px overflow-hidden rounded-md border border-line-strong bg-line-strong sm:grid-cols-2 xl:grid-cols-3">
+    {% for item in services_with_delay %}
+      {% include 'components/cards/service_card.html' with service=item.service %}
+    {% empty %}
+      <p class="col-span-full py-8 text-mist">خدمتی ثبت نشده است.</p>
+    {% endfor %}
+  </div>
+</section>
