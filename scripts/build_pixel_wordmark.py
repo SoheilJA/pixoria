@@ -1,8 +1,16 @@
 """Generate the Pixoria pixel wordmark, compact mark and favicon set.
 
 Everything is derived from the self-hosted Vazirmatn font (SIL OFL) — the Persian
-word «پیکسوریا» is rendered, pixelated onto a coarse grid and emitted as crisp
-square pixels, so the logo is a real pixel-grid SVG (no external assets, no CDN).
+word «پیکسوریا» is rendered as a *joined* word, pixelated onto a coarse grid and
+emitted as crisp square pixels, so the logo is a real pixel-grid SVG (no external
+assets, no CDN).
+
+Persian joining needs complex text shaping, which PIL cannot do without
+libraqm (not available here). `arabic_reshaper` converts the word to Unicode
+presentation forms (ﭖ ﯿ ﮐ …) so the letters connect without a shaper, and
+`python-bidi` flips the result into visual order for PIL's left-to-right
+renderer. Never split the word into per-letter elements and never apply
+letter-spacing — both break Arabic-script joining.
 
 Outputs (static/brand/):
   wordmark-full.svg        «پیکسوریا» — ink white + lime accent on the «ک»
@@ -18,6 +26,8 @@ Usage:  python scripts/build_pixel_wordmark.py
 import json
 from pathlib import Path
 
+import arabic_reshaper
+from bidi.algorithm import get_display
 from PIL import Image, ImageDraw, ImageFont
 
 BASE = Path(__file__).resolve().parent.parent
@@ -25,9 +35,6 @@ OUT = BASE / "static" / "brand"
 FONT = BASE / "static" / "fonts" / "vazirmatn-600-arabic.woff2"
 
 TEXT = "پیکسوریا"
-# Without libraqm the renderer cannot join/shape Arabic, so letters are laid out
-# individually in visual (left-to-right) order; isolated letterforms are a
-# deliberate pixel-font look.
 ACCENT_LETTER = "ک"
 
 INK = "#eaf2e8"  # --color-ink (used for preview renders)
@@ -37,35 +44,30 @@ NIGHT = "#04070a"  # --color-night (favicon background)
 RENDER_SIZE = 700          # font px used for the source raster (then pixelated)
 WORDMARK_ROWS = 14         # pixel rows of the full wordmark
 MARK_ROWS = 12             # pixel rows of the compact «پ» mark
-TRACKING_RATIO = 0.06      # gap between letters, as a fraction of the cap height
 THRESHOLD = 100            # alpha coverage that keeps a pixel cell "on"
 
 
-def render_grid(letters, rows, tracking_ratio=TRACKING_RATIO):
-    """Rasterize `letters` (list of single chars) and pixelate to `rows` rows.
+def _shape(text):
+    """Joined Persian text in visual (left-to-right) order for PIL."""
+    return get_display(arabic_reshaper.reshape(text))
 
-    Returns (grid, letter_spans) where letter_spans[i] = (x0, x1) column range of
-    the i-th letter in the grid, so a single letter can be recoloured.
+
+def render_grid(text, rows, accent_letter=None):
+    """Rasterize `text` as a joined word and pixelate it to `rows` rows.
+
+    Returns (grid, accent_span) where accent_span = (x0, x1) column range of the
+    `accent_letter` in the grid (or None when it is not requested / absent), so a
+    single letter can be recoloured without splitting the word.
     """
+    display = _shape(text)
     font = ImageFont.truetype(str(FONT), RENDER_SIZE)
     ascent, descent = font.getmetrics()
     cap = ascent + descent
 
-    # Measure each letter and lay them out left-to-right with even tracking.
-    widths = []
-    tracking = round(cap * tracking_ratio)
-    x = tracking
-    for ch in letters:
-        l, t, r, b = font.getbbox(ch)
-        widths.append((r - l, l, t, r, b))
-        x += (r - l) + tracking
-
-    img = Image.new("L", (x, cap), 0)
+    line_w = int(font.getlength(display)) + 8
+    img = Image.new("L", (line_w, cap), 0)
     draw = ImageDraw.Draw(img)
-    cursor = tracking
-    for ch, (w, l, t, r, b) in zip(letters, widths):
-        draw.text((cursor - l, -t), ch, fill=255, font=font)
-        cursor += w + tracking
+    draw.text((4, 0), display, font=font, fill=255)
 
     # Pixelate the ink itself (not the whole line box) so the pixel size is
     # measured on the glyph height — otherwise descender/dot headroom shrinks
@@ -77,12 +79,21 @@ def render_grid(letters, rows, tracking_ratio=TRACKING_RATIO):
     small = img.crop((ink_l, ink_t, ink_r, ink_b)).resize((gw, gh), Image.BOX)
     grid = [[small.getpixel((cx, cy)) >= THRESHOLD for cx in range(gw)] for cy in range(gh)]
 
-    spans = []
-    cursor = tracking
-    for (w, l, t, r, b) in widths:
-        spans.append(((cursor - ink_l) // ps, (cursor + w - ink_l) // ps))
-        cursor += w + tracking
-    return grid, spans
+    accent_span = None
+    if accent_letter and accent_letter in text:
+        # The accent is one codepoint of the shaped word; locate its visual
+        # index, then measure its column span from the ink of the prefixes
+        # around it (PIL lays presentation forms out strictly left-to-right).
+        shaped = arabic_reshaper.reshape(text)
+        logical_idx = text.index(accent_letter)
+        visual_idx = len(display) - 1 - logical_idx
+        left = draw.textlength(display[:visual_idx], font=font)
+        right = left + draw.textlength(display[visual_idx : visual_idx + 1], font=font)
+        x0 = max(0, int((max(left, ink_l) - ink_l) // ps))
+        x1 = max(x0 + 1, min(gw, int((right - ink_l) // ps) + 1))
+        accent_span = (x0, x1)
+    return grid, accent_span
+
 
 
 def runs(grid, color_of):
@@ -154,22 +165,18 @@ def grid_to_png(grid, size, color, bg=None, radius_ratio=0.0):
 
 
 def build():
-    letters = list(reversed(TEXT))  # visual LTR order (RTL word)
-    print(f"Pixelating «{TEXT}» → letters {letters}")
-
-    grid, spans = render_grid(letters, WORDMARK_ROWS)
-    accent_idx = letters.index(ACCENT_LETTER)
-    a0, a1 = spans[accent_idx]
-    print(f"  grid {len(grid[0])}x{len(grid)}  accent «{ACCENT_LETTER}» cols {a0}–{a1}")
+    print(f"Pixelating «{TEXT}» (joined Persian word)")
+    grid, accent = render_grid(TEXT, WORDMARK_ROWS, accent_letter=ACCENT_LETTER)
+    print(f"  grid {len(grid[0])}x{len(grid)}  accent «{ACCENT_LETTER}» cols {accent}")
 
     def color_of_full(x, y):
-        return LIME if a0 <= x < a1 else "currentColor"
+        return LIME if accent and accent[0] <= x < accent[1] else "currentColor"
 
     write("wordmark-full.svg", grid_to_svg(grid, color_of_full, TEXT))
     # Monochrome variant inherits its colour from CSS (`currentColor`).
     write("wordmark-mono.svg", grid_to_svg(grid, lambda x, y: "currentColor", TEXT))
 
-    mark, _ = render_grid(["پ"], MARK_ROWS, tracking_ratio=0.0)
+    mark, _ = render_grid("پ", MARK_ROWS)
     write("mark-compact.svg", grid_to_svg(mark, lambda x, y: "currentColor", "پیکسوریا"))
 
     # Favicon set — Google requires a multiple of 48x48 for rich results.
