@@ -15,6 +15,8 @@
      data-counter="1234"   count-up when scrolled into view
        data-counter-decimals="1"  data-counter-prefix="+"  data-counter-suffix="٪"
        data-counter-locale="fa"   (default) Persian digits — "en" for Latin
+     data-bar="85"         animates the element's width to this percent when
+                           it scrolls into view (skill-bar fill)
      data-horizontal      pinned section; its [data-horizontal-track] is
                            translated sideways as the page scrolls (desktop
                            only — see data-horizontal-min). The track is a
@@ -159,6 +161,28 @@ function initCounters(root = document) {
     });
 }
 
+/* ── Skill bars: the element's width tweens from 0 to data-bar percent when
+   it scrolls into view. Under reduced motion it jumps to the final width. ── */
+function initBars(root = document) {
+  $$("[data-bar]", root)
+    .filter((el) => !el.__barDone)
+    .forEach((el) => {
+      el.__barDone = true;
+      const pct = Math.min(100, Math.max(0, parseFloat(el.dataset.bar) || 0));
+      el.style.width = "0%";
+      if (RM) {
+        el.style.width = pct + "%";
+        return;
+      }
+      G.to(el, {
+        width: pct + "%",
+        duration: 1.3,
+        ease: "power3.out",
+        scrollTrigger: { trigger: el, start: "top 88%", once: true },
+      });
+    });
+}
+
 /* ── Pinned horizontal track: the section is pinned to the viewport while its
    wide inner track ([data-horizontal-track]) is translated sideways, so a row
    of cards is scrolled by scrolling down. Skipped under reduced motion and
@@ -211,6 +235,7 @@ export function initMotion() {
   initTilt();
   initMagnetic();
   initCounters();
+  initBars();
   initHorizontal();
   installRevealSafetyNet();
 }
