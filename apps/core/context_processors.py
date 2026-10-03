@@ -1,5 +1,5 @@
 from .models import SiteSettings, SocialLink, AboutStat
-from apps.home.models import CTASection
+from apps.home.models import CTASection, HeaderSettings, NavItem
 from apps.services.models import Service
 
 
@@ -20,4 +20,6 @@ def site_context(request):
         "cta": cta,
         "services_footer": services_footer,
         "stats": stats,
+        "header_settings": HeaderSettings.objects.first(),
+        "nav_items": NavItem.objects.filter(is_active=True),
     }
