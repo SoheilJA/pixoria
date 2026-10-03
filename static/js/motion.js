@@ -199,6 +199,7 @@ function initHorizontal(root = document) {
       if (!matchMedia(`(min-width: ${min}px)`).matches) return;
       const track = el.querySelector("[data-horizontal-track]");
       if (!track) return;
+      el.classList.add("is-horizontal");
       const dir = getComputedStyle(el).direction === "rtl" ? 1 : -1;
       const distance = () => Math.max(0, track.scrollWidth - el.clientWidth);
       G.to(track, {

@@ -15,11 +15,10 @@
       <p class="m-0 max-w-[44ch] text-[1.08rem] leading-[1.6] text-ink-soft" data-reveal="fade-up" data-reveal-delay="100">{{ process_section.description|safe }}</p>
     </div>
 
-    <div class="mt-[clamp(32px,4vw,56px)] grid grid-cols-1 gap-5 lg:flex lg:w-max lg:flex-nowrap lg:gap-6"
-         data-horizontal-track>
+    <div class="mt-[clamp(32px,4vw,56px)]" data-horizontal-track>
 
       {% for step in process_steps %}
-        <article class="group relative flex w-full flex-col gap-5 overflow-hidden rounded-md border border-line bg-paper-soft p-[clamp(20px,2vw,32px)] transition-colors duration-300 hover:border-line-strong lg:w-[clamp(300px,30vw,440px)] lg:shrink-0"
+        <article class="group relative flex w-full flex-col gap-5 overflow-hidden rounded-md border border-line bg-paper-soft p-[clamp(20px,2vw,32px)] transition-colors duration-300 hover:border-line-strong"
                  data-reveal="fade-up" data-reveal-delay="{{ forloop.counter0 }}00">
 
           {# شمارهٔ مرحله با فونت پیکسلی + خط اتصال به مرحلهٔ بعد #}

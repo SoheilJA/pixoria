@@ -795,6 +795,26 @@
       linear-gradient(180deg, #04070a, #060a0c 55%, #04070a);
   }
 
+  /* ═══ Pinned horizontal track (motion.js data-horizontal). The stacked
+     grid is the default; the horizontal row only turns on once motion.js
+     adds .is-horizontal, so no-JS and prefers-reduced-motion users keep a
+     normal stacked list instead of clipped, unreachable cards. ═══ */
+  [data-horizontal-track] {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+  [data-horizontal].is-horizontal [data-horizontal-track] {
+    display: flex;
+    width: max-content;
+    flex-wrap: nowrap;
+    gap: 1.5rem;
+  }
+  [data-horizontal].is-horizontal [data-horizontal-track] > * {
+    width: clamp(300px, 30vw, 440px);
+    flex-shrink: 0;
+  }
+
   /* ═══ Pixel accent utilities (8-bit flavour, ~30% of the UI) ═══ */
   .font-pixel {
     font-family: var(--font-pixel);
