@@ -1,0 +1,85 @@
+{# فرم تماس سریع — حالت فرم (بار اول و بعد از خطای اعتبارسنجی) #}
+{# داده‌ها: contact_section، contact_services، errors، form_data، rate_limited #}
+{% load icon_tags %}
+<div id="lead-form" class="flex flex-col gap-5">
+
+  {% if rate_limited %}
+    <div class="flex items-start gap-3 rounded-md border border-warn/40 bg-warn/10 p-4 text-[0.92rem] text-ink-soft" role="alert">
+      {% icon "alert-triangle" class="mt-0.5 h-5 w-5 shrink-0 text-warn" %}
+      <span>تعداد درخواست‌های شما از حد مجاز عبور کرده است. کمی بعد دوباره تلاش کنید یا مستقیم با ما تماس بگیرید.</span>
+    </div>
+  {% endif %}
+
+  <form hx-post="{% url 'home:lead' %}"
+        hx-target="#lead-form"
+        hx-swap="outerHTML"
+        hx-disabled-elt="#lead-submit"
+        class="flex flex-col gap-4"
+        novalidate>
+    {% csrf_token %}
+
+    {# هانی‌پات — برای کاربران مخفی است؛ ربات‌ها آن را پر می‌کنند #}
+    <div class="hidden" aria-hidden="true">
+      <label for="lead-website">وب‌سایت (خالی بگذارید)</label>
+      <input type="text" id="lead-website" name="company_website" tabindex="-1" autocomplete="off">
+    </div>
+
+    <div class="flex flex-col gap-2">
+      <label for="lead-name" class="font-mono text-[0.8rem] text-ink">نام و نام خانوادگی</label>
+      <input type="text" id="lead-name" name="name" required value="{{ form_data.name }}"
+             placeholder="مثلاً علی رضایی"
+             class="w-full rounded-md border bg-night px-4 py-3 font-sans text-[0.95rem] text-ink placeholder:text-ink-dim transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-lime/40
+                    {% if errors.name %}border-warn{% else %}border-line-strong{% endif %}"
+             {% if errors.name %}aria-invalid="true" aria-describedby="err-name"{% endif %}>
+      {% if errors.name %}
+        <span id="err-name" class="flex items-center gap-1.5 font-mono text-[0.76rem] text-warn">{% icon "alert-circle" class="h-3.5 w-3.5" %}{{ errors.name }}</span>
+      {% endif %}
+    </div>
+
+    <div class="flex flex-col gap-2">
+      <label for="lead-phone" class="font-mono text-[0.8rem] text-ink">شماره تماس</label>
+      <input type="tel" id="lead-phone" name="phone" required value="{{ form_data.phone }}" inputmode="tel" dir="ltr"
+             placeholder="09xxxxxxxxx"
+             class="w-full rounded-md border bg-night px-4 py-3 font-mono text-[0.95rem] text-ink placeholder:text-ink-dim transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-lime/40
+                    {% if errors.phone %}border-warn{% else %}border-line-strong{% endif %}"
+             {% if errors.phone %}aria-invalid="true" aria-describedby="err-phone"{% endif %}>
+      {% if errors.phone %}
+        <span id="err-phone" class="flex items-center gap-1.5 font-mono text-[0.76rem] text-warn">{% icon "alert-circle" class="h-3.5 w-3.5" %}{{ errors.phone }}</span>
+      {% endif %}
+    </div>
+
+    {% if contact_services %}
+      <div class="flex flex-col gap-2">
+        <label for="lead-service" class="font-mono text-[0.8rem] text-ink">خدمت موردنظر</label>
+        <select id="lead-service" name="service"
+                class="w-full rounded-md border border-line-strong bg-night px-4 py-3 font-sans text-[0.95rem] text-ink transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-lime/40">
+          <option value="">— انتخاب کنید —</option>
+          {% for service in contact_services %}
+            <option value="{{ service.pk }}" {% if form_data.service == service.pk|stringformat:"s" %}selected{% endif %}>{{ service.title }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    {% endif %}
+
+    <div class="flex flex-col gap-2">
+      <label for="lead-message" class="font-mono text-[0.8rem] text-ink">پیام شما</label>
+      <textarea id="lead-message" name="message" required rows="4"
+                placeholder="کمی درباره پروژه‌تان بنویسید…"
+                class="w-full resize-none rounded-md border bg-night px-4 py-3 font-sans text-[0.95rem] leading-[1.6] text-ink placeholder:text-ink-dim transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-lime/40
+                       {% if errors.message %}border-warn{% else %}border-line-strong{% endif %}"
+                {% if errors.message %}aria-invalid="true" aria-describedby="err-message"{% endif %}>{{ form_data.message }}</textarea>
+      {% if errors.message %}
+        <span id="err-message" class="flex items-center gap-1.5 font-mono text-[0.76rem] text-warn">{% icon "alert-circle" class="h-3.5 w-3.5" %}{{ errors.message }}</span>
+      {% endif %}
+    </div>
+
+    <button id="lead-submit" type="submit"
+            class="btn btn-lime w-full justify-center"
+            data-cursor="hover">
+      {{ contact_section.submit_text|default:"ارسال درخواست" }}
+      {% icon "arrow-left" class="h-4 w-4" %}
+    </button>
+
+    <p class="m-0 text-center font-mono text-[0.72rem] text-ink-dim">پاسخ معمولاً در کمتر از ۲۴ ساعت</p>
+  </form>
+</div>

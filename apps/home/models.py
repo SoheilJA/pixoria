@@ -2,6 +2,40 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
 
+class HomeLead(models.Model):
+    """درخواست تماس سریعِ فرم صفحه اصلی.
+
+    کوتاه و ساده نگه داشته شده تا از فرم کامل صفحه تماس (ContactSubmission)
+    مستقل بماند؛ آن فرنچایز دارای فیلدهای اجباری نوع پروژه و بودجه است که برای
+    یک فرم کوچک مناسب نیست."""
+
+    STATUS_CHOICES = [("new", "جدید"), ("seen", "مشاهده شده")]
+
+    name = models.CharField(max_length=200, verbose_name="نام و نام خانوادگی")
+    phone = models.CharField(max_length=20, verbose_name="شماره تماس")
+    service = models.ForeignKey(
+        "services.Service",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="home_leads",
+        verbose_name="خدمت موردنظر",
+    )
+    message = models.TextField(verbose_name="پیام", blank=True)
+    status = models.CharField(
+        max_length=10, choices=STATUS_CHOICES, default="new", verbose_name="وضعیت"
+    )
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="تاریخ ارسال")
+
+    class Meta:
+        verbose_name = "درخواست تماس سریع"
+        verbose_name_plural = "درخواست‌های تماس سریع"
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return f"{self.name} — {self.created_at:%Y/%m/%d}"
+
+
 class HeroSection(models.Model):
     """هیرو سکشن"""
 

@@ -53,6 +53,7 @@ RENDERED_SECTIONS = {
     "tech",
     "packages",
     "faq",
+    "contact",
     "manifesto",
     "testimonials",
     "articles",

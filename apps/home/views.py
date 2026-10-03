@@ -1,7 +1,10 @@
+from django.core.cache import cache
 from django.shortcuts import render
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.safestring import mark_safe
+from django.views.decorators.cache import never_cache
+from django.views.decorators.http import require_POST
 
 import json
 
@@ -13,6 +16,7 @@ from .models import (
     HeaderSettings,
     HeroMarqueeItem,
     HeroSection,
+    HomeLead,
     HomeSection,
     LatestArticlesSection,
     ManifestoSection,
@@ -118,3 +122,86 @@ def faq_structured_data(faq_items):
         ],
     }
     return mark_safe(json.dumps(payload, ensure_ascii=False).replace("</", "<\\/"))
+
+
+# ══════════════════════════════════════════════════════════════════
+# فرم تماس سریع — HTMX POST + هانی‌پات + محدودیت نرخ
+# ══════════════════════════════════════════════════════════════════
+LEAD_RATE_LIMIT = 5 # حداکثر ارسال در هر پنجره
+LEAD_RATE_WINDOW = 3600 # ثانیه
+
+
+def _lead_rate_key(request):
+    forwarded = request.META.get("HTTP_X_FORWARDED_FOR", "")
+    ip = forwarded.split(",")[0].strip() if forwarded else request.META.get("REMOTE_ADDR", "")
+    return f"pixoria:home-lead:{ip}"
+
+
+def _lead_context(contact_section=None, **extra):
+    context = {
+        "contact_section": contact_section or ContactSection.objects.first(),
+        "contact_services": list(Service.objects.filter(featured=True)),
+    }
+    context.update(extra)
+    return context
+
+
+@require_POST
+@never_cache
+def lead(request):
+    """ثبت درخواست تماس سریع. فقط HTMX فراخوانی می‌کند و در پاس، حالت
+    موفقیت یا همان فرم به‌همراه خطاها را برمی‌گرداند (هر دو با ۲۰۰ تا
+    htmx بدون نیاز به تنظیمات اضافه swap کند)."""
+
+    # هانی‌پات: فیلد مخفی برای ربات‌ها. در ظاهر موفق برمی‌گردانیم تا
+    # فرستنده متوجه نخشنودن درخواستش نشود.
+    if request.POST.get("company_website", ""):
+        return render(
+            request, "home/sections/_lead_success.html", _lead_context()
+        )
+
+    key = _lead_rate_key(request)
+    if cache.get(key, 0) >= LEAD_RATE_LIMIT:
+        return render(
+            request,
+            "home/sections/_lead_form.html",
+            _lead_context(rate_limited=True),
+        )
+
+    name = request.POST.get("name", "").strip()
+    phone = request.POST.get("phone", "").strip()
+    message = request.POST.get("message", "").strip()
+    service_id = request.POST.get("service", "").strip()
+
+    errors = {}
+    if len(name) < 3:
+        errors["name"] = "نام و نام خانوادگی را کامل وارد کنید."
+    if len(phone) < 7 or len(phone) > 20:
+        errors["phone"] = "یک شماره تماس معتبر وارد کنید."
+    if len(message) < 10:
+        errors["message"] = "پیام را کمی طولانی‌تر بنویسید (حداقل ۱۰ نویسه)."
+
+    if errors:
+        cache.set(key, cache.get(key, 0) + 1, LEAD_RATE_WINDOW)
+        return render(
+            request,
+            "home/sections/_lead_form.html",
+            _lead_context(
+                errors=errors,
+                form_data={"name": name, "phone": phone, "message": message, "service": service_id},
+            ),
+        )
+
+    service = None
+    if service_id:
+        try:
+            service = Service.objects.get(pk=service_id)
+        except (Service.DoesNotExist, ValueError):
+            service = None
+
+    HomeLead.objects.create(name=name, phone=phone, service=service, message=message)
+    cache.set(key, cache.get(key, 0) + 1, LEAD_RATE_WINDOW)
+
+    return render(
+        request, "home/sections/_lead_success.html", _lead_context()
+    )
