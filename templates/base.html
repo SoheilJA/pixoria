@@ -52,99 +52,81 @@
       </div>
     </div>
     <div id="htmx-progress" class="htmx-progress" aria-hidden="true"></div>
-    <header id="site-header" class="site-header fixed inset-x-0 top-0 z-50 transition-[background-color,border-color,box-shadow,backdrop-filter] duration-300 ease-ax">
-      <div class="mx-auto flex h-[var(--header-h,72px)] max-w-[1600px] items-center justify-between gap-4 px-page md:px-[clamp(20px,4vw,56px)]">
-        <!-- لوگو -->
-        <a href="{% url 'home:home' %}" class="wordmark-link group flex shrink-0 items-center" aria-label="{{ settings.site_name }}">
-          {% if settings.logo %}
-            <img src="{{ settings.logo.url }}" alt="{{ settings.site_name }}" class="h-6 w-auto max-w-[14rem]" />
-          {% else %}
-            {% pixel_wordmark "full" class="wordmark h-[22px] w-auto text-ink" %}
-          {% endif %}
-        </a>
+    <header id="site-header" class="site-header fixed inset-x-0 top-0 z-50">
+      <div class="header-wrap mx-auto max-w-[1440px] px-[clamp(12px,2.4vw,28px)] pt-[clamp(10px,1.4vw,16px)]">
+        <div class="header-bar liquid-glass flex h-[var(--header-h,64px)] items-center justify-between gap-3 rounded-full px-3 md:px-5">
+          {# لوگو #}
+          <a href="{% url 'home:home' %}" class="wordmark-link group flex shrink-0 items-center" aria-label="{{ settings.site_name }}">
+            {% if settings.logo %}
+              <img src="{{ settings.logo.url }}" alt="{{ settings.site_name }}" class="h-6 w-auto max-w-[14rem]" />
+            {% else %}
+              {% pixel_wordmark "full" class="wordmark h-[20px] w-auto text-ink md:h-[22px]" %}
+            {% endif %}
+          </a>
 
-        <!-- ناوبری دسکتاپ -->
-        <nav class="hidden items-center gap-1 lg:flex" aria-label="Primary">
-          <a href="{% url 'home:home' %}" class="nav-link {% if request.resolver_match.app_name == 'home' %}active{% endif %}">خانه</a>
-          <a href="{% url 'portfolio:list' %}" class="nav-link {% if request.resolver_match.app_name == 'portfolio' %}active{% endif %}">نمونه‌کارها</a>
+          {# ناوبری دسکتاپ — آیتم‌ها از پنل ادمین #}
+          <nav class="hidden items-center gap-0.5 lg:flex" aria-label="Primary">
+            {% load nav_tags %}
+            {% for item in nav_items %}
+              <a href="{% nav_url item.url %}" class="nav-link" data-nav-key="{{ item.url }}">{{ item.title }}</a>
+            {% endfor %}
+          </nav>
 
-          <!-- مگامنو خدمات -->
-          <div class="megamenu relative" data-megamenu>
-            <button type="button" class="nav-link flex items-center gap-1.5" data-mm-trigger aria-expanded="false" aria-controls="mm-services">
-              خدمات
-              {% icon "chevron-down" class="mm-chevron h-3.5 w-3.5 transition-transform duration-300" %}
+          {# سمت چپ: CTA + همبرگر #}
+          <div class="flex shrink-0 items-center gap-2">
+            {% if header_settings and header_settings.show_cta %}
+              <a href="{% nav_url header_settings.cta_url|default:'contact:contact' %}" class="btn btn-lime hidden text-[0.76rem] sm:inline-flex" data-magnetic="8">{{ header_settings.cta_text }}</a>
+            {% endif %}
+            <button type="button" class="menu-toggle inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-lime text-ink lg:hidden" aria-label="باز کردن منو" aria-controls="mobile-nav" aria-expanded="false">
+              <span class="menu-toggle__lines">{% icon "menu" class="h-5 w-5" %}</span>
             </button>
-            <div id="mm-services" class="megamenu-panel absolute inset-x-0 top-full pt-3" data-mm-panel role="group" aria-label="خدمات">
-              <div class="liquid-glass overflow-hidden rounded-lg">
-                <div class="relative z-10 grid grid-cols-[1.35fr_1fr]">
-                  <!-- لیست خدمات -->
-                  <div class="border-l border-line-strong p-5">
-                    <span class="mb-3 block font-mono text-[0.68rem] uppercase tracking-[0.16em] text-lime">حوزه‌های کاری</span>
-                    <div class="grid grid-cols-1 gap-0.5">
-                      {% for service in services_footer %}
-                        <a href="{% url 'services:detail' service.slug %}" class="mm-item group flex items-center justify-between gap-3 rounded-sm px-3 py-2.5 transition-colors duration-200 hover:bg-ink/5">
-                          <span class="text-[0.94rem] text-mist transition-colors duration-200 group-hover:text-ink">{{ service.title }}</span>
-                          {% icon "arrow-up-left" class="h-3.5 w-3.5 shrink-0 opacity-0 transition-all duration-200 group-hover:translate-x-[-3px] group-hover:opacity-100 group-hover:text-lime" %}
-                        </a>
-                      {% empty %}
-                        <a href="{% url 'services:list' %}" class="mm-item block rounded-sm px-3 py-2.5 text-mist hover:text-lime">مشاهده‌ی همه‌ی خدمات</a>
-                      {% endfor %}
-                    </div>
-                  </div>
-                  <!-- ستون دعوت -->
-                  <div class="relative flex flex-col justify-between gap-6 bg-gradient-to-b from-white/[0.03] to-transparent p-5">
-                    <div>
-                      <span class="mb-3 block font-mono text-[0.68rem] uppercase tracking-[0.16em] text-mist-dim">چطور کار می‌کنیم</span>
-                      <p class="m-0 text-[0.9rem] leading-[1.65] text-mist-soft">از ایده تا اجرا، کنارتان هستیم. فرآیند شفاف، تحویل به‌موقع و پشتیبانی واقعی.</p>
-                    </div>
-                    <a href="{% url 'contact:contact' %}" class="btn btn-lime group w-full justify-center text-[0.78rem]">شروع پروژه
-                      {% icon "arrow-down" class="arrow h-4 w-4 transition-transform duration-[250ms] ease-ax group-hover:translate-y-1" %}</a>
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
-
-          <a href="{% url 'blog:list' %}" class="nav-link {% if request.resolver_match.app_name == 'blog' %}active{% endif %}">بلاگ</a>
-          <a href="{% url 'core:about' %}" class="nav-link {% if request.resolver_match.app_name == 'core' %}active{% endif %}">درباره ما</a>
-          <a href="{% url 'contact:contact' %}" class="nav-link {% if request.resolver_match.app_name == 'contact' %}active{% endif %}">تماس</a>
-        </nav>
-
-        <!-- سمت چپ: CTA + موبایل -->
-        <div class="flex shrink-0 items-center gap-2.5">
-          <a href="{% url 'contact:contact' %}" class="btn btn-lime hidden text-[0.78rem] sm:inline-flex">شروع پروژه</a>
-          <button type="button" class="menu-toggle inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-sm bg-lime text-ink lg:hidden" aria-label="باز کردن منو" aria-controls="mobile-nav" aria-expanded="false">{% icon "menu" class="h-5 w-5" %}</button>
+          <div id="scroll-progress" class="scroll-progress" aria-hidden="true"></div>
         </div>
       </div>
-      <div id="scroll-progress" class="scroll-progress" aria-hidden="true"></div>
     </header>
 
-    <!-- منوی موبایل -->
-    <nav id="mobile-nav" class="mobile-nav fixed inset-0 z-[60] hidden flex-col gap-1 bg-night px-page pb-8 pt-24 font-display text-[2rem] text-ink [&.open]:flex" aria-label="Mobile">
-      <button class="mobile-close absolute left-[18px] top-[18px] inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-sm bg-lime text-ink" aria-label="بستن منو">{% icon "x" class="h-6 w-6" %}</button>
-      <a href="{% url 'home:home' %}" class="flex items-center gap-4 border-b border-night-soft py-3.5 transition-colors hover:text-lime {% if request.resolver_match.app_name == 'home' %}text-lime{% endif %}">{% icon "home" class="h-6 w-6 text-[1.2rem] opacity-70" %}خانه</a>
-      <a href="{% url 'portfolio:list' %}" class="flex items-center gap-4 border-b border-night-soft py-3.5 transition-colors hover:text-lime {% if request.resolver_match.app_name == 'portfolio' %}text-lime{% endif %}">{% icon "layout-grid" class="h-6 w-6 text-[1.2rem] opacity-70" %}نمونه کار ها</a>
-      <a href="{% url 'services:list' %}" class="flex items-center gap-4 border-b border-night-soft py-3.5 transition-colors hover:text-lime {% if request.resolver_match.app_name == 'services' %}text-lime{% endif %}">{% icon "layers" class="h-6 w-6 text-[1.2rem] opacity-70" %}خدمات</a>
-      <a href="{% url 'blog:list' %}" class="flex items-center gap-4 border-b border-night-soft py-3.5 transition-colors hover:text-lime {% if request.resolver_match.app_name == 'blog' %}text-lime{% endif %}">{% icon "newspaper" class="h-6 w-6 text-[1.2rem] opacity-70" %}بلاگ</a>
-      <a href="{% url 'core:about' %}" class="flex items-center gap-4 border-b border-night-soft py-3.5 transition-colors hover:text-lime {% if request.resolver_match.app_name == 'core' %}text-lime{% endif %}">{% icon "users" class="h-6 w-6 text-[1.2rem] opacity-70" %}درباره ما</a>
-      <a href="{% url 'contact:contact' %}" class="flex items-center gap-4 border-b border-night-soft py-3.5 transition-colors hover:text-lime {% if request.resolver_match.app_name == 'contact' %}text-lime{% endif %}">{% icon "mail" class="h-6 w-6 text-[1.2rem] opacity-70" %}تماس با ما</a>
-      <div class="mt-auto space-y-4 pt-6 border-t border-night-soft">
-        <a href="{% url 'contact:contact' %}" class="inline-flex w-full items-center justify-center gap-2 rounded-sm bg-lime px-4 py-3.5 font-mono text-[0.8rem] font-medium text-ink transition-colors duration-300 hover:bg-paper hover:text-ink">{% icon "arrow-up-left" class="h-4 w-4" %}شروع پروژه</a>
-        <div class="flex flex-col gap-3 font-mono text-[0.78rem] text-mist-soft">
-          {% if settings.phone %}
-            <a href="tel:{{ settings.phone }}" class="flex items-center gap-3 py-2">{% icon "phone" class="h-4 w-4" %}{{ settings.phone }}</a>
+    {# منوی موبایل — اورلی تمام‌صفحه با انیمیشن GSAP #}
+    <div id="mobile-nav" class="mobile-nav fixed inset-0 z-[80]" aria-hidden="true" role="dialog" aria-modal="true" aria-label="منوی موبایل">
+      <div class="mobile-nav__veil"></div>
+      <div class="mobile-nav__panel liquid-glass-strong">
+        <button type="button" class="mobile-close inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-full bg-lime text-ink" aria-label="بستن منو">{% icon "x" class="h-5 w-5" %}</button>
+
+        <nav class="mobile-nav__links font-display text-[clamp(1.8rem,8vw,2.6rem)] text-ink" aria-label="منو">
+          {% for item in nav_items %}
+            <a href="{% nav_url item.url %}" class="mobile-link group flex items-center justify-between border-b border-line py-3 transition-colors hover:text-lime" data-nav-key="{{ item.url }}">
+              <span>{{ item.title }}</span>
+              <span class="text-lime opacity-0 transition-all duration-300 group-hover:translate-x-[-4px] group-hover:opacity-100">{% icon "arrow-up-left" class="h-6 w-6" %}</span>
+            </a>
+          {% endfor %}
+        </nav>
+
+        <div class="mobile-nav__foot">
+          {% if header_settings and header_settings.show_cta %}
+            <a href="{% nav_url header_settings.cta_url|default:'contact:contact' %}" class="btn btn-lime w-full justify-center">{{ header_settings.cta_text }}</a>
           {% endif %}
-          <div class="flex flex-wrap gap-3">
+          <div class="mobile-nav__contact">
+            {% if settings.phone %}
+              <a href="tel:{{ settings.phone }}" class="inline-flex items-center gap-2.5">{% icon "phone" class="h-4 w-4" %}{{ settings.phone }}</a>
+            {% endif %}
+            {% if settings.email %}
+              <a href="mailto:{{ settings.email }}" class="inline-flex items-center gap-2.5">{% icon "mail" class="h-4 w-4" %}{{ settings.email }}</a>
+            {% endif %}
+          </div>
+          <div class="mobile-nav__socials">
             {% for social in socials %}
-              <a href="{{ social.url }}" target="_blank" rel="noopener" class="inline-flex items-center gap-2">{% icon "globe" class="h-4 w-4" %}{{ social.name }}</a>
+              <a href="{{ social.url }}" target="_blank" rel="noopener" class="inline-flex items-center gap-2 rounded-full border border-line px-3.5 py-1.5 transition-colors hover:border-lime hover:text-lime">
+                <span class="font-pixel text-[0.55rem]">{{ social.label }}</span>{{ social.name }}
+              </a>
             {% endfor %}
           </div>
-          <div class="flex justify-between border-t border-night-soft pt-4">
-            <span>آماده همکاری</span><span>© {{ settings.established_year }} {{ settings.site_name }}</span>
+          <div class="mobile-nav__legal">
+            <span>© {{ settings.established_year }} {{ settings.site_name }}</span>
+            <span class="inline-flex items-center gap-2"><span class="h-1.5 w-1.5 animate-pulse rounded-full bg-lime"></span>{{ settings.status|default:'آماده همکاری' }}</span>
           </div>
         </div>
       </div>
-    </nav>
+    </div>
     <div class="min-w-0">
       <main id="content-start" class="pt-[var(--header-h,72px)]">
           {% block content %}
