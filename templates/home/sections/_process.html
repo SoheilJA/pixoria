@@ -1,0 +1,48 @@
+{# فرآیند کار — اسکرول افقی پین‌شده در دسکتاپ، استک‌شده در موبایل #}
+{# داده‌ها: process_section (ProcessSection)، process_steps (ProcessStep) #}
+{% load icon_tags %}
+{% if process_section and process_steps %}
+  <section class="relative flex min-h-screen flex-col justify-center overflow-hidden px-page py-[clamp(64px,9vw,120px)]"
+           data-horizontal
+           aria-labelledby="process-head"
+           data-bg-intensity="0.9" data-bg-glow="0.95" data-bg-swirl="1.1" data-bg-hue="0.12">
+
+    <div class="flex flex-col gap-[clamp(24px,3vw,40px)] md:flex-row md:items-end md:justify-between">
+      <div class="max-w-[760px]" data-reveal="fade-up">
+        <span class="eyebrow mb-6 inline-block">{{ process_section.subtitle }}<span class="ml-2 inline-block h-1.5 w-1.5 rounded-full bg-lime align-[2px]"></span></span>
+        <h2 id="process-head" class="max-w-[22ch]">{{ process_section.title|safe }}</h2>
+      </div>
+      <p class="m-0 max-w-[44ch] text-[1.08rem] leading-[1.6] text-ink-soft" data-reveal="fade-up" data-reveal-delay="100">{{ process_section.description|safe }}</p>
+    </div>
+
+    <div class="mt-[clamp(32px,4vw,56px)] grid grid-cols-1 gap-5 lg:flex lg:w-max lg:flex-nowrap lg:gap-6"
+         data-horizontal-track>
+
+      {% for step in process_steps %}
+        <article class="group relative flex w-full flex-col gap-5 overflow-hidden rounded-md border border-line bg-paper-soft p-[clamp(20px,2vw,32px)] transition-colors duration-300 hover:border-line-strong lg:w-[clamp(300px,30vw,440px)] lg:shrink-0"
+                 data-reveal="fade-up" data-reveal-delay="{{ forloop.counter0 }}00">
+
+          {# شمارهٔ مرحله با فونت پیکسلی + خط اتصال به مرحلهٔ بعد #}
+          <div class="flex items-center justify-between border-b border-line pb-4">
+            <span class="font-pixel text-[0.72rem] text-lime" aria-hidden="true">{% if forloop.counter < 10 %}0{% endif %}{{ forloop.counter }}</span>
+            <span class="font-mono text-[0.72rem] uppercase tracking-[0.14em] text-ink-dim">مرحله</span>
+          </div>
+
+          <h3 class="max-w-[20ch] text-[clamp(1.25rem,1.6vw,1.6rem)] font-medium leading-[1.2] text-ink">{{ step.title }}</h3>
+          <p class="m-0 text-[0.98rem] leading-[1.65] text-ink-soft">{{ step.description }}</p>
+
+          <span class="mt-auto inline-flex items-center gap-2 font-mono text-[0.78rem] text-lime/80 opacity-0 transition-opacity duration-300 group-hover:opacity-100" aria-hidden="true">
+            {% icon "arrow-left" class="h-4 w-4" %} گام بعد
+          </span>
+        </article>
+      {% endfor %}
+    </div>
+
+    {# راهنمای اسکرول — فقط دسکتاپ #}
+    <div class="mt-10 hidden items-center gap-3 font-mono text-[0.72rem] uppercase tracking-[0.14em] text-ink-dim lg:flex" aria-hidden="true">
+      <span class="h-px w-10 bg-line-strong"></span>
+      برای دیدن همهٔ مراحل اسکرول کنید
+      {% icon "arrow-down" class="h-3.5 w-3.5 animate-bounce text-lime" %}
+    </div>
+  </section>
+{% endif %}

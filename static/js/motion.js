@@ -15,6 +15,11 @@
      data-counter="1234"   count-up when scrolled into view
        data-counter-decimals="1"  data-counter-prefix="+"  data-counter-suffix="٪"
        data-counter-locale="fa"   (default) Persian digits — "en" for Latin
+     data-horizontal      pinned section; its [data-horizontal-track] is
+                           translated sideways as the page scrolls (desktop
+                           only — see data-horizontal-min). The track is a
+                           plain stacked grid below that width.
+     data-horizontal-min="1024"  breakpoint for the pinned horizontal mode
      #scroll-progress      slim brand-green scroll progress bar (in the header)
 
    Rules: never combine data-magnetic with data-reveal (both own the element's
@@ -154,6 +159,40 @@ function initCounters(root = document) {
     });
 }
 
+/* ── Pinned horizontal track: the section is pinned to the viewport while its
+   wide inner track ([data-horizontal-track]) is translated sideways, so a row
+   of cards is scrolled by scrolling down. Skipped under reduced motion and
+   below `data-horizontal-min`, where the track is a plain stacked grid.
+   Direction follows the document so RTL and LTR pages both scroll the right
+   way. ── */
+function initHorizontal(root = document) {
+  $$("[data-horizontal]", root)
+    .filter((el) => !el.__horizontalDone)
+    .forEach((el) => {
+      el.__horizontalDone = true;
+      if (RM || !window.ScrollTrigger) return;
+      const min = parseInt(el.dataset.horizontalMin || "1024", 10);
+      if (!matchMedia(`(min-width: ${min}px)`).matches) return;
+      const track = el.querySelector("[data-horizontal-track]");
+      if (!track) return;
+      const dir = getComputedStyle(el).direction === "rtl" ? 1 : -1;
+      const distance = () => Math.max(0, track.scrollWidth - el.clientWidth);
+      G.to(track, {
+        x: () => dir * distance(),
+        ease: "none",
+        scrollTrigger: {
+          trigger: el,
+          start: "top top",
+          end: () => "+=" + distance(),
+          scrub: 0.5,
+          pin: true,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+        },
+      });
+    });
+}
+
 /* ── Drop ScrollTriggers whose trigger element left the DOM in an HTMX swap,
    so page navigation does not pile up stale tweens. ── */
 function pruneStaleTriggers() {
@@ -172,6 +211,7 @@ export function initMotion() {
   initTilt();
   initMagnetic();
   initCounters();
+  initHorizontal();
   installRevealSafetyNet();
 }
 
