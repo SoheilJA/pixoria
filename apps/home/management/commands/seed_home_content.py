@@ -47,6 +47,7 @@ RENDERED_SECTIONS = {
     "clients",
     "works",
     "services",
+    "stats",
     "manifesto",
     "testimonials",
     "articles",

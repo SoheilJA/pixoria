@@ -1,0 +1,36 @@
+{# آمار و ارقام — اعداد انیمیشنی با data-counter #}
+{# داده‌ها: stats_section (StatsSection)، stats (StatItem) #}
+{% load icon_tags %}
+{% if stats_section and stats %}
+  <section class="relative px-page py-[clamp(56px,7vw,104px)]"
+           aria-labelledby="stats-head"
+           data-bg-intensity="0.85" data-bg-glow="1.0" data-bg-swirl="0.9" data-bg-hue="0.04">
+
+    <div class="pixel-divider mb-[clamp(40px,5vw,64px)]" aria-hidden="true"></div>
+
+    <div class="grid grid-cols-1 gap-[clamp(28px,4vw,48px)] md:grid-cols-[minmax(0,1.1fr)_minmax(0,1.4fr)] md:items-center">
+      <div data-reveal="fade-up">
+        <span class="eyebrow mb-6 inline-block">{{ stats_section.subtitle }}<span class="ml-2 inline-block h-1.5 w-1.5 rounded-full bg-lime align-[2px]"></span></span>
+        <h2 id="stats-head" class="max-w-[20ch]">{{ stats_section.title|safe }}</h2>
+      </div>
+      <p class="m-0 max-w-[52ch] text-[1.1rem] leading-[1.6] text-ink-soft" data-reveal="fade-up" data-reveal-delay="100">{{ stats_section.description|safe }}</p>
+    </div>
+
+    <div class="mt-[clamp(36px,4.5vw,56px)] grid grid-cols-2 gap-px overflow-hidden rounded-md border border-line-strong bg-line-strong xl:grid-cols-4">
+      {% for stat in stats %}
+        <div class="group relative flex flex-col gap-3 bg-paper-soft p-[clamp(18px,2vw,28px)] transition-colors duration-300 hover:bg-paper"
+             data-reveal="fade-up" data-reveal-delay="{{ forloop.counter0 }}00">
+          <span class="font-pixel text-[0.6rem] text-lime/70" aria-hidden="true">{% if forloop.counter < 10 %}0{% endif %}{{ forloop.counter }}</span>
+          <span class="flex items-baseline gap-1 font-display text-[clamp(2rem,3.6vw,3.2rem)] font-medium leading-none tracking-[-0.03em] text-ink">
+            <span data-counter="{{ stat.value }}" data-counter-prefix="{{ stat.prefix }}" data-counter-suffix="{{ stat.suffix }}">۰</span>
+          </span>
+          <span class="font-mono text-[0.92rem] font-medium text-ink">{{ stat.label }}</span>
+          {% if stat.description %}
+            <span class="text-[0.86rem] leading-[1.5] text-ink-dim">{{ stat.description }}</span>
+          {% endif %}
+          <span class="absolute inset-x-0 top-0 h-px scale-x-0 bg-lime transition-transform duration-300 ease-ax group-hover:scale-x-100" aria-hidden="true"></span>
+        </div>
+      {% endfor %}
+    </div>
+  </section>
+{% endif %}
