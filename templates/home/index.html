@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load icon_tags %}
+{% load icon_tags component_tags %}
 
 {% block title %}
   {{ settings.site_name }} — {{ settings.site_description }}
@@ -65,15 +65,13 @@
   <section class="px-page py-[clamp(64px,12vw,100px)] md:py-section" aria-labelledby="work-head">
     {% include 'components/section_header.html' with eyebrow='کارهای منتخب' title=featured_work_section.title|safe title_id='work-head' subtitle=featured_work_section.description|safe %}
 
-    <div class="carousel mt-16" id="works-carousel">
-      <div class="carousel-track">
-        {% for work in featured_works %}
-          {% include 'components/cards/portfolio_card.html' with work=work %}
-        {% empty %}
-          <p data-aos="fade-up">پروژه‌ای برای نمایش وجود ندارد.</p>
-        {% endfor %}
-      </div>
-    </div>
+    {% carousel id='works-carousel' per_view=4 class='mt-16' %}
+      {% for work in featured_works %}
+        {% include 'components/cards/portfolio_card.html' with work=work %}
+      {% empty %}
+        <p data-aos="fade-up">پروژه‌ای برای نمایش وجود ندارد.</p>
+      {% endfor %}
+    {% endcarousel %}
   </section>
 
   <!-- ═══ خدمات ═══ -->
@@ -136,29 +134,22 @@
   {% if testimonials %}
     <section class="px-page pb-[clamp(32px,5vw,56px)] pt-[clamp(64px,12vw,100px)] md:pb-section-sm md:pt-section" aria-labelledby="testimonials-head">
       {% include 'components/section_header.html' with eyebrow='نظرات مشتریان' title='آن‌ها تجربه‌شان را گفتند.' title_id='testimonials-head' %}
-      <div class="carousel mt-14" id="testimonials-carousel">
-        <div class="carousel-track">
-          {% for t in testimonials %}
-            {% include 'components/cards/testimonial_card.html' with t=t %}
-          {% endfor %}
-        </div>
-      </div>
+      {% carousel id='testimonials-carousel' per_view=3 gap=20 autoplay=true interval=6000 class='mt-14' %}
+        {% for t in testimonials %}
+          {% include 'components/cards/testimonial_card.html' with t=t %}
+        {% endfor %}
+      {% endcarousel %}
     </section>
   {% endif %}
 
   {% if latest_articles %}
     <section class="px-page py-[clamp(64px,12vw,100px)] md:py-section" aria-labelledby="latest-articles-head">
       {% include 'components/section_header.html' with eyebrow=latest_articles_section.subtitle title=latest_articles_section.title|default:'مقالات اخیر'|safe title_id='latest-articles-head' subtitle=latest_articles_section.description|safe cta_text='مشاهده همه مقالات' cta_href=blog_url %}
-      <div class="carousel mt-16" id="latest-articles-carousel">
-        <div class="carousel-track">
-          {% for article in latest_articles %}
-            {% include 'components/cards/blog_card.html' with article=article %}
-          {% endfor %}
-        </div>
-        <div class="carousel-nav">
-          <button type="button" class="carousel-btn-prev" aria-label="قبلی">{% icon "arrow-left" class="h-5 w-5" %}</button><button type="button" class="carousel-btn-next" aria-label="بعدی">{% icon "arrow-right" class="h-5 w-5" %}</button>
-        </div>
-      </div>
+      {% carousel id='latest-articles-carousel' per_view=4 class='mt-16' %}
+        {% for article in latest_articles %}
+          {% include 'components/cards/blog_card.html' with article=article %}
+        {% endfor %}
+      {% endcarousel %}
     </section>
   {% endif %}
 {% endblock %}

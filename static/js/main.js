@@ -105,9 +105,13 @@ function updateStrength(val) {
   if (val.length >= 12 && /[A-Z0-9!@#$]/.test(val)) b3.classList.add('active-3');
 }
 
-// ─── Carousels — GSAP module ───
-if (document.querySelector('.carousel')) {
-  import('./core/carousel.js')
+// ─── Carousels — GSAP module (re-inits after every HTMX swap) ───
+let carouselPromise = null;
+function initCarousels() {
+  if (!carouselPromise) carouselPromise = import('./core/carousel.js');
+  carouselPromise
     .then((m) => m.initCarousels())
     .catch(() => {});
 }
+if (document.querySelector('.carousel')) initCarousels();
+document.addEventListener('htmx:afterSwap', initCarousels);

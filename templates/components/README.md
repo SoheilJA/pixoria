@@ -22,6 +22,45 @@ lives here — extend the component instead.
 | `components/badge.html` | `text`, `variant` (line/solid/soft), `href`, `dir`, `class` | tags, categories |
 | `components/cta_banner.html` | (none — data from `CTASection` via context processor) | base.html |
 
+## Carousel
+
+`components/carousel.html` + the `{% carousel %}…{% endcarousel %}` block tag
+(`{% load component_tags %}`). The wrapped markup becomes the carousel track,
+so any card partial can be dropped in — this is the only carousel markup and
+the only carousel JS in the site:
+
+```django
+{% load component_tags %}
+{% carousel id='works-carousel' per_view=4 gap=24 %}
+  {% for work in featured_works %}
+    {% include 'components/cards/portfolio_card.html' with work=work %}
+  {% endfor %}
+{% endcarousel %}
+```
+
+| Prop | Type | Default | Notes |
+| --- | --- | --- | --- |
+| `id` | str | — | wrapper id (debugging/anchors only; the JS is id-agnostic) |
+| `per_view` | int | 3 | desktop slides per view; 1 on mobile, `min(2, per_view)` on tablet |
+| `gap` | int | 24 | px gap between slides |
+| `autoplay` | bool | false | auto-advance; disabled under `prefers-reduced-motion` |
+| `interval` | int | 6000 | autoplay step in ms (clamped to ≥ 2000) |
+| `arrows` | bool | true | prev/next buttons (Lucide arrows) |
+| `dots` | bool | true | dot indicators, one per scroll position |
+| `class` | str | — | extra classes on the wrapper |
+
+JS: `static/js/core/carousel.js` — a single generic pass initialises every
+`.carousel` from its own `data-*` attributes (no per-id config) and re-runs on
+`htmx:afterSwap`; carousels replaced by a swap are destroyed so their timers
+and listeners do not leak. RTL: the previous button sits on the right and
+points right, `ArrowLeft` advances, `ArrowRight` goes back.
+
+**Never write real template tag syntax inside a `{# … #}` comment** — the
+Django lexer's `tag_re` is not compiled with `re.DOTALL`, so a multi-line
+comment is not skipped and the tags inside it are parsed for real (a
+self-referencing usage example in a doc comment caused `RecursionError`).
+Document usage here in prose instead.
+
 ## Cards (`components/cards/`)
 
 | Component | Props | Model |
