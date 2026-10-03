@@ -819,13 +819,23 @@
   }
 
   /* ═══ Custom cursor (desktop pointers only; static/js/cursor.js) ═══ */
+  /* The nodes live in #cursor-shell (hx-preserve), so the native cursor stays
+     hidden across HTMX navigations via :has(). */
+  body:has(.cursor-shell),
+  body:has(.cursor-shell) * {
+    cursor: none !important;
+  }
+  .cursor-shell {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    pointer-events: none;
+  }
   .cursor-dot,
   .cursor-ring {
     position: fixed;
     top: 0;
     left: 0;
-    z-index: 99999;
-    pointer-events: none;
     border-radius: 999px;
     will-change: transform;
   }
@@ -854,27 +864,26 @@
     transition: opacity 0.2s ease, transform 0.2s var(--ease-ax-out);
   }
   /* Hovering a link/button — ring tightens and turns solid lime */
-  body.cursor-hover .cursor-ring {
+  .cursor-shell.cursor-hover .cursor-ring {
     width: 26px;
     height: 26px;
     margin: -13px 0 0 -13px;
     background: var(--color-lime);
     border-color: var(--color-lime);
-    mix-blend-mode: normal;
   }
   /* Hovering a card/media — ring grows and shows a label */
-  body.cursor-view .cursor-ring {
+  .cursor-shell.cursor-view .cursor-ring {
     width: 74px;
     height: 74px;
     margin: -37px 0 0 -37px;
     background: var(--color-lime);
     border-color: var(--color-lime);
   }
-  body.cursor-view .cursor-ring span {
+  .cursor-shell.cursor-view .cursor-ring span {
     opacity: 1;
     transform: scale(1);
   }
-  body.cursor-text .cursor-ring {
+  .cursor-shell.cursor-text .cursor-ring {
     width: 4px;
     height: 26px;
     margin: -13px 0 0 -2px;
@@ -882,16 +891,23 @@
     background: var(--color-lime);
     border-color: transparent;
   }
-  body.cursor-down .cursor-dot {
+  .cursor-shell.cursor-down .cursor-dot {
     transform: scale(0.5);
   }
-  body.cursor-ready,
-  body.cursor-ready * {
-    cursor: none !important;
+  .cursor-trail {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 5px;
+    height: 5px;
+    margin: -2.5px 0 0 -2.5px;
+    background: var(--color-lime);
+    pointer-events: none;
+    z-index: 99998;
   }
   @media (hover: none), (pointer: coarse), (prefers-reduced-motion: reduce) {
-    .cursor-dot,
-    .cursor-ring {
+    .cursor-shell,
+    .cursor-trail {
       display: none !important;
     }
   }
