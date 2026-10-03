@@ -51,6 +51,7 @@ RENDERED_SECTIONS = {
     "process",
     "why",
     "tech",
+    "packages",
     "manifesto",
     "testimonials",
     "articles",

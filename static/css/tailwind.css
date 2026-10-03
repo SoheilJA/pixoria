@@ -601,6 +601,9 @@
   .max-h-\[80vh\] {
     max-height: 80vh;
   }
+  .min-h-\[2\.6em\] {
+    min-height: 2.6em;
+  }
   .min-h-\[70vh\] {
     min-height: 70vh;
   }
@@ -1029,6 +1032,10 @@
   .rounded-xl {
     border-radius: var(--radius-xl);
   }
+  .rounded-b-sm {
+    border-bottom-right-radius: var(--radius-sm);
+    border-bottom-left-radius: var(--radius-sm);
+  }
   .border {
     border-style: var(--tw-border-style);
     border-width: 1px;
@@ -1040,6 +1047,10 @@
   .border-t {
     border-top-style: var(--tw-border-style);
     border-top-width: 1px;
+  }
+  .border-t-0 {
+    border-top-style: var(--tw-border-style);
+    border-top-width: 0px;
   }
   .border-b {
     border-bottom-style: var(--tw-border-style);
@@ -1072,6 +1083,12 @@
     border-color: color-mix(in srgb, #c8ff3d 40%, transparent);
     @supports (color: color-mix(in lab, red, red)) {
       border-color: color-mix(in oklab, var(--color-lime) 40%, transparent);
+    }
+  }
+  .border-lime\/60 {
+    border-color: color-mix(in srgb, #c8ff3d 60%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      border-color: color-mix(in oklab, var(--color-lime) 60%, transparent);
     }
   }
   .border-line {
@@ -1236,6 +1253,9 @@
   }
   .p-\[clamp\(18px\,2vw\,28px\)\] {
     padding: clamp(18px, 2vw, 28px);
+  }
+  .p-\[clamp\(20px\,2vw\,30px\)\] {
+    padding: clamp(20px, 2vw, 30px);
   }
   .p-\[clamp\(20px\,2vw\,32px\)\] {
     padding: clamp(20px, 2vw, 32px);
@@ -1608,11 +1628,17 @@
   .text-\[clamp\(1\.1rem\,1\.6vw\,1\.5rem\)\] {
     font-size: clamp(1.1rem, 1.6vw, 1.5rem);
   }
+  .text-\[clamp\(1\.2rem\,1\.5vw\,1\.5rem\)\] {
+    font-size: clamp(1.2rem, 1.5vw, 1.5rem);
+  }
   .text-\[clamp\(1\.2rem\,1\.8vw\,1\.6rem\)\] {
     font-size: clamp(1.2rem, 1.8vw, 1.6rem);
   }
   .text-\[clamp\(1\.3rem\,2vw\,1\.8rem\)\] {
     font-size: clamp(1.3rem, 2vw, 1.8rem);
+  }
+  .text-\[clamp\(1\.4rem\,2vw\,1\.9rem\)\] {
+    font-size: clamp(1.4rem, 2vw, 1.9rem);
   }
   .text-\[clamp\(1\.5rem\,2\.2vw\,2\.4rem\)\] {
     font-size: clamp(1.5rem, 2.2vw, 2.4rem);
@@ -1625,6 +1651,9 @@
   }
   .text-\[clamp\(1\.6rem\,2\.4vw\,2\.4rem\)\] {
     font-size: clamp(1.6rem, 2.4vw, 2.4rem);
+  }
+  .text-\[clamp\(1\.7rem\,2\.4vw\,2\.3rem\)\] {
+    font-size: clamp(1.7rem, 2.4vw, 2.3rem);
   }
   .text-\[clamp\(1\.8rem\,2\.4vw\,2\.4rem\)\] {
     font-size: clamp(1.8rem, 2.4vw, 2.4rem);
@@ -1868,6 +1897,18 @@
   .text-ink-dim {
     color: var(--color-ink-dim);
   }
+  .text-ink-dim\/50 {
+    color: color-mix(in srgb, #7f8c82 50%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      color: color-mix(in oklab, var(--color-ink-dim) 50%, transparent);
+    }
+  }
+  .text-ink-dim\/60 {
+    color: color-mix(in srgb, #7f8c82 60%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      color: color-mix(in oklab, var(--color-ink-dim) 60%, transparent);
+    }
+  }
   .text-ink-soft {
     color: var(--color-ink-soft);
   }
@@ -1967,6 +2008,10 @@
   }
   .shadow {
     --tw-shadow: 0 1px 3px 0 var(--tw-shadow-color, rgb(0 0 0 / 0.1)), 0 1px 2px -1px var(--tw-shadow-color, rgb(0 0 0 / 0.1));
+    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+  }
+  .shadow-glow {
+    --tw-shadow: 0 0 0 1px var(--tw-shadow-color, rgba(200, 255, 61, 0.22)), 0 14px 50px -12px var(--tw-shadow-color, rgba(200, 255, 61, 0.28));
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
   }
   .ring {
@@ -2373,6 +2418,12 @@
     }
     .md\:top-8 {
       top: calc(var(--spacing) * 8);
+    }
+    .md\:-mt-4 {
+      margin-top: calc(var(--spacing) * -4);
+    }
+    .md\:mb-4 {
+      margin-bottom: calc(var(--spacing) * 4);
     }
     .md\:flex {
       display: flex;

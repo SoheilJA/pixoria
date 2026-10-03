@@ -1,0 +1,74 @@
+{# پکیج‌ها و قیمت‌ها — سه پلن، پلن پیشنهادی هایلایت، گزینهٔ استعلام قیمت #}
+{# داده‌ها: packages_section (PackagesSection)، packages (Package.features) #}
+{% load icon_tags %}
+{% if packages_section and packages %}
+  <section class="relative px-page py-[clamp(64px,9vw,128px)]"
+           aria-labelledby="packages-head"
+           data-bg-intensity="0.9" data-bg-glow="1.05" data-bg-swirl="1.0" data-bg-hue="0.03">
+
+    <div class="mb-[clamp(32px,4vw,52px)] max-w-[760px]" data-reveal="fade-up">
+      <span class="eyebrow mb-6 inline-block">{{ packages_section.subtitle }}<span class="ml-2 inline-block h-1.5 w-1.5 rounded-full bg-lime align-[2px]"></span></span>
+      <h2 id="packages-head" class="mb-[18px] max-w-[22ch]">{{ packages_section.title|safe }}</h2>
+      <p class="m-0 max-w-[58ch] text-[1.12rem] leading-[1.55] text-ink-soft">{{ packages_section.description|safe }}</p>
+    </div>
+
+    <div class="grid grid-cols-1 items-stretch gap-5 md:grid-cols-3 lg:gap-6">
+      {% for pkg in packages %}
+        <article class="group relative flex flex-col gap-6 overflow-hidden rounded-md border bg-paper-soft p-[clamp(20px,2vw,30px)] transition-transform duration-300 ease-ax-out hover:-translate-y-1
+                        {% if pkg.is_featured %}border-lime/60 bg-paper-deep shadow-glow md:-mt-4 md:mb-4{% else %}border-line hover:border-line-strong{% endif %}"
+                 data-reveal="fade-up" data-reveal-delay="{{ forloop.counter0 }}00">
+
+          {# نشان پلن پیشنهادی #}
+          {% if pkg.badge %}
+            <span class="absolute inset-x-0 top-0 flex justify-center">
+              <span class="pixel-badge rounded-b-sm border-t-0 bg-lime px-3 py-1 text-night">{{ pkg.badge }}</span>
+            </span>
+          {% endif %}
+
+          <div class="flex flex-col gap-2 {% if pkg.badge %}pt-7{% endif %}">
+            <h3 class="text-[clamp(1.2rem,1.5vw,1.5rem)] font-medium text-ink">{{ pkg.name }}</h3>
+            {% if pkg.description %}
+              <p class="m-0 min-h-[2.6em] text-[0.92rem] leading-[1.55] text-ink-soft">{{ pkg.description }}</p>
+            {% endif %}
+          </div>
+
+          {# قیمت #}
+          <div class="flex items-baseline gap-2 border-y border-line py-5">
+            {% if pkg.price %}
+              <span class="font-display text-[clamp(1.7rem,2.4vw,2.3rem)] font-medium leading-none text-ink">{{ pkg.price }}</span>
+            {% else %}
+              <span class="font-display text-[clamp(1.4rem,2vw,1.9rem)] font-medium leading-none text-lime">استعلام قیمت</span>
+            {% endif %}
+            {% if pkg.price_note %}
+              <span class="font-mono text-[0.74rem] text-ink-dim">{% if pkg.price %}· {% endif %}{{ pkg.price_note }}</span>
+            {% endif %}
+          </div>
+
+          {# ویژگی‌ها #}
+          <ul class="m-0 flex flex-col gap-3 p-0">
+            {% for feature in pkg.features.all %}
+              <li class="flex items-start gap-3 text-[0.94rem] leading-[1.5] {% if feature.included %}text-ink-soft{% else %}text-ink-dim/60{% endif %}">
+                <span class="mt-0.5 shrink-0 {% if feature.included %}text-lime{% else %}text-ink-dim/50{% endif %}" aria-hidden="true">
+                  {% if feature.included %}{% icon "check" class="h-4 w-4" %}{% else %}{% icon "x" class="h-4 w-4" %}{% endif %}
+                </span>
+                <span class="{% if not feature.included %}line-through{% endif %}">{{ feature.title }}</span>
+              </li>
+            {% endfor %}
+          </ul>
+
+          <div class="mt-auto pt-2">
+            {% if pkg.is_featured %}
+              {% include 'components/button.html' with text='شروع پروژه' href=contact_url variant='lime' class='w-full justify-center' %}
+            {% else %}
+              {% include 'components/button.html' with text='انتخاب این پکیج' href=contact_url variant='ghost' class='w-full justify-center' %}
+            {% endif %}
+          </div>
+        </article>
+      {% endfor %}
+    </div>
+
+    {% if packages_section.note %}
+      <p class="m-0 mt-8 text-center font-mono text-[0.78rem] text-ink-dim" data-reveal="fade-up">{{ packages_section.note }}</p>
+    {% endif %}
+  </section>
+{% endif %}
