@@ -195,7 +195,7 @@ Behaviour notes:
 
 **Verified:** all nine page routes (home, about, contact, services list/detail, portfolio list/detail, blog list/detail) return 200; each renders exactly one header, one breadcrumb trail, one CTA band and one footer; the contact form still POSTs and returns the Persian success fragment; `manage.py check` clean.
 
-**Gotcha worth remembering:** a literal `{% include 'components/breadcrumb.html' with items=crumbs %}` written inside a `{# … #}` documentation comment is *not* a comment to the template engine — Django parses tags there, so the file included itself and the page died with `RecursionError: maximum recursion depth exceeded`. Keep tag syntax out of template comments (document usage in prose, or in `components/README.md`).
+**Gotcha worth remembering:** Django's template lexer (`tag_re` in `django/template/base.py`) is **not** compiled with `re.DOTALL`, so a `{# … #}` comment is only recognised when it fits on **one line**. A multi-line doc comment is never treated as a comment — its `{#` and everything after it lands in the output as literal text (and any `<a>`/`<button>` mentioned inside is then swallowed by the browser as markup, so the text looks mangled on the page). Component prop docs therefore use **one `{# … #}` per line**, and no comment may contain `{%`, `{{` or `#}` — those are still parsed/tag-delimiters inside a single-line comment, which is how a self-referencing `{% include %}` example once made a file include itself and die with `RecursionError`. A repo-wide scan for multi-line `{#` is part of the QA checklist (task 23).
 
 Before this pass, three page templates were entirely standalone documents instead of extending the base shell:
 

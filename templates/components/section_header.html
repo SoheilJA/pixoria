@@ -1,14 +1,13 @@
-{# Section header: eyebrow chip + title + optional subtitle.
-   eyebrow:    str  optional — small mono label above the title
-   title:      str  required — section heading (h2)
-   title_id:   str  optional — id for aria-labelledby; auto "section-head" if omitted
-   subtitle:   str  optional — supporting paragraph under the title
-   cta_text:   str  optional — trailing "view all" link
-   cta_href:   str  optional — required when cta_text is given
-   align:      str  optional — "center" to centre the block (default: start)
-   class:      str  optional — extra wrapper classes
-   The dot inside the eyebrow uses the brand lime.
-#}
+{# Section header: eyebrow chip + title + optional subtitle. #}
+{# eyebrow:    str  optional — small mono label above the title #}
+{# title:      str  required — section heading (h2) #}
+{# title_id:   str  optional — id for aria-labelledby; auto "section-head" if omitted #}
+{# subtitle:   str  optional — supporting paragraph under the title #}
+{# cta_text:   str  optional — trailing "view all" link #}
+{# cta_href:   str  optional — required when cta_text is given #}
+{# align:      str  optional — "center" to centre the block (default: start) #}
+{# class:      str  optional — extra wrapper classes #}
+{# The dot inside the eyebrow uses the brand lime. #}
 {% load icon_tags %}
 <div class="max-w-[880px] {{ class }}{% if align == 'center' %} mx-auto text-center{% endif %}" data-reveal="fade-up">
   {% if eyebrow %}<span class="eyebrow mb-6 inline-block">{{ eyebrow }}<span class="ml-2 inline-block h-1.5 w-1.5 rounded-full bg-lime align-[2px]"></span></span>{% endif %}

@@ -1,8 +1,7 @@
-{# Article card used in the blog grid, carousels and related-posts blocks.
-   article:     obj  required — Article model instance
-   show_image:  bool optional — render the cover image (default true)
-   class:       str  optional — extra classes on the <article>
-#}
+{# Article card used in the blog grid, carousels and related-posts blocks. #}
+{# article:     obj  required — Article model instance #}
+{# show_image:  bool optional — render the cover image (default true) #}
+{# class:       str  optional — extra classes on the <article> #}
 {% load icon_tags %}
 <article class="group flex flex-col overflow-hidden rounded-md border border-line bg-paper transition-[transform,border-color] duration-300 ease-ax hover:-translate-y-1 hover:border-night {{ class }}" data-reveal="fade-up" data-reveal-delay="{{ forloop.counter0|add:'50' }}" data-reveal-duration="700">
   {% if show_image != False and article.cover_image %}

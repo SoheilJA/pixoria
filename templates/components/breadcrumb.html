@@ -1,11 +1,11 @@
-{# Breadcrumb trail (RTL). Renders a <nav aria-label="breadcrumb"> with
-   chevron separators. The last item is marked aria-current="page".
-   items: list required — each item is a dict {"label": str, "url": str?};
-          an item without "url" is treated as the current page.
-   Build the list with apps.core.context_utils.crumbs() in the view:
-     crumbs(("خانه", "home:home"), ("بلاگ", "blog:list"), (article.title, None))
-   and pass it with `with items=crumbs`.
-   NOTE: never write a literal template tag inside a {# #} comment — Django
+{# Breadcrumb trail (RTL). Renders a <nav aria-label="breadcrumb"> with #}
+{# chevron separators. The last item is marked aria-current="page". #}
+{# items: list required — each item is a dict {"label": str, "url": str?}; #}
+{# an item without "url" is treated as the current page. #}
+{# Build the list with apps.core.context_utils.crumbs() in the view: #}
+{# crumbs(("خانه", "home:home"), ("بلاگ", "blog:list"), (article.title, None)) #}
+{# and pass it with `with items=crumbs`. #}
+{# NOTE: never write a literal template tag inside a {# #} comment — Django
    parses tags there too, which once made this file load itself recursively.
 #}
 {% load icon_tags %}

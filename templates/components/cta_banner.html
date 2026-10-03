@@ -1,8 +1,7 @@
-{# Global pre-footer call-to-action band.
-   Content comes from the `CTASection` singleton exposed as `cta` by the
-   site_context processor, with SiteSettings (`settings`) fallbacks — no
-   props needed. Rendered once, in base.html, so every page shares it.
-#}
+{# Global pre-footer call-to-action band. #}
+{# Content comes from the `CTASection` singleton exposed as `cta` by the #}
+{# site_context processor, with SiteSettings (`settings`) fallbacks — no #}
+{# props needed. Rendered once, in base.html, so every page shares it. #}
 {% load icon_tags %}
 <section class="relative overflow-hidden bg-lime text-ink" aria-labelledby="cta-head">
   <div class="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-night/5 blur-3xl" aria-hidden="true"></div>

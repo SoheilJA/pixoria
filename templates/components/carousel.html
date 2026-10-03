@@ -1,9 +1,9 @@
 {% load icon_tags %}
-{# Carousel wrapper — the ONE carousel implementation for the whole site.
-   Portfolio items, testimonials, blog posts, any list. Fill the track with
-   any card partial through the carousel block tag (see the usage example in
-   components/README.md — NOTE: never write real tag syntax inside a
-   template comment; the lexer does not skip multi-line comments). #}
+{# Carousel wrapper — the ONE carousel implementation for the whole site. #}
+{# Portfolio items, testimonials, blog posts, any list. Fill the track with #}
+{# any card partial through the carousel block tag (see the usage example in #}
+{# components/README.md — NOTE: never write real tag syntax inside a #}
+{# template comment; the lexer does not skip multi-line comments). #}
 <div class="carousel{% if class %} {{ class }}{% endif %}"{% if id %} id="{{ id }}"{% endif %}
      data-per-view="{{ per_view|default:'3' }}"
      data-gap="{{ gap|default:'24' }}"

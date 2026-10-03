@@ -1,15 +1,14 @@
-{# Inner-page hero: breadcrumb + big title + optional description/tags/cta.
-   Used by services, portfolio, blog, about, contact — keeps page-top
-   rhythm, padding and animation identical everywhere.
-   crumbs:        list optional — see components/breadcrumb.html
-   title:         str  required — page h1
-   title_highlight: str optional — accent word appended in display italic
-   title_id:      str  optional — id for aria-labelledby
-   description:  str  optional — supporting text
-   tags:         list optional — iterable of strings rendered as badges
-   cta_*:        see components/button.html (renders one primary button)
-   class:        str  optional — extra classes on the <section>
-#}
+{# Inner-page hero: breadcrumb + big title + optional description/tags/cta. #}
+{# Used by services, portfolio, blog, about, contact — keeps page-top #}
+{# rhythm, padding and animation identical everywhere. #}
+{# crumbs:        list optional — see components/breadcrumb.html #}
+{# title:         str  required — page h1 #}
+{# title_highlight: str optional — accent word appended in display italic #}
+{# title_id:      str  optional — id for aria-labelledby #}
+{# description:  str  optional — supporting text #}
+{# tags:         list optional — iterable of strings rendered as badges #}
+{# cta_*:        see components/button.html (renders one primary button) #}
+{# class:        str  optional — extra classes on the <section> #}
 {% load icon_tags %}
 <section class="border-b border-line px-page pb-[clamp(40px,5vw,80px)] pt-[clamp(64px,9vw,130px)] {{ class }}" {% if title_id %}aria-labelledby="{{ title_id }}"{% endif %} data-reveal="fade-up">
   {% if crumbs %}<div class="mb-5">{% include 'components/breadcrumb.html' with items=crumbs %}</div>{% endif %}

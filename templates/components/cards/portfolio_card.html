@@ -1,7 +1,6 @@
-{# Portfolio (case study) card used in carousels and grids.
-   work:   obj  required — Portfolio model instance
-   class:  str  optional — extra classes on the <article>
-#}
+{# Portfolio (case study) card used in carousels and grids. #}
+{# work:   obj  required — Portfolio model instance #}
+{# class:  str  optional — extra classes on the <article> #}
 {% load icon_tags %}
 <article class="group flex flex-col overflow-hidden rounded-md border border-line bg-paper transition-[transform,border-color] duration-300 ease-ax hover:-translate-y-1 hover:border-night {{ class }}" data-reveal="fade-up" data-reveal-delay="{{ forloop.counter0|add:'50' }}" data-reveal-duration="700">
   <a href="{% url 'portfolio:detail' work.slug %}" class="block aspect-[4/3] overflow-hidden bg-paper-soft">

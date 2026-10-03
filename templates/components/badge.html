@@ -1,10 +1,9 @@
-{# Small pill badge.
-   text:    str  required — badge label
-   variant: str  optional — "line" (default, bordered) | "solid" (lime fill) | "soft" (paper bg)
-   href:    str  optional — renders an <a> instead of a <span>
-   dir:     str  optional — "ltr" for latin content (emails/URLs)
-   class:   str  optional — extra classes
-#}
+{# Small pill badge. #}
+{# text:    str  required — badge label #}
+{# variant: str  optional — "line" (default, bordered) | "solid" (lime fill) | "soft" (paper bg) #}
+{# href:    str  optional — renders an <a> instead of a <span> #}
+{# dir:     str  optional — "ltr" for latin content (emails/URLs) #}
+{# class:   str  optional — extra classes #}
 {% if href %}
   <a href="{{ href }}" class="{{ class }} inline-flex items-center rounded-full border px-3 py-[5px] font-mono text-[0.72rem] uppercase tracking-[0.1em] transition-colors duration-200 {% if variant == 'solid' %}border-lime bg-lime font-semibold text-ink{% elif variant == 'soft' %}border-line bg-paper-soft text-ink-soft{% else %}border-line text-ink-dim hover:border-night hover:text-ink{% endif %}"{% if dir %} dir="{{ dir }}"{% endif %}>{{ text }}</a>
 {% else %}
