@@ -22,7 +22,70 @@ from apps.home.models import (
     ManifestoSection,
     CTASection,
     LatestArticlesSection,
+    HomeSection,
+    StatsSection,
+    StatItem,
+    ProcessSection,
+    ProcessStep,
+    WhySection,
+    WhyFeature,
+    TechSection,
+    TechSkill,
+    PackagesSection,
+    Package,
+    PackageFeature,
+    FaqSection,
+    FaqItem,
+    ContactSection,
 )
+
+
+# کلیدهایی که پارشالشان وجود دارد و در صفحه رندر می‌شوند. هر بار که یک
+# پارشال جدید اضافه می‌شود، کلیدش از اینجا روشن می‌شود.
+RENDERED_SECTIONS = {
+    "hero",
+    "clients",
+    "works",
+    "services",
+    "manifesto",
+    "testimonials",
+    "articles",
+}
+
+# ترتیب پیش‌فرض بخش‌ها در صفحه — مطابق جریان تجربهٔ کاربری.
+SECTION_ORDER = {
+    "hero": 0,
+    "clients": 10,
+    "works": 20,
+    "services": 30,
+    "stats": 40,
+    "process": 50,
+    "why": 60,
+    "tech": 70,
+    "packages": 80,
+    "testimonials": 90,
+    "faq": 100,
+    "contact": 110,
+    "manifesto": 120,
+    "articles": 130,
+}
+
+SECTION_TITLES = {
+    "hero": "هیرو",
+    "clients": "برندهای همکار",
+    "works": "نمونه‌کارهای منتخب",
+    "stats": "آمار و ارقام",
+    "services": "خدمات",
+    "process": "فرآیند کار",
+    "why": "چرا پیکسوریا",
+    "tech": "تکنولوژی‌ها و مهارت‌ها",
+    "packages": "پکیج‌ها و قیمت‌ها",
+    "testimonials": "نظرات مشتریان",
+    "faq": "سوالات متداول",
+    "contact": "فرم تماس سریع",
+    "manifesto": "مانیفست برند",
+    "articles": "آخرین مقالات",
+}
 
 
 def first_or_create(model, **fields):
@@ -40,6 +103,14 @@ class Command(BaseCommand):
         self.seed_header()
         self.seed_hero()
         self.seed_sections()
+        self.seed_stats()
+        self.seed_process()
+        self.seed_why()
+        self.seed_tech()
+        self.seed_packages()
+        self.seed_faq()
+        self.seed_contact()
+        self.seed_home_sections()
         self.seed_site()
         self.stdout.write(self.style.SUCCESS("محتوای پیش‌فرض پیکسوریا آماده شد."))
 
@@ -170,6 +241,322 @@ class Command(BaseCommand):
                 added += 1
         if added:
             self.stdout.write(f"  + {added} برند همکار")
+
+    # ── Stats / counters ──
+    def seed_stats(self):
+        _, c = first_or_create(
+            StatsSection,
+            subtitle="آمار و ارقام",
+            title="عددها حرف نمی‌زنند، کار می‌کنند",
+            description=(
+                "به جای وعده‌های بزرگ، به آنچه ساخته‌ایم نگاه کنید. این هم خلاصه‌ای "
+                "کوتاه از مسیر پیکسوریا تا امروز."
+            ),
+        )
+        self.log("آمار", c)
+
+        stats = [
+            ("+", "", "۱۲۰", "پروژهٔ تحویل‌شده", "وب‌سایت، فروشگاه و اپلیکیشن"),
+            ("", "٪", "۹۸", "رضایت مشتریان", "بر اساس نظرات پس از تحویل"),
+            ("", "", "۶", "سال تجربه", "از ۱۳۹۸ تا امروز"),
+            ("+", "", "۴۰", "برند همکار", "از استارتاپ تا سازمانی"),
+        ]
+        added = 0
+        for i, (prefix, suffix, value, label, desc) in enumerate(stats):
+            if not StatItem.objects.filter(label=label).exists():
+                StatItem.objects.create(
+                    prefix=prefix,
+                    suffix=suffix,
+                    value=value,
+                    label=label,
+                    description=desc,
+                    order=i * 10,
+                )
+                added += 1
+        if added:
+            self.stdout.write(f"  + {added} آیتم آمار")
+
+    # ── Process ──
+    def seed_process(self):
+        _, c = first_or_create(
+            ProcessSection,
+            subtitle="فرآیند کار",
+            title="از ایده تا تحویل، شفاف و مرحله‌به‌مرحله",
+            description=(
+                "هیچ پروژه‌ای در تاریکی پیش نمی‌رود. هر گام را از قبل می‌دانید، "
+                "در هر مرحله بازخورد می‌دهید و دقیقاً می‌دانید کجا هستید."
+            ),
+        )
+        self.log("فرآیند", c)
+
+        steps = [
+            (
+                "کشف و استراتژی",
+                "با یک گفت‌وگوی عمیق شروع می‌کنیم؛ هدف، مخاطب و رقبا را می‌شناسیم، "
+                "نیازهای واقعی را پیدا می‌کنیم و نقشهٔ راه پروژه را با هم می‌کشیم.",
+            ),
+            (
+                "طراحی و هویت بصری",
+                "از اسکچ و وایرفریم شروع می‌کنیم تا طراحی نهایی. رنگ، تایپوگرافی و "
+                "هویت بصری برند در این مرحله شکل می‌گیرد و بازخورد شما در آن نقش دارد.",
+            ),
+            (
+                "توسعه و ساخت",
+                "طراحی را به کدی تمیز، سریع و واکنش‌گرا تبدیل می‌کنیم. روی مرورگرها و "
+                "دستگاه‌های مختلف تست می‌کنیم تا همه‌چیز مثل ساعت کار کند.",
+            ),
+            (
+                "انتشار و رشد",
+                "پروژه را منتشر می‌کنیم، داده‌ها را اندازه می‌گیریم و بهبود می‌دهیم. "
+                "بعد از تحویل هم کنارتان می‌مانیم تا رشد متوقف نشود.",
+            ),
+        ]
+        added = 0
+        for i, (title, desc) in enumerate(steps):
+            if not ProcessStep.objects.filter(title=title).exists():
+                ProcessStep.objects.create(
+                    title=title, description=desc, order=i * 10
+                )
+                added += 1
+        if added:
+            self.stdout.write(f"  + {added} مرحله فرآیند")
+
+    # ── Why Pixoria (bento) ──
+    def seed_why(self):
+        _, c = first_or_create(
+            WhySection,
+            subtitle="چرا پیکسوریا",
+            title="با ما کار کردن، فرق دارد",
+            description=(
+                "ما پیمانکار نیستیم؛ شریک کاری شما هستیم. این هم چند دلیل کوچک که "
+                "تیم‌ها ما را انتخاب می‌کنند و به ما اعتماد می‌کنند."
+            ),
+        )
+        self.log("چرا پیکسوریا", c)
+
+        features = [
+            ("zap", "سرعت تحویل بالا", "در چرخه‌های کوتاه تحویل می‌دهیم تا زودتر از همه نتیجه را ببینید.", "wide"),
+            ("palette", "هویت بصری متمایز", "طراحی که برند شما را از رقبا متمایز می‌کند.", "small"),
+            ("shield-check", "کیفیت تضمین‌شده", "تست روی دستگاه‌ها و مرورگرها قبل از تحویل.", "small"),
+            ("code-2", "کد تمیز و مقیاس‌پذیر", "کدی می‌نویسیم که فردا هم قابل توسعه باشد؛ نه فقط امروز کار کند.", "wide"),
+            ("users", "شریک کاری، نه پیمانکار", "شفاف می‌گوییم، راهنمایی می‌کنیم و تا رسیدن به نتیجه کنارتان هستیم. تیم خودتان را بزرگ کنید.", "tall"),
+            ("rocket", "پشتیبانی بعد از تحویل", "بعد از انتشار هم در کنارتان می‌مانیم.", "small"),
+        ]
+        added = 0
+        for i, (icon, title, desc, size) in enumerate(features):
+            if not WhyFeature.objects.filter(title=title).exists():
+                WhyFeature.objects.create(
+                    icon=icon, title=title, description=desc, size=size, order=i * 10
+                )
+                added += 1
+        if added:
+            self.stdout.write(f"  + {added} ویژگی")
+
+    # ── Tech / skills ──
+    def seed_tech(self):
+        _, c = first_or_create(
+            TechSection,
+            subtitle="تکنولوژی‌ها و مهارت‌ها",
+            title="با ابزارهای درست می‌سازیم",
+            description=(
+                "تکنولوژی به خودی خود ارزش نیست؛ انتخاب درست آن است. این ابزارها "
+                "هستند که پروژهٔ شما را سریع، پایدار و قابل توسعه نگه می‌دارند."
+            ),
+        )
+        self.log("تکنولوژی", c)
+
+        skills = [
+            ("طراحی رابط کاربری", "Figma", 95, "ابزار طراحی"),
+            ("توسعهٔ فرانت‌اند", "HTML / CSS / Tailwind", 96, "فرانت‌اند"),
+            ("توسعهٔ فرانت‌اند", "JavaScript", 92, "فرانت‌اند"),
+            ("انیمیشن و تعامل", "GSAP / Three.js", 85, "فرانت‌اند"),
+            ("توسعهٔ بک‌اند", "Python / Django", 94, "بک‌اند"),
+            ("پایگاه داده", "PostgreSQL", 82, "بک‌اند"),
+            ("استقرار و سرور", "Docker / Linux", 78, "بک‌اند"),
+        ]
+        added = 0
+        for i, (category, name, level, _) in enumerate(skills):
+            if not TechSkill.objects.filter(name=name).exists():
+                TechSkill.objects.create(
+                    name=name, level=level, category=category, order=i * 10
+                )
+                added += 1
+        if added:
+            self.stdout.write(f"  + {added} مهارت")
+
+    # ── Packages / pricing ──
+    def seed_packages(self):
+        _, c = first_or_create(
+            PackagesSection,
+            subtitle="پکیج‌ها و قیمت‌ها",
+            title="پکیجی برای هر مرحله از رشد",
+            description=(
+                "قیمت مشخص، تحویل مشخص. پکیجی را انتخاب کنید که به کسب‌وکار شما "
+                "می‌رسد؛ و اگر جای دستکاری بود، با هم سفارشی‌اش می‌کنیم."
+            ),
+            note="قیمت‌ها به تومان است و برای پروژه‌های سفارشی متفاوت است.",
+        )
+        self.log("پکیج‌ها", c)
+
+        packages = [
+            {
+                "name": "پایه",
+                "description": "نقطهٔ شروع مناسب استارتاپ‌ها و کسب‌وکارهای کوچک",
+                "price": "۸٬۰۰۰٬۰۰۰",
+                "price_note": "هر پروژه",
+                "is_featured": False,
+                "badge": "",
+                "features": [
+                    ("طراحی واکنش‌گرای یک‌صفحه‌ای", True),
+                    ("بهینه‌سازی سرعت اولیه", True),
+                    ("تحویل در ۱۰ روز کاری", True),
+                    ("یک ویرایش رایگان پس از تحویل", True),
+                    ("طراحی اختصاصی رابط کاربری", False),
+                    ("پنل مدیریت محتوا", False),
+                ],
+            },
+            {
+                "name": "حرفه‌ای",
+                "description": "محبوب‌ترین انتخاب برندهای در حال رشد",
+                "price": "۲۴٬۰۰۰٬۰۰۰",
+                "price_note": "هر پروژه",
+                "is_featured": True,
+                "badge": "پرطرفدار",
+                "features": [
+                    ("طراحی واکنش‌گرای چندصفحه‌ای", True),
+                    ("طراحی اختصاصی رابط کاربری", True),
+                    ("پنل مدیریت محتوا", True),
+                    ("بهینه‌سازی پایهٔ موتور جستجو", True),
+                    ("۳۰ روز پشتیبانی رایگان", True),
+                    ("هویت بصری کامل برند", False),
+                ],
+            },
+            {
+                "name": "سازمانی",
+                "description": "برای محصولاتی که مقیاس‌پذیر و اختصاصی می‌خواهند",
+                "price": "",
+                "price_note": "استعلام قیمت",
+                "is_featured": False,
+                "badge": "اختصاصی",
+                "features": [
+                    ("طراحی و توسعهٔ کاملاً اختصاصی", True),
+                    ("هویت بصری کامل برند", True),
+                    ("اتصال به درگاه پرداخت و سرویس‌ها", True),
+                    ("بهینه‌سازی پیشرفتهٔ موتور جستجو", True),
+                    ("پشتیبانی اختصاصی ۶ ماهه", True),
+                    ("گزارش‌گیری دوره‌ای عملکرد", True),
+                ],
+            },
+        ]
+        added = 0
+        for i, pkg in enumerate(packages):
+            package, created = Package.objects.get_or_create(
+                name=pkg["name"],
+                defaults={
+                    "description": pkg["description"],
+                    "price": pkg["price"],
+                    "price_note": pkg["price_note"],
+                    "is_featured": pkg["is_featured"],
+                    "badge": pkg["badge"],
+                    "order": i * 10,
+                },
+            )
+            if not created:
+                continue
+            added += 1
+            for j, (title, included) in enumerate(pkg["features"]):
+                PackageFeature.objects.create(
+                    package=package, title=title, included=included, order=j * 10
+                )
+        if added:
+            self.stdout.write(f"  + {added} پکیج")
+
+    # ── FAQ ──
+    def seed_faq(self):
+        _, c = first_or_create(
+            FaqSection,
+            subtitle="سوالات متداول",
+            title="هر سوالی دارید، اینجا بپرسید",
+            description=(
+                "پاسخ پرتکرارترین پرسش‌هایی را که از ما می‌شود اینجا گذاشته‌ایم. "
+                "پاسخ دقیق‌تری نیاز داشتید؟ کافی است تماس بگیرید."
+            ),
+        )
+        self.log("سوالات متداول", c)
+
+        items = [
+            (
+                "مدت زمان انجام یک پروژه چقدر است؟",
+                "بستگی به وسعت پروژه دارد. پروژه‌های پکیج پایه معمولاً در ۱۰ روز کاری "
+                "تحویل داده می‌شوند و پروژه‌های سازمانی بین ۴ تا ۸ هفته طول می‌کشند. "
+                "در جلسهٔ اول و بعد از بررسی دقیق، برآورد زمان را به شما می‌گوییم.",
+            ),
+            (
+                "قیمت پروژه چگونه محاسبه می‌شود؟",
+                "قیمت بر اساس وسعت کار، تعداد صفحات، امکانات موردنیاز و زمان تحویل "
+                "تعیین می‌شود. پکیج‌های آماده ما قیمت مشخص دارند؛ برای پروژه‌های "
+                "سفارشی پس از جلسهٔ مشاوره پیش‌فاکتور شفافی می‌دهیم.",
+            ),
+            (
+                "بعد از تحویل پروژه پشتیبانی دارید؟",
+                "بله. همهٔ پروژه‌ها با دورهٔ پشتیبانی رایگان تحویل می‌شوند و بعد از آن "
+                "هم بسته‌های پشتیبانی ماهانه داریم. باگ‌های احتمالی را هم بدون "
+                "هزینهٔ اضافه برطرف می‌کنیم.",
+            ),
+            (
+                "محتوا و عکس‌های سایت را خودمان آماده می‌کنیم؟",
+                "اختیاری است. اگر محتوایی دارید، با آن کار می‌کنیم؛ اگر نه، تیم "
+                "تولید محتوای ما می‌تواند متن و تصاویر را برایتان آماده کند.",
+            ),
+            (
+                "قرارداد و نحوهٔ پرداخت چگونه است؟",
+                "همکاری با قرارداد رسمی شروع می‌شود. پرداخت معمولاً در سه مرحله است: "
+                "بیعانهٔ شروع، عقد مرحلهٔ طراحی و تسویهٔ هنگام تحویل. برای پروژه‌های "
+                "طولانی‌تر، اقساط منعطف هم داریم.",
+            ),
+        ]
+        added = 0
+        for i, (question, answer) in enumerate(items):
+            if not FaqItem.objects.filter(question=question).exists():
+                FaqItem.objects.create(
+                    question=question, answer=answer, order=i * 10
+                )
+                added += 1
+        if added:
+            self.stdout.write(f"  + {added} سوال متداول")
+
+    # ── Contact lead form ──
+    def seed_contact(self):
+        _, c = first_or_create(
+            ContactSection,
+            subtitle="فرم تماس سریع",
+            title="پروژه‌تان را شروع کنید",
+            description=(
+                "نام، شماره و یک پیام کوتاه کافی است. در کمتر از ۲۴ ساعت پاسخ "
+                "می‌دهیم و در یک جلسهٔ کوتاه، ایده‌تان را بررسی می‌کنیم."
+            ),
+            submit_text="ارسال درخواست",
+            success_text="درخواست شما دریافت شد. به‌زودی با شما تماس می‌گیریم.",
+        )
+        self.log("فرم تماس", c)
+
+    # ── HomeSection rows: order + visibility of every partial ──
+    def seed_home_sections(self):
+        created = 0
+        for key, title in SECTION_TITLES.items():
+            if key not in RENDERED_SECTIONS:
+                continue
+            _, c = HomeSection.objects.get_or_create(
+                key=key,
+                defaults={
+                    "title": title,
+                    "order": SECTION_ORDER[key],
+                    "is_active": True,
+                },
+            )
+            created += int(c)
+        if created:
+            self.stdout.write(f"  + {created} بخش صفحه اصلی")
 
     # ── Site settings + socials (only when the table is empty) ──
     def seed_site(self):
