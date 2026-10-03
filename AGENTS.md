@@ -44,64 +44,64 @@ raqm. Both are now installed and must be added to `requirements.txt`.
 - [x] Verify `python manage.py check` passes; DB already seeded
 
 ### Phase 1 — Foundation
-- [ ] 1.1 Add `arabic_reshaper` + `python-bidi` to `requirements.txt`
-- [ ] 1.2 Vendor build-only dev deps nothing to add; verify Tailwind build runs
-- [ ] 1.3 Add pixel/glow design tokens + utilities to `static/src/input.css`, rebuild
-- [ ] 1.4 Add `bg-shell` container (`hx-preserve`) to `base.html` for the shared canvas
-- [ ] 1.5 Vendor Alpine.js for the FAQ accordion (local file, no CDN)
+- [x] 1.1 Add `arabic_reshaper` + `python-bidi` to `requirements.txt`
+- [x] 1.2 Vendor build-only dev deps nothing to add; verify Tailwind build runs
+- [x] 1.3 Add pixel/glow design tokens + utilities to `static/src/input.css`, rebuild
+- [x] 1.4 Add `bg-shell` container (`hx-preserve`) to `base.html` for the shared canvas
+- [x] 1.5 Vendor Alpine.js for the FAQ accordion (local file, no CDN)
 
 ### Phase 2 — Background engine (`static/js/pixoria-bg/`)
-- [ ] 2.1 `PixoriaBackground` module skeleton: canvas, quality/fallback handling, dispose
-- [ ] 2.2 Ribbon geometry + GLSL shader (noise-driven flow, additive glow)
-- [ ] 2.3 Scroll driver: ScrollTrigger → uniforms; `data-bg-*` section keyframes
-- [ ] 2.4 Presets file (`home` + footer rest-state shared by every page)
-- [ ] 2.5 CSS gradient fallback (no WebGL / reduced motion / low-end), pause off-screen/tab-hidden
-- [ ] 2.6 Boot from `base.html` via `json_script` config; wire readability vignette
+- [x] 2.1 `PixoriaBackground` module skeleton: canvas, quality/fallback handling, dispose
+- [x] 2.2 Ribbon geometry + GLSL shader (noise-driven flow, additive glow)
+- [x] 2.3 Scroll driver: ScrollTrigger → uniforms; `data-bg-*` section keyframes
+- [x] 2.4 Presets file (`home` + footer rest-state shared by every page)
+- [x] 2.5 CSS gradient fallback (no WebGL / reduced motion / low-end), pause off-screen/tab-hidden
+- [x] 2.6 Boot from `base.html` via `json_script` config; wire readability vignette
 
 ### Phase 3 — Preloader link
-- [ ] 3.1 Canvas shows inside the preloader in hero state on first visit
-- [ ] 3.2 On load done: same canvas transitions (pull-back/dim/move) into page bg, overlay fades
-- [ ] 3.3 Later visits / HTMX navigations: short path, canvas never restarts
+- [x] 3.1 Canvas shows inside the preloader in hero state on first visit
+- [x] 3.2 On load done: same canvas transitions (pull-back/dim/move) into page bg, overlay fades
+- [x] 3.3 Later visits / HTMX navigations: short path, canvas never restarts
 
 ### Phase 4 — Logo / wordmark
-- [ ] 4.1 Fix `build_pixel_wordmark.py` to render the joined word via reshaper+bidi
-- [ ] 4.2 Regenerate brand assets, verify «پیکسوریا» connects in header/preloader/footer
-- [ ] 4.3 Self-host a pixel Latin font (already present: `press-start-2p` / `jersey10`) wired for labels
+- [x] 4.1 Fix `build_pixel_wordmark.py` to render the joined word via reshaper+bidi
+- [x] 4.2 Regenerate brand assets, verify «پیکسوریا» connects in header/preloader/footer
+- [x] 4.3 Self-host a pixel Latin font (already present: `press-start-2p` / `jersey10`) wired for labels
 
 ### Phase 5 — Header + mobile menu
-- [ ] 5.1 Redesign header: floating liquid-glass bar, wordmark, nav, lime CTA, active indicator
-- [ ] 5.2 Hide on scroll-down / show on scroll-up, glass strengthens after scroll
-- [ ] 5.3 Full-screen mobile menu overlay (GSAP): staggered links, contact block, socials, CTA, scroll-lock, ESC, focus handling
+- [x] 5.1 Redesign header: floating liquid-glass bar, wordmark, nav, lime CTA, active indicator
+- [x] 5.2 Hide on scroll-down / show on scroll-up, glass strengthens after scroll
+- [x] 5.3 Full-screen mobile menu overlay (GSAP): staggered links, contact block, socials, CTA, scroll-lock, ESC, focus handling
 
 ### Phase 6 — Custom cursor
-- [ ] 6.1 `static/js/cursor.js`: dot + trailing ring (quickTo), states, `data-cursor` labels
-- [ ] 6.2 Magnetic CTA, click feedback, pixel trail; disabled on touch / reduced motion
+- [x] 6.1 `static/js/cursor.js`: dot + trailing ring (quickTo), states, `data-cursor` labels
+- [x] 6.2 Magnetic CTA, click feedback, pixel trail; disabled on touch / reduced motion
 
 ### Phase 7 — Section system + sections
-- [ ] 7.1 `HomeSection` model (`key`, `order`, `is_active`) + admin; view renders in admin order
-- [ ] 7.2 `templates/home/sections/` partials; `home/index.html` includes them by order
-- [ ] 7.3 Hero restyle (pixel highlight word, stat chips, scroll indicator)
-- [ ] 7.4 Clients strip (reuse `ClientMarqueeItem`, pausable marquee)
-- [ ] 7.5 Stats/counters section (animated numbers via `data-counter`)
-- [ ] 7.6 Process section — pinned horizontal scroll desktop, stacked mobile
-- [ ] 7.7 Why Pixoria — bento grid with pixel micro-visuals
-- [ ] 7.8 Tech/skills grid with progress bars
-- [ ] 7.9 Packages/pricing (3 plans, highlighted, “contact for price” option)
-- [ ] 7.10 FAQ — Alpine accordion + FAQPage JSON-LD
-- [ ] 7.11 Contact lead form — HTMX POST, honeypot + rate limit, success/error states
-- [ ] 7.12 Pre-footer CTA improvement (keeps `CTASection`)
-- [ ] 7.13 Keep featured works / services / testimonials / articles sections working in new flow
+- [x] 7.1 `HomeSection` model (`key`, `order`, `is_active`) + admin; view renders in admin order
+- [x] 7.2 `templates/home/sections/` partials; `home/index.html` includes them by order
+- [x] 7.3 Hero restyle (pixel highlight word, stat chips, scroll indicator)
+- [x] 7.4 Clients strip (reuse `ClientMarqueeItem`, pausable marquee)
+- [x] 7.5 Stats/counters section (animated numbers via `data-counter`)
+- [x] 7.6 Process section — pinned horizontal scroll desktop, stacked mobile
+- [x] 7.7 Why Pixoria — bento grid with pixel micro-visuals
+- [x] 7.8 Tech/skills grid with progress bars
+- [x] 7.9 Packages/pricing (3 plans, highlighted, “contact for price” option)
+- [x] 7.10 FAQ — Alpine accordion + FAQPage JSON-LD
+- [x] 7.11 Contact lead form — HTMX POST, honeypot + rate limit, success/error states
+- [x] 7.12 Pre-footer CTA improvement (keeps `CTASection`)
+- [x] 7.13 Keep featured works / services / testimonials / articles sections working in new flow
 
 ### Phase 8 — Footer
-- [ ] 8.1 Redesigned footer: oversized pixel wordmark, columns, contact, socials, back-to-top
-- [ ] 8.2 Background rest-state always applies on pre-footer + footer
+- [x] 8.1 Redesigned footer: oversized pixel wordmark, columns, contact, socials, back-to-top
+- [x] 8.2 Background rest-state always applies on pre-footer + footer
 
 ### Phase 9 — Polish / QA
-- [ ] 9.1 `seed_home_content` management command with realistic Persian defaults
-- [ ] 9.2 SEO pass: single H1, meta, JSON-LD, alt texts, heading order
-- [ ] 9.3 Perf: lazy init, pixelRatio cap, pause off-screen, no layout shift
-- [ ] 9.4 a11y pass: reduced motion, focus, aria, contrast over the background
-- [ ] 9.5 Full `manage.py check` + migrations + browser smoke test
+- [x] 9.1 `seed_home_content` management command with realistic Persian defaults
+- [x] 9.2 SEO pass: single H1, meta, JSON-LD, alt texts, heading order
+- [x] 9.3 Perf: lazy init, pixelRatio cap, pause off-screen, no layout shift
+- [x] 9.4 a11y pass: reduced motion, focus, aria, contrast over the background
+- [x] 9.5 Full `manage.py check` + migrations + browser smoke test
 
 ## Rules
 - One small commit per step, English imperative mood, ≤ ~60 chars. Never broken code.
@@ -118,3 +118,19 @@ raqm. Both are now installed and must be added to `requirements.txt`.
   and the new home section merely styles around it rather than duplicating the model.
 - `AboutStat` already exists for about-page stats; the home stats section gets its own
   model to keep page content independent (prompt §6 asks for per-section settings).
+- **Lead form model:** `ContactSubmission` (contact app) has mandatory `project_type` /
+  `budget` / `start_time` fields that do not fit a short homepage form, so a dedicated
+  `HomeLead` model was added to the `home` app instead of touching the contact app.
+- **Alpine + HTMX:** Alpine boots once; after each `htmx:afterSwap` the inline script in
+  `base.html` calls `Alpine.initTree(document.body)` so the FAQ accordion keeps working
+  after navigation.
+- **Section keys ↔ partials:** `seed_home_content` only registers a `HomeSection` row for
+  keys listed in `RENDERED_SECTIONS`; a key is added there once its partial exists, so the
+  page can never include a missing template.
+- **Pinned horizontal scroll:** the horizontal row is opt-in via the `is-horizontal` class
+  that `motion.js` sets only when the tween actually runs. Without JS or under
+  `prefers-reduced-motion` the process section degrades to a normal stacked grid instead
+  of clipped cards.
+- **Validation status codes:** the lead endpoint answers 200 for both success and
+  validation-error states so htmx swaps the body without extra config; the rate limit and
+  honeypot also return the form. Only `GET` answers 405.
