@@ -1,0 +1,38 @@
+{# چرا پیکسوریا — بنتو گرید با میکرو-ویژوال‌های پیکسلی #}
+{# داده‌ها: why_section (WhySection)، why_features (WhyFeature) #}
+{% load icon_tags %}
+{% if why_section and why_features %}
+  <section class="relative px-page py-[clamp(64px,9vw,128px)]"
+           aria-labelledby="why-head"
+           data-bg-intensity="0.85" data-bg-glow="0.9" data-bg-swirl="0.95" data-bg-hue="0.06">
+
+    <div class="mb-[clamp(32px,4vw,52px)] max-w-[860px]" data-reveal="fade-up">
+      <span class="eyebrow mb-6 inline-block">{{ why_section.subtitle }}<span class="ml-2 inline-block h-1.5 w-1.5 rounded-full bg-lime align-[2px]"></span></span>
+      <h2 id="why-head" class="mb-[18px] max-w-[22ch]">{{ why_section.title|safe }}</h2>
+      <p class="m-0 max-w-[58ch] text-[1.12rem] leading-[1.55] text-ink-soft">{{ why_section.description|safe }}</p>
+    </div>
+
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:auto-rows-[minmax(196px,1fr)] lg:grid-cols-3">
+      {% for feature in why_features %}
+        <article class="group glass-card relative flex flex-col gap-4 overflow-hidden{% if feature.size == 'wide' %} sm:col-span-2{% elif feature.size == 'tall' %} lg:row-span-2{% endif %}"
+                 data-reveal="fade-up" data-reveal-delay="{{ forloop.counter0 }}00">
+
+          {# بریدن پیکسلی گوشهٔ بالا-راست (همگام با سمت شروع در RTL) #}
+          <span class="absolute inset-x-0 top-0 h-px origin-right scale-x-0 bg-lime transition-transform duration-500 ease-ax group-hover:scale-x-100" aria-hidden="true"></span>
+
+          <div class="flex items-center justify-between">
+            <span class="inline-flex h-11 w-11 items-center justify-center rounded-md border border-line-strong bg-night text-lime transition-colors duration-300 group-hover:border-lime/50">
+              {% icon feature.icon class="h-5 w-5" %}
+            </span>
+            <span class="pixel-dots" aria-hidden="true">
+              {% for i in "01234567" %}<span></span>{% endfor %}
+            </span>
+          </div>
+
+          <h3 class="max-w-[18ch] text-[clamp(1.1rem,1.4vw,1.35rem)] font-medium leading-[1.25] text-ink">{{ feature.title }}</h3>
+          <p class="m-0 max-w-[42ch] text-[0.96rem] leading-[1.6] text-ink-soft">{{ feature.description }}</p>
+        </article>
+      {% endfor %}
+    </div>
+  </section>
+{% endif %}

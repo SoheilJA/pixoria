@@ -818,6 +818,33 @@
     filter: drop-shadow(0 0 14px rgba(200, 255, 61, 0.35));
   }
 
+  /* ═══ Pixel micro-visual — a small 8-bit dot grid that lights up on
+     hover. Used as the decorative corner of bento cards. ═══ */
+  .pixel-dots {
+    display: grid;
+    grid-template-columns: repeat(4, 6px);
+    gap: 3px;
+  }
+  .pixel-dots span {
+    width: 6px;
+    height: 6px;
+    background: color-mix(in srgb, var(--color-lime) 30%, transparent);
+    transition: background-color 0.3s var(--ease-ax);
+  }
+  .group:hover .pixel-dots span {
+    animation: pixel-blink 1s var(--ease-ax) infinite alternate;
+  }
+  .group:hover .pixel-dots span:nth-child(2) { animation-delay: 0.08s; }
+  .group:hover .pixel-dots span:nth-child(3) { animation-delay: 0.16s; }
+  .group:hover .pixel-dots span:nth-child(4) { animation-delay: 0.24s; }
+  .group:hover .pixel-dots span:nth-child(5) { animation-delay: 0.32s; }
+  .group:hover .pixel-dots span:nth-child(6) { animation-delay: 0.4s; }
+  .group:hover .pixel-dots span:nth-child(7) { animation-delay: 0.2s; }
+  .group:hover .pixel-dots span:nth-child(8) { animation-delay: 0.28s; }
+  @keyframes pixel-blink {
+    to { background: var(--color-lime); }
+  }
+
   /* ═══ Custom cursor (desktop pointers only; static/js/cursor.js) ═══ */
   /* The nodes live in #cursor-shell (hx-preserve), so the native cursor stays
      hidden across HTMX navigations via :has(). */

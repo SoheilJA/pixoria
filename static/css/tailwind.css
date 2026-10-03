@@ -462,6 +462,9 @@
   .mb-\[clamp\(16px\,2vw\,26px\)\] {
     margin-bottom: clamp(16px, 2vw, 26px);
   }
+  .mb-\[clamp\(32px\,4vw\,52px\)\] {
+    margin-bottom: clamp(32px, 4vw, 52px);
+  }
   .mb-\[clamp\(40px\,5vw\,64px\)\] {
     margin-bottom: clamp(40px, 5vw, 64px);
   }
@@ -699,6 +702,9 @@
   .max-w-\[36ch\] {
     max-width: 36ch;
   }
+  .max-w-\[42ch\] {
+    max-width: 42ch;
+  }
   .max-w-\[44ch\] {
     max-width: 44ch;
   }
@@ -717,6 +723,9 @@
   .max-w-\[56ch\] {
     max-width: 56ch;
   }
+  .max-w-\[58ch\] {
+    max-width: 58ch;
+  }
   .max-w-\[60ch\] {
     max-width: 60ch;
   }
@@ -734,6 +743,9 @@
   }
   .max-w-\[760px\] {
     max-width: 760px;
+  }
+  .max-w-\[860px\] {
+    max-width: 860px;
   }
   .max-w-\[880px\] {
     max-width: 880px;
@@ -1312,6 +1324,9 @@
   .py-\[clamp\(64px\,9vw\,120px\)\] {
     padding-block: clamp(64px, 9vw, 120px);
   }
+  .py-\[clamp\(64px\,9vw\,128px\)\] {
+    padding-block: clamp(64px, 9vw, 128px);
+  }
   .py-\[clamp\(64px\,9vw\,130px\)\] {
     padding-block: clamp(64px, 9vw, 130px);
   }
@@ -1702,6 +1717,10 @@
   .leading-\[1\.15\] {
     --tw-leading: 1.15;
     line-height: 1.15;
+  }
+  .leading-\[1\.25\] {
+    --tw-leading: 1.25;
+    line-height: 1.25;
   }
   .leading-\[1\.35\] {
     --tw-leading: 1.35;
@@ -2102,6 +2121,14 @@
     .group-hover\:border-lime-deep:is(:where(.group):hover *) {
       border-color: var(--color-lime-deep);
     }
+    .group-hover\:border-lime\/50:is(:where(.group):hover *) {
+      border-color: color-mix(in srgb, #c8ff3d 50%, transparent);
+    }
+    @supports (color: color-mix(in lab, red, red)) {
+      .group-hover\:border-lime\/50:is(:where(.group):hover *) {
+        border-color: color-mix(in oklab, var(--color-lime) 50%, transparent);
+      }
+    }
     .group-hover\:bg-lime:is(:where(.group):hover *) {
       background-color: var(--color-lime);
     }
@@ -2287,6 +2314,9 @@
     }
   }
   @media (width >= 40rem) {
+    .sm\:col-span-2 {
+      grid-column: span 2 / span 2;
+    }
     .sm\:inline-flex {
       display: inline-flex;
     }
@@ -2431,6 +2461,9 @@
     .lg\:top-8 {
       top: calc(var(--spacing) * 8);
     }
+    .lg\:row-span-2 {
+      grid-row: span 2 / span 2;
+    }
     .lg\:flex {
       display: flex;
     }
@@ -2448,6 +2481,9 @@
     }
     .lg\:shrink-0 {
       flex-shrink: 0;
+    }
+    .lg\:auto-rows-\[minmax\(196px\,1fr\)\] {
+      grid-auto-rows: minmax(196px,1fr);
     }
     .lg\:grid-cols-3 {
       grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -3352,6 +3388,49 @@
   }
   .pixel-glow {
     filter: drop-shadow(0 0 14px rgba(200, 255, 61, 0.35));
+  }
+  .pixel-dots {
+    display: grid;
+    grid-template-columns: repeat(4, 6px);
+    gap: 3px;
+  }
+  .pixel-dots span {
+    width: 6px;
+    height: 6px;
+    background: color-mix(in srgb, #c8ff3d 30%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      background: color-mix(in srgb, var(--color-lime) 30%, transparent);
+    }
+    transition: background-color 0.3s var(--ease-ax);
+  }
+  .group:hover .pixel-dots span {
+    animation: pixel-blink 1s var(--ease-ax) infinite alternate;
+  }
+  .group:hover .pixel-dots span:nth-child(2) {
+    animation-delay: 0.08s;
+  }
+  .group:hover .pixel-dots span:nth-child(3) {
+    animation-delay: 0.16s;
+  }
+  .group:hover .pixel-dots span:nth-child(4) {
+    animation-delay: 0.24s;
+  }
+  .group:hover .pixel-dots span:nth-child(5) {
+    animation-delay: 0.32s;
+  }
+  .group:hover .pixel-dots span:nth-child(6) {
+    animation-delay: 0.4s;
+  }
+  .group:hover .pixel-dots span:nth-child(7) {
+    animation-delay: 0.2s;
+  }
+  .group:hover .pixel-dots span:nth-child(8) {
+    animation-delay: 0.28s;
+  }
+  @keyframes pixel-blink {
+    to {
+      background: var(--color-lime);
+    }
   }
   body:has(.cursor-shell), body:has(.cursor-shell) * {
     cursor: none !important;
