@@ -287,6 +287,9 @@
   .bottom-0 {
     bottom: 0px;
   }
+  .bottom-6 {
+    bottom: calc(var(--spacing) * 6);
+  }
   .bottom-\[-3rem\] {
     bottom: -3rem;
   }
@@ -530,6 +533,9 @@
   .h-2 {
     height: calc(var(--spacing) * 2);
   }
+  .h-3 {
+    height: calc(var(--spacing) * 3);
+  }
   .h-3\.5 {
     height: calc(var(--spacing) * 3.5);
   }
@@ -631,6 +637,12 @@
   }
   .w-1\.5 {
     width: calc(var(--spacing) * 1.5);
+  }
+  .w-2 {
+    width: calc(var(--spacing) * 2);
+  }
+  .w-3 {
+    width: calc(var(--spacing) * 3);
   }
   .w-3\.5 {
     width: calc(var(--spacing) * 3.5);
@@ -1134,10 +1146,10 @@
   .border-night {
     border-color: var(--color-night);
   }
-  .border-night\/20 {
-    border-color: color-mix(in srgb, #04070a 20%, transparent);
+  .border-night\/30 {
+    border-color: color-mix(in srgb, #04070a 30%, transparent);
     @supports (color: color-mix(in lab, red, red)) {
-      border-color: color-mix(in oklab, var(--color-night) 20%, transparent);
+      border-color: color-mix(in oklab, var(--color-night) 30%, transparent);
     }
   }
   .border-warn {
@@ -1204,6 +1216,12 @@
     background-color: color-mix(in srgb, #04070a 10%, transparent);
     @supports (color: color-mix(in lab, red, red)) {
       background-color: color-mix(in oklab, var(--color-night) 10%, transparent);
+    }
+  }
+  .bg-night\/15 {
+    background-color: color-mix(in srgb, #04070a 15%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      background-color: color-mix(in oklab, var(--color-night) 15%, transparent);
     }
   }
   .bg-paper {
@@ -2013,6 +2031,12 @@
       color: color-mix(in oklab, var(--color-ink) 70%, transparent);
     }
   }
+  .text-ink\/80 {
+    color: color-mix(in srgb, #eaf2e8 80%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      color: color-mix(in oklab, var(--color-ink) 80%, transparent);
+    }
+  }
   .text-lime {
     color: var(--color-lime);
   }
@@ -2086,8 +2110,14 @@
   .accent-\[\#a3d130\] {
     accent-color: #a3d130;
   }
+  .\!opacity-25 {
+    opacity: 25% !important;
+  }
   .opacity-0 {
     opacity: 0%;
+  }
+  .opacity-30 {
+    opacity: 30%;
   }
   .opacity-40 {
     opacity: 40%;
@@ -3573,7 +3603,8 @@
   }
   .pixel-divider {
     height: 6px;
-    background-image: repeating-linear-gradient(90deg, var(--color-lime) 0 6px, transparent 6px 12px);
+    color: var(--color-lime);
+    background-image: repeating-linear-gradient(90deg, currentColor 0 6px, transparent 6px 12px);
     opacity: 0.5;
   }
   .pixel-badge {

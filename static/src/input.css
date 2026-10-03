@@ -808,10 +808,13 @@
   .pixel-corner-2 {
     clip-path: polygon(0 0, 100% 0, 100% 100%, var(--pixel-size, 10px) 100%, 0 calc(100% - var(--pixel-size, 10px)));
   }
-  /* Stepped pixel divider: square dots instead of a hairline */
+  /* Stepped pixel divider: square dots instead of a hairline. Paints with
+     currentColor so it can be tinted from the call site (e.g. text-night on
+     the lime CTA band). */
   .pixel-divider {
     height: 6px;
-    background-image: repeating-linear-gradient(90deg, var(--color-lime) 0 6px, transparent 6px 12px);
+    color: var(--color-lime);
+    background-image: repeating-linear-gradient(90deg, currentColor 0 6px, transparent 6px 12px);
     opacity: 0.5;
   }
   /* Small 8-bit label chip */
