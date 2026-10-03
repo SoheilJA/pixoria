@@ -58,3 +58,19 @@ class LatestArticlesSectionAdmin(admin.ModelAdmin):
 
     def has_add_permission(self, request):
         return not LatestArticlesSection.objects.exists()
+
+
+@admin.register(HeaderSettings)
+class HeaderSettingsAdmin(admin.ModelAdmin):
+    list_display = ["cta_text", "cta_url", "show_cta"]
+
+    def has_add_permission(self, request):
+        return not HeaderSettings.objects.exists()
+
+
+@admin.register(NavItem)
+class NavItemAdmin(admin.ModelAdmin):
+    list_display = ["title", "url", "order", "is_active"]
+    list_editable = ["order", "is_active"]
+    list_display_links = ["title"]
+    search_fields = ["title", "url"]

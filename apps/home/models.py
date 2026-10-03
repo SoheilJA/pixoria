@@ -151,3 +151,49 @@ class LatestArticlesSection(models.Model):
         if not self.pk and LatestArticlesSection.objects.exists():
             raise ValueError("فقط یک سکشن آخرین مقالات مجاز است")
         super().save(*args, **kwargs)
+
+
+class HeaderSettings(models.Model):
+    """تنظیمات هدر بالای سایت — دکمهٔ CTA"""
+
+    cta_text = models.CharField(max_length=50, verbose_name="متن دکمه CTA", default="شروع پروژه")
+    cta_url = models.CharField(
+        max_length=200,
+        verbose_name="لینک دکمه CTA",
+        blank=True,
+        help_text="نام آدرس جنگو (مثل contact:contact) یا مسیر مستقیم (مثل /contact/)",
+    )
+    show_cta = models.BooleanField(default=True, verbose_name="نمایش دکمه CTA")
+
+    class Meta:
+        verbose_name = "تنظیمات هدر"
+        verbose_name_plural = "تنظیمات هدر"
+
+    def __str__(self):
+        return "تنظیمات هدر"
+
+    def save(self, *args, **kwargs):
+        if not self.pk and HeaderSettings.objects.exists():
+            raise ValueError("فقط یک تنظیمات هدر مجاز است")
+        super().save(*args, **kwargs)
+
+
+class NavItem(models.Model):
+    """آیتم‌های منوی بالای سایت"""
+
+    title = models.CharField(max_length=100, verbose_name="عنوان")
+    url = models.CharField(
+        max_length=200,
+        verbose_name="لینک",
+        help_text="نام آدرس جنگو (مثل portfolio:list) یا مسیر مستقیم (مثل /blog/)",
+    )
+    order = models.PositiveIntegerField(default=0, verbose_name="ترتیب")
+    is_active = models.BooleanField(default=True, verbose_name="فعال")
+
+    class Meta:
+        verbose_name = "آیتم منو"
+        verbose_name_plural = "آیتم‌های منو"
+        ordering = ["order"]
+
+    def __str__(self):
+        return self.title
