@@ -1,5 +1,7 @@
 from django.db import models
 
+from .icon_utils import validate_icon_name
+
 
 class SiteSettings(models.Model):
     """تنظیمات کلی سایت"""
@@ -14,6 +16,59 @@ class SiteSettings(models.Model):
     status = models.CharField(
         max_length=50, verbose_name="وضعیت", default="آماده همکاری"
     )
+
+    # ── بخش برند فوتر ──
+    tagline = models.CharField(
+        max_length=200,
+        verbose_name="شعار برند",
+        blank=True,
+        help_text="مثلاً: هویتی درخشان، اعتباری ماندگار.",
+    )
+    phone_secondary = models.CharField(
+        max_length=20,
+        verbose_name="شماره همراه",
+        blank=True,
+        help_text="شماره دوم نمایش‌داده‌شده در فوتر و منوی موبایل",
+    )
+    website = models.URLField(
+        verbose_name="آدرس وب‌سایت", blank=True, help_text="مثلاً: https://www.pixoria.ir"
+    )
+    og_image = models.FileField(
+        verbose_name="تصویر اشتراک‌گذاری (OG)",
+        upload_to="brand/",
+        blank=True,
+        help_text="تصویر پیش‌نمایش شبکه‌های اجتماعی (۱۲۰۰×۶۳۰ پیکسل توصیه می‌شود)",
+    )
+
+    # ── کارت‌های اعتماد و امنیت در فوتر ──
+    trust_first_title = models.CharField(
+        max_length=50, verbose_name="عنوان کارت اول اعتماد", blank=True, default="اینماد"
+    )
+    trust_first_subtitle = models.CharField(
+        max_length=100,
+        verbose_name="زیرنویس کارت اول",
+        blank=True,
+        default="درگاه امن پرداخت",
+    )
+    trust_second_title = models.CharField(
+        max_length=50,
+        verbose_name="عنوان کارت دوم اعتماد",
+        blank=True,
+        default="ساماندهی",
+    )
+    trust_second_subtitle = models.CharField(
+        max_length=100,
+        verbose_name="زیرنویس کارت دوم",
+        blank=True,
+        default="ثبت رسمی کسب‌وکار",
+    )
+    trust_note = models.CharField(
+        max_length=300,
+        verbose_name="یادداشت بخش اعتماد",
+        blank=True,
+        default="لوگوی اینماد و ساماندهی پس از دریافت در همین قسمت قرار می‌گیرد.",
+    )
+
     logo = models.FileField(
         verbose_name="لوگوی سایت",
         upload_to="brand/",
@@ -64,6 +119,17 @@ class SocialLink(models.Model):
     name = models.CharField(
         max_length=50, verbose_name="نام کامل", help_text="مثلا اینستاگرام"
     )
+    icon = models.CharField(
+        max_length=64,
+        verbose_name="آیکون",
+        blank=True,
+        default="globe",
+        validators=[validate_icon_name],
+        help_text=(
+            "نام انگلیسی یک آیکون Lucide. مثال: instagram، linkedin، send (تلگرام)، "
+            "globe. لیست کامل: lucide.dev/icons"
+        ),
+    )
 
     url = models.URLField(verbose_name="لینک")
     order = models.PositiveIntegerField(default=0, verbose_name="ترتیب")
@@ -75,6 +141,49 @@ class SocialLink(models.Model):
 
     def __str__(self):
         return self.label
+
+
+class FooterLinkGroup(models.Model):
+    """ستون لینک‌های فوتر — مثلاً «دسترسی سریع» یا группы دلخواه"""
+
+    title = models.CharField(max_length=100, verbose_name="عنوان ستون")
+    order = models.PositiveIntegerField(default=0, verbose_name="ترتیب")
+    is_active = models.BooleanField(default=True, verbose_name="فعال")
+
+    class Meta:
+        verbose_name = "ستون لینک‌های فوتر"
+        verbose_name_plural = "ستون‌های لینک‌های فوتر"
+        ordering = ["order"]
+
+    def __str__(self):
+        return self.title
+
+
+class FooterLink(models.Model):
+    """آیتم لینک داخل یک ستون فوتر"""
+
+    group = models.ForeignKey(
+        FooterLinkGroup,
+        on_delete=models.CASCADE,
+        related_name="links",
+        verbose_name="ستون",
+    )
+    title = models.CharField(max_length=100, verbose_name="عنوان")
+    url = models.CharField(
+        max_length=200,
+        verbose_name="لینک",
+        help_text="نام آدرس جنگو (مثل portfolio:list) یا مسیر مستقیم (مثل /blog/)",
+    )
+    order = models.PositiveIntegerField(default=0, verbose_name="ترتیب")
+    is_active = models.BooleanField(default=True, verbose_name="فعال")
+
+    class Meta:
+        verbose_name = "لینک فوتر"
+        verbose_name_plural = "لینک‌های فوتر"
+        ordering = ["order"]
+
+    def __str__(self):
+        return self.title
 
 
 """مدل های صفحه درباره ما"""

@@ -5,6 +5,43 @@ from .models import *
 @admin.register(SiteSettings)
 class SiteSettingsAdmin(admin.ModelAdmin):
     list_display = ["site_name", "email", "phone", "status"]
+    fieldsets = [
+        (
+            "مشخصات سایت",
+            {
+                "fields": [
+                    "site_name",
+                    "site_description",
+                    "established_year",
+                    "status",
+                    "logo",
+                    "favicon",
+                    "apple_touch_icon",
+                    "og_image",
+                ]
+            },
+        ),
+        (
+            "اطلاعات تماس",
+            {
+                "fields": ["email", "phone", "phone_secondary", "address", "website"]
+            },
+        ),
+        (
+            "فوتر",
+            {
+                "fields": [
+                    "footer_description",
+                    "tagline",
+                    "trust_first_title",
+                    "trust_first_subtitle",
+                    "trust_second_title",
+                    "trust_second_subtitle",
+                    "trust_note",
+                ]
+            },
+        ),
+    ]
 
     def has_add_permission(self, request):
         return not SiteSettings.objects.exists()
@@ -12,7 +49,21 @@ class SiteSettingsAdmin(admin.ModelAdmin):
 
 @admin.register(SocialLink)
 class SocialLinkAdmin(admin.ModelAdmin):
-    list_display = ["label", "name", "url", "order"]
+    list_display = ["label", "name", "icon", "url", "order"]
+    list_editable = ["order"]
+
+
+class FooterLinkInline(admin.TabularInline):
+    model = FooterLink
+    extra = 1
+    list_editable = ["order"]
+
+
+@admin.register(FooterLinkGroup)
+class FooterLinkGroupAdmin(admin.ModelAdmin):
+    list_display = ["title", "order", "is_active"]
+    list_editable = ["order", "is_active"]
+    inlines = [FooterLinkInline]
 
 
 @admin.register(AboutPageHero)

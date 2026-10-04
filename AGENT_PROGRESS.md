@@ -196,7 +196,7 @@ but are out of scope for this migration order (home/about/contact/404 only).
   files: `static/src/input.css` | commit: "feat(css): replace design tokens with v2 gold theme"
 - [x] T02 — Self-host Space Grotesk woff2 and register font faces |
   files: `static/fonts/*`, `static/fonts/font_urls.css` | commit: "feat(fonts): self-host space grotesk woff2"
-- [ ] T03 — Add `highlight` template filter for `[[ ]]` colored words |
+- [x] T03 — Add `highlight` template filter for `[[ ]]` colored words |
   files: `apps/core/templatetags/highlight_tags.py` | commit: "feat(templatetags): add highlight filter for colored headings"
 - [ ] T04 — Extend site chrome models (SiteSettings footer/contact fields,
   SocialLink icon) + migration + admin |
