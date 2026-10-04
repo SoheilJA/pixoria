@@ -138,12 +138,18 @@ but are out of scope for this migration order (home/about/contact/404 only).
 
 ## Decisions log
 
-- **D1 — Palette replacement, not merge.** `static/src/input.css` @theme is
-  rewritten with the new tokens (ink/cream/gold/royal, Vazirmatn + Space
-  Grotesk). The old lime tokens are dropped; old templates that reference
-  `text-lime`, `bg-night` etc. break visually but are scheduled for
-  replacement/cleanup. Alias `--color-lime: var(--color-gold)` etc. is NOT
-  added — full replacement keeps the CSS small.
+- **D1 — Full replacement, no coexistence (user directive).**
+  `static/src/input.css` is fully replaced by the V2 design (tokens + all
+  custom CSS from `new/assets/css/input.css`). Nothing of the old frontend
+  survives: old tokens (`--color-night`, `--color-lime`, …), old custom CSS
+  (`.liquid-glass`, `.preloader`, `.bg-shell`, …), old JS
+  (`main.js`, `motion.js`, `cursor.js`, `pixoria-bg/`, `engine/`, …) and old
+  Rubik/pixel font files are all deleted in the cleanup phase. Interim
+  consequence: pages whose templates are not converted yet render unstyled
+  until they are replaced — that is expected and part of the migration.
+  Pages with no new design (`blog/*`, `portfolio/*`, `services/*`, `login`)
+  get minimal placeholders extending the new `base.html` (see §8 of the
+  prompt) so no URL is broken.
 - **D2 — Colored heading marker.** Template filter `highlight` in
   `apps/core/templatetags/highlight_tags.py`: escapes text, converts
   `[[word]]` → `<span class="text-goldgrad">word</span>`; use
@@ -186,9 +192,9 @@ but are out of scope for this migration order (home/about/contact/404 only).
 
 ### Phase 0 — Foundation
 
-- [ ] T01 — Replace Tailwind source with V2 design tokens and custom CSS |
+- [x] T01 — Replace Tailwind source with V2 design tokens and custom CSS |
   files: `static/src/input.css` | commit: "feat(css): replace design tokens with v2 gold theme"
-- [ ] T02 — Self-host Space Grotesk woff2 and register font faces |
+- [x] T02 — Self-host Space Grotesk woff2 and register font faces |
   files: `static/fonts/*`, `static/fonts/font_urls.css` | commit: "feat(fonts): self-host space grotesk woff2"
 - [ ] T03 — Add `highlight` template filter for `[[ ]]` colored words |
   files: `apps/core/templatetags/highlight_tags.py` | commit: "feat(templatetags): add highlight filter for colored headings"
@@ -302,4 +308,4 @@ but are out of scope for this migration order (home/about/contact/404 only).
 
 ## Current status
 
-Phase A complete. Starting T01 (replace Tailwind tokens with the v2 gold theme).
+T01 + T02 done (v2 tokens + self-hosted fonts). Starting T03 (highlight filter).
