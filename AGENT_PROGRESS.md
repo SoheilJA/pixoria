@@ -198,7 +198,7 @@ but are out of scope for this migration order (home/about/contact/404 only).
   files: `static/fonts/*`, `static/fonts/font_urls.css` | commit: "feat(fonts): self-host space grotesk woff2"
 - [x] T03 — Add `highlight` template filter for `[[ ]]` colored words |
   files: `apps/core/templatetags/highlight_tags.py` | commit: "feat(templatetags): add highlight filter for colored headings"
-- [ ] T04 — Extend site chrome models (SiteSettings footer/contact fields,
+- [x] T04 — Extend site chrome models (SiteSettings footer/contact fields,
   SocialLink icon) + migration + admin |
   files: `apps/core/models.py`, `apps/core/migrations/`, `apps/core/admin.py` | commit: "feat(core): extend site settings and social link models"
 - [ ] T05 — Rebuild local Lucide sprite to cover every icon used in `new/` |
