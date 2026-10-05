@@ -1,8 +1,6 @@
 from django.contrib import admin
-from django.contrib.admin import display
-from django.templatetags.static import static
-from django.utils.html import format_html
 
+from apps.core.icon_utils import IconPreviewMixin
 from .models import (
     ServicesPageSection,
     Service,
@@ -31,26 +29,11 @@ class ServiceStatInline(admin.TabularInline):
     extra = 1
 
 
-class ServiceWhyUsInline(admin.TabularInline):
+class ServiceWhyUsInline(IconPreviewMixin, admin.TabularInline):
     model = ServiceWhyUs
     extra = 1
-    fields = ["icon", "icon_preview", "title", "description", "order"]
+    fields = ["icon_preview", "icon", "title", "description", "order"]
     readonly_fields = ["icon_preview"]
-
-    @display(description="پیش‌نمایش")
-    def icon_preview(self, obj):
-        if not obj.icon:
-            return "—"
-        return format_html(
-            '<svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" '
-            'fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" '
-            'stroke-linejoin="round" style="color:#c8ff3d">'
-            '<use href="{}#i-{}" xlink:href="{}#i-{}"></use></svg>',
-            static("icons/lucide.sprite.svg"),
-            obj.icon,
-            static("icons/lucide.sprite.svg"),
-            obj.icon,
-        )
 
 
 class ServiceDeliverableInline(admin.TabularInline):
@@ -88,24 +71,39 @@ class ServiceTestimonialInline(admin.TabularInline):
     model = ServiceTestimonial
     extra = 1
     fields = [
+        "kind",
         "author_name",
         "author_role",
         "author_image",
         "text",
+        "rating",
         "order",
         "show_on_home",
     ]
+
+
 @admin.register(ServiceTestimonial)
 class ServiceTestimonialAdmin(admin.ModelAdmin):
-    list_display = ['author_name', 'author_role', 'service', 'show_on_home', 'order']
-    list_editable = ['show_on_home', 'order']
-    list_filter = ['service', 'show_on_home']
+    list_display = ["author_name", "author_role", "kind", "service", "show_on_home", "order"]
+    list_editable = ["show_on_home", "order"]
+    list_filter = ["service", "show_on_home", "kind"]
+    search_fields = ["author_name", "author_role", "text"]
+
 
 @admin.register(Service)
-class ServiceAdmin(admin.ModelAdmin):
-    list_display = ["title", "order", "featured"]
-    list_editable = ["order", "featured"]
+class ServiceAdmin(IconPreviewMixin, admin.ModelAdmin):
+    list_display = ["icon_preview", "title", "visual", "card_span", "order", "featured"]
+    list_editable = ["visual", "card_span", "order", "featured"]
+    list_display_links = ["icon_preview", "title"]
     prepopulated_fields = {"slug": ("title",)}
+    fieldsets = [
+        ("هویت خدمت", {"fields": ["title", "slug", "icon", "excerpt", "description"]}),
+        (
+            "کارت صفحه اصلی",
+            {"fields": ["visual", "card_span", "chips", "badge", "featured", "order"]},
+        ),
+        ("تگ‌ها", {"fields": ["tags"]}),
+    ]
     inlines = [
         ServiceStatInline,
         ServiceWhyUsInline,

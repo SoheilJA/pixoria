@@ -1,4 +1,6 @@
 from django.contrib import admin
+
+from apps.core.icon_utils import IconPreviewMixin
 from .models import *
 
 
@@ -11,9 +13,25 @@ class PackageFeatureInline(admin.TabularInline):
 @admin.register(HeroSection)
 class HeroSectionAdmin(admin.ModelAdmin):
     list_display = ["title"]
+    fields = [
+        "eyebrow",
+        "title",
+        "description",
+        "cta_primary_text",
+        "cta_primary_url",
+        "cta_secondary_text",
+        "cta_secondary_url",
+    ]
 
     def has_add_permission(self, request):
         return not HeroSection.objects.exists()
+
+
+@admin.register(HeroStat)
+class HeroStatAdmin(IconPreviewMixin, admin.ModelAdmin):
+    list_display = ["icon_preview", "value", "label", "icon", "order", "is_active"]
+    list_editable = ["value", "label", "icon", "order", "is_active"]
+    list_display_links = ["icon_preview"]
 
 
 @admin.register(HeroMarqueeItem)
@@ -21,9 +39,52 @@ class HeroMarqueeItemAdmin(admin.ModelAdmin):
     list_display = ["text", "order"]
 
 
+class HomeAboutStatInline(IconPreviewMixin, admin.TabularInline):
+    model = HomeAboutStat
+    extra = 1
+    fields = ["icon_preview", "icon", "value", "prefix", "suffix", "label", "order", "is_active"]
+    readonly_fields = ["icon_preview"]
+    ordering = ["order"]
+
+
+@admin.register(HomeAboutSection)
+class HomeAboutSectionAdmin(admin.ModelAdmin):
+    list_display = ["title", "eyebrow"]
+    fields = ["eyebrow", "title", "paragraph_one", "paragraph_two", "chips", "footer_label"]
+    inlines = [HomeAboutStatInline]
+
+    def has_add_permission(self, request):
+        return not HomeAboutSection.objects.exists()
+
+
+@admin.register(HomeAboutStat)
+class HomeAboutStatAdmin(IconPreviewMixin, admin.ModelAdmin):
+    list_display = ["icon_preview", "label", "value", "prefix", "suffix", "icon", "order", "is_active"]
+    list_editable = ["value", "prefix", "suffix", "icon", "order", "is_active"]
+    list_display_links = ["icon_preview", "label"]
+
+
+@admin.register(TrustedSection)
+class TrustedSectionAdmin(admin.ModelAdmin):
+    list_display = ["title", "eyebrow"]
+    fields = ["eyebrow", "title", "description", "footer_label"]
+
+    def has_add_permission(self, request):
+        return not TrustedSection.objects.exists()
+
+
+@admin.register(TestimonialSection)
+class TestimonialSectionAdmin(admin.ModelAdmin):
+    list_display = ["title", "eyebrow"]
+    fields = ["eyebrow", "title", "description"]
+
+    def has_add_permission(self, request):
+        return not TestimonialSection.objects.exists()
+
+
 @admin.register(FeaturedWorkSection)
 class FeaturedWorkSectionAdmin(admin.ModelAdmin):
-    list_display = ["title"]
+    list_display = ["title", "eyebrow"]
 
     def has_add_permission(self, request):
         return not FeaturedWorkSection.objects.exists()
@@ -31,7 +92,7 @@ class FeaturedWorkSectionAdmin(admin.ModelAdmin):
 
 @admin.register(ServicesSection)
 class ServicesSectionAdmin(admin.ModelAdmin):
-    list_display = ["title"]
+    list_display = ["title", "eyebrow"]
 
     def has_add_permission(self, request):
         return not ServicesSection.objects.exists()
@@ -39,7 +100,9 @@ class ServicesSectionAdmin(admin.ModelAdmin):
 
 @admin.register(ClientMarqueeItem)
 class ClientMarqueeItemAdmin(admin.ModelAdmin):
-    list_display = ["name", "order"]
+    list_display = ["name", "mark", "accent", "order"]
+    list_editable = ["mark", "accent", "order"]
+    list_display_links = ["name"]
 
 
 @admin.register(ManifestoSection)
@@ -52,7 +115,7 @@ class ManifestoSectionAdmin(admin.ModelAdmin):
 
 @admin.register(CTASection)
 class CTASectionAdmin(admin.ModelAdmin):
-    list_display = ["title", "email", "phone"]
+    list_display = ["title", "eyebrow", "email", "phone"]
     fields = ["eyebrow", "title", "description", "email", "phone"]
 
     def has_add_permission(self, request):
@@ -61,7 +124,7 @@ class CTASectionAdmin(admin.ModelAdmin):
 
 @admin.register(LatestArticlesSection)
 class LatestArticlesSectionAdmin(admin.ModelAdmin):
-    list_display = ["title", "subtitle"]
+    list_display = ["title", "eyebrow", "subtitle"]
 
     def has_add_permission(self, request):
         return not LatestArticlesSection.objects.exists()
@@ -92,37 +155,37 @@ class HomeSectionAdmin(admin.ModelAdmin):
 
 @admin.register(StatsSection)
 class StatsSectionAdmin(admin.ModelAdmin):
-    list_display = ["title", "subtitle"]
+    list_display = ["title", "eyebrow", "subtitle"]
 
     def has_add_permission(self, request):
         return not StatsSection.objects.exists()
 
 
 @admin.register(StatItem)
-class StatItemAdmin(admin.ModelAdmin):
-    list_display = ["label", "value", "prefix", "suffix", "order", "is_active"]
-    list_editable = ["value", "prefix", "suffix", "order", "is_active"]
-    list_display_links = ["label"]
+class StatItemAdmin(IconPreviewMixin, admin.ModelAdmin):
+    list_display = ["icon_preview", "label", "value", "prefix", "suffix", "icon", "order", "is_active"]
+    list_editable = ["value", "prefix", "suffix", "icon", "order", "is_active"]
+    list_display_links = ["icon_preview", "label"]
 
 
 @admin.register(ProcessSection)
 class ProcessSectionAdmin(admin.ModelAdmin):
-    list_display = ["title", "subtitle"]
+    list_display = ["title", "eyebrow", "subtitle"]
 
     def has_add_permission(self, request):
         return not ProcessSection.objects.exists()
 
 
 @admin.register(ProcessStep)
-class ProcessStepAdmin(admin.ModelAdmin):
-    list_display = ["title", "order", "is_active"]
-    list_editable = ["order", "is_active"]
-    list_display_links = ["title"]
+class ProcessStepAdmin(IconPreviewMixin, admin.ModelAdmin):
+    list_display = ["icon_preview", "title", "icon", "order", "is_active"]
+    list_editable = ["icon", "order", "is_active"]
+    list_display_links = ["icon_preview", "title"]
 
 
 @admin.register(WhySection)
 class WhySectionAdmin(admin.ModelAdmin):
-    list_display = ["title", "subtitle"]
+    list_display = ["title", "eyebrow", "subtitle"]
 
     def has_add_permission(self, request):
         return not WhySection.objects.exists()
@@ -138,17 +201,17 @@ class WhyFeatureAdmin(admin.ModelAdmin):
 
 @admin.register(TechSection)
 class TechSectionAdmin(admin.ModelAdmin):
-    list_display = ["title", "subtitle"]
+    list_display = ["title", "eyebrow", "subtitle"]
 
     def has_add_permission(self, request):
         return not TechSection.objects.exists()
 
 
 @admin.register(TechSkill)
-class TechSkillAdmin(admin.ModelAdmin):
-    list_display = ["name", "level", "category", "order", "is_active"]
-    list_editable = ["level", "order", "is_active"]
-    list_display_links = ["name"]
+class TechSkillAdmin(IconPreviewMixin, admin.ModelAdmin):
+    list_display = ["icon_preview", "name", "icon", "level", "category", "order", "is_active"]
+    list_editable = ["icon", "level", "order", "is_active"]
+    list_display_links = ["icon_preview", "name"]
     search_fields = ["name", "category"]
 
 
@@ -170,7 +233,7 @@ class PackageAdmin(admin.ModelAdmin):
 
 @admin.register(FaqSection)
 class FaqSectionAdmin(admin.ModelAdmin):
-    list_display = ["title", "subtitle"]
+    list_display = ["title", "eyebrow", "subtitle"]
 
     def has_add_permission(self, request):
         return not FaqSection.objects.exists()
@@ -186,7 +249,7 @@ class FaqItemAdmin(admin.ModelAdmin):
 
 @admin.register(ContactSection)
 class ContactSectionAdmin(admin.ModelAdmin):
-    list_display = ["title", "subtitle", "submit_text"]
+    list_display = ["title", "eyebrow", "submit_text"]
 
     def has_add_permission(self, request):
         return not ContactSection.objects.exists()

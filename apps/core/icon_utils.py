@@ -11,6 +11,9 @@ from pathlib import Path
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
+from django.contrib.admin import display
+from django.templatetags.static import static
+from django.utils.html import format_html
 
 SPRITE_REL_PATH = Path("icons") / "lucide.sprite.svg"
 _SYMBOL_RE = re.compile(r'<symbol id="i-([^"]+)"')
@@ -50,3 +53,33 @@ def validate_icon_name(value):
             "این نام آیکون در مجموعه Lucide وجود ندارد. "
             "نام انگلیسی آیکون را از https://lucide.dev/icons انتخاب کنید."
         )
+
+
+def icon_preview_html(name, *, size=22, color="#c9a15a"):
+    """اسنیپت SVG یک آیکون لوساید از اسپرایت محلی — برای پیش‌نمایش در ادمین.
+
+    رنگ پیش‌فرض طلاییِ پالت v2 است."""
+    if not name:
+        return "—"
+    url = static(str(SPRITE_REL_PATH).replace("\\", "/"))
+    return format_html(
+        '<svg aria-hidden="true" width="{}" height="{}" viewBox="0 0 24 24" '
+        'fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" '
+        'stroke-linejoin="round" style="color:{}">'
+        '<use href="{}#i-{}" xlink:href="{}#i-{}"></use></svg>',
+        size,
+        size,
+        color,
+        url,
+        name,
+        url,
+        name,
+    )
+
+
+class IconPreviewMixin:
+    """ستون «پیش‌نمایش آیکون» را برای مدل‌هایی با فیلد ``icon`` فراهم می‌کند."""
+
+    @display(description="آیکون")
+    def icon_preview(self, obj):
+        return icon_preview_html(getattr(obj, "icon", ""))

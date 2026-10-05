@@ -380,8 +380,10 @@ but are out of scope for this migration order (home/about/contact/404 only).
   `templates/home/sections/_{about,trusted,portfolio,blog}.html` (stubs) |
   commit: "feat(home): add v2 section model fields" — done as T12a (home) +
   T12b (services) in one commit
-- [ ] T13 — Register/adjust admin for the new fields (help_text, list_editable) |
-  files: `apps/home/admin.py`, `apps/services/admin.py` | commit: "feat(admin): wire v2 home section fields"
+- [x] T13 — Register/adjust admin for the new fields (help_text, list_editable) |
+  files: `apps/home/admin.py`, `apps/services/admin.py`,
+  `apps/core/icon_utils.py` (shared `IconPreviewMixin` + `icon_preview_html`) |
+  commit: "feat(admin): wire v2 home section fields"
 
 ### Phase 4 — home page templates
 
@@ -453,8 +455,10 @@ but are out of scope for this migration order (home/about/contact/404 only).
 
 ## Current status
 
-T01–T12 done — Phases 0–2 plus the v2 home/services models complete. Next:
-T13 (admin wiring for the new fields). Migrations applied: home 0009/0010,
-services 0006; `manage.py check` and `makemigrations --check` both clean;
-home page still renders 200 (new section keys have stub partials until
-T14–T25 fill them). hero-scene.js verified with `node --check` earlier.
+T01–T13 done — Phases 0–2 plus v2 models and their admin complete. Next:
+T14 (update `home/index.html` + view context for the new section keys).
+Migrations applied: home 0009/0010, services 0006; `manage.py check` and
+`makemigrations --check` clean; home page still renders 200 (new section
+keys have stub partials until T14–T25 fill them). Admin verified with a
+throwaway smoke test: every home/services/core changelist and the change
+pages of all new models render 200 as superuser.
