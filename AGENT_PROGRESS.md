@@ -395,8 +395,12 @@ but are out of scope for this migration order (home/about/contact/404 only).
   files: `templates/home/sections/_hero.html`,
   `apps/home/management/commands/seed_home_content.py` (v2 hero copy +
   HeroStat seed, imports) | commit: "feat(home): convert hero section to v2"
-- [ ] T16 — Add `_about.html` (short intro, DB-driven) |
-  files: `templates/home/sections/_about.html` | commit: "feat(home): add about section"
+- [x] T16 — Add `_about.html` (short intro, DB-driven) |
+  files: `templates/home/sections/_about.html`,
+  `apps/home/management/commands/seed_home_content.py` (HomeAboutSection +
+  HomeAboutStat copy, TrustedSection/TestimonialSection/FeaturedWork/
+  Services eyebrows, v2 client marquee marks) |
+  commit: "feat(home): add about section"
 - [ ] T17 — Convert `_services.html` (4 bespoke service cards) |
   files: `templates/home/sections/_services.html` | commit: "feat(home): convert services section to v2"
 - [ ] T18 — Convert clients → `_trusted.html` (brand plates marquee) |
@@ -459,11 +463,10 @@ but are out of scope for this migration order (home/about/contact/404 only).
 
 ## Current status
 
-T01–T15 done. Next: T16 (add `_about.html`). Hero v2 renders 200: title
-with `[[ ]]` gold highlight via the `highlight` filter, DB-driven eyebrow,
-description, both CTAs (`nav_url`-resolved) and the `HeroStat` row, plus
-the `#hero-3d`/`#hero-canvas`/`#hero-fallback` mount consumed by
-hero-scene.js. The seed command now ships the v2 hero copy (eyebrow,
-«تصویری حرفه‌ای،[[برندی ماندگار]]», CTAs) and three HeroStat rows; the
-pre-existing v1 HeroSection row was migrated to the v2 copy in-place
-(seed is idempotent and never overwrites admin edits).
+T01–T16 done. Next: T17 (convert `_services.html`). About section v2
+renders: DB-driven eyebrow/title (`highlight:"dark"` variant), two
+paragraphs, csv chips, `established_year` watermark, glass panel with
+`settings.address` figcaption, and four `HomeAboutStat` counters using
+`data-counter` (pixoria.js animates them, fa-IR digits). Seed also ships
+TrustedSection, TestimonialSection and the v2 client marquee (mark +
+accent per brand).

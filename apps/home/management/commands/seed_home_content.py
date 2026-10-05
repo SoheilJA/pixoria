@@ -195,21 +195,78 @@ class Command(BaseCommand):
     # ── Section singletons ──
     def seed_sections(self):
         _, c = first_or_create(
-            FeaturedWorkSection,
-            title="کارهایی که با افتخار ساخته‌ایم",
+            HomeAboutSection,
+            eyebrow="درباره پیکسوریا",
+            title="پانزده سال تجربه، یک هدف:[[برندی ماندگار]]",
+            paragraph_one=(
+                "«استودیوی طراحی و توسعهٔ پیکسوریا» از سال ۱۳۸۹ کار خود را آغاز کرده و "
+                "در حوزه‌های طراحی سایت، برنامه‌نویسی، خدمات گرافیکی و طراحی لوگو "
+                "در مشهد فعالیت می‌کند."
+            ),
+            paragraph_two=(
+                "در این سال‌ها، پیکسوریا به‌عنوان مشاور و مجری تبلیغات در کنار "
+                "شرکت‌ها و ادارات بوده است؛ با یک هدف روشن: ساختن تصویری حرفه‌ای "
+                "و اعتباری ماندگار برای برند شما."
+            ),
+            chips="طراحی سایت، برنامه‌نویسی، خدمات گرافیکی، طراحی لوگو",
+            footer_label="PIXORIA · EST. 2010",
+        )
+        self.log("درباره ما", c)
+
+        about_stats = [
+            ("award", "15", "", "+", "سال سابقه"),
+            ("briefcase", "500", "", "+", "کسب‌وکار مشاوره‌شده"),
+            ("users", "135", "", "+", "بلاگر تبلیغاتی"),
+            ("at-sign", "350", "", "+", "پیج عمومی و تبلیغاتی کشور"),
+        ]
+        added = 0
+        for icon, value, prefix, suffix, label in about_stats:
+            if not HomeAboutStat.objects.filter(label=label).exists():
+                HomeAboutStat.objects.create(
+                    icon=icon, value=value, prefix=prefix, suffix=suffix, label=label,
+                    order=about_stats.index((icon, value, prefix, suffix, label)) * 10,
+                )
+                added += 1
+        if added:
+            self.stdout.write(f"  + {added} شمارندهٔ درباره ما")
+
+        _, c = first_or_create(
+            TrustedSection,
+            eyebrow="رزومه و اعتماد",
+            title="برندهایی که به ما اعتماد کردند",
             description=(
-                "هر پروژه برای ما فراتر از یک تحویل است؛ پایه‌ای برای رشد کسب‌وکار "
-                "مشتری‌مان. نمونه‌کارهای منتخب را اینجا ببینید."
+                "همکاری با بانک‌ها، شرکت‌های صنعتی و کنگره‌های ملی؛ اعتبارِ ما، "
+                "امضای آن‌هاست."
+            ),
+            footer_label="TRUSTED PARTNERS · SINCE 2010",
+        )
+        self.log("برندهای همکار", c)
+
+        _, c = first_or_create(
+            TestimonialSection,
+            eyebrow="نظرات مشتریان",
+            title="آنچه مشتریان [[می‌گویند]]",
+        )
+        self.log("نظرات مشتریان", c)
+
+        _, c = first_or_create(
+            FeaturedWorkSection,
+            eyebrow="نمونه‌کارها",
+            title="گزیدهٔ [[پروژه‌ها]]",
+            description=(
+                "هر پروژه، یک داستان از ایده تا اجراست. با فیلتر، پروژه‌های هر "
+                "خدمت را جداگانه ببینید."
             ),
         )
         self.log("نمونه کارها", c)
 
         _, c = first_or_create(
             ServicesSection,
-            title="خدمتی برای هر مرحلهٔ رشد شما",
+            eyebrow="خدمات ما",
+            title="از ایده تا اجرا، [[زیر یک سقف]]",
             description=(
-                "از اولین اسکچ تا انتشار و پشتیبانی، در هر گام مسیر کنارتان هستیم. "
-                "حوزه‌های کاری ما را ببینید و شروع کنید."
+                "چهار سرویس اصلی، یک استاندارد: کیفیتِ بی‌تعارف. هر پروژه در "
+                "پیکسوریا با وسواس یک کارگاه هنری پیش می‌رود."
             ),
         )
         self.log("خدمات", c)
@@ -256,11 +313,21 @@ class Command(BaseCommand):
         )
         self.log("آخرین مقالات", c)
 
-        clients = ["دیجی‌کالا", "اسنپ", "تپسی", "اولین", "بانک پاسارگاد", "زیرالسرویس"]
+        clients = [
+            ("رفاه", "بانک رفاه", "gold"),
+            ("پپسی", "پپسی خراسان", "royal"),
+            ("تجارت", "بانک تجارت", "gold"),
+            ("هواآوی", "شرکت هواآوی", "royal"),
+            ("شهر", "بانک شهر", "gold"),
+            ("توس", "شرکت توس / مبنا", "royal"),
+            ("کنگره", "کنگرهٔ ملی ساخت بیمارستان", "gold"),
+        ]
         added = 0
-        for i, name in enumerate(clients):
+        for i, (mark, name, accent) in enumerate(clients):
             if not ClientMarqueeItem.objects.filter(name=name).exists():
-                ClientMarqueeItem.objects.create(name=name, order=i * 10)
+                ClientMarqueeItem.objects.create(
+                    mark=mark, name=name, accent=accent, order=i * 10
+                )
                 added += 1
         if added:
             self.stdout.write(f"  + {added} برند همکار")

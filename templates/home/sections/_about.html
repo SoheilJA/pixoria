@@ -1,3 +1,104 @@
-{% comment %}
-  جایگاه موقت بخش «درباره ما» — در T16 با طرح v2 پر می‌شود.
-{% endcomment %}
+{% load icon_tags highlight_tags fa_digits %}
+{# درباره ما v2 — معرفی کوتاه + تابلوی شیشه‌ای + شمارنده‌ها #}
+{# داده‌ها: about_section (HomeAboutSection)، about_stats (HomeAboutStat) #}
+{% if about_section %}
+  <section id="about" class="relative overflow-hidden bg-cream">
+    <svg class="divider" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0,54 C220,90 420,10 640,40 C860,70 1040,6 1240,36 C1340,51 1400,44 1440,48 L1440,0 L0,0 Z" fill="#0a0a0c" />
+    </svg>
+
+    <div class="relative z-10 mx-auto max-w-7xl px-6 pb-24 pt-36 md:pt-44">
+      <div class="grid items-center gap-16 lg:grid-cols-12">
+        <div class="lg:col-span-5">
+          {% if about_section.eyebrow %}
+            <p class="eyebrow eyebrow-dark" data-reveal="up">{{ about_section.eyebrow }}</p>
+          {% endif %}
+          <h2 class="mt-5 text-4xl font-extrabold leading-[1.3] text-paper md:text-5xl" data-reveal="right">
+            {{ about_section.title|highlight:"dark" }}
+          </h2>
+          {% if about_section.paragraph_one %}
+            <p class="mt-6 font-light leading-8 text-coy" data-reveal="right" data-delay="0.1">
+              {{ about_section.paragraph_one }}
+            </p>
+          {% endif %}
+          {% if about_section.paragraph_two %}
+            <p class="mt-4 font-light leading-8 text-coy" data-reveal="right" data-delay="0.16">
+              {{ about_section.paragraph_two }}
+            </p>
+          {% endif %}
+          {% if about_section.chips %}
+            <ul class="mt-8 flex flex-wrap gap-3" data-reveal="right" data-delay="0.22">
+              {% for chip in about_section.get_chips_list %}
+                <li class="s-chip-light">{{ chip }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+          {% if about_section.footer_label %}
+            <span class="mt-10 block font-latin text-[10px] tracking-[.45em] text-gold-dark/60" data-reveal="up" data-delay="0.28">
+              {{ about_section.footer_label }}
+            </span>
+          {% endif %}
+        </div>
+
+        <div class="relative lg:col-span-7" data-reveal="left">
+          <span class="stroke-title-light pointer-events-none absolute -top-14 left-0 select-none text-[8.5rem] font-extrabold leading-none" aria-hidden="true">
+            {{ settings.established_year|default:"۱۳۸۹"|fa_digits }}
+          </span>
+          <span class="pointer-events-none absolute -bottom-10 -right-10 h-48 w-48 rounded-full aurora-blob" style="background: radial-gradient(circle, rgba(201,161,90,0.35), transparent 65%);" aria-hidden="true"></span>
+
+          {# تابلوی شیشه‌ای زنده (CSS خالص) #}
+          <div class="about-panel relative grid aspect-[4/3] place-items-center overflow-hidden border border-gold-dark/30 bg-cream2" style="border-radius: 6rem 1.25rem 6rem 1.25rem" aria-hidden="true">
+            <span class="grid-bg absolute inset-0 opacity-60"></span>
+            <span class="about-scan absolute inset-x-0 top-0 h-40"></span>
+            <span class="about-ring about-ring-1 absolute rounded-full border border-dashed border-gold-dark/30"></span>
+            <span class="about-ring about-ring-2 absolute rounded-full border border-gold/25"></span>
+            <span class="about-ring about-ring-3 absolute rounded-full border border-royal/20"></span>
+            <div class="about-orb relative grid place-items-center">
+              <span class="absolute inset-0 rounded-full" style="background: radial-gradient(circle at 34% 30%, rgba(244,236,217,0.9), rgba(232,196,122,0.5) 42%, rgba(143,107,44,0.25) 72%, rgba(143,107,44,0.08) 90%); box-shadow: 0 0 80px -16px rgba(201,161,90,0.65), inset -22px -16px 50px -26px rgba(10,10,12,0.85);"></span>
+              <span class="absolute -inset-4 rounded-full border border-gold/30" style="transform: rotate(-24deg) scaleY(0.34)"></span>
+              <span class="relative text-6xl font-extrabold text-goldgrad-dark">پ</span>
+            </div>
+            <span class="about-orbit about-orbit-1" aria-hidden="true"><span class="about-dot about-dot-1 absolute block h-4 w-4 rounded-full bg-gold-light shadow-[0_0_14px_rgba(201,161,90,0.8)]"></span></span>
+            <span class="about-orbit about-orbit-2" aria-hidden="true"><span class="about-dot about-dot-2 absolute block h-3 w-3 rounded-full bg-royal/80 shadow-[0_0_12px_rgba(46,99,255,0.9)]"></span></span>
+            <span class="about-orbit about-orbit-3" aria-hidden="true"><span class="about-dot about-dot-3 absolute block h-2.5 w-2.5 rounded-full bg-paper/70"></span></span>
+            <span class="absolute -top-5 right-10 h-4 w-4 rotate-45 bg-gradient-to-br from-gold-dark to-gold-light" style="box-shadow: 0 0 20px 2px rgba(201,161,90,0.5)"></span>
+            {% if settings.address %}
+              <figcaption class="glass-light absolute bottom-6 right-6 flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium text-paper">
+                {% icon "map-pin" class="h-4 w-4 text-gold-dark" %}
+                {{ settings.address }}
+              </figcaption>
+            {% endif %}
+            {% if settings.established_year %}
+              <span class="glass-light absolute left-6 top-6 rounded-full px-4 py-2 text-xs font-latin tracking-[.2em] text-gold-dark">
+                EST. {{ settings.established_year }}
+              </span>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+      {# شمارنده‌ها #}
+      {% if about_stats %}
+        <div class="relative mt-24" data-reveal="up">
+          <div class="absolute inset-x-4 top-1/2 hidden border-t border-dashed border-gold-dark/25 lg:block" aria-hidden="true"></div>
+          <ul class="relative grid grid-cols-2 gap-6 lg:grid-cols-4 lg:gap-8">
+            {% for stat in about_stats %}
+              {% with cycle=forloop.counter|divisibleby:2 %}
+                <li class="glass-light tilt relative z-10 px-7 py-7 {% if cycle %}lg:mt-10{% else %}lg:-mt-2{% endif %}"
+                    style="{% if cycle %}border-radius: 0.9rem 2.25rem 0.9rem 2.25rem{% else %}border-radius: 2.25rem 0.9rem 2.25rem 0.9rem{% endif %}"
+                    data-reveal="up" data-delay="{{ forloop.counter0|stringformat:'d'|add:'0' }}">
+                  <span class="glare" aria-hidden="true"></span>
+                  <span class="icon-ring absolute left-6 top-6">{% icon stat.icon class="h-4 w-4" %}</span>
+                  <p class="text-4xl font-extrabold text-goldgrad-dark">
+                    <span class="fa-num" data-counter="{{ stat.value|floatformat:"0" }}"{% if stat.prefix %} data-prefix="{{ stat.prefix }}"{% endif %}{% if stat.suffix %} data-suffix="{{ stat.suffix }}"{% endif %}>۰</span>
+                  </p>
+                  <p class="mt-2 text-sm text-coy">{{ stat.label }}</p>
+                </li>
+              {% endwith %}
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+    </div>
+  </section>
+{% endif %}
