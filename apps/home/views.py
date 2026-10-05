@@ -35,7 +35,7 @@ from .models import (
     WhySection,
     ClientMarqueeItem,
 )
-from apps.portfolio.models import Portfolio
+from apps.portfolio.models import Category, Portfolio
 from apps.services.models import Service, ServiceTestimonial
 from apps.blog.models import Article
 
@@ -101,6 +101,10 @@ def home(request):
     if "portfolio" in keys:
         context["portfolio_items"] = list(
             Portfolio.objects.filter(featured=True).prefetch_related("categories")
+        )
+        # فقط دسته‌بندی‌هایی دکمهٔ فیلتر می‌گیرند که روی این پروژه‌ها فعال باشند.
+        context["portfolio_categories"] = list(
+            Category.objects.filter(portfolio__featured=True).distinct().order_by("order", "id")
         )
 
     # ── دادهٔ ساختاریافتهٔ FAQ برای موتورهای جستجو (schema.org/FAQPage) ──

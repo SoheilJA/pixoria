@@ -1,3 +1,90 @@
-{% comment %}
-  جایگاه موقت بخش «نمونه‌کارها» — در T19 با گرید فیلترشوندهٔ طرح v2 پر می‌شود.
-{% endcomment %}
+{% load highlight_tags fa_digits %}
+{# نمونه‌کارهای منتخب v2 — گرید قابل فیلتر #}
+{# داده‌ها: portfolio_section (FeaturedWorkSection)، portfolio_items (Portfolio[])،
+   portfolio_categories (Category[]) — pixoria.js فیلتر و شمارشگر را مدیریت می‌کند #}
+{% if portfolio_items %}
+  <section id="portfolio" class="relative overflow-hidden bg-ink">
+    {# خط تقسیم‌کنندهٔ روشن روی بخش روشنِ قبلی #}
+    <svg class="divider" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0,58 C320,12 640,78 960,42 C1200,14 1360,62 1440,32 L1440,0 L0,0 Z" fill="#efece5"></path>
+    </svg>
+
+    <div class="pointer-events-none absolute left-[-6rem] top-1/4 h-96 w-96 rounded-full opacity-25 aurora-blob"
+         style="background: radial-gradient(circle, rgba(201, 161, 90, 0.28), transparent 65%);" aria-hidden="true"></div>
+    <div class="pointer-events-none absolute bottom-10 right-[-4rem] h-80 w-80 rounded-full opacity-20 aurora-blob"
+         style="background: radial-gradient(circle, rgba(46, 99, 255, 0.3), transparent 70%);" aria-hidden="true"></div>
+
+    <div class="relative z-10 mx-auto max-w-7xl px-6 pb-28 pt-36 md:pt-44">
+      <div class="flex flex-wrap items-end justify-between gap-6">
+        <div>
+          {% if portfolio_section %}
+            {% if portfolio_section.eyebrow %}
+              <p class="eyebrow" data-reveal="up">{{ portfolio_section.eyebrow }}</p>
+            {% endif %}
+            {% if portfolio_section.title %}
+              <h2 class="mt-5 text-4xl font-extrabold leading-[1.3] md:text-[2.7rem]" data-reveal="right">
+                {{ portfolio_section.title|highlight }}
+              </h2>
+            {% endif %}
+            {% if portfolio_section.description %}
+              <p class="mt-4 max-w-xl font-light leading-8 text-cream/55" data-reveal="right" data-delay="0.1">
+                {{ portfolio_section.description }}
+              </p>
+            {% endif %}
+          {% endif %}
+        </div>
+      </div>
+
+      {# فیلتر دسته‌بندی — کلید فیلتر = اسلاگ دسته‌بندی #}
+      {% if portfolio_categories %}
+        <div class="mt-10 flex flex-wrap gap-2.5" data-reveal="up" data-delay="0.12" id="pf-filters">
+          <button class="flt-btn active" data-filter="all">همه</button>
+          {% for category in portfolio_categories %}
+            <button class="flt-btn" data-filter="{{ category.slug }}">{{ category.name }}</button>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      {# شمارشگر — مقدار اولیه از سمت سرور؛ pixoria.js هنگام فیلتر به‌روز می‌شود #}
+      <p class="mt-5 font-latin text-[10px] tracking-[.3em] text-gold/60" id="pf-count"
+         data-reveal="up" data-delay="0.14">
+        {{ portfolio_items|length|fa_digits }} PROJECTS
+      </p>
+
+      <div class="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2" id="pf-grid">
+        {% for item in portfolio_items %}
+          {% with category=item.categories.first %}
+            <a href="{% url 'portfolio:detail' item.slug %}"
+               class="tile pf-item group relative block overflow-hidden"
+               data-cat="{{ category.slug|default:'' }}"
+               style="border-radius: {% cycle '2.5rem' '2.75rem 0.75rem' '0.9rem' '0.75rem 2.75rem' '1.75rem' '1rem 4rem' %}"
+               aria-label="{{ item.title }}">
+              {% if item.image %}
+                <img src="{{ item.image.url }}" alt="{{ item.title }}" loading="lazy" decoding="async"
+                     class="aspect-[4/3] h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.06]">
+              {% else %}
+                {# جایگاه تصویر وقتی پروژه عکس ندارد #}
+                <div class="aspect-[4/3] w-full bg-gradient-to-br from-ink2 via-ink3 to-ink2"></div>
+              {% endif %}
+              <div class="tile-caption">
+                <div class="flex flex-wrap gap-2">
+                  {% if category %}<span class="type-chip">{{ category.name }}</span>{% endif %}
+                  {% if item.year %}<span class="tile-tag">{{ item.year|fa_digits }}</span>{% endif %}
+                </div>
+                <h3 class="mt-3 text-lg font-bold">{{ item.title }}</h3>
+                {% if item.excerpt %}
+                  <p class="text-sm text-cream/60">{{ item.excerpt }}</p>
+                {% endif %}
+              </div>
+            </a>
+          {% endwith %}
+        {% endfor %}
+      </div>
+
+      {# پیام خالی — وقتی هیچ پروژه‌ای در دستهٔ انتخاب‌شده نیست #}
+      <p class="mt-10 hidden text-center text-sm text-cream/40" id="pf-empty">
+        پروژه‌ای در این دسته ثبت نشده است.
+      </p>
+    </div>
+  </section>
+{% endif %}
