@@ -1,3 +1,4 @@
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
 from apps.core.icon_utils import validate_icon_name
@@ -23,12 +24,61 @@ class ServicesPageSection(models.Model):
 
 
 class Service(models.Model):
-    """خدمت"""
+    """خدمت — در صفحه اصلی به‌صورت کارت‌های اختصاصی v2 با تصویرسازی اختصاصی رندر
+    می‌شود."""
+
+    VISUAL_CHOICES = [
+        ("none", "بدون تصویرسازی"),
+        ("browser", "ماکت مرورگر"),
+        ("terminal", "ترمینال"),
+        ("palette", "پالت رنگی و پوستر"),
+        ("diamond", "شبکهٔ راهنمای لوگو"),
+    ]
+    SPAN_CHOICES = [
+        ("wide", "عریض (۷ ستون)"),
+        ("narrow", "کوچک (۵ ستون)"),
+    ]
 
     title = models.CharField(max_length=200, verbose_name="عنوان")
     slug = models.SlugField(max_length=200, unique=True, verbose_name="اسلاگ")
     excerpt = models.TextField(verbose_name="توضیحات کوتاه")
     description = models.TextField(verbose_name="توضیحات کامل صفحه خدمت")
+    icon = models.CharField(
+        max_length=64,
+        default="sparkles",
+        verbose_name="آیکون",
+        help_text=(
+            "نام انگلیسی یک آیکون Lucide، بدون فاصله. "
+            "مثال: monitor-smartphone، code-xml، palette، diamond. "
+            "لیست کامل آیکون‌ها: lucide.dev/icons"
+        ),
+        validators=[validate_icon_name],
+    )
+    visual = models.CharField(
+        max_length=10,
+        choices=VISUAL_CHOICES,
+        default="none",
+        verbose_name="تصویرسازی کارت",
+        help_text="تصویرسازی اختصاصیِ کارت در صفحه اصلی (ماکت مرورگر، ترمینال و ...)",
+    )
+    card_span = models.CharField(
+        max_length=10,
+        choices=SPAN_CHOICES,
+        default="narrow",
+        verbose_name="عرض کارت در صفحه اصلی",
+    )
+    chips = models.CharField(
+        max_length=500,
+        verbose_name="برچسب‌های کارت",
+        blank=True,
+        help_text="با ویرگول جدا کنید. مثلاً: واکنش‌گرا، سئو-friendly، پشتیبانی مستمر",
+    )
+    badge = models.CharField(
+        max_length=100,
+        verbose_name="نشان شناورِ کارت",
+        blank=True,
+        help_text="متن نشان شیشه‌ای شناور روی تصویرسازی. مثلاً: ۹۹/۱۰۰ · Core Web Vitals",
+    )
     tags = models.CharField(
         max_length=500,
         verbose_name="تگ‌ها",
@@ -47,6 +97,9 @@ class Service(models.Model):
 
     def get_tags_list(self):
         return [tag.strip() for tag in self.tags.split(",") if tag.strip()]
+
+    def get_chips_list(self):
+        return [chip.strip() for chip in self.chips.split(",") if chip.strip()]
 
 
 class ServiceStat(models.Model):
@@ -248,7 +301,15 @@ class ServiceFAQ(models.Model):
 
 
 class ServiceTestimonial(models.Model):
-    """نظرات مشتریان"""
+    """نظرات مشتریان — سه نوع کارت در اسلایدر صفحه اصلی: متنی، ویدیویی و صوتی.
+    پخش ویدیو و صدا در مرورگر شبیه‌سازی می‌شود؛ بنابراین فقط پوستر و مدت
+    زمان نمایش داده می‌شود."""
+
+    KIND_CHOICES = [
+        ("text", "متن"),
+        ("video", "ویدیو"),
+        ("audio", "صوت"),
+    ]
 
     service = models.ForeignKey(
         Service,
@@ -256,12 +317,51 @@ class ServiceTestimonial(models.Model):
         related_name="testimonials",
         verbose_name="خدمت",
     )
+    kind = models.CharField(
+        max_length=10,
+        choices=KIND_CHOICES,
+        default="text",
+        verbose_name="نوع کارت",
+    )
     author_name = models.CharField(max_length=100, verbose_name="نام")
     author_role = models.CharField(max_length=200, verbose_name="نقش و شرکت")
     author_image = models.ImageField(
         upload_to="testimonials/", verbose_name="تصویر", blank=True
     )
-    text = models.TextField(verbose_name="متن نظر")
+    text = models.TextField(verbose_name="متن نظر", blank=True)
+    rating = models.PositiveIntegerField(
+        default=5,
+        verbose_name="امتیاز (۱ تا ۵)",
+        validators=[MinValueValidator(1), MaxValueValidator(5)],
+    )
+    video_poster = models.ImageField(
+        upload_to="testimonials/video/",
+        verbose_name="پوستر ویدیو",
+        blank=True,
+        help_text="برای کارت‌های ویدیویی. تصویر پوسترِ پیش از پخش",
+    )
+    video_duration = models.PositiveIntegerField(
+        default=48,
+        verbose_name="مدت زمان ویدیو (ثانیه)",
+        help_text="در مرورگر شبیه‌سازی می‌شود؛ فقط برای نمایش زمان",
+    )
+    audio_title = models.CharField(
+        max_length=200,
+        verbose_name="عنوان پیام صوتی",
+        blank=True,
+        help_text="مثلاً: گفت‌وگو با کارفرما",
+    )
+    audio_project = models.CharField(
+        max_length=200,
+        verbose_name="پروژهٔ پیام صوتی",
+        blank=True,
+        help_text="مثلاً: پروژهٔ همایش ملی",
+    )
+    audio_duration = models.PositiveIntegerField(
+        default=65,
+        verbose_name="مدت زمان صوت (ثانیه)",
+        help_text="در مرورگر شبیه‌سازی می‌شود؛ فقط برای نمایش زمان",
+    )
     show_on_home = models.BooleanField(default=False, verbose_name="نمایش در صفحه اصلی")
     order = models.PositiveIntegerField(default=0, verbose_name="ترتیب")
 

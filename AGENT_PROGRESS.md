@@ -285,6 +285,45 @@ but are out of scope for this migration order (home/about/contact/404 only).
   poster; any exception or a 3.5s boot timeout falls back to
   `#hero-fallback`. Owns the `window.__hero3d` flag and calls
   `ScrollTrigger.refresh()` after its late-added triggers are created.
+- **D19 — Home model extensions (T12).** (a) `HeroSection` gains `eyebrow`,
+  `cta_primary_*` / `cta_secondary_*` (URL-name, path or `#anchor`, defaults
+  `#contact` / `#portfolio`; empty secondary URL hides the button), and a
+  new `HeroStat` child (value/label/icon — plain text row like «+۵۰۰
+  کسب‌وکار مشاوره‌شده», not a counter). `HeroMarqueeItem` stays (unused in
+  v2, model kept per D1). (b) New singletons `HomeAboutSection` (eyebrow,
+  title, two paragraphs, csv `chips`, latin `footer_label`) with a
+  `HomeAboutStat` child (icon + counter fields, mirrors `StatItem`) — the
+  about section's four glass counters are a *separate* stat set from the
+  dark `stats` section, so a second model was added rather than overloading
+  `StatItem` with two FKs. (c) New singletons `TrustedSection` and
+  `TestimonialSection` (the trusted/testimonials headers had no model at
+  all). (d) `eyebrow` added to every section-settings model
+  (FeaturedWork, Services, Stats, Process, Why, Tech, Faq,
+  LatestArticles, Contact); old `subtitle` kept intact for the old
+  partials until they are replaced. (e) `ClientMarqueeItem` gains `mark`
+  (short plate text) + `accent` (gold/royal). (f) `ProcessStep`,
+  `StatItem`, `TechSkill` gain optional Lucide `icon` fields validated by
+  `validate_icon_name`. (g) `HomeSection.KEY_CHOICES` now exactly matches
+  the v2 order: hero, about, services, trusted, portfolio, why, process,
+  testimonials, tech, stats, blog, faq, contact. Data migration `0010`
+  renames the existing rows (clients→trusted, works→portfolio,
+  articles→blog) and deletes `manifesto`; empty stub partials
+  `_about/_trusted/_portfolio/_blog.html` were created so `home/index.html`
+  keeps rendering 200 until T14–T25 fill them (the `key` rename would
+  otherwise raise TemplateDoesNotExist). The seed command's key maps were
+  updated to the same names/orders.
+- **D20 — Services model extensions (T12b).** `Service` gains `icon`
+  (Lucide), `visual` (none/browser/terminal/palette/diamond — the bespoke
+  card artwork in `_services.html`), `card_span` (wide 7 / narrow 5
+  columns, independent of `visual` so the admin controls the bento layout),
+  `chips` (csv, `get_chips_list()` helper) and `badge` (floating glass
+  label like «۹۹/۱۰۰ · Core Web Vitals»). `ServiceTestimonial` gains `kind`
+  (text/video/audio), `video_poster`, `video_duration`, `audio_title`,
+  `audio_project`, `audio_duration` (all durations in **seconds** as
+  integers — templates format them with `fa_digits`; `pixoria.js` still
+  hardcodes 48/65 and T21 will wire them through `data-*` attributes) and
+  `rating` (1–5, default 5). `text` is now blank because video/audio cards
+  carry no quote.
 
 ## Tasks
 
@@ -331,12 +370,16 @@ but are out of scope for this migration order (home/about/contact/404 only).
 
 ### Phase 3 — home page models
 
-- [ ] T12 — Extend home models for the new sections (Hero fields, new
+- [x] T12 — Extend home models for the new sections (Hero fields, new
   HomeAboutSection, ClientMarqueeItem mark/accent, Service visual + chips,
   WhyFeature/ProcessStep/StatItem/TechSkill icons, ServiceTestimonial
   kind/media, HomeSection keys) + migrations |
-  files: `apps/home/models.py`, `apps/home/migrations/`, `apps/services/models.py`,
-  `apps/services/migrations/` | commit: "feat(home): add v2 section model fields" — split as T12a/T12b if too big
+  files: `apps/home/models.py`, `apps/home/migrations/0009_*`, `0010_*`,
+  `apps/services/models.py`, `apps/services/migrations/0006_*`,
+  `apps/home/management/commands/seed_home_content.py`,
+  `templates/home/sections/_{about,trusted,portfolio,blog}.html` (stubs) |
+  commit: "feat(home): add v2 section model fields" — done as T12a (home) +
+  T12b (services) in one commit
 - [ ] T13 — Register/adjust admin for the new fields (help_text, list_editable) |
   files: `apps/home/admin.py`, `apps/services/admin.py` | commit: "feat(admin): wire v2 home section fields"
 
@@ -410,6 +453,8 @@ but are out of scope for this migration order (home/about/contact/404 only).
 
 ## Current status
 
-T01–T11 done — Phases 0–2 complete (foundation, base chrome, interaction +
-hero JS). Next: T12 (extend home models for the new sections). hero-scene.js
-verified with `node --check` (valid ESM, local three.module.js import).
+T01–T12 done — Phases 0–2 plus the v2 home/services models complete. Next:
+T13 (admin wiring for the new fields). Migrations applied: home 0009/0010,
+services 0006; `manage.py check` and `makemigrations --check` both clean;
+home page still renders 200 (new section keys have stub partials until
+T14–T25 fill them). hero-scene.js verified with `node --check` earlier.
