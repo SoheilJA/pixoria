@@ -350,6 +350,15 @@ but are out of scope for this migration order (home/about/contact/404 only).
   step was missing from the v1 data and was created; `WhyFeature.size` is
   unused by v2 and was cleared. The seed still holds the v1 copy — T25
   replaces it.
+- **D24 — Media cards are data-driven (T21).** `pixoria.js`
+  `initMediaCards` was rewritten to iterate `[data-video-card]` /
+  `[data-audio-card]` instead of the hardcoded `#v-*` / `#a-*` IDs, so the
+  slider may hold any number of video/audio cards, and each card's duration is
+  read from the `data-video-card` / `data-audio-card` attribute itself (the D20
+  promise — 48/65 are no longer hardcoded). Inner elements are looked up with
+  `card.querySelector("[data-v-play]")` etc. `input.css`'s `#a-play` icon rules
+  became `.play-btn` class rules for the same reason. A new `fa_duration`
+  filter (`apps/core/templatetags/fa_digits.py`) formats seconds as «۰:۴۸».
 
 ## Tasks
 
@@ -441,8 +450,10 @@ but are out of scope for this migration order (home/about/contact/404 only).
 - [x] T20 — Convert `_why.html`, `_process.html` |
   files: `templates/home/sections/_why.html`, `templates/home/sections/_process.html` |
   commit: "feat(home): convert why and process sections to v2"
-- [ ] T21 — Convert `_testimonials.html` (text/video/audio cards + slider) |
-  files: `templates/home/sections/_testimonials.html` | commit: "feat(home): convert testimonials to v2 slider"
+- [x] T21 — Convert `_testimonials.html` (text/video/audio cards + slider) |
+  files: `templates/home/sections/_testimonials.html`, `static/js/pixoria.js`,
+  `static/src/input.css`, `apps/core/templatetags/fa_digits.py` |
+  commit: "feat(home): convert testimonials to v2 slider"
 - [ ] T22 — Convert `_tech.html`, `_stats.html` |
   files: `templates/home/sections/_tech.html`, `templates/home/sections/_stats.html` | commit: "feat(home): convert tech and stats sections to v2"
 - [ ] T23 — Convert `_articles.html` (blog cards), `_faq.html` (accordion) |
@@ -533,3 +544,14 @@ values would mean 100-second delays). The `HomeSection` rows were renumbered
 to the v2 order (D22) because the v1 orders rendered process before why and
 broke every section transition; the why/process DB copy was aligned to the
 design (D23).
+
+T21 done. Next: T22 (`_tech.html`, `_stats.html`). The testimonials section
+renders the v2 slider from `ServiceTestimonial` in the three kinds: text cards
+(rating stars, quote icon, avatar initial or `author_image`), video cards
+(poster + simulated playback) and audio cards (waveform + WebAudio).
+`pixoria.js` now iterates `[data-video-card]` / `[data-audio-card]` with
+per-card durations instead of the hardcoded IDs (D24), the `#a-play` CSS rules
+became `.play-btn`, and a new `fa_duration` filter renders «۰:۴۸». The three
+existing testimonials were aligned to the design's kinds (مریم صادقی text /
+سعید محمودی video / سارا توکلی audio); video/audio cards without media show
+gradient placeholders and their fields render nothing.

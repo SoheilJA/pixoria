@@ -433,14 +433,16 @@ function mediaSim({ dur, onTick, onEnd }) {
 
 function initMediaCards({ hasGsap, REDUCED, fmtTime }) {
   const gsap = window.gsap;
-  /* ---------------- video card (simulated playback) ---------------- */
-  const vPlay = document.getElementById("v-play");
-  if (vPlay) {
-    const vImg = document.getElementById("v-img");
-    const vScrim = document.getElementById("v-scrim");
-    const vProg = document.getElementById("v-prog");
-    const vTime = document.getElementById("v-time");
-    const DUR = 48;
+
+  /* ---------------- video cards (simulated playback) ---------------- */
+  document.querySelectorAll("[data-video-card]").forEach((card) => {
+    const vPlay = card.querySelector("[data-v-play]");
+    if (!vPlay) return;
+    const vImg = card.querySelector("[data-v-img]");
+    const vScrim = card.querySelector("[data-v-scrim]");
+    const vProg = card.querySelector("[data-v-prog]");
+    const vTime = card.querySelector("[data-v-time]");
+    const DUR = Math.max(1, parseInt(card.dataset.videoCard || "48", 10) || 48);
     let kb = null;
     const sim = mediaSim({
       dur: DUR,
@@ -480,15 +482,15 @@ function initMediaCards({ hasGsap, REDUCED, fmtTime }) {
         }
       }
     });
-  }
+  });
 
-  /* ---------------- audio card (real WebAudio playback) ---------------- */
-  const aPlay = document.getElementById("a-play");
-  if (aPlay) {
-    const barsWrap = document.getElementById("a-bars");
-    const aCur = document.getElementById("a-cur");
-    if (!barsWrap) return;
-    const DUR = 65;
+  /* ---------------- audio cards (real WebAudio playback) ---------------- */
+  document.querySelectorAll("[data-audio-card]").forEach((card) => {
+    const aPlay = card.querySelector("[data-a-play]");
+    const barsWrap = card.querySelector("[data-a-bars]");
+    const aCur = card.querySelector("[data-a-cur]");
+    if (!aPlay || !barsWrap) return;
+    const DUR = Math.max(1, parseInt(card.dataset.audioCard || "65", 10) || 65);
     const N = 44;
     const bars = [];
     for (let i = 0; i < N; i++) {
@@ -583,7 +585,7 @@ function initMediaCards({ hasGsap, REDUCED, fmtTime }) {
         stopSound();
       }
     });
-  }
+  });
 }
 
 /* ------------------------------------------------------- portfolio filter */
