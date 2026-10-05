@@ -20,8 +20,6 @@ from .models import (
     HomeSection,
     LatestArticlesSection,
     ManifestoSection,
-    Package,
-    PackagesSection,
     ProcessSection,
     ProcessStep,
     ServicesSection,
@@ -85,12 +83,6 @@ def home(request):
         "why_features": WhyFeature.objects.filter(is_active=True) if "why" in keys else [],
         "tech_section": TechSection.objects.first() if "tech" in keys else None,
         "tech_skills": TechSkill.objects.filter(is_active=True) if "tech" in keys else [],
-        "packages_section": PackagesSection.objects.first() if "packages" in keys else None,
-        "packages": (
-            Package.objects.filter(is_active=True).prefetch_related("features")
-            if "packages" in keys
-            else []
-        ),
         "faq_section": FaqSection.objects.first() if "faq" in keys else None,
         "faq_items": FaqItem.objects.filter(is_active=True) if "faq" in keys else [],
         "contact_section": ContactSection.objects.first() if "contact" in keys else None,

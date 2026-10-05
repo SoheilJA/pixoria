@@ -265,6 +265,26 @@ but are out of scope for this migration order (home/about/contact/404 only).
   poster; any exception or a 3.5s boot timeout falls back to
   `#hero-fallback`. Owns the `window.__hero3d` flag and calls
   `ScrollTrigger.refresh()` after its late-added triggers are created.
+- **D18 — Pricing removed from the home page (user directive).** The
+  `packages` section is dropped from the home rendering entirely: removed
+  from `HomeSection.KEY_CHOICES`, from the seed command's
+  `RENDERED_SECTIONS`/`SECTION_ORDER`/`SECTION_TITLES` and its
+  `seed_packages()` method, from the `home` view context (+ its imports), the
+  `templates/home/sections/_packages.html` partial deleted, and the existing
+  `packages` HomeSection row deleted from the DB. The `PackagesSection`/
+  `Package`/`PackageFeature` MODELS stay (data untouched, still in the admin)
+  — they are simply no longer reachable from the home page. Mention of
+  «پکیج» remaining on the page are FAQ answer prose, not the section.
+  (PMREM-lit env, 3 star layers, crystal planet, rings, moons, scroll-driven
+  `travel`) wrapped in the D8 rules: renderer is only built after `load` +
+  `requestIdleCallback` AND an IntersectionObserver gate (rootMargin 200px);
+  `pixelRatio ≤ 2`; the loop is *paused* (`setAnimationLoop(null)`) rather
+  than skipped when the hero leaves the viewport or the tab is hidden, and
+  resumed on return; full disposal (geometries, materials, textures, PMREM,
+  renderer) on `pagehide`; reduced-motion renders nothing and shows the CSS
+  poster; any exception or a 3.5s boot timeout falls back to
+  `#hero-fallback`. Owns the `window.__hero3d` flag and calls
+  `ScrollTrigger.refresh()` after its late-added triggers are created.
 
 ## Tasks
 

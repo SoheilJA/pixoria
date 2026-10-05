@@ -31,9 +31,6 @@ from apps.home.models import (
     WhyFeature,
     TechSection,
     TechSkill,
-    PackagesSection,
-    Package,
-    PackageFeature,
     FaqSection,
     FaqItem,
     ContactSection,
@@ -51,7 +48,6 @@ RENDERED_SECTIONS = {
     "process",
     "why",
     "tech",
-    "packages",
     "faq",
     "contact",
     "manifesto",
@@ -69,7 +65,6 @@ SECTION_ORDER = {
     "process": 50,
     "why": 60,
     "tech": 70,
-    "packages": 80,
     "testimonials": 90,
     "faq": 100,
     "contact": 110,
@@ -86,7 +81,6 @@ SECTION_TITLES = {
     "process": "فرآیند کار",
     "why": "چرا پیکسوریا",
     "tech": "تکنولوژی‌ها و مهارت‌ها",
-    "packages": "پکیج‌ها و قیمت‌ها",
     "testimonials": "نظرات مشتریان",
     "faq": "سوالات متداول",
     "contact": "فرم تماس سریع",
@@ -114,7 +108,6 @@ class Command(BaseCommand):
         self.seed_process()
         self.seed_why()
         self.seed_tech()
-        self.seed_packages()
         self.seed_faq()
         self.seed_contact()
         self.seed_home_sections()
@@ -390,93 +383,6 @@ class Command(BaseCommand):
                 added += 1
         if added:
             self.stdout.write(f"  + {added} مهارت")
-
-    # ── Packages / pricing ──
-    def seed_packages(self):
-        _, c = first_or_create(
-            PackagesSection,
-            subtitle="پکیج‌ها و قیمت‌ها",
-            title="پکیجی برای هر مرحله از رشد",
-            description=(
-                "قیمت مشخص، تحویل مشخص. پکیجی را انتخاب کنید که به کسب‌وکار شما "
-                "می‌رسد؛ و اگر جای دستکاری بود، با هم سفارشی‌اش می‌کنیم."
-            ),
-            note="قیمت‌ها به تومان است و برای پروژه‌های سفارشی متفاوت است.",
-        )
-        self.log("پکیج‌ها", c)
-
-        packages = [
-            {
-                "name": "پایه",
-                "description": "نقطهٔ شروع مناسب استارتاپ‌ها و کسب‌وکارهای کوچک",
-                "price": "۸٬۰۰۰٬۰۰۰",
-                "price_note": "هر پروژه",
-                "is_featured": False,
-                "badge": "",
-                "features": [
-                    ("طراحی واکنش‌گرای یک‌صفحه‌ای", True),
-                    ("بهینه‌سازی سرعت اولیه", True),
-                    ("تحویل در ۱۰ روز کاری", True),
-                    ("یک ویرایش رایگان پس از تحویل", True),
-                    ("طراحی اختصاصی رابط کاربری", False),
-                    ("پنل مدیریت محتوا", False),
-                ],
-            },
-            {
-                "name": "حرفه‌ای",
-                "description": "محبوب‌ترین انتخاب برندهای در حال رشد",
-                "price": "۲۴٬۰۰۰٬۰۰۰",
-                "price_note": "هر پروژه",
-                "is_featured": True,
-                "badge": "پرطرفدار",
-                "features": [
-                    ("طراحی واکنش‌گرای چندصفحه‌ای", True),
-                    ("طراحی اختصاصی رابط کاربری", True),
-                    ("پنل مدیریت محتوا", True),
-                    ("بهینه‌سازی پایهٔ موتور جستجو", True),
-                    ("۳۰ روز پشتیبانی رایگان", True),
-                    ("هویت بصری کامل برند", False),
-                ],
-            },
-            {
-                "name": "سازمانی",
-                "description": "برای محصولاتی که مقیاس‌پذیر و اختصاصی می‌خواهند",
-                "price": "",
-                "price_note": "استعلام قیمت",
-                "is_featured": False,
-                "badge": "اختصاصی",
-                "features": [
-                    ("طراحی و توسعهٔ کاملاً اختصاصی", True),
-                    ("هویت بصری کامل برند", True),
-                    ("اتصال به درگاه پرداخت و سرویس‌ها", True),
-                    ("بهینه‌سازی پیشرفتهٔ موتور جستجو", True),
-                    ("پشتیبانی اختصاصی ۶ ماهه", True),
-                    ("گزارش‌گیری دوره‌ای عملکرد", True),
-                ],
-            },
-        ]
-        added = 0
-        for i, pkg in enumerate(packages):
-            package, created = Package.objects.get_or_create(
-                name=pkg["name"],
-                defaults={
-                    "description": pkg["description"],
-                    "price": pkg["price"],
-                    "price_note": pkg["price_note"],
-                    "is_featured": pkg["is_featured"],
-                    "badge": pkg["badge"],
-                    "order": i * 10,
-                },
-            )
-            if not created:
-                continue
-            added += 1
-            for j, (title, included) in enumerate(pkg["features"]):
-                PackageFeature.objects.create(
-                    package=package, title=title, included=included, order=j * 10
-                )
-        if added:
-            self.stdout.write(f"  + {added} پکیج")
 
     # ── FAQ ──
     def seed_faq(self):
