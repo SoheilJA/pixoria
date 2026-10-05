@@ -150,7 +150,17 @@ class ManifestoSection(models.Model):
 class CTASection(models.Model):
     """سکشن کال تو اکشن - ثابت در همه صفحات"""
 
-    title = models.CharField(max_length=200, verbose_name="عنوان")
+    eyebrow = models.CharField(
+        max_length=100,
+        verbose_name="متن بالای عنوان",
+        blank=True,
+        help_text="متن کوچک و طلایی بالای عنوان. مثلاً: برند شما، امضای ما",
+    )
+    title = models.CharField(
+        max_length=200,
+        verbose_name="عنوان",
+        help_text="کلمه‌ای که باید رنگی شود را داخل [[ ]] بنویسید.",
+    )
     description = models.TextField(verbose_name="توضیحات")
     email = models.EmailField(verbose_name="ایمیل")
     phone = models.CharField(max_length=20, verbose_name="شماره تماس")

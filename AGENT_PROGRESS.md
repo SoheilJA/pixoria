@@ -210,6 +210,19 @@ but are out of scope for this migration order (home/about/contact/404 only).
   `trust_*` SiteSettings fields. Every column is `{% if %}`-guarded, so an
   empty DB renders a valid (sparse) footer. The footer owns `id="contact"` —
   the home lead-form section (T24) must use a different anchor id.
+- **D14 — CTA partial wiring (T08).** `CTASection.eyebrow` added (small gold
+  line above the title); `title` runs through `highlight` and its help_text
+  explains the `[[ ]]` marker. Primary pill → `contact:contact` (label
+  «مشاوره رایگان» kept as a constant UI label), secondary pill → `tel:` with
+  `phone` (`.fa-num`), plus a discreet `mailto:` link when `email` is set so
+  the existing email field is still rendered. The whole section is wrapped in
+  `{% if cta %}`. The design's cream top-divider was dropped: the partial is
+  included above the footer on every page, and the wave only reads correctly
+  against a light preceding section.
+- **GOTCHA — template comments.** Django's lexer regex
+  (`{%.*?%}|{{.*?}}|{#.*?#}`, no DOTALL) means `{# … #}` only comments a
+  SINGLE line; a multi-line `{#` block leaks its text into the rendered HTML.
+  Use `{% comment %}…{% endcomment %}` for multi-line notes in templates.
 
 ## Tasks
 
@@ -235,8 +248,10 @@ but are out of scope for this migration order (home/about/contact/404 only).
   `apps/core/templatetags/fa_digits.py` | commit: "feat(base): add v2 header partial with db mega menu"
 - [x] T07 — Create footer partial (contact, quick links, services, enamad) |
   files: `templates/partials/_footer.html` | commit: "feat(base): add v2 footer partial"
-- [ ] T08 — Create pre-footer CTA partial in new pill style |
-  files: `templates/partials/_cta.html` | commit: "feat(base): add v2 cta partial"
+- [x] T08 — Create pre-footer CTA partial in new pill style |
+  files: `templates/partials/_cta.html`, `apps/home/models.py`,
+  `apps/home/migrations/0007_*`, `apps/home/admin.py` |
+  commit: "feat(base): add v2 cta partial"
 - [ ] T09 — Rewrite `base.html` to compose new partials, local deferred
   assets, toast container, scroll progress; keep block names (title,
   description, og_title, og_description, extra_css, extra_head, content,
@@ -333,10 +348,8 @@ but are out of scope for this migration order (home/about/contact/404 only).
 
 ## Current status
 
-T01–T07 done (v2 tokens, fonts, highlight filter, chrome models, icon sprite,
-header partial, footer partial). Next: T08 (pre-footer CTA partial). Partials
-are not yet included anywhere — `base.html` still holds the old inline header
-and footer; T09 wires the partials in. Header verified by rendering with the
-live DB (6 nav links, 4 mega cards, 10 mobile links) and an empty context;
-footer likewise (2 socials, 1 link group + 4 services, trust cards) and with
-an empty context (sparse footer, no exceptions).
+T01–T08 done (v2 tokens, fonts, highlight filter, chrome models, icon sprite,
+header/footer/CTA partials). Next: T09 (rewrite `base.html` to compose the
+new partials). All three partials verified by rendering with the live DB and
+with an empty context (header/footer degrade gracefully; CTA renders nothing
+without a `CTASection` row).

@@ -53,6 +53,7 @@ class ManifestoSectionAdmin(admin.ModelAdmin):
 @admin.register(CTASection)
 class CTASectionAdmin(admin.ModelAdmin):
     list_display = ["title", "email", "phone"]
+    fields = ["eyebrow", "title", "description", "email", "phone"]
 
     def has_add_permission(self, request):
         return not CTASection.objects.exists()

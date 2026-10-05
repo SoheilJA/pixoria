@@ -1,7 +1,6 @@
 {% load icon_tags nav_tags highlight_tags fa_digits %}
-{# هدر و منوی موبایل — همهٔ محتوا از دیتابیس می‌آید:
-   NavItem (منو)، HeaderSettings (دکمهٔ CTA)، Service (مگامنو)،
-   SiteSettings (لوگو و بنر مگامنو). #}
+{% comment %}هدر و منوی موبایل — محتوا از دیتابیس: NavItem (منو)، HeaderSettings
+(دکمهٔ CTA)، Service (مگامنو) و SiteSettings (لوگو و بنر مگامنو).{% endcomment %}
 {% url 'services:list' as services_url %}
 <header id="site-header" class="fixed inset-x-0 top-0 z-50 px-4 pt-4">
   <nav
