@@ -239,6 +239,21 @@ but are out of scope for this migration order (home/about/contact/404 only).
   designed to overlay full-bleed heroes, and inner pages give their own hero
   top padding (old `components/page_hero.html` already has
   `pt-[clamp(64px,9vw,130px)]`).
+- **D16 — pixoria.js (T10).** ES module; `import Lenis from
+  "./vendor/lenis.mjs"` (that file has a `default` export), GSAP +
+  ScrollTrigger consumed as globals from the defer scripts in base.html. All
+  features degrade without GSAP / with reduced motion / on touch. Differences
+  from the `new/` inline script: (a) no `lucide.createIcons()` (local sprite,
+  D3); (b) nav "active" state is **path-based** (`location.pathname` vs each
+  `.nav-link` href), re-synced on `htmx:pushedIntoHistory`/`afterSettle` —
+  the v1 section scroll-spy is dropped because nav items are real page URLs;
+  (c) the hero WebGL-fallback timer lives in hero-scene.js (T11) which owns
+  the `window.__hero3d` flag; (d) toast is also exposed as
+  `window.pixoriaToast(msg)` and announced automatically after
+  `htmx:afterSettle` when the swapped content contains a `[data-toast="…"]`
+  element — the lead form success template (T24) and contact form (T30) use
+  that attribute; (e) Esc closes the mobile menu; sliders/media cards guard
+  against missing sub-elements so partials can render without them.
 
 ## Tasks
 
@@ -276,7 +291,7 @@ but are out of scope for this migration order (home/about/contact/404 only).
 
 ### Phase 2 — shared JS + static assets
 
-- [ ] T10 — Port the `new/` page script into `static/js/pixoria.js` (Lenis,
+- [x] T10 — Port the `new/` page script into `static/js/pixoria.js` (Lenis,
   reveal, counters, magnetic, tilt, float, scrollspy, menu, FAQ, portfolio
   filter, testimonial slider, toast) |
   files: `static/js/pixoria.js` | commit: "feat(js): add shared pixoria interaction layer"
@@ -364,8 +379,6 @@ but are out of scope for this migration order (home/about/contact/404 only).
 
 ## Current status
 
-T01–T09 done — Phase 1 (base.html) complete. Next: T10 (port the new design's
-page script into `static/js/pixoria.js`). Verified after the base rewrite:
-`, /about/ /contact/ /services/ /portfolio/ /blog/` all return 200 with the
-new header/footer/CTA/toast, and the custom 404 handler renders against the
-new base. Not-yet-converted page bodies render unstyled (expected per D1).
+T01–T10 done — Phase 1 (base.html) + the interaction layer complete. Next:
+T11 (hero Three.js scene as a lazy, disposable module). pixoria.js verified
+with `node --check` (valid ESM, lenis default import resolves).
