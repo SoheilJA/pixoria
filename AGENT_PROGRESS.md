@@ -359,6 +359,30 @@ but are out of scope for this migration order (home/about/contact/404 only).
   `card.querySelector("[data-v-play]")` etc. `input.css`'s `#a-play` icon rules
   became `.play-btn` class rules for the same reason. A new `fa_duration`
   filter (`apps/core/templatetags/fa_digits.py`) formats seconds as «۰:۴۸».
+- **D25 — T25 seed copy + the one-time alignment that has to run with it.**
+  The seed now carries the v2 copy for every section whose prose the design
+  rewrites: `HeaderSettings.cta_text` «مشاوره رایگان» (matches the header
+  pill), `CTASection` (eyebrow «برند شما، امضای ما»), `LatestArticlesSection`
+  (eyebrow «مجلهٔ پیکسوریا»), `ContactSection` (eyebrow «شروع همکاری»), and the
+  stats / tech / why / process / FAQ blocks (v2 icons, labels, questions — the
+  v1 `subtitle`/`level`/`category`/`description` values v2 never renders are
+  seeded empty). Two collection cleanups follow the D21 pattern: `TechSkill`
+  and `FaqItem` rows whose name/question is not in the v2 list are deleted, so
+  re-seeding an old v1 DB converges instead of accumulating duplicates
+  (verified: 5 v1 FAQ rows → 6 v2 rows; a second run adds and deletes
+  nothing). But `first_or_create` cannot update singletons that already
+  exist, so the four section singletons + the header CTA + the empty
+  `SiteSettings` chrome fields (`tagline`, `mega_*`, `trust_*`, `website`)
+  were nudged in place once with a throwaway script, exactly like the D22/D23
+  one-shots. **GOTCHA from this task:** `SiteSettings` held the user's *real*
+  content (footer description, street address, established year, socials
+  pointing at their own project), not seed placeholders, so a blanket
+  alignment clobbered three fields and created four duplicate `SocialLink`
+  rows; they were restored and the duplicates deleted. Rule going forward:
+  dump `SiteSettings` first and only write fields that are empty or match a
+  known seed value — never overwrite a field that already holds data. Also
+  `ALLOWED_HOSTS` excludes `testserver`, so `Client().get("/")` returns 400
+  inside `manage.py shell`; use `Client(HTTP_HOST="localhost")`.
 
 ## Tasks
 
@@ -466,7 +490,7 @@ but are out of scope for this migration order (home/about/contact/404 only).
   files: `templates/home/sections/_contact.html`, `_lead_form.html`,
   `_lead_success.html`, `static/src/input.css` (`.field` + `.field-err`) |
   commit: "feat(home): restyle lead form to v2"
-- [ ] T25 — Update `seed_home_content` with the new Persian copy from `new/` |
+- [x] T25 — Update `seed_home_content` with the new Persian copy from `new/` |
   files: `apps/home/management/commands/seed_home_content.py` | commit: "feat(home): seed v2 persian content"
 
 ### Phase 5 — 404 page
@@ -612,3 +636,26 @@ inline `<style>` into `static/src/input.css` (it will be reused by T30).
 Verified end-to-end with the Django test client: home 200, valid POST → success
 card + `data-toast`, invalid POST → errors + `.invalid` + repopulated values,
 honeypot → success card, 6th POST → rate-limit notice.
+
+T25 done. Next: T26 (`templates/404.html` in v2 style). `seed_home_content`
+now seeds the design's Persian copy everywhere: stats (eyebrow «دستاوردها»,
+«پیکسوریا [[در یک نگاه]]» + the four icon counters ۱۵/۵۰۰+/۹۸٪/۲۴/۷), tech
+(«ابزارها و فناوری‌ها» + the twelve tools with their Lucide icons in the two
+marquee rows), why («شش دلیل برای [[انتخاب ما]]» + the six reason cards),
+process («از ایده تا [[تحویل]] در پنج گام» + the five GPS steps), faq
+(«پرسش‌های متداول» + the design's six Q&A), blog header («مجلهٔ پیکسوریا» /
+«آخرین [[نوشته‌ها]]»), lead form («شروع همکاری» / «بیایید [[برندِ شما]] را
+ماندگار کنیم»), CTA («برند شما، امضای ما») and the header pill
+«مشاوره رایگان». The v1 `subtitle`/`level`/`category` copy v2 never renders
+is seeded empty. Because `first_or_create` will not touch rows that already
+exist, the four section singletons + the header CTA + the empty `SiteSettings`
+chrome fields (tagline, mega banner, trust cards, website) were nudged in
+place once with a throwaway script (D25, D22/D23 precedent); the DB's real
+user content (CTA phone/email, footer description, address, established year,
+the user's own socials) was left untouched after an accidental overwrite was
+reverted. `TechSkill`/`FaqItem` cleanups follow D21, so re-running the seed on
+the old v1 DB converges instead of duplicating (5 v1 FAQ rows → 6 v2 rows, and
+a second run is a pure no-op). Verified: `manage.py check` and
+`makemigrations --check` clean, home renders 200 with every v2 string
+present, and the seed is idempotent (FAQ 6 / tech 12 / stats 4 / why 6 /
+process 5).
