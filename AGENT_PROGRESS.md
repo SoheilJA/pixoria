@@ -201,6 +201,15 @@ but are out of scope for this migration order (home/about/contact/404 only).
   `highlight` filter, so `[[ ]]` markers work), `.mega_description`,
   `.mega_cta_text` (default «مشاهده همه خدمات», links to `services:list`);
   the banner block is skipped entirely when `mega_title` is empty.
+- **D13 — Footer partial wiring (T07).** Brand column: logo/wordmark +
+  `tagline` + `footer_description` + «از سال {established_year}», contact list
+  from `phone`/`phone_secondary`/`email`/`website`, socials as `.soc` buttons
+  (`SocialLink.icon`). Link columns come from `footer_groups`
+  (`FooterLinkGroup` → `FooterLink`, active-only, prefetched by the context
+  processor), services from `services_footer`, trust cards from the
+  `trust_*` SiteSettings fields. Every column is `{% if %}`-guarded, so an
+  empty DB renders a valid (sparse) footer. The footer owns `id="contact"` —
+  the home lead-form section (T24) must use a different anchor id.
 
 ## Tasks
 
@@ -224,7 +233,7 @@ but are out of scope for this migration order (home/about/contact/404 only).
   files: `templates/partials/_header.html`, `apps/core/models.py`,
   `apps/core/migrations/0008_*`, `apps/core/admin.py`,
   `apps/core/templatetags/fa_digits.py` | commit: "feat(base): add v2 header partial with db mega menu"
-- [ ] T07 — Create footer partial (contact, quick links, services, enamad) |
+- [x] T07 — Create footer partial (contact, quick links, services, enamad) |
   files: `templates/partials/_footer.html` | commit: "feat(base): add v2 footer partial"
 - [ ] T08 — Create pre-footer CTA partial in new pill style |
   files: `templates/partials/_cta.html` | commit: "feat(base): add v2 cta partial"
@@ -324,9 +333,10 @@ but are out of scope for this migration order (home/about/contact/404 only).
 
 ## Current status
 
-T01–T06 done (v2 tokens, fonts, highlight filter, chrome models, icon sprite,
-header partial). Next: T07 (footer partial). The header partial is not yet
-included anywhere — `base.html` still holds the old inline header; T09 wires
-the partials in. Verified by rendering `partials/_header.html` with the live
-DB (6 nav links, 4 mega cards, 10 mobile links) and with an empty context
-(no exceptions, mega menu hidden).
+T01–T07 done (v2 tokens, fonts, highlight filter, chrome models, icon sprite,
+header partial, footer partial). Next: T08 (pre-footer CTA partial). Partials
+are not yet included anywhere — `base.html` still holds the old inline header
+and footer; T09 wires the partials in. Header verified by rendering with the
+live DB (6 nav links, 4 mega cards, 10 mobile links) and an empty context;
+footer likewise (2 socials, 1 link group + 4 services, trust cards) and with
+an empty context (sparse footer, no exceptions).

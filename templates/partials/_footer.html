@@ -1,0 +1,159 @@
+{% load icon_tags nav_tags fa_digits %}
+{# فوتر — برند و تماس، ستون‌های لینک (FooterLinkGroup)، خدمات،
+   کارت‌های اعتماد (اینماد/ساماندهی). همهٔ محتوا از دیتابیس می‌آید. #}
+<footer id="contact" class="relative overflow-hidden bg-ink3">
+  <svg
+    class="divider divider-tall"
+    viewBox="0 0 1440 120"
+    preserveAspectRatio="none"
+    aria-hidden="true"
+  >
+    <path
+      d="M0,78 C240,118 480,34 760,64 C1040,94 1240,26 1440,60 L1440,0 L0,0 Z"
+      fill="#121214"
+    />
+  </svg>
+  <div
+    class="pixel-bg pointer-events-none absolute inset-0 opacity-20"
+    aria-hidden="true"
+  ></div>
+
+  <div class="relative z-10 mx-auto max-w-7xl px-6 pb-10 pt-36 md:pt-44">
+    <div class="grid gap-14 lg:grid-cols-12">
+      {# برند و اطلاعات تماس #}
+      <div class="lg:col-span-4" data-reveal="up">
+        <div class="flex items-center gap-3">
+          {% if settings.logo %}
+            <img src="{{ settings.logo.url }}" alt="{{ settings.site_name }}" class="h-9 w-auto" />
+          {% else %}
+            <span class="logo-mark" aria-hidden="true"><span>پ</span></span>
+            <span class="flex flex-col leading-none">
+              <span class="text-2xl font-extrabold">{{ settings.site_name }}</span>
+              <span class="font-latin text-[9px] tracking-[.4em] text-gold/90">PIXORIA</span>
+            </span>
+          {% endif %}
+        </div>
+        {% if settings.tagline or settings.footer_description or settings.established_year %}
+          <p class="mt-5 max-w-xs font-light leading-8 text-cream/60">
+            {% if settings.tagline %}{{ settings.tagline }}<br />{% endif %}
+            {{ settings.footer_description }}
+            {% if settings.established_year %}<br />از سال {{ settings.established_year }}{% endif %}
+          </p>
+        {% endif %}
+        {% if settings.phone or settings.phone_secondary or settings.email or settings.website %}
+          <ul class="mt-8 space-y-4 text-sm text-cream/70">
+            {% if settings.phone %}
+              <li>
+                <a href="tel:{{ settings.phone }}" class="flex items-center gap-3 transition hover:text-gold-light">
+                  {% icon "phone" class="h-4 w-4 text-gold" %}
+                  <span class="fa-num">{{ settings.phone }}</span>
+                </a>
+              </li>
+            {% endif %}
+            {% if settings.phone_secondary %}
+              <li>
+                <a href="tel:{{ settings.phone_secondary }}" class="flex items-center gap-3 transition hover:text-gold-light">
+                  {% icon "smartphone" class="h-4 w-4 text-gold" %}
+                  <span class="fa-num">{{ settings.phone_secondary }}</span>
+                </a>
+              </li>
+            {% endif %}
+            {% if settings.email %}
+              <li>
+                <a href="mailto:{{ settings.email }}" class="flex items-center gap-3 transition hover:text-gold-light">
+                  {% icon "mail" class="h-4 w-4 text-gold" %}
+                  <span dir="ltr" class="font-latin tracking-wide">{{ settings.email }}</span>
+                </a>
+              </li>
+            {% endif %}
+            {% if settings.website %}
+              <li>
+                <a href="{{ settings.website }}" class="flex items-center gap-3 transition hover:text-gold-light">
+                  {% icon "globe" class="h-4 w-4 text-gold" %}
+                  <span dir="ltr" class="font-latin tracking-wide">{{ settings.website|cut:"https://"|cut:"http://" }}</span>
+                </a>
+              </li>
+            {% endif %}
+          </ul>
+        {% endif %}
+        {% if socials %}
+          <div class="mt-8 flex gap-3">
+            {% for social in socials %}
+              <a href="{{ social.url }}" class="soc" target="_blank" rel="noopener" aria-label="{{ social.name }}">
+                {% icon social.icon|default:"globe" class="h-4.5 w-4.5" %}
+              </a>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+
+      {# ستون‌های لینک دلخواه (از پنل ادمین) #}
+      {% for group in footer_groups %}
+        <nav class="lg:col-span-2" aria-label="{{ group.title }}" data-reveal="up" data-delay="0.1">
+          <h3 class="footer-h">{{ group.title }}</h3>
+          <ul class="space-y-3.5 text-sm">
+            {% for link in group.links.all %}
+              <li><a class="f-link" href="{% nav_url link.url %}">{{ link.title }}</a></li>
+            {% endfor %}
+          </ul>
+        </nav>
+      {% endfor %}
+
+      {# خدمات #}
+      {% if services_footer %}
+        <nav class="lg:col-span-3" aria-label="خدمات" data-reveal="up" data-delay="0.16">
+          <h3 class="footer-h">خدمات</h3>
+          <ul class="space-y-3.5 text-sm">
+            {% for service in services_footer %}
+              <li><a class="f-link" href="{% url 'services:detail' service.slug %}">{{ service.title }}</a></li>
+            {% endfor %}
+          </ul>
+        </nav>
+      {% endif %}
+
+      {# اعتماد و امنیت (جایگاه اینماد و ساماندهی) #}
+      {% if settings.trust_first_title or settings.trust_second_title %}
+        <div class="lg:col-span-3" data-reveal="left" data-delay="0.2">
+          <h3 class="footer-h">اعتماد و امنیت</h3>
+          <div class="mt-4 grid grid-cols-2 gap-4">
+            {% if settings.trust_first_title %}
+              <div
+                class="enamad-card group flex flex-col items-center justify-center gap-2 px-4 py-6 text-center"
+              >
+                {% icon "shield-check" class="h-7 w-7 text-gold-light transition-transform duration-500 group-hover:scale-110" %}
+                <span class="text-sm font-bold text-cream/85">{{ settings.trust_first_title }}</span>
+                {% if settings.trust_first_subtitle %}
+                  <span class="text-[10px] text-cream/40">{{ settings.trust_first_subtitle }}</span>
+                {% endif %}
+              </div>
+            {% endif %}
+            {% if settings.trust_second_title %}
+              <div
+                class="enamad-card group flex flex-col items-center justify-center gap-2 px-4 py-6 text-center"
+              >
+                {% icon "badge-check" class="h-7 w-7 text-gold-light transition-transform duration-500 group-hover:scale-110" %}
+                <span class="text-sm font-bold text-cream/85">{{ settings.trust_second_title }}</span>
+                {% if settings.trust_second_subtitle %}
+                  <span class="text-[10px] text-cream/40">{{ settings.trust_second_subtitle }}</span>
+                {% endif %}
+              </div>
+            {% endif %}
+          </div>
+          {% if settings.trust_note %}
+            <p class="mt-4 text-xs leading-6 text-cream/40">{{ settings.trust_note }}</p>
+          {% endif %}
+        </div>
+      {% endif %}
+    </div>
+
+    {# کپی‌رایت #}
+    <div
+      class="mt-16 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-8 text-xs text-cream/40 md:flex-row"
+    >
+      <p>© {{ settings.site_name }} — تمامی حقوق محفوظ است.</p>
+      <p class="font-latin tracking-[.3em] text-cream/30">
+        PIXORIA — DESIGN &amp; DEVELOPMENT STUDIO
+      </p>
+    </div>
+  </div>
+</footer>
