@@ -116,6 +116,7 @@ class Command(BaseCommand):
         self.seed_faq()
         self.seed_contact()
         self.seed_home_sections()
+        self.seed_services()
         self.seed_site()
         self.stdout.write(self.style.SUCCESS("محتوای پیش‌فرض پیکسوریا آماده شد."))
 
@@ -560,6 +561,46 @@ class Command(BaseCommand):
             created += int(c)
         if created:
             self.stdout.write(f"  + {created} بخش صفحه اصلی")
+
+    # ── Services: تصویرسازی و برچسب کارت‌های v2 ──
+    def seed_services(self):
+        from apps.services.models import Service
+
+        v2 = {
+            "طراحی سایت": dict(
+                icon="monitor-smartphone", visual="browser", card_span="wide",
+                chips="واکنش‌گرا، سئو-friendly، پشتیبانی مستمر",
+                badge="۹۹/۱۰۰ · Core Web Vitals",
+            ),
+            "برنامه‌نویسی": dict(
+                icon="code-xml", visual="terminal", card_span="narrow",
+                chips="", badge="CI/CD خودکار",
+            ),
+            "خدمات گرافیکی": dict(
+                icon="palette", visual="palette", card_span="narrow",
+                chips="", badge="",
+            ),
+            "طراحی لوگو": dict(
+                icon="diamond", visual="diamond", card_span="wide",
+                chips="کنسپت اختصاصی، فایل وکتور، راهنمای برند",
+                badge="هویت بصری",
+            ),
+        }
+        updated = 0
+        for title, fields in v2.items():
+            service = Service.objects.filter(title=title).first()
+            if service is None:
+                continue
+            changed = False
+            for key, value in fields.items():
+                if getattr(service, key) != value:
+                    setattr(service, key, value)
+                    changed = True
+            if changed:
+                service.save()
+                updated += 1
+        if updated:
+            self.stdout.write(f"  ~ {updated} خدمت به طرح v2 به‌روز شد")
 
     # ── Site settings + socials (only when the table is empty) ──
     def seed_site(self):

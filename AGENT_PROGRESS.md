@@ -401,8 +401,11 @@ but are out of scope for this migration order (home/about/contact/404 only).
   HomeAboutStat copy, TrustedSection/TestimonialSection/FeaturedWork/
   Services eyebrows, v2 client marquee marks) |
   commit: "feat(home): add about section"
-- [ ] T17 — Convert `_services.html` (4 bespoke service cards) |
-  files: `templates/home/sections/_services.html` | commit: "feat(home): convert services section to v2"
+- [x] T17 — Convert `_services.html` (4 bespoke service cards) |
+  files: `templates/home/sections/_services.html`,
+  `apps/home/management/commands/seed_home_content.py` (`seed_services`
+  applies v2 visual/card_span/chips/badge per service) |
+  commit: "feat(home): convert services section to v2"
 - [ ] T18 — Convert clients → `_trusted.html` (brand plates marquee) |
   files: `templates/home/sections/_trusted.html` | commit: "feat(home): convert clients to trusted marquee"
 - [ ] T19 — Convert works → `_portfolio.html` (filterable grid) |
@@ -463,10 +466,12 @@ but are out of scope for this migration order (home/about/contact/404 only).
 
 ## Current status
 
-T01–T16 done. Next: T17 (convert `_services.html`). About section v2
-renders: DB-driven eyebrow/title (`highlight:"dark"` variant), two
-paragraphs, csv chips, `established_year` watermark, glass panel with
-`settings.address` figcaption, and four `HomeAboutStat` counters using
-`data-counter` (pixoria.js animates them, fa-IR digits). Seed also ships
-TrustedSection, TestimonialSection and the v2 client marquee (mark +
-accent per brand).
+T01–T17 done. Next: T18 (clients → `_trusted.html`). Services v2
+renders all four bespoke cards from `Service.visual`: browser mock,
+terminal (animated build bar), palette + poster, diamond guide grid —
+each driven by `card_span` (7/5 columns), `chips`, `badge`, `icon`, and
+linking to `services:detail` with the slug. `visual=none` renders a
+plain card so non-visual services still work. Seed's new
+`seed_services()` applies the v2 card fields to the four existing
+services; the pre-existing `ServicesSection` row was migrated to the v2
+copy in place (eyebrow + «از ایده تا اجرا، [[زیر یک سقف]]»).

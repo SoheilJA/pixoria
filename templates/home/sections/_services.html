@@ -1,20 +1,252 @@
-{# خدمات — گرید کارت‌ها #}
-{# داده‌ها: services_section، services_with_delay #}
-<section class="relative overflow-hidden px-page py-[clamp(64px,11vw,120px)] text-ink"
-         aria-labelledby="services-head"
-         data-bg-intensity="0.9" data-bg-glow="0.9" data-bg-swirl="1.0" data-bg-hue="0.18">
+{% load icon_tags highlight_tags nav_tags fa_digits %}
+{# خدمات v2 — چهار کارت اختصاصی با تصویرسازی مختص هر خدمت #}
+{# داده‌ها: services_section (ServicesSection)، services (Service[]) #}
+{# هر خدمت: visual (browser/terminal/palette/diamond/none)، card_span، chips، badge #}
+{% if services %}
+  <section id="services" class="relative overflow-hidden bg-ink2">
+    <svg class="divider divider-flip" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0,26 C260,84 520,82 760,44 C1000,6 1240,80 1440,30 L1440,0 L0,0 Z" fill="#f5f3ee" />
+    </svg>
+    <div class="grid-bg pointer-events-none absolute inset-0 opacity-30" aria-hidden="true"></div>
 
-  <div class="relative mb-16 max-w-[880px]" data-reveal="fade-up">
-    <span class="eyebrow mb-6 inline-block">حوزه‌های کاری<span class="ml-2 inline-block h-1.5 w-1.5 rounded-full bg-lime align-[2px]"></span></span>
-    <h2 id="services-head" class="mb-[18px]">{{ services_section.title|safe }}</h2>
-    <p class="m-0 max-w-[60ch] text-[1.15rem] leading-[1.5] text-ink-soft">{{ services_section.description|safe }}</p>
-  </div>
+    <div class="relative z-10 mx-auto max-w-7xl px-6 pb-28 pt-36 md:pt-44">
+      <div class="grid items-end gap-8 lg:grid-cols-12">
+        <div class="lg:col-span-7">
+          {% if services_section.eyebrow %}
+            <p class="eyebrow" data-reveal="up">{{ services_section.eyebrow }}</p>
+          {% endif %}
+          {% if services_section.title %}
+            <h2 class="mt-5 text-4xl font-extrabold leading-[1.3] md:text-[2.7rem]" data-reveal="right">
+              {{ services_section.title|highlight }}
+            </h2>
+          {% endif %}
+        </div>
+        {% if services_section.description %}
+          <p class="font-light leading-8 text-cream/60 lg:col-span-5" data-reveal="left">
+            {{ services_section.description }}
+          </p>
+        {% endif %}
+      </div>
 
-  <div class="relative grid grid-cols-1 gap-px overflow-hidden rounded-md border border-line-strong bg-line-strong sm:grid-cols-2 xl:grid-cols-3">
-    {% for item in services_with_delay %}
-      {% include 'components/cards/service_card.html' with service=item.service %}
-    {% empty %}
-      <p class="col-span-full py-8 text-mist">خدمتی ثبت نشده است.</p>
-    {% endfor %}
-  </div>
-</section>
+      <div class="mt-16 grid gap-6 lg:grid-cols-12">
+        {% for service in services %}
+          <article class="svc-card glass tilt group relative flex flex-col overflow-hidden {% if service.card_span == 'wide' %}lg:col-span-7 p-9{% else %}lg:col-span-5 p-9{% endif %}"
+                   style="{% if service.card_span == 'wide' %}border-radius: 1.1rem 2.5rem 1.1rem 2.5rem{% else %}border-radius: 2.5rem 1.1rem 2.5rem 1.1rem{% endif %}"
+                   data-reveal="{% if service.card_span == 'wide' %}left{% else %}up{% endif %}">
+            <span class="glare" aria-hidden="true"></span>
+            <span class="ghost-num{% if service.card_span == 'wide' %} ghost-num-r{% endif %}" aria-hidden="true">
+              {{ forloop.counter|stringformat:"02d"|fa_digits }}
+            </span>
+
+            {% if service.visual == 'browser' %}
+              <div class="relative z-10 grid flex-1 lg:grid-cols-2">
+                <div class="flex flex-col">
+                  <div class="flex items-center gap-3">
+                    <span class="svc-icon">{% icon service.icon class="h-5 w-5" %}</span>
+                    <h3 class="text-2xl font-bold">{{ service.title }}</h3>
+                  </div>
+                  <p class="mt-4 font-light leading-8 text-cream/65">{{ service.excerpt }}</p>
+                  {% if service.chips %}
+                    <div class="mt-5 flex flex-wrap gap-2.5">
+                      {% for chip in service.get_chips_list %}
+                        <span class="s-chip">{{ chip }}</span>
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+                  <a class="more-link mt-auto pt-7" href="{% url 'services:detail' service.slug %}">
+                    بیشتر بدانید {% icon "arrow-left" class="h-4 w-4" %}
+                  </a>
+                </div>
+                {# ماکت مرورگر #}
+                <div class="relative flex items-center p-6 md:p-10">
+                  <div class="svc-browser relative w-full overflow-hidden border border-white/[.08] bg-ink/60 shadow-2xl" style="border-radius: 1rem 1rem 0.6rem 0.6rem">
+                    <div class="flex items-center gap-2 border-b border-white/[.06] px-4 py-3">
+                      <span class="h-2.5 w-2.5 rounded-full bg-gold/50"></span>
+                      <span class="h-2.5 w-2.5 rounded-full bg-cream/20"></span>
+                      <span class="h-2.5 w-2.5 rounded-full bg-royal/50"></span>
+                      <span class="mr-3 flex-1 truncate rounded-full bg-white/[.05] px-3 py-1 text-left font-latin text-[9px] text-cream/40">pixoria.ir</span>
+                    </div>
+                    <div class="relative grid-bg p-5">
+                      <div class="svc-scan absolute inset-x-0 top-0 h-24"></div>
+                      <div class="h-16 rounded-lg bg-gradient-to-l from-gold/25 to-transparent"></div>
+                      <div class="mt-3 grid grid-cols-3 gap-2.5">
+                        <div class="h-10 rounded-md bg-white/[.06] transition-colors duration-700 group-hover:bg-gold/15"></div>
+                        <div class="h-10 rounded-md bg-white/[.06] transition-colors duration-700 group-hover:bg-gold/15"></div>
+                        <div class="h-10 rounded-md bg-white/[.06] transition-colors duration-700 group-hover:bg-gold/15"></div>
+                      </div>
+                      <div class="mt-2.5 space-y-2">
+                        <div class="h-2 w-3/4 rounded-full bg-white/[.07]"></div>
+                        <div class="h-2 w-1/2 rounded-full bg-white/[.05]"></div>
+                      </div>
+                    </div>
+                  </div>
+                  {% if service.badge %}
+                    <span data-float="10" class="glass absolute -top-2 right-2 rounded-full px-3 py-1.5 text-[11px] text-gold-light md:right-8">{{ service.badge }}</span>
+                  {% endif %}
+                </div>
+              </div>
+
+            {% elif service.visual == 'terminal' %}
+              <div class="relative z-10 flex items-center gap-3">
+                <span class="svc-icon">{% icon service.icon class="h-5 w-5" %}</span>
+                <h3 class="text-2xl font-bold">{{ service.title }}</h3>
+              </div>
+              <p class="relative z-10 mt-4 font-light leading-8 text-cream/65">{{ service.excerpt }}</p>
+              {# ترمینال #}
+              <div class="relative z-10 mt-7 flex flex-1 flex-col">
+                <div class="svc-terminal relative flex flex-1 flex-col overflow-hidden border border-white/[.08] bg-ink3/80" style="border-radius: 0.85rem; min-height: 13rem">
+                  <div class="flex flex-none items-center justify-between border-b border-white/[.06] px-4 py-2.5">
+                    <span class="font-latin text-[9px] tracking-[.2em] text-cream/40">BASH</span>
+                    <div class="flex gap-1.5">
+                      <span class="h-2 w-2 rounded-full bg-gold/50"></span>
+                      <span class="h-2 w-2 rounded-full bg-cream/15"></span>
+                      <span class="h-2 w-2 rounded-full bg-royal/50"></span>
+                    </div>
+                  </div>
+                  <div class="flex flex-1 flex-col p-4 font-latin text-[10.5px] leading-relaxed" dir="ltr">
+                    <p class="text-cream/45"><span class="text-gold-light">$</span> pixoria build --prod</p>
+                    <p class="mt-1.5 text-cream/55"><span class="text-royal">✓</span> compiling modules <span class="text-cream/30">… ۱۲۴ فایل</span></p>
+                    <p class="mt-1 text-cream/55"><span class="text-royal">✓</span> running test suite <span class="text-gold/70">۸۱۲ passed</span></p>
+                    <p class="mt-1 text-cream/55"><span class="text-royal">✓</span> deploying to edge <span class="cursor-blink">▋</span></p>
+                    <div class="mt-auto pt-3.5">
+                      <div class="h-1 overflow-hidden rounded-full bg-white/[.08]">
+                        <span class="svc-build-bar block h-full w-0 rounded-full bg-gradient-to-l from-gold-light to-gold"></span>
+                      </div>
+                      <p class="mt-2 text-[9px] text-cream/35" data-build-pct>۰٪</p>
+                    </div>
+                  </div>
+                </div>
+                {% if service.badge %}
+                  <span data-float="8" class="glass absolute -bottom-3 left-6 rounded-full px-3 py-1.5 text-[11px] text-gold-light">{{ service.badge }}</span>
+                {% endif %}
+              </div>
+              <a class="more-link relative z-10 mt-7" href="{% url 'services:detail' service.slug %}">
+                بیشتر بدانید {% icon "arrow-left" class="h-4 w-4" %}
+              </a>
+
+            {% elif service.visual == 'palette' %}
+              <div class="flex items-center gap-3">
+                <span class="svc-icon">{% icon service.icon class="h-5 w-5" %}</span>
+                <h3 class="text-2xl font-bold">{{ service.title }}</h3>
+              </div>
+              <p class="mt-4 font-light leading-8 text-cream/65">{{ service.excerpt }}</p>
+              {# پالت رنگی متحرک + پوستر #}
+              <div class="relative mt-7 flex flex-1 items-center gap-5">
+                <div class="svc-palette relative h-32 w-32 shrink-0">
+                  <span class="svc-palette-ring absolute inset-0 rounded-full">
+                    <span class="absolute left-1/2 top-0 h-5 w-5 -translate-x-1/2 rounded-full bg-gold-light shadow-[0_0_14px_rgba(232,196,122,0.8)]"></span>
+                    <span class="svc-palette-dot absolute right-1 top-1/3 h-4 w-4 rounded-full bg-royal shadow-[0_0_14px_rgba(46,99,255,0.8)]"></span>
+                    <span class="svc-palette-dot absolute bottom-2 right-1/4 h-4 w-4 rounded-full bg-cream shadow-[0_0_14px_rgba(245,243,238,0.6)]"></span>
+                    <span class="svc-palette-dot absolute bottom-2 left-1/4 h-4 w-4 rounded-full bg-gold-dark shadow-[0_0_14px_rgba(143,107,44,0.8)]"></span>
+                  </span>
+                  <span class="absolute inset-[34%] rounded-full bg-ink2 ring-1 ring-gold/25"></span>
+                </div>
+                {# پوستری زنده با CSS خالص #}
+                <div class="svc-poster relative aspect-[16/11] flex-1 overflow-hidden border border-white/[.08] bg-ink/50 transition-transform duration-700 group-hover:scale-[1.03]" style="border-radius: 1rem" aria-hidden="true">
+                  <span class="grid-bg absolute inset-0 opacity-60"></span>
+                  <span class="svc-poster-sun absolute -right-10 -top-12 h-44 w-44 rounded-full" style="background: radial-gradient(circle, rgba(232,196,122,0.55), rgba(201,161,90,0.12) 55%, transparent 72%);"></span>
+                  <span class="svc-poster-disc absolute left-6 top-7 h-24 w-24 rounded-full border-2 border-dashed border-gold/40"></span>
+                  <span class="svc-poster-disc svc-poster-disc-2 absolute left-14 top-14 h-24 w-24 rounded-full border border-royal/30"></span>
+                  <span class="svc-poster-bar absolute bottom-16 right-6 h-2.5 w-24 rounded-full bg-gradient-to-l from-royal/70 to-transparent"></span>
+                  <span class="svc-poster-bar absolute bottom-10 right-6 h-2.5 w-16 rounded-full bg-gold/50"></span>
+                  <span class="svc-poster-type absolute bottom-6 left-6 font-latin text-6xl font-bold text-gold/15">پ</span>
+                  <div class="absolute left-6 top-6 flex gap-1.5" dir="ltr">
+                    <span class="h-4 w-4 rounded-full bg-gold-light/90"></span>
+                    <span class="h-4 w-4 rounded-full bg-royal/90"></span>
+                    <span class="h-4 w-4 rounded-full bg-cream/80"></span>
+                    <span class="h-4 w-4 rounded-full bg-gold-dark/90"></span>
+                  </div>
+                  <div class="absolute inset-x-4 bottom-3">
+                    <div class="h-1 rounded-full bg-white/15">
+                      <span class="block h-full w-2/3 rounded-full bg-gradient-to-l from-gold-light to-gold" aria-hidden="true"></span>
+                    </div>
+                    <p class="mt-2 flex items-center justify-between text-[10px] text-cream/70">
+                      <span>پوستر و هویت بصری</span><span class="fa-num">CMYK آمادهٔ چاپ</span>
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <a class="more-link mt-7" href="{% url 'services:detail' service.slug %}">
+                بیشتر بدانید {% icon "arrow-left" class="h-4 w-4" %}
+              </a>
+
+            {% elif service.visual == 'diamond' %}
+              <div class="relative z-10 grid flex-1 lg:grid-cols-2">
+                <div class="relative flex items-center justify-center p-8 md:p-12">
+                  <div class="svc-diamond relative grid aspect-square w-full max-w-xs place-items-center overflow-hidden border border-white/[.07] bg-ink/40" style="border-radius: 1.5rem">
+                    <span class="grid-bg absolute inset-0 opacity-70"></span>
+                    <svg viewBox="0 0 220 220" class="absolute inset-0 h-full w-full" fill="none" aria-hidden="true">
+                      <defs>
+                        <linearGradient id="gld-{{ forloop.counter }}" x1="0" y1="0" x2="1" y2="1">
+                          <stop offset="0" stop-color="#e8c47a" />
+                          <stop offset="0.55" stop-color="#c9a15a" />
+                          <stop offset="1" stop-color="#8f6b2c" />
+                        </linearGradient>
+                      </defs>
+                      <g stroke="rgba(232,196,122,.16)" stroke-dasharray="2 6">
+                        <line x1="110" y1="0" x2="110" y2="220" />
+                        <line x1="0" y1="110" x2="220" y2="110" />
+                        <line x1="36" y1="36" x2="184" y2="184" />
+                        <line x1="184" y1="36" x2="36" y2="184" />
+                        <circle cx="110" cy="110" r="96" />
+                        <circle cx="110" cy="110" r="32" />
+                      </g>
+                      <circle class="spin-slow" cx="110" cy="110" r="104" fill="none" stroke="url(#gld-{{ forloop.counter }})" stroke-width="1.5" stroke-dasharray="3 10" opacity=".8" />
+                      <circle class="svc-logo-ring-2" cx="110" cy="110" r="76" fill="none" stroke="url(#gld-{{ forloop.counter }})" stroke-width="1" stroke-dasharray="1 8" opacity=".55" />
+                      <path class="svc-logo-diamond" d="M110 58 L162 110 L110 162 L58 110 Z" fill="none" stroke="url(#gld-{{ forloop.counter }})" stroke-width="2.5" />
+                      <path class="svc-logo-diamond-inner" d="M110 84 L136 110 L110 136 L84 110 Z" fill="url(#gld-{{ forloop.counter }})" opacity=".92" />
+                      <text x="110" y="120" text-anchor="middle" font-size="26" font-weight="700" fill="#0d0d0f">پ</text>
+                    </svg>
+                    {% if service.badge %}
+                      <span data-float="8" class="glass absolute -top-3 right-4 rounded-full px-3 py-1.5 text-[11px] text-gold-light">{{ service.badge }}</span>
+                    {% endif %}
+                    {% if service.get_chips_list %}
+                      <span data-float="10" class="glass absolute -bottom-3 left-6 rounded-full px-3 py-1.5 text-[11px] text-cream/80">
+                        {{ service.get_chips_list|last }}
+                      </span>
+                    {% endif %}
+                  </div>
+                </div>
+                <div class="flex flex-col">
+                  <div class="flex items-center gap-3">
+                    <span class="svc-icon">{% icon service.icon class="h-5 w-5" %}</span>
+                    <h3 class="text-2xl font-bold">{{ service.title }}</h3>
+                  </div>
+                  <p class="mt-4 font-light leading-8 text-cream/65">{{ service.excerpt }}</p>
+                  {% if service.chips %}
+                    <div class="mt-5 flex flex-wrap gap-2.5">
+                      {% for chip in service.get_chips_list %}
+                        <span class="s-chip">{{ chip }}</span>
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+                  <a class="more-link mt-auto pt-7" href="{% url 'services:detail' service.slug %}">
+                    بیشتر بدانید {% icon "arrow-left" class="h-4 w-4" %}
+                  </a>
+                </div>
+              </div>
+
+            {% else %}
+              {# بدون تصویرسازی — کارت ساده #}
+              <div class="relative z-10 flex items-center gap-3">
+                <span class="svc-icon">{% icon service.icon class="h-5 w-5" %}</span>
+                <h3 class="text-2xl font-bold">{{ service.title }}</h3>
+              </div>
+              <p class="relative z-10 mt-4 font-light leading-8 text-cream/65">{{ service.excerpt }}</p>
+              {% if service.chips %}
+                <div class="relative z-10 mt-5 flex flex-wrap gap-2.5">
+                  {% for chip in service.get_chips_list %}
+                    <span class="s-chip">{{ chip }}</span>
+                  {% endfor %}
+                </div>
+              {% endif %}
+              <a class="more-link relative z-10 mt-auto pt-7" href="{% url 'services:detail' service.slug %}">
+                بیشتر بدانید {% icon "arrow-left" class="h-4 w-4" %}
+              </a>
+            {% endif %}
+          </article>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+{% endif %}
