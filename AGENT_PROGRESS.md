@@ -254,6 +254,17 @@ but are out of scope for this migration order (home/about/contact/404 only).
   element — the lead form success template (T24) and contact form (T30) use
   that attribute; (e) Esc closes the mobile menu; sliders/media cards guard
   against missing sub-elements so partials can render without them.
+- **D17 — hero-scene.js (T11).** Faithful port of the `new/` hero module
+  (PMREM-lit env, 3 star layers, crystal planet, rings, moons, scroll-driven
+  `travel`) wrapped in the D8 rules: renderer is only built after `load` +
+  `requestIdleCallback` AND an IntersectionObserver gate (rootMargin 200px);
+  `pixelRatio ≤ 2`; the loop is *paused* (`setAnimationLoop(null)`) rather
+  than skipped when the hero leaves the viewport or the tab is hidden, and
+  resumed on return; full disposal (geometries, materials, textures, PMREM,
+  renderer) on `pagehide`; reduced-motion renders nothing and shows the CSS
+  poster; any exception or a 3.5s boot timeout falls back to
+  `#hero-fallback`. Owns the `window.__hero3d` flag and calls
+  `ScrollTrigger.refresh()` after its late-added triggers are created.
 
 ## Tasks
 
@@ -295,7 +306,7 @@ but are out of scope for this migration order (home/about/contact/404 only).
   reveal, counters, magnetic, tilt, float, scrollspy, menu, FAQ, portfolio
   filter, testimonial slider, toast) |
   files: `static/js/pixoria.js` | commit: "feat(js): add shared pixoria interaction layer"
-- [ ] T11 — Port hero Three.js scene into a lazy, disposable module |
+- [x] T11 — Port hero Three.js scene into a lazy, disposable module |
   files: `static/js/hero-scene.js` | commit: "feat(js): add lazy hero three.js scene"
 
 ### Phase 3 — home page models
@@ -379,6 +390,6 @@ but are out of scope for this migration order (home/about/contact/404 only).
 
 ## Current status
 
-T01–T10 done — Phase 1 (base.html) + the interaction layer complete. Next:
-T11 (hero Three.js scene as a lazy, disposable module). pixoria.js verified
-with `node --check` (valid ESM, lenis default import resolves).
+T01–T11 done — Phases 0–2 complete (foundation, base chrome, interaction +
+hero JS). Next: T12 (extend home models for the new sections). hero-scene.js
+verified with `node --check` (valid ESM, local three.module.js import).
