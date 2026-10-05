@@ -324,6 +324,13 @@ but are out of scope for this migration order (home/about/contact/404 only).
   hardcodes 48/65 and T21 will wire them through `data-*` attributes) and
   `rating` (1–5, default 5). `text` is now blank because video/audio cards
   carry no quote.
+- **D21 — Trusted marquee data (T18).** `seed_home_content.seed_clients()` is
+  authoritative for the client table: brands not in the v2 design are deleted
+  (`exclude(name__in=…)`), missing ones created, existing ones left alone (the
+  file-wide "never overwrite admin edits" rule). This cleaned up 9 stale v1
+  rows (آبانسا، دیجی‌کالا، اسنپ، …). The command also reconfigures
+  `sys.stdout` to UTF-8 in `handle()` because a Windows cp1252 console raises
+  UnicodeEncodeError on the Persian progress messages.
 
 ## Tasks
 
@@ -406,8 +413,9 @@ but are out of scope for this migration order (home/about/contact/404 only).
   `apps/home/management/commands/seed_home_content.py` (`seed_services`
   applies v2 visual/card_span/chips/badge per service) |
   commit: "feat(home): convert services section to v2"
-- [ ] T18 — Convert clients → `_trusted.html` (brand plates marquee) |
-  files: `templates/home/sections/_trusted.html` | commit: "feat(home): convert clients to trusted marquee"
+- [x] T18 — Convert clients → `_trusted.html` (brand plates marquee) |
+  files: `templates/home/sections/_trusted.html` |
+  commit: "feat(home): convert clients to trusted marquee"
 - [ ] T19 — Convert works → `_portfolio.html` (filterable grid) |
   files: `templates/home/sections/_portfolio.html` | commit: "feat(home): convert works to filterable portfolio grid"
 - [ ] T20 — Convert `_why.html`, `_process.html` |
@@ -466,12 +474,15 @@ but are out of scope for this migration order (home/about/contact/404 only).
 
 ## Current status
 
-T01–T17 done. Next: T18 (clients → `_trusted.html`). Services v2
-renders all four bespoke cards from `Service.visual`: browser mock,
-terminal (animated build bar), palette + poster, diamond guide grid —
-each driven by `card_span` (7/5 columns), `chips`, `badge`, `icon`, and
-linking to `services:detail` with the slug. `visual=none` renders a
-plain card so non-visual services still work. Seed's new
-`seed_services()` applies the v2 card fields to the four existing
-services; the pre-existing `ServicesSection` row was migrated to the v2
-copy in place (eyebrow + «از ایده تا اجرا، [[زیر یک سقف]]»).
+T01–T18 done. Next: T19 (works → `_portfolio.html`, filterable grid). The
+trusted section renders the v2 brand-plate marquee from `TrustedSection`
+(eyebrow/title/description/footer_label) + `ClientMarqueeItem` (mark, name,
+accent gold/royal), on `bg-cream2` with rounded top corners over the dark
+services section. `pixoria.js` duplicates `#trusted .marquee-group` children
+in place for the seamless `translateX(-50%)` loop and marks the copies
+`aria-hidden`. The v1 `_clients.html` partial was deleted (the `clients` →
+`trusted` key rename in migration 0010 left it orphaned). The seed's client
+list is now authoritative: it removes brands that are not in the v2 design
+(۹ stale v1 rows dropped on the first re-run) and `seed_home_content`
+reconfigures stdout to UTF-8 so Persian messages print on a Windows cp1252
+console. Home renders 200 with exactly 7 plates (4 gold / 3 royal).

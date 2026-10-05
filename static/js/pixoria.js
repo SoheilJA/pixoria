@@ -651,10 +651,17 @@ function initPortfolioFilter({ hasGsap, REDUCED, faDigits }) {
 function initMarquees() {
   // Each group must be at least as wide as its container, otherwise the loop
   // point shows a gap; duplicate the content once to guarantee the width.
+  // The copies are decorative — hide them from the accessibility tree.
   document
     .querySelectorAll("#tech .marquee-group, #trusted .marquee-group")
     .forEach((g) => {
-      g.append(...[...g.children].map((c) => c.cloneNode(true)));
+      g.append(
+        ...[...g.children].map((c) => {
+          const clone = c.cloneNode(true);
+          clone.setAttribute("aria-hidden", "true");
+          return clone;
+        }),
+      );
     });
 }
 

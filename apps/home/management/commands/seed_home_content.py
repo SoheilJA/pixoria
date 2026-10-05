@@ -8,6 +8,8 @@ Idempotent: existing rows are left alone, so it is safe to re-run after adding
 new sections. Content is Persian only — no lorem ipsum.
 """
 
+import sys
+
 from django.core.management.base import BaseCommand
 
 from apps.core.models import SiteSettings, SocialLink
@@ -106,6 +108,9 @@ class Command(BaseCommand):
     help = "پر کردن محتوای پیش‌فرض صفحه اصلی و هدر"
 
     def handle(self, *args, **options):
+        # کنسول ویندوز به‌طور پیش‌فرض cp1252 است و روی پیام‌های فارسی خطا می‌دهد.
+        sys.stdout.reconfigure(encoding="utf-8")
+
         self.seed_header()
         self.seed_hero()
         self.seed_sections()
@@ -330,8 +335,14 @@ class Command(BaseCommand):
                     mark=mark, name=name, accent=accent, order=i * 10
                 )
                 added += 1
+        # برندهای v1 که در طرح جدید نیستند از مارکویی حذف می‌شوند.
+        names = {name for _, name, _ in clients}
+        stale = ClientMarqueeItem.objects.exclude(name__in=names)
+        removed = stale.delete()[0]
         if added:
             self.stdout.write(f"  + {added} برند همکار")
+        if removed:
+            self.stdout.write(f"  - {removed} برند قدیمی حذف شد")
 
     # ── Stats / counters ──
     def seed_stats(self):
