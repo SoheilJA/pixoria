@@ -1,11 +1,12 @@
-{# فرم تماس سریع — حالت فرم (بار اول و بعد از خطای اعتبارسنجی) #}
-{# داده‌ها: contact_section، contact_services، errors، form_data، rate_limited #}
 {% load icon_tags %}
-<div id="lead-form" class="flex flex-col gap-5">
+{# فرم تماس سریع v2 — حالت فرم (بار اول و بعد از خطای اعتبارسنجی) #}
+{# داده‌ها: contact_section، contact_services، errors، form_data، rate_limited #}
+{# لیبل‌های شناور: input یا placeholder پر می‌شود یا .static (select) #}
+<div id="lead-form" class="flex flex-col gap-6">
 
   {% if rate_limited %}
-    <div class="flex items-start gap-3 rounded-md border border-warn/40 bg-warn/10 p-4 text-[0.92rem] text-ink-soft" role="alert">
-      {% icon "alert-triangle" class="mt-0.5 h-5 w-5 shrink-0 text-warn" %}
+    <div class="flex items-start gap-3 rounded-[1rem] border border-[rgba(192,57,43,0.4)] bg-[rgba(192,57,43,0.07)] p-4 text-[0.92rem] text-[#a83a2b]" role="alert">
+      {% icon "alert-triangle" class="mt-0.5 h-5 w-5 shrink-0" %}
       <span>تعداد درخواست‌های شما از حد مجاز عبور کرده است. کمی بعد دوباره تلاش کنید یا مستقیم با ما تماس بگیرید.</span>
     </div>
   {% endif %}
@@ -14,7 +15,7 @@
         hx-target="#lead-form"
         hx-swap="outerHTML"
         hx-disabled-elt="#lead-submit"
-        class="flex flex-col gap-4"
+        class="flex flex-col gap-6"
         novalidate>
     {% csrf_token %}
 
@@ -24,62 +25,62 @@
       <input type="text" id="lead-website" name="company_website" tabindex="-1" autocomplete="off">
     </div>
 
-    <div class="flex flex-col gap-2">
-      <label for="lead-name" class="font-mono text-[0.8rem] text-ink">نام و نام خانوادگی</label>
-      <input type="text" id="lead-name" name="name" required value="{{ form_data.name }}"
-             placeholder="مثلاً علی رضایی"
-             class="w-full rounded-md border bg-night px-4 py-3 font-sans text-[0.95rem] text-ink placeholder:text-ink-dim transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-lime/40
-                    {% if errors.name %}border-warn{% else %}border-line-strong{% endif %}"
-             {% if errors.name %}aria-invalid="true" aria-describedby="err-name"{% endif %}>
-      {% if errors.name %}
-        <span id="err-name" class="flex items-center gap-1.5 font-mono text-[0.76rem] text-warn">{% icon "alert-circle" class="h-3.5 w-3.5" %}{{ errors.name }}</span>
-      {% endif %}
-    </div>
+    <div class="grid gap-6 md:grid-cols-2">
+      <div>
+        <label class="field {% if errors.name %}invalid{% endif %}">
+          <input type="text" name="name" required value="{{ form_data.name }}" placeholder=" "
+                 autocomplete="name" id="lead-name"
+                 {% if errors.name %}aria-invalid="true" aria-describedby="err-name"{% endif %}>
+          <span>نام و نام خانوادگی</span>
+        </label>
+        {% if errors.name %}
+          <span id="err-name" class="field-err">{% icon "alert-circle" class="h-3.5 w-3.5" %}{{ errors.name }}</span>
+        {% endif %}
+      </div>
 
-    <div class="flex flex-col gap-2">
-      <label for="lead-phone" class="font-mono text-[0.8rem] text-ink">شماره تماس</label>
-      <input type="tel" id="lead-phone" name="phone" required value="{{ form_data.phone }}" inputmode="tel" dir="ltr"
-             placeholder="09xxxxxxxxx"
-             class="w-full rounded-md border bg-night px-4 py-3 font-mono text-[0.95rem] text-ink placeholder:text-ink-dim transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-lime/40
-                    {% if errors.phone %}border-warn{% else %}border-line-strong{% endif %}"
-             {% if errors.phone %}aria-invalid="true" aria-describedby="err-phone"{% endif %}>
-      {% if errors.phone %}
-        <span id="err-phone" class="flex items-center gap-1.5 font-mono text-[0.76rem] text-warn">{% icon "alert-circle" class="h-3.5 w-3.5" %}{{ errors.phone }}</span>
-      {% endif %}
+      <div>
+        <label class="field {% if errors.phone %}invalid{% endif %}">
+          <input type="tel" name="phone" required value="{{ form_data.phone }}" placeholder=" "
+                 inputmode="tel" dir="ltr" style="text-align: right" id="lead-phone"
+                 {% if errors.phone %}aria-invalid="true" aria-describedby="err-phone"{% endif %}>
+          <span>شماره تماس</span>
+        </label>
+        {% if errors.phone %}
+          <span id="err-phone" class="field-err">{% icon "alert-circle" class="h-3.5 w-3.5" %}{{ errors.phone }}</span>
+        {% endif %}
+      </div>
     </div>
 
     {% if contact_services %}
-      <div class="flex flex-col gap-2">
-        <label for="lead-service" class="font-mono text-[0.8rem] text-ink">خدمت موردنظر</label>
-        <select id="lead-service" name="service"
-                class="w-full rounded-md border border-line-strong bg-night px-4 py-3 font-sans text-[0.95rem] text-ink transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-lime/40">
-          <option value="">— انتخاب کنید —</option>
-          {% for service in contact_services %}
-            <option value="{{ service.pk }}" {% if form_data.service == service.pk|stringformat:"s" %}selected{% endif %}>{{ service.title }}</option>
-          {% endfor %}
-        </select>
+      <div>
+        <label class="field static">
+          <select name="service" id="lead-service">
+            <option value="" {% if not form_data.service %}selected{% endif %}></option>
+            {% for service in contact_services %}
+              <option value="{{ service.pk }}" {% if form_data.service == service.pk|stringformat:"s" %}selected{% endif %}>{{ service.title }}</option>
+            {% endfor %}
+          </select>
+          <span>خدمت موردنظر</span>
+        </label>
       </div>
     {% endif %}
 
-    <div class="flex flex-col gap-2">
-      <label for="lead-message" class="font-mono text-[0.8rem] text-ink">پیام شما</label>
-      <textarea id="lead-message" name="message" required rows="4"
-                placeholder="کمی درباره پروژه‌تان بنویسید…"
-                class="w-full resize-none rounded-md border bg-night px-4 py-3 font-sans text-[0.95rem] leading-[1.6] text-ink placeholder:text-ink-dim transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-lime/40
-                       {% if errors.message %}border-warn{% else %}border-line-strong{% endif %}"
-                {% if errors.message %}aria-invalid="true" aria-describedby="err-message"{% endif %}>{{ form_data.message }}</textarea>
+    <div>
+      <label class="field {% if errors.message %}invalid{% endif %}">
+        <textarea name="message" required rows="4" placeholder=" " id="lead-message"
+                  {% if errors.message %}aria-invalid="true" aria-describedby="err-message"{% endif %}>{{ form_data.message }}</textarea>
+        <span>پیام شما</span>
+      </label>
       {% if errors.message %}
-        <span id="err-message" class="flex items-center gap-1.5 font-mono text-[0.76rem] text-warn">{% icon "alert-circle" class="h-3.5 w-3.5" %}{{ errors.message }}</span>
+        <span id="err-message" class="field-err">{% icon "alert-circle" class="h-3.5 w-3.5" %}{{ errors.message }}</span>
       {% endif %}
     </div>
 
-    <button id="lead-submit" type="submit"
-            class="btn btn-lime w-full justify-center"
-            data-cursor="hover">
+    <button id="lead-submit" type="submit" class="btn btn-gold w-full px-8 py-4 text-lg" data-magnetic>
+      {% icon "send" class="h-5 w-5" %}
       {{ contact_section.submit_text|default:"ارسال درخواست" }}
-      {% icon "arrow-left" class="h-4 w-4" %}
     </button>
 
-    <p class="m-0 text-center font-mono text-[0.72rem] text-ink-dim">پاسخ معمولاً در کمتر از ۲۴ ساعت</p>
+    <p class="m-0 text-center text-xs text-coy/80">پاسخ معمولاً در کمتر از ۲۴ ساعت</p>
   </form>
 </div>

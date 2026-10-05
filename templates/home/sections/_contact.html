@@ -1,54 +1,79 @@
-{# فرم تماس سریع — HTMX POST با هانی‌پات و محدودیت نرخ #}
-{# داده‌ها: contact_section (ContactSection)، contact_services (Service) #}
-{% load icon_tags %}
+{% load icon_tags highlight_tags fa_digits %}
+{# فرم تماس سریع v2 — HTMX POST با هانی‌پات و محدودیت نرخ #}
+{# داده‌ها: contact_section (ContactSection)، contact_services (Service[])،
+   settings (SiteSettings)، socials (SocialLink[]) #}
+{# انکر این بخش #lead است؛ فوتر صاحب id="contact" است (D13) #}
 {% if contact_section %}
-  <section class="relative px-page py-[clamp(64px,9vw,128px)]"
-           aria-labelledby="contact-head"
-           data-bg-intensity="1.0" data-bg-glow="1.2" data-bg-swirl="1.0" data-bg-hue="0.0">
+  <section id="lead" class="relative overflow-hidden bg-cream2">
+    <div class="grid-bg pointer-events-none absolute inset-0 opacity-50" aria-hidden="true"></div>
+    <div class="pointer-events-none absolute left-[-4rem] top-24 h-72 w-72 rounded-full opacity-40 aurora-blob"
+         style="background: radial-gradient(circle, rgba(201, 161, 90, 0.22), transparent 65%)" aria-hidden="true"></div>
 
-    <div class="grid grid-cols-1 gap-[clamp(32px,4vw,56px)] lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] lg:items-start">
-
+    <div class="relative z-10 mx-auto grid max-w-7xl gap-12 px-6 pb-24 pt-28 md:pb-28 md:pt-32 lg:grid-cols-12">
       {# ستون متن + اطلاعات تماس #}
-      <div class="flex flex-col gap-6" data-reveal="fade-up">
-        <div>
-          <span class="eyebrow mb-6 inline-block">{{ contact_section.subtitle }}<span class="ml-2 inline-block h-1.5 w-1.5 rounded-full bg-lime align-[2px]"></span></span>
-          <h2 id="contact-head" class="mb-[18px] max-w-[18ch]">{{ contact_section.title|safe }}</h2>
-          <p class="m-0 max-w-[46ch] text-[1.06rem] leading-[1.6] text-ink-soft">{{ contact_section.description|safe }}</p>
-        </div>
+      <div class="lg:col-span-4" data-reveal="right">
+        {% if contact_section.eyebrow %}
+          <p class="eyebrow eyebrow-dark">{{ contact_section.eyebrow }}</p>
+        {% endif %}
+        {% if contact_section.title %}
+          <h2 id="contact-head" class="mt-5 text-4xl font-extrabold leading-[1.3] text-paper md:text-[2.4rem]">
+            {{ contact_section.title|highlight:"dark" }}
+          </h2>
+        {% endif %}
+        {% if contact_section.description %}
+          <p class="mt-5 font-light leading-8 text-coy">{{ contact_section.description }}</p>
+        {% endif %}
 
-        <div class="pixel-divider w-[140px]" aria-hidden="true"></div>
+        {# اطلاعات تماس — از SiteSettings #}
+        {% if settings.phone or settings.email or settings.address or settings.status %}
+          <ul class="mt-8 space-y-4 text-sm text-coy">
+            {% if settings.phone %}
+              <li class="flex items-center gap-3">
+                <span class="icon-ring" aria-hidden="true">{% icon "phone" class="h-4 w-4" %}</span>
+                <span class="fa-num" dir="ltr">{{ settings.phone }}</span>
+              </li>
+            {% endif %}
+            {% if settings.email %}
+              <li class="flex items-center gap-3">
+                <span class="icon-ring" aria-hidden="true">{% icon "mail" class="h-4 w-4" %}</span>
+                <span dir="ltr">{{ settings.email }}</span>
+              </li>
+            {% endif %}
+            {% if settings.address %}
+              <li class="flex items-center gap-3">
+                <span class="icon-ring" aria-hidden="true">{% icon "map-pin" class="h-4 w-4" %}</span>
+                <span>{{ settings.address }}</span>
+              </li>
+            {% endif %}
+            {% if settings.status %}
+              <li class="flex items-center gap-3">
+                <span class="icon-ring" aria-hidden="true">{% icon "circle-dot" class="h-4 w-4" %}</span>
+                <span>{{ settings.status }}</span>
+              </li>
+            {% endif %}
+          </ul>
+        {% endif %}
 
-        <ul class="m-0 grid grid-cols-1 gap-4 p-0 font-mono text-[0.86rem] sm:grid-cols-2">
-          {% if settings.phone %}
-            <li class="flex items-center gap-3 text-ink-soft">
-              <span class="grid h-9 w-9 place-items-center rounded-md border border-line-strong bg-night-soft text-lime" aria-hidden="true">{% icon "phone" class="h-4 w-4" %}</span>
-              <span dir="ltr">{{ settings.phone }}</span>
-            </li>
-          {% endif %}
-          {% if settings.email %}
-            <li class="flex items-center gap-3 text-ink-soft">
-              <span class="grid h-9 w-9 place-items-center rounded-md border border-line-strong bg-night-soft text-lime" aria-hidden="true">{% icon "mail" class="h-4 w-4" %}</span>
-              <span dir="ltr">{{ settings.email }}</span>
-            </li>
-          {% endif %}
-          {% if settings.address %}
-            <li class="flex items-center gap-3 text-ink-soft">
-              <span class="grid h-9 w-9 place-items-center rounded-md border border-line-strong bg-night-soft text-lime" aria-hidden="true">{% icon "map-pin" class="h-4 w-4" %}</span>
-              <span>{{ settings.address }}</span>
-            </li>
-          {% endif %}
-          {% if settings.status %}
-            <li class="flex items-center gap-3 text-ink-soft">
-              <span class="grid h-9 w-9 place-items-center rounded-md border border-line-strong bg-night-soft text-lime" aria-hidden="true">{% icon "circle-dot" class="h-4 w-4" %}</span>
-              <span>{{ settings.status }}</span>
-            </li>
-          {% endif %}
-        </ul>
+        {# شبکه‌های اجتماعی #}
+        {% if socials %}
+          <div class="mt-9 flex flex-wrap gap-3">
+            {% for social in socials %}
+              <a href="{{ social.url }}"
+                 class="soc !text-gold-dark"
+                 style="border-color: rgba(143, 107, 44, 0.4); background: rgba(255, 255, 255, 0.55);"
+                 aria-label="{{ social.label }}"
+                 rel="noopener noreferrer"
+                 target="_blank">
+                {% if social.icon %}{% icon social.icon class="h-4 w-4" %}{% else %}{{ social.name }}{% endif %}
+              </a>
+            {% endfor %}
+          </div>
+        {% endif %}
       </div>
 
-      {# ستون فرم — داخل کارت شیشه‌ای #}
-      <div class="glass-card relative overflow-hidden" data-reveal="fade-up" data-reveal-delay="100">
-        <span class="absolute inset-x-0 top-0 h-px bg-gradient-to-l from-transparent via-lime/60 to-transparent" aria-hidden="true"></span>
+      {# ستون فرم — داخل کارت شیشه‌ای روشن #}
+      <div class="glass-light relative overflow-hidden p-8 md:p-10 lg:col-span-8"
+           style="border-radius: 2.5rem 1rem 2.5rem 1rem" data-reveal="left">
         {% include "home/sections/_lead_form.html" %}
       </div>
     </div>

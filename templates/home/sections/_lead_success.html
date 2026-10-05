@@ -1,16 +1,22 @@
-{# فرم تماس سریع — حالت موفقیت (جایگزین کل فرم می‌شود) #}
-{# داده‌ها: contact_section #}
 {% load icon_tags %}
-<div id="lead-form" class="flex flex-col items-center gap-6 rounded-md border border-lime/40 bg-lime/[0.06] p-[clamp(24px,3vw,40px)] text-center">
-  <span class="grid h-16 w-16 place-items-center rounded-full bg-lime text-night pixel-glow" aria-hidden="true">
+{# فرم تماس سریع v2 — حالت موفقیت (جایگزین کل فرم می‌شود) #}
+{# داده‌ها: contact_section #}
+{# data-toast: pixoria.js بعد از swap هت‌ام‌ایکس پیام را در toast اعلام می‌کند #}
+<div id="lead-form" class="flex flex-col items-center gap-6 p-[clamp(16px,3vw,32px)] text-center">
+  <span data-toast="{{ contact_section.success_text|default:'درخواست شما دریافت شد. به‌زودی با شما تماس می‌گیریم.' }}" hidden></span>
+  <span class="grid h-16 w-16 place-items-center rounded-full bg-gradient-to-br from-gold-light to-gold text-paper shadow-[0_18px_40px_-14px_rgba(201,161,90,0.7)]"
+        style="border-radius: 999px" aria-hidden="true">
     {% icon "check" class="h-8 w-8" %}
   </span>
   <div class="flex flex-col gap-3">
-    <h3 class="m-0 text-[clamp(1.2rem,1.6vw,1.5rem)] font-medium text-ink">درخواست شما ثبت شد</h3>
-    <p class="m-0 max-w-[44ch] text-[0.98rem] leading-[1.65] text-ink-soft">
+    <h3 class="m-0 text-[clamp(1.2rem,1.6vw,1.5rem)] font-bold text-paper">درخواست شما ثبت شد</h3>
+    <p class="m-0 max-w-[44ch] text-[0.98rem] leading-[1.7] text-coy">
       {{ contact_section.success_text|default:"درخواست شما دریافت شد. به‌زودی با شما تماس می‌گیریم." }}
     </p>
   </div>
-  <div class="pixel-divider w-[120px]" aria-hidden="true"></div>
-  <a href="{% url 'contact:contact' %}" class="btn btn-ghost">فرم کامل تماس {% icon "arrow-left" class="h-4 w-4" %}</a>
+  <a href="{% url 'contact:contact' %}"
+     class="btn btn-ghost !text-gold-dark px-7 py-3.5"
+     style="border-color: rgba(143, 107, 44, 0.4); background: rgba(255, 255, 255, 0.55);">
+    فرم کامل تماس {% icon "arrow-left" class="h-4 w-4" %}
+  </a>
 </div>

@@ -462,8 +462,10 @@ but are out of scope for this migration order (home/about/contact/404 only).
   files: `templates/home/sections/_blog.html` (replaces the v1 `_articles.html`
   carousel partial, deleted), `templates/home/sections/_faq.html` |
   commit: "feat(home): convert articles and faq sections to v2"
-- [ ] T24 — Rework `_contact.html` lead form into v2 style (HTMX kept) |
-  files: `templates/home/sections/_contact.html`, `_lead_form.html`, `_lead_success.html` | commit: "feat(home): restyle lead form to v2"
+- [x] T24 — Rework `_contact.html` lead form into v2 style (HTMX kept) |
+  files: `templates/home/sections/_contact.html`, `_lead_form.html`,
+  `_lead_success.html`, `static/src/input.css` (`.field` + `.field-err`) |
+  commit: "feat(home): restyle lead form to v2"
 - [ ] T25 — Update `seed_home_content` with the new Persian copy from `new/` |
   files: `apps/home/management/commands/seed_home_content.py` | commit: "feat(home): seed v2 persian content"
 
@@ -589,3 +591,24 @@ FAQPage JSON-LD in `home/index.html` is unchanged. The DB copy for these two
 sections was intentionally left as-is (the v2 copy lands with the T25 seed
 update), so the `eyebrow` fields render empty until then — both partials are
 `{% if %}`-guarded around it.
+
+T24 done. Next: T25 (update `seed_home_content` with the v2 Persian copy).
+The lead-form section renders on `bg-cream2` (12-col grid: text column
+`lg:col-span-4` + `glass-light` form card `lg:col-span-8`, radius
+`2.5rem 1rem 2.5rem 1rem`) with the anchor renamed to `id="lead"` — the footer
+owns `id="contact"` (D13), so the hero's default `#contact` CTA still lands on
+the footer. The text column shows `eyebrow-dark`, `title|highlight:"dark"`,
+description, a phone/email/address/status list with `icon-ring` icons and the
+`socials` context as `.soc !text-gold-dark` buttons. The form itself
+(`_lead_form.html`) uses the design's floating-label `.field` pattern
+(`input:not(:placeholder-shown) + span` floats the label; `.field.static` keeps
+the select's label always up), with the honeypot, `hx-post`/`hx-target`/
+`hx-swap="outerHTML"`/`hx-disabled-elt`, `btn-gold` magnetic submit and a
+`.field.invalid` red ring + `.field-err` message per validation error.
+`_lead_success.html` renders the gold check card with a hidden `data-toast`
+span (D16 — pixoria.js announces it after the HTMX swap) and a ghost button to
+`contact:contact`. The `.field` CSS block was ported from `new/contact.html`'s
+inline `<style>` into `static/src/input.css` (it will be reused by T30).
+Verified end-to-end with the Django test client: home 200, valid POST → success
+card + `data-toast`, invalid POST → errors + `.invalid` + repopulated values,
+honeypot → success card, 6th POST → rate-limit notice.

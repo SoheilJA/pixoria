@@ -825,6 +825,79 @@ html.lenis body {
   color: #5c5647;
 }
 
+/* ---------- فرم (لیبل شناور) ---------- */
+.field {
+  position: relative;
+  display: block;
+}
+.field input,
+.field textarea,
+.field select {
+  width: 100%;
+  color: #2b2620;
+  outline: none;
+  resize: none;
+  background: rgba(255, 255, 255, 0.75);
+  border: 1px solid rgba(143, 107, 44, 0.35);
+  border-radius: 1.1rem;
+  padding: 1.2rem 1.15rem 0.55rem;
+  transition:
+    border-color 0.3s,
+    box-shadow 0.3s;
+}
+.field select {
+  appearance: none;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%238f6b2c' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: left 1rem center;
+  padding-left: 2.75rem;
+}
+.field select option {
+  color: #2b2620;
+}
+.field textarea {
+  min-height: 9rem;
+}
+.field input:focus,
+.field textarea:focus,
+.field select:focus {
+  border-color: rgba(201, 161, 90, 0.85);
+  box-shadow: 0 0 0 3px rgba(201, 161, 90, 0.15);
+}
+.field span {
+  position: absolute;
+  top: 0.95rem;
+  right: 1.15rem;
+  color: #8a8172;
+  pointer-events: none;
+  transition: all 0.25s;
+  font-size: 0.95rem;
+}
+.field input:focus + span,
+.field input:not(:placeholder-shown) + span,
+.field textarea:focus + span,
+.field textarea:not(:placeholder-shown) + span,
+.field.static span {
+  top: 0.35rem;
+  font-size: 0.68rem;
+  color: var(--gold-d);
+}
+.field.invalid input,
+.field.invalid textarea,
+.field.invalid select {
+  border-color: rgba(192, 57, 43, 0.65);
+  box-shadow: 0 0 0 3px rgba(192, 57, 43, 0.12);
+}
+.field-err {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.4rem;
+  font-size: 0.76rem;
+  color: #a83a2b;
+}
+
 /* ---------- نقشهٔ دفتر (contact) ---------- */
 .cities-spin {
   animation: citiesSpin 26s linear infinite;
