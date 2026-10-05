@@ -673,6 +673,7 @@ function initStatCounts({ hasGsap, ScrollTrigger }) {
   const gsap = window.gsap;
   document.querySelectorAll("[data-count]").forEach((el) => {
     const target = parseFloat(el.dataset.count);
+    const prefix = el.dataset.prefix || "";
     const suffix = el.dataset.suffix || "";
     if (hasGsap && ScrollTrigger) {
       const obj = { v: 0 };
@@ -686,12 +687,12 @@ function initStatCounts({ hasGsap, ScrollTrigger }) {
             duration: 2,
             ease: "power2.out",
             onUpdate: () => {
-              el.textContent = faDigits(Math.round(obj.v)) + suffix;
+              el.textContent = prefix + faDigits(Math.round(obj.v)) + suffix;
             },
           }),
       });
     } else {
-      el.textContent = faDigits(target) + suffix;
+      el.textContent = prefix + faDigits(target) + suffix;
     }
   });
 }

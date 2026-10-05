@@ -454,8 +454,10 @@ but are out of scope for this migration order (home/about/contact/404 only).
   files: `templates/home/sections/_testimonials.html`, `static/js/pixoria.js`,
   `static/src/input.css`, `apps/core/templatetags/fa_digits.py` |
   commit: "feat(home): convert testimonials to v2 slider"
-- [ ] T22 — Convert `_tech.html`, `_stats.html` |
-  files: `templates/home/sections/_tech.html`, `templates/home/sections/_stats.html` | commit: "feat(home): convert tech and stats sections to v2"
+- [x] T22 — Convert `_tech.html`, `_stats.html` |
+  files: `templates/home/sections/_tech.html`, `templates/home/sections/_stats.html`,
+  `apps/home/views.py`, `static/js/pixoria.js` |
+  commit: "feat(home): convert tech and stats sections to v2"
 - [ ] T23 — Convert `_articles.html` (blog cards), `_faq.html` (accordion) |
   files: `templates/home/sections/_articles.html`, `templates/home/sections/_faq.html` | commit: "feat(home): convert articles and faq sections to v2"
 - [ ] T24 — Rework `_contact.html` lead form into v2 style (HTMX kept) |
@@ -555,3 +557,13 @@ became `.play-btn`, and a new `fa_duration` filter renders «۰:۴۸». The thre
 existing testimonials were aligned to the design's kinds (مریم صادقی text /
 سعید محمودی video / سارا توکلی audio); video/audio cards without media show
 gradient placeholders and their fields render nothing.
+
+T22 done. Next: T23 (`_articles.html` blog cards + `_faq.html` accordion).
+`_tech.html` renders two marquee rows of `tech-chip`s (icon + name) split by
+the new `tech_row1` / `tech_row2` context lists — the skills were aligned to
+the design's twelve tools. `_stats.html` renders four `stat-card`s with
+`data-count` + `data-prefix` / `data-suffix` (pixoria.js now reads `data-prefix`
+too, so `+`/`٪`/`/۷` wrap the counted number) and the `PIXORIA` stroke
+watermark. Both section settings were aligned to the v2 copy in place
+(«ابزارها و فناوری‌ها» / «دستاوردها»); the `category`/`level`/`description`
+fields the v1 templates used are unused by v2 and cleared.

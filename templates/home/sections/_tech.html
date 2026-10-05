@@ -1,34 +1,61 @@
-{# تکنولوژی‌ها و مهارت‌ها — نوارهای پیشرفت انیمیشنی #}
-{# داده‌ها: tech_section (TechSection)، tech_skills (TechSkill) #}
-{% load icon_tags %}
+{% load icon_tags highlight_tags fa_digits %}
+{# ابزارها و فناوری‌ها v2 — دو نوار متحرک از چیپ‌ها #}
+{# داده‌ها: tech_section (TechSection)، tech_skills (TechSkill[]) #}
+{# pixoria.js محتوای هر marquee-group را دو برابر می‌کند تا حلقهٔ پیوسته بسازد #}
 {% if tech_section and tech_skills %}
-  <section class="relative px-page py-[clamp(64px,9vw,128px)]"
-           aria-labelledby="tech-head"
-           data-bg-intensity="0.8" data-bg-glow="0.85" data-bg-swirl="0.9" data-bg-hue="0.1">
+  <section id="tech" class="relative overflow-hidden bg-cream2">
+    <div class="grid-bg pointer-events-none absolute inset-0 opacity-50" aria-hidden="true"></div>
+    <div class="pointer-events-none absolute right-[8%] top-16 h-72 w-72 rounded-full opacity-40 aurora-blob"
+         style="background: radial-gradient(circle, rgba(46, 99, 255, 0.16), transparent 70%)" aria-hidden="true"></div>
 
-    <div class="grid grid-cols-1 gap-[clamp(32px,4vw,56px)] lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.3fr)]">
-      <div class="lg:sticky lg:top-28 lg:self-start" data-reveal="fade-up">
-        <span class="eyebrow mb-6 inline-block">{{ tech_section.subtitle }}<span class="ml-2 inline-block h-1.5 w-1.5 rounded-full bg-lime align-[2px]"></span></span>
-        <h2 id="tech-head" class="mb-[18px] max-w-[16ch]">{{ tech_section.title|safe }}</h2>
-        <p class="m-0 max-w-[44ch] text-[1.08rem] leading-[1.6] text-ink-soft">{{ tech_section.description|safe }}</p>
-        <div class="pixel-divider mt-10 max-w-[180px]" aria-hidden="true"></div>
+    <div class="relative mx-auto max-w-7xl px-6 pb-24 pt-28 md:pt-32">
+      <div class="text-center">
+        {% if tech_section.eyebrow %}
+          <p class="eyebrow eyebrow-dark eyebrow-c justify-center" data-reveal="up">{{ tech_section.eyebrow }}</p>
+        {% endif %}
+        {% if tech_section.title %}
+          <h2 class="mt-5 text-3xl font-extrabold leading-[1.3] text-paper md:text-[2.4rem]"
+              data-reveal="up" data-delay="0.08">
+            {{ tech_section.title|highlight:"dark" }}
+          </h2>
+        {% endif %}
+        {% if tech_section.description %}
+          <p class="mx-auto mt-4 max-w-xl font-light leading-8 text-coy" data-reveal="up" data-delay="0.12">
+            {{ tech_section.description }}
+          </p>
+        {% endif %}
       </div>
 
-      <div class="grid grid-cols-1 gap-x-10 gap-y-7 sm:grid-cols-2">
-        {% for skill in tech_skills %}
-          <div data-reveal="fade-up" data-reveal-delay="{% if forloop.counter0|divisibleby:'2' %}100{% else %}0{% endif %}">
-            <div class="mb-2.5 flex items-baseline justify-between gap-3 font-mono text-[0.86rem]">
-              <span class="font-medium text-ink">{{ skill.name }}</span>
-              <span class="shrink-0 text-ink-dim">{{ skill.level }}٪</span>
+      {# نوارهای متحرک نامحدود — مهارت‌ها در دو ردیف تقسیم می‌شوند #}
+      <div class="relative mt-14 space-y-5" data-reveal="up" data-delay="0.14">
+        {# ردیف اول — راست‌به‌چپ #}
+        <div class="marquee relative overflow-hidden">
+          <div class="marquee-track">
+            <div class="marquee-group">
+              {% for skill in tech_row1 %}
+                <span class="tech-chip">
+                  {% if skill.icon %}{% icon skill.icon class="h-4 w-4" %}{% endif %}
+                  {{ skill.name }}
+                </span>
+              {% endfor %}
             </div>
-            <span class="block h-1.5 w-full overflow-hidden rounded-full bg-line-strong" role="img" aria-label="{{ skill.name }} — {{ skill.level }} درصد تسلط">
-              <span class="block h-full w-0 rounded-full bg-gradient-to-l from-lime-600 via-lime-deep to-lime" data-bar="{{ skill.level }}"></span>
-            </span>
-            {% if skill.category %}
-              <span class="mt-2 block font-mono text-[0.7rem] uppercase tracking-[0.1em] text-ink-dim">{{ skill.category }}</span>
-            {% endif %}
           </div>
-        {% endfor %}
+        </div>
+        {# ردیف دوم — معکوس #}
+        {% if tech_row2 %}
+          <div class="marquee relative overflow-hidden">
+            <div class="marquee-track marquee-rev">
+              <div class="marquee-group">
+                {% for skill in tech_row2 %}
+                  <span class="tech-chip">
+                    {% if skill.icon %}{% icon skill.icon class="h-4 w-4" %}{% endif %}
+                    {{ skill.name }}
+                  </span>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        {% endif %}
       </div>
     </div>
   </section>
