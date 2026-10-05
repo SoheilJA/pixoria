@@ -16,10 +16,12 @@ from .models import (
     HeaderSettings,
     HeroMarqueeItem,
     HeroSection,
+    HeroStat,
+    HomeAboutSection,
+    HomeAboutStat,
     HomeLead,
     HomeSection,
     LatestArticlesSection,
-    ManifestoSection,
     ProcessSection,
     ProcessStep,
     ServicesSection,
@@ -27,6 +29,8 @@ from .models import (
     StatsSection,
     TechSection,
     TechSkill,
+    TestimonialSection,
+    TrustedSection,
     WhyFeature,
     WhySection,
     ClientMarqueeItem,
@@ -53,28 +57,32 @@ def home(request):
         # ── بخش‌های موجود (جریان داده دست‌نخورده) ──
         "hero": HeroSection.objects.first() if "hero" in keys else None,
         "hero_marquee": HeroMarqueeItem.objects.all(),
-        "featured_work_section": FeaturedWorkSection.objects.first() if "works" in keys else None,
-        "featured_works": Portfolio.objects.filter(featured=True)[:3] if "works" in keys else [],
+        "hero_stats": HeroStat.objects.filter(is_active=True) if "hero" in keys else [],
         "services_section": ServicesSection.objects.first() if "services" in keys else None,
         "services": featured_services,
         "services_with_delay": [
             {"service": service, "delay": (index % 5) * 100}
             for index, service in enumerate(featured_services)
         ],
-        "clients": ClientMarqueeItem.objects.all() if "clients" in keys else [],
-        "manifesto": ManifestoSection.objects.first() if "manifesto" in keys else None,
         "testimonials": (
             ServiceTestimonial.objects.filter(show_on_home=True) if "testimonials" in keys else []
         ),
-        "latest_articles_section": LatestArticlesSection.objects.first() if "articles" in keys else None,
+        "testimonials_section": TestimonialSection.objects.first() if "testimonials" in keys else None,
         "latest_articles": (
             Article.objects.filter(status="published", published_at__lte=timezone.now())
             .select_related("category")
             .order_by("-published_at")[:8]
-            if "articles" in keys
+            if "blog" in keys
             else []
         ),
         # ── بخش‌های جدید ──
+        "about_section": HomeAboutSection.objects.first() if "about" in keys else None,
+        "about_stats": HomeAboutStat.objects.filter(is_active=True) if "about" in keys else [],
+        "trusted_section": TrustedSection.objects.first() if "trusted" in keys else None,
+        "clients": ClientMarqueeItem.objects.all() if "trusted" in keys else [],
+        "portfolio_section": FeaturedWorkSection.objects.first() if "portfolio" in keys else None,
+        "portfolio_items": [],
+        "blog_section": LatestArticlesSection.objects.first() if "blog" in keys else None,
         "stats_section": StatsSection.objects.first() if "stats" in keys else None,
         "stats": StatItem.objects.filter(is_active=True) if "stats" in keys else [],
         "process_section": ProcessSection.objects.first() if "process" in keys else None,
@@ -88,6 +96,12 @@ def home(request):
         "contact_section": ContactSection.objects.first() if "contact" in keys else None,
         "contact_services": Service.objects.filter(featured=True) if "contact" in keys else [],
     }
+
+    # ── نمونه‌کارهای صفحه اصلی: پروژه‌های منتخب، همراه با دسته‌بندی برای فیلتر ──
+    if "portfolio" in keys:
+        context["portfolio_items"] = list(
+            Portfolio.objects.filter(featured=True).prefetch_related("categories")
+        )
 
     # ── دادهٔ ساختاریافتهٔ FAQ برای موتورهای جستجو (schema.org/FAQPage) ──
     if "faq" in keys:

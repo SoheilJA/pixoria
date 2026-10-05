@@ -1,17 +1,64 @@
 {% extends 'base.html' %}
-{% load icon_tags component_tags %}
+{% load icon_tags component_tags highlight_tags fa_digits %}
 
 {% block title %}
-  {{ settings.site_name }} — {{ settings.site_description }}
+  {{ settings.site_name }} | استودیوی طراحی و توسعه — طراحی سایت، برنامه‌نویسی، گرافیک و لوگو
 {% endblock %}
 {% block description %}
-  آژانس دیجیتال مارکتینگ
+  {% if settings.site_description %}{{ settings.site_description }}{% else %}استودیوی طراحی و توسعهٔ پیکسوریا؛ طراحی سایت، برنامه‌نویسی، خدمات گرافیکی و طراحی لوگو. مشاوره رایگان.{% endif %}
 {% endblock %}
 {% block og_title %}
-  {{ settings.site_name }} — استودیوی طراحی و توسعهٔ محصول دیجیتال
+  {{ settings.site_name }} | استودیوی طراحی و توسعه — طراحی سایت، برنامه‌نویسی، گرافیک و لوگو
 {% endblock %}
 {% block og_description %}
-  پیکسوریا؛ از هویت بصری و طراحی رابط کاربری تا کدنویسی و انتشار محصول دیجیتال.
+  {% if settings.footer_description %}{{ settings.footer_description }}{% else %}از سال {{ settings.established_year|default:"۱۳۸۹" }}؛ طراحی سایت، برنامه‌نویسی، خدمات گرافیکی و طراحی لوگو. مشاوره رایگان.{% endif %}
+{% endblock %}
+
+{% block extra_head %}
+  {# داده‌های ساختاریافتهٔ سازمان + وب‌سایت (schema.org) — از SiteSettings. #}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "{{ request.build_absolute_uri }}#org",
+          "name": "{{ settings.site_name }}",
+          "alternateName": "PIXORIA",
+          "url": "{{ request.build_absolute_uri }}",
+          {% if settings.email %}"email": "{{ settings.email }}",{% endif %}
+          {% if settings.phone %}"telephone": "{{ settings.phone }}",{% endif %}
+          {% if settings.established_year %}"foundingDate": "{{ settings.established_year }}",{% endif %}
+          {% if settings.address %}
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "{{ settings.address }}",
+            "addressCountry": "IR"
+          },
+          {% endif %}
+          "contactPoint": {
+            "@type": "ContactPoint",
+            {% if settings.phone %}"telephone": "{{ settings.phone }}",{% endif %}
+            "contactType": "customer service",
+            "areaServed": "IR",
+            "availableLanguage": ["fa"]
+          }
+        },
+        {
+          "@type": "WebSite",
+          "@id": "{{ request.build_absolute_uri }}#site",
+          "url": "{{ request.build_absolute_uri }}",
+          "name": "{{ settings.site_name }}",
+          "inLanguage": "fa-IR",
+          "publisher": { "@id": "{{ request.build_absolute_uri }}#org" }
+        }
+      ]
+    }
+  </script>
+  {% if faq_json %}
+    {# FAQPage — از سوالات متداول دیتابیس (apps.home.views.faq_structured_data). #}
+    <script type="application/ld+json">{{ faq_json }}</script>
+  {% endif %}
 {% endblock %}
 
 {% block content %}

@@ -387,8 +387,10 @@ but are out of scope for this migration order (home/about/contact/404 only).
 
 ### Phase 4 — home page templates
 
-- [ ] T14 — Update `home/index.html` + view context for new section keys |
-  files: `templates/home/index.html`, `apps/home/views.py` | commit: "feat(home): render v2 section keys"
+- [x] T14 — Update `home/index.html` + view context for new section keys |
+  files: `templates/home/index.html`, `apps/home/views.py`,
+  `templates/home/sections/_faq.html` (duplicate FAQ JSON-LD removed) |
+  commit: "feat(home): render v2 section keys"
 - [ ] T15 — Convert `_hero.html` to the v2 hero (3D mount + fallback) |
   files: `templates/home/sections/_hero.html` | commit: "feat(home): convert hero section to v2"
 - [ ] T16 — Add `_about.html` (short intro, DB-driven) |
@@ -455,10 +457,13 @@ but are out of scope for this migration order (home/about/contact/404 only).
 
 ## Current status
 
-T01–T13 done — Phases 0–2 plus v2 models and their admin complete. Next:
-T14 (update `home/index.html` + view context for the new section keys).
-Migrations applied: home 0009/0010, services 0006; `manage.py check` and
-`makemigrations --check` clean; home page still renders 200 (new section
-keys have stub partials until T14–T25 fill them). Admin verified with a
-throwaway smoke test: every home/services/core changelist and the change
-pages of all new models render 200 as superuser.
+T01–T14 done. Next: T15 (convert `_hero.html` to the v2 hero). Migrations
+applied: home 0009/0010, services 0006; `manage.py check` and
+`makemigrations --check` clean. Home renders 200 both with the seeded DB
+(two valid JSON-LD blocks: Organization+WebSite graph and FAQPage) and
+with a fully empty DB (throwaway test verified). View context: old keys
+removed (`featured_work_*`, `manifesto`, `latest_articles_section`), new
+ones added (`hero_stats`, `about_section`/`about_stats`,
+`trusted_section`, `portfolio_section`/`portfolio_items` (prefetched
+categories), `blog_section`, `testimonials_section`); live old partials'
+context vars untouched until their partial is rewritten.
