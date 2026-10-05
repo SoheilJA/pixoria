@@ -1,47 +1,74 @@
-{# فرآیند کار — اسکرول افقی پین‌شده در دسکتاپ، استک‌شده در موبایل #}
-{# داده‌ها: process_section (ProcessSection)، process_steps (ProcessStep) #}
-{% load icon_tags %}
+{% load icon_tags highlight_tags fa_digits %}
+{# فرآیند کار v2 — تایم‌لاین GPS پنج‌گام + کارت‌های شیشه‌ای #}
+{# داده‌ها: process_section (ProcessSection)، process_steps (ProcessStep[]) #}
+{# pixoria.js مسیر gps-draw را هنگام اسکرول رسم می‌کند و مهره را جابه‌جا می‌کند #}
 {% if process_section and process_steps %}
-  <section class="relative flex min-h-screen flex-col justify-center overflow-hidden px-page py-[clamp(64px,9vw,120px)]"
-           data-horizontal
-           aria-labelledby="process-head"
-           data-bg-intensity="0.9" data-bg-glow="0.95" data-bg-swirl="1.1" data-bg-hue="0.12">
+  <section id="process" class="relative overflow-hidden bg-ink">
+    {# خط تقسیم‌کنندهٔ روشن روی بخش روشنِ قبلی #}
+    <svg class="divider" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0,58 C320,12 640,78 960,42 C1200,14 1360,62 1440,32 L1440,0 L0,0 Z" fill="#efece5"></path>
+    </svg>
+    <div class="grid-bg pointer-events-none absolute inset-0 opacity-25" aria-hidden="true"></div>
+    <div class="pointer-events-none absolute left-[-5rem] top-24 h-80 w-80 rounded-full opacity-20 aurora-blob"
+         style="background: radial-gradient(circle, rgba(201, 161, 90, 0.3), transparent 65%)" aria-hidden="true"></div>
 
-    <div class="flex flex-col gap-[clamp(24px,3vw,40px)] md:flex-row md:items-end md:justify-between">
-      <div class="max-w-[760px]" data-reveal="fade-up">
-        <span class="eyebrow mb-6 inline-block">{{ process_section.subtitle }}<span class="ml-2 inline-block h-1.5 w-1.5 rounded-full bg-lime align-[2px]"></span></span>
-        <h2 id="process-head" class="max-w-[22ch]">{{ process_section.title|safe }}</h2>
+    <div class="relative z-10 mx-auto max-w-7xl px-6 pb-28 pt-36 md:pt-44">
+      <div class="text-center">
+        {% if process_section.eyebrow %}
+          <p class="eyebrow" data-reveal="up">{{ process_section.eyebrow }}</p>
+        {% endif %}
+        {% if process_section.title %}
+          <h2 class="mt-5 text-4xl font-extrabold leading-[1.3] md:text-[2.7rem]" data-reveal="up" data-delay="0.08">
+            {{ process_section.title|highlight }}
+          </h2>
+        {% endif %}
+        {% if process_section.description %}
+          <p class="mx-auto mt-4 max-w-xl font-light leading-8 text-cream/55" data-reveal="up" data-delay="0.14">
+            {{ process_section.description }}
+          </p>
+        {% endif %}
       </div>
-      <p class="m-0 max-w-[44ch] text-[1.08rem] leading-[1.6] text-ink-soft" data-reveal="fade-up" data-reveal-delay="100">{{ process_section.description|safe }}</p>
-    </div>
 
-    <div class="mt-[clamp(32px,4vw,56px)]" data-horizontal-track>
+      {# تایم‌لاین — مسیر GPS: جادهٔ خط‌چینِ در حال طی شدن #}
+      <div class="relative mt-14 lg:mt-20">
+        <div class="relative h-40 sm:h-52 lg:h-60">
+          <svg class="absolute inset-0 h-full w-full" viewBox="0 0 1000 240" preserveAspectRatio="none" aria-hidden="true">
+            <defs>
+              <linearGradient id="gpsGrad" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0" stop-color="#8f6b2c"></stop>
+                <stop offset="0.5" stop-color="#c9a15a"></stop>
+                <stop offset="1" stop-color="#e8c47a"></stop>
+              </linearGradient>
+            </defs>
+            <path class="gps-base"
+                  d="M100,120 C166,120 234,60 300,60 C366,60 434,150 500,150 C566,150 634,60 700,60 C766,60 834,120 900,120"></path>
+            <path class="gps-move"
+                  d="M100,120 C166,120 234,60 300,60 C366,60 434,150 500,150 C566,150 634,60 700,60 C766,60 834,120 900,120"></path>
+            <path class="gps-draw" pathLength="1"
+                  d="M100,120 C166,120 234,60 300,60 C366,60 434,150 500,150 C566,150 634,60 700,60 C766,60 834,120 900,120"></path>
+            <circle class="gps-dot" cx="100" cy="120" r="7"></circle>
+          </svg>
+          {# گره‌های مسیر — یکی برای هر مرحله #}
+          {% for step in process_steps %}
+            <span class="gps-node" style="{% cycle 'left: 10%; top: 50%' 'left: 30%; top: 25%' 'left: 50%; top: 62.5%' 'left: 70%; top: 25%' 'left: 90%; top: 50%' %}"
+                  aria-hidden="true">{{ forloop.counter|stringformat:"02d"|fa_digits }}</span>
+          {% endfor %}
+        </div>
 
-      {% for step in process_steps %}
-        <article class="group relative flex w-full flex-col gap-5 overflow-hidden rounded-md border border-line bg-paper-soft p-[clamp(20px,2vw,32px)] transition-colors duration-300 hover:border-line-strong"
-                 data-reveal="fade-up" data-reveal-delay="{{ forloop.counter0 }}00">
-
-          {# شمارهٔ مرحله با فونت پیکسلی + خط اتصال به مرحلهٔ بعد #}
-          <div class="flex items-center justify-between border-b border-line pb-4">
-            <span class="font-pixel text-[0.72rem] text-lime" aria-hidden="true">{% if forloop.counter < 10 %}0{% endif %}{{ forloop.counter }}</span>
-            <span class="font-mono text-[0.72rem] uppercase tracking-[0.14em] text-ink-dim">مرحله</span>
-          </div>
-
-          <h3 class="max-w-[20ch] text-[clamp(1.25rem,1.6vw,1.6rem)] font-medium leading-[1.2] text-ink">{{ step.title }}</h3>
-          <p class="m-0 text-[0.98rem] leading-[1.65] text-ink-soft">{{ step.description }}</p>
-
-          <span class="mt-auto inline-flex items-center gap-2 font-mono text-[0.78rem] text-lime/80 opacity-0 transition-opacity duration-300 group-hover:opacity-100" aria-hidden="true">
-            {% icon "arrow-left" class="h-4 w-4" %} گام بعد
-          </span>
-        </article>
-      {% endfor %}
-    </div>
-
-    {# راهنمای اسکرول — فقط دسکتاپ #}
-    <div class="mt-10 hidden items-center gap-3 font-mono text-[0.72rem] uppercase tracking-[0.14em] text-ink-dim lg:flex" aria-hidden="true">
-      <span class="h-px w-10 bg-line-strong"></span>
-      برای دیدن همهٔ مراحل اسکرول کنید
-      {% icon "arrow-down" class="h-3.5 w-3.5 animate-bounce text-lime" %}
+        <div class="grid gap-6 {% if process_steps|length > 1 %}lg:grid-cols-{{ process_steps|length }}{% endif %}">
+          {% for step in process_steps %}
+            <article class="process-step glass tilt group relative overflow-hidden p-7"
+                     style="border-radius: 1.5rem 1.5rem 1.5rem 0.6rem"
+                     data-reveal="up" data-delay="{% cycle '0' '0.08' '0.16' '0.24' '0.32' %}">
+              <span class="glare" aria-hidden="true"></span>
+              <span class="process-node">{% icon step.icon class="h-5 w-5" %}</span>
+              <span class="process-idx font-latin" aria-hidden="true">{{ forloop.counter|stringformat:"02d"|fa_digits }}</span>
+              <h3 class="mt-4 text-lg font-bold">{{ step.title }}</h3>
+              <p class="mt-2.5 text-sm leading-7 text-cream/55">{{ step.description }}</p>
+            </article>
+          {% endfor %}
+        </div>
+      </div>
     </div>
   </section>
 {% endif %}

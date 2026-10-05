@@ -331,6 +331,25 @@ but are out of scope for this migration order (home/about/contact/404 only).
   rows (آبانسا، دیجی‌کالا، اسنپ، …). The command also reconfigures
   `sys.stdout` to UTF-8 in `handle()` because a Windows cp1252 console raises
   UnicodeEncodeError on the Persian progress messages.
+- **D22 — HomeSection order aligned to v2 (T20).** The `HomeSection` rows
+  still carried v1 `order` values (process 50 / why 60, about and trusted both
+  10, blog last at 130), so the v2 partials rendered in the wrong sequence and
+  the section transitions broke — every v2 partial assumes a fixed neighbour
+  (trusted's rounded top sits over the dark services section, portfolio's
+  cream divider sits on trusted's cream2, why's `clip-path` sits on
+  portfolio's ink, process's divider sits on why's cream). The rows were
+  renumbered once to the `KEY_CHOICES` order (hero 10 … contact 130) and all
+  set active. The `order`/`is_active` fields stay admin-editable; this was a
+  one-time alignment like the T17/T19 copy fixes.
+- **D23 — Why/process content aligned (T20).** `WhySection`,
+  `WhyFeature` (6 rows), `ProcessSection` and `ProcessStep` rows were updated
+  in place to the v2 copy (eyebrow «چرا پیکسوریا؟» / «روش کار مأ»، titles with
+  `[[ ]]` markers, the design's six reasons and five steps with their Lucide
+  icons — badge-check, gem, zap, trending-up, shield-check, heart-handshake /
+  message-circle, search, pen-tool, code-xml, party-popper). The 5th process
+  step was missing from the v1 data and was created; `WhyFeature.size` is
+  unused by v2 and was cleared. The seed still holds the v1 copy — T25
+  replaces it.
 
 ## Tasks
 
@@ -416,10 +435,12 @@ but are out of scope for this migration order (home/about/contact/404 only).
 - [x] T18 — Convert clients → `_trusted.html` (brand plates marquee) |
   files: `templates/home/sections/_trusted.html` |
   commit: "feat(home): convert clients to trusted marquee"
-- [ ] T19 — Convert works → `_portfolio.html` (filterable grid) |
-  files: `templates/home/sections/_portfolio.html` | commit: "feat(home): convert works to filterable portfolio grid"
-- [ ] T20 — Convert `_why.html`, `_process.html` |
-  files: `templates/home/sections/_why.html`, `templates/home/sections/_process.html` | commit: "feat(home): convert why and process sections to v2"
+- [x] T19 — Convert works → `_portfolio.html` (filterable grid) |
+  files: `templates/home/sections/_portfolio.html`, `apps/home/views.py` |
+  commit: "feat(home): convert works to filterable portfolio grid"
+- [x] T20 — Convert `_why.html`, `_process.html` |
+  files: `templates/home/sections/_why.html`, `templates/home/sections/_process.html` |
+  commit: "feat(home): convert why and process sections to v2"
 - [ ] T21 — Convert `_testimonials.html` (text/video/audio cards + slider) |
   files: `templates/home/sections/_testimonials.html` | commit: "feat(home): convert testimonials to v2 slider"
 - [ ] T22 — Convert `_tech.html`, `_stats.html` |
@@ -486,3 +507,29 @@ list is now authoritative: it removes brands that are not in the v2 design
 (۹ stale v1 rows dropped on the first re-run) and `seed_home_content`
 reconfigures stdout to UTF-8 so Persian messages print on a Windows cp1252
 console. Home renders 200 with exactly 7 plates (4 gold / 3 royal).
+
+T19 done. Next: T20 (`_why.html`, `_process.html`). The portfolio section
+renders featured `Portfolio` items in the v2 tile grid; filter buttons come
+from `portfolio_categories` (categories that appear on featured projects,
+added to the `home` view context — `data-filter`/`data-cat` use the category
+slug, so `pixoria.js`'s exact-match filter works unchanged). Each tile links
+to `portfolio:detail`, shows the primary category as `.type-chip`, the year as
+`.tile-tag`, and cycles the design's six border-radius variants; tiles
+without an image get a dark gradient placeholder, and `#pf-empty` covers
+empty categories. The pre-existing `FeaturedWorkSection` row was aligned to
+the v2 copy in place (eyebrow «نمونه‌کارها», title «گزیدهٔ
+[[پروژه‌ها]]»), mirroring the T17 `ServicesSection` precedent — the seed's
+`first_or_create` never overwrites existing prose.
+
+T20 done. Next: T21 (`_testimonials.html` — text/video/audio cards + slider).
+`_why.html` renders six `glass-light` cards on `bg-cream` (clip-path top,
+grid-bg + aurora blobs) from `WhySection` + `WhyFeature`, with `icon-ring-pulse`
+icons, Persian `why-idx` ordinals and the alternating border-radius cycle.
+`_process.html` renders the GPS timeline (`gps-base/move/draw` + `gps-dot` +
+one `gps-node` per step, positions cycled) and `ProcessStep` cards in a
+`lg:grid-cols-{{ steps|length }}` grid. Both use `data-delay` in decimal
+seconds (`pixoria.js` runs `parseFloat` on it — the v1-style `{{ i }}00`
+values would mean 100-second delays). The `HomeSection` rows were renumbered
+to the v2 order (D22) because the v1 orders rendered process before why and
+broke every section transition; the why/process DB copy was aligned to the
+design (D23).
