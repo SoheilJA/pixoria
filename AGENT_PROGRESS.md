@@ -187,6 +187,20 @@ but are out of scope for this migration order (home/about/contact/404 only).
 - **D9 — Mega-menu from DB.** The services mega-menu items are generated
   from `Service` objects (icon, title, excerpt, url) instead of a new model;
   a `SiteSettings`-level banner line is added for the promo banner text.
+- **D10 — Mega-menu wiring (T06).** The mega menu is attached to whichever
+  `NavItem` resolves to `services:list` (`{% url 'services:list' as
+  services_url %}` + `{% nav_url item.url as item_url %}` string compare), so
+  the admin still reorders/renames nav items freely. Service cards come from
+  the existing `services_footer` context (≤5). On mobile, services render as
+  a nested sub-list under the same nav item (`.m-link` smaller style).
+- **D11 — Persian digits.** Filter `fa_digits` in
+  `apps/core/templatetags/fa_digits.py` translates latin digit runs to
+  fa-IR (`{{ forloop.counter|stringformat:"02d"|fa_digits }}` → «۰۱»). Use
+  it anywhere a latin-digit source is rendered (ordinals, counters, phones).
+- **D12 — Mega-banner copy.** `SiteSettings.mega_title` (runs through the
+  `highlight` filter, so `[[ ]]` markers work), `.mega_description`,
+  `.mega_cta_text` (default «مشاهده همه خدمات», links to `services:list`);
+  the banner block is skipped entirely when `mega_title` is empty.
 
 ## Tasks
 
@@ -201,13 +215,15 @@ but are out of scope for this migration order (home/about/contact/404 only).
 - [x] T04 — Extend site chrome models (SiteSettings footer/contact fields,
   SocialLink icon) + migration + admin |
   files: `apps/core/models.py`, `apps/core/migrations/`, `apps/core/admin.py` | commit: "feat(core): extend site settings and social link models"
-- [ ] T05 — Rebuild local Lucide sprite to cover every icon used in `new/` |
+- [x] T05 — Rebuild local Lucide sprite to cover every icon used in `new/` |
   files: `static/icons/lucide.sprite.svg`, `scripts/build_icon_sprite.js` | commit: "chore(icons): rebuild lucide sprite for v2 design"
 
 ### Phase 1 — base.html (header / footer / CTA)
 
-- [ ] T06 — Create header partial (glass nav, DB mega-menu, mobile overlay) |
-  files: `templates/partials/_header.html` | commit: "feat(base): add v2 header partial with db mega menu"
+- [x] T06 — Create header partial (glass nav, DB mega-menu, mobile overlay) |
+  files: `templates/partials/_header.html`, `apps/core/models.py`,
+  `apps/core/migrations/0008_*`, `apps/core/admin.py`,
+  `apps/core/templatetags/fa_digits.py` | commit: "feat(base): add v2 header partial with db mega menu"
 - [ ] T07 — Create footer partial (contact, quick links, services, enamad) |
   files: `templates/partials/_footer.html` | commit: "feat(base): add v2 footer partial"
 - [ ] T08 — Create pre-footer CTA partial in new pill style |
@@ -308,4 +324,9 @@ but are out of scope for this migration order (home/about/contact/404 only).
 
 ## Current status
 
-T01 + T02 done (v2 tokens + self-hosted fonts). Starting T03 (highlight filter).
+T01–T06 done (v2 tokens, fonts, highlight filter, chrome models, icon sprite,
+header partial). Next: T07 (footer partial). The header partial is not yet
+included anywhere — `base.html` still holds the old inline header; T09 wires
+the partials in. Verified by rendering `partials/_header.html` with the live
+DB (6 nav links, 4 mega cards, 10 mobile links) and with an empty context
+(no exceptions, mega menu hidden).

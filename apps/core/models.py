@@ -69,6 +69,33 @@ class SiteSettings(models.Model):
         default="لوگوی اینماد و ساماندهی پس از دریافت در همین قسمت قرار می‌گیرد.",
     )
 
+    # ─ـ مگامنوی خدمات در هدر ──
+    mega_title = models.CharField(
+        max_length=200,
+        verbose_name="عنوان بنر مگامنو",
+        blank=True,
+        help_text=(
+            "عنوان بنر بالای منوی کشویی خدمات در هدر. "
+            "کلمه‌ای که باید رنگی شود را داخل [[ ]] بنویسید. "
+            "مثلاً: چهار سرویس حرفه‌ای، یک [[برند ماندگار]]"
+        ),
+    )
+    mega_description = models.CharField(
+        max_length=300,
+        verbose_name="توضیح بنر مگامنو",
+        blank=True,
+        help_text="توضیح کوتاه زیر عنوان بنر مگامنو (اختیاری).",
+    )
+    mega_cta_text = models.CharField(
+        max_length=50,
+        verbose_name="متن دکمهٔ بنر مگامنو",
+        blank=True,
+        default="مشاهده همه خدمات",
+        help_text=(
+            "متن دکمهٔ انتهای بنر مگامنو؛ این دکمه به صفحهٔ همه خدمات لینک می‌شود."
+        ),
+    )
+
     logo = models.FileField(
         verbose_name="لوگوی سایت",
         upload_to="brand/",

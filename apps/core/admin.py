@@ -41,6 +41,13 @@ class SiteSettingsAdmin(admin.ModelAdmin):
                 ]
             },
         ),
+        (
+            "مگامنوی خدمات (هدر)",
+            {
+                "fields": ["mega_title", "mega_description", "mega_cta_text"],
+                "description": "بنر بالای منوی کشویی خدمات در هدر سایت.",
+            },
+        ),
     ]
 
     def has_add_permission(self, request):
