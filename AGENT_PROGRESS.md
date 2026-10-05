@@ -458,8 +458,10 @@ but are out of scope for this migration order (home/about/contact/404 only).
   files: `templates/home/sections/_tech.html`, `templates/home/sections/_stats.html`,
   `apps/home/views.py`, `static/js/pixoria.js` |
   commit: "feat(home): convert tech and stats sections to v2"
-- [ ] T23 — Convert `_articles.html` (blog cards), `_faq.html` (accordion) |
-  files: `templates/home/sections/_articles.html`, `templates/home/sections/_faq.html` | commit: "feat(home): convert articles and faq sections to v2"
+- [x] T23 — Convert `_articles.html` (blog cards), `_faq.html` (accordion) |
+  files: `templates/home/sections/_blog.html` (replaces the v1 `_articles.html`
+  carousel partial, deleted), `templates/home/sections/_faq.html` |
+  commit: "feat(home): convert articles and faq sections to v2"
 - [ ] T24 — Rework `_contact.html` lead form into v2 style (HTMX kept) |
   files: `templates/home/sections/_contact.html`, `_lead_form.html`, `_lead_success.html` | commit: "feat(home): restyle lead form to v2"
 - [ ] T25 — Update `seed_home_content` with the new Persian copy from `new/` |
@@ -567,3 +569,23 @@ too, so `+`/`٪`/`/۷` wrap the counted number) and the `PIXORIA` stroke
 watermark. Both section settings were aligned to the v2 copy in place
 («ابزارها و فناوری‌ها» / «دستاوردها»); the `category`/`level`/`description`
 fields the v1 templates used are unused by v2 and cleared.
+
+T23 done. Next: T24 (`_contact.html` lead form → v2 style, HTMX kept). The blog
+section renders in `_blog.html` (the v2 partial for the `blog` HomeSection key;
+the v1 `_articles.html` carousel partial was deleted like `_clients.html` in
+T18) as `blog-card` articles on `bg-ink2` under the cream wave divider: cover
+image with the `blog-chip` category plate, a Jalali date via the new
+`fa_jdate` filter (`apps/core/templatetags/jalali_tags.py`, jdatetime) next to
+the `fa_digits` reading time, excerpt and a «ادامهٔ مطلب» affordance, the whole
+card linking to `blog:detail`. The header uses `blog_section.eyebrow` +
+`title|highlight` and a `.more-link` to `blog_url`; up to six published
+articles render (`latest_articles|slice:":6"`), cards without a cover get a
+dark gradient placeholder. `_faq.html` was rewritten from the v1 Alpine
+accordion to the design's plain-JS one (`.faq-item` / `.faq-q` / `.faq-a` /
+`.faq-icon`, driven by `pixoria.js`'s `initFaq` — Alpine is gone from base.html
+since D15) on `bg-cream` with a centered header (`eyebrow-dark` + `highlight:"dark"`),
+`aria-expanded`/`aria-controls` per item and staggered `data-delay`s. The
+FAQPage JSON-LD in `home/index.html` is unchanged. The DB copy for these two
+sections was intentionally left as-is (the v2 copy lands with the T25 seed
+update), so the `eyebrow` fields render empty until then — both partials are
+`{% if %}`-guarded around it.
