@@ -15,6 +15,7 @@ from apps.home.models import (
     HeaderSettings,
     NavItem,
     HeroSection,
+    HeroStat,
     HeroMarqueeItem,
     FeaturedWorkSection,
     ServicesSection,
@@ -23,6 +24,10 @@ from apps.home.models import (
     CTASection,
     LatestArticlesSection,
     HomeSection,
+    HomeAboutSection,
+    HomeAboutStat,
+    TrustedSection,
+    TestimonialSection,
     StatsSection,
     StatItem,
     ProcessSection,
@@ -144,14 +149,32 @@ class Command(BaseCommand):
     def seed_hero(self):
         _, created = first_or_create(
             HeroSection,
-            title="ایده‌هایت را به محصول می‌سازیم",
+            eyebrow="استودیوی طراحی و توسعه · از سال ۱۳۸۹",
+            title="تصویری حرفه‌ای،[[برندی ماندگار]]",
             description=(
-                "پیکسوریا استودیوی طراحی و توسعهٔ محصولات دیجیتال است؛ از هویت بصری و "
-                "طراحی رابط کاربری تا کدنویسی و انتشار. کنارتان هستیم تا ایده‌ای که در "
-                "ذهن دارید، در دست کاربران بنشیند."
+                "پیکسوریا پانزده سال است در مشهد کنار برندهاست؛ از طراحی سایت "
+                "و برنامه‌نویسی تا خدمات گرافیکی و طراحی لوگو — تا برند شما "
+                "همان‌قدر که شایسته است، دیده شود."
             ),
+            cta_primary_text="مشاوره رایگان",
+            cta_primary_url="#contact",
+            cta_secondary_text="مشاهده نمونه‌کارها",
+            cta_secondary_url="#portfolio",
         )
         self.log("هیرو", created)
+
+        stats = [
+            ("+۵۰۰", "کسب‌وکار مشاوره‌شده", "", 0),
+            ("۱۳۵+", "بلاگر تبلیغاتی", "", 10),
+            ("مشهد", "", "map-pin", 20),
+        ]
+        added = 0
+        for value, label, icon, order in stats:
+            if not HeroStat.objects.filter(value=value, label=label).exists():
+                HeroStat.objects.create(value=value, label=label, icon=icon, order=order)
+                added += 1
+        if added:
+            self.stdout.write(f"  + {added} آمار هیرو")
 
         marquee = [
             "طراحی وب‌سایت",

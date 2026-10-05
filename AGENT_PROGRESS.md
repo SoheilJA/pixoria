@@ -391,8 +391,10 @@ but are out of scope for this migration order (home/about/contact/404 only).
   files: `templates/home/index.html`, `apps/home/views.py`,
   `templates/home/sections/_faq.html` (duplicate FAQ JSON-LD removed) |
   commit: "feat(home): render v2 section keys"
-- [ ] T15 — Convert `_hero.html` to the v2 hero (3D mount + fallback) |
-  files: `templates/home/sections/_hero.html` | commit: "feat(home): convert hero section to v2"
+- [x] T15 — Convert `_hero.html` to the v2 hero (3D mount + fallback) |
+  files: `templates/home/sections/_hero.html`,
+  `apps/home/management/commands/seed_home_content.py` (v2 hero copy +
+  HeroStat seed, imports) | commit: "feat(home): convert hero section to v2"
 - [ ] T16 — Add `_about.html` (short intro, DB-driven) |
   files: `templates/home/sections/_about.html` | commit: "feat(home): add about section"
 - [ ] T17 — Convert `_services.html` (4 bespoke service cards) |
@@ -457,13 +459,11 @@ but are out of scope for this migration order (home/about/contact/404 only).
 
 ## Current status
 
-T01–T14 done. Next: T15 (convert `_hero.html` to the v2 hero). Migrations
-applied: home 0009/0010, services 0006; `manage.py check` and
-`makemigrations --check` clean. Home renders 200 both with the seeded DB
-(two valid JSON-LD blocks: Organization+WebSite graph and FAQPage) and
-with a fully empty DB (throwaway test verified). View context: old keys
-removed (`featured_work_*`, `manifesto`, `latest_articles_section`), new
-ones added (`hero_stats`, `about_section`/`about_stats`,
-`trusted_section`, `portfolio_section`/`portfolio_items` (prefetched
-categories), `blog_section`, `testimonials_section`); live old partials'
-context vars untouched until their partial is rewritten.
+T01–T15 done. Next: T16 (add `_about.html`). Hero v2 renders 200: title
+with `[[ ]]` gold highlight via the `highlight` filter, DB-driven eyebrow,
+description, both CTAs (`nav_url`-resolved) and the `HeroStat` row, plus
+the `#hero-3d`/`#hero-canvas`/`#hero-fallback` mount consumed by
+hero-scene.js. The seed command now ships the v2 hero copy (eyebrow,
+«تصویری حرفه‌ای،[[برندی ماندگار]]», CTAs) and three HeroStat rows; the
+pre-existing v1 HeroSection row was migrated to the v2 copy in-place
+(seed is idempotent and never overwrites admin edits).
