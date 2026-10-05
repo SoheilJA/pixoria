@@ -223,6 +223,22 @@ but are out of scope for this migration order (home/about/contact/404 only).
   (`{%.*?%}|{{.*?}}|{#.*?#}`, no DOTALL) means `{# … #}` only comments a
   SINGLE line; a multi-line `{#` block leaks its text into the rendered HTML.
   Use `{% comment %}…{% endcomment %}` for multi-line notes in templates.
+- **D15 — base.html v2 layout (T09).** Composes
+  `partials/_header.html` → `<main id="main">` (content block →
+  `partials/_cta.html` → `afterPrefooter` block) → `partials/_footer.html`,
+  plus the skip link, `#scroll-progress` bar, `.grain` overlay and `#toast`
+  (role=status, local `check` icon). Assets, all local and deferred:
+  `js/vendor/gsap.min.js` + `js/vendor/ScrollTrigger.min.js` (defer, globals),
+  `js/pixoria.js` (module — T10), `js/hero-scene.js` (module — T11),
+  `js/htmx.min.js` (defer, for the lead/contact forms). Dropped from v1:
+  Alpine (v2 FAQ/menu are plain JS in pixoria.js), `hx-boost` on `<body>`
+  (plain multi-page navigation; htmx stays only for form posts), the
+  `bg-shell`/preloader/`pixoria-glass` SVG scaffolding, `{{ preset }}`
+  bg-config json_script and the old inline nav-sync script (pixoria.js owns
+  scroll-spy now). `<main>` has NO top padding — the fixed glass header is
+  designed to overlay full-bleed heroes, and inner pages give their own hero
+  top padding (old `components/page_hero.html` already has
+  `pt-[clamp(64px,9vw,130px)]`).
 
 ## Tasks
 
@@ -252,7 +268,7 @@ but are out of scope for this migration order (home/about/contact/404 only).
   files: `templates/partials/_cta.html`, `apps/home/models.py`,
   `apps/home/migrations/0007_*`, `apps/home/admin.py` |
   commit: "feat(base): add v2 cta partial"
-- [ ] T09 — Rewrite `base.html` to compose new partials, local deferred
+- [x] T09 — Rewrite `base.html` to compose new partials, local deferred
   assets, toast container, scroll progress; keep block names (title,
   description, og_title, og_description, extra_css, extra_head, content,
   afterPrefooter, extra_js) |
@@ -348,8 +364,8 @@ but are out of scope for this migration order (home/about/contact/404 only).
 
 ## Current status
 
-T01–T08 done (v2 tokens, fonts, highlight filter, chrome models, icon sprite,
-header/footer/CTA partials). Next: T09 (rewrite `base.html` to compose the
-new partials). All three partials verified by rendering with the live DB and
-with an empty context (header/footer degrade gracefully; CTA renders nothing
-without a `CTASection` row).
+T01–T09 done — Phase 1 (base.html) complete. Next: T10 (port the new design's
+page script into `static/js/pixoria.js`). Verified after the base rewrite:
+`, /about/ /contact/ /services/ /portfolio/ /blog/` all return 200 with the
+new header/footer/CTA/toast, and the custom 404 handler renders against the
+new base. Not-yet-converted page bodies render unstyled (expected per D1).

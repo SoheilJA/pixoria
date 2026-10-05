@@ -1,10 +1,10 @@
-{% load static icon_tags brand_tags %}
+{% load static icon_tags %}
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <meta name="theme-color" content="#04070a" />
+    <meta name="theme-color" content="#0a0a0c" />
     <title>
       {% block title %}
         {{ settings.site_name }}
@@ -15,7 +15,7 @@
       {% endblock %}" />
     <link rel="canonical" href="{{ request.build_absolute_uri }}" />
 
-    {# Open Graph — مقاصد سئو و اشتراک‌گذاری در شبکه‌های اجتماعی #}
+    {# Open Graph — برای سئو و اشتراک‌گذاری در شبکه‌های اجتماعی #}
     <meta property="og:site_name" content="{{ settings.site_name }}" />
     <meta property="og:locale" content="fa_IR" />
     <meta property="og:type" content="website" />
@@ -23,225 +23,74 @@
     <meta property="og:title" content="{% block og_title %}{{ settings.site_name }}{% endblock %}" />
     <meta property="og:description" content="{% block og_description %}{{ settings.site_description }}{% endblock %}" />
     <meta name="twitter:card" content="summary_large_image" />
-    {# Favicon set — generated from the pixel wordmark; replaceable via SiteSettings #}
+    {# فاوآیکون — قابل تعویض از SiteSettings #}
     <link rel="icon" href="{% if settings.favicon %}{{ settings.favicon.url }}{% else %}{% static 'brand/favicon.ico' %}{% endif %}" sizes="any" />
     {% if not settings.favicon %}<link rel="icon" type="image/png" sizes="48x48" href="{% static 'brand/favicon-48.png' %}" />{% endif %}
     <link rel="apple-touch-icon" href="{% if settings.apple_touch_icon %}{{ settings.apple_touch_icon.url }}{% else %}{% static 'brand/apple-touch-icon.png' %}{% endif %}" />
     <link rel="manifest" href="{% static 'brand/site.webmanifest' %}" />
     <link rel="stylesheet" href="{% static 'fonts/font_urls.css' %}" />
     <link rel="stylesheet" href="{% static 'css/tailwind.css' %}" />
-    {# <link rel="stylesheet" href="{% static 'css/styles.css' %}" /> #}
     {% block extra_css %}
     {% endblock %}
     {% block extra_head %}
     {% endblock %}
-    {# Background engine config — preset per page; read by static/js/pixoria-bg/boot.js #}
-    {{ preset|default:'home'|json_script:'bg-config' }}
   </head>
-  <body class="overflow-x-hidden bg-night font-sans text-body text-ink-soft antialiased" hx-boost="true">
-    {# Background canvas shell — one fixed WebGL layer behind all content.
-       hx-preserve keeps it alive across HTMX navigations (the whole <body> is
-       swapped), so the background never restarts on a page change. #}
-    <div id="bg-shell" class="bg-shell" hx-preserve aria-hidden="true">
-      <div class="bg-fallback"></div>
-    </div>
-    {# Displacement filter used by .liquid-glass (feTurbulence + feDisplacementMap) #}
-    <svg class="sr-only" aria-hidden="true" focusable="false" width="0" height="0" style="position:absolute;width:0;height:0">
-      <filter id="pixoria-glass" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB">
-        <feTurbulence type="fractalNoise" baseFrequency="0.012 0.018" numOctaves="2" seed="7" result="noise" />
-        <feDisplacementMap in="SourceGraphic" in2="noise" scale="14" xChannelSelector="R" yChannelSelector="G" />
-      </filter>
-    </svg>
-    <div id="preloader" class="preloader" aria-hidden="true">
-      <div class="preloader__title">
-        {% pixel_wordmark "full" class="wordmark preloader__wordmark h-[34px] w-auto text-ink" %}
-        <div class="preloader__progress" role="progressbar" aria-label="بارگذاری">
-          <span class="preloader__bar"></span>
-        </div>
-        <span class="preloader__pct">۰٪</span>
+  <body class="overflow-x-hidden bg-ink font-sans text-cream antialiased">
+    {# پرش به محتوای اصلی — دسترس‌پذیری #}
+    <a
+      href="#main"
+      class="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:right-2 focus:z-[200] focus:rounded-full focus:bg-gold focus:px-5 focus:py-2 focus:text-ink"
+      >پرش به محتوای اصلی</a
+    >
+
+    {# نوار پیشرفت اسکرول #}
+    <div
+      id="scroll-progress"
+      class="fixed top-0 right-0 left-0 z-[85] h-[3px] origin-right scale-x-0"
+      style="background: linear-gradient(to left, #8f6b2c, #c9a15a 30%, #e8c47a 55%, #2e63ff);"
+      aria-hidden="true"
+    ></div>
+
+    {# بافت نویز ظریف #}
+    <div class="grain" aria-hidden="true"></div>
+
+    {% include "partials/_header.html" %}
+
+    <main id="main" class="min-w-0">
+      {% block content %}
+      {% endblock %}
+      {% include "partials/_cta.html" %}
+      {% block afterPrefooter %}
+      {% endblock %}
+    </main>
+
+    {% include "partials/_footer.html" %}
+
+    {# اعلان (Toast) — توسط pixoria.js نمایش داده می‌شود #}
+    <div
+      id="toast"
+      class="fixed inset-x-0 bottom-6 z-[100] flex justify-center px-4"
+      role="status"
+      aria-live="polite"
+    >
+      <div class="glass flex items-center gap-3 rounded-full px-6 py-4">
+        <span
+          class="grid h-7 w-7 flex-none place-items-center rounded-full bg-gold/20 text-gold-light"
+          >{% icon "check" class="h-4 w-4" %}</span
+        >
+        <p id="toast-text" class="text-sm text-cream/85"></p>
       </div>
     </div>
-    <div id="htmx-progress" class="htmx-progress" aria-hidden="true"></div>
-    <header id="site-header" class="site-header fixed inset-x-0 top-0 z-50">
-      <div class="header-wrap mx-auto max-w-[1440px] px-[clamp(12px,2.4vw,28px)] pt-[clamp(10px,1.4vw,16px)]">
-        <div class="header-bar liquid-glass flex h-[var(--header-h,64px)] items-center justify-between gap-3 rounded-full px-3 md:px-5">
-          {# لوگو #}
-          <a href="{% url 'home:home' %}" class="wordmark-link group flex shrink-0 items-center" aria-label="{{ settings.site_name }}">
-            {% if settings.logo %}
-              <img src="{{ settings.logo.url }}" alt="{{ settings.site_name }}" class="h-6 w-auto max-w-[14rem]" />
-            {% else %}
-              {% pixel_wordmark "full" class="wordmark h-[20px] w-auto text-ink md:h-[22px]" %}
-            {% endif %}
-          </a>
 
-          {# ناوبری دسکتاپ — آیتم‌ها از پنل ادمین #}
-          <nav class="hidden items-center gap-0.5 lg:flex" aria-label="Primary">
-            {% load nav_tags %}
-            {% for item in nav_items %}
-              <a href="{% nav_url item.url %}" class="nav-link" data-nav-key="{{ item.url }}">{{ item.title }}</a>
-            {% endfor %}
-          </nav>
-
-          {# سمت چپ: CTA + همبرگر #}
-          <div class="flex shrink-0 items-center gap-2">
-            {% if header_settings and header_settings.show_cta %}
-              <a href="{% nav_url header_settings.cta_url|default:'contact:contact' %}" class="btn btn-lime hidden text-[0.76rem] sm:inline-flex" data-magnetic="8">{{ header_settings.cta_text }}</a>
-            {% endif %}
-            <button type="button" class="menu-toggle inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-lime text-ink lg:hidden" aria-label="باز کردن منو" aria-controls="mobile-nav" aria-expanded="false">
-              <span class="menu-toggle__lines">{% icon "menu" class="h-5 w-5" %}</span>
-            </button>
-          </div>
-          <div id="scroll-progress" class="scroll-progress" aria-hidden="true"></div>
-        </div>
-      </div>
-    </header>
-
-    {# منوی موبایل — اورلی تمام‌صفحه با انیمیشن GSAP #}
-    <div id="mobile-nav" class="mobile-nav fixed inset-0 z-[80]" aria-hidden="true" role="dialog" aria-modal="true" aria-label="منوی موبایل">
-      <div class="mobile-nav__veil"></div>
-      <div class="mobile-nav__panel liquid-glass-strong">
-        <button type="button" class="mobile-close inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-full bg-lime text-ink" aria-label="بستن منو">{% icon "x" class="h-5 w-5" %}</button>
-
-        <nav class="mobile-nav__links font-display text-[clamp(1.8rem,8vw,2.6rem)] text-ink" aria-label="منو">
-          {% for item in nav_items %}
-            <a href="{% nav_url item.url %}" class="mobile-link group flex items-center justify-between border-b border-line py-3 transition-colors hover:text-lime" data-nav-key="{{ item.url }}">
-              <span>{{ item.title }}</span>
-              <span class="text-lime opacity-0 transition-all duration-300 group-hover:translate-x-[-4px] group-hover:opacity-100">{% icon "arrow-up-left" class="h-6 w-6" %}</span>
-            </a>
-          {% endfor %}
-        </nav>
-
-        <div class="mobile-nav__foot">
-          {% if header_settings and header_settings.show_cta %}
-            <a href="{% nav_url header_settings.cta_url|default:'contact:contact' %}" class="btn btn-lime w-full justify-center">{{ header_settings.cta_text }}</a>
-          {% endif %}
-          <div class="mobile-nav__contact">
-            {% if settings.phone %}
-              <a href="tel:{{ settings.phone }}" class="inline-flex items-center gap-2.5">{% icon "phone" class="h-4 w-4" %}{{ settings.phone }}</a>
-            {% endif %}
-            {% if settings.email %}
-              <a href="mailto:{{ settings.email }}" class="inline-flex items-center gap-2.5">{% icon "mail" class="h-4 w-4" %}{{ settings.email }}</a>
-            {% endif %}
-          </div>
-          <div class="mobile-nav__socials">
-            {% for social in socials %}
-              <a href="{{ social.url }}" target="_blank" rel="noopener" class="inline-flex items-center gap-2 rounded-full border border-line px-3.5 py-1.5 transition-colors hover:border-lime hover:text-lime">
-                <span class="font-pixel text-[0.55rem]">{{ social.label }}</span>{{ social.name }}
-              </a>
-            {% endfor %}
-          </div>
-          <div class="mobile-nav__legal">
-            <span>© {{ settings.established_year }} {{ settings.site_name }}</span>
-            <span class="inline-flex items-center gap-2"><span class="h-1.5 w-1.5 animate-pulse rounded-full bg-lime"></span>{{ settings.status|default:'آماده همکاری' }}</span>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="min-w-0">
-      <main id="content-start" class="pt-[var(--header-h,72px)]">
-          {% block content %}
-          {% endblock %}
-          {% include 'components/cta_banner.html' %}
-          {% block afterPrefooter %}
-          {% endblock %}
-        </main>
-        <footer class="cfooter-stars relative overflow-hidden bg-night px-page pb-6 pt-[clamp(60px,7vw,100px)] text-[0.92rem] text-mist" aria-labelledby="footer-head" data-bg-rest>
-          <div class="pointer-events-none absolute inset-0 z-[1] bg-gradient-to-b from-night via-transparent to-night/85" aria-hidden="true"></div>
-          <h2 id="footer-head" class="sr-only">فوتر سایت</h2><div class="relative z-10 grid grid-cols-2 gap-8 border-b border-line-strong pb-12 md:grid-cols-[1.4fr_1fr_1fr_1fr] md:gap-12">
-            <div class="flex max-w-[36ch] flex-col gap-[18px]">
-              <span class="flex items-center gap-2.5">{% if settings.logo %}<img src="{{ settings.logo.url }}" alt="{{ settings.site_name }}" class="h-7 w-auto" />{% else %}{% pixel_wordmark "full" class="wordmark h-[26px] w-auto text-ink" %}{% endif %}</span><p class="m-0 leading-[1.55] text-mist-soft">{{ settings.footer_description }}</p>
-            </div>
-            <div>
-              <h4 class="mb-3.5 font-mono text-[0.74rem] text-ink">نقشه سایت</h4><a href="{% url 'home:home' %}" class="block py-1.5 text-mist-soft hover:text-lime">خانه</a><a href="{% url 'portfolio:list' %}" class="block py-1.5 text-mist-soft hover:text-lime">نمونه‌کارها</a><a href="{% url 'services:list' %}" class="block py-1.5 text-mist-soft hover:text-lime">خدمات</a><a href="{% url 'blog:list' %}" class="block py-1.5 text-mist-soft hover:text-lime">بلاگ</a><a href="{% url 'core:about' %}" class="block py-1.5 text-mist-soft hover:text-lime">درباره ما</a><a href="{% url 'contact:contact' %}" class="block py-1.5 text-mist-soft hover:text-lime">تماس با ما</a>
-            </div>
-            <div>
-              <h4 class="mb-3.5 font-mono text-[0.74rem] text-ink">خدمات</h4>{% for service in services_footer %}
-                <a href="{% url 'services:detail' service.slug %}" class="block py-1.5 text-mist-soft hover:text-lime">{{ service.title }}</a>
-              {% empty %}
-                <a href="{% url 'services:list' %}" class="block py-1.5 text-mist-soft hover:text-lime">مشاهده خدمات</a>
-              {% endfor %}
-            </div>
-            <div>
-              <h4 class="mb-3.5 font-mono text-[0.74rem] text-ink">ارتباط</h4>{% if settings.email %}
-                <a href="mailto:{{ settings.email }}" class="block py-1.5 text-mist-soft hover:text-lime">{{ settings.email }}</a>
-              {% endif %}
-              {% if settings.phone %}
-                <a href="tel:{{ settings.phone }}" class="block py-1.5 text-mist-soft hover:text-lime">{{ settings.phone }}</a>
-              {% endif %}
-              {% if settings.address %}
-                <span class="block py-1.5 text-mist-soft">{{ settings.address }}</span>
-              {% endif %}
-              <div class="mt-3 flex flex-wrap gap-3">
-                {% for social in socials %}
-                  <a href="{{ social.url }}" target="_blank" rel="noopener" class="text-mist-soft hover:text-lime">{{ social.name }}</a>
-                {% endfor %}
-              </div>
-            </div>
-          </div>
-          <div class="relative z-10 mt-6 grid grid-cols-1 gap-2 font-mono text-[0.74rem] text-mist-dim md:grid-cols-3 md:gap-6">
-            <span>© {{ settings.established_year }} {{ settings.site_name }}</span><span class="md:text-center">{{ settings.address|default:'ایران' }}</span><span class="md:text-left">{{ settings.status|default:'آماده همکاری' }}</span>
-          </div>
-
-          {# واترمارک پیکسلی بزرگ — امضای برند در پایین صفحه #}
-          <div class="relative z-10 mt-10" aria-hidden="true">
-            <div class="pixel-divider mb-8 opacity-25"></div>
-            {% pixel_wordmark "mono" class="wordmark h-[clamp(52px,11vw,132px)] w-auto text-ink/[0.05] transition-colors duration-700 hover:text-ink/10" %}
-          </div>
-
-          {# بازگشت به بالا #}
-          <a href="#content-start"
-             class="group absolute bottom-5 left-page z-20 inline-flex items-center gap-2 rounded-full border border-line-strong bg-paper-soft/80 px-4 py-2 font-mono text-[0.72rem] text-mist-soft backdrop-blur-sm transition-colors duration-300 hover:border-lime hover:text-lime"
-             aria-label="بازگشت به ابتدای صفحه">
-            <span class="transition-transform duration-300 ease-ax group-hover:-translate-y-1" aria-hidden="true">↑</span>
-            بازگشت به بالا
-          </a>
-        </footer>
-      </div>
-  <script src="{% static 'js/vendor/gsap.min.js' %}"></script>
-  <script src="{% static 'js/vendor/ScrollTrigger.min.js' %}"></script>
-    <script src="{% static 'js/vendor/alpine.min.js' %}" defer></script>
-    <script src="{% static 'js/main.js' %}" defer></script>
-    <script type="module" src="{% static 'js/pixoria-bg/boot.js' %}"></script>
-    <script type="module" src="{% static 'js/home-motion.js' %}"></script>
-    <script type="module" src="{% static 'js/header-motion.js' %}"></script>
-    <script type="module" src="{% static 'js/footer-stars.js' %}"></script>
-    <script type="module" src="{% static 'js/core/wordmark.js' %}"></script>
-    <script type="module" src="{% static 'js/core/glass.js' %}"></script>
-    <script src="{% static 'js/htmx.min.js' %}" defer></script>
-    <script type="module" src="{% static 'js/motion.js' %}"></script>
-    <script type="module" src="{% static 'js/cursor.js' %}"></script>
-    <script>
-      ;(function () {
-        var htmxBar = document.getElementById('htmx-progress')
-      document.body.addEventListener('htmx:beforeRequest', function () {
-        if (htmxBar) htmxBar.classList.add('is-loading')
-      })
-      document.body.addEventListener('htmx:afterRequest', function () {
-        if (htmxBar) htmxBar.classList.remove('is-loading')
-      })
-      function syncActiveNav() {
-        var path = window.location.pathname
-        document.querySelectorAll('#site-header .nav-link[href], #mobile-nav a[href^="/"]').forEach(function (a) {
-          var href = a.getAttribute('href').replace(/\/$/, '')
-          var isActive = href !== '' && (path === href || (href !== '/' && path.indexOf(href) === 0))
-          if (a.closest('#site-header')) {
-            a.classList.toggle('active', isActive)
-          }
-          if (a.closest('#mobile-nav')) {
-            a.classList.toggle('text-lime', isActive)
-          }
-        })
-      }
-      document.addEventListener('DOMContentLoaded', syncActiveNav)
-      document.addEventListener('htmx:pushedIntoHistory', syncActiveNav)
-      document.addEventListener('htmx:afterSettle', syncActiveNav)
-
-      /* htmx swaps the whole body; Alpine only inits the tree it booted with,
-         so hand it the new one. */
-      document.addEventListener('htmx:afterSwap', function () {
-        if (window.Alpine) window.Alpine.initTree(document.body)
-      })
-    </script>
+    {# کتابخانه‌ها — همه محلی، بدون CDN #}
+    <script defer src="{% static 'js/vendor/gsap.min.js' %}"></script>
+    <script defer src="{% static 'js/vendor/ScrollTrigger.min.js' %}"></script>
+    {# لایهٔ تعاملات (Lenis، reveal، counters، منو، …) — T10 #}
+    <script type="module" src="{% static 'js/pixoria.js' %}"></script>
+    {# صحنهٔ سه‌بعدی هیرو — فقط در صورت وجود #hero-3d و نزدیک بودن به دید مقداردهی می‌شود — T11 #}
+    <script type="module" src="{% static 'js/hero-scene.js' %}"></script>
+    {# HTMX — برای فرم‌های ارسال بدون بازبارگذاری صفحه #}
+    <script defer src="{% static 'js/htmx.min.js' %}"></script>
     {% block extra_js %}
     {% endblock %}
   </body>
