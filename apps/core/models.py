@@ -2,6 +2,24 @@ from django.db import models
 
 from .icon_utils import validate_icon_name
 
+# راهنمای مشترک فیلد آیکون — در چندین مدل تکرار می‌شود تا متن کمکی یکسانی داشته
+# باشد. آیکون‌ها از اسپرایت محلی لوساید بارگذاری می‌شوند (بدون CDN).
+ICON_HELP = (
+    "نام انگلیسی یک آیکون Lucide، بدون فاصله. "
+    "مثال: zap، palette، shield-check. "
+    "لیست کامل آیکون‌ها: lucide.dev/icons"
+)
+# راهنمای مشترک فیلد متن بالای عنوان (eyebrow) که در سکشن‌های v2 بالای عنوان
+# می‌آید.
+EYEBROW_HELP = "متن کوچک و طلاییِ بالای عنوان. مثلاً: داستان ما"
+# راهنمای مشترک فیلد عنوان سکشن‌ها — مارکر [[ ]] کلمهٔ رنگی را مشخص می‌کند.
+TITLE_HELP = "کلمه‌ای که باید رنگی شود را داخل [[ ]] بنویسید."
+# راهنمای مشترک فیلدهای لینک دکمه‌ها — نام آدرس جنگو، مسیر مستقیم یا لنگر.
+URL_HELP = (
+    "نام آدرس جنگو (مثل contact:contact)، مسیر مستقیم (مثل /blog/) "
+    "یا لنگر صفحه (مثل #contact)"
+)
+
 
 class SiteSettings(models.Model):
     """تنظیمات کلی سایت"""
@@ -219,8 +237,35 @@ class FooterLink(models.Model):
 class AboutPageHero(models.Model):
     """هیرو سکشن درباره ما"""
 
-    title = models.CharField(max_length=200, verbose_name="عنوان")
+    title = models.CharField(
+        max_length=200,
+        verbose_name="عنوان",
+        help_text=TITLE_HELP + " مثال: داستانی که از [[۱۳۸۹]] آغاز شد",
+    )
     description = models.TextField(verbose_name="توضیحات")
+    eyebrow = models.CharField(
+        max_length=200,
+        verbose_name="متن بالای عنوان",
+        blank=True,
+        help_text=EYEBROW_HELP + ". مثال: استودیوی طراحی و توسعهٔ پیکسوریا",
+    )
+    cta_primary_text = models.CharField(
+        max_length=50, verbose_name="متن دکمهٔ اصلی", default="تماس با ما"
+    )
+    cta_primary_url = models.CharField(
+        max_length=200, verbose_name="لینک دکمهٔ اصلی", default="contact:contact",
+        help_text=URL_HELP,
+    )
+    cta_secondary_text = models.CharField(
+        max_length=50, verbose_name="متن دکمهٔ دوم", default="خدمات ما"
+    )
+    cta_secondary_url = models.CharField(
+        max_length=200,
+        verbose_name="لینک دکمهٔ دوم",
+        blank=True,
+        default="services:list",
+        help_text=URL_HELP + ". خالی بگذارید تا دکمهٔ دوم نمایش داده نشود",
+    )
 
     class Meta:
         verbose_name = "هیروسکشن صفحه درباره ما"
@@ -238,7 +283,51 @@ class AboutPageHero(models.Model):
 class AboutStory(models.Model):
     """داستان ما"""
 
-    description = models.TextField(verbose_name="توضیحات ")
+    description = models.TextField(
+        verbose_name="پاراگراف اصلی",
+        help_text="اولین و بزرگ‌ترین پاراگرافِ بخش داستان (روشن).",
+    )
+    eyebrow = models.CharField(
+        max_length=100, verbose_name="متن بالای عنوان", blank=True, help_text=EYEBROW_HELP
+    )
+    title = models.CharField(
+        max_length=200,
+        verbose_name="عنوان",
+        blank=True,
+        help_text=TITLE_HELP + " مثال: از یک استودیوی طراحی، تا مشاورِ [[برندها]]",
+    )
+    body = models.TextField(
+        verbose_name="پاراگراف‌های تکمیلی",
+        blank=True,
+        help_text="پاراگراف‌های بعدیِ داستان — هر خط یک پاراگراف جداگانه.",
+    )
+    chips = models.CharField(
+        max_length=300,
+        verbose_name="برچسب‌ها",
+        blank=True,
+        help_text="متن‌های کوچکِ کپسولی زیر داستان، جدا شده با ویرگول. مثلاً: مشهد، شرکت‌ها و ادارات",
+    )
+    quote = models.TextField(
+        verbose_name="نقل‌قول",
+        blank=True,
+        help_text="نقل‌قولِ انتهای بخش داستان. خالی بگذارید تا نقل‌قول نمایش داده نشود.",
+    )
+    image = models.ImageField(
+        upload_to="about/story/",
+        verbose_name="تصویر",
+        blank=True,
+        null=True,
+        help_text="تصویر کنار داستان (نسبت ۴:۳). اختیاری.",
+    )
+    image_alt = models.CharField(
+        max_length=200, verbose_name="متن جایگزین تصویر", blank=True
+    )
+    image_caption = models.CharField(
+        max_length=100,
+        verbose_name="کپشن تصویر",
+        blank=True,
+        help_text="متن داخل کپسولِ روی تصویر. مثلاً: مشهد",
+    )
 
     class Meta:
         verbose_name = "داستان ما"
@@ -251,6 +340,77 @@ class AboutStory(models.Model):
         if not self.pk and AboutStory.objects.exists():
             raise ValueError("فقط یک سکشن مجاز است")
         super().save(*args, **kwargs)
+
+
+class AboutJourneySection(models.Model):
+    """بخش «مسیر» — جدول زمانی حوزه‌های فعالیت (روشن → تیره)"""
+
+    eyebrow = models.CharField(
+        max_length=100,
+        verbose_name="متن بالای عنوان",
+        blank=True,
+        default="حوزه‌های فعالیت",
+        help_text=EYEBROW_HELP,
+    )
+    title = models.CharField(
+        max_length=200,
+        verbose_name="عنوان",
+        default="حوزه‌ها، در یک [[مسیر]]",
+        help_text=TITLE_HELP,
+    )
+    subtitle = models.CharField(
+        max_length=300, verbose_name="توضیح کوتاه", blank=True
+    )
+    badge_icon = models.CharField(
+        max_length=64,
+        verbose_name="آیکون کپسول",
+        default="award",
+        validators=[validate_icon_name],
+        help_text="آیکون کپسول شناورِ روی نقشهٔ مسیر. " + ICON_HELP,
+    )
+    badge_text = models.CharField(
+        max_length=100,
+        verbose_name="متن کپسول",
+        blank=True,
+        default="+۱۵ سال تجربه",
+        help_text="متن کپسول شناورِ روی نقشهٔ مسیر. اعداد فارسی نمایش داده می‌شوند.",
+    )
+
+    class Meta:
+        verbose_name = "بخش مسیر صفحه درباره ما"
+        verbose_name_plural = "بخش مسیر صفحه درباره ما"
+
+    def __str__(self):
+        return "بخش مسیر"
+
+    def save(self, *args, **kwargs):
+        if not self.pk and AboutJourneySection.objects.exists():
+            raise ValueError("فقط یک سکشن مجاز است")
+        super().save(*args, **kwargs)
+
+
+class AboutJourneyStep(models.Model):
+    """یک ایستگاه از مسیرِ حوزه‌های فعالیت"""
+
+    year = models.CharField(
+        max_length=20,
+        verbose_name="سال یا عنوان",
+        blank=True,
+        help_text="مثلاً ۱۳۸۹ برای ایستگاه اول، یا «امروز» برای ایستگاه آخر.",
+    )
+    title = models.CharField(max_length=200, verbose_name="عنوان ایستگاه")
+    subtitle = models.CharField(
+        max_length=200, verbose_name="توضیح کوتاه", blank=True
+    )
+    order = models.PositiveIntegerField(default=0, verbose_name="ترتیب")
+
+    class Meta:
+        verbose_name = "ایستگاه مسیر"
+        verbose_name_plural = "ایستگاه‌های مسیر"
+        ordering = ["order"]
+
+    def __str__(self):
+        return self.title
 
 
 class TeamMember(models.Model):
@@ -290,10 +450,40 @@ class AboutValue(models.Model):
 class AboutStat(models.Model):
     """آمار و ارقام"""
 
-    number = models.CharField(max_length=50, verbose_name="عدد", help_text="مثلا +70")
+    number = models.CharField(
+        max_length=50,
+        verbose_name="متن عدد (قدیمی)",
+        blank=True,
+        help_text="فیلد قدیمیِ نمایش عدد. در طرح v2 از «مقدار»، «پیشوند» و «پسوند» استفاده می‌شود.",
+    )
+    value = models.PositiveIntegerField(
+        default=0,
+        verbose_name="مقدار",
+        help_text="عدد شمارش‌شوندهٔ انیمیشنی. مثلاً ۱۵۰",
+    )
+    prefix = models.CharField(
+        max_length=10,
+        verbose_name="پیشوند",
+        blank=True,
+        help_text="مثلاً +",
+    )
+    suffix = models.CharField(
+        max_length=10,
+        verbose_name="پسوند",
+        blank=True,
+        help_text="مثلاً ٪",
+    )
     label = models.CharField(max_length=100, verbose_name="برچست")
     description = models.CharField(
         max_length=200, verbose_name="توضیحات کوتاه", blank=True
+    )
+    icon = models.CharField(
+        max_length=64,
+        blank=True,
+        default="award",
+        verbose_name="آیکون",
+        help_text=ICON_HELP,
+        validators=[validate_icon_name],
     )
     order = models.PositiveIntegerField(default=0, verbose_name="ترتیب")
 
@@ -304,6 +494,39 @@ class AboutStat(models.Model):
 
     def __str__(self):
         return self.label
+
+
+class AboutClientsSection(models.Model):
+    """بخش «اعتماد مشتریان» — دیوار نام برندهای همکار"""
+
+    eyebrow = models.CharField(
+        max_length=100,
+        verbose_name="متن بالای عنوان",
+        blank=True,
+        default="رزومه و اعتماد",
+        help_text=EYEBROW_HELP,
+    )
+    title = models.CharField(
+        max_length=200,
+        verbose_name="عنوان",
+        default="اعتمادِ آن‌ها، [[افتخارِ ما]]",
+        help_text=TITLE_HELP,
+    )
+    subtitle = models.CharField(
+        max_length=300, verbose_name="توضیح کوتاه", blank=True
+    )
+
+    class Meta:
+        verbose_name = "بخش مشتریان صفحه درباره ما"
+        verbose_name_plural = "بخش مشتریان صفحه درباره ما"
+
+    def __str__(self):
+        return "بخش مشتریان"
+
+    def save(self, *args, **kwargs):
+        if not self.pk and AboutClientsSection.objects.exists():
+            raise ValueError("فقط یک سکشن مجاز است")
+        super().save(*args, **kwargs)
 
 
 class AboutPre(models.Model):

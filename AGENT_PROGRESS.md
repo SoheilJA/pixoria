@@ -500,7 +500,49 @@ but are out of scope for this migration order (home/about/contact/404 only).
   only whitespace, `exclude`/`category`(instance and slug)/`limit` behave, and
   two carousels on one page produce two independent tracks with no element ids.
 
-## Tasks
+- **D33 — About model extensions (T31).** `new/about.html` has five sections
+  (hero → story → journey → stats → clients; the final cream CTA is the shared
+  `_cta.html` from base, and the header/footer come from base too). Extended the
+  existing models instead of adding parallel ones: `AboutPageHero` gains
+  `eyebrow` and the same CTA pair as `HeroSection` (`cta_primary_*` /
+  `cta_secondary_*`, `nav_url`-resolvable, empty secondary URL hides the
+  button); `AboutStory` gains `eyebrow`, `title` (with `[[ ]]`), `body` (extra
+  paragraphs, newline-separated), `chips` (csv), `quote`, `image` /
+  `image_alt` / `image_caption`; `AboutStat` gains the `StatItem` counter trio
+  (`value` int + `prefix` / `suffix`) plus a Lucide `icon` — the old `number`
+  CharField stays in the DB (untouched) for the v1 template and is unused by v2.
+  Three new singletons: `AboutJourneySection` (eyebrow/title/subtitle +
+  `badge_icon`/`badge_text` for the floating "+۱۵ سال تجربه" capsule) with an
+  `AboutJourneyStep` child (`year` free text — «۱۳۸۹» first / «امروز» last —
+  title, subtitle, order), and `AboutClientsSection` (eyebrow/title/subtitle).
+  **The clients wall reuses `home.ClientMarqueeItem`** — the DB already holds
+  exactly the seven brands the design names, and sharing the table keeps one
+  edit point; the about view queries it directly (no new FK, no new client
+  model). The hero's orbit pills (طراحی سایت / برنامه‌نویسی / …) come from the
+  `Service` table (`Service.objects.all()[:4]`, icon + title), same as the
+  mega-menu. There is NO section-registry model for the about page — the v2
+  order is fixed in the template with per-section `{% if %}` guards, since
+  unlike the home page nothing here needs admin-reorderable sections. The
+  `AboutMission` / `AboutValue` / `AboutPre` / `TeamMember` /
+  `AboutProcessStep` / `AboutFaq` models and their data stay untouched — they
+  simply are not part of the v2 about design (D18 precedent); T43 decides
+  their fate. Migration `core.0009`, admin fieldsets + `IconPreviewMixin` on
+  `AboutStatAdmin`, new singletons get the usual `has_add_permission` guard.
+  Seed: new `apps/core/management/commands/seed_about_content.py` (the core
+  app had no management package before — it was created for this command),
+  carrying the verbatim Persian copy from `new/about.html`, `first_or_create`
+  for singletons, and the D21/D25 collection cleanup for the two collections
+  (`AboutJourneyStep` / `AboutStat` delete rows not in the v2 list, then
+  `get_or_create` the rest) — this removed the 3 stale v1 stat rows
+  («+۵۰ پروژه تحویل شده» …) and seeded the 4 v2 counters. Re-running is a
+  clean no-op (verified). The two v1 singletons held old-design prototype copy
+  with raw markup («یک استودیو خلاق <br> در مشهد.» / story description with
+  `<p><strong>`), which would render as escaped noise through the `highlight`
+  filter; per D22/D23/D25 they were nudged in place once with a throwaway
+  script after dumping the prior values. **Journey SVG gotcha for T32:** the
+  desktop map hardcodes 5 node positions along a fixed path; with DB-driven
+  steps the template must distribute nodes itself (position list keyed by
+  index, or evenly along the path) and the mobile `<ol>` renders all steps.
 
 ### Phase 0 — Foundation
 
@@ -657,15 +699,16 @@ but are out of scope for this migration order (home/about/contact/404 only).
 
 ### Phase 6 — About page (from `new/about.html`)
 
-- [ ] T31 — Extend about models for the v2 about page (hero, story,
+- [x] T31 — Extend about models for the v2 about page (hero, story,
   journey/timeline, stats, values, team, clients wall, CTA — whatever exists
   in `new/about.html`), reuse existing `core.About*` models and `TeamMember`;
   add only what is missing; migration + admin (Persian
   help_text/verbose_name, inlines, `order`, `is_active`); optional-content
   rules; seed command with the original Persian copy from `new/about.html`
   (idempotent, no overwriting) |
-  files: `apps/core/models.py`, `apps/core/migrations/`, `apps/core/admin.py`,
-  `apps/core/management/commands/*` | commit: "feat(about): add v2 about page models"
+  files: `apps/core/models.py`, `apps/core/migrations/0009_*`, `apps/core/admin.py`,
+  `apps/core/management/commands/seed_about_content.py`, `apps/core/views.py` |
+  commit: "feat(about): add v2 about page models"
 - [ ] T32 — Rebuild `templates/core/about.html` from `new/about.html`: extend
   `base.html`, REMOVE the duplicated hard-coded header/footer/CTA from the new
   file (base ones are the reference), bind everything to the models, use
@@ -768,9 +811,11 @@ but are out of scope for this migration order (home/about/contact/404 only).
 
 ## Current status
 
-T01–T30 done. Next: T31 — extend the about models for the v2 about page (hero,
-story, journey/timeline, stats, values, team, clients wall, CTA — whatever
-exists in `new/about.html`), reusing existing `core.About*` models and
-`TeamMember`, adding only what is missing; migration + admin + seed with the
-Persian copy from `new/about.html`.
+T01–T31 done. Next: T32 — rebuild `templates/core/about.html` from
+`new/about.html` on top of `base.html` (drop the duplicated
+header/footer/CTA/mega-menu markup, bind the five sections to the models per
+D33, `highlight` for `[[ ]]` titles, `{% icon %}` instead of `data-lucide`,
+`fa_digits` + `data-counter` for the stats, `nav_url` for the hero CTAs,
+service pills from the `Service` table, DB-distributed journey nodes, skip
+every empty section) and update `apps/core/views.py` if needed.
 
