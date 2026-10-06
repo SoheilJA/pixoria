@@ -3,7 +3,7 @@
 {# داده‌ها: portfolio_section (FeaturedWorkSection)، portfolio_items (Portfolio[])،
    portfolio_categories (Category[]) — pixoria.js فیلتر و شمارشگر را مدیریت می‌کند #}
 {% if portfolio_items %}
-  <section id="portfolio" class="relative overflow-hidden bg-ink">
+  <section id="portfolio" class="relative overflow-hidden bg-ink" data-pf-root>
     {# خط تقسیم‌کنندهٔ روشن روی بخش روشنِ قبلی #}
     <svg class="divider" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true">
       <path d="M0,58 C320,12 640,78 960,42 C1200,14 1360,62 1440,32 L1440,0 L0,0 Z" fill="#efece5"></path>
@@ -37,7 +37,7 @@
 
       {# فیلتر دسته‌بندی — کلید فیلتر = اسلاگ دسته‌بندی #}
       {% if portfolio_categories %}
-        <div class="mt-10 flex flex-wrap gap-2.5" data-reveal="up" data-delay="0.12" id="pf-filters">
+        <div class="mt-10 flex flex-wrap gap-2.5" data-reveal="up" data-delay="0.12" data-pf-filters>
           <button class="flt-btn active" data-filter="all">همه</button>
           {% for category in portfolio_categories %}
             <button class="flt-btn" data-filter="{{ category.slug }}">{{ category.name }}</button>
@@ -46,12 +46,12 @@
       {% endif %}
 
       {# شمارشگر — مقدار اولیه از سمت سرور؛ pixoria.js هنگام فیلتر به‌روز می‌شود #}
-      <p class="mt-5 font-latin text-[10px] tracking-[.3em] text-gold/60" id="pf-count"
+      <p class="mt-5 font-latin text-[10px] tracking-[.3em] text-gold/60" data-pf-count
          data-reveal="up" data-delay="0.14">
         {{ portfolio_items|length|fa_digits }} PROJECTS
       </p>
 
-      <div class="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3" id="pf-grid">
+      <div class="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3" data-pf-grid>
         {% for item in portfolio_items %}
           {# شعاع گوشه‌ها بین کارت‌ها متغیر است تا گرید یکنواخت نباشد #}
           {% cycle '2.5rem' '2.75rem 0.75rem' '0.9rem' '0.75rem 2.75rem' '1.75rem' '1rem 4rem' as card_radius silent %}
@@ -60,7 +60,7 @@
       </div>
 
       {# پیام خالی — وقتی هیچ پروژه‌ای در دستهٔ انتخاب‌شده نیست #}
-      <p class="mt-10 hidden text-center text-sm text-cream/40" id="pf-empty">
+      <p class="mt-10 hidden text-center text-sm text-cream/40" data-pf-empty>
         پروژه‌ای در این دسته ثبت نشده است.
       </p>
     </div>

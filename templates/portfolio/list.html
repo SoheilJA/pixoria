@@ -1,115 +1,129 @@
 {% extends 'base.html' %}
-{% load icon_tags %}
+{% load icon_tags highlight_tags fa_digits %}
 
-{% block title %}نمونه کار ها — {{ settings.site_name }}{% endblock %}
-{% block description %}گزیده ای از پروژه های {{ settings.site_name }} در حوزه سئو، طراحی وب و دیجیتال مارکتینگ{% endblock %}
+{% block title %}{{ page_section.title|default:"نمونه‌کارها"|striptags }} — {{ settings.site_name }}{% endblock %}
+{% block description %}{{ page_section.description|default:"گزیده‌ای از پروژه‌های طراحی و توسعه‌شده در پیکسوریا" }}{% endblock %}
+
+{% block extra_head %}
+  {# مسیر نمایش — خانه → آرشیو نمونه‌کارها #}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "خانه",
+          "item": "{{ request.scheme }}://{{ request.get_host }}{% url 'home:home' %}"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "نمونه‌کارها",
+          "item": "{{ request.build_absolute_uri }}"
+        }
+      ]
+    }
+  </script>
+{% endblock %}
 
 {% block content %}
+  {% comment %}هیرو — عنوان آرشیو نمونه‌کارها با مادرِ شناور و کلمهٔ حک‌شدهٔ works{% endcomment %}
+  <section class="relative overflow-hidden bg-ink" data-mouse-parallax>
+    <div class="pointer-events-none absolute inset-0" aria-hidden="true">
+      <div data-depth="0.05" class="absolute right-[9%] top-[12%]">
+        <span data-float="14" class="orb block h-20 w-20"
+              style="background: radial-gradient(circle at 32% 30%, rgba(232,196,122,0.42), rgba(201,161,90,0.07) 60%, transparent 72%);"></span>
+      </div>
+      <div data-depth="0.08" class="absolute bottom-[16%] left-[8%]">
+        <span data-float="12" class="shard block h-24 w-20 rotate-12"></span>
+      </div>
+      <div data-depth="0.05" class="absolute left-[32%] top-[14%]">
+        <span data-float="10" class="orb block h-10 w-10"
+              style="background: radial-gradient(circle, rgba(46,99,255,0.5), transparent 70%);"></span>
+      </div>
+    </div>
+    <div class="pointer-events-none absolute -left-32 top-1/3 h-[30rem] w-[30rem] rounded-full opacity-30"
+         style="background: radial-gradient(circle, rgba(201,161,90,0.22), transparent 65%);"
+         aria-hidden="true"></div>
+    <span class="stroke-title font-latin pointer-events-none absolute -bottom-10 left-0 select-none text-[20vw] font-light leading-none"
+          aria-hidden="true">works</span>
 
-  {% include 'components/page_hero.html' with crumbs=crumbs title=page_section.title title_id='ph' description=page_section.description %}
-
-  <div class="work-filters flex flex-wrap gap-2 border-b border-line px-page py-6 font-mono text-[0.78rem] uppercase tracking-[0.06em]" role="toolbar" aria-label="فیلتر کارها" data-reveal="fade-up" data-reveal-delay="200">
-    <button type="button"
-            data-filter="all"
-            aria-pressed="{% if not selected_category %}true{% else %}false{% endif %}"
-            class="cursor-pointer rounded-full border px-3.5 py-2 transition-colors duration-200 {% if not selected_category %}border-night bg-night text-ink{% else %}border-line bg-transparent text-ink-soft hover:border-night hover:text-ink{% endif %}">
-      همه
-    </button>
-    {% for category in categories %}
-      <button type="button"
-              data-filter="{{ category.slug }}"
-              aria-pressed="{% if selected_category.slug == category.slug %}true{% else %}false{% endif %}"
-              class="cursor-pointer rounded-full border px-3.5 py-2 transition-colors duration-200 {% if selected_category.slug == category.slug %}border-night bg-night text-ink{% else %}border-line bg-transparent text-ink-soft hover:border-night hover:text-ink{% endif %}">
-        {{ category.name }}
-      </button>
-    {% endfor %}
-  </div>
-
-  <section class="work-grid grid grid-cols-1 gap-y-10 px-page py-16 md:grid-cols-2 md:gap-x-8 md:gap-y-14" aria-label="آرشیو پروژه ها" id="portfolio-grid-target">
-    {% for item in portfolios_with_delay %}
-      {% with portfolio=item.portfolio delay=item.delay %}
-      <article class="reveal group flex flex-col gap-4"
-               data-category="{% for cat in portfolio.categories.all %}{{ cat.slug }}{% if not forloop.last %},{% endif %}{% endfor %}"
-               data-reveal="fade-up"
-               data-reveal-duration="500"
-               data-reveal-delay="{{ delay }}"
-              >
-        <a href="{% url 'portfolio:detail' portfolio.slug %}" class="flex flex-col gap-4 text-inherit no-underline">
-          <div class="relative aspect-[4/3] overflow-hidden rounded-md bg-paper-soft">
-            <span class="absolute right-4 top-4 z-[1] font-mono text-[0.74rem] text-ink-dim">{{ forloop.counter|stringformat:'02d' }}</span>
-            <img src="{{ portfolio.image.url }}" alt="{{ portfolio.title }}" loading="lazy"
-                 class="h-full w-full object-cover transition-transform duration-[600ms] ease-ax group-hover:scale-[1.03]" />
-          </div>
-          <div class="flex gap-3.5 font-mono text-[0.74rem] uppercase tracking-[0.1em] text-ink-dim">
-            <span>{{ portfolio.client_name }}</span><span>{{ portfolio.year }}</span>
-          </div>
-          <h3 class="text-[1.7rem] leading-[1.05]">{{ portfolio.title }}</h3>
-          <p class="m-0 max-w-[48ch] text-[0.96rem] text-ink-soft">{{ portfolio.excerpt }}</p>
-          {% if portfolio.categories.all %}
-          <div class="flex flex-wrap gap-2">
-            {% for cat in portfolio.categories.all %}
-              <span class="rounded-full border border-line px-3 py-[3px] font-mono text-[0.72rem] uppercase tracking-[0.08em] text-ink-dim">{{ cat.name }}</span>
-            {% endfor %}
-          </div>
+    <div class="relative z-10 mx-auto max-w-7xl px-6 pb-28 pt-36 md:pt-48">
+      <div class="max-w-2xl">
+        {% if page_section and page_section.eyebrow %}
+          <p class="eyebrow" data-reveal="up">{{ page_section.eyebrow }}</p>
+        {% endif %}
+        <h1 class="mt-6 text-[2.6rem] font-extrabold leading-[1.25] sm:text-5xl lg:text-6xl"
+            data-reveal="right">
+          {% if page_section and page_section.title %}
+            {{ page_section.title|highlight }}
+          {% else %}
+            نمونه‌کارها
           {% endif %}
-          <span class="inline-flex items-center gap-2.5 font-mono text-[0.8rem] text-ink">
-            مشاهده پروژه <span class="h-px w-8 bg-line transition-colors group-hover:bg-night"></span> {% icon "arrow-left" class="inline-block h-4 w-4 align-middle" %}
+        </h1>
+        {% if page_section and page_section.description %}
+          <p class="mt-6 max-w-xl text-lg font-light leading-8 text-cream/70"
+             data-reveal="right" data-delay="0.12">
+            {{ page_section.description }}
+          </p>
+        {% endif %}
+
+        {# خلاصهٔ آرشیو — تعداد پروژه‌ها و دسته‌بندی‌ها #}
+        <div class="mt-10 flex flex-wrap items-center gap-3" data-reveal="up" data-delay="0.2">
+          <span class="inline-flex items-center gap-2 rounded-full border border-cream/10 bg-white/[0.02] px-4 py-2 text-sm text-cream/60">
+            {% icon "briefcase" class="h-4 w-4 text-gold" %}
+            <b class="font-bold text-cream fa-num">{{ portfolios|length|fa_digits }}</b> پروژه
           </span>
-        </a>
-      </article>
-      {% endwith %}
-    {% empty %}
-      <p class="col-span-full py-10 text-center font-mono text-[0.9rem] text-ink-dim">نمونه کاری برای این دسته بندی ثبت نشده است.</p>
-    {% endfor %}
+          {% if categories %}
+            <span class="inline-flex items-center gap-2 rounded-full border border-cream/10 bg-white/[0.02] px-4 py-2 text-sm text-cream/60">
+              {% icon "layers" class="h-4 w-4 text-gold" %}
+              <b class="font-bold text-cream fa-num">{{ categories|length|fa_digits }}</b> دسته‌بندی
+            </span>
+          {% endif %}
+        </div>
+      </div>
+    </div>
   </section>
 
-  <script>
-    (function() {
-      const filters = document.querySelector('.work-filters');
-      if (!filters) return;
-      const grid = document.getElementById('portfolio-grid-target');
-      const articles = grid ? grid.querySelectorAll('article') : [];
+  {% comment %}آرشیو — فیلتر دسته‌بندی + گرید سه‌ستونیِ پروژه‌ها.
+     data-pf-sync: آدرس صفحه با فیلترِ انتخاب‌شده همگام می‌شود (pixoria.js).{% endcomment %}
+  <section id="works" class="relative overflow-hidden bg-ink2" data-pf-root data-pf-sync>
+    <svg class="divider divider-flip" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0,26 C260,84 520,82 760,44 C1000,6 1240,80 1440,30 L1440,0 L0,0 Z" fill="#0a0a0c"></path>
+    </svg>
+    <div class="grid-bg pointer-events-none absolute inset-0 opacity-20" aria-hidden="true"></div>
 
-      function setActive(btn) {
-        filters.querySelectorAll('button').forEach(function(b) {
-          b.classList.remove('border-night', 'bg-night', 'text-ink');
-          b.classList.add('border-line', 'bg-transparent', 'text-ink-soft');
-          b.setAttribute('aria-pressed', 'false');
-        });
-        btn.classList.add('border-night', 'bg-night', 'text-ink');
-        btn.classList.remove('border-line', 'bg-transparent', 'text-ink-soft');
-        btn.setAttribute('aria-pressed', 'true');
-      }
+    <div class="relative z-10 mx-auto max-w-7xl px-6 pb-28 pt-32">
+      {# فیلتر دسته‌بندی — کلید فیلتر = اسلاگ دسته‌بندی #}
+      {% if categories %}
+        <div class="flex flex-wrap gap-2.5" data-reveal="up" data-pf-filters>
+          <button class="flt-btn{% if not selected_category %} active{% endif %}" data-filter="all">همه</button>
+          {% for category in categories %}
+            <button class="flt-btn{% if selected_category.slug == category.slug %} active{% endif %}"
+                    data-filter="{{ category.slug }}">{{ category.name }}</button>
+          {% endfor %}
+        </div>
+      {% endif %}
 
-      function filterItems(slug) {
-        articles.forEach(function(article) {
-          const tags = (article.getAttribute('data-category') || '').split(',');
-          const show = slug === 'all' || tags.includes(slug);
-          article.style.display = show ? '' : 'none';
-          if (show) {
-            article.classList.remove('in');
-            void article.offsetWidth;
-            article.classList.add('in');
-          }
-        });
-      }
+      {# شمارشگر — مقدار اولیه از سمت سرور؛ pixoria.js هنگام فیلتر به‌روز می‌شود #}
+      <p class="mt-5 font-latin text-[10px] tracking-[.3em] text-gold/60" data-pf-count data-reveal="up" data-delay="0.1">
+        {{ portfolios|length|fa_digits }} PROJECTS
+      </p>
 
-      filters.addEventListener('click', function(e) {
-        const btn = e.target.closest('button[data-filter]');
-        if (!btn) return;
+      <div class="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3" data-pf-grid>
+        {% for project in portfolios %}
+          {# شعاع گوشه‌ها بین کارت‌ها متغیر است تا گرید یکنواخت نباشد #}
+          {% cycle '2.5rem' '2.75rem 0.75rem' '0.9rem' '0.75rem 2.75rem' '1.75rem' '1rem 4rem' as card_radius silent %}
+          {% include "components/_project_card.html" with project=project filter_key=project.categories.first.slug radius=card_radius %}
+        {% endfor %}
+      </div>
 
-        setActive(btn);
-        filterItems(btn.getAttribute('data-filter'));
-
-        const slug = btn.getAttribute('data-filter');
-        const url = slug === 'all'
-          ? "{% url 'portfolio:list' %}"
-          : "{% url 'portfolio:list' %}?category=" + slug;
-        if (window.location.search !== '?' + (slug === 'all' ? '' : 'category=' + slug)) {
-          history.pushState({filter: slug}, '', url);
-        }
-      });
-    })();
-  </script>
-
+      {# پیام خالی — وقتی هیچ پروژه‌ای در آرشیو (یا دستهٔ انتخاب‌شده) نیست #}
+      <p class="mt-10 text-center text-sm text-cream/40{% if portfolios %} hidden{% endif %}" data-pf-empty>
+        پروژه‌ای ثبت نشده است.
+      </p>
+    </div>
+  </section>
 {% endblock %}

@@ -346,9 +346,6 @@
   .top-2 {
     top: calc(var(--spacing) * 2);
   }
-  .top-4 {
-    top: calc(var(--spacing) * 4);
-  }
   .top-6 {
     top: calc(var(--spacing) * 6);
   }
@@ -381,6 +378,9 @@
   }
   .top-\[13\%\] {
     top: 13%;
+  }
+  .top-\[14\%\] {
+    top: 14%;
   }
   .top-\[24\%\] {
     top: 24%;
@@ -465,6 +465,9 @@
   }
   .right-\[8\%\] {
     right: 8%;
+  }
+  .right-\[9\%\] {
+    right: 9%;
   }
   .right-\[10\%\] {
     right: 10%;
@@ -655,6 +658,9 @@
   .left-\[30\%\] {
     left: 30%;
   }
+  .left-\[32\%\] {
+    left: 32%;
+  }
   .left-\[36\%\] {
     left: 36%;
   }
@@ -663,9 +669,6 @@
   }
   .z-50 {
     z-index: 50;
-  }
-  .z-\[1\] {
-    z-index: 1;
   }
   .z-\[55\] {
     z-index: 55;
@@ -690,9 +693,6 @@
   }
   .col-span-7 {
     grid-column: span 7 / span 7;
-  }
-  .col-span-full {
-    grid-column: 1 / -1;
   }
   .container {
     width: 100%;
@@ -1228,9 +1228,6 @@
   .max-w-\[44ch\] {
     max-width: 44ch;
   }
-  .max-w-\[48ch\] {
-    max-width: 48ch;
-  }
   .max-w-\[50ch\] {
     max-width: 50ch;
   }
@@ -1676,6 +1673,12 @@
   .border-\[rgba\(192\,57\,43\,0\.4\)\] {
     border-color: rgba(192,57,43,0.4);
   }
+  .border-cream\/10 {
+    border-color: color-mix(in srgb, #f5f3ee 10%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      border-color: color-mix(in oklab, var(--color-cream) 10%, transparent);
+    }
+  }
   .border-gold-dark\/20 {
     border-color: color-mix(in srgb, #8f6b2c 20%, transparent);
     @supports (color: color-mix(in lab, red, red)) {
@@ -2042,6 +2045,12 @@
       background-color: color-mix(in oklab, var(--color-white) 8%, transparent);
     }
   }
+  .bg-white\/\[0\.02\] {
+    background-color: color-mix(in srgb, #fff 2%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      background-color: color-mix(in oklab, var(--color-white) 2%, transparent);
+    }
+  }
   .bg-gradient-to-b {
     --tw-gradient-position: to bottom in oklab;
     background-image: linear-gradient(var(--tw-gradient-stops));
@@ -2265,9 +2274,6 @@
   }
   .py-28 {
     padding-block: calc(var(--spacing) * 28);
-  }
-  .py-\[3px\] {
-    padding-block: 3px;
   }
   .py-\[5px\] {
     padding-block: 5px;
@@ -3011,9 +3017,6 @@
       color: color-mix(in oklab, var(--color-gold) 90%, transparent);
     }
   }
-  .text-inherit {
-    color: inherit;
-  }
   .text-ink {
     color: var(--color-ink);
   }
@@ -3049,9 +3052,6 @@
   }
   .line-through {
     text-decoration-line: line-through;
-  }
-  .no-underline {
-    text-decoration-line: none;
   }
   .underline {
     text-decoration-line: underline;
@@ -3602,12 +3602,6 @@
     }
     .md\:gap-12 {
       gap: calc(var(--spacing) * 12);
-    }
-    .md\:gap-x-8 {
-      column-gap: calc(var(--spacing) * 8);
-    }
-    .md\:gap-y-14 {
-      row-gap: calc(var(--spacing) * 14);
     }
     .md\:border-l {
       border-left-style: var(--tw-border-style);

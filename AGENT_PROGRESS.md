@@ -613,6 +613,42 @@ but are out of scope for this migration order (home/about/contact/404 only).
   runs are clean no-ops. `/contact/` still renders 200 on the old template
   (T34 replaces it).
 
+- **D38 — Portfolio list page (T36).** `templates/portfolio/list.html` rebuilt
+  on `base.html` in the D27 design language: a dark `bg-ink` hero (orbs/shard
+  with `data-mouse-parallax`, a stroked latin `works` watermark, `eyebrow` +
+  `highlight` h1 + description from the `PortfolioPageSection` singleton, and a
+  «N پروژه · M دسته‌بندی» chip row) followed by a `bg-ink2` archive section
+  with an ink-filled `divider-flip` wave, the same `flt-btn` filter pills the
+  home section uses, the latin «N PROJECTS» counter, and a 3-column grid of
+  `_project_card.html` (radius `{% cycle %}` exactly like home). No new CSS —
+  every class (`eyebrow`, `stroke-title`, `divider`, `grid-bg`, `orb`, `shard`,
+  `tile`, `flt-btn`, `font-latin`) already existed. CTA/footer come from base.
+  **Filter is client-side**, matching the home section: the view now passes
+  *all* projects (`prefetch_related("categories")`, ordered by `order`/`id`)
+  and `?category=<slug>` only sets the initially-active pill — an invalid slug
+  no longer 404s the whole archive (the old `get_object_or_404` did). The old
+  `portfolios_with_delay` context entry (a v1 stagger helper) is gone; the
+  cards animate via the filter itself. **No pagination/load-more by design:**
+  a JS filter and server-side paging fight each other (paged-in cards would
+  need `data-cat` re-application), the home precedent is all-items + filter,
+  and a studio archive is a few dozen projects at most — add a cap +
+  `blog:load`-style HTMX later only if the archive actually grows.
+  **The filter component was generalized** (the D26 rule): `pixoria.js`'s
+  `initPortfolioFilter` no longer reads the hard-coded `#pf-grid`/`#pf-filters`
+  /`#pf-count`/`#pf-empty` ids — it loops `document.querySelectorAll("[data-
+  pf-root]")` and looks each part up inside that root, so several filters can
+  share a page. Two behaviours were added behind the opt-in `data-pf-sync`
+  attribute (archive only, home behaviour unchanged): the URL is kept in sync
+  with `history.replaceState` on every filter click, and a `?category=` on load
+  pre-selects its pill. `home/sections/_portfolio.html` migrated to the same
+  hooks (`id="pf-*"` → `data-pf-*`), so the two pages are one component.
+  Verified: list 200 (37 KB) with both projects, `?category=web-design`
+  pre-selects its pill, `?category=nope` still 200, empty DB (no projects, no
+  categories) renders 200 with 0 cards, 0 pills and the «پروژه‌ای ثبت نشده
+  است.» message visible by default; home unchanged (hooks present, no old
+  ids); no leaked `[[ ]]`, zero CDN refs; `node --check` on the module passes;
+  Tailwind rebuilt (no token changes).
+
 - **D37 — Portfolio model review (T35).** The review found the model layer
   already covered the planned pages; the missing pieces were added, all
   optional so a bare project still renders: `image_alt` (a11y/SEO for the
@@ -642,9 +678,9 @@ but are out of scope for this migration order (home/about/contact/404 only).
   clean; `/portfolio/` and a detail page render 200 with data, `/portfolio/`
   still 200 with an empty project table and a missing slug 404s; every admin
   page (changelist/add/change) renders 200; an invalid icon name is rejected
-  and a valid one saves. The DB holds two throwaway verification rows (one
-  `ProjectStat`, one `ProjectImage` pointing at a nonexistent file) that the
-  sandbox refused to delete — remove them before T36.
+  and a valid one saves. Verified end to end after the two throwaway rows
+  (one `ProjectStat`, one `ProjectImage`) from the icon/gallery check were
+  removed again.
 
 - **D36 — Contact page template (T34).** `templates/contact/contact.html` fully
   replaced (v1 page-hero + project-type/budget/start-time selects out) with the
@@ -890,7 +926,7 @@ but are out of scope for this migration order (home/about/contact/404 only).
   fields), all optional; migration + admin + seed if needed |
   files: `apps/portfolio/models.py`, `apps/portfolio/migrations/`,
   `apps/portfolio/admin.py` | commit: "feat(portfolio): extend models for v2 pages"
-- [ ] T36 — Portfolio LIST page `templates/portfolio/list.html`: v2 hero
+- [x] T36 — Portfolio LIST page `templates/portfolio/list.html`: v2 hero
   (eyebrow + `highlight` title from admin-editable settings if reasonable),
   category filter (server-side by existing URL/query if the view supports it,
   else JS filter), 3-column grid using `_project_card.html`, pagination or
@@ -958,14 +994,13 @@ but are out of scope for this migration order (home/about/contact/404 only).
 
 ## Current status
 
-T01–T35 done. Next: T36 — portfolio LIST page `templates/portfolio/list.html`
-in the v2 design language (D27): v2 hero (eyebrow + `highlight` title from the
-`PortfolioPageSection` singleton), category filter (the view already filters
-server-side on `?category=<slug>` — see `Category.filter_url`), 3-column grid
-using `_project_card.html`, pagination or HTMX load-more, empty state, CTA
-from base. Before starting, delete the two throwaway verification rows left in
-the DB by T35 (D37). The projects carousel (`{% projects_carousel %}`) and
-`_project_card.html` are the building blocks; `portfolio.views.portfolio_list`
-already provides `categories`, `selected_category`, `portfolios` and
-`page_section`.
+T01–T36 done. Next: T37 — portfolio DETAIL page `templates/portfolio/detail.html`
+in the v2 design language (D27): hero with cover image, meta (client, year,
+service type, categories, external link), challenge/solution sections, stat
+counters (`ProjectStat`, now with `icon`), gallery when `gallery` is present,
+styled description, prev/next project, `{% projects_carousel exclude=object %}`
+as related work, JSON-LD + meta blocks. The view already provides `portfolio`,
+`stats`, `prev_portfolio`, `next_portfolio`; the gallery and `testimonial`
+need prefetching/adding. `_project_card.html`, `.tile`, `.glass` and the
+counter/reveal hooks are the building blocks.
 

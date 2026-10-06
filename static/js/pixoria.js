@@ -690,15 +690,20 @@ function initMediaCards({ hasGsap, REDUCED, fmtTime }) {
 
 function initPortfolioFilter({ hasGsap, REDUCED, faDigits }) {
   const gsap = window.gsap;
-  const pfGrid = document.getElementById("pf-grid");
-  const pfFilters = document.getElementById("pf-filters");
-  const pfCount = document.getElementById("pf-count");
-  const pfEmpty = document.getElementById("pf-empty");
-  if (!pfGrid || !pfFilters) return;
+  // هر نمونه از فیلتر در یک wrapper با data-pf-root قرار دارد تا چند فیلتر
+  // روی یک صفحه (مثلاً خانه + آرشیو) بدون تداخل کار کنند.
+  document.querySelectorAll("[data-pf-root]").forEach((root) => {
+    const pfGrid = root.querySelector("[data-pf-grid]");
+    const pfFilters = root.querySelector("[data-pf-filters]");
+    const pfCount = root.querySelector("[data-pf-count]");
+    const pfEmpty = root.querySelector("[data-pf-empty]");
+    if (!pfGrid || !pfFilters) return;
 
-  const items = [...pfGrid.querySelectorAll(".pf-item")];
+    const items = [...pfGrid.querySelectorAll(".pf-item")];
+    // فقط صفحهٔ آرشیو آدرس را با فیلتر همگام می‌کند (data-pf-sync).
+    const syncUrl = root.hasAttribute("data-pf-sync");
 
-  const apply = (cat) => {
+  const apply = (cat, skipUrl) => {
     let shown = 0;
     items.forEach((el) => {
       const match = cat === "all" || el.dataset.cat === cat;
@@ -733,16 +738,35 @@ function initPortfolioFilter({ hasGsap, REDUCED, faDigits }) {
     });
     if (pfCount) pfCount.textContent = `${faDigits(shown)} PROJECTS`;
     if (pfEmpty) pfEmpty.classList.toggle("hidden", shown > 0);
+    if (syncUrl && !skipUrl) {
+      const url =
+        cat === "all" ? location.pathname : `${location.pathname}?category=${cat}`;
+      history.replaceState(null, "", url);
+    }
+  };
+
+  const setActive = (btn) => {
+    pfFilters.querySelectorAll(".flt-btn").forEach((b) =>
+      b.classList.toggle("active", b === btn),
+    );
   };
 
   pfFilters.addEventListener("click", (e) => {
     const btn = e.target.closest(".flt-btn");
     if (!btn) return;
-    pfFilters.querySelectorAll(".flt-btn").forEach((b) =>
-      b.classList.remove("active"),
-    );
-    btn.classList.add("active");
+    setActive(btn);
     apply(btn.dataset.filter);
+  });
+
+  // بازدید از ?category=<slug> همان دسته را از ابتدا فعال می‌کند.
+  const initial = new URLSearchParams(location.search).get("category");
+  if (initial) {
+    const btn = pfFilters.querySelector(`[data-filter="${initial}"]`);
+    if (btn) {
+      setActive(btn);
+      apply(initial, true);
+    }
+  }
   });
 }
 

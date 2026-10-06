@@ -1,26 +1,27 @@
 from django.shortcuts import render, get_object_or_404
+
 from apps.core.context_utils import crumbs
 from .models import Portfolio, Category, PortfolioPageSection
 
 
 def portfolio_list(request):
     categories = Category.objects.all()
-    selected_slug = request.GET.get("category", None)
+    selected_slug = request.GET.get("category")
 
-    if selected_slug:
-        selected_category = get_object_or_404(Category, slug=selected_slug)
-        portfolios = list(Portfolio.objects.filter(categories=selected_category))
-    else:
-        selected_category = None
-        portfolios = list(Portfolio.objects.all())
+    # همهٔ پروژه‌ها به مشتری پاس داده می‌شوند؛ فیلترِ دسته‌بندی در مرورگر
+    # انجام می‌شود (مثل بخش نمونه‌کارهای صفحهٔ اصلی) تا جابه‌جایی بین دسته‌ها
+    # بدون بارگذاریِ دوبارهٔ صفحه باشد. ?category= فقط دستهٔ فعالِ اولیه را
+    # مشخص می‌کند و یک اسلاگِ نامعتبر کل صفحه را ۴۰۴ نمی‌کند.
+    portfolios = list(
+        Portfolio.objects.prefetch_related("categories").order_by("order", "id")
+    )
+    selected_category = (
+        categories.filter(slug=selected_slug).first() if selected_slug else None
+    )
 
     context = {
         "crumbs": crumbs(("خانه", "home:home"), ("نمونه‌کارها", None)),
         "portfolios": portfolios,
-        "portfolios_with_delay": [
-            {"portfolio": portfolio, "delay": (index % 4) * 100}
-            for index, portfolio in enumerate(portfolios)
-        ],
         "categories": categories,
         "selected_category": selected_category,
         "page_section": PortfolioPageSection.objects.first(),
