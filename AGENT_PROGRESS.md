@@ -613,7 +613,47 @@ but are out of scope for this migration order (home/about/contact/404 only).
   runs are clean no-ops. `/contact/` still renders 200 on the old template
   (T34 replaces it).
 
-- **D38 — Portfolio list page (T36).** `templates/portfolio/list.html` rebuilt
+- **D39 — Portfolio detail page (T37).** `templates/portfolio/detail.html`
+  rebuilt on `base.html` in the D27 design language, replacing the v1 template
+  (which still used the deleted `text-ink`/`bg-night`/`px-page` tokens and
+  therefore rendered unstyled). Eight sections, alternating dark/cream in the
+  v2 rhythm: hero (`bg-ink`, mouse-parallax, `project` stroke watermark,
+  breadcrumb trail, category chips linking to `category.filter_url`, highlight
+  h1, four glass meta tiles for client/year/service/site) → cover image
+  (`bg-ink2`, `divider-flip`, `fetchpriority="high"`) → description (`bg-cream`,
+  rounded top corners, sticky sidebar with `get_technologies_list()` as
+  `s-chip-light`s) → challenge/solution (`bg-cream2`, two `glass-light` cards,
+  only when either field is set) → results (`bg-ink2`, `ProjectStat` cards reusing
+  the home `stat-card`/`stat-num`/`stat-icon` classes — `stat.number` is free
+  text like «+۳۵٪» so it renders through `fa_digits`, not `data-counter`, since
+  it is not a pure number) + the optional `testimonial` FK rendered as one
+  `_testimonial_card.html` (a single card, not the slider — the slider tag needs
+  a `service` and `Portfolio` has no FK to one; D37) → gallery (`bg-ink`, only
+  when `gallery` is non-empty, `cycle` radius + caption slide-in) → other work
+  (`bg-ink2`, `{% projects_carousel exclude=portfolio limit=6 %}` + prev/next
+  glass tiles). **The prev/next queries were fixed**: the v1 versions compared
+  `order` alone, so projects sharing one `order` value were invisible to each
+  other; they now mirror the list ordering (`order`, `id`) with a `Q(order__lt) |
+  Q(order=..., id__lt)` pair. The whole "other work" section is guarded by
+  `{% if prev_portfolio or next_portfolio %}` — that flag is exactly "another
+  project exists", which is also the carousel's non-empty condition, so a
+  single-project DB renders neither the header nor an empty track. **The view's
+  `stats` NameError was fixed**: the T36 prefetch edit dropped
+  `stats = portfolio.stats.all()` but left `"stats": stats` in the context, so
+  every detail page raised 500; the template now reads the prefetched
+  `portfolio.stats.all` directly and the context entry is gone.
+  JSON-LD (`CreativeWork` + `BreadcrumbList`) in `extra_head` uses a NEW
+  `json` filter (`apps/core/templatetags/json_tags.py`, `ensure_ascii=False` so
+  Persian stays readable) instead of raw interpolation, so a quote in a title
+  can never break the script block. `meta` description comes from
+  `get_meta_description()`. Verified: detail 200 (49 KB bare, 55 KB with
+  stats/testimonial/challenge/solution/technologies), 404 on a missing slug,
+  200 with a minimal project (no image/categories/stats/gallery — optional
+  sections skip), 200 with a single-project DB (related section fully hidden,
+  no empty carousel controls), prev/next correct on both neighbours, no leaked
+  `[[ ]]`, no CDN references, `manage.py check` + `makemigrations --check`
+  clean, home/about/contact/blog/list unaffected, Tailwind rebuilt (no token
+  changes — only new arbitrary utilities).
   on `base.html` in the D27 design language: a dark `bg-ink` hero (orbs/shard
   with `data-mouse-parallax`, a stroked latin `works` watermark, `eyebrow` +
   `highlight` h1 + description from the `PortfolioPageSection` singleton, and a
@@ -933,10 +973,10 @@ but are out of scope for this migration order (home/about/contact/404 only).
   HTMX load-more, empty state, CTA from base |
   files: `templates/portfolio/list.html`, `apps/portfolio/views.py` |
   commit: "feat(portfolio): rebuild list page in v2 style"
-- [ ] T37 — Portfolio DETAIL page `templates/portfolio/detail.html`: hero with
+- [x] T37 — Portfolio DETAIL page `templates/portfolio/detail.html`: hero with
   cover image, meta (client, year, service type, categories, external link),
-  challenge/solution sections, stats counters (`ProjectStat`), gallery if
-  present, description (rich text styled), next/previous project,
+  challenge/solution sections, stats counters (`ProjectStat`, now with `icon`),
+  gallery if present, description (rich text styled), next/previous project,
   `{% projects_carousel exclude=object %}` as related projects, optional
   `{% testimonials_slider service=... %}` only if it makes sense. JSON-LD +
   meta blocks | files: `templates/portfolio/detail.html`,
@@ -994,13 +1034,13 @@ but are out of scope for this migration order (home/about/contact/404 only).
 
 ## Current status
 
-T01–T36 done. Next: T37 — portfolio DETAIL page `templates/portfolio/detail.html`
-in the v2 design language (D27): hero with cover image, meta (client, year,
-service type, categories, external link), challenge/solution sections, stat
-counters (`ProjectStat`, now with `icon`), gallery when `gallery` is present,
-styled description, prev/next project, `{% projects_carousel exclude=object %}`
-as related work, JSON-LD + meta blocks. The view already provides `portfolio`,
-`stats`, `prev_portfolio`, `next_portfolio`; the gallery and `testimonial`
-need prefetching/adding. `_project_card.html`, `.tile`, `.glass` and the
-counter/reveal hooks are the building blocks.
+T01–T37 done. Next: T38 — review `blog` models; add only what is missing
+(featured flag, optional cover alt text — SEO fields exist already); migration
++ admin if needed. Add a reusable rich-text typography style for TinyMCE
+`HTMLField` content in `static/src/input.css` (headings, lists, quotes, images,
+tables, code, links) in the gold/cream/ink language, RTL-correct — the
+portfolio detail page (T37) currently styles its description with inline
+arbitrary variants, so this prose class should be reusable there too. Then T39
+(blog list) and T40 (blog detail: Jalali date via `fa_jdate`, reading time,
+reading-progress bar, TOC, share links, related `articles_carousel`).
 

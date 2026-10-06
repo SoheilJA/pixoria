@@ -1,4 +1,5 @@
 from django.shortcuts import render, get_object_or_404
+from django.db.models import Q
 
 from apps.core.context_utils import crumbs
 from .models import Portfolio, Category, PortfolioPageSection
@@ -30,14 +31,24 @@ def portfolio_list(request):
 
 
 def portfolio_detail(request, slug):
-    portfolio = get_object_or_404(Portfolio, slug=slug)
-    stats = portfolio.stats.all()
+    portfolio = get_object_or_404(
+        Portfolio.objects.select_related("testimonial")
+        .prefetch_related("categories", "stats", "gallery"),
+        slug=slug,
+    )
 
+    # پروژهٔ قبلی و بعدی — ترتیب یکسان با آرشیو (order، سپس id) تا لینک‌ها
+    # دقیقاً همسایهٔ پروژهٔ فعلی در لیست باشند؛ مقایسهٔ order به‌تنهایی
+    # پروژه‌های هم‌ترتیب را نادیده می‌گرفت.
     prev_portfolio = (
-        Portfolio.objects.filter(order__lt=portfolio.order).order_by("-order").first()
+        Portfolio.objects.filter(Q(order__lt=portfolio.order) | Q(order=portfolio.order, id__lt=portfolio.id))
+        .order_by("-order", "-id")
+        .first()
     )
     next_portfolio = (
-        Portfolio.objects.filter(order__gt=portfolio.order).order_by("order").first()
+        Portfolio.objects.filter(Q(order__gt=portfolio.order) | Q(order=portfolio.order, id__gt=portfolio.id))
+        .order_by("order", "id")
+        .first()
     )
 
     context = {
@@ -47,7 +58,6 @@ def portfolio_detail(request, slug):
             (portfolio.title, None),
         ),
         "portfolio": portfolio,
-        "stats": stats,
         "prev_portfolio": prev_portfolio,
         "next_portfolio": next_portfolio,
     }
