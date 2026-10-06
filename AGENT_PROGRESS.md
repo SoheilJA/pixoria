@@ -613,6 +613,39 @@ but are out of scope for this migration order (home/about/contact/404 only).
   runs are clean no-ops. `/contact/` still renders 200 on the old template
   (T34 replaces it).
 
+- **D37 — Portfolio model review (T35).** The review found the model layer
+  already covered the planned pages; the missing pieces were added, all
+  optional so a bare project still renders: `image_alt` (a11y/SEO for the
+  cover), `technologies` csv + `get_technologies_list()` (mirrors
+  `Service.get_chips_list()`), a nullable `testimonial` FK to
+  `services.ServiceTestimonial` (the detail page's optional customer-quote
+  card — the component `testimonials_slider` needs a `service`, so the detail
+  page renders this one card directly instead), `meta_description` +
+  `get_meta_description()` (fallback to `excerpt`, mirrors `Article`), an
+  `icon` on `ProjectStat` (validated by `validate_icon_name`, previewed in the
+  inline via `IconPreviewMixin`), a new `ProjectImage` child
+  (`image`/`alt`/`caption`/`order`, `related_name="gallery"`) rendered only
+  when present, and `eyebrow` on `PortfolioPageSection` with `[[ ]]`
+  `help_text` on both titles. Migration `portfolio.0004`; admin gained
+  fieldsets (تصویر و گالری / مشتری و دسته‌بندی / محتوای پروژه / بازخورد و سئو /
+  نمایش), the `ProjectImageInline`, `list_filter` (`categories`, `featured`),
+  `search_fields` and the icon preview column.
+  Seed: `apps/portfolio/management/commands/seed_portfolio_content.py` (new
+  management package in the portfolio app). It deliberately touches NO project
+  data — نمونه‌کارها are the user's real client work, so stats/gallery/
+  technologies stay admin-entered (unlike home/about, whose copy is the
+  design's prose). It only fills the section `eyebrow` when empty («نمونه‌کارها»,
+  matching the home portfolio section's eyebrow) and creates the four default
+  `Category` rows only when the table is completely empty, so a fresh DB has a
+  working filter and an existing one is never clobbered. Two runs are clean
+  no-ops (verified). Verified: `manage.py check` + `makemigrations --check`
+  clean; `/portfolio/` and a detail page render 200 with data, `/portfolio/`
+  still 200 with an empty project table and a missing slug 404s; every admin
+  page (changelist/add/change) renders 200; an invalid icon name is rejected
+  and a valid one saves. The DB holds two throwaway verification rows (one
+  `ProjectStat`, one `ProjectImage` pointing at a nonexistent file) that the
+  sandbox refused to delete — remove them before T36.
+
 - **D36 — Contact page template (T34).** `templates/contact/contact.html` fully
   replaced (v1 page-hero + project-type/budget/start-time selects out) with the
   four `new/contact.html` sections on top of `base.html`: hero → form →
@@ -851,7 +884,7 @@ but are out of scope for this migration order (home/about/contact/404 only).
 
 ### Phase 8 — Portfolio pages (no design in `new/`: design them)
 
-- [ ] T35 — Review `portfolio` models vs the planned pages; add only what is
+- [x] T35 — Review `portfolio` models vs the planned pages; add only what is
   missing (e.g. optional gallery images inline, results/metrics via existing
   `ProjectStat`, technologies/tags, optional related testimonial link, SEO
   fields), all optional; migration + admin + seed if needed |
@@ -925,12 +958,14 @@ but are out of scope for this migration order (home/about/contact/404 only).
 
 ## Current status
 
-T01–T34 done. Next: T35 — review the `portfolio` models against the planned
-v2 pages (list + detail) and add only what is missing (optional gallery images
-inline, results/metrics via the existing `ProjectStat`, technologies/tags,
-optional related testimonial link, SEO fields), all optional; migration +
-admin + seed if needed. The testimonials slider and projects carousel
-components already accept a `service`/`exclude`/`category`/`limit` parameter
-(D31/D32), and `_project_card.html`/`_article_card.html` (D30) plus the design
-language for pages without a `new/` design (D27) are the building blocks.
+T01–T35 done. Next: T36 — portfolio LIST page `templates/portfolio/list.html`
+in the v2 design language (D27): v2 hero (eyebrow + `highlight` title from the
+`PortfolioPageSection` singleton), category filter (the view already filters
+server-side on `?category=<slug>` — see `Category.filter_url`), 3-column grid
+using `_project_card.html`, pagination or HTMX load-more, empty state, CTA
+from base. Before starting, delete the two throwaway verification rows left in
+the DB by T35 (D37). The projects carousel (`{% projects_carousel %}`) and
+`_project_card.html` are the building blocks; `portfolio.views.portfolio_list`
+already provides `categories`, `selected_category`, `portfolios` and
+`page_section`.
 
