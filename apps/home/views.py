@@ -101,9 +101,17 @@ def home(request):
 
     # ── نمونه‌کارهای صفحه اصلی: پروژه‌های منتخب، همراه با دسته‌بندی برای فیلتر ──
     if "portfolio" in keys:
-        context["portfolio_items"] = list(
-            Portfolio.objects.filter(featured=True).prefetch_related("categories")
+        pf_items = list(
+            Portfolio.objects.filter(featured=True)
+            .order_by("order", "id")
+            .prefetch_related("categories")[:9]
         )
+        # گرید سه‌ستونه است؛ تعداد باید مضربی از ۳ باشد تا ردیف آخر یتیم نماند.
+        # وقتی پروژه‌ها ۳ تا یا کمترند همه‌شان را نشان می‌دهیم (پنهان کردن محتوا
+        # از زیباییِ گرید مهم‌تر است).
+        if len(pf_items) > 3:
+            pf_items = pf_items[: len(pf_items) - len(pf_items) % 3]
+        context["portfolio_items"] = pf_items
         # فقط دسته‌بندی‌هایی دکمهٔ فیلتر می‌گیرند که روی این پروژه‌ها فعال باشند.
         context["portfolio_categories"] = list(
             Category.objects.filter(portfolio__featured=True).distinct().order_by("order", "id")

@@ -411,6 +411,13 @@ but are out of scope for this migration order (home/about/contact/404 only).
   Verified through `handler404` with `override_settings(DEBUG=False)` and a
   non-existent URL (status 404, all content present) — no temporary route was
   needed, so nothing had to be removed afterwards.
+- **D29 — Portfolio grid trim (T27).** The home portfolio grid is
+  `grid-cols-1 md:grid-cols-2 lg:grid-cols-3`; the view caps featured items at
+  9 (ordered by `order`, `id`) and, when there are more than 3, trims the list
+  to the largest multiple of 3 so the last `lg` row is never one orphan tile.
+  Counts ≤ 3 are shown as-is on purpose — hiding real content to satisfy the
+  grid math is worse than a short row (the DB currently has only one featured
+  project, which would have been trimmed to zero by a naive `% 3` slice).
 
 ## Tasks
 
@@ -534,7 +541,7 @@ but are out of scope for this migration order (home/about/contact/404 only).
 
 ### Phase 5b — Home tweak + shared components
 
-- [ ] T27 — Home portfolio grid becomes 3 columns (`grid-cols-1
+- [x] T27 — Home portfolio grid becomes 3 columns (`grid-cols-1
   md:grid-cols-2 lg:grid-cols-3`), keep the filter, radius variants, empty
   state. Limit rendered items to a multiple of 3 (e.g. 6 or 9) from the view.
   Verify no orphan/ugly tile layout at all breakpoints |
@@ -680,9 +687,8 @@ but are out of scope for this migration order (home/about/contact/404 only).
 
 ## Current status
 
-T01–T26 done (all home page sections, base chrome, shared JS, v2 seed copy,
-v2 404 page). Next: T27 — make the home portfolio grid 3 columns
-(`grid-cols-1 md:grid-cols-2 lg:grid-cols-3`), keep the filter/radius
-variants/empty state, and limit rendered items to a multiple of 3 from the
-view.
+T01–T27 done. Next: T28 — extract reusable CARD partials (no visual change):
+`templates/components/_project_card.html`, `_article_card.html`,
+`_testimonial_card.html` (text/video/audio kinds), and switch the home
+sections to use them.
 

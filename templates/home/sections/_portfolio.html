@@ -51,7 +51,7 @@
         {{ portfolio_items|length|fa_digits }} PROJECTS
       </p>
 
-      <div class="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2" id="pf-grid">
+      <div class="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3" id="pf-grid">
         {% for item in portfolio_items %}
           {% with category=item.categories.first %}
             <a href="{% url 'portfolio:detail' item.slug %}"
