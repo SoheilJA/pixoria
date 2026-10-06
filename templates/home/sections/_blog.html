@@ -1,8 +1,9 @@
-{% load icon_tags highlight_tags fa_digits jalali_tags %}
-{# مجلهٔ پیکسوریا v2 — کارت‌های مقاله روی پس‌زمینهٔ تیره #}
-{# داده‌ها: blog_section (LatestArticlesSection)، latest_articles (Article[])، blog_url #}
-{# pixoria.js با data-tilt به کارت‌ها کج‌شدن و درخشش می‌دهد #}
-{% if latest_articles %}
+{% load icon_tags highlight_tags articles_tags %}
+{# مجلهٔ پیکسوریا v2 — کاروسل مقالات روی پس‌زمینهٔ تیره #}
+{# داده‌ها: blog_section (LatestArticlesSection)، blog_url #}
+{# خود کاروسل (articles_tags) کوئری می‌زند و وقتی مقاله‌ای نیست چیزی چاپ #}
+{# نمی‌کند. pixoria.js هر [data-carousel] را مستقل راه‌اندازی می‌کند. #}
+{% if blog_section %}
   <section id="blog" class="relative overflow-hidden bg-ink2">
     {# موج روشنِ بالای بخش — گذار از بخش دستاوردهای تیره #}
     <svg class="divider" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true">
@@ -31,13 +32,9 @@
         {% endif %}
       </div>
 
-      {# نهایتاً شش مقالهٔ منتشرشده در سه ستون #}
-      <div class="mt-14 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {% for article in latest_articles|slice:":6" %}
-          {# پلکانِ زمانِ ظهور کارت‌ها #}
-          {% cycle '0' '0.1' '0.2' '0.3' '0.4' '0.5' as card_delay silent %}
-          {% include "components/_article_card.html" with article=article delay=card_delay %}
-        {% endfor %}
+      {# نهایتاً هشت مقالهٔ منتشرشده در کاروسل #}
+      <div class="mt-14" data-reveal="up">
+        {% articles_carousel %}
       </div>
     </div>
   </section>

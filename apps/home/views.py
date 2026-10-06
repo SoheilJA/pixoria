@@ -1,7 +1,6 @@
 from django.core.cache import cache
 from django.shortcuts import render
 from django.urls import reverse
-from django.utils import timezone
 from django.utils.safestring import mark_safe
 from django.views.decorators.cache import never_cache
 from django.views.decorators.http import require_POST
@@ -37,7 +36,6 @@ from .models import (
 )
 from apps.portfolio.models import Category, Portfolio
 from apps.services.models import Service
-from apps.blog.models import Article
 
 
 def home(request):
@@ -65,13 +63,6 @@ def home(request):
             for index, service in enumerate(featured_services)
         ],
         "testimonials_section": TestimonialSection.objects.first() if "testimonials" in keys else None,
-        "latest_articles": (
-            Article.objects.filter(status="published", published_at__lte=timezone.now())
-            .select_related("category")
-            .order_by("-published_at")[:8]
-            if "blog" in keys
-            else []
-        ),
         # ── بخش‌های جدید ──
         "about_section": HomeAboutSection.objects.first() if "about" in keys else None,
         "about_stats": HomeAboutStat.objects.filter(is_active=True) if "about" in keys else [],

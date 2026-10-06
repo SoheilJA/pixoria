@@ -1180,6 +1180,9 @@
   .w-\[60px\] {
     width: 60px;
   }
+  .w-\[min\(86vw\,360px\)\] {
+    width: min(86vw, 360px);
+  }
   .w-\[min\(88vw\,400px\)\] {
     width: min(88vw, 400px);
   }
@@ -1384,6 +1387,9 @@
   }
   .snap-center {
     scroll-snap-align: center;
+  }
+  .snap-start {
+    scroll-snap-align: start;
   }
   .list-none {
     list-style-type: none;
@@ -3639,6 +3645,9 @@
     .md\:w-72 {
       width: calc(var(--spacing) * 72);
     }
+    .md\:w-\[min\(46vw\,400px\)\] {
+      width: min(46vw, 400px);
+    }
     .md\:grid-cols-2 {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
@@ -3834,6 +3843,9 @@
     }
     .lg\:w-\[42\%\] {
       width: 42%;
+    }
+    .lg\:w-\[min\(30vw\,400px\)\] {
+      width: min(30vw, 400px);
     }
     .lg\:-translate-y-1\/2 {
       --tw-translate-y: calc(calc(1 / 2 * 100%) * -1);
@@ -5507,13 +5519,6 @@ a:hover .logo-mark {
 .no-scrollbar {
   scrollbar-width: none;
 }
-[data-slider] {
-  cursor: grab;
-}
-[data-slider].dragging {
-  scroll-snap-type: none;
-  cursor: grabbing;
-}
 .ctrl-btn {
   display: grid;
   place-items: center;
@@ -5532,14 +5537,21 @@ a:hover .logo-mark {
   border-color: rgba(232, 196, 122, 0.8);
   color: var(--gold-l);
 }
-.t-dot {
+[data-slider], [data-carousel-track] {
+  cursor: grab;
+}
+[data-slider].dragging, [data-carousel-track].dragging {
+  scroll-snap-type: none;
+  cursor: grabbing;
+}
+.slider-dot {
   width: 8px;
   height: 8px;
   border-radius: 999px;
   background: rgba(245, 243, 238, 0.25);
   transition: 0.35s;
 }
-.t-dot.active {
+.slider-dot.active {
   background: var(--gold-l);
   width: 24px;
 }

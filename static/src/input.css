@@ -1962,13 +1962,6 @@ a:hover .logo-mark {
 .no-scrollbar {
   scrollbar-width: none;
 }
-[data-slider] {
-  cursor: grab;
-}
-[data-slider].dragging {
-  scroll-snap-type: none;
-  cursor: grabbing;
-}
 .ctrl-btn {
   display: grid;
   place-items: center;
@@ -1987,14 +1980,23 @@ a:hover .logo-mark {
   border-color: rgba(232, 196, 122, 0.8);
   color: var(--gold-l);
 }
-.t-dot {
+[data-slider],
+[data-carousel-track] {
+  cursor: grab;
+}
+[data-slider].dragging,
+[data-carousel-track].dragging {
+  scroll-snap-type: none;
+  cursor: grabbing;
+}
+.slider-dot {
   width: 8px;
   height: 8px;
   border-radius: 999px;
   background: rgba(245, 243, 238, 0.25);
   transition: 0.35s;
 }
-.t-dot.active {
+.slider-dot.active {
   background: var(--gold-l);
   width: 24px;
 }

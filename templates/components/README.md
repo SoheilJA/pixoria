@@ -25,35 +25,34 @@ lives here — extend the component instead.
 ## Carousel
 
 `components/carousel.html` + the `{% carousel %}…{% endcarousel %}` block tag
-(`{% load component_tags %}`). The wrapped markup becomes the carousel track,
+(`{% load component_tags %}`). The wrapped markup becomes the scroll-snap track,
 so any card partial can be dropped in — this is the only carousel markup and
 the only carousel JS in the site:
 
 ```django
 {% load component_tags %}
-{% carousel id='works-carousel' per_view=4 gap=24 %}
-  {% for work in featured_works %}
-    {% include 'components/cards/portfolio_card.html' with work=work %}
+{% carousel class='mt-14' %}
+  {% for article in articles %}
+    {% include 'components/_article_card.html' with article=article %}
   {% endfor %}
 {% endcarousel %}
 ```
 
 | Prop | Type | Default | Notes |
 | --- | --- | --- | --- |
-| `id` | str | — | wrapper id (debugging/anchors only; the JS is id-agnostic) |
-| `per_view` | int | 3 | desktop slides per view; 1 on mobile, `min(2, per_view)` on tablet |
-| `gap` | int | 24 | px gap between slides |
-| `autoplay` | bool | false | auto-advance; disabled under `prefers-reduced-motion` |
-| `interval` | int | 6000 | autoplay step in ms (clamped to ≥ 2000) |
-| `arrows` | bool | true | prev/next buttons (Lucide arrows) |
-| `dots` | bool | true | dot indicators, one per scroll position |
-| `class` | str | — | extra classes on the wrapper |
+| `class` | str | — | extra classes on the wrapper (spacing belongs to the caller) |
+| `id` | str | — | wrapper id (anchors/debugging only; the JS never reads it) |
 
-JS: `static/js/core/carousel.js` — a single generic pass initialises every
-`.carousel` from its own `data-*` attributes (no per-id config) and re-runs on
-`htmx:afterSwap`; carousels replaced by a swap are destroyed so their timers
-and listeners do not leak. RTL: the previous button sits on the right and
-points right, `ArrowLeft` advances, `ArrowRight` goes back.
+The wrapper carries no config data attributes: the track is plain CSS
+`scroll-snap` (`snap-x snap-mandatory`, cards get `snap-start` + a fixed width
+from the caller), and `static/js/pixoria.js` `initCarousels` initialises every
+`[data-carousel]` per instance — dots (`data-carousel-dots`, one per slide),
+prev/next (`data-carousel-prev`/`-next`), keyboard on the focusable track
+(`ArrowLeft` advances in RTL, `ArrowRight` goes back, `Home`/`End` jump), and
+mouse drag via the shared `enableTrackDrag` helper (touch keeps native scroll).
+The dot style is `.slider-dot`, shared with the testimonial slider; `.ctrl-btn`
+styles the prev/next buttons. The carousel hides itself when the track is empty
+(the section tags below guard on `{% if items %}`).
 
 **Never write real template tag syntax inside a `{# … #}` comment** — the
 Django lexer's `tag_re` is not compiled with `re.DOTALL`, so a multi-line
@@ -95,6 +94,14 @@ they render nothing when there is no data:
 | Tag | Props | Template | Model |
 | --- | --- | --- | --- |
 | `testimonials_slider` | `service` (default none), `limit` (9), `title`, `eyebrow`, `id` (`"testimonials"`) | `components/testimonials_slider.html` | `ServiceTestimonial` |
+| `projects_carousel` | `exclude`, `category` (instance or slug), `service` (Service instance → its title, or string), `limit` (8) | `components/projects_carousel.html` | `apps.portfolio.Portfolio` |
+| `articles_carousel` | `exclude`, `category` (instance or slug), `limit` (8) | `components/articles_carousel.html` | `apps.blog.Article` |
+
+Each renders nothing when its query is empty. The two carousels drop into the
+`{% carousel %}` shell above; `articles_carousel` backs the home blog section,
+and both are meant for related-content blocks on detail pages. `exclude` takes
+a model instance (the current object); `limit` is `int()`-coerced so a string
+variable cannot 500 the page.
 
 The slider markup uses no element ids: `data-slider` (track), `data-slider-root`
 (scope the JS looks the controls up in), `data-slider-prev` / `data-slider-next`

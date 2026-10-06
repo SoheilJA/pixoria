@@ -271,6 +271,7 @@ function init() {
   }
 
   initSliders({ hasGsap, REDUCED, faDigits });
+  initCarousels({ REDUCED, faDigits });
   initMediaCards({ hasGsap, REDUCED, fmtTime });
   initPortfolioFilter({ hasGsap, REDUCED, faDigits });
   initMarquees();
@@ -282,6 +283,50 @@ function init() {
   window.addEventListener("load", () => {
     if (hasGsap && ScrollTrigger) ScrollTrigger.refresh();
   });
+}
+
+/* ------------------------------------------------------- shared track drag */
+
+// کشیدنِ ماوس روی یک ترکِ اسکرولِ افقی (اسلایدر نظرات، کاروسل‌ها). لمس از
+// اسکرولِ خودِ مرورگر استفاده می‌کند؛ کلیک‌هایی که واقعاً کشیده شده‌اند خنثی
+// می‌شوند تا روی کارت‌های قابل‌کلیک اثر نگذارند.
+function enableTrackDrag(track) {
+  let dragging = false;
+  let startX = 0;
+  let startSL = 0;
+  let moved = 0;
+  track.addEventListener("pointerdown", (e) => {
+    if (e.pointerType !== "mouse") return;
+    dragging = true;
+    moved = 0;
+    startX = e.clientX;
+    startSL = track.scrollLeft;
+    track.classList.add("dragging");
+    track.setPointerCapture(e.pointerId);
+  });
+  track.addEventListener("pointermove", (e) => {
+    if (!dragging) return;
+    const dx = e.clientX - startX;
+    moved = Math.max(moved, Math.abs(dx));
+    track.scrollLeft = startSL + dx;
+  });
+  const endDrag = () => {
+    if (!dragging) return;
+    dragging = false;
+    track.classList.remove("dragging");
+  };
+  track.addEventListener("pointerup", endDrag);
+  track.addEventListener("pointercancel", endDrag);
+  track.addEventListener(
+    "click",
+    (e) => {
+      if (moved > 8) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    },
+    true,
+  );
 }
 
 /* ------------------------------------------------------- testimonial slider */
@@ -296,7 +341,7 @@ function initSliders({ hasGsap, REDUCED, faDigits }) {
     if (!cards.length || !dotsWrap) return;
     const dots = cards.map((_, i) => {
       const d = document.createElement("button");
-      d.className = "t-dot" + (i === 0 ? " active" : "");
+      d.className = "slider-dot" + (i === 0 ? " active" : "");
       d.setAttribute("aria-label", "نظر " + faDigits(i + 1));
       d.addEventListener("click", () => {
         const target = -cards[i].offsetLeft + 24;
@@ -355,42 +400,93 @@ function initSliders({ hasGsap, REDUCED, faDigits }) {
   }
 
   // Mouse drag
-  let dragging = false;
-  let startX = 0;
-  let startSL = 0;
-  let moved = 0;
-  slider.addEventListener("pointerdown", (e) => {
-    if (e.pointerType !== "mouse") return;
-    dragging = true;
-    moved = 0;
-    startX = e.clientX;
-    startSL = slider.scrollLeft;
-    slider.classList.add("dragging");
-    slider.setPointerCapture(e.pointerId);
+  enableTrackDrag(slider);
   });
-  slider.addEventListener("pointermove", (e) => {
-    if (!dragging) return;
-    const dx = e.clientX - startX;
-    moved = Math.max(moved, Math.abs(dx));
-    slider.scrollLeft = startSL + dx;
-  });
-  const endDrag = () => {
-    if (!dragging) return;
-    dragging = false;
-    slider.classList.remove("dragging");
-  };
-  slider.addEventListener("pointerup", endDrag);
-  slider.addEventListener("pointercancel", endDrag);
-  slider.addEventListener(
-    "click",
-    (e) => {
-      if (moved > 8) {
+}
+
+/* ------------------------------------------------------------- carousels */
+
+// هر [data-carousel] یک نمونهٔ مستقل است: کاروسل روی هم‌رفتهٔ CSS scroll-snap
+// است و دکمه‌ها/نقاط/کیبورد فقط به همان نمونه مربوط می‌شوند. جهت RTL است:
+// دکمهٔ بعدی سمت چپ می‌نشیند و ArrowLeft به جلو می‌رود.
+function initCarousels({ REDUCED, faDigits }) {
+  document.querySelectorAll("[data-carousel]").forEach((root) => {
+    const track = root.querySelector("[data-carousel-track]");
+    if (!track) return;
+    const slides = [...track.children];
+    if (!slides.length) return;
+    const dotsWrap = root.querySelector("[data-carousel-dots]");
+    const prevBtn = root.querySelector("[data-carousel-prev]");
+    const nextBtn = root.querySelector("[data-carousel-next]");
+    const GAP = 24;
+
+    const dots = dotsWrap
+      ? slides.map((slide, i) => {
+          const d = document.createElement("button");
+          d.className = "slider-dot" + (i === 0 ? " active" : "");
+          d.setAttribute("aria-label", "اسلاید " + faDigits(i + 1));
+          d.addEventListener("click", () => {
+            track.scrollTo({
+              left: -slides[i].offsetLeft + GAP,
+              behavior: REDUCED ? "auto" : "smooth",
+            });
+          });
+          dotsWrap.appendChild(d);
+          return d;
+        })
+      : null;
+
+    const maxScroll = () => track.scrollWidth - track.clientWidth;
+    const progress = () =>
+      maxScroll() > 0
+        ? Math.min(1, Math.abs(track.scrollLeft) / maxScroll())
+        : 0;
+    let ticking = false;
+    track.addEventListener(
+      "scroll",
+      () => {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(() => {
+          const idx = Math.round(progress() * (slides.length - 1));
+          if (dots)
+            dots.forEach((d, i) => d.classList.toggle("active", i === idx));
+          ticking = false;
+        });
+      },
+      { passive: true },
+    );
+
+    const step = () => slides[0].offsetWidth + GAP;
+    const next = () => {
+      if (progress() > 0.92)
+        track.scrollTo({ left: 0, behavior: REDUCED ? "auto" : "smooth" });
+      else
+        track.scrollBy({ left: -step(), behavior: REDUCED ? "auto" : "smooth" });
+    };
+    const prev = () =>
+      track.scrollBy({ left: step(), behavior: REDUCED ? "auto" : "smooth" });
+    if (nextBtn) nextBtn.addEventListener("click", next);
+    if (prevBtn) prevBtn.addEventListener("click", prev);
+
+    // کیبورد: ترک focusable است. ArrowLeft در RTL به جلو (سمت چپ) می‌رود.
+    track.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowLeft") {
         e.preventDefault();
-        e.stopPropagation();
+        next();
+      } else if (e.key === "ArrowRight") {
+        e.preventDefault();
+        prev();
+      } else if (e.key === "Home") {
+        e.preventDefault();
+        track.scrollTo({ left: 0, behavior: "auto" });
+      } else if (e.key === "End") {
+        e.preventDefault();
+        track.scrollTo({ left: -maxScroll(), behavior: "auto" });
       }
-    },
-    true,
-  );
+    });
+
+    enableTrackDrag(track);
   });
 }
 

@@ -468,6 +468,37 @@ but are out of scope for this migration order (home/about/contact/404 only).
   text/video/audio testimonials renders one card per kind, `limit` truncates,
   and two tag calls on one page yield two `data-slider-root`s with no duplicate
   ids. Node `--check` passes on the module.
+- **D32 — Carousels (T30).** The v1 carousel (the `.carousel*` classes, the
+  `per_view`/`gap`/`autoplay` config data attributes and
+  `static/js/core/carousel.js`, which v2's `base.html` never loaded anyway) is
+  gone: `components/carousel.html` is rewritten as a scroll-snap shell with
+  `data-carousel` / `data-carousel-track` / `-prev` / `-next` / `-dots` hooks,
+  reusing the testimonials' `.ctrl-btn` buttons and the renamed `.slider-dot`
+  dot style (was `.t-dot`, renamed now that two components share it). The
+  `{% carousel %}…{% endcarousel %}` block tag in `component_tags.py` stays —
+  it only forwards `class`/`id` now that the config props are dead — and its
+  `content` slot is a `SafeString`, so no double escaping. Two new inclusion
+  tags next to their models: `apps/portfolio/templatetags/projects_tags.py`
+  (`projects_carousel(exclude, category, service, limit=8)`) and
+  `apps/blog/templatetags/articles_tags.py`
+  (`articles_carousel(exclude, category, limit=8)`). Both query themselves
+  (`Portfolio` ordered by `order`; `Article` filtered to `published` and
+  non-future, ordered by `-published_at`), accept `exclude` as a model
+  instance and `category` as either an instance or a slug, coerce `limit` with
+  `int()`, and render nothing on an empty query. `service` filters the free-text
+  `service_type` field (a `Service` instance resolves to its `title`) because
+  `Portfolio` has no FK to `Service` — see T35 if a real relation is wanted.
+  `pixoria.js` gained `initCarousels` (dots per slide, scroll-progress active
+  dot, prev/next with wrap-around, keyboard on the focusable track —
+  `ArrowLeft` advances in RTL — and mouse drag) and the shared
+  `enableTrackDrag(track)` helper that the testimonial slider now also uses.
+  The home blog section is now `blog_section` (header + link) + one
+  `{% articles_carousel %}` call, so the view's `latest_articles` entry and
+  the `Article`/`timezone` imports were dropped. Card widths inside a carousel
+  are the caller's job (`w-[min(86vw,360px)] … lg:w-[min(30vw,400px)] shrink-0
+  snap-start`). Verified in a rolled-back transaction: empty queries render
+  only whitespace, `exclude`/`category`(instance and slug)/`limit` behave, and
+  two carousels on one page produce two independent tracks with no element ids.
 
 ## Tasks
 
@@ -613,7 +644,7 @@ but are out of scope for this migration order (home/about/contact/404 only).
   files: `apps/core/templatetags/*`, `static/js/pixoria.js`,
   `templates/home/sections/_testimonials.html` |
   commit: "feat(components): testimonials slider inclusion tag"
-- [ ] T30 — Generic carousel component + CAROUSEL SECTIONS:
+- [x] T30 — Generic carousel component + CAROUSEL SECTIONS:
   `{% projects_carousel exclude=None category=None service=None limit=8 %}` and
   `{% articles_carousel exclude=None category=None limit=8 %}` built on the
   card partials. Lightweight dependency-free carousel (CSS scroll-snap + small
@@ -737,11 +768,9 @@ but are out of scope for this migration order (home/about/contact/404 only).
 
 ## Current status
 
-T01–T29 done. Next: T30 — generic carousel component + CAROUSEL SECTIONS:
-`{% projects_carousel exclude=None category=None service=None limit=8 %}` and
-`{% articles_carousel exclude=None category=None limit=8 %}` built on the
-`_project_card.html` / `_article_card.html` partials, dependency-free
-(scroll-snap CSS + small per-instance JS in pixoria.js: prev/next, RTL-aware,
-keyboard, drag/touch, `aria-label`s), hiding itself when empty. The home blog
-section should use the articles component.
+T01–T30 done. Next: T31 — extend the about models for the v2 about page (hero,
+story, journey/timeline, stats, values, team, clients wall, CTA — whatever
+exists in `new/about.html`), reusing existing `core.About*` models and
+`TeamMember`, adding only what is missing; migration + admin + seed with the
+Persian copy from `new/about.html`.
 
