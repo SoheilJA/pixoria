@@ -77,9 +77,14 @@ class Article(models.Model):
         verbose_name="نویسنده",
     )
 
-    cover_image = models.ImageField(upload_to="blog/covers/", verbose_name="تصویر کاور")
+    cover_image = models.ImageField(
+        upload_to="blog/covers/", verbose_name="تصویر کاور", blank=True
+    )
     cover_image_alt = models.CharField(
-        max_length=250, verbose_name="متن جایگزین تصویر کاور"
+        max_length=250,
+        verbose_name="متن جایگزین تصویر کاور",
+        blank=True,
+        help_text="برای دسترس‌پذیری و سئو. اگر خالی باشد، از عنوان مقاله استفاده می‌شود",
     )
 
     excerpt = models.TextField(max_length=300, verbose_name="خلاصه مقاله")
@@ -91,6 +96,11 @@ class Article(models.Model):
 
     status = models.CharField(
         max_length=10, choices=STATUS_CHOICES, default="draft", verbose_name="وضعیت"
+    )
+    featured = models.BooleanField(
+        default=False,
+        verbose_name="مقالهٔ ویژه",
+        help_text="نمایش در اسلات ویژهٔ بالای صفحهٔ بلاگ (فقط یک مقاله در آن جای می‌گیرد)",
     )
     published_at = models.DateTimeField(
         default=timezone.now, verbose_name="تاریخ انتشار"
@@ -125,20 +135,27 @@ class Article(models.Model):
     def get_meta_description(self):
         return self.meta_description or self.excerpt
 
+    def get_cover_alt(self):
+        """متن جایگزین کاور یا fallback به عنوان مقاله (دسترس‌پذیری)."""
+        return self.cover_image_alt or self.title
+
     def is_updated(self):
         return (self.updated_at - self.published_at).days >= 1
 
 
 class BlogPageSettings(models.Model):
     title = models.CharField(
-        max_length=100, verbose_name="عنوان صفحه بلاگ", help_text="مثلاً: دانش،"
+        max_length=100,
+        verbose_name="عنوان صفحه بلاگ",
+        help_text="کلمه‌ای که باید رنگی شود را داخل [[ ]] بنویسید. مثلاً: دانش، [[بی‌واسطه]]",
     )
-    # title_highlight = models.CharField(
-    #     max_length=100,
-    #     verbose_name="بخش هایلایت‌شده عنوان",
-    #     help_text="مثلاً: بی‌واسطه.",
-    # )
     description = models.TextField(verbose_name="توضیحات صفحه بلاگ")
+    eyebrow = models.CharField(
+        max_length=100,
+        verbose_name="متن بالای عنوان",
+        blank=True,
+        help_text="متن کوچک و طلاییِ بالای عنوان. مثلاً: مجلهٔ پیکسوریا",
+    )
 
     class Meta:
         verbose_name = "تنظیمات صفحه بلاگ"

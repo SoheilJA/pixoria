@@ -7,7 +7,7 @@
         <a href="{% url 'blog:detail' rel.slug %}" class="group flex items-start gap-3.5" title="{{ rel.title }}">
           {% if rel.cover_image and rel.cover_image.url %}
             <div class="grid h-[60px] w-[60px] shrink-0 place-items-center overflow-hidden rounded-sm bg-paper-deep">
-              <img src="{{ rel.cover_image.url }}" alt="{{ rel.cover_image_alt }}" loading="lazy" class="h-full w-full object-cover" />
+              <img src="{{ rel.cover_image.url }}" alt="{{ rel.get_cover_alt }}" loading="lazy" class="h-full w-full object-cover" />
             </div>
           {% endif %}
           <div>

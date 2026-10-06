@@ -654,6 +654,58 @@ but are out of scope for this migration order (home/about/contact/404 only).
   `[[ ]]`, no CDN references, `manage.py check` + `makemigrations --check`
   clean, home/about/contact/blog/list unaffected, Tailwind rebuilt (no token
   changes — only new arbitrary utilities).
+
+- **D40 — Blog model review + prose styles (T38).** The model layer was
+  already nearly complete for the v2 pages; the review added only the missing
+  pieces, all optional so a bare article still renders: `Article.featured`
+  (bool, seeds the hero slot of the list page — T39), and `cover_image` +
+  `cover_image_alt` became **blank=True** with a new `get_cover_alt()` helper
+  (fallback to the title, mirroring `Portfolio.image_alt`) so an article can
+  be saved without a cover at all and the alt text is never empty — D37 found
+  the same a11y gap in the portfolio model. `BlogPageSettings` gained
+  `eyebrow` (every v2 section header has one) plus the `[[ ]]` `help_text` on
+  `title`, and the commented-out `title_highlight` remnant was deleted — the
+  `highlight` filter replaces it (D2). Migrations `blog.0004` (featured +
+  eyebrow + title help_text) and `0005` (cover fields blank). Admin:
+  `featured` joined `list_display` + `list_editable` (next to `status`),
+  `list_filter` gained `featured`/`author`, `search_fields` gained
+  `meta_title`, `prepopulated_fields` for the slug, `BlogPageSettings` got a
+  fieldset with the marker description, Tag/Author got `search_fields`. Seed:
+  `apps/blog/management/commands/seed_blog_content.py` — the D25 pattern once
+  more: `first_or_create` for the singleton (only fills `eyebrow` when empty —
+  the existing row holds the user's real title/description) plus a one-time
+  `featured` pick of the newest published article when NO article is featured
+  yet (never moves a flag the admin already set). Two runs are clean no-ops
+  (verified). The command deliberately touches NO article content — blog
+  posts are the user's own writing, like portfolio projects (D37).
+  **The reusable rich-text style is `.prose-ink` / `.prose-cream`** in
+  `static/src/input.css`: two variants of one system for TinyMCE `HTMLField`
+  output, ink for light (cream) backgrounds and cream for dark, covering
+  every tag the TinyMCE toolbar can emit — h2 (with a short gold dash above,
+  matching `.eyebrow`'s visual language) through h6, p, strong/em/u/s, links
+  (gold underline, offset 4px, hover deepens), `ul` with rotated-square gold
+  markers (list-style none + `::before`), `ol` with circled Persian counters
+  (`counter(ol-counter, persian)` — the browser renders ۱/۲/۳ natively),
+  blockquote with a 3px gold RIGHT border (RTL — a left border would read
+  backwards), inline + block code (Space Grotesk via `--font-latin`,
+  `direction: ltr` + `unicode-bidi: isolate` so a Latin snippet inside RTL
+  prose is never re-shaped), tables (right-aligned headers, `display: block`
+  + `overflow-x: auto` on narrow screens), `figure`/`figcaption`, and `hr` as
+  a gold gradient fade. RTL is baked in everywhere (padding-right on lists,
+  right-side markers and borders, right text-align in table cells). The
+  portfolio detail page (T37) was migrated from its inline arbitrary
+  variants to `.prose-ink` for description/challenge/solution, and the blog
+  detail body (`detail_body.html`) got it too, so the style is exercised by
+  two pages already. **Verified:** `manage.py check` + `makemigrations --check`
+  clean, every admin page (changelist/add/change/settings) 200, blog detail
+  200 with a rich fixture (all tags render, TOC `toc-N` ids intact, sidebar
+  links resolve), 200 with a cover-less article (cover section skips), list
+  200, all other pages unaffected, Tailwind rebuilt (73 prose rules
+  compiled). No visual regression tool exists in this repo, so the CSS was
+  verified structurally (compiled output + selector coverage) rather than by
+  screenshot.
+
+- **D38 — Portfolio list page (T36).** `templates/portfolio/list.html` rebuilt
   on `base.html` in the D27 design language: a dark `bg-ink` hero (orbs/shard
   with `data-mouse-parallax`, a stroked latin `works` watermark, `eyebrow` +
   `highlight` h1 + description from the `PortfolioPageSection` singleton, and a
@@ -984,13 +1036,14 @@ but are out of scope for this migration order (home/about/contact/404 only).
 
 ### Phase 9 — Blog pages (no design in `new/`: design them)
 
-- [ ] T38 — Review `blog` models; add only what is missing (e.g. featured
-  flag, optional cover alt text, SEO fields exist already); migration + admin
-  if needed. Add a reusable rich-text typography style for TinyMCE `HTMLField`
+- [x] T38 — Review `blog` models; add only what is missing (featured flag,
+  optional cover alt text — SEO fields exist already); migration + admin if
+  needed. Add a reusable rich-text typography style for TinyMCE `HTMLField`
   content in `static/src/input.css` (headings, lists, quotes, images, tables,
   code, links) in the gold/cream/ink language, RTL-correct |
   files: `apps/blog/models.py`, `apps/blog/migrations/`, `apps/blog/admin.py`,
-  `static/src/input.css` | commit: "feat(blog): extend models and add prose styles"
+  `static/src/input.css`, `apps/blog/management/commands/seed_blog_content.py` |
+  commit: "feat(blog): extend models and add prose styles"
 - [ ] T39 — Blog LIST page `templates/blog/list.html`: v2 hero, featured
   article, category filter, search only if already supported by the view, grid
   using `_article_card.html`, keep the existing `blog:load` HTMX load-more
@@ -1034,13 +1087,15 @@ but are out of scope for this migration order (home/about/contact/404 only).
 
 ## Current status
 
-T01–T37 done. Next: T38 — review `blog` models; add only what is missing
-(featured flag, optional cover alt text — SEO fields exist already); migration
-+ admin if needed. Add a reusable rich-text typography style for TinyMCE
-`HTMLField` content in `static/src/input.css` (headings, lists, quotes, images,
-tables, code, links) in the gold/cream/ink language, RTL-correct — the
-portfolio detail page (T37) currently styles its description with inline
-arbitrary variants, so this prose class should be reusable there too. Then T39
-(blog list) and T40 (blog detail: Jalali date via `fa_jdate`, reading time,
-reading-progress bar, TOC, share links, related `articles_carousel`).
+T01–T38 done. Next: T39 — blog LIST page `templates/blog/list.html`: v2 hero
+(eyebrow + `highlight` title from `BlogPageSettings`, now with `eyebrow` +
+`[[ ]]` title — D40), featured-article slot using the new
+`Article.featured` flag, category filter (the existing `flt-btn` pills from
+home/portfolio list, keeping `blog:load` HTMX load-more working — the
+`article_cards.html` partial must switch from the v1 `components/cards/
+blog_card.html` to `components/_article_card.html`), empty state, CTA from
+base. Then T40 — blog DETAIL: Jalali date (`fa_jdate`), reading time
+(`fa_digits`), reading-progress bar, `.prose-ink` body (ready — D40), TOC,
+tags, share buttons, `{% articles_carousel exclude=article
+category=article.category %}` as related posts, Article JSON-LD.
 

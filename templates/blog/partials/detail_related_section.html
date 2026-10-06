@@ -9,7 +9,7 @@
         <a href="{% url 'blog:detail' rel.slug %}" class="group overflow-hidden rounded-[6px] border border-line transition-[transform,border-color] duration-300 hover:-translate-y-[3px] hover:border-night" title="{{ rel.title }}" data-reveal="fade-up" data-reveal-delay="{{ forloop.counter0|add:'100' }}" data-reveal-duration="700">
           {% if rel.cover_image and rel.cover_image.url %}
             <div class="flex aspect-video items-center justify-center overflow-hidden bg-paper-deep">
-              <img src="{{ rel.cover_image.url }}" alt="{{ rel.cover_image_alt }}" loading="lazy" class="h-full w-full object-cover" />
+              <img src="{{ rel.cover_image.url }}" alt="{{ rel.get_cover_alt }}" loading="lazy" class="h-full w-full object-cover" />
             </div>
           {% endif %}
           <div class="flex flex-col gap-2 p-5">

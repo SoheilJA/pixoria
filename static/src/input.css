@@ -2486,4 +2486,391 @@ a:hover .logo-mark {
     padding: 1rem;
   }
 }
+
+/* ---------- تایپوگرافیِ محتوای غنی (TinyMCE) ----------
+   دو نوع: .prose-ink روی پس‌زمینهٔ روشن (کرم) و .prose-cream روی تیره.
+   خروجی TinyMCE فقط تگ‌های سِمانتیک است (h2..h6, p, ul, ol, blockquote,
+   pre, table, img, figure, a)؛ استایل‌ها روی همین تگ‌ها می‌نشینند و با
+   هیچ کلاسی از سمت ویرایشگر حساب نمی‌شوند. RTL: تمام جهت‌ها right-based.
+*/
+.prose-ink,
+.prose-cream {
+  font-size: 1.06rem;
+  line-height: 1.95;
+  letter-spacing: 0.005em;
+}
+.prose-ink {
+  color: #4a4438;
+}
+.prose-cream {
+  color: rgba(245, 243, 238, 0.82);
+}
+/* پاراگراف‌ها */
+.prose-ink p,
+.prose-cream p {
+  margin: 0 0 1.35em;
+}
+.prose-ink > p:first-child,
+.prose-cream > p:first-child {
+  margin-top: 0;
+}
+/* عناوین — داش طلایی کوتاه بالای h2/h3 */
+.prose-ink h2,
+.prose-ink h3,
+.prose-ink h4,
+.prose-cream h2,
+.prose-cream h3,
+.prose-cream h4 {
+  font-weight: 800;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+}
+.prose-ink h2,
+.prose-cream h2 {
+  font-size: clamp(1.55rem, 2.4vw, 2rem);
+  margin: 2.4em 0 0.85em;
+  padding-top: 1.6em;
+  position: relative;
+}
+.prose-ink h2::before,
+.prose-cream h2::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 2.75rem;
+  height: 3px;
+  border-radius: 999px;
+  background: linear-gradient(to left, var(--gold), rgba(201, 161, 90, 0.1));
+}
+.prose-ink h2 {
+  color: #1e1b15;
+}
+.prose-cream h2 {
+  color: var(--cream);
+}
+.prose-ink h3,
+.prose-cream h3 {
+  font-size: clamp(1.2rem, 1.6vw, 1.4rem);
+  margin: 1.9em 0 0.7em;
+}
+.prose-ink h3 {
+  color: #2a251c;
+}
+.prose-cream h3 {
+  color: var(--cream);
+}
+.prose-ink h4,
+.prose-cream h4 {
+  font-size: 1.06rem;
+  margin: 1.5em 0 0.55em;
+}
+.prose-ink h4 {
+  color: #3a3428;
+}
+.prose-cream h4 {
+  color: rgba(245, 243, 238, 0.92);
+}
+/* حداکثر دو سطح عنوان در متن */
+.prose-ink h5,
+.prose-ink h6,
+.prose-cream h5,
+.prose-cream h6 {
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 1.3em 0 0.5em;
+  color: var(--gold-d);
+}
+.prose-cream h5,
+.prose-cream h6 {
+  color: var(--gold-l);
+}
+/* لینک‌ها — زیرخط ظریف طلایی با تغییر رنگ در هاور */
+.prose-ink a,
+.prose-cream a {
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-thickness: 1.5px;
+  transition: color 0.25s;
+}
+.prose-ink a {
+  color: var(--gold-d);
+  text-decoration-color: rgba(143, 107, 44, 0.4);
+}
+.prose-ink a:hover {
+  color: var(--gold);
+  text-decoration-color: var(--gold);
+}
+.prose-cream a {
+  color: var(--gold-l);
+  text-decoration-color: rgba(232, 196, 122, 0.4);
+}
+.prose-cream a:hover {
+  color: #fff;
+  text-decoration-color: var(--gold-l);
+}
+/* تأکیدها */
+.prose-ink strong,
+.prose-cream strong {
+  font-weight: 800;
+}
+.prose-ink strong {
+  color: #1e1b15;
+}
+.prose-cream strong {
+  color: var(--cream);
+}
+.prose-ink em,
+.prose-cream em {
+  font-style: italic;
+}
+.prose-ink u,
+.prose-cream u {
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 3px;
+}
+.prose-ink u {
+  text-decoration-color: rgba(201, 161, 90, 0.55);
+}
+.prose-cream u {
+  text-decoration-color: rgba(232, 196, 122, 0.55);
+}
+.prose-ink s,
+.prose-cream s {
+  opacity: 0.55;
+}
+/* لیست‌ها — نقطهٔ لوزیِ طلایی */
+.prose-ink ul,
+.prose-cream ul,
+.prose-ink ol,
+.prose-cream ol {
+  margin: 0 0 1.35em;
+  padding-right: 1.6em;
+}
+.prose-ink li,
+.prose-cream li {
+  margin-bottom: 0.55em;
+  padding-right: 0.35em;
+}
+.prose-ink li:last-child,
+.prose-cream li:last-child {
+  margin-bottom: 0;
+}
+.prose-ink ul,
+.prose-cream ul {
+  list-style: none;
+}
+.prose-ink ul > li,
+.prose-cream ul > li {
+  position: relative;
+}
+.prose-ink ul > li::before,
+.prose-cream ul > li::before {
+  content: "";
+  position: absolute;
+  right: -1.15em;
+  top: 0.72em;
+  width: 7px;
+  height: 7px;
+  transform: rotate(45deg);
+  background: var(--gold);
+  opacity: 0.85;
+}
+.prose-ink ol,
+.prose-cream ol {
+  list-style: none;
+  counter-reset: ol-counter;
+}
+.prose-ink ol > li,
+.prose-cream ol > li {
+  position: relative;
+  counter-increment: ol-counter;
+}
+.prose-ink ol > li::before,
+.prose-cream ol > li::before {
+  content: counter(ol-counter, persian);
+  position: absolute;
+  right: -1.9em;
+  top: 0.15em;
+  width: 1.35em;
+  height: 1.35em;
+  display: grid;
+  place-items: center;
+  font-size: 0.72em;
+  font-weight: 700;
+  border-radius: 999px;
+}
+.prose-ink ol > li::before {
+  color: var(--gold-d);
+  background: rgba(201, 161, 90, 0.14);
+  border: 1px solid rgba(143, 107, 44, 0.3);
+}
+.prose-cream ol > li::before {
+  color: var(--gold-l);
+  background: rgba(201, 161, 90, 0.12);
+  border: 1px solid rgba(201, 161, 90, 0.35);
+}
+/* نقل‌قول — خط طلایی در سمت راست (RTL) */
+.prose-ink blockquote,
+.prose-cream blockquote {
+  margin: 1.9em 0;
+  padding: 0.35em 1.4em 0.35em 0;
+  border-right: 3px solid var(--gold);
+  font-size: 1.12rem;
+  font-weight: 500;
+  line-height: 1.8;
+}
+.prose-ink blockquote {
+  background: rgba(201, 161, 90, 0.06);
+  color: #3a3428;
+}
+.prose-cream blockquote {
+  background: rgba(201, 161, 90, 0.07);
+  color: rgba(245, 243, 238, 0.9);
+}
+.prose-ink blockquote p,
+.prose-cream blockquote p {
+  margin: 0.4em 0;
+}
+.prose-ink blockquote p:first-child,
+.prose-cream blockquote p:first-child {
+  margin-top: 0;
+}
+.prose-ink blockquote p:last-child,
+.prose-cream blockquote p:last-child {
+  margin-bottom: 0;
+}
+/* کد — اینلاین و بلوک */
+.prose-ink code,
+.prose-cream code {
+  font-family: var(--font-latin), monospace;
+  font-size: 0.86em;
+  direction: ltr;
+  unicode-bidi: isolate;
+  padding: 0.15em 0.4em;
+  border-radius: 0.35rem;
+}
+.prose-ink code {
+  background: rgba(201, 161, 90, 0.13);
+  color: #6b4d16;
+  border: 1px solid rgba(143, 107, 44, 0.22);
+}
+.prose-cream code {
+  background: rgba(255, 255, 255, 0.07);
+  color: var(--gold-l);
+  border: 1px solid rgba(232, 196, 122, 0.22);
+}
+.prose-ink pre,
+.prose-cream pre {
+  margin: 1.7em 0;
+  padding: 1.15em 1.35em;
+  border-radius: 0.9rem;
+  overflow-x: auto;
+  direction: ltr;
+  text-align: left;
+}
+.prose-ink pre {
+  background: #1e1b15;
+  border: 1px solid rgba(201, 161, 90, 0.28);
+}
+.prose-cream pre {
+  background: rgba(6, 6, 7, 0.75);
+  border: 1px solid rgba(232, 196, 122, 0.22);
+}
+.prose-ink pre code,
+.prose-cream pre code {
+  padding: 0;
+  background: none;
+  border: none;
+  color: rgba(245, 243, 238, 0.9);
+  font-size: 0.84rem;
+  line-height: 1.7;
+}
+/* تصاویر و figure */
+.prose-ink img,
+.prose-cream img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.9rem;
+}
+.prose-ink figure,
+.prose-cream figure {
+  margin: 1.9em 0;
+}
+.prose-ink figcaption,
+.prose-cream figcaption {
+  margin-top: 0.75em;
+  font-size: 0.84rem;
+  line-height: 1.65;
+  text-align: center;
+}
+.prose-ink figcaption {
+  color: #6b6455;
+}
+.prose-cream figcaption {
+  color: rgba(245, 243, 238, 0.5);
+}
+/* جداول */
+.prose-ink table,
+.prose-cream table {
+  width: 100%;
+  margin: 1.9em 0;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+  overflow-x: auto;
+  display: block;
+}
+.prose-ink thead th,
+.prose-cream thead th {
+  padding: 0.75em 1em;
+  font-weight: 700;
+  text-align: right;
+  font-size: 0.84rem;
+}
+.prose-ink thead th {
+  color: #1e1b15;
+  background: rgba(201, 161, 90, 0.14);
+  border-bottom: 2px solid rgba(143, 107, 44, 0.4);
+}
+.prose-cream thead th {
+  color: var(--cream);
+  background: rgba(201, 161, 90, 0.1);
+  border-bottom: 2px solid rgba(201, 161, 90, 0.4);
+}
+.prose-ink tbody td,
+.prose-cream tbody td {
+  padding: 0.7em 1em;
+  text-align: right;
+  line-height: 1.7;
+}
+.prose-ink tbody td {
+  border-bottom: 1px solid rgba(30, 27, 21, 0.12);
+}
+.prose-cream tbody td {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+}
+.prose-ink tbody tr:last-child td,
+.prose-cream tbody tr:last-child td {
+  border-bottom: none;
+}
+.prose-ink tbody tr:hover td {
+  background: rgba(201, 161, 90, 0.05);
+}
+.prose-cream tbody tr:hover td {
+  background: rgba(255, 255, 255, 0.03);
+}
+/* خط افقی */
+.prose-ink hr,
+.prose-cream hr {
+  margin: 2.4em 0;
+  height: 1px;
+  border: none;
+}
+.prose-ink hr {
+  background: linear-gradient(to left, rgba(143, 107, 44, 0.45), transparent);
+}
+.prose-cream hr {
+  background: linear-gradient(to left, rgba(201, 161, 90, 0.45), transparent);
+}
     </style>

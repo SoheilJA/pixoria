@@ -205,12 +205,8 @@
           {% endif %}
         </div>
 
-        {# متن کامل — پاراگراف‌ها با linebreaks رندر می‌شوند #}
-        <div class="lg:col-span-8 max-w-none text-lg font-light leading-9 text-coy
-                    [&>p]:mb-[1.4em] [&>p:first-child]:mt-0
-                    [&_a]:font-medium [&_a]:text-gold-dark [&_a]:underline [&_a]:decoration-gold-dark/40 [&_a]:underline-offset-4
-                    [&_strong]:font-bold [&_strong]:text-paper"
-             data-reveal="right" data-delay="0.1">
+        {# متن کامل — تایپوگرافیِ محتوای غنی (T38) #}
+        <div class="prose-ink lg:col-span-8" data-reveal="right" data-delay="0.1">
           {{ portfolio.description|linebreaks }}
         </div>
       </div>
@@ -229,8 +225,7 @@
               <span class="icon-ring mb-6">{% icon "alert-circle" class="h-5 w-5" %}</span>
               <p class="eyebrow eyebrow-dark">چالش</p>
               <h3 class="mt-4 text-2xl font-extrabold leading-tight text-paper">مشکل کجا بود؟</h3>
-              <div class="mt-5 font-light leading-8 text-coy
-                          [&>p]:mb-[1.1em] [&>p:last-child]:mb-0">
+              <div class="prose-ink mt-5">
                 {{ portfolio.challenge|linebreaks }}
               </div>
             </article>
@@ -242,8 +237,7 @@
               <span class="icon-ring mb-6">{% icon "rocket" class="h-5 w-5" %}</span>
               <p class="eyebrow eyebrow-dark">راهکار</p>
               <h3 class="mt-4 text-2xl font-extrabold leading-tight text-paper">چطور حلش کردیم؟</h3>
-              <div class="mt-5 font-light leading-8 text-coy
-                          [&>p]:mb-[1.1em] [&>p:last-child]:mb-0">
+              <div class="prose-ink mt-5">
                 {{ portfolio.solution|linebreaks }}
               </div>
             </article>

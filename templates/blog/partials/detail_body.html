@@ -1,18 +1,18 @@
 {% load icon_tags %}
 {% comment %}محتوای اصلی مقاله + اشتراک‌گذاری{% endcomment %}
-<article class="post-body max-w-[72ch]" data-reveal="fade-up" data-reveal-delay="100" data-reveal-duration="700">
+<article class="post-body prose-ink max-w-[72ch]" data-reveal="fade-up" data-reveal-delay="100" data-reveal-duration="700">
   {# lead paragraph (excerpt) #}
-  <div class="mb-[2em] border-b border-line pb-[2em] text-[clamp(1.1rem,1.4vw,1.35rem)] leading-[1.6] text-ink-soft">{{ article.excerpt }}</div>
+  <div class="mb-[2em] border-b border-gold-dark/25 pb-[2em] text-[clamp(1.1rem,1.4vw,1.35rem)] leading-[1.6] font-medium text-paper">{{ article.excerpt }}</div>
 
   {# main content #}
   {{ content_html|safe }}
 
   {# social sharing bar #}
-  <div class="mt-[3em] flex flex-wrap items-center gap-3.5 border-t border-line pt-7 font-mono text-[0.78rem] uppercase tracking-[0.1em] text-ink-dim">
+  <div class="mt-[3em] flex flex-wrap items-center gap-3 border-t border-gold-dark/25 pt-7 text-[0.78rem] font-medium tracking-wide text-coy/80">
     <span>اشتراک‌گذاری:</span>
-    <a href="https://twitter.com/intent/tweet?url={{ request.build_absolute_uri }}" target="_blank" rel="noopener noreferrer" title="اشتراک‌گذاری در توییتر" aria-label="اشتراک‌گذاری در توییتر" class="inline-flex items-center gap-[7px] rounded-full border border-line px-4 py-2 text-ink-soft transition-[background,border-color,color] duration-200 hover:border-night hover:bg-night hover:text-ink">TW</a>
-    <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ request.build_absolute_uri }}" target="_blank" rel="noopener noreferrer" title="اشتراک‌گذاری در لینکدین" aria-label="اشتراک‌گذاری در لینکدین" class="inline-flex items-center gap-[7px] rounded-full border border-line px-4 py-2 text-ink-soft transition-[background,border-color,color] duration-200 hover:border-night hover:bg-night hover:text-ink">LI</a>
-    <a href="https://t.me/share/url?url={{ request.build_absolute_uri }}&text={{ article.title|urlencode }}" target="_blank" rel="noopener noreferrer" title="اشتراک‌گذاری در تلگرام" aria-label="اشتراک‌گذاری در تلگرام" class="inline-flex items-center gap-[7px] rounded-full border border-line px-4 py-2 text-ink-soft transition-[background,border-color,color] duration-200 hover:border-night hover:bg-night hover:text-ink">TG</a>
-    <a href="#" id="copy-link-btn" title="کپی لینک صفحه" aria-label="کپی لینک صفحه" class="inline-flex items-center gap-[7px] rounded-full border border-line px-4 py-2 text-ink-soft transition-[background,border-color,color] duration-200 hover:border-night hover:bg-night hover:text-ink">{% icon "link" class="h-4 w-4" %} کپی لینک</a>
+    <a href="https://twitter.com/intent/tweet?url={{ request.build_absolute_uri }}" target="_blank" rel="noopener noreferrer" title="اشتراک‌گذاری در توییتر" aria-label="اشتراک‌گذاری در توییتر" class="inline-flex items-center gap-[7px] rounded-full border border-gold-dark/35 px-4 py-2 transition-colors duration-200 hover:border-gold hover:bg-gold/10 hover:text-gold-dark">TW</a>
+    <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ request.build_absolute_uri }}" target="_blank" rel="noopener noreferrer" title="اشتراک‌گذاری در لینکدین" aria-label="اشتراک‌گذاری در لینکدین" class="inline-flex items-center gap-[7px] rounded-full border border-gold-dark/35 px-4 py-2 transition-colors duration-200 hover:border-gold hover:bg-gold/10 hover:text-gold-dark">LI</a>
+    <a href="https://t.me/share/url?url={{ request.build_absolute_uri }}&text={{ article.title|urlencode }}" target="_blank" rel="noopener noreferrer" title="اشتراک‌گذاری در تلگرام" aria-label="اشتراک‌گذاری در تلگرام" class="inline-flex items-center gap-[7px] rounded-full border border-gold-dark/35 px-4 py-2 transition-colors duration-200 hover:border-gold hover:bg-gold/10 hover:text-gold-dark">TG</a>
+    <a href="#" id="copy-link-btn" title="کپی لینک صفحه" aria-label="کپی لینک صفحه" class="inline-flex items-center gap-[7px] rounded-full border border-gold-dark/35 px-4 py-2 transition-colors duration-200 hover:border-gold hover:bg-gold/10 hover:text-gold-dark">{% icon "link" class="h-4 w-4" %} کپی لینک</a>
   </div>
 </article>
