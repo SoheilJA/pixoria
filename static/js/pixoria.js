@@ -138,25 +138,40 @@ function init() {
   document.addEventListener("htmx:afterSettle", syncActiveNav);
 
   /* ---------------- reveal animations ---------------- */
-  if (hasGsap && !REDUCED) {
-    gsap.utils.toArray("[data-reveal]").forEach((el) => {
-      const type = el.dataset.reveal || "up";
-      const vars = {
-        opacity: 0,
-        duration: 1,
-        ease: "power3.out",
-        delay: parseFloat(el.dataset.delay || 0),
-      };
-      if (type === "up") vars.y = 50;
-      else if (type === "right") vars.x = 60;
-      else if (type === "left") vars.x = -60;
-      else if (type === "scale") vars.scale = 0.92;
-      gsap.from(el, {
-        ...vars,
-        scrollTrigger: { trigger: el, start: "top 88%", once: true },
-      });
+  // کارت‌هایی که بعد از یک تعویضِ HTMX (مثلاً «مقالات بیشتر») وارد صفحه
+  // می‌شوند را با data-blog-reveal علامت‌گذاری می‌کنیم؛ آن‌ها در زمانِ boot
+  // هنوز وجود ندارند و باید پس از settle دوباره راه‌اندازی شوند.
+  const revealEl = (el) => {
+    const type = el.dataset.reveal || "up";
+    const vars = {
+      opacity: 0,
+      duration: 1,
+      ease: "power3.out",
+      delay: parseFloat(el.dataset.delay || 0),
+    };
+    if (type === "up") vars.y = 50;
+    else if (type === "right") vars.x = 60;
+    else if (type === "left") vars.x = -60;
+    else if (type === "scale") vars.scale = 0.92;
+    gsap.from(el, {
+      ...vars,
+      scrollTrigger: { trigger: el, start: "top 88%", once: true },
     });
+  };
+  if (hasGsap && !REDUCED) {
+    gsap.utils.toArray("[data-reveal]").forEach(revealEl);
   }
+  // تعویضِ HTMX → فقط عناصرِ تازه‌اضافه‌شده آنیمیشن می‌گیرند (با رعایت
+  // prefers-reduced-motion).
+  document.addEventListener("htmx:afterSettle", () => {
+    if (!hasGsap || REDUCED) return;
+    document.querySelectorAll("[data-blog-reveal]").forEach((el) => {
+      if (el.dataset.revealDone) return;
+      el.dataset.revealDone = "1";
+      revealEl(el);
+      if (!TOUCH) tiltCard(el);
+    });
+  });
 
   /* ---------------- counters (data-counter) ---------------- */
   document.querySelectorAll("[data-counter]").forEach((el) => {
@@ -200,25 +215,27 @@ function init() {
   }
 
   /* ---------------- 3D tilt cards + glare ---------------- */
-  if (hasGsap && !TOUCH && !REDUCED) {
-    document.querySelectorAll("[data-tilt]").forEach((card) => {
-      gsap.set(card, { transformPerspective: 900 });
-      const rx = gsap.quickTo(card, "rotationX", { duration: 0.5, ease: "power2" });
-      const ry = gsap.quickTo(card, "rotationY", { duration: 0.5, ease: "power2" });
-      card.addEventListener("mousemove", (e) => {
-        const r = card.getBoundingClientRect();
-        const px = (e.clientX - r.left) / r.width;
-        const py = (e.clientY - r.top) / r.height;
-        rx((py - 0.5) * -6);
-        ry((px - 0.5) * 6);
-        card.style.setProperty("--gx", px * 100 + "%");
-        card.style.setProperty("--gy", py * 100 + "%");
-      });
-      card.addEventListener("mouseleave", () => {
-        rx(0);
-        ry(0);
-      });
+  // کارت‌های تعویض‌شده با HTMX (data-blog-reveal) هم tilt می‌گیرند.
+  const tiltCard = (card) => {
+    gsap.set(card, { transformPerspective: 900 });
+    const rx = gsap.quickTo(card, "rotationX", { duration: 0.5, ease: "power2" });
+    const ry = gsap.quickTo(card, "rotationY", { duration: 0.5, ease: "power2" });
+    card.addEventListener("mousemove", (e) => {
+      const r = card.getBoundingClientRect();
+      const px = (e.clientX - r.left) / r.width;
+      const py = (e.clientY - r.top) / r.height;
+      rx((py - 0.5) * -6);
+      ry((px - 0.5) * 6);
+      card.style.setProperty("--gx", px * 100 + "%");
+      card.style.setProperty("--gy", py * 100 + "%");
     });
+    card.addEventListener("mouseleave", () => {
+      rx(0);
+      ry(0);
+    });
+  };
+  if (hasGsap && !TOUCH && !REDUCED) {
+    document.querySelectorAll("[data-tilt]").forEach(tiltCard);
   }
 
   /* ---------------- floating elements ---------------- */

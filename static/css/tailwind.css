@@ -675,6 +675,9 @@
   .left-\[36\%\] {
     left: 36%;
   }
+  .isolate {
+    isolation: isolate;
+  }
   .z-10 {
     z-index: 10;
   }
@@ -704,6 +707,9 @@
   }
   .col-span-7 {
     grid-column: span 7 / span 7;
+  }
+  .col-span-full {
+    grid-column: 1 / -1;
   }
   .container {
     width: 100%;
@@ -843,6 +849,9 @@
   .mb-10 {
     margin-bottom: calc(var(--spacing) * 10);
   }
+  .mb-16 {
+    margin-bottom: calc(var(--spacing) * 16);
+  }
   .mb-\[2em\] {
     margin-bottom: 2em;
   }
@@ -854,6 +863,12 @@
   }
   .ml-auto {
     margin-left: auto;
+  }
+  .line-clamp-3 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
   }
   .\!hidden {
     display: none !important;
@@ -1701,6 +1716,12 @@
     border-color: color-mix(in srgb, #8f6b2c 30%, transparent);
     @supports (color: color-mix(in lab, red, red)) {
       border-color: color-mix(in oklab, var(--color-gold-dark) 30%, transparent);
+    }
+  }
+  .border-gold-dark\/35 {
+    border-color: color-mix(in srgb, #8f6b2c 35%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      border-color: color-mix(in oklab, var(--color-gold-dark) 35%, transparent);
     }
   }
   .border-gold\/10 {
@@ -3249,11 +3270,6 @@
     transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
     transition-duration: var(--tw-duration, var(--default-transition-duration));
   }
-  .transition-\[background\,border-color\,color\] {
-    transition-property: background,border-color,color;
-    transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
-    transition-duration: var(--tw-duration, var(--default-transition-duration));
-  }
   .transition-\[background\,color\] {
     transition-property: background,color;
     transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
@@ -3443,6 +3459,9 @@
       --tw-scale-z: 110%;
       scale: var(--tw-scale-x) var(--tw-scale-y);
     }
+    .hover\:border-gold:hover {
+      border-color: var(--color-gold);
+    }
     .hover\:border-gold\/50:hover {
       border-color: color-mix(in srgb, #c9a15a 50%, transparent);
     }
@@ -3461,6 +3480,14 @@
     }
     .hover\:bg-\[\#161616\]:hover {
       background-color: #161616;
+    }
+    .hover\:bg-gold\/10:hover {
+      background-color: color-mix(in srgb, #c9a15a 10%, transparent);
+    }
+    @supports (color: color-mix(in lab, red, red)) {
+      .hover\:bg-gold\/10:hover {
+        background-color: color-mix(in oklab, var(--color-gold) 10%, transparent);
+      }
     }
     .hover\:bg-paper:hover {
       background-color: var(--color-paper);
@@ -3778,8 +3805,14 @@
     .lg\:hidden {
       display: none;
     }
+    .lg\:aspect-auto {
+      aspect-ratio: auto;
+    }
     .lg\:h-60 {
       height: calc(var(--spacing) * 60);
+    }
+    .lg\:h-full {
+      height: 100%;
     }
     .lg\:w-\[42\%\] {
       width: 42%;
@@ -3838,6 +3871,10 @@
       border-left-style: var(--tw-border-style);
       border-left-width: 1px;
     }
+    .lg\:bg-gradient-to-l {
+      --tw-gradient-position: to left in oklab;
+      background-image: linear-gradient(var(--tw-gradient-stops));
+    }
     .lg\:px-8 {
       padding-inline: calc(var(--spacing) * 8);
     }
@@ -3872,46 +3909,11 @@
       padding-left: 0px;
     }
   }
-  .\[\&_a\]\:font-medium a {
-    --tw-font-weight: var(--font-weight-medium);
-    font-weight: var(--font-weight-medium);
-  }
-  .\[\&_a\]\:text-gold-dark a {
-    color: var(--color-gold-dark);
-  }
-  .\[\&_a\]\:underline a {
-    text-decoration-line: underline;
-  }
-  .\[\&_a\]\:decoration-gold-dark\/40 a {
-    text-decoration-color: color-mix(in srgb, #8f6b2c 40%, transparent);
-    @supports (color: color-mix(in lab, red, red)) {
-      text-decoration-color: color-mix(in oklab, var(--color-gold-dark) 40%, transparent);
-    }
-  }
-  .\[\&_a\]\:underline-offset-4 a {
-    text-underline-offset: 4px;
-  }
-  .\[\&_strong\]\:font-bold strong {
-    --tw-font-weight: var(--font-weight-bold);
-    font-weight: var(--font-weight-bold);
-  }
-  .\[\&_strong\]\:text-paper strong {
-    color: var(--color-paper);
-  }
   .\[\&\.active\]\:text-ink.active {
     color: var(--color-ink);
   }
-  .\[\&\>p\]\:mb-\[1\.1em\] > p {
-    margin-bottom: 1.1em;
-  }
   .\[\&\>p\]\:mb-\[1\.4em\] > p {
     margin-bottom: 1.4em;
-  }
-  .\[\&\>p\:first-child\]\:mt-0 > p:first-child {
-    margin-top: 0px;
-  }
-  .\[\&\>p\:last-child\]\:mb-0 > p:last-child {
-    margin-bottom: 0px;
   }
 }
 :root {

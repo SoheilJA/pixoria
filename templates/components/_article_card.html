@@ -8,12 +8,12 @@
 <a href="{% url 'blog:detail' article.slug %}"
    class="blog-card glass tilt group relative block overflow-hidden{% if class %} {{ class }}{% endif %}"
    style="border-radius: 1.75rem;{% if style %} {{ style }}{% endif %}"
-   data-tilt data-reveal="up" data-delay="{{ delay|default:'0' }}">
+   data-tilt data-reveal="up" data-delay="{{ delay|default:'0' }}"{% if data_blog_reveal %} data-blog-reveal{% endif %}>
   <span class="glare" aria-hidden="true"></span>
   <figure class="relative overflow-hidden" style="border-radius: 1.75rem 1.75rem 0 0">
     {% if article.cover_image %}
       <img src="{{ article.cover_image.url }}"
-           alt="{{ article.cover_image_alt }}"
+           alt="{{ article.get_cover_alt }}"
            loading="lazy" decoding="async"
            class="aspect-[16/10] w-full object-cover transition-transform duration-700 group-hover:scale-105">
     {% else %}

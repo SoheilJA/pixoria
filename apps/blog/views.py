@@ -25,11 +25,26 @@ def article_list(request):
     qs = _get_articles("all")
     paginator = Paginator(qs, PAGE_SIZE)
     page_obj = paginator.get_page(1)
+
+    # مقالهٔ ویژه — جدیدترین مقالهٔ منتشرشده با پرچم featured. فقط یک اسلات
+    # در بالای آرشیو وجود دارد و وقتی چیزی-flag گذاری نشده خالی می‌ماند.
+    featured_article = (
+        Article.objects.filter(
+            status="published",
+            published_at__lte=timezone.now(),
+            featured=True,
+        )
+        .select_related("category", "author")
+        .order_by("-published_at")
+        .first()
+    )
+
     context = {
         "crumbs": crumbs(("خانه", "home:home"), ("بلاگ", None)),
         "page_settings": BlogPageSettings.objects.first(),
         "categories": Category.objects.all(),
         "articles": page_obj.object_list,
+        "featured_article": featured_article,
         "has_next": page_obj.has_next(),
         "next_page": 2,
         "current_category": "all",

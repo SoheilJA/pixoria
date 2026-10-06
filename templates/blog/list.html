@@ -1,44 +1,221 @@
 {% extends 'base.html' %}
-{% load icon_tags %}
+{% load icon_tags highlight_tags fa_digits jalali_tags %}
 
-{% block title %}
-  {{ page_settings.title }} {{ page_settings.title_highlight }}
-{% endblock %}
-{% block description %}
-  {{ page_settings.description }}
+{% block title %}{{ page_settings.title|default:"بلاگ"|striptags }} — {{ settings.site_name }}{% endblock %}
+{% block description %}{{ page_settings.description|default:"تجربه‌ها و درس‌های ساخت محصول‌های دیجیتال" }}{% endblock %}
+
+{% block extra_head %}
+  {# مسیر نمایش — خانه → آرشیو بلاگ #}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "خانه",
+          "item": "{{ request.scheme }}://{{ request.get_host }}{% url 'home:home' %}"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "بلاگ",
+          "item": "{{ request.build_absolute_uri }}"
+        }
+      ]
+    }
+  </script>
 {% endblock %}
 
 {% block content %}
-  {% include 'components/page_hero.html' with crumbs=crumbs title=page_settings.title|safe title_id='blog-head' description=page_settings.description|safe title_highlight=page_settings.title_highlight %}
-
-  <div class="flex flex-wrap gap-2.5 border-b border-line px-page py-6" id="blog-filters" role="toolbar" aria-label="دسته‌بندی مقالات" data-reveal="fade-up" data-reveal-delay="150">
-    <button type="button" class="filter-btn rounded-full border border-night px-3.5 py-2 font-mono text-[0.78rem] uppercase tracking-[0.06em] text-ink transition-colors duration-200 aria-pressed:bg-night aria-pressed:text-lime" aria-pressed="true" hx-get="{% url 'blog:load' %}?category=all&page=1" hx-target="#blog-grid" hx-swap="innerHTML">همه</button>
-    {% for cat in categories %}
-      <button type="button" class="filter-btn rounded-full border border-line px-3.5 py-2 font-mono text-[0.78rem] uppercase tracking-[0.06em] text-ink-soft transition-colors duration-200 hover:border-night hover:text-ink aria-pressed:border-night aria-pressed:bg-night aria-pressed:text-lime" aria-pressed="false" hx-get="{% url 'blog:load' %}?category={{ cat.slug }}&page=1" hx-target="#blog-grid" hx-swap="innerHTML">{{ cat.title }}</button>
-    {% endfor %}
-  </div>
-
-  <section class="px-page py-[clamp(56px,7vw,100px)]" aria-label="مقالات">
-    <div class="grid grid-cols-1 gap-7 md:grid-cols-2 lg:grid-cols-3" id="blog-grid">
-      {% include 'blog/partials/article_cards.html' %}
+  {% comment %}هیرو — عنوان آرشیو بلاگ با مادرِ شناور و کلمهٔ حک‌شدهٔ blog{% endcomment %}
+  <section class="relative overflow-hidden bg-ink" data-mouse-parallax>
+    <div class="pointer-events-none absolute inset-0" aria-hidden="true">
+      <div data-depth="0.05" class="absolute right-[9%] top-[12%]">
+        <span data-float="14" class="orb block h-20 w-20"
+              style="background: radial-gradient(circle at 32% 30%, rgba(232,196,122,0.42), rgba(201,161,90,0.07) 60%, transparent 72%);"></span>
+      </div>
+      <div data-depth="0.08" class="absolute bottom-[16%] left-[8%]">
+        <span data-float="12" class="shard block h-24 w-20 rotate-12"></span>
+      </div>
+      <div data-depth="0.05" class="absolute left-[32%] top-[14%]">
+        <span data-float="10" class="orb block h-10 w-10"
+              style="background: radial-gradient(circle, rgba(46,99,255,0.5), transparent 70%);"></span>
+      </div>
     </div>
+    <div class="pointer-events-none absolute -left-32 top-1/3 h-[30rem] w-[30rem] rounded-full opacity-30"
+         style="background: radial-gradient(circle, rgba(201,161,90,0.22), transparent 65%);"
+         aria-hidden="true"></div>
+    <span class="stroke-title font-latin pointer-events-none absolute -bottom-10 left-0 select-none text-[22vw] font-light leading-none"
+          aria-hidden="true">blog</span>
 
-    <div class="mt-14 text-center" id="load-more-wrapper">
-      {% if has_next %}
-        {% include 'components/button.html' with text='مقالات بیشتر' variant='ghost' arrow='down' id='load-more-btn' hx_get=load_more_url %}
+    <div class="relative z-10 mx-auto max-w-7xl px-6 pb-28 pt-36 md:pt-48">
+      {# مسیر نمایش — خانه ← آرشیو بلاگ #}
+      <nav aria-label="مسیر صفحه" class="font-latin text-[10px] tracking-[.3em] text-cream/40" data-reveal="up">
+        <ol class="flex flex-wrap items-center gap-x-3 gap-y-1">
+          {% for item in crumbs %}
+            <li class="flex items-center gap-3">
+              {% if not forloop.first %}
+                <span class="h-1 w-1 rotate-45 bg-gold/60" aria-hidden="true"></span>
+              {% endif %}
+              {% if item.url %}
+                <a href="{{ item.url }}" class="transition-colors hover:text-gold-light">{{ item.label }}</a>
+              {% elif forloop.last %}
+                <span aria-current="page" class="text-cream/70">{{ item.label }}</span>
+              {% else %}
+                <span>{{ item.label }}</span>
+              {% endif %}
+            </li>
+          {% endfor %}
+        </ol>
+      </nav>
+
+      <div class="mt-10 max-w-2xl">
+        {% if page_settings and page_settings.eyebrow %}
+          <p class="eyebrow" data-reveal="up">{{ page_settings.eyebrow }}</p>
+        {% endif %}
+        <h1 class="mt-6 text-[2.6rem] font-extrabold leading-[1.25] sm:text-5xl lg:text-6xl"
+            data-reveal="right">
+          {% if page_settings and page_settings.title %}
+            {{ page_settings.title|highlight }}
+          {% else %}
+            بلاگ
+          {% endif %}
+        </h1>
+        {% if page_settings and page_settings.description %}
+          <p class="mt-6 max-w-xl text-lg font-light leading-8 text-cream/70"
+             data-reveal="right" data-delay="0.12">
+            {{ page_settings.description }}
+          </p>
+        {% endif %}
+
+        {# خلاصهٔ آرشیو — تعداد مقاله‌ها و دسته‌بندی‌ها #}
+        <div class="mt-10 flex flex-wrap items-center gap-3" data-reveal="up" data-delay="0.2">
+          <span class="inline-flex items-center gap-2 rounded-full border border-cream/10 bg-white/[0.02] px-4 py-2 text-sm text-cream/60">
+            {% icon "book-open" class="h-4 w-4 text-gold" %}
+            <b class="font-bold text-cream fa-num">{{ articles|length|fa_digits }}</b> مقاله
+          </span>
+          {% if categories %}
+            <span class="inline-flex items-center gap-2 rounded-full border border-cream/10 bg-white/[0.02] px-4 py-2 text-sm text-cream/60">
+              {% icon "layers" class="h-4 w-4 text-gold" %}
+              <b class="font-bold text-cream fa-num">{{ categories|length|fa_digits }}</b> دسته‌بندی
+            </span>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {% comment %}آرشیو — مقالهٔ ویژه + فیلتر + گرید مقالات.
+     data-blog-root: phoenix از این wrapper برای مدیریت آدرس و reinit بعد از swap استفاده می‌کند.{% endcomment %}
+  <section class="relative overflow-hidden bg-ink2" data-blog-root>
+    <svg class="divider divider-flip" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0,26 C260,84 520,82 760,44 C1000,6 1240,80 1440,30 L1440,0 L0,0 Z" fill="#0a0a0c"></path>
+    </svg>
+    <div class="grid-bg pointer-events-none absolute inset-0 opacity-20" aria-hidden="true"></div>
+
+    <div class="relative z-10 mx-auto max-w-7xl px-6 pb-28 pt-32">
+      {# مقالهٔ ویژه — بزرگ‌ترین مقالهٔ انتخاب‌شده در ادمین #}
+      {% if featured_article %}
+        <a href="{% url 'blog:detail' featured_article.slug %}"
+           class="glass tilt group relative mb-16 grid overflow-hidden lg:grid-cols-2"
+           style="border-radius: 2.5rem 1.25rem 2.5rem 1.25rem"
+           data-tilt data-reveal="up">
+          <span class="glare" aria-hidden="true"></span>
+          <figure class="relative overflow-hidden" style="border-radius: 2.5rem 1.25rem 0 0">
+            {% if featured_article.cover_image %}
+              <img src="{{ featured_article.cover_image.url }}"
+                   alt="{{ featured_article.get_cover_alt }}"
+                   loading="eager" decoding="async"
+                   class="aspect-[16/10] w-full object-cover transition-transform duration-700 group-hover:scale-[1.04] lg:aspect-auto lg:h-full">
+            {% else %}
+              <div class="grid aspect-[16/10] w-full place-items-center bg-gradient-to-br from-ink3 to-ink2 lg:aspect-auto lg:h-full">
+                <span class="text-6xl font-extrabold text-goldgrad">پ</span>
+              </div>
+            {% endif %}
+            <div class="absolute inset-0 bg-gradient-to-t from-ink2/90 to-transparent lg:bg-gradient-to-l" aria-hidden="true"></div>
+            <span class="blog-chip">ویژه</span>
+          </figure>
+          <div class="relative z-10 flex flex-col justify-center p-8 md:p-12">
+            <p class="font-latin text-[10px] tracking-[.25em] text-gold/60">
+              <span class="fa-num">{{ featured_article.published_at|fa_jdate }}</span>
+              · <span class="fa-num">{{ featured_article.reading_time|fa_digits }}</span> دقیقه
+            </p>
+            <h2 class="mt-4 text-2xl font-extrabold leading-[1.3] text-cream md:text-3xl">
+              {{ featured_article.title }}
+            </h2>
+            {% if featured_article.excerpt %}
+              <p class="mt-4 line-clamp-3 text-cream/60">
+                {{ featured_article.excerpt }}
+              </p>
+            {% endif %}
+            <span class="mt-7 inline-flex items-center gap-1.5 text-sm font-medium text-gold-light transition-all duration-300 group-hover:gap-3">
+              ادامهٔ مطلب
+              {% icon "arrow-left" class="h-4 w-4" %}
+            </span>
+          </div>
+        </a>
       {% endif %}
+
+      {# فیلتر دسته‌بندی — هر کلیک گرید را با HTMX تعویض می‌کند #}
+      {% if categories %}
+        <div class="flex flex-wrap gap-2.5"
+             id="blog-filters" role="toolbar" aria-label="دسته‌بندی مقالات"
+             data-reveal="up">
+          <button type="button"
+                  class="flt-btn active"
+                  aria-pressed="true"
+                  hx-get="{% url 'blog:load' %}?category=all&page=1"
+                  hx-target="#blog-grid"
+                  hx-swap="innerHTML">همه</button>
+          {% for cat in categories %}
+            <button type="button"
+                    class="flt-btn"
+                    aria-pressed="false"
+                    hx-get="{% url 'blog:load' %}?category={{ cat.slug }}&page=1"
+                    hx-target="#blog-grid"
+                    hx-swap="innerHTML">{{ cat.title }}</button>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      {# گرید مقالات — blog:load کارت‌ها را داخل این عنصر تعویض می‌کند #}
+      <div class="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3" id="blog-grid">
+        {% include 'blog/partials/article_cards.html' %}
+      </div>
+
+      {# دکمهٔ «مقالات بیشتر» — با HTMX صفحهٔ بعد را به گرید می‌چسباند #}
+      <div class="mt-14 text-center" id="load-more-wrapper" hx-swap-oob="true">
+        {% if has_next %}
+          <button class="btn btn-ghost px-8 py-4" id="load-more-btn"
+                  hx-get="{{ load_more_url }}"
+                  hx-target="#blog-grid"
+                  hx-swap="beforeend">
+            مقالات بیشتر
+            {% icon "arrow-down" class="h-4 w-4" %}
+          </button>
+        {% endif %}
+      </div>
     </div>
   </section>
 {% endblock %}
 
 {% block extra_js %}
   <script>
-    document.getElementById('blog-filters').addEventListener('click', function (e) {
-      const btn = e.target.closest('.filter-btn')
-      if (!btn) return
-      document.querySelectorAll('#blog-filters .filter-btn').forEach(function (b) {
-        b.setAttribute('aria-pressed', b === btn ? 'true' : 'false')
-      })
-    })
+    ;(function () {
+      // ─── همگام‌سازی دکمهٔ فعالِ فیلتر با aria-pressed ───
+      const filters = document.getElementById('blog-filters')
+      if (filters) {
+        filters.addEventListener('click', function (e) {
+          const btn = e.target.closest('.flt-btn')
+          if (!btn) return
+          filters.querySelectorAll('.flt-btn').forEach(function (b) {
+            b.classList.toggle('active', b === btn)
+            b.setAttribute('aria-pressed', b === btn ? 'true' : 'false')
+          })
+        })
+      }
+    })()
   </script>
 {% endblock %}

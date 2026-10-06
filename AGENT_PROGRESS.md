@@ -705,6 +705,52 @@ but are out of scope for this migration order (home/about/contact/404 only).
   verified structurally (compiled output + selector coverage) rather than by
   screenshot.
 
+- **D41 — Blog list page (T39).** `templates/blog/list.html` rebuilt on
+  `base.html` in the D27 language, mirroring the portfolio list page's
+  rhythm: a dark `bg-ink` hero (mouse-parallax orbs/shard, `blog` stroke
+  watermark, breadcrumb trail, `eyebrow` + `highlight` title + description
+  from `BlogPageSettings`, «N مقاله · M دسته‌بندی» chip row) followed by a
+  `bg-ink2` archive with an ink-filled `divider-flip` wave. New pieces:
+  **(a) a featured-article slot** at the top of the archive — a wide
+  `glass tilt` split card (cover image left, content right, `blog-chip`
+  «ویژه» badge) driven by the `Article.featured` flag added in T38. The view
+  picks the newest published featured article; when none is flagged the slot
+  is skipped entirely. The featured article is NOT excluded from the paginated
+  grid — it sits in the archive too, and the slot is a curation highlight, not
+  a separate list. Verified: its link appears exactly once in the page.
+  **(b) the filter row kept HTMX** (unlike the portfolio list, whose filter is
+  pure client-side): the pills are the shared `.flt-btn` component, each with
+  `hx-get`/`hx-target="#blog-grid"`/`hx-swap="innerHTML"`, so clicking a
+  category replaces the grid server-side. The `aria-pressed` sync script moved
+  from a v1 `filter-btn` listener to `.flt-btn` and now also toggles the
+  `.active` class (the v1 styled via `aria-pressed` variants; v2's `.flt-btn`
+  uses `.active`). **(c) `blog/partials/article_cards.html` and
+  `load_response.html` now render `components/_article_card.html`** with a
+  per-card `{% cycle %}` delay (the D30 gotcha — `cycle` inside an include
+  resets, so the caller generates the stagger), replacing the v1
+  `components/cards/blog_card.html`. The `{% empty %}` branch renders a
+  centered «مقاله‌ای در این دسته منتشر نشده است.» — both on the initial
+  page and inside the HTMX response. **(d) reveal/tilt after HTMX — the real
+  fix.** `pixoria.js` ran `gsap.from(...)` over a `querySelectorAll`
+  snapshot at boot, so load-more cards arrived already-visible with no
+  animation. Two initializers were factored out (`revealEl`, `tiltCard`), and
+  an `htmx:afterSettle` listener now re-runs them **only** on elements tagged
+  `data-blog-reveal` (marked on every card by the partial via a new
+  `data_blog_reveal` prop on `_article_card.html`), with a
+  `data-reveal-done` guard so a second swap can't double-animate a card.
+  Reduced-motion and touch are respected (tilt is skipped on touch). No new
+  CSS was needed — every class (`glass`, `tilt`, `glare`, `blog-card`,
+  `blog-chip`, `flt-btn`, `eyebrow`, `stroke-title`, `divider-flip`,
+  `grid-bg`, `orb`, `shard`) already existed. **Search was deliberately NOT
+  added** — the view has no search support and the task says only if already
+  supported. Verified: list 200 (47 KB) with featured slot + filter + 3-col
+  grid; `blog:load` page 2 returns cards each carrying
+  `data-blog-reveal` + an OOB `load-more-wrapper` swap; a category with no
+  articles renders the empty message; an EMPTY database (no articles, no
+  categories) renders 200 with the featured slot and filter row skipped and
+  the empty message visible; home/about/contact/portfolio unaffected; node
+  module syntax check passes; Tailwind rebuilt (no token changes).
+
 - **D38 — Portfolio list page (T36).** `templates/portfolio/list.html` rebuilt
   on `base.html` in the D27 design language: a dark `bg-ink` hero (orbs/shard
   with `data-mouse-parallax`, a stroked latin `works` watermark, `eyebrow` +
@@ -1044,13 +1090,15 @@ but are out of scope for this migration order (home/about/contact/404 only).
   files: `apps/blog/models.py`, `apps/blog/migrations/`, `apps/blog/admin.py`,
   `static/src/input.css`, `apps/blog/management/commands/seed_blog_content.py` |
   commit: "feat(blog): extend models and add prose styles"
-- [ ] T39 — Blog LIST page `templates/blog/list.html`: v2 hero, featured
+- [x] T39 — Blog LIST page `templates/blog/list.html`: v2 hero, featured
   article, category filter, search only if already supported by the view, grid
   using `_article_card.html`, keep the existing `blog:load` HTMX load-more
   behavior working with the new cards (update the `blog` partial used by
   `blog:load`), empty state | files: `templates/blog/list.html`,
-  `apps/blog/views.py`, `templates/blog/*` |
-  commit: "feat(blog): rebuild list page in v2 style"
+  `templates/blog/partials/article_cards.html`,
+  `templates/blog/partials/load_response.html`,
+  `templates/components/_article_card.html`, `apps/blog/views.py`,
+  `static/js/pixoria.js` | commit: "feat(blog): rebuild list page in v2 style"
 - [ ] T40 — Blog DETAIL page `templates/blog/detail.html`: hero with cover,
   category, Jalali date (`fa_jdate`), reading time (`fa_digits`), author,
   reading-progress bar, article body with the typography style, auto table of
@@ -1087,15 +1135,15 @@ but are out of scope for this migration order (home/about/contact/404 only).
 
 ## Current status
 
-T01–T38 done. Next: T39 — blog LIST page `templates/blog/list.html`: v2 hero
-(eyebrow + `highlight` title from `BlogPageSettings`, now with `eyebrow` +
-`[[ ]]` title — D40), featured-article slot using the new
-`Article.featured` flag, category filter (the existing `flt-btn` pills from
-home/portfolio list, keeping `blog:load` HTMX load-more working — the
-`article_cards.html` partial must switch from the v1 `components/cards/
-blog_card.html` to `components/_article_card.html`), empty state, CTA from
-base. Then T40 — blog DETAIL: Jalali date (`fa_jdate`), reading time
-(`fa_digits`), reading-progress bar, `.prose-ink` body (ready — D40), TOC,
-tags, share buttons, `{% articles_carousel exclude=article
-category=article.category %}` as related posts, Article JSON-LD.
+T01–T39 done. Next: T40 — blog DETAIL page `templates/blog/detail.html` and
+its partials: hero with cover (`detail_hero.html`/`detail_cover.html` still
+carry v1 tokens like `text-ink`/`bg-paper-soft`), Jalali date (`fa_jdate`),
+reading time (`fa_digits`), reading-progress bar, article body in
+`.prose-ink` (ready — D40), auto table of contents (the `process_content_toc`
+h2-id injection + sidebar TOC already exist, only restyle), tags, share
+buttons (plain links), `{% articles_carousel exclude=article
+category=article.category %}` replacing the hand-rolled related grid/
+sidebar, Article JSON-LD, meta blocks. The v1 `detail_body.html` share bar
+was already restyled in T38; `detail_post_nav.html`/`sidebar_related.html`/
+`detail_related_section.html` still use old tokens.
 

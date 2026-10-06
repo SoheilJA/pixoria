@@ -1,4 +1,13 @@
-{% load icon_tags %}
+{% load fa_digits %}
+{# کارت‌های مقاله — هم برای صفحهٔ اول و هم برای پاسخِ HTMXِ blog:load. #}
+{# data-reveal-only: کارت‌هایی که بعد از تعویض HTMX اضافه می‌شوند از طریق #}
+{# data-blog-reveal علامت‌گذاری می‌شوند تا pixoria.js آنیمیشنشان را اجرا کند. #}
 {% for article in articles %}
-  {% include 'components/cards/blog_card.html' with article=article %}
+  {% cycle '0' '0.08' '0.16' '0.24' as card_delay silent %}
+  {% include "components/_article_card.html" with article=article delay=card_delay data_blog_reveal="1" %}
+{% empty %}
+  {# وقتی هیچ مقاله‌ای در این دسته نیست #}
+  <p class="col-span-full py-16 text-center text-sm text-cream/40">
+    مقاله‌ای در این دسته منتشر نشده است.
+  </p>
 {% endfor %}

@@ -1,12 +1,15 @@
-{% load icon_tags %}
+{% load icon_tags fa_digits %}
+{# پاسخِ HTMXِ blog:load: کارت‌های صفحهٔ بعد + تعویضِ دکمهٔ «مقالات بیشتر». #}
 {% include "blog/partials/article_cards.html" %}
 
-<div id="load-more-wrapper" hx-swap-oob="true" style="text-align:center;margin-top:56px">
+<div id="load-more-wrapper" hx-swap-oob="true">
   {% if has_next %}
-  <button class="btn btn-ghost" id="load-more-btn"
-    hx-get="{% url 'blog:load' %}?category={{ current_category }}&page={{ next_page }}"
-    hx-target="#blog-grid" hx-swap="beforeend">
-    مقالات بیشتر {% icon "arrow-down" class="arrow h-4 w-4" %}
-  </button>
+    <button class="btn btn-ghost px-8 py-4" id="load-more-btn"
+            hx-get="{% url 'blog:load' %}?category={{ current_category }}&page={{ next_page }}"
+            hx-target="#blog-grid"
+            hx-swap="beforeend">
+      مقالات بیشتر
+      {% icon "arrow-down" class="h-4 w-4" %}
+    </button>
   {% endif %}
 </div>
