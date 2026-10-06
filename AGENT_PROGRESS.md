@@ -275,16 +275,6 @@ but are out of scope for this migration order (home/about/contact/404 only).
   `Package`/`PackageFeature` MODELS stay (data untouched, still in the admin)
   — they are simply no longer reachable from the home page. Mention of
   «پکیج» remaining on the page are FAQ answer prose, not the section.
-  (PMREM-lit env, 3 star layers, crystal planet, rings, moons, scroll-driven
-  `travel`) wrapped in the D8 rules: renderer is only built after `load` +
-  `requestIdleCallback` AND an IntersectionObserver gate (rootMargin 200px);
-  `pixelRatio ≤ 2`; the loop is *paused* (`setAnimationLoop(null)`) rather
-  than skipped when the hero leaves the viewport or the tab is hidden, and
-  resumed on return; full disposal (geometries, materials, textures, PMREM,
-  renderer) on `pagehide`; reduced-motion renders nothing and shows the CSS
-  poster; any exception or a 3.5s boot timeout falls back to
-  `#hero-fallback`. Owns the `window.__hero3d` flag and calls
-  `ScrollTrigger.refresh()` after its late-added triggers are created.
 - **D19 — Home model extensions (T12).** (a) `HeroSection` gains `eyebrow`,
   `cta_primary_*` / `cta_secondary_*` (URL-name, path or `#anchor`, defaults
   `#contact` / `#portfolio`; empty secondary URL hides the button), and a
@@ -383,6 +373,31 @@ but are out of scope for this migration order (home/about/contact/404 only).
   known seed value — never overwrite a field that already holds data. Also
   `ALLOWED_HOSTS` excludes `testserver`, so `Client().get("/")` returns 400
   inside `manage.py shell`; use `Client(HTTP_HOST="localhost")`.
+- **D26 — Reusable components.** Two layers: (1) CARD partials
+  (`templates/components/_project_card.html`, `_article_card.html`,
+  `_testimonial_card.html`) used everywhere a card renders; (2) SECTION
+  components as inclusion tags with parameters (`service`, `category`,
+  `exclude`, `limit`) that run their own query, so views/pages do not need to
+  pass data in context. Every component: optimized query
+  (`select_related`/`prefetch_related` + `limit`), renders NOTHING when there
+  is no data, no hard-coded Persian content except tiny UI labels, no
+  hard-coded element IDs (use `data-*` hooks + per-instance JS init so the
+  same component works more than once per page), and `highlight` for headings.
+  Component JS lives in `static/js/pixoria.js` (or one small separate deferred
+  module), initialized per `[data-*]` instance — no CDN, no new libraries.
+- **D27 — Design language for pages without a `new/` design (portfolio,
+  blog).** Before designing, study `static/src/input.css` (tokens
+  ink/cream/gold/royal, `glass`, `tile`, `btn`, `eyebrow`, `divider`,
+  `blog-card`, `type-chip`, …), the converted home partials in
+  `templates/home/sections/`, the header/footer/CTA partials and the existing
+  3D/visual elements. New pages reuse the SAME classes, spacing, radius
+  variants, section rhythm (dark ↔ cream transitions), animations
+  (`data-reveal`, `data-delay`, magnetic/tilt where already used) and
+  typography (Vazirmatn + Space Grotesk latin). Do not invent a new visual
+  style. Add new CSS classes to `static/src/input.css` only when truly needed,
+  then run `npm run build`. Hero areas of inner pages need their own top
+  padding — the header is fixed and overlays (see the `pt-[clamp(...)]`
+  precedent in `components/page_hero.html`).
 
 ## Tasks
 
@@ -495,167 +510,165 @@ but are out of scope for this migration order (home/about/contact/404 only).
 
 ### Phase 5 — 404 page
 
-- [ ] T26 — Rebuild `templates/404.html` in v2 style (extends base, gold 404
-  watermark, links, optional DB copy) and verify handler404 with a temp route |
-  files: `templates/404.html` | commit: "feat(404): redesign not found page in v2 style"
+- [ ] T26 — Rebuild `templates/404.html` in v2 style: beautiful, attractive
+  Persian 404 matching the site's design language and its 3D/visual style (gold
+  404 watermark, lightweight reuse of the hero crystal/visual idea, lazy +
+  paused + disposable if WebGL is used, CSS/poster fallback, reduced-motion
+  respected). Persian copy, home button, links to main pages. Verify handler404
+  / DEBUG=False with a temporary route that is removed afterwards |
+  files: `templates/404.html`, `static/src/input.css` |
+  commit: "feat(404): redesign not found page in v2 style"
 
-### Phase 6 — About page
+### Phase 5b — Home tweak + shared components
 
-- [ ] T27 — Extend about models for the v2 about page (hero, story, journey
-  timeline, stats, clients wall, CTA) + migration + admin |
-  files: `apps/core/models.py`, `apps/core/migrations/`, `apps/core/admin.py` | commit: "feat(about): add v2 about page models"
-- [ ] T28 — Rebuild `templates/core/about.html` from `new/about.html` |
-  files: `templates/core/about.html`, `apps/core/views.py` | commit: "feat(about): rebuild about page in v2 style"
+- [ ] T27 — Home portfolio grid becomes 3 columns (`grid-cols-1
+  md:grid-cols-2 lg:grid-cols-3`), keep the filter, radius variants, empty
+  state. Limit rendered items to a multiple of 3 (e.g. 6 or 9) from the view.
+  Verify no orphan/ugly tile layout at all breakpoints |
+  files: `templates/home/sections/_portfolio.html`, `apps/home/views.py` |
+  commit: "feat(home): make portfolio grid three columns"
+- [ ] T28 — Extract CARD partials (no visual change):
+  `templates/components/_project_card.html`, `_article_card.html`,
+  `_testimonial_card.html` (text/video/audio kinds). Home sections must use
+  them | files: `templates/components/*`, `templates/home/sections/*` |
+  commit: "feat(components): extract reusable card partials"
+- [ ] T29 — Testimonials SECTION component: inclusion tag
+  `{% testimonials_slider service=None limit=9 title=... %}` (templatetag in
+  `apps/core/templatetags/` or the app that owns the model). With `service`
+  given → only that service's testimonials; without → featured/global ones (as
+  the home page does now). Section renders nothing if there is no data.
+  Refactor the slider JS in `static/js/pixoria.js` from fixed `#t-*` IDs to
+  per-instance `[data-slider]` initialization (multiple sliders per page must
+  work, no duplicate IDs). Home must use the component |
+  files: `apps/core/templatetags/*`, `static/js/pixoria.js`,
+  `templates/home/sections/_testimonials.html` |
+  commit: "feat(components): testimonials slider inclusion tag"
+- [ ] T30 — Generic carousel component + CAROUSEL SECTIONS:
+  `{% projects_carousel exclude=None category=None service=None limit=8 %}` and
+  `{% articles_carousel exclude=None category=None limit=8 %}` built on the
+  card partials. Lightweight dependency-free carousel (CSS scroll-snap + small
+  per-instance JS in pixoria.js: prev/next buttons, RTL-aware direction,
+  keyboard accessible, drag/touch friendly, `aria-label`s). No new library.
+  Section hides itself if empty. Home blog section should use the articles
+  component | files: `apps/core/templatetags/*`, `static/js/pixoria.js`,
+  `templates/components/*`, `templates/home/sections/_blog.html` |
+  commit: "feat(components): add projects and articles carousels"
 
-### Phase 7 — Contact page
+### Phase 6 — About page (from `new/about.html`)
 
-- [ ] T29 — Extend contact models for v2 (info cards, subject choices, FAQ,
-  cities block) + migration + admin |
-  files: `apps/contact/models.py`, `apps/contact/migrations/`, `apps/contact/admin.py` | commit: "feat(contact): add v2 contact models"
-- [ ] T30 — Rebuild `templates/contact/contact.html` from `new/contact.html`
-  with a working Django/HTMX form (validation, Persian messages, honeypot,
-  submissions in admin) |
-  files: `templates/contact/contact.html`, `apps/contact/views.py` | commit: "feat(contact): rebuild contact page with working form"
+- [ ] T31 — Extend about models for the v2 about page (hero, story,
+  journey/timeline, stats, values, team, clients wall, CTA — whatever exists
+  in `new/about.html`), reuse existing `core.About*` models and `TeamMember`;
+  add only what is missing; migration + admin (Persian
+  help_text/verbose_name, inlines, `order`, `is_active`); optional-content
+  rules; seed command with the original Persian copy from `new/about.html`
+  (idempotent, no overwriting) |
+  files: `apps/core/models.py`, `apps/core/migrations/`, `apps/core/admin.py`,
+  `apps/core/management/commands/*` | commit: "feat(about): add v2 about page models"
+- [ ] T32 — Rebuild `templates/core/about.html` from `new/about.html`: extend
+  `base.html`, REMOVE the duplicated hard-coded header/footer/CTA from the new
+  file (base ones are the reference), bind everything to the models, use
+  `highlight` for colored words, `{% icon %}` for icons, `fa_digits`/counters
+  where needed, local JS only, skip empty sections. Update `apps/core/views.py`
+  | files: `templates/core/about.html`, `apps/core/views.py` |
+  commit: "feat(about): rebuild about page in v2 style"
 
-### Phase 8 — Cleanup
+### Phase 7 — Contact page (from `new/contact.html`)
 
-- [ ] T31 — Verify no broken references after base rewrite (grep for removed
-  classes/tags), fix `templates/registration/login.html`,
-  `templates/admin/login.html`, `templates/blog/*` header/footer assumptions |
-  commit: "fix(templates): align remaining pages with v2 base"
-- [ ] T32 — Delete old frontend files: unreferenced static CSS/JS
-  (`static/css/{styles,site,blog}.css`, `static/js/main.js`, `cursor.js`,
-  `header-motion.js`, `home-motion.js`, `footer-stars.js`, `motion.js`,
-  `pixoria-bg/`, `engine/`, root-level duplicates) and obsolete templates/
-  components after grep verification; one commit per group |
-  commit: "chore: remove obsolete v1 frontend assets"
-- [ ] T33 — Final checks: `manage.py check`, `makemigrations --check --dry-run`,
-  `collectstatic --dry-run`, render home/about/contact/404 with an empty DB;
-  then delete `new/` |
-  commit: "chore: remove new/ prototype after migration"
+- [ ] T33 — Extend contact models for v2 (info cards, subject/project-type/
+  budget/start-time choices, FAQ, cities/map block, working hours, socials)
+  reusing existing `contact.*` models; migration + admin + seed (same rules) |
+  files: `apps/contact/models.py`, `apps/contact/migrations/`,
+  `apps/contact/admin.py`, `apps/contact/management/commands/*` |
+  commit: "feat(contact): add v2 contact models"
+- [ ] T34 — Rebuild `templates/contact/contact.html` from `new/contact.html`:
+  extends `base.html`, no duplicated header/footer/CTA, working form (Django
+  form/model, saved `ContactSubmission` visible in admin, CSRF, validation
+  with Persian error/success messages, honeypot + simple rate limit like the
+  home lead form, HTMX with `data-toast` success announcement per D16,
+  optional email notification only if email settings already exist). Reuse the
+  `.field` styles from `static/src/input.css` |
+  files: `templates/contact/contact.html`, `apps/contact/views.py` |
+  commit: "feat(contact): rebuild contact page with working form"
+
+### Phase 8 — Portfolio pages (no design in `new/`: design them)
+
+- [ ] T35 — Review `portfolio` models vs the planned pages; add only what is
+  missing (e.g. optional gallery images inline, results/metrics via existing
+  `ProjectStat`, technologies/tags, optional related testimonial link, SEO
+  fields), all optional; migration + admin + seed if needed |
+  files: `apps/portfolio/models.py`, `apps/portfolio/migrations/`,
+  `apps/portfolio/admin.py` | commit: "feat(portfolio): extend models for v2 pages"
+- [ ] T36 — Portfolio LIST page `templates/portfolio/list.html`: v2 hero
+  (eyebrow + `highlight` title from admin-editable settings if reasonable),
+  category filter (server-side by existing URL/query if the view supports it,
+  else JS filter), 3-column grid using `_project_card.html`, pagination or
+  HTMX load-more, empty state, CTA from base |
+  files: `templates/portfolio/list.html`, `apps/portfolio/views.py` |
+  commit: "feat(portfolio): rebuild list page in v2 style"
+- [ ] T37 — Portfolio DETAIL page `templates/portfolio/detail.html`: hero with
+  cover image, meta (client, year, service type, categories, external link),
+  challenge/solution sections, stats counters (`ProjectStat`), gallery if
+  present, description (rich text styled), next/previous project,
+  `{% projects_carousel exclude=object %}` as related projects, optional
+  `{% testimonials_slider service=... %}` only if it makes sense. JSON-LD +
+  meta blocks | files: `templates/portfolio/detail.html`,
+  `apps/portfolio/views.py` | commit: "feat(portfolio): rebuild detail page in v2 style"
+
+### Phase 9 — Blog pages (no design in `new/`: design them)
+
+- [ ] T38 — Review `blog` models; add only what is missing (e.g. featured
+  flag, optional cover alt text, SEO fields exist already); migration + admin
+  if needed. Add a reusable rich-text typography style for TinyMCE `HTMLField`
+  content in `static/src/input.css` (headings, lists, quotes, images, tables,
+  code, links) in the gold/cream/ink language, RTL-correct |
+  files: `apps/blog/models.py`, `apps/blog/migrations/`, `apps/blog/admin.py`,
+  `static/src/input.css` | commit: "feat(blog): extend models and add prose styles"
+- [ ] T39 — Blog LIST page `templates/blog/list.html`: v2 hero, featured
+  article, category filter, search only if already supported by the view, grid
+  using `_article_card.html`, keep the existing `blog:load` HTMX load-more
+  behavior working with the new cards (update the `blog` partial used by
+  `blog:load`), empty state | files: `templates/blog/list.html`,
+  `apps/blog/views.py`, `templates/blog/*` |
+  commit: "feat(blog): rebuild list page in v2 style"
+- [ ] T40 — Blog DETAIL page `templates/blog/detail.html`: hero with cover,
+  category, Jalali date (`fa_jdate`), reading time (`fa_digits`), author,
+  reading-progress bar, article body with the typography style, auto table of
+  contents from headings only if it can be done cheaply (small local JS, no
+  library), tags, share buttons (plain links, no third-party scripts),
+  `{% articles_carousel exclude=article category=article.category %}` as
+  related posts, Article JSON-LD, meta blocks. Keep
+  `blog:tinymce-image-upload` untouched | files: `templates/blog/detail.html`,
+  `apps/blog/views.py`, `static/js/pixoria.js` |
+  commit: "feat(blog): rebuild detail page in v2 style"
+
+### Phase 10 — Cleanup
+
+- [ ] T41 — Verify no broken references (grep for removed
+  classes/tags/includes), fix `templates/registration/login.html`,
+  `templates/admin/login.html`, proposal page and any remaining page that
+  still assumes the old base | commit: "fix(templates): align remaining pages with v2 base"
+- [ ] T42 — Services list/detail: no converted design in this migration. Give
+  them minimal placeholders that extend the new `base.html` ONLY IF they are
+  currently broken/unstyled; list them under `## Pending pages` in this file.
+  Do NOT redesign them now (the testimonials/projects/articles components must
+  already accept a `service` parameter so these pages can use them later) |
+  commit: "fix(services): placeholder pages for v2 base"
+- [ ] T43 — Delete ALL old frontend files (unreferenced static CSS/JS, old
+  templates/partials/components, unused template tags/context
+  processors/views/URLs created only for old templates). Before deleting, list
+  candidates in this file and verify with a project-wide grep. One small commit
+  per group | commit: "chore: remove obsolete v1 frontend assets"
+- [ ] T44 — Final checks: `python manage.py check`,
+  `makemigrations --check --dry-run`, `collectstatic --dry-run`, render
+  home/about/contact/404/portfolio/blog (list + detail) with an EMPTY database
+  and with seeded data, Lighthouse-minded review; then delete `new/` as a
+  separate final commit | commit: "chore: remove new/ prototype after migration"
 
 ## Current status
 
-T01–T18 done. Next: T19 (works → `_portfolio.html`, filterable grid). The
-trusted section renders the v2 brand-plate marquee from `TrustedSection`
-(eyebrow/title/description/footer_label) + `ClientMarqueeItem` (mark, name,
-accent gold/royal), on `bg-cream2` with rounded top corners over the dark
-services section. `pixoria.js` duplicates `#trusted .marquee-group` children
-in place for the seamless `translateX(-50%)` loop and marks the copies
-`aria-hidden`. The v1 `_clients.html` partial was deleted (the `clients` →
-`trusted` key rename in migration 0010 left it orphaned). The seed's client
-list is now authoritative: it removes brands that are not in the v2 design
-(۹ stale v1 rows dropped on the first re-run) and `seed_home_content`
-reconfigures stdout to UTF-8 so Persian messages print on a Windows cp1252
-console. Home renders 200 with exactly 7 plates (4 gold / 3 royal).
+T01–T25 done (all home page sections, base chrome, shared JS, v2 seed copy).
+Next: T26 — rebuild `templates/404.html` in the v2 style (gold 404 watermark,
+CSS solar-system scene reusing the hero's visual idea, Persian copy, links to
+the main pages, verify handler404 with a temporary route).
 
-T19 done. Next: T20 (`_why.html`, `_process.html`). The portfolio section
-renders featured `Portfolio` items in the v2 tile grid; filter buttons come
-from `portfolio_categories` (categories that appear on featured projects,
-added to the `home` view context — `data-filter`/`data-cat` use the category
-slug, so `pixoria.js`'s exact-match filter works unchanged). Each tile links
-to `portfolio:detail`, shows the primary category as `.type-chip`, the year as
-`.tile-tag`, and cycles the design's six border-radius variants; tiles
-without an image get a dark gradient placeholder, and `#pf-empty` covers
-empty categories. The pre-existing `FeaturedWorkSection` row was aligned to
-the v2 copy in place (eyebrow «نمونه‌کارها», title «گزیدهٔ
-[[پروژه‌ها]]»), mirroring the T17 `ServicesSection` precedent — the seed's
-`first_or_create` never overwrites existing prose.
-
-T20 done. Next: T21 (`_testimonials.html` — text/video/audio cards + slider).
-`_why.html` renders six `glass-light` cards on `bg-cream` (clip-path top,
-grid-bg + aurora blobs) from `WhySection` + `WhyFeature`, with `icon-ring-pulse`
-icons, Persian `why-idx` ordinals and the alternating border-radius cycle.
-`_process.html` renders the GPS timeline (`gps-base/move/draw` + `gps-dot` +
-one `gps-node` per step, positions cycled) and `ProcessStep` cards in a
-`lg:grid-cols-{{ steps|length }}` grid. Both use `data-delay` in decimal
-seconds (`pixoria.js` runs `parseFloat` on it — the v1-style `{{ i }}00`
-values would mean 100-second delays). The `HomeSection` rows were renumbered
-to the v2 order (D22) because the v1 orders rendered process before why and
-broke every section transition; the why/process DB copy was aligned to the
-design (D23).
-
-T21 done. Next: T22 (`_tech.html`, `_stats.html`). The testimonials section
-renders the v2 slider from `ServiceTestimonial` in the three kinds: text cards
-(rating stars, quote icon, avatar initial or `author_image`), video cards
-(poster + simulated playback) and audio cards (waveform + WebAudio).
-`pixoria.js` now iterates `[data-video-card]` / `[data-audio-card]` with
-per-card durations instead of the hardcoded IDs (D24), the `#a-play` CSS rules
-became `.play-btn`, and a new `fa_duration` filter renders «۰:۴۸». The three
-existing testimonials were aligned to the design's kinds (مریم صادقی text /
-سعید محمودی video / سارا توکلی audio); video/audio cards without media show
-gradient placeholders and their fields render nothing.
-
-T22 done. Next: T23 (`_articles.html` blog cards + `_faq.html` accordion).
-`_tech.html` renders two marquee rows of `tech-chip`s (icon + name) split by
-the new `tech_row1` / `tech_row2` context lists — the skills were aligned to
-the design's twelve tools. `_stats.html` renders four `stat-card`s with
-`data-count` + `data-prefix` / `data-suffix` (pixoria.js now reads `data-prefix`
-too, so `+`/`٪`/`/۷` wrap the counted number) and the `PIXORIA` stroke
-watermark. Both section settings were aligned to the v2 copy in place
-(«ابزارها و فناوری‌ها» / «دستاوردها»); the `category`/`level`/`description`
-fields the v1 templates used are unused by v2 and cleared.
-
-T23 done. Next: T24 (`_contact.html` lead form → v2 style, HTMX kept). The blog
-section renders in `_blog.html` (the v2 partial for the `blog` HomeSection key;
-the v1 `_articles.html` carousel partial was deleted like `_clients.html` in
-T18) as `blog-card` articles on `bg-ink2` under the cream wave divider: cover
-image with the `blog-chip` category plate, a Jalali date via the new
-`fa_jdate` filter (`apps/core/templatetags/jalali_tags.py`, jdatetime) next to
-the `fa_digits` reading time, excerpt and a «ادامهٔ مطلب» affordance, the whole
-card linking to `blog:detail`. The header uses `blog_section.eyebrow` +
-`title|highlight` and a `.more-link` to `blog_url`; up to six published
-articles render (`latest_articles|slice:":6"`), cards without a cover get a
-dark gradient placeholder. `_faq.html` was rewritten from the v1 Alpine
-accordion to the design's plain-JS one (`.faq-item` / `.faq-q` / `.faq-a` /
-`.faq-icon`, driven by `pixoria.js`'s `initFaq` — Alpine is gone from base.html
-since D15) on `bg-cream` with a centered header (`eyebrow-dark` + `highlight:"dark"`),
-`aria-expanded`/`aria-controls` per item and staggered `data-delay`s. The
-FAQPage JSON-LD in `home/index.html` is unchanged. The DB copy for these two
-sections was intentionally left as-is (the v2 copy lands with the T25 seed
-update), so the `eyebrow` fields render empty until then — both partials are
-`{% if %}`-guarded around it.
-
-T24 done. Next: T25 (update `seed_home_content` with the v2 Persian copy).
-The lead-form section renders on `bg-cream2` (12-col grid: text column
-`lg:col-span-4` + `glass-light` form card `lg:col-span-8`, radius
-`2.5rem 1rem 2.5rem 1rem`) with the anchor renamed to `id="lead"` — the footer
-owns `id="contact"` (D13), so the hero's default `#contact` CTA still lands on
-the footer. The text column shows `eyebrow-dark`, `title|highlight:"dark"`,
-description, a phone/email/address/status list with `icon-ring` icons and the
-`socials` context as `.soc !text-gold-dark` buttons. The form itself
-(`_lead_form.html`) uses the design's floating-label `.field` pattern
-(`input:not(:placeholder-shown) + span` floats the label; `.field.static` keeps
-the select's label always up), with the honeypot, `hx-post`/`hx-target`/
-`hx-swap="outerHTML"`/`hx-disabled-elt`, `btn-gold` magnetic submit and a
-`.field.invalid` red ring + `.field-err` message per validation error.
-`_lead_success.html` renders the gold check card with a hidden `data-toast`
-span (D16 — pixoria.js announces it after the HTMX swap) and a ghost button to
-`contact:contact`. The `.field` CSS block was ported from `new/contact.html`'s
-inline `<style>` into `static/src/input.css` (it will be reused by T30).
-Verified end-to-end with the Django test client: home 200, valid POST → success
-card + `data-toast`, invalid POST → errors + `.invalid` + repopulated values,
-honeypot → success card, 6th POST → rate-limit notice.
-
-T25 done. Next: T26 (`templates/404.html` in v2 style). `seed_home_content`
-now seeds the design's Persian copy everywhere: stats (eyebrow «دستاوردها»,
-«پیکسوریا [[در یک نگاه]]» + the four icon counters ۱۵/۵۰۰+/۹۸٪/۲۴/۷), tech
-(«ابزارها و فناوری‌ها» + the twelve tools with their Lucide icons in the two
-marquee rows), why («شش دلیل برای [[انتخاب ما]]» + the six reason cards),
-process («از ایده تا [[تحویل]] در پنج گام» + the five GPS steps), faq
-(«پرسش‌های متداول» + the design's six Q&A), blog header («مجلهٔ پیکسوریا» /
-«آخرین [[نوشته‌ها]]»), lead form («شروع همکاری» / «بیایید [[برندِ شما]] را
-ماندگار کنیم»), CTA («برند شما، امضای ما») and the header pill
-«مشاوره رایگان». The v1 `subtitle`/`level`/`category` copy v2 never renders
-is seeded empty. Because `first_or_create` will not touch rows that already
-exist, the four section singletons + the header CTA + the empty `SiteSettings`
-chrome fields (tagline, mega banner, trust cards, website) were nudged in
-place once with a throwaway script (D25, D22/D23 precedent); the DB's real
-user content (CTA phone/email, footer description, address, established year,
-the user's own socials) was left untouched after an accidental overwrite was
-reverted. `TechSkill`/`FaqItem` cleanups follow D21, so re-running the seed on
-the old v1 DB converges instead of duplicating (5 v1 FAQ rows → 6 v2 rows, and
-a second run is a pure no-op). Verified: `manage.py check` and
-`makemigrations --check` clean, home renders 200 with every v2 string
-present, and the seed is idempotent (FAQ 6 / tech 12 / stats 4 / why 6 /
-process 5).
