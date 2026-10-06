@@ -398,6 +398,19 @@ but are out of scope for this migration order (home/about/contact/404 only).
   then run `npm run build`. Hero areas of inner pages need their own top
   padding — the header is fixed and overlays (see the `pt-[clamp(...)]`
   precedent in `components/page_hero.html`).
+- **D28 — 404 page (T26).** `templates/404.html` extends `base.html` and
+  renders a pure-CSS "lost solar system" scene (`.nf-*` classes in
+  `input.css`) that echoes the hero's crystal-planet idea without any
+  WebGL/JS: gold planet with Saturn rings, two orbiting moons, twinkling
+  stars, a shooting meteor, floating shards/orbs, and a giant stroked `۴۰۴`
+  watermark. No 3D was added on purpose — a 404 must never block on asset
+  loading, and CSS-only keeps it instant on low-end devices; reduced-motion
+  kills every `.nf-*` animation and pins the stars at a static opacity. The
+  copy is Persian with a `highlight`-marked h1 and links to home/contact plus
+  an `s-chip` row to the main pages; `noindex` meta via `extra_head`.
+  Verified through `handler404` with `override_settings(DEBUG=False)` and a
+  non-existent URL (status 404, all content present) — no temporary route was
+  needed, so nothing had to be removed afterwards.
 
 ## Tasks
 
@@ -510,7 +523,7 @@ but are out of scope for this migration order (home/about/contact/404 only).
 
 ### Phase 5 — 404 page
 
-- [ ] T26 — Rebuild `templates/404.html` in v2 style: beautiful, attractive
+- [x] T26 — Rebuild `templates/404.html` in v2 style: beautiful, attractive
   Persian 404 matching the site's design language and its 3D/visual style (gold
   404 watermark, lightweight reuse of the hero crystal/visual idea, lazy +
   paused + disposable if WebGL is used, CSS/poster fallback, reduced-motion
@@ -667,8 +680,9 @@ but are out of scope for this migration order (home/about/contact/404 only).
 
 ## Current status
 
-T01–T25 done (all home page sections, base chrome, shared JS, v2 seed copy).
-Next: T26 — rebuild `templates/404.html` in the v2 style (gold 404 watermark,
-CSS solar-system scene reusing the hero's visual idea, Persian copy, links to
-the main pages, verify handler404 with a temporary route).
+T01–T26 done (all home page sections, base chrome, shared JS, v2 seed copy,
+v2 404 page). Next: T27 — make the home portfolio grid 3 columns
+(`grid-cols-1 md:grid-cols-2 lg:grid-cols-3`), keep the filter/radius
+variants/empty state, and limit rendered items to a multiple of 3 from the
+view.
 

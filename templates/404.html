@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load icon_tags %}
+{% load icon_tags highlight_tags %}
 
 {% block title %}
   ۴۰۴ — صفحه پیدا نشد · {{ settings.site_name }}
@@ -12,28 +12,80 @@
 {% endblock %}
 
 {% block content %}
-  <div class="relative grid min-h-[70vh] grid-rows-[1fr_auto] overflow-hidden px-page pb-[clamp(48px,6vw,80px)] pt-[clamp(32px,5vw,64px)]">
-    <span aria-hidden="true" class="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[55%] select-none whitespace-nowrap font-display text-[clamp(18rem,40vw,38rem)] font-semibold leading-none tracking-[-0.06em] text-transparent [-webkit-text-stroke:1px_var(--color-line-strong)] max-md:top-[20%] max-md:translate-y-0 max-md:text-[52vw]">۴۰۴</span>
-    <div class="relative z-[2] flex max-w-[640px] flex-col justify-center gap-8">
-      <p class="font-mono text-[0.76rem] uppercase tracking-[0.12em] text-ink-dim">
-        خطا {% icon "chevron-left" class="inline-block h-3.5 w-3.5 shrink-0 opacity-50 align-middle" %} <span class="text-ink">صفحه پیدا نشد</span>
+  {# منظومهٔ گمشده — سیارهٔ طلایی، حلقه‌های زحلی، ماه‌های در حال گردش،
+     ستاره‌های چشمک‌زن و یک شهاب‌سنگ؛ همگی CSS خالص و بدون جاوااسکریپت #}
+  <section class="nf-scene relative grid min-h-[100svh] place-items-center overflow-hidden bg-ink px-6 pb-28 pt-[clamp(120px,16vh,180px)] text-center">
+    <span class="grid-bg pointer-events-none absolute inset-0 opacity-30" aria-hidden="true"></span>
+    <div class="pointer-events-none absolute -left-32 top-1/4 h-[34rem] w-[34rem] rounded-full opacity-30 aurora-blob"
+         style="background: radial-gradient(circle, rgba(201, 161, 90, 0.22), transparent 65%)" aria-hidden="true"></div>
+    <div class="pointer-events-none absolute -right-24 bottom-10 h-72 w-72 rounded-full opacity-25 aurora-blob"
+         style="background: radial-gradient(circle, rgba(46, 99, 255, 0.28), transparent 70%)" aria-hidden="true"></div>
+
+    {# ستاره‌های چشمک‌زن #}
+    <span class="nf-star" style="left: 12%; top: 18%; animation-delay: 0s" aria-hidden="true"></span>
+    <span class="nf-star" style="left: 84%; top: 14%; animation-delay: 0.7s" aria-hidden="true"></span>
+    <span class="nf-star" style="left: 22%; top: 62%; animation-delay: 1.3s" aria-hidden="true"></span>
+    <span class="nf-star" style="left: 76%; top: 56%; animation-delay: 2s" aria-hidden="true"></span>
+    <span class="nf-star" style="left: 46%; top: 10%; animation-delay: 2.6s" aria-hidden="true"></span>
+    <span class="nf-star" style="left: 8%; top: 40%; animation-delay: 1.9s" aria-hidden="true"></span>
+    <span class="nf-star" style="left: 92%; top: 36%; animation-delay: 0.4s" aria-hidden="true"></span>
+
+    {# شهاب‌سنگ #}
+    <span class="nf-shoot" aria-hidden="true"></span>
+
+    {# واترمارک ۴۰۴ #}
+    <span class="nf-404 stroke-title" aria-hidden="true">۴۰۴</span>
+
+    {# سیارهٔ طلایی + حلقه‌ها + ماه‌ها #}
+    <div class="nf-system" aria-hidden="true">
+      <div class="nf-orbit-2 nf-orbit"><span class="nf-moon-2 nf-moon"></span></div>
+      <div class="nf-orbit"><span class="nf-moon"></span></div>
+      <span class="nf-ring nf-ring-1"></span>
+      <span class="nf-ring nf-ring-2"></span>
+      <div class="nf-planet"></div>
+    </div>
+
+    {# خرده‌سنگ‌های شناورِ اطراف صحنه #}
+    <div class="pointer-events-none absolute inset-0" aria-hidden="true">
+      <span data-float-spin="12" class="shard absolute left-[10%] top-[26%] h-20 w-16 rotate-12" style="--fa: 16px"></span>
+      <span data-float="9" class="orb absolute right-[12%] top-[24%] h-12 w-12"
+            style="--fa: 12px; background: radial-gradient(circle, rgba(46, 99, 255, 0.45), transparent 70%)"></span>
+      <span data-float-spin="10" class="float-ring absolute bottom-[16%] left-[16%] h-20 w-20" style="--fa: 14px"></span>
+      <span data-float="8" class="orb absolute bottom-[22%] right-[18%] h-9 w-9"
+            style="--fa: 10px; background: radial-gradient(circle, rgba(232, 196, 122, 0.5), transparent 70%)"></span>
+    </div>
+
+    <div class="relative z-10 flex w-full max-w-2xl flex-col items-center"
+         style="padding-top: clamp(150px, 22vh, 260px)">
+      <p class="eyebrow eyebrow-c justify-center" data-reveal="up">خطا · ۴۰۴</p>
+      <h1 class="mt-6 text-[clamp(2.1rem,5.4vw,4rem)] font-extrabold leading-[1.25]"
+          data-reveal="up" data-delay="0.08">
+        {{ "این صفحه در [[کهکشان]] ما نیست"|highlight }}
+      </h1>
+      <p class="mt-5 max-w-xl font-light leading-8 text-cream/65" data-reveal="up" data-delay="0.14">
+        صفحه‌ای که دنبالش هستی یا حذف شده، یا آدرسش عوض شده، یا اصلاً وجود نداشته.
+        بیا بریمت بگردیم.
       </p>
-      <h1 class="m-0 text-[clamp(2.4rem,5vw,5.2rem)] leading-[0.98] tracking-[-0.03em]">اینجا <em class="font-display font-normal italic">چیزی</em><br />نیست.</h1>
-      <p class="m-0 max-w-[44ch] text-[1.12rem] leading-[1.6] text-ink-soft">صفحه‌ای که دنبالش می‌گردی یا حذف شده، یا آدرسش عوض شده، یا اصلاً وجود نداشته. از لینک‌های زیر برگرد.</p>
-      <div class="mt-2 flex flex-wrap gap-3">
-        <a class="btn btn-ink group" href="{% url 'home:home' %}">برگشت به خانه {% icon "arrow-left" class="arrow h-4 w-4 transition-transform duration-[250ms] ease-ax group-hover:translate-y-1" %}</a><a class="btn btn-ghost" href="{% url 'contact:contact' %}">تماس با ما</a>
+      <div class="mt-10 flex flex-wrap items-center justify-center gap-4" data-reveal="up" data-delay="0.2">
+        <a href="{% url 'home:home' %}" class="btn btn-gold px-8 py-4" data-magnetic>
+          برگشت به خانه
+          {% icon "arrow-left" class="h-4 w-4" %}
+        </a>
+        <a href="{% url 'contact:contact' %}" class="btn btn-ghost px-8 py-4" data-magnetic>
+          مشاوره رایگان
+        </a>
       </div>
     </div>
 
-    <div class="relative z-[2] grid grid-cols-[auto_1fr] items-start gap-8 border-t border-line pt-10 max-md:grid-cols-1 max-md:gap-4">
-      <span class="whitespace-nowrap pt-1 font-mono text-[0.74rem] uppercase tracking-[0.12em] text-ink-dim">شاید دنبال این بودی</span>
-      <div class="flex flex-wrap gap-2">
-        <a href="{% url 'portfolio:list' %}" class="rounded-full border border-line px-4 py-2 font-mono text-[0.8rem] text-ink-soft transition-colors duration-200 ease-ax hover:border-night hover:bg-paper-soft hover:text-ink">نمونه کار ها</a>
-        <a href="{% url 'services:list' %}" class="rounded-full border border-line px-4 py-2 font-mono text-[0.8rem] text-ink-soft transition-colors duration-200 ease-ax hover:border-night hover:bg-paper-soft hover:text-ink">خدمات</a>
-        <a href="{% url 'core:about' %}" class="rounded-full border border-line px-4 py-2 font-mono text-[0.8rem] text-ink-soft transition-colors duration-200 ease-ax hover:border-night hover:bg-paper-soft hover:text-ink">درباره ما</a>
-        <a href="{% url 'contact:contact' %}" class="rounded-full border border-line px-4 py-2 font-mono text-[0.8rem] text-ink-soft transition-colors duration-200 ease-ax hover:border-night hover:bg-paper-soft hover:text-ink">تماس با ما</a>
-        <a href="{% url 'home:home' %}" class="rounded-full border border-line px-4 py-2 font-mono text-[0.8rem] text-ink-soft transition-colors duration-200 ease-ax hover:border-night hover:bg-paper-soft hover:text-ink">صفحه اصلی</a>
+    <div class="relative z-10 flex flex-col items-center gap-4" data-reveal="up" data-delay="0.28">
+      <span class="font-latin text-[10px] tracking-[.3em] text-gold/60">شاید دنبال این بودی</span>
+      <div class="flex flex-wrap items-center justify-center gap-2.5">
+        <a href="{% url 'portfolio:list' %}" class="s-chip">نمونه‌کارها</a>
+        <a href="{% url 'services:list' %}" class="s-chip">خدمات</a>
+        <a href="{% url 'core:about' %}" class="s-chip">درباره ما</a>
+        <a href="{% url 'blog:list' %}" class="s-chip">بلاگ</a>
+        <a href="{% url 'contact:contact' %}" class="s-chip">تماس با ما</a>
       </div>
     </div>
-  </div>
+  </section>
 {% endblock %}
