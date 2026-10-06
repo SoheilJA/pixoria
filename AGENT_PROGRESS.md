@@ -613,6 +613,45 @@ but are out of scope for this migration order (home/about/contact/404 only).
   runs are clean no-ops. `/contact/` still renders 200 on the old template
   (T34 replaces it).
 
+- **D36 — Contact page template (T34).** `templates/contact/contact.html` fully
+  replaced (v1 page-hero + project-type/budget/start-time selects out) with the
+  four `new/contact.html` sections on top of `base.html`: hero → form →
+  cities/map → FAQ, then the shared `_cta.html`/`_footer.html` — ~1800 lines of
+  duplicated chrome from the prototype dropped. The header, mobile menu, CTA
+  and footer are base's; no hard-coded copy of them survives. Conversions:
+  `[[ ]]` titles via `highlight` (dark variant on the cream sections), all
+  `data-lucide` → the local `{% icon %}` sprite, phone digits via `fa_digits`,
+  decorative `hello` stroke via the existing `.stroke-title`. The hero's four
+  contact cards render from `SiteSettings` (phone / phone_secondary / email /
+  website — the same single source the header/footer use, so the vestigial v1
+  `ContactInfo` model stays untouched for T43), each card `{% if %}`-guarded and
+  its rotating border-radius + `lg:mt-10` offset generated with two `{% cycle %}`
+  tags in lockstep. The form column's points come from `ContactFormPoint`, the
+  `.soc` buttons from `SocialLink` (with `|default:"globe"` like the footer),
+  and the FAQ uses the home `.faq-item`/`.faq-q`/`.faq-a` markup so
+  `pixoria.js`'s `initFaq` drives it unchanged — the prototype's own accordion
+  classes are gone. The radial map SVG is ported verbatim with its labels bound
+  to `ContactMapSection` (`office_name`/`office_note`/`coverage_note`), keeping
+  the SMIL animations (`cities-spin` classes already existed in `input.css`).
+  JSON-LD (Organization + ContactPage + BreadcrumbList) moved into `extra_head`.
+  The form itself is `templates/contact/_contact_form.html` (built earlier with
+  the `.field`/`.field-err` styles) included into the page, and htmx swaps its
+  `outerHTML` with either itself (validation errors / rate-limit alert) or the
+  new `templates/contact/_contact_success.html`, which carries the hidden
+  `[data-toast]` span so `pixoria.js` announces the success message after
+  `htmx:afterSettle` (D16) and offers an «ارسال پیام دیگر» link back to the
+  same page. Verified end to end: GET 200 (54 KB) with all four sections, no
+  leaked `[[ ]]`, zero CDN/lucide references; a valid POST creates exactly one
+  `ContactSubmission` (name/email/phone/subject/message) and returns the success
+  card; an invalid POST re-renders the form with the Persian `field-err`
+  messages; the honeypot returns the success card and saves nothing; the
+  `cache`-based rate limit lets exactly `RATE_LIMIT` (5) rows through and blocks
+  the 6th with the alert; and with an EMPTY database (rolled-back transaction)
+  the page still returns 200 (28 KB) — hero/map/FAQ `{% if %}`-skip while the
+  form still validates. Home (146 KB) and about (65 KB) unaffected. Tailwind
+  rebuilt (no token changes — just the newly-used `sm:grid-cols-2` / `lg:mt-10`
+  utilities).
+
 ## Tasks
 
 ### Phase 0 — Foundation
@@ -800,7 +839,7 @@ but are out of scope for this migration order (home/about/contact/404 only).
   `apps/contact/migrations/0003_*`, `apps/contact/admin.py`,
   `apps/contact/management/commands/seed_contact_content.py` |
   commit: "feat(contact): add v2 contact models"
-- [ ] T34 — Rebuild `templates/contact/contact.html` from `new/contact.html`:
+- [x] T34 — Rebuild `templates/contact/contact.html` from `new/contact.html`:
   extends `base.html`, no duplicated header/footer/CTA, working form (Django
   form/model, saved `ContactSubmission` visible in admin, CSRF, validation
   with Persian error/success messages, honeypot + simple rate limit like the
@@ -886,11 +925,12 @@ but are out of scope for this migration order (home/about/contact/404 only).
 
 ## Current status
 
-T01–T33 done. Next: T34 — rebuild `templates/contact/contact.html` from
-`new/contact.html` on top of `base.html` (no duplicated header/footer/CTA),
-with a working Django form that saves `ContactSubmission` (name/email/phone/
-subject/message), CSRF, Persian validation messages, honeypot + simple rate
-limit like the home lead form, HTMX with `data-toast` success announcement
-per D16, and reuse of the `.field` styles from `static/src/input.css`;
-`apps/contact/views.py` rewritten accordingly.
+T01–T34 done. Next: T35 — review the `portfolio` models against the planned
+v2 pages (list + detail) and add only what is missing (optional gallery images
+inline, results/metrics via the existing `ProjectStat`, technologies/tags,
+optional related testimonial link, SEO fields), all optional; migration +
+admin + seed if needed. The testimonials slider and projects carousel
+components already accept a `service`/`exclude`/`category`/`limit` parameter
+(D31/D32), and `_project_card.html`/`_article_card.html` (D30) plus the design
+language for pages without a `new/` design (D27) are the building blocks.
 

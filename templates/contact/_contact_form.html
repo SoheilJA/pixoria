@@ -1,0 +1,83 @@
+{% load icon_tags fa_digits %}
+{# فرم تماس v2 — حالت فرم (بار اول و بعد از خطای اعتبارسنجی) #}
+{# داده‌ها: form (ContactSubmissionForm)، form_section، rate_limited #}
+{# htmx: خود فرم را با outerHTML جایگزین می‌کند؛ موفقیت در _contact_success.html #}
+<form id="contact-form"
+      hx-post="{% url 'contact:contact' %}"
+      hx-target="this"
+      hx-swap="outerHTML"
+      hx-disabled-elt="#contact-submit"
+      class="glass-light p-8 md:p-10"
+      style="border-radius: 2.5rem 1rem 2.5rem 1rem"
+      novalidate>
+  {% csrf_token %}
+  {# هانی‌پات — برای کاربران مخفی است؛ ربات‌ها آن را پر می‌کنند #}
+  {{ form.company_website }}
+
+  {% if rate_limited %}
+    <div class="mb-6 flex items-start gap-3 rounded-[1rem] border border-[rgba(192,57,43,0.4)] bg-[rgba(192,57,43,0.07)] p-4 text-[0.92rem] text-[#a83a2b]" role="alert">
+      {% icon "alert-triangle" class="mt-0.5 h-5 w-5 shrink-0" %}
+      <span>تعداد درخواست‌های شما از حد مجاز عبور کرده است. کمی بعد دوباره تلاش کنید یا مستقیم با ما تماس بگیرید.</span>
+    </div>
+  {% endif %}
+
+  <div class="grid gap-6 md:grid-cols-2">
+    <div>
+      <label class="field {% if form.name.errors %}invalid{% endif %}">
+        {{ form.name }}
+        <span>نام و نام خانوادگی</span>
+      </label>
+      {% if form.name.errors %}
+        <span class="field-err">{% icon "alert-circle" class="h-3.5 w-3.5" %}{{ form.name.errors.0 }}</span>
+      {% endif %}
+    </div>
+
+    <div>
+      <label class="field {% if form.email.errors %}invalid{% endif %}">
+        {{ form.email }}
+        <span>ایمیل</span>
+      </label>
+      {% if form.email.errors %}
+        <span class="field-err">{% icon "alert-circle" class="h-3.5 w-3.5" %}{{ form.email.errors.0 }}</span>
+      {% endif %}
+    </div>
+
+    <div>
+      <label class="field">
+        {{ form.phone }}
+        <span>شماره تماس (اختیاری)</span>
+      </label>
+      {% if form.phone.errors %}
+        <span class="field-err">{% icon "alert-circle" class="h-3.5 w-3.5" %}{{ form.phone.errors.0 }}</span>
+      {% endif %}
+    </div>
+
+    <div>
+      <label class="field static {% if form.subject.errors %}invalid{% endif %}">
+        {{ form.subject }}
+        <span>موضوع</span>
+      </label>
+      {% if form.subject.errors %}
+        <span class="field-err">{% icon "alert-circle" class="h-3.5 w-3.5" %}{{ form.subject.errors.0 }}</span>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="mt-6">
+    <label class="field {% if form.message.errors %}invalid{% endif %}">
+      {{ form.message }}
+      <span>پیام شما</span>
+    </label>
+    {% if form.message.errors %}
+      <span class="field-err">{% icon "alert-circle" class="h-3.5 w-3.5" %}{{ form.message.errors.0 }}</span>
+    {% endif %}
+  </div>
+
+  <button id="contact-submit" type="submit" class="btn btn-gold mt-7 w-full px-8 py-4 text-lg" data-magnetic>
+    {% icon "send" class="h-5 w-5" %}
+    {{ form_section.button_text|default:"ارسال پیام" }}
+  </button>
+  {% if form_section.note %}
+    <p class="mt-4 text-center text-xs text-coy/80">{{ form_section.note }}</p>
+  {% endif %}
+</form>

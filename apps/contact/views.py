@@ -1,69 +1,116 @@
+"""نمای صفحهٔ «تماس با ما» و پردازش فرم آن.
+
+GET صفحه را رندر می‌کند و POST (فقط از طریق HTMX) فرم را اعتبارسنجی کرده و
+در `ContactSubmission` ذخیره می‌کند. در پاسخ، همان فرم به‌همراه خطاها یا حالت
+موفقیت برمی‌گردد — هر دو با ۲۰۰ تا htmx بدون تنظیمات اضافه swap کند."""
+
+from django.conf import settings
+from django.core.cache import cache
+from django.core.mail import send_mail
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.views.decorators.cache import never_cache
+from django.views.decorators.http import require_http_methods
+
 from apps.core.context_utils import crumbs
+from apps.core.models import SiteSettings, SocialLink
+
+from .forms import ContactSubmissionForm
 from .models import (
     ContactPageSection,
-    ContactInfo,
-    ProjectTypeChoice,
-    BudgetChoice,
-    StartTimeChoice,
+    ContactFormSection,
+    ContactFormPoint,
+    ContactMapSection,
+    ContactFaqSection,
+    ContactFaq,
     ContactSubmission,
 )
-from apps.services.models import Service
-from apps.core.models import SocialLink
+
+# محدودیت نرخ — مثل فرم تماس سریعِ صفحه اصلی.
+RATE_LIMIT = 5  # حداکثر ارسال در هر پنجره
+RATE_WINDOW = 3600  # ثانیه
 
 
-def contact(request):
-    if request.method == "POST":
-        name = request.POST.get("name", "").strip()
-        phone = request.POST.get("phone", "").strip()
-        company = request.POST.get("company", "").strip()
-        project_type = request.POST.get("project_type", "").strip()
-        budget = request.POST.get("budget", "").strip()
-        start_time = request.POST.get("start_time", "").strip()
-        message = request.POST.get("message", "").strip()
+def _rate_key(request):
+    forwarded = request.META.get("HTTP_X_FORWARDED_FOR", "")
+    ip = forwarded.split(",")[0].strip() if forwarded else request.META.get("REMOTE_ADDR", "")
+    return f"pixoria:contact:{ip}"
 
-        if not name or not phone or not project_type or not budget or not start_time:
-            return HttpResponse(
-                '<p style="color: #e74c3c; font-family: var(--mono); font-size: 0.85rem;">لطفاً همه فیلدهای اجباری را پر کنید.</p>'
-            )
 
-        ContactSubmission.objects.create(
-            name=name,
-            phone=phone,
-            company=company,
-            project_type=project_type,
-            budget=budget,
-            start_time=start_time,
-            message=message,
-        )
-
-        return HttpResponse("""
-            <div style="
-                background: #1a2e1a;
-                border: 1px solid #2d5a2d;
-                border-radius: 8px;
-                padding: 20px 24px;
-                display: flex;
-                align-items: center;
-                gap: 12px;
-            ">
-                <span style="color: var(--lime); font-size: 1.4rem;">✓</span>
-                <div>
-                    <p style="color: var(--lime); font-family: var(--mono); font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; margin: 0 0 4px;">درخواست ارسال شد</p>
-                    <p style="color: #c8c7c2; font-size: 0.95rem; margin: 0;">درخواست شما دریافت شد و به زودی با شما تماس می گیریم.</p>
-                </div>
-            </div>
-        """)
-
-    context = {
+def _page_context():
+    return {
         "crumbs": crumbs(("خانه", "home:home"), ("تماس با ما", None)),
         "page_section": ContactPageSection.objects.first(),
-        "contact_info": ContactInfo.objects.first(),
-        "project_types": ProjectTypeChoice.objects.all(),
-        "budgets": BudgetChoice.objects.all(),
-        "start_times": StartTimeChoice.objects.all(),
-        "contact_services": Service.objects.filter(featured=True),
+        "form_section": ContactFormSection.objects.first(),
+        "form_points": ContactFormPoint.objects.filter(is_active=True),
+        "map_section": ContactMapSection.objects.first(),
+        "faq_section": ContactFaqSection.objects.first(),
+        "faq_items": ContactFaq.objects.all(),
         "socials": SocialLink.objects.all(),
+        "form": ContactSubmissionForm(),
     }
-    return render(request, "contact/contact.html", context)
+
+
+@never_cache
+@require_http_methods(["GET", "POST"])
+def contact(request):
+    if request.method == "POST":
+        return _handle_submit(request)
+    return render(request, "contact/contact.html", _page_context())
+
+
+def _handle_submit(request):
+    form = ContactSubmissionForm(request.POST)
+
+    # هانی‌پات: فیلد مخفی برای ربات‌ها. در ظاهر موفق برمی‌گردانیم تا
+    # فرستنده متوجه نخشنودن درخواستش نشود.
+    if request.POST.get("company_website", ""):
+        return render(
+            request, "contact/_contact_success.html", _page_context()
+        )
+
+    key = _rate_key(request)
+    if cache.get(key, 0) >= RATE_LIMIT:
+        context = _page_context()
+        context["rate_limited"] = True
+        context["form"] = form
+        return render(request, "contact/_contact_form.html", context)
+
+    if not form.is_valid():
+        cache.set(key, cache.get(key, 0) + 1, RATE_WINDOW)
+        context = _page_context()
+        context["form"] = form
+        return render(request, "contact/_contact_form.html", context)
+
+    submission = form.save()
+    cache.set(key, cache.get(key, 0) + 1, RATE_WINDOW)
+
+    # اعلان ایمیلی فقط اگر تنظیمات ایمیل از قبل موجود باشد — و هرگز نباید
+    # شکستِ سرور ایمیل، ثبت پیام کاربر را خراب کند.
+    _maybe_notify(submission)
+
+    return render(request, "contact/_contact_success.html", _page_context())
+
+
+def _maybe_notify(submission):
+    """اگر EMAIL_HOST تنظیم شده باشد، رونوشت پیام را به ایمیل سایت می‌فرستد."""
+    if not getattr(settings, "EMAIL_HOST", None):
+        return
+    site = SiteSettings.objects.first()
+    if not site or not site.email:
+        return
+    try:
+        send_mail(
+            subject=f"پیام جدید از صفحهٔ تماس: {submission.subject or 'بدون موضوع'}",
+            message=(
+                f"نام: {submission.name}\n"
+                f"ایمیل: {submission.email}\n"
+                f"تلفن: {submission.phone or '—'}\n"
+                f"موضوع: {submission.subject or '—'}\n\n"
+                f"{submission.message}"
+            ),
+            from_email=settings.DEFAULT_FROM_EMAIL or site.email,
+            recipient_list=[site.email],
+            fail_silently=True,
+        )
+    except Exception:  # noqa: BLE001 — ایمیل هرگز نباید فرم را بشکند
+        pass

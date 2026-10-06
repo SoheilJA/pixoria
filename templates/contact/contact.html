@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load icon_tags %}
+{% load icon_tags highlight_tags fa_digits %}
 
 {% block title %}
   تماس با ما — {{ settings.site_name }}
@@ -8,98 +8,356 @@
   {{ page_section.description }}
 {% endblock %}
 
-{% block content %}
-  <!-- ─── هیرو ─── -->
-  {% include 'components/page_hero.html' with crumbs=crumbs title=page_section.title description=page_section.description title_id='contact-hero-title' %}
+{% block extra_head %}
+  {# داده‌های ساختاریافته — سازمان، صفحهٔ تماس و مسیر نمایش #}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "name": "{{ settings.site_name }}",
+          "url": "{{ settings.website|default:request.build_absolute_uri }}",
+          {% if settings.email %}"email": "{{ settings.email }}",{% endif %}
+          {% if settings.phone %}"telephone": "{{ settings.phone }}",{% endif %}
+          {% if settings.established_year %}"foundingDate": "{{ settings.established_year }}",{% endif %}
+          "address": {
+            "@type": "PostalAddress",
+            {% if settings.address %}"streetAddress": "{{ settings.address }}",{% endif %}
+            "addressLocality": "مشهد",
+            "addressCountry": "IR"
+          }
+        },
+        {
+          "@type": "ContactPage",
+          "name": "تماس با ما — {{ settings.site_name }}",
+          "inLanguage": "fa-IR"
+        },
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "خانه",
+              "item": "{{ request.scheme }}://{{ request.get_host }}{% url 'home:home' %}"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "تماس با ما",
+              "item": "{{ request.build_absolute_uri }}"
+            }
+          ]
+        }
+      ]
+    }
+  </script>
+{% endblock %}
 
-  <!-- ─── اطلاعات تماس + فرم ─── -->
-  <section class="grid grid-cols-1 gap-8 px-page py-12 md:grid-cols-[1fr_1.2fr] md:gap-20 md:py-16" aria-label="اطلاعات تماس">
-    <aside data-reveal="fade-left">
-      {% if contact_info.tagline %}
-        <p class="mb-8 text-[1.25rem] leading-[1.6] text-ink" data-reveal="fade-up">{{ contact_info.tagline }}</p>
-      {% endif %}
-      <div class="border-t border-line py-6" data-reveal="fade-up" data-reveal-delay="100">
-        <div class="mb-1.5 font-mono text-[0.78rem] text-ink-dim">دفتر — {{ contact_info.office_title }}</div>
-        <address class="not-italic leading-[1.5] text-ink-soft">{{ contact_info.office_address|linebreaksbr }}</address>
+{% block content %}
+  {% comment %}هیرو — عنوان صفحه و کارت‌های اطلاعات تماس از SiteSettings{% endcomment %}
+  {% if page_section %}
+    <section class="relative overflow-hidden bg-ink" data-mouse-parallax>
+    <div class="pointer-events-none absolute inset-0" aria-hidden="true">
+      <div data-depth="0.05" class="absolute right-[10%] top-[12%]">
+        <span data-float="14" class="orb block h-20 w-20"
+              style="background: radial-gradient(circle at 32% 30%, rgba(232,196,122,0.42), rgba(201,161,90,0.07) 60%, transparent 72%);"></span>
       </div>
-      <div class="border-y border-line py-6" data-reveal="fade-up" data-reveal-delay="150">
-        <div class="mb-3.5 font-mono text-[0.78rem] text-ink-dim">اطلاعات تماس</div>
-        <div class="grid gap-3">
-          {% if contact_info.phone %}
-            <a href="tel:{{ contact_info.phone }}" class="flex items-baseline gap-3 border-b border-dashed border-line py-1.5"><span class="min-w-[90px] font-mono text-[0.74rem] text-ink-dim">تلفن</span><span>{{ contact_info.phone }}</span></a>
+      <div data-depth="0.08" class="absolute bottom-[14%] left-[7%]">
+        <span data-float="12" class="shard block h-24 w-20 rotate-12"></span>
+      </div>
+      <div data-depth="0.05" class="absolute left-[30%] top-[10%]">
+        <span data-float="10" class="orb block h-10 w-10"
+              style="background: radial-gradient(circle, rgba(46,99,255,0.5), transparent 70%);"></span>
+      </div>
+    </div>
+    <div class="pointer-events-none absolute -left-32 top-1/3 h-[30rem] w-[30rem] rounded-full opacity-30"
+         style="background: radial-gradient(circle, rgba(201,161,90,0.22), transparent 65%);"
+         aria-hidden="true"></div>
+    <span class="stroke-title font-latin pointer-events-none absolute -bottom-10 left-0 select-none text-[20vw] font-light leading-none"
+          aria-hidden="true">hello</span>
+
+    <div class="relative z-10 mx-auto grid w-full max-w-7xl items-center gap-14 px-6 pb-24 pt-36 lg:grid-cols-12 lg:pt-44">
+      <div class="lg:col-span-5">
+        {% if page_section.eyebrow %}
+          <p class="eyebrow" data-reveal="up">{{ page_section.eyebrow }}</p>
+        {% endif %}
+        {% if page_section.title %}
+          <h1 class="mt-6 text-[2.6rem] font-extrabold leading-[1.25] sm:text-5xl lg:text-6xl"
+              data-reveal="right">
+            {{ page_section.title|highlight }}
+          </h1>
+        {% endif %}
+        {% if page_section.description %}
+          <p class="mt-6 max-w-md text-lg font-light leading-8 text-cream/70"
+             data-reveal="right" data-delay="0.12">
+            {{ page_section.description }}
+          </p>
+        {% endif %}
+        {% if page_section.response_note %}
+          <p class="mt-8 flex items-center gap-2 text-sm text-cream/50"
+             data-reveal="right" data-delay="0.2">
+            {% icon "clock" class="h-4 w-4 text-gold" %} {{ page_section.response_note }}
+          </p>
+        {% endif %}
+      </div>
+
+      {% comment %}کارت‌های اطلاعات تماس — تلفن، همراه، ایمیل و وب‌سایت{% endcomment %}
+      {% if settings.phone or settings.phone_secondary or settings.email or settings.website %}
+        <div class="grid gap-5 sm:grid-cols-2 lg:col-span-7" data-reveal="left" data-delay="0.15">
+          {% if settings.phone %}
+            <a href="tel:{{ settings.phone }}"
+               class="tilt glass group relative flex flex-col gap-4 p-7 transition-transform hover:-translate-y-1.5 {% cycle '' 'lg:mt-10' '' 'lg:mt-10' %}"
+               style="{% cycle 'border-radius: 2rem 2rem 2rem 0.75rem' 'border-radius: 2rem 2rem 0.75rem 2rem' 'border-radius: 2rem 0.75rem 2rem 2rem' 'border-radius: 0.75rem 2rem 0.75rem 2rem' %}"
+               data-tilt>
+              <span class="glare" aria-hidden="true"></span>
+              <span class="icon-ring">{% icon "phone" class="h-5 w-5" %}</span>
+              <span>
+                <span class="block text-xs text-cream/50">تلفن دفتر مرکزی</span>
+                <span class="fa-num mt-1 block text-2xl font-bold text-gold-light">{{ settings.phone|fa_digits }}</span>
+              </span>
+            </a>
           {% endif %}
-          {% if contact_info.working_hours %}
-            <div class="flex items-baseline gap-3 border-b border-dashed border-line py-1.5">
-              <span class="min-w-[90px] font-mono text-[0.74rem] text-ink-dim">ساعات کاری</span><span>{{ contact_info.working_hours }}</span>
-            </div>
+          {% if settings.phone_secondary %}
+            <a href="tel:{{ settings.phone_secondary }}"
+               class="tilt glass group relative flex flex-col gap-4 p-7 transition-transform hover:-translate-y-1.5 {% cycle '' 'lg:mt-10' '' 'lg:mt-10' %}"
+               style="{% cycle 'border-radius: 2rem 2rem 2rem 0.75rem' 'border-radius: 2rem 2rem 0.75rem 2rem' 'border-radius: 2rem 0.75rem 2rem 2rem' 'border-radius: 0.75rem 2rem 0.75rem 2rem' %}"
+               data-tilt>
+              <span class="glare" aria-hidden="true"></span>
+              <span class="icon-ring">{% icon "smartphone" class="h-5 w-5" %}</span>
+              <span>
+                <span class="block text-xs text-cream/50">همراهِ همکاران</span>
+                <span class="fa-num mt-1 block text-2xl font-bold text-gold-light">{{ settings.phone_secondary|fa_digits }}</span>
+              </span>
+            </a>
           {% endif %}
-          {% if contact_info.email_press %}
-            <a href="mailto:{{ contact_info.email_press }}" class="flex items-baseline gap-3 border-b border-dashed border-line py-1.5"><span class="min-w-[90px] font-mono text-[0.74rem] text-ink-dim">رسانه</span><span dir="ltr">{{ contact_info.email_press }}</span></a>
+          {% if settings.email %}
+            <a href="mailto:{{ settings.email }}"
+               class="tilt glass group relative flex flex-col gap-4 p-7 transition-transform hover:-translate-y-1.5 {% cycle '' 'lg:mt-10' '' 'lg:mt-10' %}"
+               style="{% cycle 'border-radius: 2rem 2rem 2rem 0.75rem' 'border-radius: 2rem 2rem 0.75rem 2rem' 'border-radius: 2rem 0.75rem 2rem 2rem' 'border-radius: 0.75rem 2rem 0.75rem 2rem' %}"
+               data-tilt>
+              <span class="glare" aria-hidden="true"></span>
+              <span class="icon-ring">{% icon "mail" class="h-5 w-5" %}</span>
+              <span>
+                <span class="block text-xs text-cream/50">ایمیل</span>
+                <span dir="ltr" class="font-latin mt-1 block text-2xl font-bold text-gold-light">{{ settings.email }}</span>
+              </span>
+            </a>
           {% endif %}
-          {% if contact_info.email_career %}
-            <a href="mailto:{{ contact_info.email_career }}" class="flex items-baseline gap-3 border-b border-dashed border-line py-1.5"><span class="min-w-[90px] font-mono text-[0.74rem] text-ink-dim">فرصت‌های شغلی</span><span dir="ltr">{{ contact_info.email_career }}</span></a>
+          {% if settings.website %}
+            <a href="{{ settings.website }}"
+               class="tilt glass group relative flex flex-col gap-4 p-7 transition-transform hover:-translate-y-1.5 {% cycle '' 'lg:mt-10' '' 'lg:mt-10' %}"
+               style="{% cycle 'border-radius: 2rem 2rem 2rem 0.75rem' 'border-radius: 2rem 2rem 0.75rem 2rem' 'border-radius: 2rem 0.75rem 2rem 2rem' 'border-radius: 0.75rem 2rem 0.75rem 2rem' %}"
+               data-tilt>
+              <span class="glare" aria-hidden="true"></span>
+              <span class="icon-ring">{% icon "globe" class="h-5 w-5" %}</span>
+              <span>
+                <span class="block text-xs text-cream/50">وب‌سایت</span>
+                <span dir="ltr" class="font-latin mt-1 block text-2xl font-bold text-gold-light">{{ settings.website }}</span>
+              </span>
+            </a>
           {% endif %}
         </div>
-      </div>
-      {% if socials %}
-        <div class="mt-8" data-reveal="fade-up" data-reveal-delay="200">
-          <div class="mb-3.5 font-mono text-[0.78rem] text-ink-dim">شبکه‌های اجتماعی</div>
-          <div class="flex flex-wrap gap-2">
+      {% endif %}
+    </div>
+    </section>
+  {% endif %}
+
+  {% comment %}فرم تماس (روشن){% endcomment %}
+  <section id="form" class="relative bg-cream" style="border-radius: 9rem 3rem 0 0">
+    <div class="relative z-10 mx-auto grid max-w-7xl gap-12 px-6 pb-24 pt-24 lg:grid-cols-12">
+      <div class="lg:col-span-4">
+        {% if form_section.eyebrow %}
+          <p class="eyebrow eyebrow-dark" data-reveal="up">{{ form_section.eyebrow }}</p>
+        {% endif %}
+        {% if form_section.title %}
+          <h2 class="mt-5 text-4xl font-extrabold leading-[1.3] text-paper"
+              data-reveal="right">
+            {{ form_section.title|highlight:"dark" }}
+          </h2>
+        {% endif %}
+        {% if form_section.description %}
+          <p class="mt-5 font-light leading-8 text-coy"
+             data-reveal="right" data-delay="0.1">
+            {{ form_section.description }}
+          </p>
+        {% endif %}
+        {% if form_points %}
+          <ul class="mt-8 space-y-4 text-sm text-coy"
+              data-reveal="right" data-delay="0.16">
+            {% for point in form_points %}
+              <li class="flex items-center gap-3">
+                <span class="icon-ring">{% icon point.icon class="h-4 w-4" %}</span>
+                {{ point.text }}
+              </li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+        {% if socials %}
+          <div class="mt-9 flex gap-3" data-reveal="right" data-delay="0.22">
             {% for social in socials %}
-              <a href="{{ social.url }}" target="_blank" rel="noopener noreferrer" class="rounded-full border border-line px-4 py-2 font-mono text-[0.8rem] text-ink-soft hover:border-night hover:bg-paper-soft">{{ social.name }}</a>
+              <a href="{{ social.url }}"
+                 class="soc !text-gold-dark"
+                 style="border-color: rgba(143, 107, 44, 0.4); background: rgba(255, 255, 255, 0.55);"
+                 aria-label="{{ social.name|default:social.label }}"
+                 target="_blank" rel="noopener noreferrer">
+                {% icon social.icon|default:"globe" class="h-4 w-4" %}
+              </a>
             {% endfor %}
           </div>
-        </div>
-      {% endif %}
-      <div class="mt-8" data-reveal="fade-up" data-reveal-delay="250">
-        <div class="mb-3.5 font-mono text-[0.78rem] text-ink-dim">خدمات ما</div>
-        <div class="grid">
-          {% for service in contact_services %}
-            <a href="{% url 'services:detail' service.slug %}" class="flex items-center justify-between border-b border-dashed border-line py-3 text-ink-soft hover:text-ink"><span>{{ service.title }}</span>{% icon "arrow-left" class="inline-block h-5 w-5" %}</a>
-          {% endfor %}
-        </div>
+        {% endif %}
       </div>
-    </aside>
 
-    <form class="grid gap-[18px] rounded-md bg-paper-soft p-7 md:p-10" aria-label="فرم درخواست پروژه" novalidate data-reveal="fade-right" data-reveal-delay="100" hx-post="{% url 'contact:contact' %}" hx-target="#form-result" hx-swap="innerHTML" hx-on::after-request="if(event.detail.successful) this.reset()">
-      {% csrf_token %}
-      <div data-reveal="fade-up">
-        <h2 class="mb-1.5 text-[1.4rem]">درخواست پروژه</h2><p class="m-0 font-mono text-[0.74rem] text-ink-dim">همه فیلدها به جز پیام اجباری هستند</p>
+      <div class="lg:col-span-8" data-reveal="left">
+        {% include "contact/_contact_form.html" %}
       </div>
-      <div class="grid grid-cols-1 gap-[18px] md:grid-cols-2" data-reveal="fade-up" data-reveal-delay="100">
-        <label class="flex flex-col gap-1.5 font-mono text-[0.74rem] text-ink-dim" for="contact-name">نام شما<input id="contact-name" type="text" name="name" autocomplete="name" required class="rounded-sm border border-line bg-paper px-3.5 py-3 font-sans text-base text-ink focus:border-night focus:outline-none focus:ring-[3px] focus:ring-lime/45" /></label><label class="flex flex-col gap-1.5 font-mono text-[0.74rem] text-ink-dim" for="contact-phone">شماره تماس<input id="contact-phone" type="tel" name="phone" autocomplete="tel" required class="rounded-sm border border-line bg-paper px-3.5 py-3 font-sans text-base text-ink focus:border-night focus:outline-none focus:ring-[3px] focus:ring-lime/45" /></label>
-      </div>
-      <label class="flex flex-col gap-1.5 font-mono text-[0.74rem] text-ink-dim" for="contact-company" data-reveal="fade-up" data-reveal-delay="150">شرکت / سازمان<input id="contact-company" type="text" name="company" autocomplete="organization" class="rounded-sm border border-line bg-paper px-3.5 py-3 font-sans text-base text-ink focus:border-night focus:outline-none focus:ring-[3px] focus:ring-lime/45" /></label>
-      <div class="grid grid-cols-1 gap-[18px] md:grid-cols-2" data-reveal="fade-up" data-reveal-delay="200">
-        <label class="flex flex-col gap-1.5 font-mono text-[0.74rem] text-ink-dim" for="contact-project-type">
-          نوع پروژه<select id="contact-project-type" name="project_type" required class="rounded-sm border border-line bg-paper px-3.5 py-3 font-sans text-base text-ink focus:border-night focus:outline-none focus:ring-[3px] focus:ring-lime/45">
-            <option value="">انتخاب کنید…</option>
-            {% for item in project_types %}
-              <option value="{{ item.label }}">{{ item.label }}</option>
-            {% endfor %}
-          </select>
-        </label><label class="flex flex-col gap-1.5 font-mono text-[0.74rem] text-ink-dim" for="contact-budget">
-          بودجه تقریبی<select id="contact-budget" name="budget" required class="rounded-sm border border-line bg-paper px-3.5 py-3 font-sans text-base text-ink focus:border-night focus:outline-none focus:ring-[3px] focus:ring-lime/45">
-            <option value="">انتخاب کنید…</option>
-            {% for item in budgets %}
-              <option value="{{ item.label }}">{{ item.label }}</option>
-            {% endfor %}
-          </select>
-        </label>
-      </div>
-      <label class="flex flex-col gap-1.5 font-mono text-[0.74rem] text-ink-dim" for="contact-start-time" data-reveal="fade-up" data-reveal-delay="250">
-        زمان شروع<select id="contact-start-time" name="start_time" required class="rounded-sm border border-line bg-paper px-3.5 py-3 font-sans text-base text-ink focus:border-night focus:outline-none focus:ring-[3px] focus:ring-lime/45">
-          <option value="">انتخاب کنید…</option>
-          {% for item in start_times %}
-            <option value="{{ item.label }}">{{ item.label }}</option>
-          {% endfor %}
-        </select>
-      </label>
-      <label class="flex flex-col gap-1.5 font-mono text-[0.74rem] text-ink-dim" for="contact-message" data-reveal="fade-up" data-reveal-delay="300">درباره پروژه کمی توضیح بدهید<textarea id="contact-message" name="message" placeholder="روی چه چیزی کار می‌کنید، موفقیت برای شما چه معنی دارد، چرا سراغ ما آمدید…" class="min-h-[140px] resize-y rounded-sm border border-line bg-paper px-3.5 py-3 font-sans text-base text-ink focus:border-night focus:outline-none focus:ring-[3px] focus:ring-lime/45"></textarea></label>
-      <div class="flex flex-wrap items-center justify-between gap-[18px]" data-reveal="fade-up" data-reveal-delay="350">
-        <p class="m-0 text-[0.84rem] text-ink-dim">ما فقط برای پاسخ به شما از این اطلاعات استفاده می‌کنیم.</p><button type="submit" class="btn btn-ink group">ارسال درخواست {% icon "arrow-left" class="inline-block h-4 w-4 transition-transform group-hover:translate-y-1" %}</button>
-      </div>
-      <div id="form-result" class="mt-2" role="status" aria-live="polite"></div>
-    </form>
+    </div>
   </section>
+
+  {% comment %}دفتر و پوشش خدمات (تیره){% endcomment %}
+  {% if map_section %}
+    <section id="cities" class="relative overflow-hidden bg-ink2">
+      <svg class="divider divider-flip" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0,26 C260,84 520,82 760,44 C1000,6 1240,80 1440,30 L1440,0 L0,0 Z" fill="#f5f3ee" />
+      </svg>
+
+      <div class="relative z-10 mx-auto max-w-4xl px-6 pb-28 pt-32 text-center md:pt-40">
+        {% if map_section.eyebrow %}
+          <p class="eyebrow eyebrow-c justify-center" data-reveal="up">{{ map_section.eyebrow }}</p>
+        {% endif %}
+        {% if map_section.title %}
+          <h2 class="mt-5 text-4xl font-extrabold leading-[1.3] md:text-[2.7rem]"
+              data-reveal="up" data-delay="0.08">
+            {{ map_section.title|highlight }}
+          </h2>
+        {% endif %}
+        {% if map_section.subtitle %}
+          <p class="mx-auto mt-4 max-w-lg font-light leading-8 text-cream/60"
+             data-reveal="up" data-delay="0.14">
+            {{ map_section.subtitle }}
+          </p>
+        {% endif %}
+
+        <svg class="mx-auto mt-14 w-full max-w-2xl"
+             viewBox="0 0 800 300"
+             role="img"
+             aria-label="دفتر مرکزی پیکسوریا و حلقهٔ پوشش خدمات"
+             data-reveal="up" data-delay="0.2">
+          <defs>
+            <linearGradient id="cl" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0" stop-color="#8f6b2c" />
+              <stop offset=".5" stop-color="#e8c47a" />
+              <stop offset="1" stop-color="#c9a15a" />
+            </linearGradient>
+            <radialGradient id="cg">
+              <stop offset="0" stop-color="rgba(232,196,122,.55)" />
+              <stop offset="1" stop-color="rgba(232,196,122,0)" />
+            </radialGradient>
+          </defs>
+
+          {# حلقه‌های هم‌مرکز پوشش خدمات #}
+          <g fill="none" stroke="rgba(201,161,90,.28)">
+            <circle cx="400" cy="160" r="96" stroke-dasharray="3 10" />
+            <circle cx="400" cy="160" r="140" stroke-dasharray="3 12" opacity=".7" />
+            <circle cx="400" cy="160" r="188" stroke-dasharray="2 14" opacity=".45" />
+          </g>
+          {# حلقه‌های چرخان #}
+          <g fill="none" stroke="url(#cl)" stroke-width="1.6"
+             style="transform-origin: 400px 160px" class="cities-spin">
+            <ellipse cx="400" cy="160" rx="118" ry="44" stroke-dasharray="8 14" opacity=".75" />
+          </g>
+          <g fill="none" stroke="rgba(46,99,255,.55)" stroke-width="1.4"
+             style="transform-origin: 400px 160px" class="cities-spin-rev">
+            <ellipse cx="400" cy="160" rx="168" ry="60" stroke-dasharray="5 16" opacity=".6" />
+          </g>
+
+          {# هالهٔ مرکزی #}
+          <circle r="78" fill="url(#cg)" cx="400" cy="160" />
+
+          {# گرهٔ مرکزی: دفتر #}
+          <g>
+            <circle cx="400" cy="160" r="16" fill="#0a0a0c" stroke="#e8c47a" stroke-width="2.5" />
+            <circle cx="400" cy="160" r="5" fill="#e8c47a" />
+            <circle cx="400" cy="160" r="16" fill="none" stroke="#e8c47a" stroke-width="1.5">
+              <animate attributeName="r" values="16;40" dur="2.6s" repeatCount="indefinite" />
+              <animate attributeName="opacity" values=".8;0" dur="2.6s" repeatCount="indefinite" />
+            </circle>
+          </g>
+
+          {# ماهواره‌های شناور روی حلقه‌ها #}
+          <circle r="5.5" fill="#e8c47a">
+            <animateMotion dur="4s" repeatCount="indefinite" path="M 400 44 A 118 44 0 1 1 399.9 44 Z" />
+          </circle>
+          <circle r="4" fill="#3b7bff">
+            <animateMotion dur="5.6s" repeatCount="indefinite" path="M 400 100 A 168 60 0 1 0 399.9 100 Z" />
+          </circle>
+          <circle r="3.5" fill="rgba(245,243,238,.8)">
+            <animateMotion dur="7s" repeatCount="indefinite" path="M 400 64 A 96 96 0 1 1 399.9 64 Z" />
+          </circle>
+
+          {% if map_section.office_name %}
+            <g font-size="24" font-weight="800" fill="#f5f3ee" text-anchor="middle">
+              <text x="400" y="252">{{ map_section.office_name }}</text>
+            </g>
+          {% endif %}
+          {% if map_section.office_note %}
+            <g font-size="13" fill="rgba(245,243,238,.55)" text-anchor="middle">
+              <text x="400" y="274">{{ map_section.office_note }}</text>
+            </g>
+          {% endif %}
+          {% if map_section.coverage_note %}
+            <text x="400" y="36" text-anchor="middle" font-size="13" fill="rgba(232,196,122,.8)">
+              {{ map_section.coverage_note }}
+            </text>
+          {% endif %}
+        </svg>
+      </div>
+    </section>
+  {% endif %}
+
+  {% comment %}پرسش‌های پرتکرار (روشن){% endcomment %}
+  {% if faq_section and faq_items %}
+    <section id="faq" class="relative bg-cream2" style="border-radius: 3rem 9rem 0 0">
+      <div class="mx-auto max-w-3xl px-6 py-24">
+        <div class="text-center">
+          {% if faq_section.eyebrow %}
+            <p class="eyebrow eyebrow-dark eyebrow-c justify-center" data-reveal="up">{{ faq_section.eyebrow }}</p>
+          {% endif %}
+          {% if faq_section.title %}
+            <h2 class="mt-5 text-4xl font-extrabold leading-[1.3] text-paper"
+                data-reveal="up" data-delay="0.08">
+              {{ faq_section.title|highlight:"dark" }}
+            </h2>
+          {% endif %}
+        </div>
+
+        <div class="mt-12 space-y-4">
+          {% for item in faq_items %}
+            <div class="faq-item" data-reveal="up" data-delay="{% cycle '0' '0.06' '0.12' '0.18' %}">
+              <h3 class="m-0">
+                <button type="button" class="faq-q"
+                        aria-expanded="false" aria-controls="cfaq-panel-{{ forloop.counter }}">
+                  <span>{{ item.question }}</span>
+                  <span class="faq-icon" aria-hidden="true">{% icon "plus" class="h-4 w-4" %}</span>
+                </button>
+              </h3>
+              <div id="cfaq-panel-{{ forloop.counter }}" class="faq-a" role="region">
+                <p>{{ item.answer|linebreaksbr }}</p>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+
+        {% if faq_section.footer_question %}
+          <div class="mt-14 text-center" data-reveal="up">
+            <p class="text-coy">{{ faq_section.footer_question }}</p>
+            <a href="#form" class="btn btn-gold mt-4 px-8 py-3.5" data-magnetic>
+              {{ faq_section.footer_cta_text|default:"ارسال پیام" }} {% icon "arrow-left" class="h-4 w-4" %}
+            </a>
+          </div>
+        {% endif %}
+      </div>
+    </section>
+  {% endif %}
 {% endblock %}
