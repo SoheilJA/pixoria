@@ -581,6 +581,37 @@ but are out of scope for this migration order (home/about/contact/404 only).
   and the page still returns 200; home page unaffected (146 KB, 200); node
   module syntax check passes; Tailwind rebuilt (no token changes — just the
   new arbitrary classes).
+- **D35 — Contact model extensions (T33).** `new/contact.html` has four
+  sections (hero → form → cities/map → FAQ; the CTA and footer come from base).
+  Reused what existed and added only the missing pieces. `ContactPageSection`
+  gained `eyebrow` + `response_note` (the small "پاسخ‌گویی در روزهای کاری…"
+  line under the hero description). The hero's four contact cards render from
+  `SiteSettings` (phone / phone_secondary / email / website) — the same single
+  source the header/footer already use, so the pre-existing `ContactInfo`
+  model (office_title/working_hours/…) is now vestigial for v2 and left
+  untouched for T43. New singletons mirroring the home/about pattern:
+  `ContactFormSection` (eyebrow/title/description + `button_text` + `note`,
+  with a `ContactFormPoint` child — icon + text, order, is_active — for the
+  three-point checklist), `ContactMapSection` (eyebrow/title/subtitle +
+  `office_name` / `office_note` / `coverage_note` for the radial map's
+  labels) and `ContactFaqSection` (eyebrow/title + `footer_question` /
+  `footer_cta_text` for the "پاسخ‌تان را پیدا نکردید؟" closing block) with a
+  `ContactFaq` child (question/answer/order) — there was NO contact FAQ model
+  before (home's `FaqItem` holds different questions). `SubjectChoice`
+  (label/order) joins the existing choice models for the form's subject
+  select, and `ContactSubmission` gained `email` + `subject`; the v1 fields
+  (company/project_type/budget/start_time) stay untouched — the v2 form
+  renders name/email/phone/subject/message, and whether the old fields are
+  re-introduced later is a T34 decision. Migration `contact.0003`; admin got
+  fieldsets for the singletons, a `ContactFormPointInline`, `list_editable`
+  orders and the new submissions columns. Seed:
+  `apps/contact/management/commands/seed_contact_content.py` (new management
+  package in the contact app) with the verbatim Persian copy, the D21-style
+  collection cleanup for `ContactFormPoint`/`ContactFaq`, and
+  `first_or_create` singletons — the one existing v1 `ContactPageSection` row
+  was nudged in place once after dumping its values (D25 pattern). Two seed
+  runs are clean no-ops. `/contact/` still renders 200 on the old template
+  (T34 replaces it).
 
 ## Tasks
 
@@ -762,11 +793,12 @@ but are out of scope for this migration order (home/about/contact/404 only).
 
 ### Phase 7 — Contact page (from `new/contact.html`)
 
-- [ ] T33 — Extend contact models for v2 (info cards, subject/project-type/
+- [x] T33 — Extend contact models for v2 (info cards, subject/project-type/
   budget/start-time choices, FAQ, cities/map block, working hours, socials)
   reusing existing `contact.*` models; migration + admin + seed (same rules) |
-  files: `apps/contact/models.py`, `apps/contact/migrations/`,
-  `apps/contact/admin.py`, `apps/contact/management/commands/*` |
+  files: `apps/contact/models.py`,
+  `apps/contact/migrations/0003_*`, `apps/contact/admin.py`,
+  `apps/contact/management/commands/seed_contact_content.py` |
   commit: "feat(contact): add v2 contact models"
 - [ ] T34 — Rebuild `templates/contact/contact.html` from `new/contact.html`:
   extends `base.html`, no duplicated header/footer/CTA, working form (Django
@@ -854,11 +886,11 @@ but are out of scope for this migration order (home/about/contact/404 only).
 
 ## Current status
 
-T01–T32 done — the about page is fully migrated (models, admin, seed,
-template). Next: T33 — extend the contact models for v2 (info cards,
-subject/project-type/budget/start-time choices, FAQ, cities/map block, working
-hours, socials) from `new/contact.html`, reusing existing `contact.*` models
-(`ContactPageSection`, `ContactInfo`, `ContactSubmission` + the choice models)
-and adding only what is missing; migration + admin + seed with the same
-idempotent/no-overwrite rules.
+T01–T33 done. Next: T34 — rebuild `templates/contact/contact.html` from
+`new/contact.html` on top of `base.html` (no duplicated header/footer/CTA),
+with a working Django form that saves `ContactSubmission` (name/email/phone/
+subject/message), CSRF, Persian validation messages, honeypot + simple rate
+limit like the home lead form, HTMX with `data-toast` success announcement
+per D16, and reuse of the `.field` styles from `static/src/input.css`;
+`apps/contact/views.py` rewritten accordingly.
 
