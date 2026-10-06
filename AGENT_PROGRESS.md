@@ -441,6 +441,33 @@ but are out of scope for this migration order (home/about/contact/404 only).
   stay until the still-unconverted pages (`blog/partials/article_cards.html`,
   `services/detail.html`) are rebuilt (T39/T42); new pages must use the new
   partials.
+- **D31 — Testimonials slider component (T29).** The whole section (divider,
+  stroke-quote watermark, header, controls, scroll-snap track, hint line) moved
+  into `templates/components/testimonials_slider.html`, driven by the inclusion
+  tag `testimonials_slider(service=None, limit=9, title="", eyebrow="",
+  id="testimonials")` in `apps/services/templatetags/testimonial_tags.py` (the
+  tag lives with the model owner, `apps.services`). With no `service` it queries
+  `show_on_home=True` (exactly what the home view did), with one it queries that
+  service's testimonials (unrestricted by `show_on_home` — a service page shows
+  its own evidence); ordered by `order`, `id`, capped by `limit` (`int()`-
+  coerced so a string variable cannot 500 the page). It renders nothing on an
+  empty query, so `templates/home/sections/_testimonials.html` shrank to a
+  single tag call passing the `TestimonialSection` singleton's title/eyebrow,
+  and the home view dropped its now-unused `testimonials` context entry (and
+  the `ServiceTestimonial` import) — `services/detail.html` keeps its own
+  separate `testimonials` context and is untouched. The element ids are gone:
+  `#t-slider` → `data-slider`, `#t-prev/next/dots` → `data-slider-prev/next/
+  dots`, all looked up inside a `data-slider-root` wrapper, and
+  `static/src/input.css`'s `#t-slider{.dragging}` rules became `[data-slider]`
+  attribute selectors (Tailwind rebuilt). `pixoria.js`'s `initSliders` now loops
+  `document.querySelectorAll("[data-slider]")` and initialises each instance
+  independently (dots, scroll progress, autoplay, drag all close over that
+  instance's `slider`), so several sliders can share a page; the default section
+  `id` stays `testimonials` for anchors and is overridable. Verified in a
+  rolled-back transaction: empty service renders zero characters, a service with
+  text/video/audio testimonials renders one card per kind, `limit` truncates,
+  and two tag calls on one page yield two `data-slider-root`s with no duplicate
+  ids. Node `--check` passes on the module.
 
 ## Tasks
 
@@ -575,7 +602,7 @@ but are out of scope for this migration order (home/about/contact/404 only).
   `_testimonial_card.html` (text/video/audio kinds). Home sections must use
   them | files: `templates/components/*`, `templates/home/sections/*` |
   commit: "feat(components): extract reusable card partials"
-- [ ] T29 — Testimonials SECTION component: inclusion tag
+- [x] T29 — Testimonials SECTION component: inclusion tag
   `{% testimonials_slider service=None limit=9 title=... %}` (templatetag in
   `apps/core/templatetags/` or the app that owns the model). With `service`
   given → only that service's testimonials; without → featured/global ones (as
@@ -710,10 +737,11 @@ but are out of scope for this migration order (home/about/contact/404 only).
 
 ## Current status
 
-T01–T28 done. Next: T29 — testimonials SECTION component: an inclusion tag
-`{% testimonials_slider service=None limit=9 title=... %}` (filters by service
-when one is given, featured/global otherwise, renders nothing without data),
-and the slider JS in `static/js/pixoria.js` refactored from the fixed `#t-*`
-IDs to per-instance `[data-slider]` initialization so several sliders can live
-on one page.
+T01–T29 done. Next: T30 — generic carousel component + CAROUSEL SECTIONS:
+`{% projects_carousel exclude=None category=None service=None limit=8 %}` and
+`{% articles_carousel exclude=None category=None limit=8 %}` built on the
+`_project_card.html` / `_article_card.html` partials, dependency-free
+(scroll-snap CSS + small per-instance JS in pixoria.js: prev/next, RTL-aware,
+keyboard, drag/touch, `aria-label`s), hiding itself when empty. The home blog
+section should use the articles component.
 

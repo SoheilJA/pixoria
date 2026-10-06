@@ -1962,10 +1962,10 @@ a:hover .logo-mark {
 .no-scrollbar {
   scrollbar-width: none;
 }
-#t-slider {
+[data-slider] {
   cursor: grab;
 }
-#t-slider.dragging {
+[data-slider].dragging {
   scroll-snap-type: none;
   cursor: grabbing;
 }

@@ -36,7 +36,7 @@ from .models import (
     ClientMarqueeItem,
 )
 from apps.portfolio.models import Category, Portfolio
-from apps.services.models import Service, ServiceTestimonial
+from apps.services.models import Service
 from apps.blog.models import Article
 
 
@@ -64,9 +64,6 @@ def home(request):
             {"service": service, "delay": (index % 5) * 100}
             for index, service in enumerate(featured_services)
         ],
-        "testimonials": (
-            ServiceTestimonial.objects.filter(show_on_home=True) if "testimonials" in keys else []
-        ),
         "testimonials_section": TestimonialSection.objects.first() if "testimonials" in keys else None,
         "latest_articles": (
             Article.objects.filter(status="published", published_at__lte=timezone.now())

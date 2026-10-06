@@ -287,57 +287,58 @@ function init() {
 /* ------------------------------------------------------- testimonial slider */
 
 function initSliders({ hasGsap, REDUCED, faDigits }) {
-  const slider = document.getElementById("t-slider");
-  if (!slider) return;
-
-  const cards = [...slider.querySelectorAll(".t-card")];
-  const dotsWrap = document.getElementById("t-dots");
-  if (!cards.length || !dotsWrap) return;
-  const dots = cards.map((_, i) => {
-    const d = document.createElement("button");
-    d.className = "t-dot" + (i === 0 ? " active" : "");
-    d.setAttribute("aria-label", "نظر " + faDigits(i + 1));
-    d.addEventListener("click", () => {
-      const target = -cards[i].offsetLeft + 24;
-      slider.scrollTo({ left: target, behavior: REDUCED ? "auto" : "smooth" });
-    });
-    dotsWrap.appendChild(d);
-    return d;
-  });
-
-  const maxScroll = () => slider.scrollWidth - slider.clientWidth;
-  const progress = () =>
-    maxScroll() > 0
-      ? Math.min(1, Math.abs(slider.scrollLeft) / maxScroll())
-      : 0;
-  let ticking = false;
-  slider.addEventListener(
-    "scroll",
-    () => {
-      if (ticking) return;
-      ticking = true;
-      requestAnimationFrame(() => {
-        const idx = Math.round(progress() * (cards.length - 1));
-        dots.forEach((d, i) => d.classList.toggle("active", i === idx));
-        ticking = false;
+  // هر [data-slider] یک نمونهٔ مستقل است؛ دکمه‌ها و نقاط داخل همان
+  // data-slider-root جستجو می‌شوند تا چند اسلایدر در یک صفحه کار کنند.
+  document.querySelectorAll("[data-slider]").forEach((slider) => {
+    const root = slider.closest("[data-slider-root]");
+    const cards = [...slider.querySelectorAll(".t-card")];
+    const dotsWrap = root && root.querySelector("[data-slider-dots]");
+    if (!cards.length || !dotsWrap) return;
+    const dots = cards.map((_, i) => {
+      const d = document.createElement("button");
+      d.className = "t-dot" + (i === 0 ? " active" : "");
+      d.setAttribute("aria-label", "نظر " + faDigits(i + 1));
+      d.addEventListener("click", () => {
+        const target = -cards[i].offsetLeft + 24;
+        slider.scrollTo({ left: target, behavior: REDUCED ? "auto" : "smooth" });
       });
-    },
-    { passive: true },
-  );
+      dotsWrap.appendChild(d);
+      return d;
+    });
 
-  const step = () => cards[0].offsetWidth + 24;
-  const next = () => {
-    if (progress() > 0.92)
-      slider.scrollTo({ left: 0, behavior: REDUCED ? "auto" : "smooth" });
-    else
-      slider.scrollBy({ left: -step(), behavior: REDUCED ? "auto" : "smooth" });
-  };
-  const prev = () =>
-    slider.scrollBy({ left: step(), behavior: REDUCED ? "auto" : "smooth" });
-  const nextBtn = document.getElementById("t-next");
-  const prevBtn = document.getElementById("t-prev");
-  if (nextBtn) nextBtn.addEventListener("click", next);
-  if (prevBtn) prevBtn.addEventListener("click", prev);
+    const maxScroll = () => slider.scrollWidth - slider.clientWidth;
+    const progress = () =>
+      maxScroll() > 0
+        ? Math.min(1, Math.abs(slider.scrollLeft) / maxScroll())
+        : 0;
+    let ticking = false;
+    slider.addEventListener(
+      "scroll",
+      () => {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(() => {
+          const idx = Math.round(progress() * (cards.length - 1));
+          dots.forEach((d, i) => d.classList.toggle("active", i === idx));
+          ticking = false;
+        });
+      },
+      { passive: true },
+    );
+
+    const step = () => cards[0].offsetWidth + 24;
+    const next = () => {
+      if (progress() > 0.92)
+        slider.scrollTo({ left: 0, behavior: REDUCED ? "auto" : "smooth" });
+      else
+        slider.scrollBy({ left: -step(), behavior: REDUCED ? "auto" : "smooth" });
+    };
+    const prev = () =>
+      slider.scrollBy({ left: step(), behavior: REDUCED ? "auto" : "smooth" });
+    const nextBtn = root && root.querySelector("[data-slider-next]");
+    const prevBtn = root && root.querySelector("[data-slider-prev]");
+    if (nextBtn) nextBtn.addEventListener("click", next);
+    if (prevBtn) prevBtn.addEventListener("click", prev);
 
   // Autoplay
   if (!REDUCED) {
@@ -390,6 +391,7 @@ function initSliders({ hasGsap, REDUCED, faDigits }) {
     },
     true,
   );
+  });
 }
 
 /* ------------------------------------------------------- shared media simulator */

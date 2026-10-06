@@ -81,6 +81,27 @@ The legacy `components/cards/*.html` cards are v1-styled and remain only for
 pages that are not converted yet (`blog/partials/article_cards.html`,
 `services/detail.html`); they are deleted in the cleanup phase.
 
+## Section components (inclusion tags)
+
+These run their own query, so a page does not pass the data in context, and
+they render nothing when there is no data:
+
+```django
+{% load testimonial_tags %}
+{% testimonials_slider %}                          {# نظراتِ عمومی (show_on_home) #}
+{% testimonials_slider service=object limit=6 %}   {# نظراتِ یک خدمت #}
+```
+
+| Tag | Props | Template | Model |
+| --- | --- | --- | --- |
+| `testimonials_slider` | `service` (default none), `limit` (9), `title`, `eyebrow`, `id` (`"testimonials"`) | `components/testimonials_slider.html` | `ServiceTestimonial` |
+
+The slider markup uses no element ids: `data-slider` (track), `data-slider-root`
+(scope the JS looks the controls up in), `data-slider-prev` / `data-slider-next`
+/ `data-slider-dots`, and `.t-card` per slide. `static/js/pixoria.js`
+initialises every `[data-slider]` independently, so several sliders may share a
+page. Pass a distinct `id` when more than one is on the same page.
+
 ## Conventions
 
 - A component never reaches into the parent's context except through its
