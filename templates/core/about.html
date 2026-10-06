@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load static icon_tags %}
+{% load icon_tags highlight_tags fa_digits nav_tags %}
 
 {% block title %}
   درباره ما — {{ settings.site_name }}
@@ -8,129 +8,562 @@
   {{ hero.description|striptags }}
 {% endblock %}
 
+{% block extra_head %}
+  {# داده‌های ساختاریافته — سازمان، صفحهٔ درباره ما و مسیر نمایش #}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "name": "{{ settings.site_name }}",
+          "url": "{{ settings.website|default:request.build_absolute_uri }}",
+          {% if settings.email %}"email": "{{ settings.email }}",{% endif %}
+          {% if settings.phone %}"telephone": "{{ settings.phone }}",{% endif %}
+          {% if settings.established_year %}"foundingDate": "{{ settings.established_year }}",{% endif %}
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "مشهد",
+            "addressCountry": "IR"
+          }
+        },
+        {
+          "@type": "AboutPage",
+          "name": "درباره ما — {{ settings.site_name }}",
+          "inLanguage": "fa-IR"
+        },
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "خانه",
+              "item": "{{ request.scheme }}://{{ request.get_host }}{% url 'home:home' %}"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "درباره ما",
+              "item": "{{ request.build_absolute_uri }}"
+            }
+          ]
+        }
+      ]
+    }
+  </script>
+{% endblock %}
+
 {% block content %}
-  <!-- ─── هیرو ─── -->
-  {% include 'components/page_hero.html' with crumbs=crumbs title=hero.title|safe description=hero.description|safe title_id='about-hero-title' %}
-
-  <!-- ─── ماموریت ─── -->
-  {% if mission %}
-  <section class="px-page py-[clamp(64px,9vw,120px)]" data-reveal="fade-up">
-    <div class="grid grid-cols-1 gap-12 md:grid-cols-[1.1fr_1fr] md:items-center">
-      <div>
-        <span class="eyebrow mb-6 inline-block">{{ mission.label }}<span class="mr-2 inline-block h-1.5 w-1.5 rounded-full bg-lime align-[2px]"></span></span>
-        <h2 class="mb-5 max-w-[22ch] font-display text-[clamp(2.2rem,4vw,3.6rem)] leading-[1.05] tracking-[-0.02em]">{{ mission.title }}</h2>
-        <div class="max-w-[60ch] text-[1.1rem] leading-[1.7] text-ink-soft">{{ mission.description|safe }}</div>
-      </div>
-      {% if mission.image %}
-      <div class="relative aspect-[4/3] overflow-hidden rounded-xl">
-        <img src="{{ mission.image.url }}" alt="{{ mission.title }}" loading="lazy" class="h-full w-full object-cover transition-transform duration-700 ease-ax hover:scale-[1.02]" />
-      </div>
-      {% endif %}
-    </div>
-  </section>
-  {% endif %}
-
-  <!-- ─── داستان ─── -->
-  <section class="px-page py-16" data-reveal="fade-up">
-    <div class="grid grid-cols-1 items-start gap-8 md:grid-cols-[1fr_1.4fr] md:gap-20">
-      <div class="flex aspect-[4/3] items-center justify-center overflow-hidden rounded-md bg-paper-soft md:sticky md:top-8 md:aspect-[4/5]" data-reveal="fade-up">
-        <img src="{% static 'img/about.svg' %}" alt="{{ settings.site_name }}" loading="lazy" class="h-full w-full object-cover" />
-      </div>
-      <div class="text-[1.1rem] leading-[1.65] text-ink-soft" data-reveal="fade-up" data-reveal-delay="100">{{ story.description|safe }}</div>
-    </div>
-  </section>
-
-  <!-- ─── مراحل کار ─── -->
-  {% if process_steps %}
-  <section class="bg-night px-page py-[clamp(64px,9vw,120px)] text-ink" data-reveal="fade-up">
-    {% include 'components/section_header.html' with eyebrow='روش کار' title='چطور با هم پیش می‌رویم؟' title_id='process-head' %}
-    <div class="mt-14 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-      {% for step in process_steps %}
-      <article class="group relative flex flex-col gap-4 rounded-xl border border-line bg-[#131313] p-7 transition-colors duration-300 hover:border-lime/30" data-reveal="fade-up" data-reveal-delay="{{ forloop.counter0 }}00">
-        <span class="absolute -top-3 left-6 h-6 w-6 rounded-full bg-lime flex items-center justify-center font-mono text-[0.85rem] font-bold text-ink">{{ forloop.counter }}</span>
-        <h3 class="mt-4 text-[1.4rem] leading-[1.2]">{{ step.title }}</h3>
-        <div class="text-[1rem] leading-[1.65] text-mist">{{ step.description|safe }}</div>
-      </article>
-      {% endfor %}
-    </div>
-  </section>
-  {% endif %}
-
-  <!-- ─── تیم ─── -->
-  <section class="px-page py-12 md:py-16" aria-label="تیم">
-    {% include 'components/section_header.html' with eyebrow='تیم' title='آدم‌های پشت کارها' title_id='team-head' %}
-    <div class="mt-12 grid grid-cols-2 gap-6 md:gap-8 lg:grid-cols-4">
-      {% for member in team %}
-        <article class="flex flex-col gap-3.5" data-reveal="fade-up" data-reveal-delay="{{ forloop.counter0 }}00">
-          <div class="aspect-[4/5] overflow-hidden rounded-md bg-paper-soft">
-            <img src="{{ member.image.url }}" alt="{{ member.name }}" loading="lazy" class="h-full w-full object-cover" />
-          </div><h3 class="text-[1.3rem] leading-[1.1]">{{ member.name }}</h3><div class="font-mono text-[0.74rem] text-ink-dim">{{ member.role|safe }}</div>
-          <div class="text-[0.94rem] text-ink-soft">{{ member.bio|safe }}</div>
-        </article>
-      {% empty %}
-        <p data-reveal="fade-up">اطلاعات اعضای تیم به‌زودی اضافه می‌شود.</p>
-      {% endfor %}
-    </div>
-  </section>
-
-  <!-- ─── ارزش‌ها ─── -->
-  <section class="border-t border-line px-page py-16" aria-labelledby="values-title">
-    {% include 'components/section_header.html' with eyebrow='ارزش‌ها' title='چند چیز که به آن‌ها باور داریم.' title_id='values-title' %}
-    <div class="mt-12 grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-8 lg:grid-cols-3">
-      {% for value in values %}
-        <div class="flex flex-col gap-2.5 border-t border-line pt-6" data-reveal="fade-up" data-reveal-delay="{{ forloop.counter0 }}0">
-          <span class="font-mono text-[0.74rem] text-ink-dim">{{ forloop.counter|stringformat:'02d' }}</span><h3 class="text-[1.3rem]">{{ value.title|safe }}</h3><div class="text-[0.96rem] text-ink-soft">{{ value.description|safe }}</div>
+  {% comment %}هیرو — داستان استودیو با مدار خدمات{% endcomment %}
+  {% if hero %}
+    <section
+      class="relative flex min-h-[100svh] items-center overflow-hidden bg-ink"
+      data-mouse-parallax
+    >
+      <div class="pointer-events-none absolute inset-0" aria-hidden="true">
+        <div data-depth="0.05" class="absolute right-[8%] top-[10%]">
+          <span
+            data-float="14"
+            class="orb block h-20 w-20"
+            style="background: radial-gradient(circle at 32% 30%, rgba(232,196,122,0.42), rgba(201,161,90,0.07) 60%, transparent 72%);"
+          ></span>
         </div>
-      {% empty %}
-        <p data-reveal="fade-up">ارزش‌های ما به‌زودی منتشر می‌شوند.</p>
-      {% endfor %}
-    </div>
-  </section>
+        <div data-depth="0.09" class="absolute left-[8%] bottom-[18%]">
+          <span data-float="12" class="shard block h-28 w-24 rotate-12"></span>
+        </div>
+        <div data-depth="0.06" class="absolute bottom-[26%] right-[30%]">
+          <span
+            data-float="10"
+            class="orb block h-10 w-10"
+            style="background: radial-gradient(circle, rgba(46,99,255,0.5), transparent 70%);"
+          ></span>
+        </div>
+      </div>
+      <div
+        class="pointer-events-none absolute -left-40 top-1/4 h-[34rem] w-[34rem] rounded-full opacity-30"
+        style="background: radial-gradient(circle, rgba(201,161,90,0.22), transparent 65%);"
+        aria-hidden="true"
+      ></div>
+      {% if settings.established_year %}
+        <span
+          class="stroke-title pointer-events-none absolute -bottom-16 left-0 select-none text-[24vw] font-extrabold leading-none"
+          aria-hidden="true">{{ settings.established_year|fa_digits }}</span
+        >
+      {% endif %}
 
-  <!-- ─── آمار ─── -->
-  <section class="border-t border-line px-page py-16" aria-label="آمار و ارقام">
-    <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
-      {% for stat in stats %}
-        <div class="border-t border-line pt-5" data-reveal="fade-up" data-reveal-delay="{{ forloop.counter0 }}00">
-          <span class="block font-display text-[clamp(2.8rem,5vw,5rem)] leading-none text-ink">{{ stat.number }}</span><span class="mt-3 block font-mono text-[0.8rem] text-ink-dim">{{ stat.label }}</span>{% if stat.description %}
-            <span class="mt-2 block text-[0.9rem] text-ink-soft">{{ stat.description }}</span>
+      <div
+        class="relative z-10 mx-auto grid w-full max-w-7xl items-center gap-14 px-6 pb-24 pt-36 lg:grid-cols-2 lg:pt-28"
+      >
+        <div>
+          {% if hero.eyebrow %}
+            <p class="eyebrow" data-reveal="up">{{ hero.eyebrow }}</p>
+          {% endif %}
+          <h1
+            class="mt-6 text-[2.6rem] font-extrabold leading-[1.25] sm:text-5xl lg:text-6xl"
+            data-reveal="right"
+          >
+            {{ hero.title|highlight }}
+          </h1>
+          <p
+            class="mt-6 max-w-xl text-lg font-light leading-8 text-cream/70"
+            data-reveal="right"
+            data-delay="0.12"
+          >
+            {{ hero.description }}
+          </p>
+          <div
+            class="mt-10 flex flex-wrap gap-4"
+            data-reveal="right"
+            data-delay="0.2"
+          >
+            <a
+              href="{% nav_url hero.cta_primary_url %}"
+              class="btn btn-gold px-8 py-4"
+              data-magnetic
+              >{{ hero.cta_primary_text }}
+              {% icon "arrow-left" class="h-4 w-4" %}</a
+            >
+            {% if hero.cta_secondary_url %}
+              <a
+                href="{% nav_url hero.cta_secondary_url %}"
+                class="btn btn-ghost px-8 py-4"
+                data-magnetic
+                >{{ hero.cta_secondary_text }}</a
+              >
+            {% endif %}
+          </div>
+        </div>
+
+        {% comment %}مدارِ حوزه‌های فعالیت — کپسول‌ها از جدول خدمات{% endcomment %}
+        {% if services %}
+          <div
+            class="relative mx-auto aspect-square w-full max-w-[26rem]"
+            data-reveal="left"
+            data-delay="0.15"
+          >
+            <span
+              class="absolute inset-0 rounded-full border border-dashed border-gold/30 spin-slow"
+              aria-hidden="true"
+            ></span>
+            <span
+              class="absolute inset-[15%] rounded-full border border-gold/15"
+              aria-hidden="true"
+            ></span>
+            <span
+              class="absolute inset-[30%] rounded-full border border-gold/10"
+              aria-hidden="true"
+            ></span>
+            <span
+              class="orb absolute left-1/2 top-1/2 h-44 w-44 -translate-x-1/2 -translate-y-1/2"
+              style="background: radial-gradient(circle, rgba(201,161,90,0.28), transparent 65%);"
+              aria-hidden="true"
+            ></span>
+            <div
+              class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+            >
+              <span class="logo-mark" aria-hidden="true"><span>پ</span></span>
+            </div>
+            {% for service in services %}
+              <div
+                data-float="{% cycle '10' '12' '9' '11' %}"
+                class="glass absolute flex items-center gap-2 rounded-full px-5 py-2.5 text-sm {% cycle '-top-2 left-1/2 -translate-x-1/2' 'top-1/2 -right-3 -translate-y-1/2' '-bottom-2 left-1/2 -translate-x-1/2' 'top-1/2 -left-3 -translate-y-1/2' %}"
+              >
+                {% icon service.icon class="h-4 w-4 text-gold-light" %}
+                {{ service.title }}
+              </div>
+            {% endfor %}
+            <span
+              class="absolute left-[16%] top-[24%] h-2.5 w-2.5 rounded-full bg-gold-light shadow-[0_0_14px_2px_rgba(232,196,122,.6)]"
+              aria-hidden="true"
+            ></span>
+            <span
+              class="absolute bottom-[20%] right-[15%] h-2.5 w-2.5 rounded-full bg-royal shadow-[0_0_14px_2px_rgba(46,99,255,.5)]"
+              aria-hidden="true"
+            ></span>
+          </div>
+        {% endif %}
+      </div>
+    </section>
+  {% endif %}
+
+  {% comment %}داستان ما (روشن){% endcomment %}
+  {% if story %}
+    <section
+      id="story"
+      class="relative bg-cream"
+      style="border-radius: 3rem 9rem 0 0"
+    >
+      <div class="relative z-10 mx-auto max-w-7xl px-6 pb-24 pt-28 md:pt-36">
+        <div class="grid items-center gap-14 lg:grid-cols-12">
+          <div class="lg:col-span-7">
+            {% if story.eyebrow %}
+              <p class="eyebrow eyebrow-dark" data-reveal="up">
+                {{ story.eyebrow }}
+              </p>
+            {% endif %}
+            {% if story.title %}
+              <h2
+                class="mt-5 text-4xl font-extrabold leading-[1.3] text-paper md:text-5xl"
+                data-reveal="right"
+              >
+                {{ story.title|highlight:"dark" }}
+              </h2>
+            {% endif %}
+            <p
+              class="mt-7 text-xl font-light leading-9 text-coy"
+              data-reveal="right"
+              data-delay="0.1"
+            >
+              {{ story.description }}
+            </p>
+            {% if story.body %}
+              <div
+                class="mt-5 space-y-4 font-light leading-8 text-coy"
+                data-reveal="right"
+                data-delay="0.16"
+              >
+                {{ story.body|linebreaks }}
+              </div>
+            {% endif %}
+            {% if story.get_chips_list %}
+              <ul
+                class="mt-8 flex flex-wrap gap-3"
+                data-reveal="right"
+                data-delay="0.28"
+              >
+                {% for chip in story.get_chips_list %}
+                  <li class="s-chip-light">{{ chip }}</li>
+                {% endfor %}
+              </ul>
+            {% endif %}
+          </div>
+
+          <figure class="relative lg:col-span-5" data-reveal="left">
+            {% if settings.established_year %}
+              <span
+                class="stroke-title-light pointer-events-none absolute -top-14 left-0 select-none text-[7rem] font-extrabold leading-none"
+                aria-hidden="true"
+                >{{ settings.established_year|fa_digits }}</span
+              >
+            {% endif %}
+            {% if story.image %}
+              <img
+                src="{{ story.image.url }}"
+                alt="{{ story.image_alt|default:settings.site_name }}"
+                loading="lazy"
+                decoding="async"
+                class="aspect-[4/3] w-full object-cover"
+                style="border-radius: 5rem 1.25rem 5rem 1.25rem; border: 1px solid rgba(201,161,90,0.5);"
+              />
+            {% else %}
+              {# تصویری بارگذاری نشده — یک تایلِ تزئینی به‌جای جای خالی #}
+              <div
+                class="grid aspect-[4/3] w-full place-items-center overflow-hidden bg-cream2"
+                style="border-radius: 5rem 1.25rem 5rem 1.25rem; border: 1px solid rgba(201,161,90,0.35);"
+                aria-hidden="true"
+              >
+                <span class="grid-bg absolute inset-0 opacity-50"></span>
+                <span
+                  class="relative text-[7rem] font-extrabold text-goldgrad-dark"
+                  >پ</span
+                >
+              </div>
+            {% endif %}
+            {% if story.image_caption %}
+              <figcaption
+                class="glass-light absolute bottom-6 right-6 flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium text-paper"
+              >
+                {% icon "map-pin" class="h-4 w-4 text-gold-dark" %}
+                {{ story.image_caption }}
+              </figcaption>
+            {% endif %}
+            <span
+              class="absolute -top-5 right-12 h-4 w-4 rotate-45 bg-gradient-to-br from-gold-dark to-gold-light shadow-[0_0_20px_2px_rgba(201,161,90,.5)]"
+              aria-hidden="true"
+            ></span>
+          </figure>
+        </div>
+
+        {% if story.quote %}
+          <blockquote
+            class="relative mx-auto mt-24 max-w-3xl text-center"
+            data-reveal="up"
+          >
+            {% icon "quote" class="mx-auto h-10 w-10 text-gold-dark/60" %}
+            <p
+              class="mt-5 text-2xl font-light leading-10 text-paper md:text-3xl"
+            >
+              {{ story.quote }}
+            </p>
+            <span
+              class="mt-5 flex items-center justify-center gap-4"
+              aria-hidden="true"
+            >
+              <span class="h-px w-16 bg-gold-dark/40"></span>
+              <span class="h-2 w-2 rotate-45 bg-gold-dark"></span>
+              <span class="h-px w-16 bg-gold-dark/40"></span>
+            </span>
+          </blockquote>
+        {% endif %}
+      </div>
+    </section>
+  {% endif %}
+
+  {% comment %}مسیرِ حوزه‌های فعالیت (تیره){% endcomment %}
+  {% if journey and journey_steps %}
+    <section id="journey" class="relative overflow-hidden bg-ink2">
+      <svg
+        class="divider divider-flip"
+        viewBox="0 0 1440 90"
+        preserveAspectRatio="none"
+        aria-hidden="true"
+      >
+        <path
+          d="M0,26 C260,84 520,82 760,44 C1000,6 1240,80 1440,30 L1440,0 L0,0 Z"
+          fill="#f5f3ee"
+        />
+      </svg>
+
+      <div
+        class="relative z-10 mx-auto max-w-6xl px-6 pb-28 pt-32 md:pt-40"
+      >
+        <div class="text-center">
+          {% if journey.eyebrow %}
+            <p class="eyebrow eyebrow-c justify-center" data-reveal="up">
+              {{ journey.eyebrow }}
+            </p>
+          {% endif %}
+          <h2
+            class="mt-5 text-4xl font-extrabold leading-[1.3] md:text-[2.7rem]"
+            data-reveal="up"
+            data-delay="0.08"
+          >
+            {{ journey.title|highlight }}
+          </h2>
+          {% if journey.subtitle %}
+            <p
+              class="mx-auto mt-4 max-w-xl font-light leading-8 text-cream/60"
+              data-reveal="up"
+              data-delay="0.14"
+            >
+              {{ journey.subtitle }}
+            </p>
           {% endif %}
         </div>
-      {% empty %}
-        <p data-reveal="fade-up">آمار به‌زودی اضافه می‌شود.</p>
-      {% endfor %}
-    </div>
-  </section>
 
-  <!-- ─── سوالات متداول ─── -->
-  {% if faqs %}
-  <section class="px-page py-[clamp(64px,9vw,120px)]" data-reveal="fade-up">
-    {% include 'components/section_header.html' with eyebrow='سوالات متداول' title='سوالاتی که معمولاً پرسیده می‌شوند' title_id='faq-head' %}
-    <div class="mt-12 max-w-3xl space-y-3">
-      {% for faq in faqs %}
-      <details class="group border border-line rounded-xl overflow-hidden transition-colors duration-300 hover:border-lime/30" data-reveal="fade-up" data-reveal-delay="{{ forloop.counter0 }}50">
-        <summary class="flex items-center justify-between gap-4 p-5 cursor-pointer list-none">
-          <h3 class="text-[1.1rem] leading-[1.4]">{{ faq.question }}</h3>
-          {% icon "chevron-down" class="h-5 w-5 text-lime shrink-0 transition-transform duration-300 group-open:rotate-180" %}
-        </summary>
-        <div class="px-5 pb-5 border-t border-line text-ink-soft leading-[1.7]">{{ faq.answer|safe }}</div>
-      </details>
-      {% endfor %}
-    </div>
-  </section>
+        {% comment %}نقشهٔ مسیر (دسکتاپ) — گره‌ها و مسیر از دیتابیس ساخته می‌شوند{% endcomment %}
+        <div
+          class="relative mt-10 hidden lg:block"
+          data-reveal="up"
+          data-delay="0.2"
+          style="aspect-ratio: 1000/340"
+        >
+          <svg
+            class="absolute inset-0 h-full w-full"
+            viewBox="0 0 1000 340"
+            preserveAspectRatio="none"
+            role="img"
+            aria-label="مسیر حوزه‌های فعالیت پیکسوریا"
+          >
+            <defs>
+              <linearGradient id="jl" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0" stop-color="#8f6b2c" />
+                <stop offset=".5" stop-color="#e8c47a" />
+                <stop offset="1" stop-color="#c9a15a" />
+              </linearGradient>
+            </defs>
+            <path
+              d="{{ journey_path }}"
+              fill="none"
+              stroke="url(#jl)"
+              stroke-width="2.5"
+              stroke-dasharray="3 10"
+              stroke-linecap="round"
+            />
+            {% for step in journey_steps %}
+              <g fill="#0a0a0c" stroke="#e8c47a" stroke-width="2">
+                <circle cx="{{ step.point_x }}" cy="{{ step.point_y }}" r="9" />
+              </g>
+              <g fill="#e8c47a">
+                <circle cx="{{ step.point_x }}" cy="{{ step.point_y }}" r="3" />
+              </g>
+              <text
+                x="{{ step.point_x }}"
+                y="{% if step.label_below %}{{ step.point_y|add:'42' }}{% else %}{{ step.point_y|add:'-28' }}{% endif %}"
+                font-size="17"
+                font-weight="700"
+                fill="#f5f3ee"
+                text-anchor="middle"
+              >
+                {{ step.label_bold }}
+              </text>
+              {% if step.label_small %}
+                <text
+                  x="{{ step.point_x }}"
+                  y="{% if step.label_below %}{{ step.point_y|add:'62' }}{% else %}{{ step.point_y|add:'-8' }}{% endif %}"
+                  font-size="11.5"
+                  fill="rgba(245,243,238,.55)"
+                  text-anchor="middle"
+                >
+                  {{ step.label_small }}
+                </text>
+              {% endif %}
+            {% endfor %}
+          </svg>
+          {% if journey.badge_text %}
+            <div
+              data-float="12"
+              class="glass absolute flex items-center gap-2 rounded-full px-6 py-3 text-sm font-bold text-gold-light"
+              style="left: 41%; top: 0"
+            >
+              {% icon journey.badge_icon class="h-4 w-4" %}
+              <span class="fa-num">{{ journey.badge_text|fa_digits }}</span>
+            </div>
+          {% endif %}
+        </div>
+
+        {% comment %}نسخهٔ موبایل — خط زمانی ساده{% endcomment %}
+        <div class="relative mt-14 lg:hidden" data-reveal="up">
+          <span
+            class="absolute bottom-2 right-[5px] top-2 w-[2px] bg-gradient-to-b from-transparent via-gold/50 to-transparent"
+            aria-hidden="true"
+          ></span>
+          <ol class="space-y-10 pr-8">
+            {% for step in journey_steps %}
+              <li class="relative">
+                <span
+                  class="absolute -right-8 top-2 h-3.5 w-3.5 rotate-45 {% if forloop.last %}bg-gradient-to-br from-gold-dark to-gold-light shadow-[0_0_14px_2px_rgba(232,196,122,.5)]{% else %}bg-gold{% endif %}"
+                  aria-hidden="true"
+                ></span>
+                <h3 class="font-bold{% if forloop.last %} text-gold-light{% endif %}">
+                  {% if step.year %}
+                    <span class="fa-num ml-2 text-gold-light">{{ step.year|fa_digits }}</span> —
+                  {% endif %}{{ step.title }}
+                </h3>
+                {% if step.subtitle %}
+                  <p class="mt-1 text-sm text-cream/55">{{ step.subtitle }}</p>
+                {% endif %}
+              </li>
+            {% endfor %}
+          </ol>
+        </div>
+      </div>
+    </section>
   {% endif %}
 
-  <!-- ─── مانیفست پیش از فوتر ─── -->
-  {% if pre %}
-  <section class="bg-night px-page py-[clamp(64px,9vw,130px)] text-ink" aria-labelledby="manifesto-title">
-    <div class="grid grid-cols-1 gap-10 md:grid-cols-[1fr_1.2fr] md:gap-20">
-      <div data-reveal="fade-up">
-        <span class="font-mono text-[0.8rem] text-lime">{{ pre.label|safe }}</span><h2 id="manifesto-title" class="mt-5 text-ink">{{ pre.title|safe }}</h2>
+  {% comment %}آمار (روشن){% endcomment %}
+  {% if stats %}
+    <section
+      id="stats"
+      class="relative bg-cream2"
+      style="border-radius: 9rem 3rem 0 0"
+    >
+      <div class="mx-auto max-w-6xl px-6 py-24">
+        <div
+          class="glass-light relative overflow-hidden p-8 md:p-12"
+          style="border-radius: 3rem 1rem 3rem 1rem"
+          data-reveal="up"
+        >
+          <span
+            class="pointer-events-none absolute -left-8 -top-10 h-36 w-36 rounded-full"
+            style="background: radial-gradient(circle, rgba(201,161,90,0.3), transparent 65%);"
+            aria-hidden="true"
+          ></span>
+          <ul class="relative grid grid-cols-2 gap-y-10 lg:grid-cols-4">
+            {% for stat in stats %}
+              <li
+                class="border-gold-dark/20 lg:border-l lg:px-8 {% if forloop.first %}lg:first:border-l-0 lg:first:pr-0{% endif %}{% if forloop.last %} lg:last:pl-0{% endif %}"
+              >
+                {% if stat.icon %}
+                  <span class="icon-ring"
+                    >{% icon stat.icon class="h-5 w-5" %}</span
+                  >
+                {% endif %}
+                <p
+                  class="mt-4 text-4xl font-extrabold text-goldgrad-dark md:text-5xl"
+                >
+                  <span
+                    class="fa-num"
+                    data-counter="{{ stat.value }}"{% if stat.prefix %} data-prefix="{{ stat.prefix }}"{% endif %}{% if stat.suffix %} data-suffix="{{ stat.suffix }}"{% endif %}
+                    >۰</span
+                  >
+                </p>
+                <p class="mt-2 text-sm text-coy">{{ stat.label }}</p>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
       </div>
-      <div class="text-[1.05rem] leading-[1.65] text-mist" data-reveal="fade-up" data-reveal-delay="100">
-        {{ pre.description|safe }}<a class="btn btn-lime mt-5" href="{{ pre.button_url }}">{{ pre.button_text }} {% icon "arrow-left" class="inline-block h-4 w-4 align-middle" %}</a>
+    </section>
+  {% endif %}
+
+  {% comment %}دیوار برندها (تیره){% endcomment %}
+  {% if clients_section and clients %}
+    <section id="clients" class="relative overflow-hidden bg-ink">
+      <svg
+        class="divider"
+        viewBox="0 0 1440 90"
+        preserveAspectRatio="none"
+        aria-hidden="true"
+      >
+        <path
+          d="M0,58 C320,12 640,78 960,42 C1200,14 1360,62 1440,32 L1440,0 L0,0 Z"
+          fill="#efece5"
+        />
+      </svg>
+      <span
+        class="font-latin stroke-title pointer-events-none absolute -left-6 bottom-8 select-none text-[13rem] font-light leading-none"
+        aria-hidden="true"
+        >trust</span
+      >
+
+      <div
+        class="relative z-10 mx-auto max-w-5xl px-6 pb-28 pt-32 text-center md:pt-40"
+      >
+        {% if clients_section.eyebrow %}
+          <p class="eyebrow eyebrow-c justify-center" data-reveal="up">
+            {{ clients_section.eyebrow }}
+          </p>
+        {% endif %}
+        <h2
+          class="mt-5 text-4xl font-extrabold leading-[1.3] md:text-[2.7rem]"
+          data-reveal="up"
+          data-delay="0.08"
+        >
+          {{ clients_section.title|highlight }}
+        </h2>
+        {% if clients_section.subtitle %}
+          <p
+            class="mx-auto mt-4 max-w-xl font-light leading-8 text-cream/60"
+            data-reveal="up"
+            data-delay="0.14"
+          >
+            {{ clients_section.subtitle }}
+          </p>
+        {% endif %}
+
+        <ul
+          class="mt-14 flex flex-wrap items-center justify-center gap-x-7 gap-y-6"
+          data-reveal="up"
+          data-delay="0.2"
+        >
+          {% for client in clients %}
+            <li class="flex items-center gap-7">
+              <span
+                class="cursor-default text-xl font-medium text-cream/65 transition-colors duration-300 hover:text-gold-light md:text-2xl"
+                >{{ client.name }}</span
+              >
+              {% if not forloop.last %}
+                <span
+                  class="h-2 w-2 rotate-45 bg-gold/70"
+                  aria-hidden="true"
+                ></span>
+              {% endif %}
+            </li>
+          {% endfor %}
+        </ul>
       </div>
-    </div>
-  </section>
+    </section>
   {% endif %}
 {% endblock %}

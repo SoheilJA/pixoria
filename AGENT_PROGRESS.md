@@ -543,6 +543,46 @@ but are out of scope for this migration order (home/about/contact/404 only).
   desktop map hardcodes 5 node positions along a fixed path; with DB-driven
   steps the template must distribute nodes itself (position list keyed by
   index, or evenly along the path) and the mobile `<ol>` renders all steps.
+- **D34 — About page template (T32).** `templates/core/about.html` fully replaced
+  (v1 mission/story/process/team/values/stats/FAQ/pre partials out) with the
+  five `new/about.html` sections on top of `base.html`: hero → story → journey
+  → stats → clients, then the shared `_cta.html`/`_footer.html` from base —
+  every hard-coded duplicate of the header, mega-menu, mobile menu, CTA and
+  footer from the prototype was dropped (~1100 lines of chrome). Conversions:
+  `[[ ]]` titles via `highlight` (dark variant on the cream sections), all
+  `data-lucide` → the local `{% icon %}` sprite, hero CTAs via `{% nav_url %}`,
+  digits via `fa_digits`, stats via `data-counter` + `data-prefix`/`-suffix`
+  (15+/500+/135+/350+). The hero's orbit pills are built from the `Service`
+  table with two independent `{% cycle %}`s per loop iteration (float duration +
+  top/right/bottom/left position), so the orbit degrades gracefully to fewer
+  pills. **Zero new CSS**: the design's `.ghost-stroke`/`.ghost-stroke-light`
+  are the existing `.stroke-title`/`.stroke-title-light`, and `.client-wall`'s
+  hover became inline `hover:text-gold-light`. The journey map is computed
+  server-side (`journey_points`/`journey_path` in `apps/core/views.py`): the
+  design's exact five node positions when there are five steps, otherwise an
+  even sinusoidal spread, with a quadratic path drawn *through* the computed
+  points so the path and nodes can never disagree; each step is annotated with
+  `point_x`/`point_y`/`label_below`/`label_bold`/`label_small` (bold = year for
+  the first/last station, title otherwise — mirroring the design's labels).
+  The mobile timeline's decorative line moved out of the `<ol>` into a wrapper
+  div (the prototype had an invalid `<span>` child of `<ol>`). The story image
+  is optional — without it a decorative «پ» tile renders instead of a hole
+  (the seed cannot create image files). `story.body` uses `|linebreaks` inside
+  a `space-y-4` wrapper, and `AboutStory.get_chips_list()` mirrors
+  `HomeAboutSection`. JSON-LD (Organization + AboutPage + BreadcrumbList) moved
+  into `extra_head`, built from `SiteSettings` — only required fields are used
+  so conditional commas can never break the JSON. `pixoria.js`'s mouse-parallax
+  was generalized from `document.getElementById("home")` to
+  `document.querySelectorAll("[data-mouse-parallax]")` and the home hero got
+  the attribute (behavior unchanged) so both pages share one init path.
+  Verified: `/about/` renders 200 (65 KB) with all five sections, no leaked
+  `[[ ]]` markers, zero CDN/lucide references, journey nodes/labels/counters
+  correct; with an EMPTY database (rolled-back transaction) every section skips
+  and the page still returns 200; home page unaffected (146 KB, 200); node
+  module syntax check passes; Tailwind rebuilt (no token changes — just the
+  new arbitrary classes).
+
+## Tasks
 
 ### Phase 0 — Foundation
 
@@ -709,12 +749,15 @@ but are out of scope for this migration order (home/about/contact/404 only).
   files: `apps/core/models.py`, `apps/core/migrations/0009_*`, `apps/core/admin.py`,
   `apps/core/management/commands/seed_about_content.py`, `apps/core/views.py` |
   commit: "feat(about): add v2 about page models"
-- [ ] T32 — Rebuild `templates/core/about.html` from `new/about.html`: extend
+- [x] T32 — Rebuild `templates/core/about.html` from `new/about.html`: extend
   `base.html`, REMOVE the duplicated hard-coded header/footer/CTA from the new
   file (base ones are the reference), bind everything to the models, use
   `highlight` for colored words, `{% icon %}` for icons, `fa_digits`/counters
   where needed, local JS only, skip empty sections. Update `apps/core/views.py`
-  | files: `templates/core/about.html`, `apps/core/views.py` |
+  | files: `templates/core/about.html`, `apps/core/views.py`,
+  `apps/core/models.py` (`AboutStory.get_chips_list`),
+  `templates/home/sections/_hero.html` (`data-mouse-parallax` hook),
+  `static/js/pixoria.js` (parallax generalized) |
   commit: "feat(about): rebuild about page in v2 style"
 
 ### Phase 7 — Contact page (from `new/contact.html`)
@@ -811,11 +854,11 @@ but are out of scope for this migration order (home/about/contact/404 only).
 
 ## Current status
 
-T01–T31 done. Next: T32 — rebuild `templates/core/about.html` from
-`new/about.html` on top of `base.html` (drop the duplicated
-header/footer/CTA/mega-menu markup, bind the five sections to the models per
-D33, `highlight` for `[[ ]]` titles, `{% icon %}` instead of `data-lucide`,
-`fa_digits` + `data-counter` for the stats, `nav_url` for the hero CTAs,
-service pills from the `Service` table, DB-distributed journey nodes, skip
-every empty section) and update `apps/core/views.py` if needed.
+T01–T32 done — the about page is fully migrated (models, admin, seed,
+template). Next: T33 — extend the contact models for v2 (info cards,
+subject/project-type/budget/start-time choices, FAQ, cities/map block, working
+hours, socials) from `new/contact.html`, reusing existing `contact.*` models
+(`ContactPageSection`, `ContactInfo`, `ContactSubmission` + the choice models)
+and adding only what is missing; migration + admin + seed with the same
+idempotent/no-overwrite rules.
 

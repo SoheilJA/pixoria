@@ -1,7 +1,7 @@
 {% load icon_tags highlight_tags nav_tags fa_digits %}
 {# هیرو v2 — صحنهٔ سه‌بعدی + جایگزین CSS + المان‌های شناور + CTA و آمار از دیتابیس #}
 {# داده‌ها: hero (HeroSection)، hero_stats (HeroStat) #}
-<section id="home" class="relative flex min-h-[100svh] items-center overflow-hidden bg-ink">
+<section id="home" data-mouse-parallax class="relative flex min-h-[100svh] items-center overflow-hidden bg-ink">
   {# صحنهٔ سه‌بعدی — hero-scene.js فقط در صورت نزدیک شدن به دید مقداردهی می‌شود #}
   <div id="hero-3d" class="absolute inset-0" aria-hidden="true">
     <canvas id="hero-canvas" class="h-full w-full"></canvas>

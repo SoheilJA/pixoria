@@ -329,6 +329,10 @@ class AboutStory(models.Model):
         help_text="متن داخل کپسولِ روی تصویر. مثلاً: مشهد",
     )
 
+    def get_chips_list(self):
+        """لیست برچسب‌ها — فیلد csv را به لیست پایتون تبدیل می‌کند."""
+        return [chip.strip() for chip in self.chips.split(",") if chip.strip()]
+
     class Meta:
         verbose_name = "داستان ما"
         verbose_name_plural = "داستان ما"

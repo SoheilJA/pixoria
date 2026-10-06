@@ -251,9 +251,9 @@ function init() {
   }
 
   /* ---------------- hero mouse parallax ---------------- */
+  // هر سکشن هیرو (خانه یا درباره ما) که data-mouse-parallax داشته باشد.
   if (!TOUCH && !REDUCED) {
-    const hero = document.getElementById("home");
-    if (hero) {
+    document.querySelectorAll("[data-mouse-parallax]").forEach((hero) => {
       const layers = hero.querySelectorAll("[data-depth]");
       hero.addEventListener(
         "mousemove",
@@ -267,7 +267,7 @@ function init() {
         },
         { passive: true },
       );
-    }
+    });
   }
 
   initSliders({ hasGsap, REDUCED, faDigits });
