@@ -1,0 +1,40 @@
+{% load icon_tags fa_digits jalali_tags %}
+{# کارت مقاله — کارتِ مجله برای گرید و کاروسل‌ها. #}
+{# article: obj  required — نمونه‌ی Article #}
+{# delay:   str  optional — تاخیر انیمیشن ظهور (پیش‌فرض ۰)؛ چون cycle درون #}
+{#          یک include ریست می‌شود، فراخواننده باید پلکان را پاس دهد #}
+{# class:   str  optional — کلاس اضافی روی ریشه #}
+{# style:   str  optional — style اضافی روی ریشه #}
+<a href="{% url 'blog:detail' article.slug %}"
+   class="blog-card glass tilt group relative block overflow-hidden{% if class %} {{ class }}{% endif %}"
+   style="border-radius: 1.75rem;{% if style %} {{ style }}{% endif %}"
+   data-tilt data-reveal="up" data-delay="{{ delay|default:'0' }}">
+  <span class="glare" aria-hidden="true"></span>
+  <figure class="relative overflow-hidden" style="border-radius: 1.75rem 1.75rem 0 0">
+    {% if article.cover_image %}
+      <img src="{{ article.cover_image.url }}"
+           alt="{{ article.cover_image_alt }}"
+           loading="lazy" decoding="async"
+           class="aspect-[16/10] w-full object-cover transition-transform duration-700 group-hover:scale-105">
+    {% else %}
+      <div class="aspect-[16/10] w-full bg-gradient-to-br from-ink3 to-ink2" aria-hidden="true"></div>
+    {% endif %}
+    <div class="absolute inset-0 bg-gradient-to-t from-ink2/90 to-transparent" aria-hidden="true"></div>
+    {% if article.category %}
+      <span class="blog-chip">{{ article.category.title }}</span>
+    {% endif %}
+  </figure>
+  <div class="relative z-10 p-6">
+    <p class="font-latin text-[10px] tracking-[.25em] text-gold/60">
+      <span class="fa-num">{{ article.published_at|fa_jdate }}</span> · {{ article.reading_time|fa_digits }} دقیقه
+    </p>
+    <h3 class="mt-3 text-lg font-bold leading-7">{{ article.title }}</h3>
+    {% if article.excerpt %}
+      <p class="mt-3 text-sm leading-7 text-cream/55">{{ article.excerpt }}</p>
+    {% endif %}
+    <span class="mt-5 inline-flex items-center gap-1.5 text-sm text-gold-light transition-all duration-300 group-hover:gap-3">
+      ادامهٔ مطلب
+      {% icon "arrow-left" class="h-4 w-4" %}
+    </span>
+  </div>
+</a>

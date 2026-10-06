@@ -61,14 +61,25 @@ comment is not skipped and the tags inside it are parsed for real (a
 self-referencing usage example in a doc comment caused `RecursionError`).
 Document usage here in prose instead.
 
-## Cards (`components/cards/`)
+## Cards
+
+v2 card partials — every new page/section MUST use these (props in the file's
+header comment):
 
 | Component | Props | Model |
 | --- | --- | --- |
-| `blog_card.html` | `article`, `show_image`, `class` | `apps.blog.Article` |
-| `portfolio_card.html` | `work`, `class` | `apps.portfolio.Portfolio` |
-| `testimonial_card.html` | `t`, `class` | `ServiceTestimonial` |
-| `service_card.html` | `service`, `index`, `class` | `apps.services.Service` |
+| `components/_project_card.html` | `project`, `filter_key`, `radius`, `class`, `style` | `apps.portfolio.Portfolio` |
+| `components/_article_card.html` | `article`, `delay`, `class`, `style` | `apps.blog.Article` |
+| `components/_testimonial_card.html` | `t`, `class` (text/video/audio kinds inside one partial) | `apps.services.ServiceTestimonial` |
+
+`filter_key` only emits the home grid's filter hook (`pf-item` + `data-cat`).
+The staggered values (`radius`, `delay`) come from a `{% cycle ... as x silent %}`
+in the caller's loop — `{% cycle %}` inside an `{% include %}` resets on every
+inclusion, so the partial cannot generate them itself.
+
+The legacy `components/cards/*.html` cards are v1-styled and remain only for
+pages that are not converted yet (`blog/partials/article_cards.html`,
+`services/detail.html`); they are deleted in the cleanup phase.
 
 ## Conventions
 

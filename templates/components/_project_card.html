@@ -1,0 +1,34 @@
+{% load fa_digits %}
+{# کارت پروژه — کارتِ نمونه‌کار برای گرید قابل‌فیلتر و کاروسل‌ها. #}
+{# project:    obj  required — نمونه‌ی Portfolio #}
+{# filter_key: str  optional — اسلاگ دسته‌بندی برای فیلترِ گرید (data-cat)؛ #}
+{#             فقط وقتی مقدار دارد کلاس pf-item و data-cat چاپ می‌شود #}
+{# radius:     str  optional — شعاع گوشه‌ها (پیش‌فرض ۱.۷۵رم)؛ چون cycle درون #}
+{#             یک include ریست می‌شود، فراخواننده باید مقدار متغیر را پاس دهد #}
+{# class:      str  optional — کلاس اضافی روی ریشه #}
+{# style:      str  optional — style اضافی روی ریشه #}
+{% with category=project.categories.first %}
+<a href="{% url 'portfolio:detail' project.slug %}"
+   class="tile group relative block overflow-hidden{% if filter_key %} pf-item{% endif %}{% if class %} {{ class }}{% endif %}"
+   {% if filter_key %}data-cat="{{ filter_key }}"{% endif %}
+   style="border-radius: {{ radius|default:"1.75rem" }};{% if style %} {{ style }}{% endif %}"
+   aria-label="{{ project.title }}">
+  {% if project.image %}
+    <img src="{{ project.image.url }}" alt="{{ project.title }}" loading="lazy" decoding="async"
+         class="aspect-[4/3] h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.06]">
+  {% else %}
+    {# جایگاه تصویر وقتی پروژه عکس ندارد #}
+    <div class="aspect-[4/3] w-full bg-gradient-to-br from-ink2 via-ink3 to-ink2"></div>
+  {% endif %}
+  <div class="tile-caption">
+    <div class="flex flex-wrap gap-2">
+      {% if category %}<span class="type-chip">{{ category.name }}</span>{% endif %}
+      {% if project.year %}<span class="tile-tag">{{ project.year|fa_digits }}</span>{% endif %}
+    </div>
+    <h3 class="mt-3 text-lg font-bold">{{ project.title }}</h3>
+    {% if project.excerpt %}
+      <p class="text-sm text-cream/60">{{ project.excerpt }}</p>
+    {% endif %}
+  </div>
+</a>
+{% endwith %}

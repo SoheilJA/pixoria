@@ -53,31 +53,9 @@
 
       <div class="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3" id="pf-grid">
         {% for item in portfolio_items %}
-          {% with category=item.categories.first %}
-            <a href="{% url 'portfolio:detail' item.slug %}"
-               class="tile pf-item group relative block overflow-hidden"
-               data-cat="{{ category.slug|default:'' }}"
-               style="border-radius: {% cycle '2.5rem' '2.75rem 0.75rem' '0.9rem' '0.75rem 2.75rem' '1.75rem' '1rem 4rem' %}"
-               aria-label="{{ item.title }}">
-              {% if item.image %}
-                <img src="{{ item.image.url }}" alt="{{ item.title }}" loading="lazy" decoding="async"
-                     class="aspect-[4/3] h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.06]">
-              {% else %}
-                {# جایگاه تصویر وقتی پروژه عکس ندارد #}
-                <div class="aspect-[4/3] w-full bg-gradient-to-br from-ink2 via-ink3 to-ink2"></div>
-              {% endif %}
-              <div class="tile-caption">
-                <div class="flex flex-wrap gap-2">
-                  {% if category %}<span class="type-chip">{{ category.name }}</span>{% endif %}
-                  {% if item.year %}<span class="tile-tag">{{ item.year|fa_digits }}</span>{% endif %}
-                </div>
-                <h3 class="mt-3 text-lg font-bold">{{ item.title }}</h3>
-                {% if item.excerpt %}
-                  <p class="text-sm text-cream/60">{{ item.excerpt }}</p>
-                {% endif %}
-              </div>
-            </a>
-          {% endwith %}
+          {# شعاع گوشه‌ها بین کارت‌ها متغیر است تا گرید یکنواخت نباشد #}
+          {% cycle '2.5rem' '2.75rem 0.75rem' '0.9rem' '0.75rem 2.75rem' '1.75rem' '1rem 4rem' as card_radius silent %}
+          {% include "components/_project_card.html" with project=item filter_key=item.categories.first.slug radius=card_radius %}
         {% endfor %}
       </div>
 

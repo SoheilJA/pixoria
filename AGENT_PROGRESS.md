@@ -418,6 +418,29 @@ but are out of scope for this migration order (home/about/contact/404 only).
   Counts ≤ 3 are shown as-is on purpose — hiding real content to satisfy the
   grid math is worse than a short row (the DB currently has only one featured
   project, which would have been trimmed to zero by a naive `% 3` slice).
+- **D30 — Card partials + the `{% cycle %}` include gotcha (T28).**
+  `templates/components/_project_card.html` (props `project`, `filter_key`,
+  `radius`, `class`, `style`), `_article_card.html` (`article`, `delay`,
+  `class`, `style`) and `_testimonial_card.html` (`t`, `class` — the
+  text/video/audio branches in one file) replace the markup that was inline in
+  the home sections. `_portfolio.html`, `_blog.html` and `_testimonials.html`
+  now `{% include %}` them, and the render output is byte-identical apart from
+  attribute order (verified by diffing the rendered page before/after — the
+  class and style *multisets* are equal). Section-specific hooks stay with the
+  caller: the filter hook (`pf-item` + `data-cat`) only prints when
+  `filter_key` is passed, and the slider's sizing (`w-[min(88vw,400px)]
+  shrink-0 snap-center`) comes from the section's `class` prop; `t-card` is
+  baked into the testimonial card because it is the slider's card hook (it
+  carries no styling). **GOTCHA:** `{% cycle %}` inside an `{% include %}`d
+  template resets on every inclusion (the included template gets a fresh
+  `render_context`), so the per-card stagger values (the project card's
+  rotating border-radius, the article card's reveal delay) are generated with
+  `{% cycle ... as x silent %}` in the *caller's* loop and passed as props —
+  and the `silent` keyword is mandatory in Django 5.2, otherwise the value is
+  printed into the page as stray text. The v1 `components/cards/*.html` cards
+  stay until the still-unconverted pages (`blog/partials/article_cards.html`,
+  `services/detail.html`) are rebuilt (T39/T42); new pages must use the new
+  partials.
 
 ## Tasks
 
@@ -547,7 +570,7 @@ but are out of scope for this migration order (home/about/contact/404 only).
   Verify no orphan/ugly tile layout at all breakpoints |
   files: `templates/home/sections/_portfolio.html`, `apps/home/views.py` |
   commit: "feat(home): make portfolio grid three columns"
-- [ ] T28 — Extract CARD partials (no visual change):
+- [x] T28 — Extract CARD partials (no visual change):
   `templates/components/_project_card.html`, `_article_card.html`,
   `_testimonial_card.html` (text/video/audio kinds). Home sections must use
   them | files: `templates/components/*`, `templates/home/sections/*` |
@@ -687,8 +710,10 @@ but are out of scope for this migration order (home/about/contact/404 only).
 
 ## Current status
 
-T01–T27 done. Next: T28 — extract reusable CARD partials (no visual change):
-`templates/components/_project_card.html`, `_article_card.html`,
-`_testimonial_card.html` (text/video/audio kinds), and switch the home
-sections to use them.
+T01–T28 done. Next: T29 — testimonials SECTION component: an inclusion tag
+`{% testimonials_slider service=None limit=9 title=... %}` (filters by service
+when one is given, featured/global otherwise, renders nothing without data),
+and the slider JS in `static/js/pixoria.js` refactored from the fixed `#t-*`
+IDs to per-instance `[data-slider]` initialization so several sliders can live
+on one page.
 
