@@ -1,37 +1,119 @@
 {% extends 'base.html' %}
-{% load icon_tags %}
+{% load icon_tags highlight_tags fa_digits %}
 
-{% block title %}
-  خدمات — {{ settings.site_name }}
-{% endblock %}
-{% block description %}
-  {{ page_section.description }}
-{% endblock %}
+{% block title %}{{ page_section.title|default:"خدمات"|striptags }} — {{ settings.site_name }}{% endblock %}
+{% block description %}{{ page_section.description|default:"خدمات طراحی و توسعهٔ محصول‌های دیجیتال پیکسوریا" }}{% endblock %}
+
+{% comment %}
+  placeholder موقت (T42): صفحهٔ خدمات هنوز طرح v2 ندارد، بنابراین این قالب
+  حداقلی است — فقط دادهٔ دیتابیس با کلاس‌های v2 موجود رندر می‌شود. بازطراحی
+  کامل این صفحه خارج از ترتیب این مهاجرت است.
+{% endcomment %}
 
 {% block content %}
-  {% include 'components/page_hero.html' with crumbs=crumbs title=page_section.title|safe title_id='services-head' description=page_section.description|safe %}
+  {% comment %}هیرو — عنوان آرشیو خدمات با مادرِ شناور{% endcomment %}
+  <section class="relative overflow-hidden bg-ink" data-mouse-parallax>
+    <div class="pointer-events-none absolute inset-0" aria-hidden="true">
+      <div data-depth="0.05" class="absolute right-[9%] top-[12%]">
+        <span data-float="14" class="orb block h-20 w-20"
+              style="background: radial-gradient(circle at 32% 30%, rgba(232,196,122,0.42), rgba(201,161,90,0.07) 60%, transparent 72%);"></span>
+      </div>
+      <div data-depth="0.08" class="absolute bottom-[16%] left-[8%]">
+        <span data-float="12" class="shard block h-24 w-20 rotate-12"></span>
+      </div>
+      <div data-depth="0.05" class="absolute left-[32%] top-[14%]">
+        <span data-float="10" class="orb block h-10 w-10"
+              style="background: radial-gradient(circle, rgba(46,99,255,0.5), transparent 70%);"></span>
+      </div>
+    </div>
+    <span class="stroke-title font-latin pointer-events-none absolute -bottom-10 left-0 select-none text-[16vw] font-light leading-none"
+          aria-hidden="true">services</span>
 
-  <section class="px-page pt-8 md:pt-16" aria-label="فهرست خدمات">
-    {% for item in services_with_delay %}
-      {% with service=item.service delay=item.delay %}
-        <article class="grid grid-cols-1 items-start gap-8 border-b border-line py-10 md:grid-cols-[80px_1fr_1.4fr_auto] md:gap-8 md:py-14" data-reveal="fade-up" data-reveal-duration="500" data-reveal-delay="{{ delay }}">
-          <span class="font-mono text-[0.84rem] text-ink-dim">{{ forloop.counter|stringformat:'02d' }} / {{ services|length|stringformat:'02d' }}</span>
-          <div>
-            <h2 class="mb-3.5 text-[clamp(1.6rem,2.4vw,2.4rem)]"><a href="{% url 'services:detail' service.slug %}" class="text-ink transition-colors hover:text-ink-soft">{{ service.title }}</a></h2>
-            {% if service.tags %}
-              <div class="flex flex-wrap gap-1.5" data-reveal="fade-up" data-reveal-delay="{{ delay|add:80 }}">
-                {% for tag in service.get_tags_list %}
-                  <span class="rounded-full bg-paper-soft px-2.5 py-[5px] font-mono text-[0.72rem] text-ink-soft">{{ tag }}</span>
-                {% endfor %}
+    <div class="relative z-10 mx-auto max-w-7xl px-6 pb-28 pt-36 md:pt-48">
+      <nav aria-label="مسیر صفحه" class="font-latin text-[10px] tracking-[.3em] text-cream/40" data-reveal="up">
+        <ol class="flex flex-wrap items-center gap-x-3 gap-y-1">
+          {% for item in crumbs %}
+            <li class="flex items-center gap-3">
+              {% if not forloop.first %}
+                <span class="h-1 w-1 rotate-45 bg-gold/60" aria-hidden="true"></span>
+              {% endif %}
+              {% if item.url %}
+                <a href="{{ item.url }}" class="transition-colors hover:text-gold-light">{{ item.label }}</a>
+              {% elif forloop.last %}
+                <span aria-current="page" class="text-cream/70">{{ item.label }}</span>
+              {% else %}
+                <span>{{ item.label }}</span>
+              {% endif %}
+            </li>
+          {% endfor %}
+        </ol>
+      </nav>
+
+      <h1 class="mt-8 max-w-3xl text-[2.6rem] font-extrabold leading-[1.25] sm:text-5xl lg:text-6xl"
+          data-reveal="right">
+        {% if page_section and page_section.title %}
+          {{ page_section.title|highlight }}
+        {% else %}
+          خدمات
+        {% endif %}
+      </h1>
+      {% if page_section and page_section.description %}
+        <p class="mt-6 max-w-2xl text-lg font-light leading-8 text-cream/70"
+           data-reveal="right" data-delay="0.12">
+          {{ page_section.description }}
+        </p>
+      {% endif %}
+
+      {% if services %}
+        <div class="mt-10 flex flex-wrap items-center gap-3" data-reveal="up" data-delay="0.2">
+          <span class="inline-flex items-center gap-2 rounded-full border border-cream/10 bg-white/[0.02] px-4 py-2 text-sm text-cream/60">
+            {% icon "sparkles" class="h-4 w-4 text-gold" %}
+            <b class="font-bold text-cream fa-num">{{ services|length|fa_digits }}</b> خدمت
+          </span>
+        </div>
+      {% endif %}
+    </div>
+  </section>
+
+  {% comment %}آرشیو خدمات — فهرست حداقلی{% endcomment %}
+  <section class="relative overflow-hidden bg-ink2">
+    <svg class="divider divider-flip" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0,26 C260,84 520,82 760,44 C1000,6 1240,80 1440,30 L1440,0 L0,0 Z" fill="#0a0a0c"></path>
+    </svg>
+    <div class="grid-bg pointer-events-none absolute inset-0 opacity-20" aria-hidden="true"></div>
+
+    <div class="relative z-10 mx-auto max-w-7xl px-6 pb-28 pt-32 md:pt-40">
+      {% if services %}
+        <div class="flex flex-col divide-y divide-cream/10">
+          {% for service in services %}
+            <a href="{% url 'services:detail' service.slug %}"
+               class="group grid grid-cols-1 items-start gap-5 py-10 transition-colors duration-300 hover:bg-white/[0.02] md:grid-cols-[56px_1fr_auto] md:gap-8 md:py-12"
+               data-reveal="up" data-delay="{% cycle '0' '0.06' '0.12' '0.18' %}">
+              <span class="icon-ring h-12 w-12 shrink-0">{% icon service.icon class="h-5 w-5" %}</span>
+              <div class="min-w-0">
+                <h2 class="text-[clamp(1.4rem,2.4vw,2rem)] font-extrabold leading-[1.2] text-cream transition-colors group-hover:text-gold-light">
+                  {{ service.title }}
+                </h2>
+                {% if service.excerpt %}
+                  <p class="mt-3 max-w-2xl text-[0.95rem] leading-7 text-cream/55">{{ service.excerpt }}</p>
+                {% endif %}
+                {% if service.get_tags_list %}
+                  <div class="mt-4 flex flex-wrap gap-2">
+                    {% for tag in service.get_tags_list %}
+                      <span class="s-chip">{{ tag }}</span>
+                    {% endfor %}
+                  </div>
+                {% endif %}
               </div>
-            {% endif %}
-          </div>
-          <p class="m-0 text-[1rem] leading-[1.6] text-ink-soft" data-reveal="fade-up" data-reveal-delay="{{ delay|add:110 }}">{{ service.excerpt }}</p>
-          <a class="group inline-flex items-center gap-3 whitespace-nowrap font-mono text-[0.78rem] text-ink" href="{% url 'services:detail' service.slug %}" data-reveal="fade-up" data-reveal-delay="{{ delay|add:150 }}"><span class="transition-transform duration-200 group-hover:-translate-x-1">مشاهده خدمت</span>{% icon "arrow-left" class="inline-block h-5 w-5 transition-transform duration-200 group-hover:-translate-x-1" %}</a>
-        </article>
-      {% endwith %}
-    {% empty %}
-      <p class="py-16 text-ink-dim" data-reveal="fade-up">در حال حاضر خدمتی ثبت نشده است.</p>
-    {% endfor %}
+              <span class="hidden h-12 w-12 shrink-0 place-items-center rounded-full border border-cream/10 text-cream/50 transition-all duration-300 group-hover:border-gold/60 group-hover:bg-gold/10 group-hover:text-gold-light md:grid">
+                {% icon "arrow-left" class="h-5 w-5" %}
+              </span>
+            </a>
+          {% endfor %}
+        </div>
+      {% else %}
+        <p class="py-16 text-center text-cream/50" data-reveal="up">در حال حاضر خدمتی ثبت نشده است.</p>
+      {% endif %}
+    </div>
   </section>
 {% endblock %}

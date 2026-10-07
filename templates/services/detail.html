@@ -1,282 +1,386 @@
 {% extends 'base.html' %}
-{% load icon_tags %}
-{% load static %}
-{% load anim_tags %}
+{% load icon_tags highlight_tags fa_digits testimonial_tags %}
 
 {% block title %}{{ service.title }} — {{ settings.site_name }}{% endblock %}
 {% block description %}{{ service.excerpt }}{% endblock %}
 
+{% comment %}
+  placeholder موقت (T42): صفحهٔ جزئیات خدمت هنوز طرح v2 ندارد، بنابراین این
+  قالب حداقلی است — فقط دادهٔ دیتابیس با کلاس‌های v2 موجود رندر می‌شود.
+  بازطراحی کامل این صفحه خارج از ترتیب این مهاجرت است.
+{% endcomment %}
+
 {% block content %}
-
-  <!-- ─── هیرو ─── -->
-  <section class="border-b border-line px-page pb-[clamp(40px,5vw,80px)] pt-[clamp(64px,9vw,130px)]" aria-labelledby="service-title">
-    {% include 'components/breadcrumb.html' with items=crumbs %}
-
-    {% if service.tags %}
-    <div class="mt-6 mb-6 flex flex-wrap gap-2" data-reveal="fade-up" data-reveal-delay="50">
-      {% for tag in service.get_tags_list %}
-        {% include 'components/badge.html' with text=tag variant='soft' %}
-      {% endfor %}
-    </div>
-    {% endif %}
-
-    <h1 id="service-title" class="mt-6 mb-8 max-w-[22ch] font-display text-[clamp(2.4rem,5vw,5.6rem)] leading-[0.96] tracking-[-0.03em]" data-reveal="fade-up" data-reveal-delay="100">{{ service.title }}</h1>
-
-    <div class="grid grid-cols-1 items-end gap-16 border-t border-line pt-8 md:grid-cols-[1.4fr_1fr]" data-reveal="fade-up" data-reveal-delay="200">
-      <div>
-        <p class="m-0 max-w-[56ch] text-[1.18rem] leading-[1.55] text-ink-soft">{{ service.excerpt }}</p>
+  {% comment %}هیرو — آیکون، تگ‌ها، عنوان و خلاصهٔ خدمت{% endcomment %}
+  <section class="relative overflow-hidden bg-ink" data-mouse-parallax>
+    <div class="pointer-events-none absolute inset-0" aria-hidden="true">
+      <div data-depth="0.05" class="absolute right-[9%] top-[12%]">
+        <span data-float="14" class="orb block h-20 w-20"
+              style="background: radial-gradient(circle at 32% 30%, rgba(232,196,122,0.42), rgba(201,161,90,0.07) 60%, transparent 72%);"></span>
       </div>
-      <div class="flex flex-col items-start gap-3">
-        {% include 'components/button.html' with text='مشاوره رایگان' href=contact_url variant='ink' arrow='left' %}
+      <div data-depth="0.08" class="absolute bottom-[16%] left-[8%]">
+        <span data-float="12" class="shard block h-24 w-20 rotate-12"></span>
+      </div>
+    </div>
+    <span class="stroke-title font-latin pointer-events-none absolute -bottom-10 left-0 select-none text-[14vw] font-light leading-none"
+          aria-hidden="true">service</span>
+
+    <div class="relative z-10 mx-auto max-w-7xl px-6 pb-28 pt-36 md:pt-48">
+      <nav aria-label="مسیر صفحه" class="font-latin text-[10px] tracking-[.3em] text-cream/40" data-reveal="up">
+        <ol class="flex flex-wrap items-center gap-x-3 gap-y-1">
+          {% for item in crumbs %}
+            <li class="flex items-center gap-3">
+              {% if not forloop.first %}
+                <span class="h-1 w-1 rotate-45 bg-gold/60" aria-hidden="true"></span>
+              {% endif %}
+              {% if item.url %}
+                <a href="{{ item.url }}" class="transition-colors hover:text-gold-light">{{ item.label }}</a>
+              {% elif forloop.last %}
+                <span aria-current="page" class="text-cream/70">{{ item.label|truncatechars:34 }}</span>
+              {% else %}
+                <span>{{ item.label }}</span>
+              {% endif %}
+            </li>
+          {% endfor %}
+        </ol>
+      </nav>
+
+      <span class="icon-ring mt-10 h-14 w-14" data-reveal="up">{% icon service.icon class="h-6 w-6" %}</span>
+
+      {% if service.get_tags_list %}
+        <div class="mt-6 flex flex-wrap gap-2" data-reveal="up" data-delay="0.06">
+          {% for tag in service.get_tags_list %}
+            <span class="s-chip">{{ tag }}</span>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      <h1 class="mt-6 max-w-3xl text-[2.4rem] font-extrabold leading-[1.25] sm:text-5xl lg:text-[3.4rem]"
+          data-reveal="right">
+        {{ service.title|highlight }}
+      </h1>
+      {% if service.excerpt %}
+        <p class="mt-6 max-w-2xl text-lg font-light leading-8 text-cream/70"
+           data-reveal="right" data-delay="0.12">
+          {{ service.excerpt }}
+        </p>
+      {% endif %}
+
+      <div class="mt-10 flex flex-wrap gap-4" data-reveal="up" data-delay="0.18">
+        <a href="{% url 'contact:contact' %}" class="btn btn-gold px-7 py-3.5" data-magnetic>
+          مشاوره رایگان
+          {% icon "arrow-left" class="h-4 w-4" %}
+        </a>
         {% if plans %}
-          {% include 'components/button.html' with text='مشاهده قیمت‌ها' href='#pricing' variant='ghost' %}
+          <a href="#pricing" class="btn btn-ghost px-7 py-3.5">مشاهده قیمت‌ها</a>
         {% endif %}
       </div>
     </div>
   </section>
 
-  <!-- ─── آمار ─── -->
+  {% comment %}آمار خدمت — فقط وقتی آماری ثبت شده باشد{% endcomment %}
   {% if stats %}
-  <section class="border-b border-line">
-    <div class="grid grid-cols-2 lg:grid-cols-4">
-      {% for stat in stats %}
-        <div class="border-b border-l border-line px-page py-[clamp(32px,4vw,56px)] text-center last:border-l-0 lg:border-b-0" data-reveal="fade-up" data-reveal-delay="{{ forloop.counter0|stagger:100 }}">
-          <div class="font-display text-[clamp(2.4rem,4vw,4rem)] font-semibold leading-none tracking-[-0.04em] text-ink">{{ stat.number }}</div>
-          <div class="mt-2 font-mono text-[0.76rem] uppercase tracking-[0.1em] text-ink-dim">{{ stat.label }}</div>
-          {% if stat.description %}<div class="mt-1.5 text-[0.88rem] text-ink-soft">{{ stat.description }}</div>{% endif %}
+    <section class="relative overflow-hidden bg-ink2">
+      <svg class="divider divider-flip" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0,26 C260,84 520,82 760,44 C1000,6 1240,80 1440,30 L1440,0 L0,0 Z" fill="#0a0a0c"></path>
+      </svg>
+      <div class="relative z-10 mx-auto max-w-7xl px-6 pb-24 pt-28">
+        <div class="grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-6">
+          {% for stat in stats %}
+            <div class="stat-card" data-reveal="up" data-delay="{% cycle '0' '0.06' '0.12' '0.18' %}">
+              <div class="stat-num font-latin">{{ stat.number|fa_digits }}</div>
+              <p class="mt-2 text-sm font-medium text-cream/70">{{ stat.label }}</p>
+              {% if stat.description %}
+                <p class="mt-1 text-[0.8rem] text-cream/45">{{ stat.description }}</p>
+              {% endif %}
+            </div>
+          {% endfor %}
         </div>
-      {% endfor %}
-    </div>
-  </section>
+      </div>
+    </section>
   {% endif %}
 
-  <!-- ─── توضیحات کامل ─── -->
+  {% comment %}توضیحات کامل — متن غنی روی پس‌زمینهٔ روشن{% endcomment %}
   {% if service.description %}
-  <div class="grid grid-cols-1 items-start gap-20 border-b border-line px-page py-[clamp(56px,7vw,100px)] md:grid-cols-[1fr_1.8fr]">
-    <div class="md:sticky md:top-8" data-reveal="fade-up">
-      <span class="eyebrow mb-3.5 block"><span class="ml-2 inline-block h-1.5 w-1.5 rounded-full bg-lime align-middle"></span>درباره این خدمت</span>
-      <h2 class="font-display text-[clamp(1.8rem,2.6vw,2.6rem)] leading-[1.08] tracking-[-0.025em]">{{ service.title }} چیست؟</h2>
-    </div>
-    <div class="reveal max-w-none text-[1.1rem] leading-[1.65] text-ink-soft [&>p]:mb-[1.4em]" data-reveal="fade-up" data-reveal-delay="100">
-      {{ service.description|safe }}
-    </div>
-  </div>
+    <section class="relative bg-cream" style="border-radius: 3rem 9rem 0 0">
+      <div class="relative z-10 mx-auto max-w-7xl px-6 pb-28 pt-28 md:pt-36">
+        <div class="grid grid-cols-1 items-start gap-12 lg:grid-cols-[1fr_2fr] lg:gap-20">
+          <div class="lg:sticky lg:top-28" data-reveal="up">
+            <p class="eyebrow eyebrow-dark">درباره این خدمت</p>
+            <h2 class="mt-5 text-3xl font-extrabold leading-[1.3] text-paper md:text-[2.4rem]">
+              {{ service.title }} چیست؟
+            </h2>
+          </div>
+          <div class="prose-ink max-w-none" data-reveal="up" data-delay="0.08">
+            {{ service.description|safe }}
+          </div>
+        </div>
+      </div>
+    </section>
   {% endif %}
 
-  <!-- ─── خروجی‌ها و فرآیند ─── -->
+  {% comment %}خروجی‌ها و فرآیند — دو ستون شیشه‌ای روشن{% endcomment %}
   {% if deliverables or processes %}
-  <div class="grid grid-cols-1 border-b border-line md:grid-cols-2">
-    {% if deliverables %}
-    <div class="px-page py-[clamp(48px,6vw,80px)] md:border-l md:border-line" data-reveal="fade-up">
-      <span class="eyebrow mb-5 block"><span class="ml-2 inline-block h-1.5 w-1.5 rounded-full bg-lime align-middle"></span>چه چیزی تحویل می‌گیرید</span>
-      <h3 class="mb-6 font-display text-[clamp(1.5rem,2.2vw,2rem)] leading-[1.1]">خروجی‌های معمول</h3>
-      <ul class="m-0 flex list-none flex-col gap-3 p-0">
-        {% for item in deliverables %}
-          <li class="flex items-baseline gap-2.5 text-[0.98rem] text-ink-soft" data-reveal="fade-up" data-reveal-delay="{{ forloop.counter0|stagger:60 }}">{% icon "check" class="h-4 w-4 shrink-0 font-bold text-lime-deep" %}{{ item.title }}</li>
-        {% endfor %}
-      </ul>
-    </div>
-    {% endif %}
-    {% if processes %}
-    <div class="px-page py-[clamp(48px,6vw,80px)]" data-reveal="fade-up" data-reveal-delay="100">
-      <span class="eyebrow mb-5 block"><span class="ml-2 inline-block h-1.5 w-1.5 rounded-full bg-lime align-middle"></span>چطور پیش می‌رویم</span>
-      <h3 class="mb-6 font-display text-[clamp(1.5rem,2.2vw,2rem)] leading-[1.1]">فرآیند کار</h3>
-      <ol class="m-0 flex list-none flex-col gap-3 p-0" style="counter-reset: step;">
-        {% for step in processes %}
-          <li class="grid grid-cols-[36px_1fr] items-baseline gap-3 text-[0.98rem] text-ink-soft" data-reveal="fade-up" data-reveal-delay="{{ forloop.counter0|stagger:60 }}"><span class="font-mono text-[0.8rem] text-lime-deep">{{ forloop.counter|stringformat:'02d' }}</span>{{ step.title }}</li>
-        {% endfor %}
-      </ol>
-    </div>
-    {% endif %}
-  </div>
+    <section class="relative bg-cream2">
+      <div class="relative z-10 mx-auto max-w-7xl px-6 pb-28 pt-4">
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-8">
+          {% if deliverables %}
+            <div class="glass-light p-8 md:p-10" style="border-radius: 1.75rem 1rem" data-reveal="up">
+              <p class="eyebrow eyebrow-dark">چه چیزی تحویل می‌گیرید</p>
+              <h3 class="mt-4 text-2xl font-extrabold text-paper">خروجی‌های معمول</h3>
+              <ul class="mt-7 flex flex-col gap-3.5">
+                {% for item in deliverables %}
+                  <li class="flex items-baseline gap-3 text-[0.95rem] text-coy">
+                    {% icon "check" class="mt-1 h-4 w-4 shrink-0 text-gold-dark" %}
+                    <span>{{ item.title }}</span>
+                  </li>
+                {% endfor %}
+              </ul>
+            </div>
+          {% endif %}
+          {% if processes %}
+            <div class="glass-light p-8 md:p-10" style="border-radius: 1rem 1.75rem" data-reveal="up" data-delay="0.08">
+              <p class="eyebrow eyebrow-dark">چطور پیش می‌رویم</p>
+              <h3 class="mt-4 text-2xl font-extrabold text-paper">فرآیند کار</h3>
+              <ol class="mt-7 flex flex-col gap-3.5">
+                {% for step in processes %}
+                  <li class="flex items-baseline gap-3 text-[0.95rem] text-coy">
+                    <span class="font-latin text-sm font-bold text-gold-dark fa-num">{{ forloop.counter|stringformat:"02d"|fa_digits }}</span>
+                    <span>{{ step.title }}</span>
+                  </li>
+                {% endfor %}
+              </ol>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </section>
   {% endif %}
 
-  <!-- ─── چرا ما ─── -->
+  {% comment %}چرا ما — کارت‌های شیشه‌ای تیره{% endcomment %}
   {% if why_us %}
-  <section class="border-b border-line px-page py-[clamp(56px,7vw,100px)]">
-    {% include 'components/section_header.html' with eyebrow='مزیت رقابتی' title='چرا '|add:settings.site_name|add:'؟' title_id='why-us-head' %}
-    <div class="mt-12 grid grid-cols-1 overflow-hidden rounded-[6px] border border-line bg-line sm:grid-cols-2 lg:grid-cols-3" style="gap:1px">
-      {% for item in why_us %}
-        <div class="flex flex-col gap-3 bg-paper p-[clamp(28px,3vw,40px)] transition-colors hover:bg-paper-soft" data-reveal="fade-up" data-reveal-delay="{{ forloop.counter0|stagger:100 }}">
-          <span class="text-lime">{% icon item.icon class="h-7 w-7" %}</span>
-          <h3 class="m-0 font-display text-[clamp(1.2rem,1.8vw,1.6rem)]">{{ item.title }}</h3>
-          <p class="m-0 text-[0.96rem] leading-[1.6] text-ink-soft">{{ item.description }}</p>
+    <section class="relative overflow-hidden bg-ink2">
+      <svg class="divider divider-flip" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0,26 C260,84 520,82 760,44 C1000,6 1240,80 1440,30 L1440,0 L0,0 Z" fill="#efece5"></path>
+      </svg>
+      <div class="grid-bg pointer-events-none absolute inset-0 opacity-20" aria-hidden="true"></div>
+      <div class="relative z-10 mx-auto max-w-7xl px-6 pb-28 pt-28 md:pt-32">
+        <div class="max-w-2xl">
+          <p class="eyebrow" data-reveal="up">مزیت رقابتی</p>
+          <h2 class="mt-5 text-4xl font-extrabold leading-[1.3] md:text-[2.7rem]" data-reveal="up" data-delay="0.08">
+            چرا {{ settings.site_name|default:"پیکسوریا" }}؟
+          </h2>
         </div>
-      {% endfor %}
-    </div>
-  </section>
+        <div class="mt-14 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {% for item in why_us %}
+            <div class="glass p-7" style="border-radius: {% cycle '1.5rem' '1rem' '1.75rem 0.75rem' %}"
+                 data-reveal="up" data-delay="{% cycle '0' '0.06' '0.12' %}">
+              <span class="icon-ring h-10 w-10">{% icon item.icon class="h-5 w-5" %}</span>
+              <h3 class="mt-5 text-lg font-bold text-cream">{{ item.title }}</h3>
+              <p class="mt-2.5 text-sm leading-7 text-cream/55">{{ item.description }}</p>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
   {% endif %}
 
-  <!-- ─── قیمت‌گذاری ─── -->
+  {% comment %}قیمت‌گذاری — پلن‌ها و آیتم‌های دلخواه{% endcomment %}
   {% if plans %}
-  <section id="pricing" class="border-b border-line px-page py-[clamp(56px,7vw,100px)]">
-    {% include 'components/section_header.html' with eyebrow='قیمت‌گذاری شفاف' title='پلن مناسب خودتان را انتخاب کنید.' title_id='pricing-head' subtitle='قیمت‌ها شامل مالیات نیستند. برای پروژه‌های سازمانی با ما تماس بگیرید.' %}
-    <div class="mt-14 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-      {% for plan in plans %}
-        {% if plan.is_featured %}
-        <article class="relative flex flex-col gap-5 rounded-[6px] border border-night bg-night p-7" data-reveal="fade-up" data-reveal-delay="{{ forloop.counter0|stagger:100 }}">
-          <span class="absolute -top-3 right-5 rounded-full bg-lime px-3 py-1 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.12em] text-ink">پیشنهادی</span>
-          <div>
-            <span class="mb-2.5 block font-mono text-[0.74rem] uppercase tracking-[0.14em] text-mist-dim">{{ plan.name }}</span>
-            <div class="flex flex-wrap items-baseline gap-1.5">
-              {% if plan.old_price %}<span class="font-mono text-[0.8rem] text-mist-dim line-through">{{ plan.old_price }}</span>{% endif %}
-              <span class="font-display text-[clamp(1.8rem,2.4vw,2.4rem)] font-semibold leading-none tracking-[-0.04em] text-lime">{{ plan.price }}</span>
-              <span class="font-mono text-[0.74rem] text-mist-dim">میلیون تومان</span>
-            </div>
-            {% if plan.discount_label %}<div class="mt-1.5 font-mono text-[0.72rem] text-lime">{{ plan.discount_label }}</div>{% endif %}
-          </div>
-          <div class="h-px bg-line-strong"></div>
-          <ul class="m-0 flex flex-1 list-none flex-col gap-2 p-0">
-            {% for feature in plan.features.all %}
-              {% if feature.included %}
-                <li class="flex gap-2 text-[0.88rem] text-mist">{% icon "check" class="h-4 w-4 shrink-0 text-lime" %}{{ feature.title }}</li>
-              {% else %}
-                <li class="flex gap-2 text-[0.88rem] text-mist opacity-40"><span>—</span>{{ feature.title }}</li>
+    <section id="pricing" class="relative bg-cream">
+      <div class="relative z-10 mx-auto max-w-7xl px-6 pb-28 pt-28 md:pt-36">
+        <div class="max-w-2xl">
+          <p class="eyebrow eyebrow-dark" data-reveal="up">قیمت‌گذاری شفاف</p>
+          <h2 class="mt-5 text-4xl font-extrabold leading-[1.3] text-paper md:text-[2.7rem]"
+              data-reveal="up" data-delay="0.08">
+            پلن مناسب خودتان را انتخاب کنید.
+          </h2>
+        </div>
+
+        <div class="mt-14 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {% for plan in plans %}
+            <article class="glass-light relative flex flex-col gap-5 p-7{% if plan.is_featured %} ring-1 ring-gold/40{% endif %}"
+                     style="border-radius: {% cycle '1.5rem' '1rem' '1.75rem 0.75rem' '0.75rem 1.75rem' %}"
+                     data-reveal="up" data-delay="{% cycle '0' '0.06' '0.12' '0.18' %}">
+              {% if plan.is_featured %}
+                <span class="absolute -top-3 right-6 rounded-full bg-gold px-3 py-1 text-[0.68rem] font-bold tracking-wider text-ink">
+                  پیشنهادی
+                </span>
               {% endif %}
-            {% endfor %}
-          </ul>
-          <a class="btn btn-lime text-[0.9rem]" href="{% url 'contact:contact' %}">شروع کنید {% icon "arrow-left" class="inline-block h-4 w-4 align-middle" %}</a>
-        </article>
-        {% else %}
-        <article class="flex flex-col gap-5 rounded-[6px] border border-line p-7 transition-[border-color,box-shadow] hover:border-night hover:shadow-[0_4px_24px_rgba(0,0,0,0.08)]" data-reveal="fade-up" data-reveal-delay="{{ forloop.counter0|stagger:100 }}">
-          <div>
-            <span class="mb-2.5 block font-mono text-[0.74rem] uppercase tracking-[0.14em] text-ink-dim">{{ plan.name }}</span>
-            <div class="flex flex-wrap items-baseline gap-1.5">
-              {% if plan.old_price %}<span class="font-mono text-[0.8rem] text-ink-dim line-through">{{ plan.old_price }}</span>{% endif %}
-              <span class="font-display text-[clamp(1.8rem,2.4vw,2.4rem)] font-semibold leading-none tracking-[-0.04em]">{{ plan.price }}</span>
-              <span class="font-mono text-[0.74rem] text-ink-dim">میلیون تومان</span>
+              <div>
+                <span class="mb-2.5 block font-latin text-[10px] tracking-[.25em] text-coy/70">{{ plan.name }}</span>
+                <div class="flex flex-wrap items-baseline gap-1.5">
+                  {% if plan.old_price %}
+                    <span class="text-sm text-coy/50 line-through fa-num">{{ plan.old_price }}</span>
+                  {% endif %}
+                  <span class="font-latin text-[1.7rem] font-bold leading-none text-paper fa-num">{{ plan.price }}</span>
+                  <span class="text-[0.72rem] text-coy/60">میلیون تومان</span>
+                </div>
+                {% if plan.discount_label %}
+                  <div class="mt-1.5 text-[0.72rem] font-medium text-gold-dark">{{ plan.discount_label }}</div>
+                {% endif %}
+              </div>
+              <div class="h-px bg-gold-dark/20"></div>
+              <ul class="flex flex-1 flex-col gap-2.5">
+                {% for feature in plan.features.all %}
+                  {% if feature.included %}
+                    <li class="flex gap-2 text-[0.88rem] text-coy">
+                      {% icon "check" class="mt-1 h-4 w-4 shrink-0 text-gold-dark" %}
+                      <span>{{ feature.title }}</span>
+                    </li>
+                  {% else %}
+                    <li class="flex gap-2 text-[0.88rem] text-coy/40">
+                      <span aria-hidden="true">—</span>
+                      <span>{{ feature.title }}</span>
+                    </li>
+                  {% endif %}
+                {% endfor %}
+              </ul>
+              <a href="{% url 'contact:contact' %}" class="btn btn-gold w-full justify-center px-5 py-3 text-[0.9rem]">
+                شروع کنید
+                {% icon "arrow-left" class="h-4 w-4" %}
+              </a>
+            </article>
+          {% endfor %}
+        </div>
+
+        {% if custom_items %}
+          <div class="glass-light mt-8 p-8 md:p-10" style="border-radius: 1.5rem" data-custom-root data-reveal="up">
+            <div class="mb-8 grid grid-cols-1 items-start gap-8 lg:grid-cols-[1fr_auto]">
+              <div>
+                <p class="eyebrow eyebrow-dark">پلن دلخواه</p>
+                <h2 class="mt-4 text-2xl font-extrabold text-paper md:text-[2rem]">فقط چیزی که نیاز دارید.</h2>
+                <p class="mt-3 max-w-xl text-[0.95rem] text-coy">
+                  آیتم‌های موردنظر را انتخاب کنید — قیمت نهایی به‌صورت خودکار محاسبه می‌شود.
+                </p>
+              </div>
+              <div class="flex items-baseline gap-2.5 rounded-2xl bg-ink px-6 py-5 text-cream">
+                <span class="font-latin text-[10px] tracking-[.2em] text-cream/45">مجموع تخمینی</span>
+                <span class="font-latin text-[1.7rem] font-bold leading-none text-gold-light fa-num" data-custom-total>۰</span>
+                <span class="text-[0.72rem] text-cream/45">میلیون تومان</span>
+              </div>
             </div>
-            {% if plan.discount_label %}<div class="mt-1.5 font-mono text-[0.72rem] text-lime-deep">{{ plan.discount_label }}</div>{% endif %}
+            <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+              {% for item in custom_items %}
+                <label class="flex cursor-pointer items-center justify-between gap-4 rounded-2xl border border-gold-dark/20 px-5 py-4 transition-colors has-[:checked]:border-gold has-[:checked]:bg-gold/5"
+                       for="ci-{{ item.id }}" data-reveal="up" data-delay="{% cycle '0' '0.05' '0.1' '0.15' %}">
+                  <span class="flex items-center gap-3.5">
+                    <input type="checkbox" id="ci-{{ item.id }}" data-custom-price="{{ item.price }}"
+                           class="h-4 w-4 shrink-0 accent-gold" />
+                    <span class="flex flex-col">
+                      <span class="text-[0.95rem] font-medium text-paper">{{ item.title }}</span>
+                      {% if item.description %}
+                        <span class="mt-0.5 text-[0.82rem] text-coy/70">{{ item.description }}</span>
+                      {% endif %}
+                    </span>
+                  </span>
+                  <span class="shrink-0 font-latin text-[0.84rem] font-medium text-gold-dark fa-num">{{ item.price }}M</span>
+                </label>
+              {% endfor %}
+            </div>
+            <div class="mt-8 flex flex-col items-start justify-between gap-5 border-t border-gold-dark/20 pt-6 sm:flex-row sm:items-center">
+              <p class="text-[0.86rem] text-coy/70">قیمت‌ها تخمینی هستند. برآورد دقیق بعد از جلسه اولیه ارائه می‌شود.</p>
+              <a href="{% url 'contact:contact' %}" class="btn btn-gold px-7 py-3.5">
+                درخواست مشاوره
+                {% icon "arrow-left" class="h-4 w-4" %}
+              </a>
+            </div>
           </div>
-          <div class="h-px bg-line"></div>
-          <ul class="m-0 flex flex-1 list-none flex-col gap-2 p-0">
-            {% for feature in plan.features.all %}
-              {% if feature.included %}
-                <li class="flex gap-2 text-[0.88rem] text-ink-soft">{% icon "check" class="h-4 w-4 shrink-0 text-lime-deep" %}{{ feature.title }}</li>
-              {% else %}
-                <li class="flex gap-2 text-[0.88rem] text-ink-soft opacity-40"><span>—</span>{{ feature.title }}</li>
-              {% endif %}
-            {% endfor %}
-          </ul>
-          <a class="btn btn-ghost text-[0.9rem]" href="{% url 'contact:contact' %}">شروع کنید {% icon "arrow-left" class="inline-block h-4 w-4 align-middle" %}</a>
-        </article>
         {% endif %}
-      {% endfor %}
-    </div>
-
-    {% if custom_items %}
-    <div class="mt-6 rounded-[6px] border border-line p-[clamp(28px,3vw,40px)]" data-reveal="fade-up">
-      <div class="mb-8 grid grid-cols-1 items-start gap-8 lg:grid-cols-[1fr_auto]">
-        <div>
-          <span class="eyebrow mb-4 inline-block"><span class="ml-2 inline-block h-1.5 w-1.5 rounded-full bg-lime align-middle"></span>پلن دلخواه</span>
-          <h2 class="mb-3 font-display text-[clamp(1.5rem,2.4vw,2.2rem)]">فقط چیزی که نیاز دارید.</h2>
-          <p class="max-w-[56ch] text-[0.98rem] text-ink-soft">آیتم‌های موردنظر را انتخاب کنید — قیمت نهایی به‌صورت خودکار محاسبه می‌شود.</p>
-        </div>
-        <div class="flex items-baseline gap-2.5 rounded-[6px] bg-night px-6 py-5 text-ink">
-          <span class="font-mono text-[0.72rem] uppercase tracking-[0.1em] text-mist-dim">مجموع تخمینی</span>
-          <span class="font-display text-[clamp(1.8rem,2.6vw,2.6rem)] font-semibold leading-none text-lime" id="custom-total-amount">۰</span>
-          <span class="font-mono text-[0.74rem] text-mist-dim">میلیون تومان</span>
-        </div>
       </div>
-      <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
-        {% for item in custom_items %}
-          <label class="custom-item flex cursor-pointer items-center justify-between gap-4 rounded-[6px] border border-line px-5 py-4 transition-[border-color,background-color] hover:border-night has-[:checked]:border-night has-[:checked]:bg-paper-soft" for="ci-{{ item.id }}"
-                 data-reveal="fade-up" data-reveal-delay="{{ forloop.counter0|stagger:60 }}">
-            <span class="flex items-center gap-3.5">
-              <input type="checkbox" id="ci-{{ item.id }}" data-price="{{ item.price }}" class="h-4 w-4 shrink-0 accent-[#a3d130]" />
-              <span class="flex flex-col">
-                <span class="text-[0.98rem] font-medium text-ink">{{ item.title }}</span>
-                {% if item.description %}<span class="mt-0.5 text-[0.85rem] text-ink-dim">{{ item.description }}</span>{% endif %}
-              </span>
-            </span>
-            <span class="shrink-0 font-mono text-[0.84rem] text-lime-deep">{{ item.price }}M</span>
-          </label>
-        {% endfor %}
-      </div>
-      <div class="mt-8 flex flex-col items-start justify-between gap-5 border-t border-line pt-6 sm:flex-row sm:items-center" data-reveal="fade-up">
-        <p class="m-0 text-[0.88rem] text-ink-dim">قیمت‌ها تخمینی هستند. برآورد دقیق بعد از جلسه اولیه ارائه می‌شود.</p>
-        <a class="btn btn-ink" href="{% url 'contact:contact' %}">
-          درخواست مشاوره {% icon "arrow-left" class="inline-block h-4 w-4 align-middle" %}
-        </a>
-      </div>
-    </div>
-    {% endif %}
-  </section>
+    </section>
   {% endif %}
 
-  <!-- ─── نظرات مشتریان ─── -->
-  {% if testimonials %}
-  <section class="border-b border-line px-page py-[clamp(56px,7vw,100px)]">
-    {% include 'components/section_header.html' with eyebrow='نظرات مشتریان' title='آن‌ها تجربه‌شان را گفتند.' title_id='testimonials-head' %}
-    <div class="mt-12 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
-      {% for t in testimonials %}
-        {% include 'components/cards/testimonial_card.html' with t=t %}
-      {% endfor %}
-    </div>
-  </section>
-  {% endif %}
+  {% comment %}نظرات مشتریان — کامپوننتِ مشترک با service{% endcomment %}
+  {% testimonials_slider service=service %}
 
-  <!-- ─── سوالات متداول ─── -->
+  {% comment %}سوالات متداول — همان نشانه‌گذاری صفحه اصلی (initFaq در pixoria.js){% endcomment %}
   {% if faqs %}
-  <section class="border-b border-line px-page py-[clamp(56px,7vw,100px)]">
-    <div class="grid grid-cols-1 items-start gap-20 lg:grid-cols-[1fr_2fr]">
-      <div class="lg:sticky lg:top-8" data-reveal="fade-up">
-        <span class="eyebrow mb-6 inline-block"><span class="ml-2 inline-block h-1.5 w-1.5 rounded-full bg-lime align-middle"></span>سوالات متداول</span>
-        <h2 class="font-display text-[clamp(1.8rem,2.6vw,2.6rem)]">چیزی که معمولاً می‌پرسند.</h2>
+    <section class="relative overflow-hidden bg-cream2">
+      <svg class="divider divider-flip" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0,26 C260,84 520,82 760,44 C1000,6 1240,80 1440,30 L1440,0 L0,0 Z" fill="#efece5"></path>
+      </svg>
+      <div class="relative z-10 mx-auto max-w-4xl px-6 pb-28 pt-28 md:pt-32">
+        <div class="max-w-2xl">
+          <p class="eyebrow eyebrow-dark" data-reveal="up">سوالات متداول</p>
+          <h2 class="mt-5 text-4xl font-extrabold leading-[1.3] text-paper md:text-[2.7rem]"
+              data-reveal="up" data-delay="0.08">
+            چیزی که معمولاً می‌پرسند.
+          </h2>
+        </div>
+        <div class="mt-12 space-y-3.5">
+          {% for faq in faqs %}
+            <div class="faq-item" data-reveal="up" data-delay="{% cycle '0' '0.06' '0.12' '0.18' '0.24' '0.3' %}">
+              <h3 class="m-0">
+                <button type="button" class="faq-q" aria-expanded="false">
+                  <span>{{ faq.question }}</span>
+                  <span class="faq-icon" aria-hidden="true">{% icon "plus" class="h-4 w-4" %}</span>
+                </button>
+              </h3>
+              <div class="faq-a" role="region">
+                <p>{{ faq.answer|linebreaksbr }}</p>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
       </div>
-      <div>
-        {% for faq in faqs %}
-          <details class="group border-t border-line last:border-b" data-reveal="fade-up" data-reveal-delay="{{ forloop.counter0|stagger:50 }}">
-            <summary class="flex cursor-pointer list-none items-center justify-between gap-6 py-6">
-              <h3 class="m-0 text-[1.1rem] font-medium leading-[1.3] text-ink">{{ faq.question }}</h3>
-              <span class="shrink-0 font-mono text-[1.4rem] font-light text-ink-dim transition-transform duration-300 group-open:rotate-45">+</span>
-            </summary>
-            <p class="max-w-[72ch] pb-6 text-[1rem] leading-[1.65] text-ink-soft">{{ faq.answer }}</p>
-          </details>
-        {% endfor %}
-      </div>
-    </div>
-  </section>
+    </section>
   {% endif %}
 
-  <!-- ─── سایر خدمات ─── -->
+  {% comment %}سایر خدمات — فهرست حداقلی{% endcomment %}
   {% if other_services %}
-  <section class="px-page py-[clamp(56px,7vw,100px)]">
-    {% include 'components/section_header.html' with eyebrow='سایر خدمات' title='خدمات دیگر ما را هم ببینید.' title_id='other-services-head' %}
-    <div class="mt-12">
-      {% for s in other_services %}
-        <a href="{% url 'services:detail' s.slug %}" class="group grid grid-cols-1 items-start gap-2 border-b border-line py-7 transition-colors duration-300 hover:bg-paper-soft md:grid-cols-[80px_1fr_1.4fr_auto] md:gap-8 md:py-9"
-           data-reveal="fade-up" data-reveal-delay="{{ forloop.counter0|stagger:50 }}">
-          <span class="font-mono text-[0.8rem] text-ink-dim">{{ forloop.counter|stringformat:'02d' }}</span>
-          <h3 class="m-0 font-display text-[clamp(1.3rem,2vw,1.8rem)] text-ink">{{ s.title }}</h3>
-          <p class="m-0 text-ink-soft">{{ s.excerpt }}</p>
-          {% icon "arrow-left" class="hidden h-5 w-5 transition group-hover:rotate-45 group-hover:text-lime-deep md:inline-block" %}
-        </a>
-      {% endfor %}
-    </div>
-  </section>
+    <section class="relative overflow-hidden bg-ink2">
+      <svg class="divider divider-flip" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0,26 C260,84 520,82 760,44 C1000,6 1240,80 1440,30 L1440,0 L0,0 Z" fill="#efece5"></path>
+      </svg>
+      <div class="grid-bg pointer-events-none absolute inset-0 opacity-20" aria-hidden="true"></div>
+      <div class="relative z-10 mx-auto max-w-7xl px-6 pb-28 pt-28 md:pt-32">
+        <div class="max-w-2xl">
+          <p class="eyebrow" data-reveal="up">سایر خدمات</p>
+          <h2 class="mt-5 text-4xl font-extrabold leading-[1.3] md:text-[2.7rem]"
+              data-reveal="up" data-delay="0.08">
+            خدمات دیگر ما را هم ببینید.
+          </h2>
+        </div>
+        <div class="mt-12 flex flex-col divide-y divide-cream/10">
+          {% for s in other_services %}
+            <a href="{% url 'services:detail' s.slug %}"
+               class="group grid grid-cols-1 items-start gap-4 py-8 transition-colors duration-300 hover:bg-white/[0.02] md:grid-cols-[56px_1fr_auto] md:gap-8"
+               data-reveal="up" data-delay="{% cycle '0' '0.06' '0.12' '0.18' %}">
+              <span class="icon-ring h-12 w-12 shrink-0">{% icon s.icon class="h-5 w-5" %}</span>
+              <div class="min-w-0">
+                <h3 class="text-xl font-bold text-cream transition-colors group-hover:text-gold-light">{{ s.title }}</h3>
+                {% if s.excerpt %}
+                  <p class="mt-2 max-w-2xl text-[0.92rem] leading-7 text-cream/55">{{ s.excerpt }}</p>
+                {% endif %}
+              </div>
+              <span class="hidden h-11 w-11 shrink-0 place-items-center rounded-full border border-cream/10 text-cream/50 transition-all duration-300 group-hover:border-gold/60 group-hover:bg-gold/10 group-hover:text-gold-light md:grid">
+                {% icon "arrow-left" class="h-5 w-5" %}
+              </span>
+            </a>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
   {% endif %}
-
 {% endblock %}
 
 {% block extra_js %}
-<script>
-  var checkboxes = document.querySelectorAll('.custom-item input[type="checkbox"]');
-  var totalEl = document.getElementById('custom-total-amount');
-  if (totalEl) {
-    function updateTotal() {
-      var total = 0;
-      checkboxes.forEach(function(cb) {
-        if (cb.checked) {
-          total += parseInt(cb.dataset.price);
-          cb.closest('.custom-item').classList.add('selected');
-        } else {
-          cb.closest('.custom-item').classList.remove('selected');
-        }
-      });
-      totalEl.textContent = total === 0 ? '۰' : total;
-    }
-    checkboxes.forEach(function(cb) { cb.addEventListener('change', updateTotal); });
-  }
-</script>
+  <script>
+    // Sum of the custom-plan items (only present when custom_items exist).
+    (function () {
+      var root = document.querySelector("[data-custom-root]");
+      if (!root) return;
+      var total = root.querySelector("[data-custom-total]");
+      var boxes = root.querySelectorAll("[data-custom-price]");
+      var FA = ["۰","۱","۲","۳","۴","۵","۶","۷","۸","۹"];
+      function fa(num) { return String(num).replace(/\d/g, function (d) { return FA[d]; }); }
+      function update() {
+        var sum = 0;
+        boxes.forEach(function (cb) { if (cb.checked) sum += parseInt(cb.dataset.customPrice, 10) || 0; });
+        total.textContent = fa(sum);
+      }
+      boxes.forEach(function (cb) { cb.addEventListener("change", update); });
+    })();
+  </script>
 {% endblock %}

@@ -1,20 +1,13 @@
 from django.shortcuts import render, get_object_or_404
-from django.urls import reverse
 from apps.core.context_utils import crumbs
 from .models import Service, ServicesPageSection
 
 
 def services_list(request):
-    services = list(Service.objects.all())
-    services_with_delay = [
-        {"service": service, "delay": (index % 5) * 100}
-        for index, service in enumerate(services)
-    ]
     context = {
         "crumbs": crumbs(("خانه", "home:home"), ("خدمات", None)),
         "page_section": ServicesPageSection.objects.first(),
-        "services": services,
-        "services_with_delay": services_with_delay,
+        "services": list(Service.objects.all()),
     }
     return render(request, "services/list.html", context)
 
@@ -32,11 +25,9 @@ def services_detail(request, slug):
         "why_us": service.why_us.all(),
         "deliverables": service.deliverables.all(),
         "processes": service.processes.all(),
-        "plans": service.plans.all(),
+        "plans": service.plans.prefetch_related("features").all(),
         "custom_items": service.custom_items.all(),
         "faqs": service.faqs.all(),
-        "testimonials": service.testimonials.all(),
         "other_services": Service.objects.exclude(slug=slug)[:4],
-        "contact_url": reverse("contact:contact"),
     }
     return render(request, "services/detail.html", context)

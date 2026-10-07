@@ -141,17 +141,9 @@ out of scope for this migration order (home/about/contact/404 only).
 
 ### Pending pages
 
-- `templates/services/list.html`, `templates/services/detail.html`: still on
-  their v1 templates. They `extends 'base.html'` (so the chrome is v2) but
-  their own markup is built entirely from dead v1 utilities (`px-page`,
-  `border-line`, `text-ink-dim`, `bg-paper-soft`, `font-display`, `font-mono`,
-  `text-ink-soft`, `data-reveal="fade-up"` + `data-reveal-delay`/`-duration`)
-  and v1 components (`components/page_hero.html`, `breadcrumb.html`,
-  `badge.html`, `button.html`, `cards/testimonial_card.html`). None of those
-  classes exist in the compiled `static/css/tailwind.css` (verified: 0
-  occurrences each), so the pages return 200 but render effectively unstyled —
-  T42 gives them minimal v2 placeholders. NOT redesigning them per the task
-  order.
+_(none left — every URL renders in the v2 design now. T42 gave the services
+pages minimal placeholders; a full services redesign is deliberately out of
+scope for this migration and can pick these templates up later.)_
 
 ## Decisions log
 
@@ -716,6 +708,43 @@ out of scope for this migration order (home/about/contact/404 only).
   `## Pending pages`** — still on v1 templates and unstyled, which is T42's
   scope, not T41's.
 
+- **D46 — Services placeholders (T42).** Confirmed broken first, as the task
+  requires: none of the v1 utilities those pages were built from (`px-page`,
+  `border-line`, `text-ink-dim`, `bg-paper-soft`, `font-display`, `font-mono`,
+  `text-ink-soft`, `data-reveal="fade-up"` + the `stagger` filter, `bg-night`,
+  `text-lime`, `btn-ink`…) exist in the compiled `static/css/tailwind.css`,
+  so they returned 200 but effectively unstyled. Both were replaced with
+  **minimal** placeholders — deliberately NOT a redesign, per the task order —
+  that extend `base.html` and render the real DB content with classes that
+  already exist: list = dark hero (orbs/shard, `services` stroke watermark,
+  breadcrumbs, `ServicesPageSection` title through `highlight` + description,
+  «N خدمت» chip) over a `bg-ink2` archive of icon-ring + title + excerpt +
+  `s-chip` tags + arrow rows (the portfolio-list rhythm), with the
+  «در حال حاضر خدمتی ثبت نشده است.» empty state; detail = dark hero (icon,
+  tag chips, `highlight` title, excerpt, «مشاوره رایگان» + «مشاهده قیمت‌ها»
+  buttons) then, each `{% if %}`-guarded, stats (`stat-card`/`stat-num`),
+  description (`.prose-ink`), deliverables/process (two `glass-light` cards),
+  why-us (`glass` grid), pricing (`glass-light` plan cards + the custom-plan
+  calculator), `{% testimonials_slider service=service %}` (the D31 component
+  — this is the "components must accept a service" requirement, exercised for
+  the first time on a real page), FAQ (the home `.faq-item`/`.faq-q`/`.faq-a`
+  markup so `pixoria.js`'s `initFaq` drives it unchanged) and other-services
+  rows. The calculator kept its logic but moved to `data-*` hooks
+  (`data-custom-root`/`-price`/`-total`) with a tiny Persian-digit converter,
+  so no v1 class or element id survives. Views cleaned of the two now-dead
+  context entries the v1 templates needed (`services_with_delay`,
+  `contact_url` — the new templates `{% url %}` directly) plus the unused
+  `testimonials` entry (the slider tag queries itself, D31) and `reverse`
+  import; `plans` gained `prefetch_related("features")` since the template
+  loops `plan.features.all`.
+  **Verified:** `manage.py check` + `makemigrations --check` clean; list 200
+  (42 KB) and detail 200 (73 KB) with the data-rich service
+  (`/services/web-design/` — all ten sections present), 200 for a bare
+  service (hero + description + other services only, optional sections fully
+  skipped), 404 on a missing slug, and with an EMPTY database (rolled-back
+  transaction) the list still returns 200 (22 KB) with the empty message
+  visible; no v1 classes, no CDN, `crumbs` breadcrumb trail intact.
+
 - **D40 — Blog model review + prose styles (T38).** The model layer was
   already nearly complete for the v2 pages; the review added only the missing
   pieces, all optional so a bare article still renders: `Article.featured`
@@ -1235,7 +1264,7 @@ out of scope for this migration order (home/about/contact/404 only).
   classes/tags/includes), fix `templates/registration/login.html`,
   `templates/admin/login.html`, proposal page and any remaining page that
   still assumes the old base | commit: "fix(templates): align remaining pages with v2 base"
-- [ ] T42 — Services list/detail: no converted design in this migration. Give
+- [x] T42 — Services list/detail: no converted design in this migration. Give
   them minimal placeholders that extend the new `base.html` ONLY IF they are
   currently broken/unstyled; list them under `## Pending pages` in this file.
   Do NOT redesign them now (the testimonials/projects/articles components must
@@ -1254,23 +1283,11 @@ out of scope for this migration order (home/about/contact/404 only).
 
 ## Current status
 
-T01–T41 done. Every page reachable from a URL now renders in the v2 design
-except the two services pages (see `## Pending pages`).
+T01–T42 done. **Every URL in the site now renders in the v2 design** — the
+services pages were the last unstyled ones and got minimal placeholders (D46);
+their full redesign stays out of scope for this migration.
 
-T41 verified the whole site: all live URLs 200/404, no leaked `[[ ]]`, no CDN
-references, no dead v1 classes/blocks/includes/icons anywhere in a live
-template, and the login (+admin login) and proposal pages are rebuilt (D45).
-
-**Next: T42.** `templates/services/list.html` and
-`templates/services/detail.html` are confirmed broken/unstyled — none of their
-v1 utility classes exist in the compiled Tailwind (see the
-`## Pending pages` entry for the full list) — so give them minimal
-placeholders extending `base.html`: real DB content (services, section
-settings), v2 classes only, no redesign. The `testimonials_slider` /
-`projects_carousel` / `articles_carousel` tags already accept a `service`, so
-the detail page can use `{% testimonials_slider service=service %}`.
-
-Then T43: delete ALL old frontend files. Candidates (verify each with a
+**Next: T43.** Delete ALL old frontend files. Candidates (verify each with a
 project-wide grep first — D45 confirmed the live templates touch none of
 them): the ten orphaned blog detail partials (`templates/blog/partials/
 detail_hero.html`, `detail_cover.html`, `detail_body.html`,
@@ -1283,11 +1300,13 @@ detail_hero.html`, `detail_cover.html`, `detail_body.html`,
 `breadcrumb.html`, `button.html`, `cta_banner.html`, `page_hero.html`,
 `section_header.html`, `carousel.html` — check whether
 `component_tags.py`'s `{% carousel %}` block tag is still used anywhere
-first). After the templates go, also review the JS/CSS/templatetag/context
-bits that only existed for them (`apps/core/templatetags/anim_tags.py`?,
-`apps/core/context_utils.py`'s crumbs if unused, `static/js/core/`,
-`static/css/blog.css` / `styles.css` / `site.css` if unreferenced). One small
-commit per group. T44: final checks with an EMPTY and a seeded database
+first; after T42 the services pages no longer use any of them). After the
+templates go, also review the JS/CSS/templatetag/context bits that only
+existed for them (`apps/core/templatetags/anim_tags.py`'s `stagger` filter —
+keep `apps/core/context_utils.py`'s crumbs, the v2 pages still use it,
+`static/js/core/`, `static/css/blog.css` / `styles.css` /
+`site.css` if unreferenced). One small commit per group.
+T44: final checks with an EMPTY and a seeded database
 (`scripts/render_check.py` is ready for that), then delete `new/`.
 
 
