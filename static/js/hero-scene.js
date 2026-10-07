@@ -8,9 +8,13 @@
  *   - devicePixelRatio is capped at 2;
  *   - the render loop is paused (not merely skipped) while the hero is
  *     off-screen or the tab is hidden, and everything is disposed on teardown;
+ *   - the star field drifts, wraps, twinkles and fades entirely on the GPU
+ *     (one clock + one speed uniform per layer — no per-frame JS loop), and
+ *     the crystal planet sits on the physical left of the frame on desktop;
  *   - prefers-reduced-motion renders nothing animated and shows the CSS
  *     fallback poster instead;
- *   - any failure (no WebGL, no GPU, exception) falls back to #hero-fallback.
+ *   - any failure (no WebGL, no GPU, exception, rejected shader) falls back
+ *     to #hero-fallback.
  *
  * Loaded as an ES module from base.html; three is imported locally.
  */
@@ -101,11 +105,19 @@ function boot() {
       return t;
     })();
 
-    // Multi-layer star field (space-depth effect)
+    // Multi-layer star field (space-depth effect). Every star drifts toward the
+    // camera and wraps inside its band entirely on the GPU — one shared clock
+    // uniform plus one speed uniform per layer, no per-frame JS loop over
+    // thousands of stars. Each star fades smoothly across its wrap edges, with
+    // view distance and with a gentle eased twinkle, so the field never pops
+    // in or out and nothing switches on/off at a hard threshold.
     const DEPTH = 90; // travel-tunnel length
+    const clockUniform = { value: 0 };
     const starLayers = [];
+
     const makeStarLayer = (count, size, zMin, zMax, colors) => {
       const pos = new Float32Array(count * 3);
+      const phase = new Float32Array(count);
       const col = new Float32Array(count * 3);
       const c = new THREE.Color();
       for (let i = 0; i < count; i++) {
@@ -115,6 +127,7 @@ function boot() {
         pos[i * 3] = Math.cos(a) * r;
         pos[i * 3 + 1] = Math.sin(a) * r;
         pos[i * 3 + 2] = zMin + Math.random() * (zMax - zMin);
+        phase[i] = Math.random() * Math.PI * 2;
         c.set(colors[Math.floor(Math.random() * colors.length)]);
         col[i * 3] = c.r;
         col[i * 3 + 1] = c.g;
@@ -122,7 +135,9 @@ function boot() {
       }
       const geo = new THREE.BufferGeometry();
       geo.setAttribute("position", new THREE.BufferAttribute(pos, 3));
+      geo.setAttribute("aPhase", new THREE.BufferAttribute(phase, 1));
       geo.setAttribute("color", new THREE.BufferAttribute(col, 3));
+
       const mat = new THREE.PointsMaterial({
         size,
         map: starTex,
@@ -132,17 +147,61 @@ function boot() {
         blending: THREE.AdditiveBlending,
         vertexColors: true,
       });
+
+      // uSpeed is written per frame; uTime is shared by every layer.
+      const uniforms = { uTime: clockUniform, uSpeed: { value: 0 } };
+      mat.onBeforeCompile = (shader) => {
+        Object.assign(shader.uniforms, uniforms, {
+          uZMin: { value: zMin },
+          uRange: { value: zMax - zMin },
+        });
+        shader.vertexShader = `attribute float aPhase;
+varying float vAlpha;
+${shader.vertexShader}`
+          .replace(
+            "#include <begin_vertex>",
+            `#include <begin_vertex>
+            // Drift toward the camera and wrap inside the layer band (GPU-side).
+            float zr = mod(transformed.z - uZMin + uTime * uSpeed, uRange) + uZMin;
+            transformed.z = zr;
+            // Soft fade across both wrap edges so a star never appears or
+            // vanishes at full opacity.
+            float edgeFade =
+              smoothstep(uZMin, uZMin + 9.0, zr) *
+              (1.0 - smoothstep(uZMin + uRange - 9.0, uZMin + uRange, zr));`,
+          )
+          .replace(
+            "#include <project_vertex>",
+            `#include <project_vertex>
+            float viewDist = -mvPosition.z;
+            // Distance fade: nothing blindingly close, nothing hard at the far plane.
+            float distFade =
+              smoothstep(7.0, 20.0, viewDist) *
+              (1.0 - smoothstep(62.0, 92.0, viewDist));
+            // Gentle eased twinkle (sin only, no hard on/off threshold).
+            float twinkle = 0.6 + 0.4 * sin(uTime * 1.6 + aPhase * 1.7);
+            vAlpha = edgeFade * distFade * twinkle;`,
+          );
+        shader.fragmentShader = `varying float vAlpha;
+${shader.fragmentShader}`.replace(
+          "vec4 diffuseColor = vec4( diffuse, opacity );",
+          "vec4 diffuseColor = vec4( diffuse, opacity * vAlpha );",
+        );
+      };
+
       const pts = new THREE.Points(geo, mat);
       scene.add(pts);
-      starLayers.push({ pts, zMin, zMax });
+      // Closer (bigger) layers move faster — matches the old per-layer speeds.
+      starLayers.push({ uniforms, speedMul: 0.4 + (zMax - zMin) / DEPTH });
       return pts;
     };
 
     const WARM = [0xfff4e0, 0xe8c47a, 0xfff4e0, 0xfff4e0, 0xc9a15a];
     const COOL = [0x2e63ff, 0x6b8bff, 0x8fa8ff];
-    makeStarLayer(900, 0.16, -DEPTH * 0.35, DEPTH * 0.65, WARM); // far layer — small, slow
-    makeStarLayer(520, 0.27, -DEPTH * 0.2, DEPTH * 0.8, [...WARM, ...COOL]); // middle
-    makeStarLayer(240, 0.42, -DEPTH * 0.1, DEPTH * 0.9, COOL.concat([0xfff4e0])); // near — big, fast
+    makeStarLayer(630, 0.16, -DEPTH * 0.35, DEPTH * 0.65, WARM); // far layer — small, slow
+    makeStarLayer(360, 0.27, -DEPTH * 0.2, DEPTH * 0.8, [...WARM, ...COOL]); // middle
+    makeStarLayer(168, 0.42, -DEPTH * 0.1, DEPTH * 0.9, COOL.concat([0xfff4e0])); // near — big, fast
+
 
     // Central crystal planet
     const planet = new THREE.Group();
@@ -218,6 +277,13 @@ function boot() {
     const cur = { rx: 0, ry: 0, roll: 0 };
 
     /* ---------------- layout (desktop vs mobile planet position) ---------------- */
+
+    // The planet's horizontal offset is defined by this ONE constant: on desktop
+    // the RTL text column owns the right half of the hero, so the crystal planet
+    // (rings + moons travel with it) is pulled toward the physical left of the
+    // frame. On mobile it stays centered and raised above the text.
+    const PLANET_X = -3.0;
+
     function layout() {
       const w = mount.clientWidth;
       const h = mount.clientHeight;
@@ -228,8 +294,7 @@ function boot() {
         planet.position.set(0, 1.1, 0);
         planet.scale.setScalar(0.62);
       } else {
-        // Desktop: planet on the left of the canvas (text column on the right)
-        planet.position.set(-2.0, 0.1, 0);
+        planet.position.set(PLANET_X, 0.1, 0);
         planet.scale.setScalar(0.95);
       }
     }
@@ -278,6 +343,7 @@ function boot() {
 
     /* ---------------- render loop (pausable) ---------------- */
     const clock = new THREE.Clock();
+    let starTime = 0;
     let running = false;
     const startLoop = () => {
       if (running || REDUCED) return;
@@ -292,28 +358,20 @@ function boot() {
     };
 
     function frame() {
-      const dt = Math.min(clock.getDelta(), 0.05);
-      const t = clock.elapsedTime;
+      // Animation time lives in our own accumulator: it survives loop pauses
+      // (hidden tab / hero off-screen) and each delta is clamped so a long
+      // pause cannot teleport the stars when the loop resumes.
+      starTime += Math.min(clock.getDelta(), 0.05);
+      const t = starTime;
 
       // Travel speed: very slow at rest, gentle at peak scroll
       const speed = 0.12 + state.travel * 0.5;
 
-      // Move stars toward the camera and wrap them behind it
+      // Stars move on the GPU — one clock + one speed write per layer per frame.
+      // (The 14× factor matches the old per-frame JS drift speed.)
+      clockUniform.value = t;
       for (const layer of starLayers) {
-        const arr = layer.pts.geometry.attributes.position.array;
-        // Closer (bigger) layers move faster
-        const layerSpeed = speed * (0.4 + (layer.zMax - layer.zMin) / DEPTH);
-        for (let i = 0; i < arr.length; i += 3) {
-          arr[i + 2] += layerSpeed * dt * 14;
-          if (arr[i + 2] > camera.position.z + 4) {
-            arr[i + 2] = layer.zMin;
-            const a = Math.random() * Math.PI * 2;
-            const r = 3 + Math.random() * 17;
-            arr[i] = Math.cos(a) * r;
-            arr[i + 1] = Math.sin(a) * r;
-          }
-        }
-        layer.pts.geometry.attributes.position.needsUpdate = true;
+        layer.uniforms.uSpeed.value = speed * layer.speedMul * 14;
       }
 
       // Planet rotation (very slow at rest, gentler while travelling)
@@ -344,17 +402,27 @@ function boot() {
       cur.roll += (targetRoll - cur.roll) * 0.06;
 
       camera.position.z = 9 - state.travel * 0.9; // gentle dive toward the planet
-      camera.position.x = cur.ry * 1.2 + 0.7; // camera slightly right, planet left of frame
+      // Camera sits opposite the planet offset so the planet stays screen-left
+      // (derived from PLANET_X — no second magic number).
+      camera.position.x = cur.ry * 1.2 - planet.position.x * 0.22;
       camera.position.y = cur.rx * 1.2;
       camera.lookAt(
-        planet.position.x * 0.55 * (1 - state.travel * 0.4),
+        planet.position.x * 0.4 * (1 - state.travel * 0.4),
         planet.position.y * (1 - state.travel * 0.4),
         0,
       );
       // Applied after lookAt so it is not overwritten
       camera.rotateZ(cur.roll);
 
-      renderer.render(scene, camera);
+      try {
+        renderer.render(scene, camera);
+      } catch (err) {
+        // A GPU/shader failure (a driver that rejects the injected star fade,
+        // for instance) must not throw every frame — stop and use the CSS poster.
+        stopLoop();
+        showFallback();
+        console.warn("pixoria hero: 3D scene failed, using CSS fallback", err);
+      }
     }
 
     // Pause the loop while the hero is off-screen or the tab is hidden.

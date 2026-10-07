@@ -772,6 +772,42 @@ scope for this migration and can pick these templates up later.)_
   lead-form markup and no `TemplateDoesNotExist`, and about/contact/portfolio/
   blog are unaffected.
 
+- **D48 — Hero 3D fixes (T46).** `static/js/hero-scene.js`:
+  **(a) one planet-offset constant.** `PLANET_X = -3.0` (was the inline magic
+  `-2.0`) is now the single source of the desktop composition: `layout()` puts
+  the crystal-planet group (rings and moons are children, so they travel with
+  it) at `PLANET_X` on desktop and centered/raised at mobile, and the camera is
+  derived from it — `camera.position.x = cur.ry * 1.2 - planet.position.x *
+  0.22` (camera sits opposite the offset) with `lookAt(planet.x * 0.4 * …)`
+  (reduced from 0.55 so the planet actually reads further left instead of the
+  camera following it and cancelling the shift). The mobile layout keeps
+  `planet.x = 0` and the same formula yields a centered planet.
+  **(b) ~30% fewer stars** per layer: 900/520/240 → 630/360/168.
+  **(c) the star pop is fixed — everything GPU-side.** The per-frame JS loop
+  over every star (the old code rewrote ~1660 z-values per frame and re-uploaded
+  three position buffers) is GONE. `PointsMaterial.onBeforeCompile` now injects,
+  into three's confirmed `points_vert`/`points_frag` chunks (injection points
+  verified verbatim in the local `three.module.js`: `#include <begin_vertex>`,
+  `#include <project_vertex>`, `vec4 diffuseColor = vec4( diffuse, opacity );`):
+  a `aPhase` attribute (per-star random phase), `mod()` z-drift + wrap inside
+  the layer band, a `smoothstep` fade across BOTH wrap edges (9 units) so a
+  star never appears/vanishes at full opacity, a distance fade in view space
+  (`smoothstep(7,20)` close, `smoothstep(62,92)` far) and a gentle eased-sin
+  twinkle (`0.6 + 0.4·sin(t·1.6 + phase·1.7)`, never zero) — combined into
+  `vAlpha` which multiplies the fragment alpha. No hard thresholds anywhere.
+  Per frame the CPU now writes ONE shared clock value + one speed per layer
+  (`speed * layer.speedMul * 14` preserves the old drift velocity). Two
+  robustness guards came with it: animation time moved from `clock.elapsedTime`
+  to a clamped `starTime` accumulator (a long pause can no longer teleport the
+  stars, and the time survives loop restarts — `clock.start()` used to reset
+  it), and the render call is wrapped in try/catch that stops the loop and
+  raises `#hero-fallback` on any runtime/shader failure, extending D17's
+  "any failure falls back" promise to failures that surface mid-loop.
+  NOT verified in a browser (no Playwright/Puppeteer in the project; the shader
+  was reviewed by hand against the local three source and the module passes
+  `node --input-type=module --check`); the home page still renders 200 and
+  loads the module.
+
 - **D40 — Blog model review + prose styles (T38).** The model layer was
   already nearly complete for the v2 pages; the review added only the missing
   pieces, all optional so a bare article still renders: `Article.featured`
@@ -1303,7 +1339,7 @@ scope for this migration and can pick these templates up later.)_
   `templates/home/index.html`, `templates/home/sections/_contact.html`,
   `_lead_form.html`, `_lead_success.html`, `static/src/input.css`,
   `static/js/pixoria.js` | commit: "feat(home): remove lead form section"
-- [ ] T46 — Hero 3D fixes (`static/js/hero-scene.js`): (a) shift the crystal
+- [x] T46 — Hero 3D fixes (`static/js/hero-scene.js`): (a) shift the crystal
   planet (and its rings/moons group) toward the physical LEFT of the screen on
   desktop — centered or slightly offset on mobile so the text stays readable,
   with the offset as ONE constant; (b) reduce the star count by ~30% across all
@@ -1657,8 +1693,8 @@ contact; descriptive alt texts; meta title/description per service.
 
 ## Current status
 
-T01–T45 done (T42 superseded by Phase 12). **Next: T46** — hero 3D fixes in
-`static/js/hero-scene.js` (shift the crystal planet left on desktop, ~30% fewer
-stars, GPU-side star fade so stars never pop in/out).
+T01–T46 done (T42 superseded by Phase 12). **Next: T47** — one shared
+`templates/components/_breadcrumb.html` partial (props: crumbs list, dark/light
+theme) replacing the duplicated inline breadcrumb markup on every page.
 
 
