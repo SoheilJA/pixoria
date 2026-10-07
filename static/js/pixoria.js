@@ -5,7 +5,8 @@
  * scroll-driven reveals/counters, magnetic + tilt effects, the mobile menu,
  * scroll progress, the testimonial slider, the media (video/audio) cards,
  * the portfolio filter, marquee duplication, the process GPS draw, the FAQ
- * accordion and the toast.
+ * accordion, the toast and the blog article chrome (reading-progress bar,
+ * table-of-contents highlight, copy-link button).
  *
  * Loaded as an ES module from base.html. GSAP + ScrollTrigger are expected as
  * globals (defer classic scripts); every feature degrades gracefully when they
@@ -296,6 +297,7 @@ function init() {
   initBuildBars({ hasGsap, ScrollTrigger });
   initGpsDraw({ hasGsap, ScrollTrigger, REDUCED });
   initFaq();
+  initArticleChrome();
 
   window.addEventListener("load", () => {
     if (hasGsap && ScrollTrigger) ScrollTrigger.refresh();
@@ -925,6 +927,84 @@ function initFaq() {
       item.classList.toggle("open", !isOpen);
       q.setAttribute("aria-expanded", String(!isOpen));
       a.style.maxHeight = isOpen ? "0" : a.scrollHeight + "px";
+    });
+  });
+}
+
+/* ------------------------------------------ blog article: TOC + progress + copy */
+
+// صفحهٔ مقالهٔ بلاگ: نوار پیشرفتِ خواندن، لینکِ فعالِ فهرست مطالب و دکمهٔ
+// کپیِ لینک. همه‌چیز با data-* قلاب می‌شود تا هیچ آی‌دیِ ثابتی روی صفحه نباشد
+// و این کد فقط روی صفحات مقاله کار کند.
+function initArticleChrome() {
+  // نوار پیشرفتِ خواندن — نسبتِ اسکرولِ شده از متن مقاله را پر می‌کند.
+  const body = document.querySelector("[data-reading-progress]");
+  const bar = document.querySelector("[data-reading-bar]");
+  if (body && bar) {
+    const sync = () => {
+      const r = body.getBoundingClientRect();
+      const total = r.height;
+      const passed = Math.min(Math.max(-r.top, 0), total);
+      bar.style.transform = `scaleX(${total > 0 ? passed / total : 0})`;
+    };
+    window.addEventListener("scroll", sync, { passive: true });
+    window.addEventListener("resize", sync);
+    sync();
+  }
+
+  // فهرست مطالب — لینکِ متناظر با هدینگی که در دید است فعال می‌شود.
+  const toc = document.querySelector("[data-toc]");
+  if (toc) {
+    const links = [...toc.querySelectorAll("[data-toc-link]")];
+    const headings = links
+      .map((a) => {
+        try {
+          return document.querySelector(
+            `#${CSS.escape(a.getAttribute("href").slice(1))}`,
+          );
+        } catch {
+          return null;
+        }
+      })
+      .filter(Boolean);
+    if (headings.length) {
+      const io = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            links.forEach((a) =>
+              a.classList.toggle("active", a.hash === `#${entry.target.id}`),
+            );
+          });
+        },
+        { rootMargin: "-20% 0px -70% 0px" },
+      );
+      headings.forEach((h) => io.observe(h));
+    }
+  }
+
+  // دکمهٔ کپیِ لینک — حالتِ «کپی شد» دو ثانیه می‌ماند.
+  document.querySelectorAll("[data-copy-link]").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      const def = btn.querySelector("[data-copy-default]");
+      const done = btn.querySelector("[data-copy-done]");
+      const flashDone = () => {
+        if (def) def.hidden = true;
+        if (done) done.hidden = false;
+        setTimeout(() => {
+          if (done) done.hidden = true;
+          if (def) def.hidden = false;
+        }, 2000);
+      };
+      if (navigator.clipboard) {
+        navigator.clipboard
+          .writeText(location.href)
+          .then(flashDone)
+          .catch(() => showToast("کپی کردن لینک ناموفق بود"));
+      } else {
+        showToast("مرورگر اجازهٔ کپی نمی‌دهد");
+      }
     });
   });
 }

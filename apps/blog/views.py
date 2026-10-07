@@ -80,12 +80,13 @@ def article_detail(request, slug):
 
     content_html, toc = process_content_toc(article.content)
 
-    # مقالات مرتبط از همین دسته‌بندی
-    related_articles = (
+    # آیا مقالهٔ دیگری در این دسته هست؟ این پرچم از برابرمجموعهٔ کوئریِ
+    # articles_carousel (exclude + category) می‌آید، پس هدرِ بخشِ مطالب مرتبط
+    # هرگز بدون کارت رندر نمی‌شود.
+    has_related = (
         Article.objects.filter(status="published", category=article.category)
         .exclude(pk=article.pk)
-        .select_related("category")
-        .order_by("-published_at")[:3]
+        .exists()
     )
 
     # مقاله قبلی (بر اساس تاریخ منتشر شدن)
@@ -113,12 +114,12 @@ def article_detail(request, slug):
         "crumbs": crumbs(
             ("خانه", "home:home"),
             ("بلاگ", "blog:list"),
-            (article.category.title, None),
+            (article.title, None),
         ),
         "article": article,
         "content_html": content_html,
         "toc": toc,
-        "related_articles": related_articles,
+        "has_related": has_related,
         "prev_article": prev_article,
         "next_article": next_article,
     }

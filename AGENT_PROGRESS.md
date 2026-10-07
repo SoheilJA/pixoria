@@ -130,11 +130,13 @@ backend, replacing the old lime/dark-space frontend.
 | — | about (short intro) | NEW `HomeAboutSection` model |
 | — | cta (pill buttons) | `CTASection` reworked into new pill style |
 
-Pending pages (no new design in `new/`): blog list/detail, portfolio
-list/detail, services list/detail, proposal, login. These keep working with
-the old templates until restyled; they already extend `base.html`, so the new
-base restyles them automatically. Service detail pages exist in `new/services/`
-but are out of scope for this migration order (home/about/contact/404 only).
+Pending pages (no new design in `new/`): services list/detail, proposal,
+login. The portfolio and blog pages had no `new/` design either but were
+designed in the v2 language directly (T35–T40, see D27) and are done. The
+remaining ones still use v1 templates; they extend `base.html`, so the new
+base restyles their chrome, but their own markup still assumes old tokens and
+needs the T41/T42 pass. Service detail pages exist in `new/services/` but are
+out of scope for this migration order (home/about/contact/404 only).
 
 ## Decisions log
 
@@ -859,6 +861,64 @@ but are out of scope for this migration order (home/about/contact/404 only).
   rebuilt (no token changes — just the newly-used `sm:grid-cols-2` / `lg:mt-10`
   utilities).
 
+- **D42 — Blog detail page (T40).** `templates/blog/detail.html` rebuilt as
+  one self-contained file on `base.html` (the D39 portfolio-detail precedent),
+  so the seven v1 partials it used to include (`detail_hero`/`detail_cover`/
+  `detail_body`/`sidebar_toc`/`sidebar_author`/`sidebar_related`/`sidebar_cta`/
+  `detail_related_section`/`detail_post_nav`/`detail_cta`) are now unreferenced
+  and left for T43 — they still carry the dead v1 tokens (`text-ink-dim`,
+  `bg-paper-soft`, `border-line`, `text-lime`, `bg-night`, `px-page`) and
+  rendered unstyled. Four sections in the v2 rhythm: hero (`bg-ink`,
+  mouse-parallax orbs/shard, latin `article` stroke watermark, breadcrumb trail
+  ending on the article title with `truncatechars:34`, category chip →
+  `blog:list` + `#tag` chips, `highlight` h1, excerpt, four glass meta tiles —
+  author / Jalali publication date (`fa_jdate`) / reading time (`fa_digits`) /
+  updated-at (`is_updated()`, `sparkles` icon); tile border-radii are literals,
+  not `cycle`, because each tile renders exactly once) → cover (`bg-ink2`,
+  `divider-flip` fill `#0a0a0c`, `fetchpriority="high"`, skipped when
+  `cover_image` is empty) → body (`bg-cream`, `border-radius: 3rem 9rem 0 0`,
+  `lg:grid-cols-12`: `prose-ink` article with an excerpt lead, the TOC-id'd
+  content and the share bar, plus a sticky `glass-light` sidebar — TOC, author
+  card (`.avatar` with `initial()` fallback) and an ink consultation card whose
+  copy is the v1 prose) → related (`bg-ink2`, divider fill `#f5f3ee`, header +
+  `{% articles_carousel exclude=article category=article.category limit=6 %}`
+  + prev/next glass cards). **The view's `related_articles` slice became
+  `has_related`**, a `.exists()` mirroring the carousel's own query
+  (`published` + same category + excluding the article), so the header never
+  renders over an empty track; prev/next keep their own `published_at`
+  queries and their own `{% if prev_article or next_article %}` guard inside
+  the section. The crumbs' last item is now the article title (was the
+  *category* title, which duplicated the chip row and never marked the page).
+  **All page JS moved into pixoria.js** as `initArticleChrome()` — the
+  template's `extra_js` block is gone entirely: (a) the reading-progress bar
+  reads `[data-reading-progress]` (the `<article>`) and scales `[data-reading-
+  bar]` (origin-right gold gradient) from plain scroll geometry, no GSAP
+  needed; (b) the TOC active link resolves each `[data-toc-link]`'s target with
+  `CSS.escape` + IntersectionObserver (`rootMargin: -20% 0px -70% 0px`) and
+  toggles `.active`, styled with self-referential arbitrary variants
+  (`[&.active]:bg-gold/10`, `group-[.active]:bg-gold-dark`) so no new CSS was
+  needed for it; (c) `[data-copy-link]` swaps its `data-copy-default` /
+  `data-copy-done` spans for 2s and falls back to `pixoriaToast` when the
+  Clipboard API is missing or rejects. No element ids anywhere on the page.
+  Share buttons: x / LinkedIn / Telegram are plain intent links and the fourth
+  is the copy button, all `.share-btn` (the one new CSS class, next to
+  `.blog-chip`). JSON-LD (`BlogPosting` + `BreadcrumbList`) in `extra_head`
+  via the `json` filter, with the conditional `image`/`author` placed *before*
+  the unconditional `publisher` so the trailing commas can never break the
+  script. **Icon gotcha:** the design-adjacent names `hash` (tag chips) and
+  `refresh-cw` (updated tile) are NOT in the local sprite — tags use a literal
+  gold `#` and the tile uses `sparkles`; check `static/icons/lucide.sprite.svg`
+  before naming an icon (D3). Verified: detail 200 (58 KB) with cover/TOC
+  (4 h2 → 4 entries)/tags/share/carousel/prev-next; 200 for the only article
+  in its category (whole related section — header, carousel and nav — hidden);
+  200 with cover/author/tags stripped (own cover section and the JSON-LD
+  `image`/`author` keys gone, related cards keep their covers); 200 with an
+  empty DB (no TOC, no related, no author card, share bar stays); 200 for a
+  rich fixture (3 TOC entries, author in JSON-LD and sidebar); missing slug
+  404; JSON-LD parses; home/about/contact/blog-list/portfolio-list unchanged;
+  `manage.py check` + `makemigrations --check` clean; node module check passes;
+  Tailwind rebuilt (no token changes — the two arbitrary variants compiled).
+
 ## Tasks
 
 ### Phase 0 — Foundation
@@ -1099,7 +1159,7 @@ but are out of scope for this migration order (home/about/contact/404 only).
   `templates/blog/partials/load_response.html`,
   `templates/components/_article_card.html`, `apps/blog/views.py`,
   `static/js/pixoria.js` | commit: "feat(blog): rebuild list page in v2 style"
-- [ ] T40 — Blog DETAIL page `templates/blog/detail.html`: hero with cover,
+- [x] T40 — Blog DETAIL page `templates/blog/detail.html`: hero with cover,
   category, Jalali date (`fa_jdate`), reading time (`fa_digits`), author,
   reading-progress bar, article body with the typography style, auto table of
   contents from headings only if it can be done cheaply (small local JS, no
@@ -1135,15 +1195,22 @@ but are out of scope for this migration order (home/about/contact/404 only).
 
 ## Current status
 
-T01–T39 done. Next: T40 — blog DETAIL page `templates/blog/detail.html` and
-its partials: hero with cover (`detail_hero.html`/`detail_cover.html` still
-carry v1 tokens like `text-ink`/`bg-paper-soft`), Jalali date (`fa_jdate`),
-reading time (`fa_digits`), reading-progress bar, article body in
-`.prose-ink` (ready — D40), auto table of contents (the `process_content_toc`
-h2-id injection + sidebar TOC already exist, only restyle), tags, share
-buttons (plain links), `{% articles_carousel exclude=article
-category=article.category %}` replacing the hand-rolled related grid/
-sidebar, Article JSON-LD, meta blocks. The v1 `detail_body.html` share bar
-was already restyled in T38; `detail_post_nav.html`/`sidebar_related.html`/
-`detail_related_section.html` still use old tokens.
+T01–T40 done — every page now renders in the v2 design. Next: Phase 10 cleanup.
+T41: verify no broken references (grep for removed classes/tags/includes) and
+fix `templates/registration/login.html`, `templates/admin/login.html`, the
+proposal page and any remaining page still assuming the old base. T42:
+services list/detail still render on v1 templates — check whether they are
+broken/unstyled and, only if so, give them minimal placeholders extending the
+new `base.html` (do NOT redesign; list them under `## Pending pages`).
+T43: delete ALL old frontend files. Candidates already identified by D42: the
+ten orphaned blog detail partials (`templates/blog/partials/detail_hero.html`,
+`detail_cover.html`, `detail_body.html`, `detail_post_nav.html`,
+`detail_related_section.html`, `detail_cta.html`, `sidebar_toc.html`,
+`sidebar_author.html`, `sidebar_related.html`, `sidebar_cta.html`) plus the v1
+`templates/components/cards/blog_card.html` (replaced by
+`components/_article_card.html` in T39) and
+`templates/components/breadcrumb.html`/`badge.html` if nothing else uses them —
+verify each with a project-wide grep before deleting. T44: final checks with
+an EMPTY and a seeded database, then delete `new/`.
+
 

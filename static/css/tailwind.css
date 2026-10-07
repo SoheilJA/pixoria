@@ -357,6 +357,9 @@
   .top-7 {
     top: calc(var(--spacing) * 7);
   }
+  .top-10 {
+    top: calc(var(--spacing) * 10);
+  }
   .top-14 {
     top: calc(var(--spacing) * 14);
   }
@@ -606,6 +609,9 @@
   .left-1\/4 {
     left: calc(1 / 4 * 100%);
   }
+  .left-2 {
+    left: calc(var(--spacing) * 2);
+  }
   .left-3 {
     left: calc(var(--spacing) * 3);
   }
@@ -810,6 +816,9 @@
   .mt-\[3em\] {
     margin-top: 3em;
   }
+  .mt-\[7px\] {
+    margin-top: 7px;
+  }
   .mt-auto {
     margin-top: auto;
   }
@@ -818,6 +827,9 @@
   }
   .mb-1 {
     margin-bottom: var(--spacing);
+  }
+  .mb-1\.5 {
+    margin-bottom: calc(var(--spacing) * 1.5);
   }
   .mb-2 {
     margin-bottom: calc(var(--spacing) * 2);
@@ -848,6 +860,9 @@
   }
   .mb-10 {
     margin-bottom: calc(var(--spacing) * 10);
+  }
+  .mb-12 {
+    margin-bottom: calc(var(--spacing) * 12);
   }
   .mb-16 {
     margin-bottom: calc(var(--spacing) * 16);
@@ -1061,6 +1076,9 @@
   }
   .h-px {
     height: 1px;
+  }
+  .max-h-\[calc\(100dvh-3rem\)\] {
+    max-height: calc(100dvh - 3rem);
   }
   .min-h-\[100svh\] {
     min-height: 100svh;
@@ -1512,6 +1530,11 @@
     margin-block-start: calc(calc(var(--spacing) * 2) * var(--tw-space-y-reverse));
     margin-block-end: calc(calc(var(--spacing) * 2) * calc(1 - var(--tw-space-y-reverse)));
   }
+  :where(.space-y-3 > :not(:last-child)) {
+    --tw-space-y-reverse: 0;
+    margin-block-start: calc(calc(var(--spacing) * 3) * var(--tw-space-y-reverse));
+    margin-block-end: calc(calc(var(--spacing) * 3) * calc(1 - var(--tw-space-y-reverse)));
+  }
   :where(.space-y-3\.5 > :not(:last-child)) {
     --tw-space-y-reverse: 0;
     margin-block-start: calc(calc(var(--spacing) * 3.5) * var(--tw-space-y-reverse));
@@ -1575,6 +1598,9 @@
   }
   .overflow-x-hidden {
     overflow-x: hidden;
+  }
+  .overflow-y-auto {
+    overflow-y: auto;
   }
   .\!rounded-2xl {
     border-radius: var(--radius-2xl) !important;
@@ -1835,6 +1861,12 @@
   .bg-\[rgba\(192\,57\,43\,0\.07\)\] {
     background-color: rgba(192,57,43,0.07);
   }
+  .bg-coy\/40 {
+    background-color: color-mix(in srgb, #5c5647 40%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      background-color: color-mix(in oklab, var(--color-coy) 40%, transparent);
+    }
+  }
   .bg-cream {
     background-color: var(--color-cream);
   }
@@ -1987,6 +2019,12 @@
   }
   .bg-paper {
     background-color: var(--color-paper);
+  }
+  .bg-paper\/15 {
+    background-color: color-mix(in srgb, #1e1b15 15%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      background-color: color-mix(in oklab, var(--color-paper) 15%, transparent);
+    }
   }
   .bg-paper\/70 {
     background-color: color-mix(in srgb, #1e1b15 70%, transparent);
@@ -2306,6 +2344,9 @@
   .py-10 {
     padding-block: calc(var(--spacing) * 10);
   }
+  .py-14 {
+    padding-block: calc(var(--spacing) * 14);
+  }
   .py-16 {
     padding-block: calc(var(--spacing) * 16);
   }
@@ -2413,6 +2454,9 @@
   }
   .pb-6 {
     padding-bottom: calc(var(--spacing) * 6);
+  }
+  .pb-8 {
+    padding-bottom: calc(var(--spacing) * 8);
   }
   .pb-10 {
     padding-bottom: calc(var(--spacing) * 10);
@@ -2642,6 +2686,9 @@
   }
   .text-\[clamp\(1\.3rem\,2vw\,1\.8rem\)\] {
     font-size: clamp(1.3rem, 2vw, 1.8rem);
+  }
+  .text-\[clamp\(1\.05rem\,1\.4vw\,1\.3rem\)\] {
+    font-size: clamp(1.05rem, 1.4vw, 1.3rem);
   }
   .text-\[clamp\(1\.5rem\,2\.2vw\,2rem\)\] {
     font-size: clamp(1.5rem, 2.2vw, 2rem);
@@ -3408,6 +3455,9 @@
       color: var(--color-gold-light);
     }
   }
+  .group-\[\.active\]\:bg-gold-dark:is(:where(.group):is(.active) *) {
+    background-color: var(--color-gold-dark);
+  }
   .before\:mr-2::before {
     content: var(--tw-content);
     margin-right: calc(var(--spacing) * 2);
@@ -3492,6 +3542,14 @@
     .hover\:bg-paper:hover {
       background-color: var(--color-paper);
     }
+    .hover\:bg-paper\/5:hover {
+      background-color: color-mix(in srgb, #1e1b15 5%, transparent);
+    }
+    @supports (color: color-mix(in lab, red, red)) {
+      .hover\:bg-paper\/5:hover {
+        background-color: color-mix(in oklab, var(--color-paper) 5%, transparent);
+      }
+    }
     .hover\:bg-white\/\[\.05\]:hover {
       background-color: color-mix(in srgb, #fff 5%, transparent);
     }
@@ -3508,6 +3566,9 @@
     }
     .hover\:text-ink:hover {
       color: var(--color-ink);
+    }
+    .hover\:text-paper:hover {
+      color: var(--color-paper);
     }
     .hover\:underline:hover {
       text-decoration-line: underline;
@@ -3558,6 +3619,9 @@
     .sm\:block {
       display: block;
     }
+    .sm\:inline {
+      display: inline;
+    }
     .sm\:inline-flex {
       display: inline-flex;
     }
@@ -3566,6 +3630,9 @@
     }
     .sm\:grid-cols-2 {
       grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .sm\:grid-cols-4 {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
     }
     .sm\:grid-cols-6 {
       grid-template-columns: repeat(6, minmax(0, 1fr));
@@ -3576,9 +3643,19 @@
     .sm\:items-center {
       align-items: center;
     }
+    .sm\:gap-5 {
+      gap: calc(var(--spacing) * 5);
+    }
     .sm\:border-l {
       border-left-style: var(--tw-border-style);
       border-left-width: 1px;
+    }
+    .sm\:px-14 {
+      padding-inline: calc(var(--spacing) * 14);
+    }
+    .sm\:text-4xl {
+      font-size: var(--text-4xl);
+      line-height: var(--tw-leading, var(--text-4xl--line-height));
     }
     .sm\:text-5xl {
       font-size: var(--text-5xl);
@@ -3842,9 +3919,6 @@
     .lg\:grid-cols-\[1fr_2fr\] {
       grid-template-columns: 1fr 2fr;
     }
-    .lg\:grid-cols-\[1fr_300px\] {
-      grid-template-columns: 1fr 300px;
-    }
     .lg\:grid-cols-\[1fr_auto\] {
       grid-template-columns: 1fr auto;
     }
@@ -3908,6 +3982,19 @@
     .lg\:last\:pl-0:last-child {
       padding-left: 0px;
     }
+  }
+  .\[\&\.active\]\:bg-gold\/10.active {
+    background-color: color-mix(in srgb, #c9a15a 10%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      background-color: color-mix(in oklab, var(--color-gold) 10%, transparent);
+    }
+  }
+  .\[\&\.active\]\:font-semibold.active {
+    --tw-font-weight: var(--font-weight-semibold);
+    font-weight: var(--font-weight-semibold);
+  }
+  .\[\&\.active\]\:text-gold-dark.active {
+    color: var(--color-gold-dark);
   }
   .\[\&\.active\]\:text-ink.active {
     color: var(--color-ink);
@@ -4506,6 +4593,28 @@ html.lenis, html.lenis body {
   color: #171207;
   background: linear-gradient(135deg, #e8c47a, #c9a15a);
   box-shadow: 0 8px 22px -10px rgba(201, 161, 90, 0.6);
+}
+.share-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 999px;
+  padding: 0.625rem 0.9rem;
+  font-size: 0.8rem;
+  color: rgba(107, 100, 85, 0.85);
+  border: 1px solid rgba(143, 107, 44, 0.35);
+  background: rgba(255, 255, 255, 0.35);
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
+}
+.share-btn svg {
+  width: 1rem;
+  height: 1rem;
+  flex: none;
+}
+.share-btn:hover {
+  color: var(--gold-d);
+  border-color: var(--gold);
+  background: rgba(201, 161, 90, 0.12);
 }
 .faq-item {
   border: 1px solid rgba(30, 27, 21, 0.12);
