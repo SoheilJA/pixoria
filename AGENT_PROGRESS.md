@@ -130,13 +130,28 @@ backend, replacing the old lime/dark-space frontend.
 | — | about (short intro) | NEW `HomeAboutSection` model |
 | — | cta (pill buttons) | `CTASection` reworked into new pill style |
 
-Pending pages (no new design in `new/`): services list/detail, proposal,
-login. The portfolio and blog pages had no `new/` design either but were
+Pending pages (no new design in `new/`): services list/detail (see
+`## Pending pages` at the end — they are the last unstyled pages and T42's
+only scope). The portfolio and blog pages had no `new/` design either but were
 designed in the v2 language directly (T35–T40, see D27) and are done. The
 remaining ones still use v1 templates; they extend `base.html`, so the new
 base restyles their chrome, but their own markup still assumes old tokens and
 needs the T41/T42 pass. Service detail pages exist in `new/services/` but are
 out of scope for this migration order (home/about/contact/404 only).
+
+### Pending pages
+
+- `templates/services/list.html`, `templates/services/detail.html`: still on
+  their v1 templates. They `extends 'base.html'` (so the chrome is v2) but
+  their own markup is built entirely from dead v1 utilities (`px-page`,
+  `border-line`, `text-ink-dim`, `bg-paper-soft`, `font-display`, `font-mono`,
+  `text-ink-soft`, `data-reveal="fade-up"` + `data-reveal-delay`/`-duration`)
+  and v1 components (`components/page_hero.html`, `breadcrumb.html`,
+  `badge.html`, `button.html`, `cards/testimonial_card.html`). None of those
+  classes exist in the compiled `static/css/tailwind.css` (verified: 0
+  occurrences each), so the pages return 200 but render effectively unstyled —
+  T42 gives them minimal v2 placeholders. NOT redesigning them per the task
+  order.
 
 ## Decisions log
 
@@ -657,6 +672,50 @@ out of scope for this migration order (home/about/contact/404 only).
   clean, home/about/contact/blog/list unaffected, Tailwind rebuilt (no token
   changes — only new arbitrary utilities).
 
+- **D45 — T41 verification + the last three v1 pages (T41).** The three pages
+  that still assumed the old chrome — `templates/registration/login.html`,
+  `templates/admin/login.html`, `templates/core/proposal.html` — were rebuilt
+  in the v2 language: the proposal page now `extends 'base.html'` and both
+  logins stay standalone full HTML documents (a login page wants no site
+  header/footer/CTA, and the admin login view renders outside the site chrome
+  anyway). All three use only local assets (`js/vendor/gsap` +
+  `ScrollTrigger` defer, `js/pixoria.js` module), the `{% icon %}` sprite,
+  `pixel_wordmark`, the shared `.field`/`.field-err`/`.btn-gold` components and
+  the same orb/shard/stroke-title hero vocabulary as the other pages; the
+  logins read their brand column and stats from the `site_context` processor
+  (`settings`, `stats` = `AboutStat`, so `stat.prefix`/`value`/`suffix` from
+  D33 work unchanged). Proposal page: v2 sections (hero with `proposal` stroke
+  watermark → screenshots → current-vs-target stats → problems/solutions →
+  essential/optional services → price card), each `{% if %}`-guarded, every
+  heading through `highlight`, `divider-flip` waves on the dark/cream
+  transitions, `noindex` via `extra_head`. One bug was caught in review:
+  `prose-ink` sat on the hero's dark `bg-ink` — `.prose-ink` is the LIGHT
+  variant per D40, so it became `.prose-cream`.
+  **Verification (new `scripts/render_check.py`, kept for T44):** every live
+  URL returns 200/404 with the real DB — home 135 KB, about 61 KB, contact
+  50 KB, portfolio list 36 KB, blog list 45 KB, login 12 KB, admin login 8 KB,
+  proposal `/proposal/divar/` 200, portfolio/blog/service details 200 — with
+  no leaked `[[ ]]` markers and zero CDN references; login GET carries CSRF +
+  the `next` hidden input, a bad POST re-renders the Persian error alert, and
+  the proposal renders client name/intro/CTA. Structural greps over the LIVE
+  templates only (404/base/blog v2/components v2/contact/core/home/partials/
+  portfolio/logins): no `px-page`/`border-line`/`text-ink-dim`/`bg-paper-soft`/
+  `font-display`/`font-mono`/`bg-night`/`text-lime`/`bg-lime`/
+  `data-reveal="fade-up"` and no removed custom classes (`.proposal-hero`,
+  `.tag-line`, `.lede`, `.site-chip`, `.section-head`, `.wordmark-link`);
+  every `{% block %}` used is one base.html defines; every `{% include %}`
+  resolves; all 38 `{% icon %}` names exist in
+  `static/icons/lucide.sprite.svg` (85 symbols — the sprite's ids are prefixed
+  `i-`, so grep for `id="i-<name>"`). **The dead classes survive only in
+  unreferenced files** — the ten blog `detail_*`/`sidebar_*` partials,
+  `home/sections/_manifesto.html` + `_works.html` (keys removed from
+  `HomeSection` in D19) and the v1 `components/` + `components/cards/` — which
+  is exactly T43's deletion list; the scratch file
+  `templates/_t_cycle.html` (an untracked `{% cycle %}` probe from D30) was
+  deleted. **Services list/detail are the exception and are documented under
+  `## Pending pages`** — still on v1 templates and unstyled, which is T42's
+  scope, not T41's.
+
 - **D40 — Blog model review + prose styles (T38).** The model layer was
   already nearly complete for the v2 pages; the review added only the missing
   pieces, all optional so a bare article still renders: `Article.featured`
@@ -1172,7 +1231,7 @@ out of scope for this migration order (home/about/contact/404 only).
 
 ### Phase 10 — Cleanup
 
-- [ ] T41 — Verify no broken references (grep for removed
+- [x] T41 — Verify no broken references (grep for removed
   classes/tags/includes), fix `templates/registration/login.html`,
   `templates/admin/login.html`, proposal page and any remaining page that
   still assumes the old base | commit: "fix(templates): align remaining pages with v2 base"
@@ -1195,22 +1254,40 @@ out of scope for this migration order (home/about/contact/404 only).
 
 ## Current status
 
-T01–T40 done — every page now renders in the v2 design. Next: Phase 10 cleanup.
-T41: verify no broken references (grep for removed classes/tags/includes) and
-fix `templates/registration/login.html`, `templates/admin/login.html`, the
-proposal page and any remaining page still assuming the old base. T42:
-services list/detail still render on v1 templates — check whether they are
-broken/unstyled and, only if so, give them minimal placeholders extending the
-new `base.html` (do NOT redesign; list them under `## Pending pages`).
-T43: delete ALL old frontend files. Candidates already identified by D42: the
-ten orphaned blog detail partials (`templates/blog/partials/detail_hero.html`,
-`detail_cover.html`, `detail_body.html`, `detail_post_nav.html`,
-`detail_related_section.html`, `detail_cta.html`, `sidebar_toc.html`,
-`sidebar_author.html`, `sidebar_related.html`, `sidebar_cta.html`) plus the v1
-`templates/components/cards/blog_card.html` (replaced by
-`components/_article_card.html` in T39) and
-`templates/components/breadcrumb.html`/`badge.html` if nothing else uses them —
-verify each with a project-wide grep before deleting. T44: final checks with
-an EMPTY and a seeded database, then delete `new/`.
+T01–T41 done. Every page reachable from a URL now renders in the v2 design
+except the two services pages (see `## Pending pages`).
+
+T41 verified the whole site: all live URLs 200/404, no leaked `[[ ]]`, no CDN
+references, no dead v1 classes/blocks/includes/icons anywhere in a live
+template, and the login (+admin login) and proposal pages are rebuilt (D45).
+
+**Next: T42.** `templates/services/list.html` and
+`templates/services/detail.html` are confirmed broken/unstyled — none of their
+v1 utility classes exist in the compiled Tailwind (see the
+`## Pending pages` entry for the full list) — so give them minimal
+placeholders extending `base.html`: real DB content (services, section
+settings), v2 classes only, no redesign. The `testimonials_slider` /
+`projects_carousel` / `articles_carousel` tags already accept a `service`, so
+the detail page can use `{% testimonials_slider service=service %}`.
+
+Then T43: delete ALL old frontend files. Candidates (verify each with a
+project-wide grep first — D45 confirmed the live templates touch none of
+them): the ten orphaned blog detail partials (`templates/blog/partials/
+detail_hero.html`, `detail_cover.html`, `detail_body.html`,
+`detail_post_nav.html`, `detail_related_section.html`, `detail_cta.html`,
+`sidebar_toc.html`, `sidebar_author.html`, `sidebar_related.html`,
+`sidebar_cta.html`), `templates/home/sections/_manifesto.html` + `_works.html`
+(HomeSection keys gone in D19), all of `templates/components/cards/`
+(`blog_card.html`, `portfolio_card.html`, `service_card.html`,
+`testimonial_card.html`) and the v1 `templates/components/` (`badge.html`,
+`breadcrumb.html`, `button.html`, `cta_banner.html`, `page_hero.html`,
+`section_header.html`, `carousel.html` — check whether
+`component_tags.py`'s `{% carousel %}` block tag is still used anywhere
+first). After the templates go, also review the JS/CSS/templatetag/context
+bits that only existed for them (`apps/core/templatetags/anim_tags.py`?,
+`apps/core/context_utils.py`'s crumbs if unused, `static/js/core/`,
+`static/css/blog.css` / `styles.css` / `site.css` if unreferenced). One small
+commit per group. T44: final checks with an EMPTY and a seeded database
+(`scripts/render_check.py` is ready for that), then delete `new/`.
 
 

@@ -1,60 +1,64 @@
-{% load static brand_tags %}
+{% load static icon_tags brand_tags fa_digits %}
 <!doctype html>
 <html lang="fa" dir="rtl">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <meta name="theme-color" content="#04070a" />
+    <meta name="theme-color" content="#0a0a0c" />
     <title>ورود مدیریت — {{ settings.site_name|default:"پیکسوریا" }}</title>
     <meta name="robots" content="noindex" />
 
     {# استایل‌های مشترک (بدون هدر و فوتر سایت) #}
+    <link rel="icon" href="{% if settings.favicon %}{{ settings.favicon.url }}{% else %}{% static 'brand/favicon.ico' %}{% endif %}" sizes="any" />
     <link rel="stylesheet" href="{% static 'fonts/font_urls.css' %}" />
     <link rel="stylesheet" href="{% static 'css/tailwind.css' %}" />
-    <link rel="icon" href="{% static 'brand/favicon.ico' %}" sizes="any" />
     <style>
-      body { background: var(--color-night); }
+      body { background: var(--ink); }
       form input[type="text"], form input[type="password"], form input[type="email"] {
         width: 100%;
-        background: var(--color-paper-deep);
-        border: 1px solid var(--color-line);
-        border-radius: var(--radius-md);
-        color: var(--color-ink);
-        padding: 0.7rem 0.9rem;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 0.9rem;
+        color: var(--cream);
+        padding: 0.85rem 1rem;
         outline: none;
-        transition: border-color .2s;
+        transition: border-color 0.2s, box-shadow 0.2s;
       }
-      form input:focus { border-color: var(--color-lime); box-shadow: 0 0 0 3px rgba(200,255,61,.15); }
+      form input::placeholder { color: rgba(245, 243, 238, 0.35); }
+      form input:focus {
+        border-color: rgba(201, 161, 90, 0.85);
+        box-shadow: 0 0 0 3px rgba(201, 161, 90, 0.18);
+      }
     </style>
   </head>
-  <body class="min-h-screen font-sans text-ink-soft antialiased">
+  <body class="min-h-screen font-sans text-cream/70 antialiased">
     <div class="mx-auto flex min-h-screen max-w-[1100px] flex-col gap-10 px-6 py-10 lg:flex-row lg:items-stretch lg:gap-16">
       {# ─── برند سمت راست ─── #}
       <section class="flex flex-col justify-between gap-10 lg:w-[42%]">
-        <a href="{% url 'home:home' %}" class="wordmark-link inline-flex items-center" aria-label="{{ settings.site_name|default:'پیکسوریا' }}">
+        <a href="{% url 'home:home' %}" class="inline-flex items-center" aria-label="{{ settings.site_name|default:'پیکسوریا' }}">
           {% if settings.logo %}
             <img src="{{ settings.logo.url }}" alt="{{ settings.site_name }}" class="h-7 w-auto" />
           {% else %}
-            {% pixel_wordmark "full" class="wordmark h-[26px] w-auto text-ink" %}
+            {% pixel_wordmark "full" class="h-[26px] w-auto text-cream" %}
           {% endif %}
         </a>
 
         <div class="max-w-[34ch]">
-          <p class="mb-4 font-mono text-[0.74rem] uppercase tracking-[0.14em] text-lime">پنل مدیریت</p>
-          <h2 class="font-display text-[clamp(1.8rem,4vw,2.6rem)] leading-[1.1] text-ink">
-            محتوای سایت از همین‌جا editable است.
+          <p class="eyebrow mb-5">پنل مدیریت</p>
+          <h2 class="text-[clamp(1.8rem,4vw,2.6rem)] font-extrabold leading-[1.15] text-cream">
+            محتوای سایت از همین‌جا ویرایش می‌شود.
           </h2>
-          <p class="mt-4 leading-[1.7]">
-            هر متن و تصویری که بازدیدکننده می‌بیند از مدیریت پیکسوریا ویرایش می‌شود.
+          <p class="mt-4 leading-7 text-cream/55">
+            هر متن و تصویری که بازدیدکننده می‌بیند از مدیریت پیکسوریا قابل تغییر است.
           </p>
         </div>
 
         {% if stats %}
-          <div class="grid grid-cols-3 gap-4 border-t border-line pt-6">
+          <div class="grid grid-cols-3 gap-4 border-t border-white/10 pt-6">
             {% for stat in stats %}
               <div>
-                <div class="font-display text-[1.4rem] text-lime">{{ stat.number }}</div>
-                <div class="font-mono text-[0.7rem] text-ink-dim">{{ stat.label }}</div>
+                <div class="font-latin text-[1.4rem] font-bold text-gold-light fa-num">{{ stat.prefix }}{{ stat.value|fa_digits }}{{ stat.suffix }}</div>
+                <div class="mt-1 text-[0.72rem] text-cream/45">{{ stat.label }}</div>
               </div>
             {% endfor %}
           </div>
@@ -63,15 +67,15 @@
 
       {# ─── فرم ورود ─── #}
       <section class="flex flex-1 items-center">
-        <div class="w-full max-w-[440px] rounded-[var(--radius-lg)] border border-line bg-paper p-[clamp(24px,4vw,40px)]">
+        <div class="glass w-full max-w-[440px] p-[clamp(24px,4vw,40px)]" style="border-radius: 2rem">
           <div class="mb-7">
-            <p class="mb-3 font-mono text-[0.74rem] text-ink-dim">
-              {{ settings.site_name|default:"پیکسوریا" }} <span class="mx-1.5">›</span> <span class="text-ink">ورود</span>
+            <p class="font-latin text-[10px] tracking-[.3em] text-cream/45">
+              {{ settings.site_name|default:"پیکسوریا" }} <span class="mx-1.5">·</span> <span class="text-cream">ورود</span>
             </p>
-            <h1 class="font-display text-[1.7rem] leading-[1.15] text-ink">ورود به حساب</h1>
-            <p class="mt-2 text-[0.92rem]">
+            <h1 class="mt-4 text-[1.7rem] font-extrabold leading-[1.15] text-cream">ورود به حساب</h1>
+            <p class="mt-2.5 text-[0.9rem]">
               مدیر سیستم هستید؟
-              <a href="{% url 'admin:index' %}" class="text-lime underline-offset-4 hover:underline">ورود مستقیم</a>
+              <a href="{% url 'admin:index' %}" class="font-medium text-gold-light underline-offset-4 hover:underline">ورود مستقیم</a>
             </p>
           </div>
 
@@ -80,29 +84,39 @@
             <input type="hidden" name="next" value="{{ next }}" />
 
             {% if form.errors %}
-              <div class="rounded-[var(--radius-md)] border border-lime/40 bg-lime/10 px-4 py-3 text-[0.88rem] text-lime">
-                نام کاربری یا گذرواژه اشتباه است. دوباره تلاش کنید.
+              <div class="flex items-start gap-3 rounded-[0.9rem] border border-red-400/40 bg-red-500/10 px-4 py-3 text-[0.88rem] text-red-300" role="alert">
+                {% icon "alert-triangle" class="mt-0.5 h-5 w-5 shrink-0" %}
+                <span>نام کاربری یا گذرواژه اشتباه است. دوباره تلاش کنید.</span>
               </div>
             {% endif %}
 
             {% for field in form %}
-              <label class="flex flex-col gap-2 text-[0.88rem]">
-                <span class="font-medium text-ink">{{ field.label }}</span>
+              <label class="flex flex-col gap-2 text-[0.88rem]" for="{{ field.id_for_label }}">
+                <span class="font-medium text-cream/80">{{ field.label }}</span>
                 {{ field }}
-                {% if field.help_text %}<small class="text-ink-dim">{{ field.help_text }}</small>{% endif %}
+                {% if field.help_text %}<small class="text-cream/45">{{ field.help_text }}</small>{% endif %}
+                {% for error in field.errors %}
+                  <span class="text-[0.8rem] text-red-300">{{ error }}</span>
+                {% endfor %}
               </label>
             {% endfor %}
 
-            <button type="submit" class="mt-1 inline-flex items-center justify-center gap-2 rounded-[var(--radius-md)] bg-lime px-5 py-3 font-medium text-night transition-colors duration-300 hover:bg-night hover:text-lime">
+            <button type="submit" class="btn btn-gold mt-1 w-full justify-center" data-magnetic>
               ورود
+              {% icon "arrow-left" class="h-4 w-4" %}
             </button>
           </form>
 
-          <p class="mt-7 border-t border-line pt-5 text-center font-mono text-[0.74rem] text-ink-dim">
+          <p class="mt-7 border-t border-white/10 pt-5 text-center font-latin text-[10px] tracking-wider text-cream/40">
             © {{ settings.established_year|default:"۱۴۰۳" }} {{ settings.site_name|default:"پیکسوریا" }}
           </p>
         </div>
       </section>
     </div>
+
+    {# کتابخانه‌ها — همه محلی، بدون CDN #}
+    <script defer src="{% static 'js/vendor/gsap.min.js' %}"></script>
+    <script defer src="{% static 'js/vendor/ScrollTrigger.min.js' %}"></script>
+    <script type="module" src="{% static 'js/pixoria.js' %}"></script>
   </body>
 </html>

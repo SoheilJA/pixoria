@@ -1,73 +1,120 @@
-{% load icon_tags brand_tags %}
-{% load static %}
-<!DOCTYPE html>
+{% load icon_tags brand_tags fa_digits static %}
+<!doctype html>
 <html lang="fa" dir="rtl">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <meta name="theme-color" content="#04070a" />
-    <title>ورود — {{ settings.site_name|default:'پیکسوریا' }}</title>
+    <meta name="theme-color" content="#0a0a0c" />
+    <title>ورود — {{ settings.site_name|default:"پیکسوریا" }}</title>
     <meta name="robots" content="noindex" />
+    <link rel="icon" href="{% if settings.favicon %}{{ settings.favicon.url }}{% else %}{% static 'brand/favicon.ico' %}{% endif %}" sizes="any" />
     <link rel="stylesheet" href="{% static 'fonts/font_urls.css' %}" />
     <link rel="stylesheet" href="{% static 'css/tailwind.css' %}" />
   </head>
-  <body class="min-h-screen bg-night font-sans text-ink-soft antialiased">
+  <body class="min-h-screen bg-ink font-sans text-cream antialiased">
     <div class="grid min-h-screen grid-cols-1 md:grid-cols-2">
-      <section class="relative flex flex-col justify-between overflow-hidden bg-night px-[clamp(32px,6vw,72px)] py-[clamp(32px,6vw,72px)]" data-reveal="fade-left">
-        {% pixel_wordmark "mono" class="pointer-events-none absolute bottom-[-3rem] left-[-2rem] h-[14rem] w-auto text-lime opacity-[0.05]" %}
-        <a href="{% url 'home:home' %}" class="wordmark-link relative z-10 inline-flex items-center gap-2.5 font-display text-[1.3rem] font-semibold text-ink" data-reveal="fade-down">{% pixel_wordmark "full" class="wordmark h-[24px] w-auto text-ink" %}</a>
-        <div class="relative z-10 my-16" data-reveal="fade-up">
-          <p class="mb-5 font-mono text-[0.74rem] text-lime">پنل کاربری</p><h2 class="max-w-[18ch] font-display text-[clamp(1.8rem,3vw,3rem)] font-medium leading-[1.1] text-ink">به <em class="font-display italic text-lime">داشبورد</em> خوش آمدید.</h2>
+      {# ─── پنل برند (تیره) ─── #}
+      <section class="relative flex flex-col justify-between overflow-hidden bg-ink px-[clamp(32px,6vw,72px)] py-[clamp(32px,6vw,72px)]">
+        <div class="pointer-events-none absolute inset-0" aria-hidden="true">
+          <div data-depth="0.05" class="absolute right-[12%] top-[14%]">
+            <span data-float="14" class="orb block h-20 w-20"
+                  style="background: radial-gradient(circle at 32% 30%, rgba(232,196,122,0.42), rgba(201,161,90,0.07) 60%, transparent 72%);"></span>
+          </div>
+          <div data-depth="0.08" class="absolute bottom-[16%] left-[10%]">
+            <span data-float="12" class="shard block h-24 w-20 rotate-12"></span>
+          </div>
         </div>
+        {% pixel_wordmark "mono" class="pointer-events-none absolute bottom-[-3rem] left-[-2rem] h-[14rem] w-auto text-gold opacity-[0.06]" %}
+
+        <a href="{% url 'home:home' %}" class="relative z-10 inline-flex items-center gap-2.5" aria-label="{{ settings.site_name|default:'پیکسوریا' }}">
+          {% if settings.logo %}
+            <img src="{{ settings.logo.url }}" alt="{{ settings.site_name }}" class="h-7 w-auto" />
+          {% else %}
+            {% pixel_wordmark "full" class="h-[24px] w-auto text-cream" %}
+          {% endif %}
+        </a>
+
+        <div class="relative z-10 my-16 max-w-md" data-reveal="up">
+          <p class="eyebrow mb-6">پنل کاربری</p>
+          <h2 class="text-[clamp(1.8rem,3vw,3rem)] font-extrabold leading-[1.15]">
+            به <span class="text-goldgrad">داشبورد</span> خوش آمدید.
+          </h2>
+          <p class="mt-5 leading-8 text-cream/60">
+            از این‌جا می‌توانید به بخش‌های مدیریتی سایت دسترسی داشته باشید.
+          </p>
+        </div>
+
         {% if stats %}
-          <div class="relative z-10 hidden flex-col gap-3.5 md:flex" data-reveal="fade-up" data-reveal-delay="100">
+          <div class="relative z-10 hidden flex-col gap-4 md:flex" data-reveal="up" data-delay="0.1">
             {% for stat in stats %}
-              <div class="flex items-baseline gap-2.5 border-t border-[#2a2a28] pt-3.5">
-                <span class="font-display text-[1.6rem] font-semibold leading-none text-lime">{{ stat.number }}</span><span class="font-mono text-[0.74rem] text-mist-dim">{{ stat.label }}</span>
+              <div class="flex items-baseline gap-3 border-t border-white/10 pt-4">
+                <span class="font-latin text-[1.5rem] font-bold leading-none text-gold-light fa-num">{{ stat.prefix }}{{ stat.value|fa_digits }}{{ stat.suffix }}</span>
+                <span class="text-[0.78rem] text-cream/45">{{ stat.label }}</span>
               </div>
             {% endfor %}
           </div>
         {% endif %}
       </section>
-      <section class="flex flex-col justify-center bg-paper px-[clamp(28px,6vw,72px)] py-10" data-reveal="fade-right">
-        <div class="w-full max-w-[400px]" data-reveal="fade-up">
+
+      {# ─── پنل فرم (روشن) ─── #}
+      <section class="flex flex-col justify-center bg-cream px-[clamp(28px,6vw,72px)] py-12" data-reveal="up">
+        <div class="w-full max-w-[420px]">
           <div class="mb-10">
-            <p class="mb-3.5 font-mono text-[0.74rem] text-ink-dim">
-              {{ settings.site_name|default:'پیکسوریا' }} {% icon "chevron-left" class="inline-block h-3.5 w-3.5 shrink-0 opacity-50 align-middle" %} <span class="text-ink">ورود</span>
-            </p><h1 class="mb-2 font-display text-[clamp(1.8rem,3vw,2.6rem)] text-ink">ورود به حساب</h1><p class="m-0 text-[0.98rem] text-ink-soft">
-              حساب ندارید؟ <a href="#" onclick="return false" class="border-b border-line font-medium text-ink">ثبت‌نام کنید</a>
+            <p class="font-latin text-[10px] tracking-[.3em] text-coy/70">
+              {{ settings.site_name|default:"پیکسوریا" }}
+              <span class="mx-1.5">·</span>
+              <span class="text-paper">ورود</span>
+            </p>
+            <h1 class="mt-4 text-[clamp(1.8rem,3vw,2.6rem)] font-extrabold leading-[1.15] text-paper">ورود به حساب</h1>
+            <p class="m-0 mt-3 text-[0.95rem] text-coy">
+              حساب ندارید؟ <a href="#" onclick="return false" class="font-medium text-gold-dark underline-offset-4 hover:underline">ثبت‌نام کنید</a>
             </p>
           </div>
-          <form class="flex flex-col gap-4" method="post" novalidate>
+
+          <form class="flex flex-col gap-5" method="post" novalidate>
             {% csrf_token %}
             <input type="hidden" name="next" value="{{ next }}" />
+
             {% if form.errors %}
-              <div class="border border-[#c64926] bg-[#fff0eb] px-4 py-3 text-[0.9rem] text-[#9f3216]" role="alert">نام کاربری یا رمز عبور اشتباه است.</div>
+              <div class="flex items-start gap-3 rounded-[1rem] border border-[rgba(192,57,43,0.4)] bg-[rgba(192,57,43,0.07)] p-4 text-[0.9rem] text-[#a83a2b]" role="alert">
+                {% icon "alert-triangle" class="mt-0.5 h-5 w-5 shrink-0" %}
+                <span>نام کاربری یا رمز عبور اشتباه است.</span>
+              </div>
             {% endif %}
+
             {% for field in form %}
-              <label class="flex flex-col gap-[7px] font-mono text-[0.74rem] text-ink-dim" for="{{ field.id_for_label }}">
-                {{ field.label }}{{ field }}{% if field.help_text %}
-                  <small class="font-sans text-[0.78rem]">{{ field.help_text }}</small>
-                {% endif %}
+              <div>
+                <label class="field static" for="{{ field.id_for_label }}">
+                  {{ field }}
+                  <span>{{ field.label }}</span>
+                </label>
                 {% for error in field.errors %}
-                  <span class="font-sans text-[0.78rem] text-[#c64926]">{{ error }}</span>
+                  <span class="field-err">{% icon "alert-circle" class="h-3.5 w-3.5" %}{{ error }}</span>
                 {% endfor %}
-              </label>
+              </div>
             {% endfor %}
+
             <div class="flex justify-end">
-              <a href="#" onclick="return false" class="font-mono text-[0.72rem] text-ink-dim hover:text-ink">رمز عبور را فراموش کردم</a>
+              <a href="#" onclick="return false" class="text-[0.78rem] text-coy transition-colors hover:text-gold-dark">رمز عبور را فراموش کردم</a>
             </div>
-            <button type="submit" class="btn btn-ink mt-2 w-full justify-center px-6 py-[15px] text-[0.88rem]">ورود {% icon "arrow-left" class="inline-block h-4 w-4 align-middle" %}</button>
+
+            <button type="submit" class="btn btn-gold mt-2 w-full justify-center px-8 py-4" data-magnetic>
+              ورود
+              {% icon "arrow-left" class="h-4 w-4" %}
+            </button>
           </form>
-          <div class="mt-10 flex flex-wrap justify-between gap-4 border-t border-line pt-6 font-mono text-[0.7rem] text-ink-dim">
-            <span>© {{ settings.established_year|default:'۱۴۰۵' }} {{ settings.site_name|default:'پیکسوریا' }}</span><a href="{% url 'contact:contact' %}" class="hover:text-ink">تماس</a>
+
+          <div class="mt-10 flex flex-wrap justify-between gap-4 border-t border-gold-dark/25 pt-6 text-[0.75rem] text-coy/70">
+            <span>© {{ settings.established_year|default:"۱۴۰۵" }} {{ settings.site_name|default:"پیکسوریا" }}</span>
+            <a href="{% url 'contact:contact' %}" class="transition-colors hover:text-gold-dark">تماس</a>
           </div>
         </div>
       </section>
     </div>
-    <script src="{% static 'js/vendor/gsap.min.js' %}"></script>
-    <script src="{% static 'js/vendor/ScrollTrigger.min.js' %}"></script>
-    <script src="{% static 'js/main.js' %}" defer></script>
-    <script type="module" src="{% static 'js/site-reveal.js' %}"></script>
+
+    {# کتابخانه‌ها — همه محلی، بدون CDN #}
+    <script defer src="{% static 'js/vendor/gsap.min.js' %}"></script>
+    <script defer src="{% static 'js/vendor/ScrollTrigger.min.js' %}"></script>
+    <script type="module" src="{% static 'js/pixoria.js' %}"></script>
   </body>
 </html>
