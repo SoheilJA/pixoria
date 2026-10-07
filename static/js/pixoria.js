@@ -39,7 +39,7 @@ function showToast(msg) {
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => toast.classList.remove("show"), 4200);
 }
-// Exposed so templates/HTMX flows (lead form, contact form) can fire it.
+// Exposed so templates/HTMX flows (contact form) can fire it.
 window.pixoriaToast = showToast;
 
 /* ------------------------------------------------------------------ init */
@@ -1012,7 +1012,7 @@ function initArticleChrome() {
 /* ------------------------------------------------------- HTMX + toast bridge */
 
 // After an HTMX swap, if the new content carries a [data-toast] element,
-// announce its message (used by the lead form and contact form success state).
+// announce its message (used by the contact form success state).
 const announceToast = () => {
   const el = document.querySelector("[data-toast]");
   if (el) showToast(el.dataset.toast);

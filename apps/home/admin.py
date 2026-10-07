@@ -245,21 +245,3 @@ class FaqItemAdmin(admin.ModelAdmin):
     list_editable = ["order", "is_active"]
     list_display_links = ["question"]
     search_fields = ["question"]
-
-
-@admin.register(ContactSection)
-class ContactSectionAdmin(admin.ModelAdmin):
-    list_display = ["title", "eyebrow", "submit_text"]
-
-    def has_add_permission(self, request):
-        return not ContactSection.objects.exists()
-
-
-@admin.register(HomeLead)
-class HomeLeadAdmin(admin.ModelAdmin):
-    list_display = ["name", "phone", "service", "status", "created_at"]
-    list_editable = ["status"]
-    list_filter = ["status", "service", "created_at"]
-    search_fields = ["name", "phone", "message"]
-    readonly_fields = ["created_at"]
-    date_hierarchy = "created_at"

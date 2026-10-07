@@ -40,7 +40,6 @@ from apps.home.models import (
     TechSkill,
     FaqSection,
     FaqItem,
-    ContactSection,
 )
 
 
@@ -59,7 +58,6 @@ RENDERED_SECTIONS = {
     "stats",
     "blog",
     "faq",
-    "contact",
 }
 
 # ترتیب پیش‌فرض بخش‌ها در صفحه — مطابق جریان تجربهٔ کاربری طرح v2.
@@ -76,7 +74,6 @@ SECTION_ORDER = {
     "stats": 90,
     "blog": 100,
     "faq": 110,
-    "contact": 120,
 }
 
 SECTION_TITLES = {
@@ -92,7 +89,6 @@ SECTION_TITLES = {
     "stats": "آمار و ارقام",
     "blog": "آخرین مقالات",
     "faq": "سوالات متداول",
-    "contact": "فرم تماس سریع",
 }
 
 
@@ -119,7 +115,6 @@ class Command(BaseCommand):
         self.seed_why()
         self.seed_tech()
         self.seed_faq()
-        self.seed_contact()
         self.seed_home_sections()
         self.seed_services()
         self.seed_site()
@@ -551,22 +546,6 @@ class Command(BaseCommand):
             self.stdout.write(f"  + {added} سوال متداول")
         if removed:
             self.stdout.write(f"  - {removed} سوال قدیمی حذف شد")
-
-    # ── Contact lead form ──
-    def seed_contact(self):
-        _, c = first_or_create(
-            ContactSection,
-            eyebrow="شروع همکاری",
-            title="بیایید [[برندِ شما]] را ماندگار کنیم",
-            description=(
-                "از یک گفت‌وگوی ساده شروع می‌شود؛ مشاورهٔ رایگان، بدون تعهد. نام، "
-                "شماره و یک پیام کوتاه کافی است؛ در کوتاه‌ترین زمان با شما تماس "
-                "می‌گیریم."
-            ),
-            submit_text="ارسال درخواست",
-            success_text="درخواست شما دریافت شد. به‌زودی با شما تماس می‌گیریم.",
-        )
-        self.log("فرم تماس", c)
 
     # ── HomeSection rows: order + visibility of every partial ──
     def seed_home_sections(self):

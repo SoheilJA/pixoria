@@ -17,40 +17,6 @@ EYEBROW_HELP = "متن کوچک و طلاییِ بالای عنوان. مثلا�
 TITLE_HELP = "کلمه‌ای که باید رنگی شود را داخل [[ ]] بنویسید."
 
 
-class HomeLead(models.Model):
-    """درخواست تماس سریعِ فرم صفحه اصلی.
-
-    کوتاه و ساده نگه داشته شده تا از فرم کامل صفحه تماس (ContactSubmission)
-    مستقل بماند؛ آن فرنچایز دارای فیلدهای اجباری نوع پروژه و بودجه است که برای
-    یک فرم کوچک مناسب نیست."""
-
-    STATUS_CHOICES = [("new", "جدید"), ("seen", "مشاهده شده")]
-
-    name = models.CharField(max_length=200, verbose_name="نام و نام خانوادگی")
-    phone = models.CharField(max_length=20, verbose_name="شماره تماس")
-    service = models.ForeignKey(
-        "services.Service",
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        related_name="home_leads",
-        verbose_name="خدمت موردنظر",
-    )
-    message = models.TextField(verbose_name="پیام", blank=True)
-    status = models.CharField(
-        max_length=10, choices=STATUS_CHOICES, default="new", verbose_name="وضعیت"
-    )
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name="تاریخ ارسال")
-
-    class Meta:
-        verbose_name = "درخواست تماس سریع"
-        verbose_name_plural = "درخواست‌های تماس سریع"
-        ordering = ["-created_at"]
-
-    def __str__(self):
-        return f"{self.name} — {self.created_at:%Y/%m/%d}"
-
-
 class HeroSection(models.Model):
     """هیرو سکشن — نسخهٔ v2 با صحنهٔ سه‌بعدی و دکمه‌های CTA"""
 
@@ -526,7 +492,6 @@ class HomeSection(models.Model):
         ("stats", "آمار و ارقام"),
         ("blog", "آخرین مقالات"),
         ("faq", "سوالات متداول"),
-        ("contact", "فرم تماس سریع"),
     ]
 
     key = models.CharField(
@@ -915,30 +880,3 @@ class FaqItem(models.Model):
 
     def __str__(self):
         return self.question
-
-
-class ContactSection(models.Model):
-    """تنظیمات بخش فرم تماس سریع در صفحه اصلی"""
-
-    eyebrow = models.CharField(
-        max_length=100, verbose_name="متن بالای عنوان", blank=True, help_text=EYEBROW_HELP
-    )
-    subtitle = models.CharField(max_length=100, verbose_name="ساب تایتل")
-    title = models.CharField(max_length=200, verbose_name="عنوان")
-    description = models.TextField(verbose_name="توضیحات")
-    submit_text = models.CharField(max_length=50, verbose_name="متن دکمه ارسال", default="ارسال درخواست")
-    success_text = models.CharField(
-        max_length=200, verbose_name="پیام موفقیت", default="درخواست شما دریافت شد. به‌زودی تماس می‌گیریم."
-    )
-
-    class Meta:
-        verbose_name = "سکشن فرم تماس"
-        verbose_name_plural = "سکشن فرم تماس"
-
-    def __str__(self):
-        return self.title
-
-    def save(self, *args, **kwargs):
-        if not self.pk and ContactSection.objects.exists():
-            raise ValueError("فقط یک سکشن فرم تماس مجاز است")
-        super().save(*args, **kwargs)

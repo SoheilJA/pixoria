@@ -31,7 +31,7 @@ backend, replacing the old lime/dark-space frontend.
 
 ### Apps & URL names
 
-- `apps.home`: `home:home` (`/`), `home:lead` (HTMX lead POST).
+- `apps.home`: `home:home` (`/`).
 - `apps.portfolio`: `portfolio:list`, `portfolio:detail(slug)`.
 - `apps.services`: `services:list`, `services:detail(slug)`.
 - `apps.core`: `core:about` (`/about/`); root-level `proposal(slug)`.
@@ -745,6 +745,33 @@ scope for this migration and can pick these templates up later.)_
   transaction) the list still returns 200 (22 KB) with the empty message
   visible; no v1 classes, no CDN, `crumbs` breadcrumb trail intact.
 
+- **D47 — Lead-form section removed (T45).** The home-page quick-contact
+  section is gone entirely; `/contact/` (`apps.contact`) is the only contact
+  path now. Removed: the `contact` `HomeSection` key (KEY_CHOICES + seed maps
+  `RENDERED_SECTIONS`/`SECTION_ORDER`/`SECTION_TITLES` + the `seed_contact()`
+  method + the seed's `ContactSection` import), the `home:lead` URL, the
+  `lead` view with its honeypot + `cache`-based rate limit
+  (`LEAD_RATE_LIMIT`/`_lead_rate_key`/`_lead_context` and the now-unused
+  `cache`/`never_cache`/`require_POST` imports), the `contact_section`/
+  `contact_services`/`contact_url` home-view context entries, the
+  `ContactSection` and `HomeLead` models, their admin registrations and the
+  three partials (`_contact.html`, `_lead_form.html`, `_lead_success.html`).
+  `apps.contact` was not touched — `ContactSubmission` and its rate limit
+  stay. The `.field`/`.field-err` CSS stays: `contact/_contact_form.html` and
+  `registration/login.html` still use it. The hero's default
+  `cta_primary_url="#contact"` still resolves because the footer keeps
+  `id="contact"` (D13). Migration `0011_remove_lead_form` does it in the
+  order the task demands — RunPython deletes the `contact` HomeSection row
+  FIRST (otherwise `home/index.html`'s section loop raises
+  TemplateDoesNotExist for the deleted partial), then `AlterField` drops the
+  key from `KEY_CHOICES`, then `DeleteModel` for both models; the reverse
+  direction is a documented noop because the models no longer exist.
+  Verified: `manage.py check` + `makemigrations --check` clean, `0011`
+  applied (the `home_homelead`/`home_contactsection` tables are dropped and
+  the `contact` section row is gone), `/` renders 200 (130 KB) with no
+  lead-form markup and no `TemplateDoesNotExist`, and about/contact/portfolio/
+  blog are unaffected.
+
 - **D40 — Blog model review + prose styles (T38).** The model layer was
   already nearly complete for the v2 pages; the review added only the missing
   pieces, all optional so a bare article still renders: `Article.featured`
@@ -1258,23 +1285,370 @@ scope for this migration and can pick these templates up later.)_
   `apps/blog/views.py`, `static/js/pixoria.js` |
   commit: "feat(blog): rebuild detail page in v2 style"
 
-### Phase 10 — Cleanup
+### Phase 11 — Fixes and site-wide polish
+
+- [x] T45 — REMOVE the home-page contact/lead-form section completely: delete
+  the `contact` HomeSection key (KEY_CHOICES, data migration deleting the row,
+  seed maps, `home/index.html`, view context), the `_contact.html` /
+  `_lead_form.html` / `_lead_success.html` partials, the `home:lead` URL + view
+  + rate-limit code, the `ContactSection` and `HomeLead` models (+ their admin,
+  inline/FK references, seed code, JSON-LD/sitemap references) and any CSS/JS
+  used only by it. Grep the whole repo FIRST and list every reference in this
+  file. Create proper migrations (delete models only AFTER removing FKs). Do
+  NOT touch `apps/contact` — the dedicated `/contact/` page and
+  `ContactSubmission` stay. The hero default CTA `#contact` still lands on the
+  footer (D13) | files: `apps/home/models.py`, `apps/home/migrations/`,
+  `apps/home/views.py`, `apps/home/urls.py`, `apps/home/admin.py`,
+  `apps/home/management/commands/seed_home_content.py`,
+  `templates/home/index.html`, `templates/home/sections/_contact.html`,
+  `_lead_form.html`, `_lead_success.html`, `static/src/input.css`,
+  `static/js/pixoria.js` | commit: "feat(home): remove lead form section"
+- [ ] T46 — Hero 3D fixes (`static/js/hero-scene.js`): (a) shift the crystal
+  planet (and its rings/moons group) toward the physical LEFT of the screen on
+  desktop — centered or slightly offset on mobile so the text stays readable,
+  with the offset as ONE constant; (b) reduce the star count by ~30% across all
+  star layers; (c) fix the star pop-in/out problem (stars vanishing/reappearing
+  abruptly on scroll travel, twinkle and camera movement): per-star alpha/size
+  fade via a shader attribute or `PointsMaterial` + `onBeforeCompile` (fade by
+  distance/near-far plane and at wrap boundaries), gentle eased-sin twinkle, no
+  hard threshold toggling — GPU-side, no per-frame JS loops over thousands of
+  stars. Keep every D8/D17 performance rule |
+  files: `static/js/hero-scene.js` | commit: "fix(hero): shift planet left and smooth stars"
+- [ ] T47 — Breadcrumbs: one shared partial `templates/components/_breadcrumb.html`
+  (props: list of crumbs, theme dark/light) replacing the duplicated inline
+  breadcrumb markup on every page (portfolio/blog/services/about/contact/404).
+  Text ≥ `text-sm` on mobile and `md:text-base` on desktop, better contrast,
+  comfortable tap targets (padding), RTL separators (chevron pointing LEFT),
+  `aria-label` + `aria-current="page"` |
+  files: `templates/components/_breadcrumb.html`, every page with crumbs,
+  `apps/core/context_utils.py` (the `crumbs` helper) |
+  commit: "feat(components): shared breadcrumb partial"
+- [ ] T48 — Two phone numbers: verify `SiteSettings.phone` and `phone_secondary`
+  are editable in the admin with Persian labels/help_text, and add optional
+  `phone_label` / `phone_secondary_label` («دفتر مرکزی» / «پشتیبانی»). The
+  header (if it shows a phone), footer, CTA partial, contact page cards,
+  about/contact JSON-LD (`telephone` as a LIST) and every `tel:` link must use
+  BOTH numbers when set and skip an empty one. Rendered digits go through
+  `fa_digits`; `tel:` hrefs keep latin digits |
+  files: `apps/core/models.py`, `apps/core/migrations/`, `apps/core/admin.py`,
+  `templates/partials/_footer.html`, `templates/partials/_cta.html`,
+  `templates/contact/contact.html`, `templates/core/about.html` |
+  commit: "feat(core): labeled dual phone numbers everywhere"
+- [ ] T49 — Fix the typo «طراحی سیات» → «طراحی سایت»: grep the repo (templates,
+  seed commands, fixtures, models, JS), fix the SOURCE, then fix the existing
+  DB row (a portfolio `Category` name/slug — show the prior value before
+  editing, keep the slug stable unless it is also wrong and no redirects are
+  needed). Check the portfolio filter pills on home and `/portfolio/` afterwards
+  | files: seed commands + a one-time data migration/nudge |
+  commit: "fix(content): correct web design category typo"
+- [ ] T50 — Home portfolio responsive layout: desktop (≥lg) = 3-column grid
+  (keep the filter, radius variants, empty state, D29 trimming); tablet (md) =
+  carousel with 2 cards per view; mobile = carousel with 1 card per view (CSS
+  scroll-snap, reusing the D32 `initCarousels` dots/prev-next + RTL keyboard).
+  ONE DOM only — a single container that is a grid at `lg` and a snap-scroller
+  below `lg`, no duplicated cards. The category filter must keep working in
+  both modes (filtered-out cards removed with `hidden`; carousel dots and scroll
+  position reset/recompute after each filter click). Page height must not grow
+  on small screens. Apply the same behavior to `/portfolio/` only if it does not
+  break its pagination-free filter; otherwise keep the list page a normal grid
+  and record why | files: `templates/home/sections/_portfolio.html`,
+  `templates/portfolio/list.html`, `static/js/pixoria.js`, `static/src/input.css` |
+  commit: "feat(portfolio): responsive grid to carousel"
+- [ ] T51 — Testimonials by type (text / video / audio): make the admin form
+  adaptive for `ServiceTestimonial` — the `kind` select shows/hides the relevant
+  fieldsets with a small admin JS file (`static/admin/js/testimonial_kind.js`
+  loaded via `Media`), and `clean()` validates that the chosen kind has its
+  required fields (text → quote; video → video file or URL + poster; audio →
+  audio file or URL + title). Add real media fields if missing
+  (`video_file`/`video_url`, `audio_file`/`audio_url`) and make the front-end
+  cards REAL players, not simulations: `<video preload="none" playsinline
+  controls-or-custom>` with poster, `<audio preload="none">` with the waveform
+  UI driven by the real `currentTime`/`duration` (keep the pretty waveform, real
+  playback state, pause the others when one starts). Duration fields become
+  optional (auto-read from metadata when empty). `_testimonial_card.html` picks
+  the template by `kind`; `testimonials_slider` includes every kind
+  automatically. Persian help_texts. Verify with one fixture of each kind in a
+  rolled-back transaction and with an empty DB |
+  files: `apps/services/models.py`, `apps/services/migrations/`,
+  `apps/services/admin.py`, `templates/components/_testimonial_card.html`,
+  `static/js/pixoria.js`, `static/admin/js/testimonial_kind.js` |
+  commit: "feat(testimonials): real video and audio players"
+- [ ] T52 — Mega-menu redesign (`templates/partials/_header.html` + CSS): a
+  completely new design in the site's space/glass language — NO per-service
+  descriptions. A wide glass panel with a row/grid of service tiles, each tile =
+  a Lucide icon inside a small glowing planet-orb (accent color per service) +
+  title only, hover animating an orbit ring around the orb; a slim bottom bar
+  with the existing `mega_title` / `mega_cta_text` banner (D12, skipped when
+  empty). The «خدمات» nav item MUST show a down-pointing chevron
+  (`{% icon "chevron-down" %}`) that rotates when the menu is
+  open/hovered/focused. Accessibility: `aria-haspopup`, `aria-expanded`,
+  `aria-controls`, open on hover with a small close delay AND on click/Enter/
+  Space, Esc closes, focus-visible styles, works on touch. Mobile overlay:
+  services nested under the same item as an accordion with the chevron. Remove
+  now-unused markup/CSS/context fields only if nothing else uses them |
+  files: `templates/partials/_header.html`, `static/src/input.css`,
+  `static/js/pixoria.js` | commit: "feat(header): redesign mega menu with orb tiles"
+- [ ] T53 — INITIAL preloader (first visit only): space-themed (small orbiting
+  planet + brand mark + thin gold progress ring/line), pure CSS, rendered by
+  `base.html` before the content, shown once per browser session — a
+  `sessionStorage` flag set by a tiny inline script in `<head>` that adds a
+  `has-preloader` class to `<html>` (no flag → no overlay → no flash). Hard
+  Lighthouse rules: no images/fonts/JS libraries needed; visible for at most
+  ~800 ms; must remove itself via a CSS-only fallback animation (opacity → 0,
+  `visibility: hidden`, `pointer-events: none` after ≤1.2 s) even if JS fails,
+  with JS removing the node on `load` earlier when ready; must NOT block or
+  delay LCP (not the LCP element itself — no large text/images), must not cause
+  layout shift; `prefers-reduced-motion` → no preloader at all; honor
+  `<noscript>`. Hero entrance animations start after the preloader hides |
+  files: `templates/base.html`, `static/src/input.css`, `static/js/pixoria.js` |
+  commit: "feat(base): first visit space preloader"
+- [ ] T54 — Page-TRANSITION loader (lightweight, non-annoying): a thin gold
+  gradient progress bar at the top plus, ONLY when a navigation takes longer
+  than ~400 ms, a small orbiting-planet indicator in a corner — never a
+  full-screen overlay, never blocking clicks. Nothing at all appears for fast
+  navigations (start after a ~150 ms delay timer). Trigger on htmx requests
+  that navigate (`htmx:beforeRequest` with `hx-boosted`/history push; ignore
+  form-post requests except to disable the button) and normal same-origin link
+  clicks (skip `target=_blank`, modifier keys, hash-only links, downloads,
+  `mailto:`/`tel:`). Complete/hide on `htmx:afterSettle`, `pageshow` (bfcache
+  restore) and `pagehide`, with a failsafe ~10 s timeout and
+  `htmx:responseError`/`sendError` handling. Respect reduced motion (static bar,
+  no spin). FIRST inspect how navigation currently works (D15 says hx-boost was
+  dropped — confirm) and record the finding |
+  files: `static/js/pixoria.js`, `static/src/input.css` |
+  commit: "feat(base): page transition progress bar"
+- [ ] T55 — Icon picker with live preview in admin: every Lucide icon field
+  (all models using `validate_icon_name`, including `SocialLink`, Service,
+  WhyFeature, ProcessStep, StatItem, TechSkill, AboutStat, ProjectStat,
+  ContactFormPoint, …) gets a reusable admin widget `IconPickerWidget` (in
+  `apps/core/icon_utils.py`): text input + live preview of the chosen icon + a
+  searchable popup grid of available icons (search by name), keyboard
+  accessible, no CDN, tiny vanilla JS in `static/admin/js/icon_picker.js`.
+  Architecture: build a FULL Lucide sprite for ADMIN ONLY
+  (`static/icons/lucide.full.sprite.svg`, loaded only on admin pages, never on
+  the public site — add `lucide-static` as a devDependency if the package is not
+  in `node_modules`), while the public sprite stays small. Add a management
+  command `python manage.py sync_icons` that scans all icon fields in the DB +
+  `{% icon "…" %}` usages in templates and rebuilds the public sprite via
+  `scripts/build_icon_sprite.js` (idempotent). The widget must show a clear
+  Persian warning when a chosen icon is not yet in the public sprite («این
+  آیکون هنوز در اسپریت سایت نیست؛ دستور sync_icons را اجرا کنید») and
+  `{% icon %}` must FAIL SOFT (render nothing, no exception) for unknown names.
+  Keep `IconPreviewMixin` list previews working and document the workflow in
+  this file | files: `apps/core/icon_utils.py`,
+  `apps/core/templatetags/icon_tags.py`, `static/admin/js/icon_picker.js`,
+  `apps/core/management/commands/sync_icons.py`, `scripts/build_icon_sprite.js` |
+  commit: "feat(admin): icon picker widget and sync_icons command"
+- [ ] T56 — Remove letter-as-logo placeholders: in Persian it is not customary
+  to turn a name's first letter into a logo, and the «پ» tile looks bad. Grep
+  all templates/CSS/JS for such placeholders (the about story fallback tile «پ»,
+  header/footer brand mark, avatar initials in testimonials/team/author,
+  `ClientMarqueeItem.mark` plates if they render a single letter, any
+  `|first` / initial fallbacks) and replace them: brand mark fallback = the T57
+  planet emblem SVG when no logo is uploaded; person avatars fallback = a
+  neutral Lucide `user-round` icon in a gold-ringed orb; client plates show the
+  full brand name (or admin-supplied short text); the story image fallback = a
+  decorative orbit/planet illustration. List every replaced spot in this file |
+  files: `templates/core/about.html`, `templates/partials/_header.html`,
+  `templates/partials/_footer.html`,
+  `templates/components/_testimonial_card.html`, `templates/blog/detail.html`, …
+  | commit: "feat(brand): replace letter placeholders with emblems"
+- [ ] T57 — LOGO + FAVICON option set: create 5–6 distinct SPACE /
+  SOLAR-SYSTEM-themed logo concepts for «پیکسوریا / Pixoria» in `static/brand/`
+  (e.g. `static/brand/option-1-orbit/`, `option-2-eclipse/`,
+  `option-3-comet/`, …), each with `logo-full.svg` (mark + Persian wordmark),
+  `logo-mark.svg`, `logo-mono-light.svg`, `logo-mono-dark.svg`, `favicon.svg`,
+  `favicon-32.png`, `favicon-16.png`, `apple-touch-icon.png` (180),
+  `icon-192.png`, `icon-512.png`, plus a `static/brand/README.md` and an
+  `index.html` preview sheet (local only) showing all options side by side on
+  dark and light backgrounds. Use the site palette (gold `#c9a15a` / `#e8c47a`
+  / `#8f6b2c`, ink `#0a0a0c`, cream `#f5f3ee`, royal `#2e63ff`). Wordmarks must
+  be converted to SVG PATHS (no font dependency): generate with a dev script
+  `scripts/build_brand.js` (opentype.js + the local Vazirmatn / Space Grotesk
+  files, `sharp` for PNG export — devDependencies, never runtime). Keep every
+  SVG small and clean (optimized, `viewBox`, no embedded rasters); the marks
+  must read well at 16–32 px (simple silhouettes) |
+  files: `static/brand/**`, `scripts/build_brand.js` |
+  commit: "feat(brand): space logo concept set"
+- [ ] T58 — Brand selection wiring: add to `SiteSettings` a `logo_choice` and a
+  `favicon_choice` (choices auto-discovered from the folders in
+  `static/brand/`, shown in the admin with a small image preview next to each
+  option and Persian help_text) while keeping the existing uploaded `logo` /
+  `favicon` / `apple_touch_icon` fields as OVERRIDES — an uploaded file wins
+  over a chosen preset. Wire a context-processor helper (a `brand` dict with
+  resolved URLs) into `base.html` (`<link rel="icon">` svg + png fallbacks,
+  apple-touch-icon, `site.webmanifest` icons, `theme-color`), the header, the
+  footer, the JSON-LD logo and the OG image fallback. Default choice = option 1
+  so nothing breaks on an empty DB. Never overwrite existing uploads. Migration
+  + admin + a `collectstatic --dry-run` check |
+  files: `apps/core/models.py`, `apps/core/migrations/`, `apps/core/admin.py`,
+  `apps/core/context_processors.py`, `templates/base.html`,
+  `templates/partials/_header.html`, `templates/partials/_footer.html` |
+  commit: "feat(core): brand choice wiring in site settings"
+- [ ] T59 — About hero visual → animated SOLAR SYSTEM: replace the CSS "orbit
+  pills" artwork on the left of the about hero with a real solar-system
+  composition — a glowing gold sun/star in the centre, concentric elliptical
+  orbit rings, and one planet per `Service` (from the DB, max ~6; each planet
+  gets its own size/speed/accent color and shows the service icon, with the
+  service TITLE as a label chip next to it, readable and counter-rotated so it
+  never turns upside down), plus a few tiny moons/asteroid dots. Pure CSS/SVG
+  animation (transform rotate with different durations, counter-rotation for
+  labels), GPU-friendly, paused when off-screen (IntersectionObserver toggling
+  `animation-play-state`), static under `prefers-reduced-motion`, degrading
+  gracefully with 1–6 services; hover/focus on a planet highlights its orbit
+  and links to the service page; responsive (scales down on mobile without
+  overflow) | files: `templates/core/about.html`, `static/src/input.css`,
+  `static/js/pixoria.js` | commit: "feat(about): animated solar system hero visual"
+- [ ] T60 — Space identity pass (light touch, performance-safe): define a tiny
+  set of reusable decorative utilities in `input.css` (`.orbit-ring`,
+  `.orbit-dot`, `.planet-orb` with accent variants, `.star-field` as a CSS-only
+  subtle starfield for dark sections) and apply them sparingly to existing dark
+  section backgrounds and inner-page heroes (portfolio/blog/contact/about) so
+  the whole site feels like one "solar system" — no images, no heavy JS, no new
+  3D. Record the utilities and where they are used |
+  files: `static/src/input.css`, inner-page heroes | commit: "feat(css): space identity utilities"
+
+### Phase 12 — Dedicated SERVICE pages (design from `new/services/*.html`)
+
+Design inputs: `new/services/{web-design,programming,graphic-design,logo-design}.html`
+(study their structure, copy and per-service atmosphere), the whole converted
+site (`static/src/input.css`, the home partials, the components, the
+header/footer/CTA) and the existing models `services.Service`, `ServiceStat`,
+`ServiceWhyUs`, `ServiceDeliverable`, `ServiceProcess`, `ServicePlan`,
+`ServiceCustomItem`, `ServiceFAQ`, `ServiceTestimonial`. Services already have
+`icon`, `visual` (none/browser/terminal/palette/diamond), `chips` and `badge`.
+
+- [ ] T61 — Review and extend the service models (reuse first; add only what is
+  missing; everything optional): a per-service theme/accent (`accent` color
+  choice mapped to CSS classes; the hero `visual` kept), hero fields (eyebrow,
+  h1 with `[[ ]]`, lead paragraph, two CTA labels/URLs), long-form SEO content
+  blocks as a new ordered child model `ServiceSection` (eyebrow, `[[ ]]` title,
+  rich-text body, optional image + alt, `layout` left/right/full, order,
+  is_active) so the admin can add as many sections as needed, `ServiceTool`
+  (name, optional icon, order) for tools/technologies, `ServiceUseCase` /
+  industries (title, icon, short text), a related-services selection (M2M to
+  self, optional), a REAL `Portfolio.service` relation (nullable FK or M2M to
+  `Service`) with a data migration that best-effort maps the existing free-text
+  `service_type` to services by title (NEVER delete `service_type`), and an
+  optional `Article.related_services` M2M; SEO fields (`meta_title`,
+  `meta_description`, optional `og_image`). Update `projects_carousel(service=…)`
+  / `articles_carousel` / `testimonials_slider(service=…)` to use the real
+  relations, keeping the text fallback. PRICING: exactly 3 plans per service
+  managed by `ServicePlan` (name, short tagline, optional integer `price` +
+  `price_prefix` like «از» + currency label defaulting to «تومان» + optional
+  `price_note` / custom text like «تماس بگیرید» when the price is empty,
+  ordered `features` child with an `is_included` flag so the admin can show
+  crossed-out items, `is_featured` "most popular", CTA label/url, order,
+  is_active); admin inline `max_num=3`, `extra=3`, validation that at most one
+  plan is featured. Add the `fa_price` filter (thousands separators + Persian
+  digits). Migrations + admin (fieldsets, inlines, `list_editable`, previews),
+  no data loss | files: `apps/services/models.py`, `apps/services/migrations/`,
+  `apps/services/admin.py`, `apps/portfolio/models.py`, `apps/blog/models.py`,
+  `apps/core/templatetags/fa_digits.py` |
+  commit: "feat(services): extend models for dedicated pages"
+- [ ] T62 — Seed command `seed_services_content.py` (idempotent; never
+  overwrite admin edits; the D21/D25 collection-cleanup pattern only for rows
+  it created): verbatim/adapted Persian copy from the four `new/services/*.html`
+  pages PLUS newly written, high-quality, UNIQUE Persian copy per service for
+  the extra sections (see the content plan below). Write natural SEO copy: one
+  clear topic per section, semantic headings, no keyword stuffing, no
+  duplicated paragraphs between services, realistic Iranian market context
+  (Mashhad/Iran, response times, Persian/RTL specifics). Seed three plausible
+  plans per service with placeholder prices the admin will change |
+  files: `apps/services/management/commands/seed_services_content.py` |
+  commit: "feat(services): seed per-service content"
+- [ ] T63 — `templates/services/detail.html` skeleton on `base.html` (the D27
+  language): per-service theme classes, the breadcrumb partial (T47), JSON-LD
+  placeholders in `extra_head`, a hero by `visual` type (bespoke artwork,
+  CSS/SVG only) and the intro/overview section. Every section `{% if %}`-guarded;
+  the page must render with an empty DB for that service's children |
+  files: `templates/services/detail.html`, `apps/services/views.py` |
+  commit: "feat(services): v2 detail page skeleton"
+- [ ] T64 — Content sections part 1: «چه کاری انجام می‌دهیم»
+  (features/deliverables), the long-form `ServiceSection` blocks (alternating
+  layout, `.prose-ink` / `.prose-cream`), use-cases/industries, and the tools &
+  technologies marquee/chips | files: `templates/services/detail.html` |
+  commit: "feat(services): detail content sections one"
+- [ ] T65 — Content sections part 2: the process timeline (`ServiceProcess`),
+  why-us (`ServiceWhyUs`), the stats counters (`ServiceStat`) and the
+  delivery/timeline note | files: `templates/services/detail.html`,
+  `static/js/pixoria.js` | commit: "feat(services): detail content sections two"
+- [ ] T66 — PRICING section: three plan cards (the featured one elevated with a
+  gold border + a «محبوب‌ترین» badge), a features list with included/excluded
+  icons, the price formatted via `fa_price`, a CTA per plan (defaulting to
+  `contact:contact` with `?plan=<slug>&service=<slug>` so the contact form can
+  prefill the subject — implement the prefill in the contact view/form WITHOUT
+  breaking T34 behavior) and the custom-request block from `ServiceCustomItem`.
+  Responsive: 3 columns on desktop, stacked or a snap-carousel on mobile. The
+  section is hidden when there are no active plans and renders 1–3 plans
+  gracefully | files: `templates/services/detail.html`, `apps/contact/views.py`,
+  `apps/contact/forms.py` | commit: "feat(services): pricing section with plan cta"
+- [ ] T67 — Social proof + discovery sections: `{% testimonials_slider
+  service=service %}`, `{% projects_carousel service=service %}` (related work),
+  the FAQ accordion (`ServiceFAQ`, reusing `.faq-item` + `initFaq`),
+  related-services cards, `{% articles_carousel %}` filtered by the service's
+  related articles, and the final CTA from base. JSON-LD: `Service` (+ `provider`
+  Organization, `areaServed`, `offers` as an `Offer` list built from the plans
+  with `priceCurrency` IRR/IRT handled correctly), `FAQPage` and
+  `BreadcrumbList` — all built with the `json` filter and skipping pieces with
+  no data so the JSON never breaks | files: `templates/services/detail.html` |
+  commit: "feat(services): social proof and discovery sections"
+- [ ] T68 — Per-service atmosphere: web-design (browser mockup + layout-grid
+  motifs), programming (terminal/code motifs), graphic-design (palette/swatch
+  motifs), logo-design (diamond/geometry/construction-grid motifs). Implement
+  these as `service-theme-*` class sets + the four hero artworks, all CSS/SVG
+  (no images), reduced-motion safe, lazily animated, each tied to the service's
+  planet/orb accent so it sits inside the site's "solar system" identity |
+  files: `templates/services/detail.html`, `static/src/input.css` |
+  commit: "feat(services): per-service hero atmospheres"
+- [ ] T69 — Services LIST page `templates/services/list.html` redesign: hero,
+  service cards using the same orb/planet language as the mega menu (T52), a
+  "how we choose" section, FAQ if available, CTA from base; then a
+  view/sitemap/internal-links check and a render of every service page + the
+  list with an EMPTY database and with seeded data; `manage.py check`,
+  `makemigrations --check`, `npm run build` |
+  files: `templates/services/list.html`, `apps/services/views.py` |
+  commit: "feat(services): redesign list page"
+
+Content plan for each service page (adapt per service, never copy-paste between
+services): hero (h1 + lead + CTAs + bespoke artwork) → overview («X چیست و چرا
+مهم است») → what we deliver → long-form guide sections (3–5 blocks: process
+specifics, technical/design choices, mistakes to avoid, how pricing is
+determined, how long it takes) → use-cases/industries → tools & technologies →
+process timeline → why us → stats → pricing (3 plans) + custom request →
+portfolio carousel (this service) → testimonials slider (this service) → FAQ
+(8–10 real questions) → related services → related articles → CTA/footer (base).
+One `<h1>`; logical h2/h3; internal links between services, portfolio, blog and
+contact; descriptive alt texts; meta title/description per service.
+
+### Phase 13 — Cleanup (RUN LAST)
 
 - [x] T41 — Verify no broken references (grep for removed
   classes/tags/includes), fix `templates/registration/login.html`,
   `templates/admin/login.html`, proposal page and any remaining page that
   still assumes the old base | commit: "fix(templates): align remaining pages with v2 base"
-- [x] T42 — Services list/detail: no converted design in this migration. Give
-  them minimal placeholders that extend the new `base.html` ONLY IF they are
-  currently broken/unstyled; list them under `## Pending pages` in this file.
-  Do NOT redesign them now (the testimonials/projects/articles components must
-  already accept a `service` parameter so these pages can use them later) |
-  commit: "fix(services): placeholder pages for v2 base"
+- [x] T42 — superseded by Phase 12 (service pages are fully redesigned) — the
+  minimal placeholders this task produced (D46) are replaced by T63–T69.
 - [ ] T43 — Delete ALL old frontend files (unreferenced static CSS/JS, old
   templates/partials/components, unused template tags/context
   processors/views/URLs created only for old templates). Before deleting, list
   candidates in this file and verify with a project-wide grep. One small commit
   per group | commit: "chore: remove obsolete v1 frontend assets"
+  Status so far: the orphaned blog detail partials, `_manifesto.html` +
+  `_works.html` and the whole v1 `templates/components/` + `components/cards/`
+  tree were already deleted by commits `9d59609` and `ba9bb99`; the v1 static
+  assets are deleted on disk and STAGED (23 files: `static/js/core/*`,
+  `static/js/pixoria-bg/*`, `static/js/engine/*`, `static/js/{main,motion,cursor,
+  home-motion,header-motion,footer-stars}.js`, `static/css/{blog,site,styles}.css`
+  and `apps/core/templatetags/anim_tags.py`) — verified unreferenced, commit them
+  as the first T43 group. Remaining candidates to check with a grep: anything
+  else that only existed for the v1 templates (unused context processors, views,
+  URLs, `HomeLead` leftovers if T45 leaves any, the v1 `ContactInfo` model that
+  D35/D36 flagged as vestigial, `PackagesSection`/`Package`/`PackageFeature` and
+  `HeroMarqueeItem` that D18/D19 kept but never render, `AboutMission`/
+  `AboutValue`/`AboutPre`/`TeamMember`/`AboutProcessStep`/`AboutFaq` that D33
+  left untouched — delete a model only with a migration and after confirming no
+  admin/seed/template references it).
 - [ ] T44 — Final checks: `python manage.py check`,
   `makemigrations --check --dry-run`, `collectstatic --dry-run`, render
   home/about/contact/404/portfolio/blog (list + detail) with an EMPTY database
@@ -1283,30 +1657,8 @@ scope for this migration and can pick these templates up later.)_
 
 ## Current status
 
-T01–T42 done. **Every URL in the site now renders in the v2 design** — the
-services pages were the last unstyled ones and got minimal placeholders (D46);
-their full redesign stays out of scope for this migration.
-
-**Next: T43.** Delete ALL old frontend files. Candidates (verify each with a
-project-wide grep first — D45 confirmed the live templates touch none of
-them): the ten orphaned blog detail partials (`templates/blog/partials/
-detail_hero.html`, `detail_cover.html`, `detail_body.html`,
-`detail_post_nav.html`, `detail_related_section.html`, `detail_cta.html`,
-`sidebar_toc.html`, `sidebar_author.html`, `sidebar_related.html`,
-`sidebar_cta.html`), `templates/home/sections/_manifesto.html` + `_works.html`
-(HomeSection keys gone in D19), all of `templates/components/cards/`
-(`blog_card.html`, `portfolio_card.html`, `service_card.html`,
-`testimonial_card.html`) and the v1 `templates/components/` (`badge.html`,
-`breadcrumb.html`, `button.html`, `cta_banner.html`, `page_hero.html`,
-`section_header.html`, `carousel.html` — check whether
-`component_tags.py`'s `{% carousel %}` block tag is still used anywhere
-first; after T42 the services pages no longer use any of them). After the
-templates go, also review the JS/CSS/templatetag/context bits that only
-existed for them (`apps/core/templatetags/anim_tags.py`'s `stagger` filter —
-keep `apps/core/context_utils.py`'s crumbs, the v2 pages still use it,
-`static/js/core/`, `static/css/blog.css` / `styles.css` /
-`site.css` if unreferenced). One small commit per group.
-T44: final checks with an EMPTY and a seeded database
-(`scripts/render_check.py` is ready for that), then delete `new/`.
+T01–T45 done (T42 superseded by Phase 12). **Next: T46** — hero 3D fixes in
+`static/js/hero-scene.js` (shift the crystal planet left on desktop, ~30% fewer
+stars, GPU-side star fade so stars never pop in/out).
 
 
