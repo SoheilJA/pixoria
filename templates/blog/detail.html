@@ -76,24 +76,7 @@
 
     <div class="relative z-10 mx-auto max-w-7xl px-6 pb-28 pt-36 md:pt-48">
       {# مسیر نمایش — خانه ← بلاگ ← مقالهٔ فعلی #}
-      <nav aria-label="مسیر صفحه" class="font-latin text-[10px] tracking-[.3em] text-cream/40" data-reveal="up">
-        <ol class="flex flex-wrap items-center gap-x-3 gap-y-1">
-          {% for item in crumbs %}
-            <li class="flex items-center gap-3">
-              {% if not forloop.first %}
-                <span class="h-1 w-1 rotate-45 bg-gold/60" aria-hidden="true"></span>
-              {% endif %}
-              {% if item.url %}
-                <a href="{{ item.url }}" class="transition-colors hover:text-gold-light">{{ item.label }}</a>
-              {% elif forloop.last %}
-                <span aria-current="page" class="text-cream/70">{{ item.label|truncatechars:34 }}</span>
-              {% else %}
-                <span>{{ item.label }}</span>
-              {% endif %}
-            </li>
-          {% endfor %}
-        </ol>
-      </nav>
+      {% include "components/_breadcrumb.html" %}
 
       {# دسته‌بندی و برچسب‌ها #}
       <div class="mt-7 flex flex-wrap gap-2.5" data-reveal="up" data-delay="0.06">

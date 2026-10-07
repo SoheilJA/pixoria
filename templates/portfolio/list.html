@@ -51,7 +51,8 @@
           aria-hidden="true">works</span>
 
     <div class="relative z-10 mx-auto max-w-7xl px-6 pb-28 pt-36 md:pt-48">
-      <div class="max-w-2xl">
+      {% include "components/_breadcrumb.html" %}
+      <div class="mt-8 max-w-2xl">
         {% if page_section and page_section.eyebrow %}
           <p class="eyebrow" data-reveal="up">{{ page_section.eyebrow }}</p>
         {% endif %}

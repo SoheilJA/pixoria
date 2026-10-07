@@ -808,6 +808,42 @@ scope for this migration and can pick these templates up later.)_
   `node --input-type=module --check`); the home page still renders 200 and
   loads the module.
 
+- **D49 — Shared breadcrumb component (T47).** `templates/components/
+  _breadcrumb.html` is now the single breadcrumb renderer: props `crumbs`
+  (from the existing `apps/core.context_utils.crumbs`) and `theme`
+  (`"dark"`/`"light"` — every current hero is `bg-ink`, so all callers use the
+  default dark variant; the light variant exists for the cream sections future
+  pages may add). It renders nothing when `crumbs` is empty, so a page without
+  a trail emits zero characters. The five identical inline `<nav>` blocks
+  (blog list/detail, services list/detail, portfolio detail — all the same
+  markup modulo `truncatechars`) were replaced with one `{% include %}`, and
+  three pages that built a `crumbs` trail in the view but never rendered it
+  now show it: `portfolio/list.html`, `core/about.html`, `contact/contact.html`
+  (each wrapped in a `mb-5` spacer above the eyebrow), plus `404.html` —
+  `config.views.custom_404` now passes `crumbs(("خانه", "home:home"), ("خطای
+  ۴۰۴", None))` and the centered hero wraps the include in a
+  `flex justify-center` (verified through `handler404` with `DEBUG=False`).
+  The old helper's docstring was updated to point at the component.
+  The component also raised the bar the task asked for: `text-sm` mobile /
+  `md:text-base` desktop (was a tiny `font-latin text-[10px] tracking-[.3em]`
+  that styled Persian text with the latin font), better contrast
+  (`text-cream/70` links, `text-cream` + `font-medium` current page, was
+  `/40` and `/70`), comfortable tap targets (`rounded px-1.5 py-1` on every
+  link/span), an RTL separator that actually points left — the local
+  `chevron-left` Lucide sprite instead of the old rotated gold square — and
+  `aria-label` + `aria-current="page"` kept.
+  **GOTCHA, caught by rendering the page:** the new file's header comment was
+  a multi-line `{# … #}` block, and per the template-lexer GOTCHA above the
+  whole comment LEAKED into the rendered HTML (the lexer's `{#.*?#}` has no
+  DOTALL, so an unmatched `{#` is just text). Caught by dumping the rendered
+  `/about/` markup, fixed by switching to `{% comment %}…{% endcomment %}` —
+  the same rule every other partial in this project already follows.
+  Verified: every list/detail page renders exactly one breadcrumb `<nav>` with
+  exactly one `aria-current`, the trail shows home → parent → current with
+  chevron separators, `manage.py check` + `makemigrations --check` clean, and
+  Tailwind was rebuilt for the new utilities (`text-ink/70`, `text-gold/80`,
+  `md:text-base`, `md:h-4`, `h-3.5`).
+
 - **D40 — Blog model review + prose styles (T38).** The model layer was
   already nearly complete for the v2 pages; the review added only the missing
   pieces, all optional so a bare article still renders: `Article.featured`
@@ -1350,7 +1386,7 @@ scope for this migration and can pick these templates up later.)_
   hard threshold toggling — GPU-side, no per-frame JS loops over thousands of
   stars. Keep every D8/D17 performance rule |
   files: `static/js/hero-scene.js` | commit: "fix(hero): shift planet left and smooth stars"
-- [ ] T47 — Breadcrumbs: one shared partial `templates/components/_breadcrumb.html`
+- [x] T47 — Breadcrumbs: one shared partial `templates/components/_breadcrumb.html`
   (props: list of crumbs, theme dark/light) replacing the duplicated inline
   breadcrumb markup on every page (portfolio/blog/services/about/contact/404).
   Text ≥ `text-sm` on mobile and `md:text-base` on desktop, better contrast,
@@ -1693,8 +1729,8 @@ contact; descriptive alt texts; meta title/description per service.
 
 ## Current status
 
-T01–T46 done (T42 superseded by Phase 12). **Next: T47** — one shared
-`templates/components/_breadcrumb.html` partial (props: crumbs list, dark/light
-theme) replacing the duplicated inline breadcrumb markup on every page.
+T01–T47 done (T42 superseded by Phase 12). **Next: T48** — labeled dual phone
+numbers (`phone`/`phone_secondary` + new `*_label` fields) used everywhere a
+phone appears.
 
 

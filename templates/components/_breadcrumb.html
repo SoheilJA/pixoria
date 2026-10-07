@@ -1,0 +1,43 @@
+{% load icon_tags %}
+{% comment %}مسیر صفحه — کامپوننت مشترک.
+   props:
+     crumbs — لیستی از apps.core.context_utils.crumbs() (قدیمی‌ترین اول؛
+       آیتم آخر صفحهٔ فعلی است)
+     theme — "dark" (هیروهای bg-ink) یا "light" (روی پس‌زمینهٔ کرم){% endcomment %}
+{% if crumbs %}
+  <nav
+    aria-label="مسیر صفحه"
+    class="text-sm md:text-base {% if theme == "light" %}text-ink/70{% else %}text-cream/70{% endif %}"
+    data-reveal="up"
+  >
+    <ol class="flex flex-wrap items-center gap-x-1.5 gap-y-1">
+      {% for item in crumbs %}
+        <li class="flex items-center gap-1.5">
+          {% if not forloop.first %}
+            {# جداکنندهٔ چپ‌نما (RTL) #}
+            <span
+              aria-hidden="true"
+              class="{% if theme == "light" %}text-gold-dark{% else %}text-gold/80{% endif %}"
+              >{% icon "chevron-left" class="h-3.5 w-3.5 md:h-4 md:w-4" %}</span
+            >
+          {% endif %}
+          {% if item.url %}
+            <a
+              href="{{ item.url }}"
+              class="rounded px-1.5 py-1 transition-colors {% if theme == "light" %}text-ink/70 hover:text-gold-dark{% else %}text-cream/70 hover:text-gold-light{% endif %}"
+              >{{ item.label }}</a
+            >
+          {% elif forloop.last %}
+            <span
+              aria-current="page"
+              class="rounded px-1.5 py-1 font-medium {% if theme == "light" %}text-ink{% else %}text-cream{% endif %}"
+              >{{ item.label|truncatechars:34 }}</span
+            >
+          {% else %}
+            <span class="rounded px-1.5 py-1">{{ item.label }}</span>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ol>
+  </nav>
+{% endif %}

@@ -30,24 +30,7 @@
           aria-hidden="true">services</span>
 
     <div class="relative z-10 mx-auto max-w-7xl px-6 pb-28 pt-36 md:pt-48">
-      <nav aria-label="مسیر صفحه" class="font-latin text-[10px] tracking-[.3em] text-cream/40" data-reveal="up">
-        <ol class="flex flex-wrap items-center gap-x-3 gap-y-1">
-          {% for item in crumbs %}
-            <li class="flex items-center gap-3">
-              {% if not forloop.first %}
-                <span class="h-1 w-1 rotate-45 bg-gold/60" aria-hidden="true"></span>
-              {% endif %}
-              {% if item.url %}
-                <a href="{{ item.url }}" class="transition-colors hover:text-gold-light">{{ item.label }}</a>
-              {% elif forloop.last %}
-                <span aria-current="page" class="text-cream/70">{{ item.label }}</span>
-              {% else %}
-                <span>{{ item.label }}</span>
-              {% endif %}
-            </li>
-          {% endfor %}
-        </ol>
-      </nav>
+      {% include "components/_breadcrumb.html" %}
 
       <h1 class="mt-8 max-w-3xl text-[2.6rem] font-extrabold leading-[1.25] sm:text-5xl lg:text-6xl"
           data-reveal="right">

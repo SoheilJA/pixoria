@@ -80,6 +80,7 @@
 
     <div class="relative z-10 mx-auto grid w-full max-w-7xl items-center gap-14 px-6 pb-24 pt-36 lg:grid-cols-12 lg:pt-44">
       <div class="lg:col-span-5">
+        <div class="mb-5">{% include "components/_breadcrumb.html" %}</div>
         {% if page_section.eyebrow %}
           <p class="eyebrow" data-reveal="up">{{ page_section.eyebrow }}</p>
         {% endif %}

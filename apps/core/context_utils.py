@@ -1,8 +1,9 @@
 """Shared helpers for building template context.
 
-`crumbs` builds the breadcrumb trail rendered inline by the v2 page heroes
-(portfolio/blog/services detail pages). Pass ancestor pages oldest-first;
-the last item is rendered as the current page. Labels are Persian.
+`crumbs` builds the breadcrumb trail rendered by
+`templates/components/_breadcrumb.html` (shared by every v2 page hero). Pass
+ancestor pages oldest-first; the last item is rendered as the current page.
+Labels are Persian.
 
 Usage in a view::
 
