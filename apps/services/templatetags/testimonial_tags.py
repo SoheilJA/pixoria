@@ -10,6 +10,7 @@
 """
 
 from django import template
+from django.db.models import Q
 
 from ..models import ServiceTestimonial
 
@@ -26,12 +27,21 @@ def testimonials_slider(service=None, limit=9, title="", eyebrow="", id="testimo
     id:      idِ عنصر section (برای لنگرها)."""
 
     queryset = ServiceTestimonial.objects.filter(service=service) if service else ServiceTestimonial.objects.filter(show_on_home=True)
+    # یک کارت فقط وقتی قابل نمایش است که محتوای نوعش را داشته باشد: کارت متنی
+    # نیاز به متن، و کارت‌های رسانه‌ای نیاز به فایل یا آدرسِ قابلِ پخش دارند
+    # (در غیر این صورت یک پلیرِ شکسته چاپ می‌شد). مطابق قانونِ پروژه، در نبودِ
+    # داده هیچی چاپ نمی‌شود.
+    playable = (
+        Q(kind="text", text__gt="")
+        | (Q(kind="video") & (Q(video_file__gt="") | Q(video_url__gt="")))
+        | (Q(kind="audio") & (Q(audio_file__gt="") | Q(audio_url__gt="")))
+    )
     try:
         limit = int(limit)
     except (TypeError, ValueError):
         limit = 9
     return {
-        "testimonials": list(queryset.order_by("order", "id")[:limit]),
+        "testimonials": list(queryset.filter(playable).order_by("order", "id")[:limit]),
         "title": title,
         "eyebrow": eyebrow,
         "section_id": id,

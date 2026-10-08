@@ -301,9 +301,11 @@ class ServiceFAQ(models.Model):
 
 
 class ServiceTestimonial(models.Model):
-    """نظرات مشتریان — سه نوع کارت در اسلایدر صفحه اصلی: متنی، ویدیویی و صوتی.
-    پخش ویدیو و صدا در مرورگر شبیه‌سازی می‌شود؛ بنابراین فقط پوستر و مدت
-    زمان نمایش داده می‌شود."""
+    """نظرات مشتریان — سه نوع کارت در اسلایدر: متنی، ویدیویی و صوتی.
+
+    ویدیو و صوت واقعی هستند: فایل آپلودشده یا یک آدرس مستقیم، و پخش واقعی
+    مرورگر روی کارت. مدت زمان اختیاری است و وقتی خالی گذاشته شود از روی
+    فرادادهٔ فایل خوانده می‌شود."""
 
     KIND_CHOICES = [
         ("text", "متن"),
@@ -334,6 +336,17 @@ class ServiceTestimonial(models.Model):
         verbose_name="امتیاز (۱ تا ۵)",
         validators=[MinValueValidator(1), MaxValueValidator(5)],
     )
+    video_file = models.FileField(
+        upload_to="testimonials/video/",
+        verbose_name="فایل ویدیو",
+        blank=True,
+        help_text="فایل ویدیو (mp4/webm). آپلود فایل یا آدرس کافی است",
+    )
+    video_url = models.URLField(
+        verbose_name="آدرس ویدیو",
+        blank=True,
+        help_text="آدرس مستقیم فایل ویدیو (مثلاً https://…/clip.mp4)",
+    )
     video_poster = models.ImageField(
         upload_to="testimonials/video/",
         verbose_name="پوستر ویدیو",
@@ -341,9 +354,21 @@ class ServiceTestimonial(models.Model):
         help_text="برای کارت‌های ویدیویی. تصویر پوسترِ پیش از پخش",
     )
     video_duration = models.PositiveIntegerField(
-        default=48,
         verbose_name="مدت زمان ویدیو (ثانیه)",
-        help_text="در مرورگر شبیه‌سازی می‌شود؛ فقط برای نمایش زمان",
+        blank=True,
+        null=True,
+        help_text="اختیاری — خالی بگذارید تا از روی فرادادهٔ فایل خوانده شود",
+    )
+    audio_file = models.FileField(
+        upload_to="testimonials/audio/",
+        verbose_name="فایل صوت",
+        blank=True,
+        help_text="فایل صوتی (mp3/m4a). آپلود فایل یا آدرس کافی است",
+    )
+    audio_url = models.URLField(
+        verbose_name="آدرس صوت",
+        blank=True,
+        help_text="آدرس مستقیم فایل صوتی (مثلاً https://…/voice.mp3)",
     )
     audio_title = models.CharField(
         max_length=200,
@@ -358,9 +383,10 @@ class ServiceTestimonial(models.Model):
         help_text="مثلاً: پروژهٔ همایش ملی",
     )
     audio_duration = models.PositiveIntegerField(
-        default=65,
         verbose_name="مدت زمان صوت (ثانیه)",
-        help_text="در مرورگر شبیه‌سازی می‌شود؛ فقط برای نمایش زمان",
+        blank=True,
+        null=True,
+        help_text="اختیاری — خالی بگذارید تا از روی فرادادهٔ فایل خوانده شود",
     )
     show_on_home = models.BooleanField(default=False, verbose_name="نمایش در صفحه اصلی")
     order = models.PositiveIntegerField(default=0, verbose_name="ترتیب")
@@ -372,3 +398,41 @@ class ServiceTestimonial(models.Model):
 
     def __str__(self):
         return f"{self.author_name} — {self.service.title}"
+
+    def get_video_src(self):
+        """آدرس پخش ویدیو: فایل آپلودشده، وگرنه آدرس مستقیم."""
+        if self.video_file:
+            return self.video_file.url
+        return self.video_url or ""
+
+    def get_audio_src(self):
+        """آدرس پخش صوت: فایل آپلودشده، وگرنه آدرس مستقیم."""
+        if self.audio_file:
+            return self.audio_file.url
+        return self.audio_url or ""
+
+    def clean(self):
+        from django.core.exceptions import ValidationError
+
+        super().clean()
+        if self.kind == "text":
+            if not self.text:
+                raise ValidationError({"text": "کارت متنی به متنِ نظر نیاز دارد."})
+        elif self.kind == "video":
+            errors = {}
+            if not (self.video_file or self.video_url):
+                errors["video_file"] = "ویدیو به فایل یا آدرسِ ویدیو نیاز دارد."
+                errors["video_url"] = "ویدیو به فایل یا آدرسِ ویدیو نیاز دارد."
+            if not self.video_poster:
+                errors["video_poster"] = "ویدیو به پوستر نیاز دارد."
+            if errors:
+                raise ValidationError(errors)
+        elif self.kind == "audio":
+            errors = {}
+            if not (self.audio_file or self.audio_url):
+                errors["audio_file"] = "صوت به فایل یا آدرسِ صوت نیاز دارد."
+                errors["audio_url"] = "صوت به فایل یا آدرسِ صوت نیاز دارد."
+            if not self.audio_title:
+                errors["audio_title"] = "کارت صوتی به عنوان نیاز دارد."
+            if errors:
+                raise ValidationError(errors)

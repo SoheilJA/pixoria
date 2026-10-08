@@ -540,201 +540,167 @@ function initCarousels({ REDUCED, faDigits }) {
   });
 }
 
-/* ------------------------------------------------------- shared media simulator */
+/* ------------------------------------------------------- media cards (real playback) */
 
-function mediaSim({ dur, onTick, onEnd }) {
-  let t = 0;
-  let raf = null;
-  let last = 0;
-  const loop = (now) => {
-    if (!raf) return;
-    const dt = (now - last) / 1000;
-    last = now;
-    t = Math.min(dur, t + dt);
-    onTick(t);
-    if (t >= dur) {
-      raf = null;
-      onEnd && onEnd();
-      return;
-    }
-    raf = requestAnimationFrame(loop);
-  };
-  return {
-    play() {
-      if (raf) return;
-      last = performance.now();
-      raf = requestAnimationFrame(loop);
-    },
-    pause() {
-      if (raf) {
-        cancelAnimationFrame(raf);
-        raf = null;
-      }
-    },
-    reset() {
-      this.pause();
-      t = 0;
-      onTick(0);
-    },
-  };
-}
+// فقط یک رسانه همزمان پخش شود: هر کارتی که شروع به پخش می‌کند، کارتِ در حال
+// پخشِ دیگر را متوقف می‌کند. هر کارت یک تابعِ stop در این مجموعه ثبت می‌کند.
+const activeMedia = new Set();
+const stopOtherMedia = (me) => {
+  activeMedia.forEach((stop) => stop !== me && stop());
+};
 
 function initMediaCards({ hasGsap, REDUCED, fmtTime }) {
   const gsap = window.gsap;
 
-  /* ---------------- video cards (simulated playback) ---------------- */
+  /* ---------------- video cards — real <video> element ---------------- */
   document.querySelectorAll("[data-video-card]").forEach((card) => {
+    const video = card.querySelector("[data-v-el]");
+    if (!video) return;
     const vPlay = card.querySelector("[data-v-play]");
-    if (!vPlay) return;
-    const vImg = card.querySelector("[data-v-img]");
     const vScrim = card.querySelector("[data-v-scrim]");
     const vProg = card.querySelector("[data-v-prog]");
     const vTime = card.querySelector("[data-v-time]");
-    const DUR = Math.max(1, parseInt(card.dataset.videoCard || "48", 10) || 48);
+
     let kb = null;
-    const sim = mediaSim({
-      dur: DUR,
-      onTick: (t) => {
-        if (vProg) vProg.style.width = (t / DUR) * 100 + "%";
-        if (vTime) vTime.textContent = fmtTime(t) + " / " + fmtTime(DUR);
-      },
-      onEnd: () => {
-        vPlay.classList.remove("is-playing");
-        if (vScrim) vScrim.style.opacity = "";
-        if (kb && hasGsap) {
-          kb.kill();
-          gsap.set(vImg, { scale: 1 });
-        }
-        sim.reset();
-      },
-    });
-    vPlay.addEventListener("click", () => {
-      const on = vPlay.classList.toggle("is-playing");
+    const setPlaying = (on) => {
+      if (vPlay) {
+        vPlay.style.opacity = on ? "0" : "";
+        vPlay.style.pointerEvents = on ? "none" : "";
+      }
+      if (vScrim) vScrim.style.opacity = on ? "0" : "";
       if (on) {
-        if (vScrim) vScrim.style.opacity = "0";
-        sim.play();
+        stopOtherMedia(stop);
+        const p = video.play();
+        if (p && p.catch) p.catch(() => setPlaying(false));
         if (hasGsap && !REDUCED)
-          kb = gsap.to(vImg, {
-            scale: 1.12,
-            duration: 9,
+          kb = gsap.to(video, {
+            scale: 1.06,
+            duration: 8,
             yoyo: true,
             repeat: -1,
             ease: "sine.inOut",
           });
       } else {
-        sim.pause();
-        if (vScrim) vScrim.style.opacity = "";
+        video.pause();
         if (kb && hasGsap) {
           kb.kill();
-          gsap.set(vImg, { scale: 1 });
+          gsap.set(video, { scale: 1 });
+          kb = null;
         }
       }
+    };
+    const stop = () => {
+      if (!video.paused) setPlaying(false);
+    };
+    activeMedia.add(stop);
+
+    if (vPlay)
+      vPlay.addEventListener("click", () =>
+        setPlaying(video.paused),
+      );
+    // کلیک روی خودِ ویدیو هم پخش را تغییر می‌دهد.
+    video.addEventListener("click", () => setPlaying(video.paused));
+
+    // مدت زمان از فراداده خوانده می‌شود تا اگر در دیتابیس ثبت نشده بود.
+    video.addEventListener("loadedmetadata", () => {
+      if (video.duration && vTime && vTime.dataset.filled !== "1") {
+        vTime.dataset.filled = "1";
+        vTime.textContent = fmtTime(0) + " / " + fmtTime(video.duration);
+      }
+    });
+    const onTime = () => {
+      const dur = video.duration || 0;
+      if (vProg && dur)
+        vProg.style.width = (video.currentTime / dur) * 100 + "%";
+      if (vTime && dur)
+        vTime.textContent =
+          fmtTime(video.currentTime) + " / " + fmtTime(dur);
+    };
+    video.addEventListener("timeupdate", onTime);
+    video.addEventListener("ended", () => {
+      setPlaying(false);
+      video.currentTime = 0;
+      onTime();
     });
   });
 
-  /* ---------------- audio cards (real WebAudio playback) ---------------- */
+  /* ---------------- audio cards — real <audio> element ---------------- */
   document.querySelectorAll("[data-audio-card]").forEach((card) => {
+    const audio = card.querySelector("[data-a-el]");
+    if (!audio) return;
     const aPlay = card.querySelector("[data-a-play]");
     const barsWrap = card.querySelector("[data-a-bars]");
     const aCur = card.querySelector("[data-a-cur]");
+    const aTotal = card.querySelector("[data-a-total]");
     if (!aPlay || !barsWrap) return;
-    const DUR = Math.max(1, parseInt(card.dataset.audioCard || "65", 10) || 65);
+
+    // موجِ صدا: نوارهای ثابتِ تزئینی که تا پیش از این با فرکانسِ تصادفی
+    // ساخته می‌شدند؛ حالا ارتفاع آن‌ها از شدتِ صدا به‌صورت تقریبی در نمی‌آید،
+    // پس همان شکلِ تصادفیِ زیبا را نگه می‌داریم و فقط پیشرفت را رنگ می‌کنیم.
     const N = 44;
     const bars = [];
     for (let i = 0; i < N; i++) {
       const b = document.createElement("span");
       b.className = "w-bar";
       b.style.height = 18 + Math.random() * 82 + "%";
+      // تأخیرِ تصادفیِ هر نوار، تا موجِ در حالِ پالس هم‌زمان نباشد.
       b.style.animationDelay = (Math.random() * 1.2).toFixed(2) + "s";
       barsWrap.appendChild(b);
       bars.push(b);
     }
-    let ctx = null;
-    let nodes = null;
-    const startSound = () => {
-      try {
-        const AC = window.AudioContext || window.webkitAudioContext;
-        ctx = ctx || new AC();
-        if (ctx.state === "suspended") ctx.resume();
-        const g = ctx.createGain();
-        g.gain.value = 0.0001;
-        g.gain.exponentialRampToValueAtTime(0.05, ctx.currentTime + 1);
-        const f = ctx.createBiquadFilter();
-        f.type = "lowpass";
-        f.frequency.value = 520;
-        const o1 = ctx.createOscillator();
-        o1.type = "sine";
-        o1.frequency.value = 112;
-        const o2 = ctx.createOscillator();
-        o2.type = "sine";
-        o2.frequency.value = 168.5;
-        const lfo = ctx.createOscillator();
-        lfo.frequency.value = 0.25;
-        const lg = ctx.createGain();
-        lg.gain.value = 0.02;
-        lfo.connect(lg);
-        lg.connect(g.gain);
-        o1.connect(f);
-        o2.connect(f);
-        f.connect(g);
-        g.connect(ctx.destination);
-        o1.start();
-        o2.start();
-        lfo.start();
-        nodes = { o1, o2, lfo, g };
-      } catch {
-        /* no audio — the progress timeline still runs */
-      }
+
+    const stop = () => {
+      if (!audio.paused) audio.pause();
     };
-    const stopSound = () => {
-      if (!nodes) return;
-      try {
-        nodes.g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.4);
-        const n = nodes;
-        setTimeout(() => {
-          try {
-            n.o1.stop();
-            n.o2.stop();
-            n.lfo.stop();
-          } catch {
-            /* already stopped */
-          }
-        }, 500);
-      } catch {
-        /* already stopped */
+    activeMedia.add(stop);
+
+    aPlay.addEventListener("click", () => {
+      const on = audio.paused;
+      if (on) {
+        stopOtherMedia(stop);
+        const p = audio.play();
+        if (p && p.catch) p.catch(() => aPlay.classList.remove("is-playing"));
+      } else {
+        audio.pause();
       }
-      nodes = null;
-    };
-    const sim = mediaSim({
-      dur: DUR,
-      onTick: (t) => {
-        if (aCur) aCur.textContent = fmtTime(t);
-        const p = t / DUR;
+    });
+
+    const render = () => {
+      const dur = audio.duration || 0;
+      const t = audio.currentTime || 0;
+      if (aCur) aCur.textContent = fmtTime(t);
+      if (dur) {
+        const p = t / dur;
         bars.forEach((b, i) =>
           b.classList.toggle("played", (i + 1) / N <= p),
         );
-      },
-      onEnd: () => {
-        aPlay.classList.remove("is-playing");
-        barsWrap.classList.remove("playing");
-        stopSound();
-        sim.reset();
-      },
+      }
+    };
+    audio.addEventListener("timeupdate", render);
+    audio.addEventListener("play", () => {
+      aPlay.classList.add("is-playing");
+      barsWrap.classList.add("playing");
     });
-    aPlay.addEventListener("click", () => {
-      const on = aPlay.classList.toggle("is-playing");
-      if (on) {
-        sim.play();
-        barsWrap.classList.add("playing");
-        startSound();
-      } else {
-        sim.pause();
-        barsWrap.classList.remove("playing");
-        stopSound();
+    audio.addEventListener("pause", () => {
+      aPlay.classList.remove("is-playing");
+      barsWrap.classList.remove("playing");
+    });
+    audio.addEventListener("ended", () => {
+      aPlay.classList.remove("is-playing");
+      barsWrap.classList.remove("playing");
+      audio.currentTime = 0;
+      render();
+    });
+    // مدت زمان کلی از فراداده خوانده می‌شود اگر در دیتابیس ثبت نشده باشد.
+    audio.addEventListener("loadedmetadata", () => {
+      if (audio.duration && aTotal && aTotal.dataset.filled !== "1") {
+        aTotal.dataset.filled = "1";
+        aTotal.textContent = fmtTime(audio.duration);
       }
     });
   });
 }
+
 
 /* ------------------------------------------------------- portfolio filter */
 

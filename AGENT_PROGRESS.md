@@ -1203,6 +1203,61 @@ scope for this migration and can pick these templates up later.)_
   filter→carousel refresh are verified by code review against the D32 carousel,
   which uses the same hooks end to end.
 
+- **D54 — Testimonials by type: adaptive admin + real players (T51).** The
+  media cards were simulations (`mediaSim` rAF timer + a WebAudio drone the
+  user could not actually hear); they are real browser playback now.
+  **Models:** `ServiceTestimonial` gained `video_file` (FileField) /
+  `video_url` (URLField) and `audio_file` / `audio_url`, and `video_duration`
+  / `audio_duration` became `blank=True, null=True` (defaults 48/65 dropped)
+  — durations are optional and read from the file metadata when empty.
+  `get_video_src()` / `get_audio_src()` resolve the upload first, then the
+  URL. `clean()` validates per kind: text → `text` required; video → a file
+  OR url required AND `video_poster` required; audio → a file OR url required
+  AND `audio_title` required (errors attached to the offending fields so the
+  admin form marks them). Migration `services.0007`.
+  **Admin:** `ServiceTestimonialAdmin` got `fieldsets` with `classes =
+  ["kind-text"/"kind-video"/"kind-audio"]` and the new
+  `static/admin/js/testimonial_kind.js` (vanilla, no jQuery) via `Media` on
+  BOTH the standalone admin and the `ServiceTestimonialInline` (it hides the
+  irrelevant fieldset on the full page and each `.form-row` individually on
+  tabular inlines, works with `id_kind` and `id_<prefix>-kind`, and
+  re-initializes on Django's `formset:added` event).
+  **Cards:** `_testimonial_card.html` now renders `<video data-v-el
+  preload="none" playsinline poster=…>` with a `<source>` (poster optional,
+  skipped when empty) and `<audio data-a-el preload="none">`; the duration
+  chips print only when the DB field is set and are filled from
+  `loadedmetadata` otherwise (`data-filled` guard so a DB value always wins).
+  **`pixoria.js`:** `mediaSim` and the WebAudio drone are gone;
+  `initMediaCards` drives the real elements — `timeupdate` → progress bar +
+  `fmtTime` currentTime/duration, `ended` → reset to poster, play/pause via
+  the badge AND a click on the video itself, the GSAP Ken-Burns zoom now sits
+  on the `<video>`, and a module-level `activeMedia` set pauses every other
+  media card when one starts (the task's "pause the others"). The waveform
+  keeps its random heights + per-bar `animationDelay` (synchronously pulsing
+  bars looked mechanical) and bars get `.played` from real progress.
+  **Slider tag:** `testimonials_slider` now filters to *playable* cards
+  (`Q(kind="text", text__gt="") | video with file-or-url | audio with
+  file-or-url`) — an admin who sets `kind=video` but attaches no file gets no
+  broken player on the site; the tag still renders nothing at all on an empty
+  query.
+  **Verified** with `scripts/_t51_check.py` inside a rolled-back transaction:
+  one fixture of each kind renders (video poster + `<source>` + duration chip
+  ۰:۴۸, audio title/project + chip ۱:۰۵, text + 4-star rating), broken
+  video/audio cards are excluded from BOTH the home query and the service
+  query, `limit` truncates, the section is absent with an empty table,
+  `clean()` rejects each incomplete kind on exactly the right fields and
+  passes each complete one, every admin page (add/change/service-change with
+  the inline) returns 200 with the fieldset classes and the JS inlined;
+  `scripts/render_check.py` — every URL still 200/404; `manage.py check` +
+  `makemigrations --check` clean; `pixoria.js` passes the ES-module syntax
+  check. Also caught while testing: `templates/404.html` still carried the
+  multi-line `{# … #}` comment the D50 sweep missed (it leaked into the 404
+  page body); converted to `{% comment %}` and re-verified via `handler404`
+  with `DEBUG=False` — no `{#` in the response, scene intact. NOT verified in
+  a real browser (no Playwright/Puppeteer in the project) — playback was
+  verified by rendering the markup and by code review against the
+  `data-*` hooks.
+
 ## Tasks
 
 ### Phase 0 — Foundation
@@ -1531,7 +1586,7 @@ scope for this migration and can pick these templates up later.)_
   and record why | files: `templates/home/sections/_portfolio.html`,
   `templates/portfolio/list.html`, `static/js/pixoria.js`, `static/src/input.css` |
   commit: "feat(portfolio): responsive grid to carousel"
-- [ ] T51 — Testimonials by type (text / video / audio): make the admin form
+- [x] T51 — Testimonials by type (text / video / audio): make the admin form
   adaptive for `ServiceTestimonial` — the `kind` select shows/hides the relevant
   fieldsets with a small admin JS file (`static/admin/js/testimonial_kind.js`
   loaded via `Media`), and `clean()` validates that the chosen kind has its
@@ -1834,8 +1889,9 @@ contact; descriptive alt texts; meta title/description per service.
 
 ## Current status
 
-T01–T50 done (T42 superseded by Phase 12; T47b was the template-comment leak
-sweep — D50). **Next: T51** — testimonials by type: an adaptive admin form for
-`ServiceTestimonial` + real video/audio players on the front-end cards.
+T01–T51 done (T42 superseded by Phase 12; T47b was the template-comment leak
+sweep — D50). **Next: T52** — mega-menu redesign: glass panel of service
+orb tiles (icon + title only, orbit ring on hover), chevron on the «خدمات»
+nav item, hover + click/keyboard open, Esc close, mobile accordion.
 
 

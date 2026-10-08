@@ -4,26 +4,25 @@
 {# class: str  optional — کلاس اضافی روی ریشه (سایز/چینش اسلایدر را فراخواننده می‌دهد) #}
 {# t-card کلاسِ قلابِ اسلایدر است (استایلی ندارد) و نباید حذف شود. #}
 {% if t.kind == "video" %}
-  {# کارت ویدیویی — پخش شبیه‌سازی‌شده روی پوستر #}
+  {# کارت ویدیویی — پخش واقعی روی <video> (پوستر تا پیش از پخش) #}
   <article class="glass tilt t-card relative flex flex-col p-5{% if class %} {{ class }}{% endif %}"
-           style="border-radius: 0.75rem 2rem 0.75rem 2rem" data-tilt
-           data-video-card="{{ t.video_duration }}">
+           style="border-radius: 0.75rem 2rem 0.75rem 2rem" data-tilt data-video-card>
     <span class="glare" aria-hidden="true"></span>
     <figure class="relative overflow-hidden rounded-[1.4rem]">
-      {% if t.video_poster %}
-        <img data-v-img src="{{ t.video_poster.url }}" alt="{{ t.author_name }}" loading="lazy" decoding="async"
-             class="aspect-[16/11] w-full object-cover">
-      {% else %}
-        <div data-v-img class="aspect-[16/11] w-full bg-gradient-to-br from-ink3 via-ink2 to-ink3"></div>
-      {% endif %}
+      <video data-v-el preload="none" playsinline
+             {% if t.video_poster %}poster="{{ t.video_poster.url }}"{% endif %}
+             class="aspect-[16/11] w-full bg-ink2 object-cover">
+        <source src="{{ t.get_video_src }}" type="video/mp4">
+      </video>
       <div data-v-scrim class="absolute inset-0 bg-ink/45 transition-opacity duration-500" aria-hidden="true"></div>
-      <button data-v-play
-              class="play-badge absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transition-transform duration-300 hover:scale-110"
+      <button data-v-play type="button"
+              class="play-badge absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transition-all duration-300 hover:scale-110"
               aria-label="پخش ویدیوی {{ t.author_name }}">
         {% icon "play" class="h-6 w-6" %}
       </button>
-      <span data-v-time class="fa-num absolute bottom-3 left-3 rounded-full bg-ink/70 px-3 py-1 text-[11px] text-cream/90 backdrop-blur">
-        ۰:۰۰ / {{ t.video_duration|fa_duration }}
+      <span data-v-time dir="ltr"
+            class="fa-num absolute bottom-3 left-3 rounded-full bg-ink/70 px-3 py-1 text-[11px] text-cream/90 backdrop-blur">
+        ۰:۰۰{% if t.video_duration %} / {{ t.video_duration|fa_duration }}{% endif %}
       </span>
       <div class="absolute inset-x-0 bottom-0 h-[3px] bg-white/15" aria-hidden="true">
         <div data-v-prog class="h-full w-0" style="background: linear-gradient(to left, #e8c47a, #c9a15a);"></div>
@@ -38,11 +37,13 @@
     </div>
   </article>
 {% elif t.kind == "audio" %}
-  {# کارت صوتی — موج صدا و زمان‌سنج #}
+  {# کارت صوتی — پخش واقعی روی <audio> با موجِ صدا #}
   <article class="glass tilt t-card relative flex flex-col p-7{% if class %} {{ class }}{% endif %}"
-           style="border-radius: 2rem 0.75rem 2rem 0.75rem" data-tilt
-           data-audio-card="{{ t.audio_duration }}">
+           style="border-radius: 2rem 0.75rem 2rem 0.75rem" data-tilt data-audio-card>
     <span class="glare" aria-hidden="true"></span>
+    <audio data-a-el preload="none">
+      <source src="{{ t.get_audio_src }}" type="audio/mpeg">
+    </audio>
     <div class="flex items-center justify-between gap-4">
       <div>
         <h3 class="text-lg font-bold">{{ t.audio_title|default:"گفت‌وگو با کارفرما" }}</h3>
@@ -50,14 +51,14 @@
           <p class="mt-1 text-xs text-cream/50">{{ t.audio_project }}</p>
         {% endif %}
       </div>
-      <button data-a-play class="play-btn" aria-label="پخش و توقف پیام صوتی {{ t.author_name }}">
+      <button data-a-play type="button" class="play-btn" aria-label="پخش و توقف پیام صوتی {{ t.author_name }}">
         <span class="ico-play grid place-items-center">{% icon "play" class="h-5 w-5" %}</span>
         <span class="ico-pause grid place-items-center">{% icon "pause" class="h-5 w-5" %}</span>
       </button>
     </div>
     <div data-a-bars class="wave mt-7 flex h-14 items-end gap-[3px]" aria-hidden="true"></div>
     <div class="mt-3 flex items-center justify-between text-[11px] text-cream/50 fa-num" dir="ltr">
-      <span data-a-cur>۰:۰۰</span><span data-a-total>{{ t.audio_duration|fa_duration }}</span>
+      <span data-a-cur>۰:۰۰</span><span data-a-total>{% if t.audio_duration %}{{ t.audio_duration|fa_duration }}{% endif %}</span>
     </div>
     <div class="mt-6 flex items-center gap-3 border-t border-white/10 pt-5">
       {% if t.author_image %}
