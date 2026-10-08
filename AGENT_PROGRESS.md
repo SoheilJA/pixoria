@@ -1148,6 +1148,21 @@ scope for this migration and can pick these templates up later.)_
   `/contact/`, `/portfolio/`, `/blog/` all 200 with 3–4 latin `tel:` hrefs and
   list-form `telephone` in every JSON-LD.
 
+- **D52 — Category typo fix (T49).** The only occurrence of «سیات» in the whole
+  project was one live DB row: `portfolio.Category` id=1 `name='طراحی سیات'`
+  (shown before editing). NO source file, seed command, fixture or JS contained
+  it (repo-wide grep + a raw-SQL scan of every table/column), so nothing in the
+  code needed changing. The slug was already the correct latin `web-design`, so
+  per the task it was left untouched — `/portfolio/?category=web-design`, the
+  filter pills and every `category.filter_url` link keep working with no
+  redirect needed. Fixed with a proper idempotent data migration,
+  `portfolio.0005_fix_web_design_category_typo` (a `RunPython` that only
+  rewrites rows still named exactly «طراحی سیات»; reverse is a documented
+  no-op). Verified: name is now «طراحی سایت» with the slug unchanged, the
+  migration survives an unapply/reapply round-trip as a no-op, and the filter
+  pills on `/` and `/portfolio/` read «طراحی سایت» with zero remaining «سیات»
+  in either rendered page. `manage.py check` + `makemigrations --check` clean.
+
 ## Tasks
 
 ### Phase 0 — Foundation
@@ -1456,7 +1471,7 @@ scope for this migration and can pick these templates up later.)_
   `templates/partials/_footer.html`, `templates/partials/_cta.html`,
   `templates/contact/contact.html`, `templates/core/about.html` |
   commit: "feat(core): labeled dual phone numbers everywhere"
-- [ ] T49 — Fix the typo «طراحی سیات» → «طراحی سایت»: grep the repo (templates,
+- [x] T49 — Fix the typo «طراحی سیات» → «طراحی سایت»: grep the repo (templates,
   seed commands, fixtures, models, JS), fix the SOURCE, then fix the existing
   DB row (a portfolio `Category` name/slug — show the prior value before
   editing, keep the slug stable unless it is also wrong and no redirects are
@@ -1779,9 +1794,9 @@ contact; descriptive alt texts; meta title/description per service.
 
 ## Current status
 
-T01–T48 done (T42 superseded by Phase 12; T47b was the template-comment leak
-sweep — D50). **Next: T49** — fix the typo «طراحی سیات» → «طراحی سایت» in the
-source AND the existing DB row (a portfolio `Category`), keeping the slug
-stable.
+T01–T49 done (T42 superseded by Phase 12; T47b was the template-comment leak
+sweep — D50). **Next: T50** — home portfolio responsive layout: 3-column grid
+at `lg`, carousel (2/view) at `md`, carousel (1/view) on mobile — ONE DOM,
+filter working in both modes.
 
 
