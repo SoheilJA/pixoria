@@ -1367,7 +1367,53 @@ scope for this migration and can pick these templates up later.)_
   Playwright/Puppeteer in the project) — timing, flag and fade paths were
   verified by code review against the CSS keyframes and the three timers.
 
+- **D57 — Page-transition loader (T54).** **Finding recorded first (as the task
+  demands):** `hx-boost` is nowhere in the project (D15 was right — it was
+  dropped), so site navigation is **plain multi-page** (full page loads on
+  `<a href>`). htmx is used in exactly two places, neither of which navigates:
+  the blog category-filter pills + load-more button (`hx-get` → `#blog-grid`,
+  `innerHTML`/`beforeend`, no `hx-push-url` → no history push, pure content
+  swap) and the contact form (`hx-post`, and it ALREADY disables its own submit
+  button via `hx-disabled-elt="#contact-submit"`, so the "disable the button"
+  clause needed nothing new). So the loader's real trigger is same-origin link
+  clicks; the htmx hooks are wired anyway (future-proof for any later
+  `hx-boost`/`hx-push-url`).
+  **Two elements in `base.html`** (both `aria-hidden`, `pointer-events: none`
+  — never full-screen, never blocking): `#nav-progress`, a 3 px top bar whose
+  `.nav-progress-bar` is a gold→royal gradient (same gradient as the scroll
+  bar, origin-right for RTL) that crawls toward 92% and snaps to 100% on
+  completion; and `#nav-orbit`, a tiny 2.5 rem corner indicator (bottom-left —
+  clear of the header, the bottom-center toast and the footer) reusing the
+  preloader's `pl-spin` keyframes with its own `.nav-orbit-ring` +
+  `.nav-orbit-planet`. Both fade via opacity + `visibility` transitions.
+  **Timing:** `start()` on click, but NOTHING shows for 150 ms (fast
+  navigations never paint anything — the requirement), the bar then appears and
+  the rAF crawl begins, and the orbit indicator appears only at 400 ms
+  (150 + 250). Completion: `htmx:afterSettle` (and `responseError`/`sendError`),
+  `pageshow` with `e.persisted` (bfcache restore) and `pagehide`, plus a 10 s
+  failsafe for a hung load. `stop()` clears the inline transform, adds `.done`
+  (CSS transitions the bar to scaleX(1)), then strips the classes 500 ms later
+  and resets the transform to 0 for the next run.
+  **Click filter** (all skip conditions): `defaultPrevented`, `button !== 0`
+  (middle/right click), any modifier key, `target` other than `_self`/`_top`/
+  `_parent`, `download` attribute, empty/`#`-only/`mailto:`/`tel:` hrefs,
+  a different `url.origin`, a link inside an `[hx-get]`/`[hx-post]`/`[hx-boost]`
+  subtree (htmx owns those), and a same-pathname+same-search URL (anchor jumps
+  within the page — the anchor handler already smooth-scrolls those). A
+  `javascript:` href falls out of the origin check too.
+  **Reduced motion:** the JS path shows the bar STATIC at scaleX(0.35) with no
+  crawl and never shows the orbit; the CSS also kills `.nav-orbit-ring`'s spin.
+  **Verified:** every URL 200/404 and clean; the markup and all compiled
+  classes are in the rendered pages; blog filter/load-more and the contact form
+  post do NOT start the loader (no boost/push-url, and they are buttons not
+  anchors); `manage.py check` + `makemigrations --check` clean; `pixoria.js`
+  passes the ES-module syntax check; Tailwind rebuilt. NOT verified in a real
+  browser (no Playwright/Puppeteer in the project) — the filter rules and the
+  three timers were verified by code review against the htmx 2 event contracts
+  and the click semantics.
+
 ## Tasks
+
 
 ### Phase 0 — Foundation
 
@@ -1743,7 +1789,7 @@ scope for this migration and can pick these templates up later.)_
   `<noscript>`. Hero entrance animations start after the preloader hides |
   files: `templates/base.html`, `static/src/input.css`, `static/js/pixoria.js` |
   commit: "feat(base): first visit space preloader"
-- [ ] T54 — Page-TRANSITION loader (lightweight, non-annoying): a thin gold
+- [x] T54 — Page-TRANSITION loader (lightweight, non-annoying): a thin gold
   gradient progress bar at the top plus, ONLY when a navigation takes longer
   than ~400 ms, a small orbiting-planet indicator in a corner — never a
   full-screen overlay, never blocking clicks. Nothing at all appears for fast
@@ -1998,14 +2044,13 @@ contact; descriptive alt texts; meta title/description per service.
 
 ## Current status
 
-T01–T53 done (T42 superseded by Phase 12; T47b was the template-comment leak
-sweep — D50). **Next: T54** — page-transition loader: thin gold gradient
-progress bar at the top plus, only when a navigation takes longer than ~400 ms,
-a small orbiting-planet corner indicator (never full-screen, never blocking);
-nothing at all for fast navigations (~150 ms delay before starting); trigger on
-htmx navigating requests and same-origin link clicks; hide on afterSettle /
-pageshow / pagehide with a ~10 s failsafe; reduced-motion respected. First
-inspect how navigation currently works (D15 says hx-boost was dropped — confirm
-and record).
+T01–T54 done (T42 superseded by Phase 12; T47b was the template-comment leak
+sweep — D50). **Next: T55** — admin icon picker with live preview: reusable
+`IconPickerWidget` (text input + preview + searchable popup grid, keyboard
+accessible, tiny vanilla JS), a full admin-only Lucide sprite
+(`static/icons/lucide.full.sprite.svg`) while the public sprite stays small, a
+`python manage.py sync_icons` command rebuilding the public sprite from DB
+fields + `{% icon %}` usages, a Persian warning when an icon is not yet in the
+public sprite, and `{% icon %}` failing soft for unknown names.
 
 

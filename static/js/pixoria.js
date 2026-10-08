@@ -191,6 +191,126 @@ function init() {
   document.addEventListener("htmx:pushedIntoHistory", syncActiveNav);
   document.addEventListener("htmx:afterSettle", syncActiveNav);
 
+  /* ---------------- page-transition loader (T54) ----------------
+     ناوبریِ سایت کاملاً چندصفحه‌ایست (hx-boost حذف شده — D15)؛ htmx فقط برای
+     تعویضِ محتوای بلاگ و فرم تماس است. پس ماشهٔ اصلی، کلیک روی لینک‌های
+     هم‌مبدأ است. نوار به مدتِ کوتاهی دیده نمی‌شود (~۱۵۰ms تأخیر) و سیارهٔ
+     مداری فقط اگر ناوبری طولانی شد (~۴۰۰ms). هرگز صفحه را نمی‌پوشاند. */
+  const navBar = document.getElementById("nav-progress");
+  const navOrbit = document.getElementById("nav-orbit");
+  if (navBar) {
+    const bar = navBar.querySelector(".nav-progress-bar");
+    let startTimer = null;
+    let orbitTimer = null;
+    let failsafe = null;
+    let rafId = null;
+    let progress = 0;
+    let active = false;
+
+    const reset = () => {
+      cancelAnimationFrame(rafId);
+      rafId = null;
+      clearTimeout(startTimer);
+      clearTimeout(orbitTimer);
+      clearTimeout(failsafe);
+      startTimer = orbitTimer = failsafe = null;
+    };
+    const stop = () => {
+      reset();
+      if (!active) return;
+      active = false;
+      if (bar) bar.style.transform = "";
+      navBar.classList.add("done"); // پرش به ۱۰۰٪
+      navOrbit.classList.remove("show");
+      setTimeout(() => {
+        navBar.classList.remove("show", "done");
+        if (bar) bar.style.transform = "scaleX(0)";
+      }, 500);
+    };
+
+    // خزیدنِ آرامِ نوار به سمت ~۹۲٪ (هرگز ۱۰۰٪ تا اتمام ناوبری)
+    const crawl = () => {
+      const tick = () => {
+        progress += (0.92 - progress) * 0.035;
+        if (bar) bar.style.transform = `scaleX(${progress})`;
+        rafId = requestAnimationFrame(tick);
+      };
+      tick();
+    };
+
+    const start = () => {
+      if (active) return;
+      active = true;
+      progress = 0;
+      // ناوبری‌های سریع اصلاً چیزی نشان داده نمی‌شود
+      startTimer = setTimeout(() => {
+        navBar.classList.add("show");
+        if (REDUCED) {
+          // حرکت کاهشی: نوار ایستا، بدون سیارهٔ چرخان
+          if (bar) bar.style.transform = "scaleX(0.35)";
+        } else {
+          crawl();
+          orbitTimer = setTimeout(
+            () => navOrbit.classList.add("show"),
+            400 - 150,
+          );
+        }
+      }, 150);
+      // هرگز بیش از ۱۰ ثانیه روی صفحه نمانَد (ناوبریِ گیرکرده)
+      failsafe = setTimeout(stop, 10000);
+    };
+
+    // تکمیل/مخفی شدن
+    document.addEventListener("htmx:afterSettle", stop);
+    document.addEventListener("htmx:responseError", stop);
+    document.addEventListener("htmx:sendError", stop);
+    window.addEventListener("pageshow", (e) => {
+      if (e.persisted) stop(); // بازگشت از bfcache
+    });
+    window.addEventListener("pagehide", stop);
+
+    // ماشهٔ htmx: فقط درخواست‌هایی که تاریخچه را جابه‌جا می‌کنند (boost /
+    // push-url). درخواست‌های فعلیِ پروژه (فیلتر/بیشترِ بلاگ، فرم تماس) ناوبری
+    // نیستند → نادیده گرفته می‌شوند.
+    document.addEventListener("htmx:beforeRequest", (e) => {
+      const cfg = e.detail?.requestConfig || {};
+      const elt = e.detail?.elt || cfg.elt || null;
+      const navigates =
+        cfg.boosted ||
+        cfg.pushUrl === true ||
+        (elt &&
+          elt.hasAttribute &&
+          (elt.hasAttribute("hx-push-url") ||
+            !!elt.closest("[hx-push-url]")));
+      if (navigates) start();
+    });
+
+    // ماشهٔ کلیک روی لینک‌های معمولیِ هم‌مبدأ
+    document.addEventListener("click", (e) => {
+      if (e.defaultPrevented || e.button !== 0) return;
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      const a = e.target.closest?.("a[href]");
+      if (!a) return;
+      // لینک‌های مدیریت‌شده توسط htmx را htmx هندل می‌کند
+      if (a.closest("[hx-get],[hx-post],[hx-boost]")) return;
+      if (a.target && a.target !== "_self" && a.target !== "_top" && a.target !== "_parent")
+        return;
+      if (a.hasAttribute("download")) return;
+      const href = a.getAttribute("href");
+      if (!href || href.startsWith("#") || href.startsWith("mailto:") || href.startsWith("tel:"))
+        return;
+      let url;
+      try {
+        url = new URL(a.href, location.origin);
+      } catch {
+        return;
+      }
+      if (url.origin !== location.origin) return;
+      if (url.pathname === location.pathname && url.search === location.search) return;
+      start();
+    });
+  }
+
   /* ---------------- reveal animations ---------------- */
   // کارت‌هایی که بعد از یک تعویضِ HTMX (مثلاً «مقالات بیشتر») وارد صفحه
   // می‌شوند را با data-blog-reveal علامت‌گذاری می‌کنیم؛ آن‌ها در زمانِ boot

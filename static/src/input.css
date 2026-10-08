@@ -1630,6 +1630,83 @@ html.has-preloader .preloader.pl-done {
   }
 }
 
+/* ---------- لودر انتقال بین صفحات (T54) ----------
+   نوار طلایی نازکِ بالا + سیارهٔ مداری کوچک در گوشه. هرگز all-page
+   نیست، کلیک‌ها را مسدود نمی‌کند و فقط روی ناوبریِ طولانی دیده می‌شود. */
+.nav-progress {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 130;
+  height: 3px;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.45s,
+    visibility 0.45s;
+}
+.nav-progress.show {
+  opacity: 1;
+  visibility: visible;
+}
+.nav-progress-bar {
+  height: 100%;
+  width: 100%;
+  transform: scaleX(0);
+  transform-origin: right center;
+  border-radius: 3px;
+  background: linear-gradient(
+    to left,
+    #8f6b2c,
+    #c9a15a 30%,
+    #e8c47a 55%,
+    #2e63ff
+  );
+  box-shadow: 0 0 12px rgba(201, 161, 90, 0.55);
+}
+.nav-progress.done .nav-progress-bar {
+  transform: scaleX(1);
+  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.3, 1);
+}
+.nav-orbit {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 1.5rem;
+  z-index: 130;
+  width: 2.5rem;
+  height: 2.5rem;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.4s,
+    visibility 0.4s;
+}
+.nav-orbit.show {
+  opacity: 1;
+  visibility: visible;
+}
+.nav-orbit-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(201, 161, 90, 0.35);
+  animation: pl-spin 1.4s linear infinite;
+}
+.nav-orbit-planet {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: radial-gradient(circle at 34% 30%, #f0d08f, #c9a15a 55%, #8f6b2c);
+  box-shadow: 0 0 8px 1px rgba(201, 161, 90, 0.6);
+  transform: translate(-50%, -50%);
+}
+
 /* ---------- section dividers ---------- */
 .divider {
   position: absolute;
@@ -2349,6 +2426,9 @@ html.has-preloader .preloader.pl-done {
   /* پیش‌لودر اصلاً نمایش داده نمی‌شود */
   html.has-preloader .preloader {
     display: none;
+  }
+  .nav-orbit-ring {
+    animation: none;
   }
 }
 

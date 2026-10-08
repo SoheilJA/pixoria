@@ -73,6 +73,16 @@
       aria-hidden="true"
     ></div>
 
+    {# لودر انتقال بین صفحات — نوار طلایی نازک بالا + سیارهٔ مداری در گوشه
+       (فقط اگر ناوبری بیش از ~۴۰۰ms طول بکشد). هرگز صفحه را نمی‌پوشاند و
+       کلیک‌ها را مسدود نمی‌کند — pixoria.js آن را راه می‌اندازد (T54) #}
+    <div id="nav-progress" class="nav-progress" aria-hidden="true">
+      <div class="nav-progress-bar"></div>
+    </div>
+    <div id="nav-orbit" class="nav-orbit" aria-hidden="true">
+      <span class="nav-orbit-ring"></span><span class="nav-orbit-planet"></span>
+    </div>
+
     {# بافت نویز ظریف #}
     <div class="grain" aria-hidden="true"></div>
 
