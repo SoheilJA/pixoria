@@ -5,6 +5,18 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <meta name="theme-color" content="#0a0a0c" />
+    {# پیش‌لودر: فقط یک بار در هر session — پرچم قبل از رنگ‌پاشی اولین فریم
+       ست می‌شود تا هیچ فلشی دیده نشود. بدون جاوااسکریپت کلاس اضافه نمی‌شود
+       و پیش‌لودر هرگز نمایش داده نمی‌شود (همان <noscript>). #}
+    <script>
+      (function () {
+        try {
+          if (sessionStorage.getItem("pixoria-pl")) return;
+          sessionStorage.setItem("pixoria-pl", "1");
+          document.documentElement.classList.add("has-preloader");
+        } catch (e) {}
+      })();
+    </script>
     <title>
       {% block title %}
         {{ settings.site_name }}
@@ -36,6 +48,16 @@
     {% endblock %}
   </head>
   <body class="overflow-x-hidden bg-ink font-sans text-cream antialiased">
+    {# پیش‌لودرِ اولین بازدید — فضایی، کاملاً CSS؛ خودش تا ۱.۲ ثانیه دیگر
+       محو می‌شود (pixoria.js زودتر، وقتی صفحه آماده شد، آن را برمی‌دارد) #}
+    <div id="preloader" class="preloader" role="presentation">
+      <div class="pl-scene">
+        <span class="pl-orbit" aria-hidden="true"><span class="pl-planet"></span></span>
+        <span class="pl-mark" aria-hidden="true"><span class="logo-mark"><span>پ</span></span></span>
+      </div>
+      <span class="pl-line" aria-hidden="true"><span class="pl-fill"></span></span>
+    </div>
+
     {# پرش به محتوای اصلی — دسترس‌پذیری #}
     <a
       href="#main"

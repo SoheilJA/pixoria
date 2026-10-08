@@ -212,8 +212,60 @@ function init() {
       scrollTrigger: { trigger: el, start: "top 88%", once: true },
     });
   };
-  if (hasGsap && !REDUCED) {
+  let revealsStarted = false;
+  const initReveals = () => {
+    if (revealsStarted || !hasGsap || REDUCED) return;
+    revealsStarted = true;
     gsap.utils.toArray("[data-reveal]").forEach(revealEl);
+  };
+
+  /* ---------------- first-visit preloader ----------------
+     هماهنگی با پیش‌لودرِ base.html: CSS خودش تا ~۱.۲۵ ثانیه دیگر المان را
+     محو می‌کند؛ اینجا زودتر، به‌محض آماده شدن صفحه، آن را برمی‌داریم.
+     انیمیشن‌های ورود (data-reveal) تا آن لحظه صبر می‌کنند تا زیرِ پردهٔ
+     محوشونده وارد شوند — نه قبل از آن. */
+  const preloader = document.getElementById("preloader");
+  // فقط در اولین بارگزاریِ session — وگرنه المان display:none است و نیازی به
+  // هماهنگی نیست (reveals فوراً شروع می‌شوند).
+  const hasPreloader =
+    preloader && document.documentElement.classList.contains("has-preloader");
+  if (hasPreloader && !REDUCED) {
+    let done = false;
+    const hide = () => {
+      if (done) return;
+      done = true;
+      initReveals();
+      // اگر CSS از قبل المان را محو کرده، فقط گره‌ش را جمع می‌کنیم (راه‌اندازی
+      // دوبارهٔ انیمیشن = فلش)
+      if (parseFloat(getComputedStyle(preloader).opacity) < 0.1) {
+        preloader.remove();
+        return;
+      }
+      preloader.classList.add("pl-done");
+      setTimeout(() => preloader.remove(), 500);
+    };
+    const navStart = performance.getEntriesByType("navigation")[0]?.startTime ?? 0;
+    if (document.readyState === "complete") {
+      // صفحه زود آماده شده (احتمالاً از کش) — برند خیلی کوتاه دیده شود
+      setTimeout(hide, 300);
+    } else {
+      window.addEventListener(
+        "load",
+        () => {
+          // لودِ سریع → خودمان زودتر برمی‌داریم؛ لودِ کند → CSS جریان دارد
+          if (performance.now() - navStart < 700) setTimeout(hide, 150);
+        },
+        { once: true },
+      );
+    }
+    // لود کند: انیمیشن‌های ورود هم‌زمان با شروعِ محوشدنِ CSS (۰.۸ ثانیه)
+    setTimeout(() => {
+      if (!done) initReveals();
+    }, 800);
+    // failsafe: گرهٔ DOM هرگز بیش از ۱.۶ ثانیه باقی نمی‌ماند
+    setTimeout(hide, 1600);
+  } else {
+    initReveals();
   }
   // تعویضِ HTMX → فقط عناصرِ تازه‌اضافه‌شده آنیمیشن می‌گیرند (با رعایت
   // prefers-reduced-motion).

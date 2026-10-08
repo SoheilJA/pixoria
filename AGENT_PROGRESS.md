@@ -1315,6 +1315,60 @@ scope for this migration and can pick these templates up later.)_
 
 
 
+- **D56 — First-visit space preloader (T53).** A pure-CSS overlay rendered by
+  `base.html` as the FIRST child of `<body>` (`role="presentation"`, opaque
+  `var(--ink)` so nothing behind it flashes): a tilted-free orbit scene — the
+  existing `.logo-mark` brand mark centered inside a faint gold ring
+  (`.pl-orbit`) with a glowing radial-gradient planet (`.pl-planet`) riding the
+  ring (`.pl-orbit` spins via the individual `rotate` property), plus a thin
+  gold progress line (`.pl-line` + `.pl-fill`, width 0 → 100% over 0.95 s).
+  No images, no fonts, no JS libraries — Lighthouse-clean, and the overlay is
+  `position: fixed` so it causes zero layout shift and is not the LCP element.
+  **Once per browser session:** a tiny inline `<script>` in `<head>` (before
+  the stylesheets, before first paint) checks `sessionStorage.pixoria-pl`; no
+  flag → set it + add `has-preloader` to `<html>`, flag present → nothing, so
+  `.preloader` stays `display: none` and nothing ever flashes. Without JS the
+  class is never added → the overlay never shows (honors `<noscript>`).
+  **Removal, three layers:** (a) CSS animation `pl-out` (opacity → 0,
+  `visibility: hidden`, `pointer-events: none`, `forwards`) starting at 0.8 s
+  and finishing at 1.25 s — so the overlay is gone even if JS is broken or
+  never runs; (b) `pixoria.js` hides it EARLIER when the page is ready: on
+  `load` (only if `load` fired within 700 ms of navigation start — on a slow
+  load the CSS fade already owns the timing) or at once when
+  `readyState === "complete"` at boot, each with a short brand-visible buffer;
+  adding `.pl-done` zeroes the animation delay so the fade starts instantly;
+  (c) an 800 ms timer starts the reveal animations on slow loads in sync with
+  the CSS fade, and a 1600 ms failsafe collects the DOM node. Two guards
+  matter: `hide()` checks the computed opacity first and just REMOVES the node
+  if the CSS already faded it (re-adding `.pl-done` mid/after animation would
+  restart it → flash), and the whole branch only engages when
+  `document.documentElement.classList.contains("has-preloader")` — the
+  `#preloader` node exists on every page load, but without the flag it is
+  `display: none` and the reveals must start IMMEDIATELY (else the hero would
+  flash un-animated for 300 ms). `prefers-reduced-motion` → the preloader is
+  `display: none` in CSS and the JS branch is skipped, so it never appears.
+  **Hero entrance coordination:** `initReveals()` (the `[data-reveal]` loop,
+  refactored out of the boot sequence behind a `revealsStarted` flag so it
+  cannot double-initialize) is called by the preloader path — fast load: at
+  `hide()`; slow load: at the 800 ms timer, exactly when the CSS fade begins —
+  so the hero's `data-reveal` elements animate in *under* the fading curtain
+  instead of playing behind a solid overlay. Without a preloader (every
+  subsequent page this session) behavior is unchanged: immediate init.
+  GOTCHA along the way: `let revealsStarted` was first declared after the
+  preloader block that calls `initReveals()` synchronously in its `else`
+  branch → TDZ `ReferenceError` on every non-first visit; the declaration now
+  sits before the function.
+  **Verified:** every URL 200/404 and clean; the rendered pages carry the
+  markup, the head flag script and all compiled classes; an EMPTY database
+  still renders 200 with the preloader markup (it is DB-independent — the
+  brand mark is the CSS `.logo-mark`, no `<img>`); `manage.py check` +
+  `makemigrations --check` clean; `pixoria.js` passes the ES-module syntax
+  check; Tailwind rebuilt. NOT verified in a real browser (no
+  Playwright/Puppeteer in the project) — timing, flag and fade paths were
+  verified by code review against the CSS keyframes and the three timers.
+
+## Tasks
+
 ### Phase 0 — Foundation
 
 - [x] T01 — Replace Tailwind source with V2 design tokens and custom CSS |
@@ -1675,7 +1729,7 @@ scope for this migration and can pick these templates up later.)_
   now-unused markup/CSS/context fields only if nothing else uses them |
   files: `templates/partials/_header.html`, `static/src/input.css`,
   `static/js/pixoria.js` | commit: "feat(header): redesign mega menu with orb tiles"
-- [ ] T53 — INITIAL preloader (first visit only): space-themed (small orbiting
+- [x] T53 — INITIAL preloader (first visit only): space-themed (small orbiting
   planet + brand mark + thin gold progress ring/line), pure CSS, rendered by
   `base.html` before the content, shown once per browser session — a
   `sessionStorage` flag set by a tiny inline script in `<head>` that adds a
@@ -1944,11 +1998,14 @@ contact; descriptive alt texts; meta title/description per service.
 
 ## Current status
 
-T01–T52 done (T42 superseded by Phase 12; T47b was the template-comment leak
-sweep — D50). **Next: T53** — initial preloader (first visit only): space-themed
-orbiting-planet + brand mark + thin gold progress ring, pure CSS, shown once
-per session via a `sessionStorage` flag + `has-preloader` class on `<html>`,
-CSS-only self-removal fallback, ≤800 ms visible, no LCP blockage,
-reduced-motion skip, hero entrance animations start after it hides.
+T01–T53 done (T42 superseded by Phase 12; T47b was the template-comment leak
+sweep — D50). **Next: T54** — page-transition loader: thin gold gradient
+progress bar at the top plus, only when a navigation takes longer than ~400 ms,
+a small orbiting-planet corner indicator (never full-screen, never blocking);
+nothing at all for fast navigations (~150 ms delay before starting); trigger on
+htmx navigating requests and same-origin link clicks; hide on afterSettle /
+pageshow / pagehide with a ~10 s failsafe; reduced-motion respected. First
+inspect how navigation currently works (D15 says hx-boost was dropped — confirm
+and record).
 
 
