@@ -19,7 +19,7 @@
           "name": "{{ settings.site_name }}",
           "url": "{{ settings.website|default:request.build_absolute_uri }}",
           {% if settings.email %}"email": "{{ settings.email }}",{% endif %}
-          {% if settings.phone %}"telephone": "{{ settings.phone }}",{% endif %}
+          {% include "partials/_json_telephone.html" %}
           {% if settings.established_year %}"foundingDate": "{{ settings.established_year }}",{% endif %}
           "address": {
             "@type": "PostalAddress",
@@ -115,7 +115,7 @@
               <span class="glare" aria-hidden="true"></span>
               <span class="icon-ring">{% icon "phone" class="h-5 w-5" %}</span>
               <span>
-                <span class="block text-xs text-cream/50">تلفن دفتر مرکزی</span>
+                <span class="block text-xs text-cream/50">{{ settings.phone_label|default:"دفتر مرکزی" }}</span>
                 <span class="fa-num mt-1 block text-2xl font-bold text-gold-light">{{ settings.phone|fa_digits }}</span>
               </span>
             </a>
@@ -128,7 +128,7 @@
               <span class="glare" aria-hidden="true"></span>
               <span class="icon-ring">{% icon "smartphone" class="h-5 w-5" %}</span>
               <span>
-                <span class="block text-xs text-cream/50">همراهِ همکاران</span>
+                <span class="block text-xs text-cream/50">{{ settings.phone_secondary_label|default:"پشتیبانی" }}</span>
                 <span class="fa-num mt-1 block text-2xl font-bold text-gold-light">{{ settings.phone_secondary|fa_digits }}</span>
               </span>
             </a>

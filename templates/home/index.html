@@ -27,7 +27,7 @@
           "alternateName": "PIXORIA",
           "url": "{{ request.build_absolute_uri }}",
           {% if settings.email %}"email": "{{ settings.email }}",{% endif %}
-          {% if settings.phone %}"telephone": "{{ settings.phone }}",{% endif %}
+          {% include "partials/_json_telephone.html" %}
           {% if settings.established_year %}"foundingDate": "{{ settings.established_year }}",{% endif %}
           {% if settings.address %}
           "address": {
@@ -38,7 +38,7 @@
           {% endif %}
           "contactPoint": {
             "@type": "ContactPoint",
-            {% if settings.phone %}"telephone": "{{ settings.phone }}",{% endif %}
+            {% include "partials/_json_telephone.html" %}
             "contactType": "customer service",
             "areaServed": "IR",
             "availableLanguage": ["fa"]

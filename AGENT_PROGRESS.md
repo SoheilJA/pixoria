@@ -1122,6 +1122,32 @@ scope for this migration and can pick these templates up later.)_
   `{#` without a same-line `#}` (the exact leak condition) now returns zero
   hits. Rule stands: multi-line template notes use `{% comment %}`.
 
+- **D51 — Labeled dual phone numbers (T48).** `SiteSettings.phone_label`
+  (default «دفتر مرکزی») and `phone_secondary_label` (default «پشتیبانی»), both
+  blank-allowed, migration `core.0010` (already applied to the live DB). The two
+  rules from the task: DISPLAYED digits go through `|fa_digits` (Persian),
+  `tel:` hrefs and JSON-LD keep LATIN digits — verified by rendering every page
+  (`tel:` hrefs contain no Persian digit; no `fa-num` span shows a latin digit).
+  Wiring: the footer shows both numbers with their label as a small sub-line,
+  the CTA section gained the second phone next to the mailto link (with its
+  label in parentheses), the mobile menu gained the second phone, and the
+  contact-page hero cards show icon + label + big gold number for each. The
+  header shows NO phone on desktop (only the mobile overlay), so nothing was
+  added there — the task's "if it shows a phone" clause. JSON-LD: one new
+  shared partial `templates/partials/_json_telephone.html` emits
+  `"telephone": ["…", "…"],` (all non-empty SiteSettings numbers, nothing when
+  none are set) and is included by `home/index.html`, `core/about.html` and
+  `contact/contact.html`. **Bug fixed in this session:** `home/index.html` had
+  the include on the Organization node AND a leftover single-string
+  `"telephone": "{{ settings.phone }}",` on its ContactPoint node — the same
+  key twice, once a list and once a string; the ContactPoint now uses the same
+  partial. `seed_home_content` now seeds latin-digit phones + both labels (it
+  only touches a fresh DB — the live row holds the user's real content
+  `09011016263` / empty secondary and was NOT touched, per the D25 rule).
+  Verified: `manage.py check` + `makemigrations --check` clean; `/`, `/about/`,
+  `/contact/`, `/portfolio/`, `/blog/` all 200 with 3–4 latin `tel:` hrefs and
+  list-form `telephone` in every JSON-LD.
+
 ## Tasks
 
 ### Phase 0 — Foundation
@@ -1419,7 +1445,7 @@ scope for this migration and can pick these templates up later.)_
   same-line `#}` | files: `templates/home/sections/_portfolio.html`,
   `templates/home/sections/_stats.html`, `templates/home/sections/_trusted.html` |
   commit: "fix(templates): stop multiline comment leak into rendered pages"
-- [ ] T48 — Two phone numbers: verify `SiteSettings.phone` and `phone_secondary`
+- [x] T48 — Two phone numbers: verify `SiteSettings.phone` and `phone_secondary`
   are editable in the admin with Persian labels/help_text, and add optional
   `phone_label` / `phone_secondary_label` («دفتر مرکزی» / «پشتیبانی»). The
   header (if it shows a phone), footer, CTA partial, contact page cards,
@@ -1753,9 +1779,9 @@ contact; descriptive alt texts; meta title/description per service.
 
 ## Current status
 
-T01–T47 done (T42 superseded by Phase 12), plus T47b (template-comment leak
-sweep — D50). **Next: T48** — labeled dual phone numbers
-(`phone`/`phone_secondary` + new `*_label` fields) used everywhere a phone
-appears.
+T01–T48 done (T42 superseded by Phase 12; T47b was the template-comment leak
+sweep — D50). **Next: T49** — fix the typo «طراحی سیات» → «طراحی سایت» in the
+source AND the existing DB row (a portfolio `Category`), keeping the slug
+stable.
 
 

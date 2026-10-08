@@ -157,7 +157,15 @@
         href="tel:{{ settings.phone }}"
         class="m-cta mt-5 flex items-center justify-center gap-2 text-sm text-cream/60"
         >{% icon "phone" class="h-4 w-4 text-gold" %}
-        <span class="fa-num">{{ settings.phone }}</span></a
+        <span class="fa-num">{{ settings.phone|fa_digits }}</span></a
+      >
+    {% endif %}
+    {% if settings.phone_secondary %}
+      <a
+        href="tel:{{ settings.phone_secondary }}"
+        class="m-cta mt-3 flex items-center justify-center gap-2 text-sm text-cream/60"
+        >{% icon "smartphone" class="h-4 w-4 text-gold" %}
+        <span class="fa-num">{{ settings.phone_secondary|fa_digits }}</span></a
       >
     {% endif %}
   </div>

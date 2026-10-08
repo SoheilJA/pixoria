@@ -55,19 +55,35 @@
         {% if cta.phone %}
           <a href="tel:{{ cta.phone }}" class="pill-outline" data-magnetic>
             {% icon "phone" class="h-6 w-6 text-gold-light" %}
-            <span class="fa-num text-xl font-bold">{{ cta.phone }}</span>
+            <span class="fa-num text-xl font-bold">{{ cta.phone|fa_digits }}</span>
           </a>
         {% endif %}
       </div>
 
-      {% if cta.email %}
-        <a
-          href="mailto:{{ cta.email }}"
-          class="mt-8 inline-flex items-center gap-2 text-sm text-cream/50 transition hover:text-gold-light"
-        >
-          {% icon "mail" class="h-4 w-4" %}
-          <span dir="ltr" class="font-latin tracking-wide">{{ cta.email }}</span>
-        </a>
+      {% if cta.email or settings.phone_secondary %}
+        <div class="mt-8 flex flex-wrap items-center justify-center gap-x-7 gap-y-3 text-sm text-cream/50">
+          {% if cta.email %}
+            <a
+              href="mailto:{{ cta.email }}"
+              class="inline-flex items-center gap-2 transition hover:text-gold-light"
+            >
+              {% icon "mail" class="h-4 w-4" %}
+              <span dir="ltr" class="font-latin tracking-wide">{{ cta.email }}</span>
+            </a>
+          {% endif %}
+          {% if settings.phone_secondary %}
+            <a
+              href="tel:{{ settings.phone_secondary }}"
+              class="inline-flex items-center gap-2 transition hover:text-gold-light"
+            >
+              {% icon "smartphone" class="h-4 w-4" %}
+              <span class="fa-num">{{ settings.phone_secondary|fa_digits }}</span>
+              {% if settings.phone_secondary_label %}
+                <span class="text-cream/35">({{ settings.phone_secondary_label }})</span>
+              {% endif %}
+            </a>
+          {% endif %}
+        </div>
       {% endif %}
     </div>
   </section>

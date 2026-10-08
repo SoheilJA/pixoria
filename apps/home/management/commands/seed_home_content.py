@@ -297,7 +297,7 @@ class Command(BaseCommand):
             title="بیایید [[برندِ شما]] را ماندگار کنیم",
             description="از یک گفت‌وگوی ساده شروع می‌شود؛ مشاورهٔ رایگان، بدون تعهد.",
             email="info@pixoria.ir",
-            phone="۰۵۱-۳۶۰۴۴۹۸۹",
+            phone="051-36044989",
         )
         self.log("CTA", c)
 
@@ -615,8 +615,10 @@ class Command(BaseCommand):
             tagline="هویتی درخشان، اعتباری ماندگار.",
             footer_description="استودیو طراحی و توسعه",
             email="info@pixoria.ir",
-            phone="۰۵۱-۳۶۰۴۴۹۸۹",
-            phone_secondary="۰۹۱۵-۶۵۰-۰۰-۱۶",
+            phone="051-36044989",
+            phone_label="دفتر مرکزی",
+            phone_secondary="0915-650-00-16",
+            phone_secondary_label="پشتیبانی",
             address="مشهد، ایران",
             website="https://www.pixoria.ir",
             established_year="۱۳۸۹",

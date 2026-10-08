@@ -25,7 +25,15 @@ class SiteSettingsAdmin(admin.ModelAdmin):
         (
             "اطلاعات تماس",
             {
-                "fields": ["email", "phone", "phone_secondary", "address", "website"]
+                "fields": [
+                    "email",
+                    "phone",
+                    "phone_label",
+                    "phone_secondary",
+                    "phone_secondary_label",
+                    "address",
+                    "website",
+                ]
             },
         ),
         (

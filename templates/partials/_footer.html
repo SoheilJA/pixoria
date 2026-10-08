@@ -46,7 +46,12 @@
               <li>
                 <a href="tel:{{ settings.phone }}" class="flex items-center gap-3 transition hover:text-gold-light">
                   {% icon "phone" class="h-4 w-4 text-gold" %}
-                  <span class="fa-num">{{ settings.phone }}</span>
+                  <span>
+                    <span class="fa-num block">{{ settings.phone|fa_digits }}</span>
+                    {% if settings.phone_label %}
+                      <span class="mt-0.5 block text-[11px] text-cream/40">{{ settings.phone_label }}</span>
+                    {% endif %}
+                  </span>
                 </a>
               </li>
             {% endif %}
@@ -54,7 +59,12 @@
               <li>
                 <a href="tel:{{ settings.phone_secondary }}" class="flex items-center gap-3 transition hover:text-gold-light">
                   {% icon "smartphone" class="h-4 w-4 text-gold" %}
-                  <span class="fa-num">{{ settings.phone_secondary }}</span>
+                  <span>
+                    <span class="fa-num block">{{ settings.phone_secondary|fa_digits }}</span>
+                    {% if settings.phone_secondary_label %}
+                      <span class="mt-0.5 block text-[11px] text-cream/40">{{ settings.phone_secondary_label }}</span>
+                    {% endif %}
+                  </span>
                 </a>
               </li>
             {% endif %}

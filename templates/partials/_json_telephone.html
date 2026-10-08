@@ -1,0 +1,5 @@
+{% comment %}مقدار «telephone» در داده‌های ساختاریافته — یک لیست از تمام شماره‌های
+   ثبت‌شده در SiteSettings (شماره‌های خالی نمایش داده نمی‌شوند).
+   استفاده (داخل یک <script type="application/ld+json">):
+     {% include "partials/_json_telephone.html" %}
+   خروجی یا `"telephone": ["..."],` است یا هیچی (وقتی هیچ شماره‌ای نیست).{% endcomment %}{% if settings.phone or settings.phone_secondary %}"telephone": [{% if settings.phone %}"{{ settings.phone }}"{% endif %}{% if settings.phone and settings.phone_secondary %}, {% endif %}{% if settings.phone_secondary %}"{{ settings.phone_secondary }}"{% endif %}],{% endif %}

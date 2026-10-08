@@ -28,7 +28,21 @@ class SiteSettings(models.Model):
     site_description = models.TextField(verbose_name="توضیحات سایت")
     footer_description = models.TextField(verbose_name="توضیحات فوتر")
     email = models.EmailField(verbose_name="ایمیل")
-    phone = models.CharField(max_length=20, verbose_name="شماره تماس")
+    phone = models.CharField(
+        max_length=20,
+        verbose_name="شماره تماس",
+        help_text="شماره اصلی. در هدر، فوتر، CTA و کارت‌های صفحهٔ تماس نمایش داده می‌شود.",
+    )
+    phone_label = models.CharField(
+        max_length=50,
+        verbose_name="برچسب شماره تماس",
+        blank=True,
+        default="دفتر مرکزی",
+        help_text=(
+            "برچسب کوچک بالای شمارهٔ اصلی در کارت‌های صفحهٔ تماس و فوتر. "
+            "خالی بگذارید تا برچسبی نمایش داده نشود."
+        ),
+    )
     address = models.TextField(verbose_name="آدرس", blank=True)
     established_year = models.CharField(max_length=10, verbose_name="سال تاسیس")
     status = models.CharField(
@@ -47,6 +61,16 @@ class SiteSettings(models.Model):
         verbose_name="شماره همراه",
         blank=True,
         help_text="شماره دوم نمایش‌داده‌شده در فوتر و منوی موبایل",
+    )
+    phone_secondary_label = models.CharField(
+        max_length=50,
+        verbose_name="برچسب شماره همراه",
+        blank=True,
+        default="پشتیبانی",
+        help_text=(
+            "برچسب کوچک بالای شمارهٔ دوم در کارت‌های صفحهٔ تماس و فوتر. "
+            "خالی بگذارید تا برچسبی نمایش داده نشود."
+        ),
     )
     website = models.URLField(
         verbose_name="آدرس وب‌سایت", blank=True, help_text="مثلاً: https://www.pixoria.ir"

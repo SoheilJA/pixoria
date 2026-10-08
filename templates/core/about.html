@@ -19,7 +19,7 @@
           "name": "{{ settings.site_name }}",
           "url": "{{ settings.website|default:request.build_absolute_uri }}",
           {% if settings.email %}"email": "{{ settings.email }}",{% endif %}
-          {% if settings.phone %}"telephone": "{{ settings.phone }}",{% endif %}
+          {% include "partials/_json_telephone.html" %}
           {% if settings.established_year %}"foundingDate": "{{ settings.established_year }}",{% endif %}
           "address": {
             "@type": "PostalAddress",
