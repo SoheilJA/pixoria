@@ -1151,6 +1151,9 @@
   .w-\[min\(86vw\,360px\)\] {
     width: min(86vw, 360px);
   }
+  .w-\[min\(86vw\,420px\)\] {
+    width: min(86vw, 420px);
+  }
   .w-\[min\(88vw\,400px\)\] {
     width: min(88vw, 400px);
   }
@@ -3262,6 +3265,9 @@
     .md\:w-72 {
       width: calc(var(--spacing) * 72);
     }
+    .md\:w-\[calc\(50\%-0\.75rem\)\] {
+      width: calc(50% - 0.75rem);
+    }
     .md\:w-\[min\(46vw\,400px\)\] {
       width: min(46vw, 400px);
     }
@@ -3436,6 +3442,9 @@
     .lg\:flex {
       display: flex;
     }
+    .lg\:grid {
+      display: grid;
+    }
     .lg\:hidden {
       display: none;
     }
@@ -3454,9 +3463,15 @@
     .lg\:w-\[min\(30vw\,400px\)\] {
       width: min(30vw, 400px);
     }
+    .lg\:w-auto {
+      width: auto;
+    }
     .lg\:-translate-y-1\/2 {
       --tw-translate-y: calc(calc(1 / 2 * 100%) * -1);
       translate: var(--tw-translate-x) var(--tw-translate-y);
+    }
+    .lg\:snap-none {
+      scroll-snap-type: none;
     }
     .lg\:grid-cols-2 {
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -3494,6 +3509,9 @@
     .lg\:gap-20 {
       gap: calc(var(--spacing) * 20);
     }
+    .lg\:overflow-visible {
+      overflow: visible;
+    }
     .lg\:border-l {
       border-left-style: var(--tw-border-style);
       border-left-width: 1px;
@@ -3513,6 +3531,9 @@
     }
     .lg\:pt-44 {
       padding-top: calc(var(--spacing) * 44);
+    }
+    .lg\:pb-0 {
+      padding-bottom: 0px;
     }
     .lg\:pb-24 {
       padding-bottom: calc(var(--spacing) * 24);

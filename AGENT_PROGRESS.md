@@ -1163,6 +1163,46 @@ scope for this migration and can pick these templates up later.)_
   pills on `/` and `/portfolio/` read «طراحی سایت» with zero remaining «سیات»
   in either rendered page. `manage.py check` + `makemigrations --check` clean.
 
+- **D53 — Portfolio grid→carousel, ONE DOM (T50).** The portfolio container is
+  now a single element that is a horizontal scroll-snap track below `lg` and the
+  same 3-column grid at `lg` — no duplicated cards, no second container:
+  `flex gap-6 overflow-x-auto snap-x snap-mandatory pb-3 no-scrollbar
+  lg:grid lg:grid-cols-3 lg:overflow-visible lg:snap-none lg:pb-0` with
+  `data-pf-grid` + `data-carousel-track` on it. Cards carry
+  `w-[min(86vw,420px)] shrink-0 snap-start md:w-[calc(50%-0.75rem)] lg:w-auto`
+  (1 per view on mobile with a peek of the next card, 2 per view at `md`, auto
+  in the grid). Controls (`data-carousel-prev/next/dots` in the shared `.ctrl-btn`
+  style, RTL chevrons per the testimonials precedent) sit in a
+  `data-carousel-controls` wrapper that is `lg:hidden`.
+  **The filter had to keep working in carousel mode**, so `initCarousels` no
+  longer snapshots the slides at boot: `visible()` filters out `is-hidden`
+  children, dots are rebuilt by `buildDots()` (clicking a dot scrolls to that
+  actual slide's `offsetLeft`), `step()` reads the first VISIBLE slide, and a
+  new `pf:changed` custom event on the track makes the filter's `apply()` reset
+  scroll to 0 and rebuild dots — dispatched synchronously (covers the non-GSAP
+  path and the reveal of newly-shown cards) plus on each hide animation's
+  `onComplete` (the GSAP path delays `is-hidden` by 0.3 s). With zero visible
+  slides the controls wrapper gets `hidden` (which beats `.flex` in the compiled
+  output — verified order: `.flex` line 860, `.hidden` line 866).
+  `enableTrackDrag` gained a guard so a track with no overflow (the desktop grid,
+  or a carousel that fits) never intercepts pointer clicks — this also makes the
+  testimonial slider skip drag when it has too few cards.
+  **Applied to `/portfolio/` too:** D38 already made the two pages one component
+  (identical `data-pf-*` hooks, same card partial, same `{% cycle %}` radii), so
+  the same markup change works there without touching its pagination-free filter
+  or the `data-pf-sync` URL behaviour — the task's "only if it does not break"
+  clause is satisfied and verified. Page height cannot grow: `.tile-caption` is
+  `position:absolute; inset:0`, so every card's height is the image's
+  `aspect-[4/3]` regardless of mode. Verified: `/`, `/about/`, `/contact/`,
+  `/portfolio/`, `/blog/` + detail pages all 200, the dual-mode classes are in
+  the rendered markup of both portfolio sections, all utilities compiled into
+  `tailwind.css` (including `lg:overflow-visible`/`lg:snap-none` and the two
+  arbitrary widths), `manage.py check` + `makemigrations --check` clean, and
+  `pixoria.js` passes `node --check`. NOT verified in a real browser (no
+  Playwright/Puppeteer in the project) — the scroll-snap behaviour and the
+  filter→carousel refresh are verified by code review against the D32 carousel,
+  which uses the same hooks end to end.
+
 ## Tasks
 
 ### Phase 0 — Foundation
@@ -1478,7 +1518,7 @@ scope for this migration and can pick these templates up later.)_
   needed). Check the portfolio filter pills on home and `/portfolio/` afterwards
   | files: seed commands + a one-time data migration/nudge |
   commit: "fix(content): correct web design category typo"
-- [ ] T50 — Home portfolio responsive layout: desktop (≥lg) = 3-column grid
+- [x] T50 — Home portfolio responsive layout: desktop (≥lg) = 3-column grid
   (keep the filter, radius variants, empty state, D29 trimming); tablet (md) =
   carousel with 2 cards per view; mobile = carousel with 1 card per view (CSS
   scroll-snap, reusing the D32 `initCarousels` dots/prev-next + RTL keyboard).
@@ -1794,9 +1834,8 @@ contact; descriptive alt texts; meta title/description per service.
 
 ## Current status
 
-T01–T49 done (T42 superseded by Phase 12; T47b was the template-comment leak
-sweep — D50). **Next: T50** — home portfolio responsive layout: 3-column grid
-at `lg`, carousel (2/view) at `md`, carousel (1/view) on mobile — ONE DOM,
-filter working in both modes.
+T01–T50 done (T42 superseded by Phase 12; T47b was the template-comment leak
+sweep — D50). **Next: T51** — testimonials by type: an adaptive admin form for
+`ServiceTestimonial` + real video/audio players on the front-end cards.
 
 

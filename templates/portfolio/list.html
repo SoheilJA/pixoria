@@ -90,7 +90,7 @@
 
   {% comment %}آرشیو — فیلتر دسته‌بندی + گرید سه‌ستونیِ پروژه‌ها.
      data-pf-sync: آدرس صفحه با فیلترِ انتخاب‌شده همگام می‌شود (pixoria.js).{% endcomment %}
-  <section id="works" class="relative overflow-hidden bg-ink2" data-pf-root data-pf-sync>
+  <section id="works" class="relative overflow-hidden bg-ink2" data-pf-root data-pf-sync data-carousel>
     <svg class="divider divider-flip" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true">
       <path d="M0,26 C260,84 520,82 760,44 C1000,6 1240,80 1440,30 L1440,0 L0,0 Z" fill="#0a0a0c"></path>
     </svg>
@@ -113,12 +113,22 @@
         {{ portfolios|length|fa_digits }} PROJECTS
       </p>
 
-      <div class="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3" data-pf-grid>
+      {# کارت‌ها: بالای lg گرید ۳ ستونی، زیر lg یک ترکِ اسکرول-اسنپ (یک DOM). #}
+      <div class="mt-8 flex gap-6 overflow-x-auto snap-x snap-mandatory pb-3 no-scrollbar
+                  lg:grid lg:grid-cols-3 lg:overflow-visible lg:snap-none lg:pb-0"
+           data-pf-grid data-carousel-track>
         {% for project in portfolios %}
           {# شعاع گوشه‌ها بین کارت‌ها متغیر است تا گرید یکنواخت نباشد #}
           {% cycle '2.5rem' '2.75rem 0.75rem' '0.9rem' '0.75rem 2.75rem' '1.75rem' '1rem 4rem' as card_radius silent %}
-          {% include "components/_project_card.html" with project=project filter_key=project.categories.first.slug radius=card_radius %}
+          {% include "components/_project_card.html" with project=project filter_key=project.categories.first.slug radius=card_radius class="w-[min(86vw,420px)] shrink-0 snap-start md:w-[calc(50%-0.75rem)] lg:w-auto" %}
         {% endfor %}
+      </div>
+
+      {# کنترل‌های کاروسل — فقط زیر lg نمایش داده می‌شوند (دکمه‌های راست/چپ RTL) #}
+      <div class="mt-8 flex items-center justify-center gap-5 lg:hidden" data-carousel-controls data-reveal="up">
+        <button type="button" class="ctrl-btn" data-carousel-prev aria-label="نمونه‌کار قبلی">{% icon "chevron-right" class="h-5 w-5" %}</button>
+        <div class="flex items-center gap-2" data-carousel-dots></div>
+        <button type="button" class="ctrl-btn" data-carousel-next aria-label="نمونه‌کار بعدی">{% icon "chevron-left" class="h-5 w-5" %}</button>
       </div>
 
       {# پیام خالی — وقتی هیچ پروژه‌ای در آرشیو (یا دستهٔ انتخاب‌شده) نیست #}

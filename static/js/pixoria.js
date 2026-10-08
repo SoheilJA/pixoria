@@ -316,6 +316,9 @@ function enableTrackDrag(track) {
   let moved = 0;
   track.addEventListener("pointerdown", (e) => {
     if (e.pointerType !== "mouse") return;
+    // وقتی ترک سرریز ندارد (مثلاً گریدِ دسکتاپ یا کاروسلی که جا شده) کشیدن
+    // بی‌معنی است و نباید کلیک‌های کارت را مسدود کند.
+    if (track.scrollWidth <= track.clientWidth + 1) return;
     dragging = true;
     moved = 0;
     startX = e.clientX;
@@ -432,28 +435,50 @@ function initCarousels({ REDUCED, faDigits }) {
   document.querySelectorAll("[data-carousel]").forEach((root) => {
     const track = root.querySelector("[data-carousel-track]");
     if (!track) return;
-    const slides = [...track.children];
-    if (!slides.length) return;
     const dotsWrap = root.querySelector("[data-carousel-dots]");
     const prevBtn = root.querySelector("[data-carousel-prev]");
     const nextBtn = root.querySelector("[data-carousel-next]");
+    const controlsWrap = root.querySelector("[data-carousel-controls]");
     const GAP = 24;
 
-    const dots = dotsWrap
-      ? slides.map((slide, i) => {
-          const d = document.createElement("button");
-          d.className = "slider-dot" + (i === 0 ? " active" : "");
-          d.setAttribute("aria-label", "اسلاید " + faDigits(i + 1));
-          d.addEventListener("click", () => {
-            track.scrollTo({
-              left: -slides[i].offsetLeft + GAP,
-              behavior: REDUCED ? "auto" : "smooth",
-            });
+    // اسلایدها می‌توانند در طول زمان مخفی شوند (فیلتر نمونه‌کارها با is-hidden
+    // کارت‌ها را حذف می‌کند)، بنابراین نقاط و گامِ اسکرول باید هر بار از روی
+    // اسلایدهای مرئیِ همان لحظه محاسبه شوند.
+    const visible = () =>
+      [...track.children].filter((s) => !s.classList.contains("is-hidden"));
+
+    let dots = null;
+    const buildDots = (slides) => {
+      if (!dotsWrap) return;
+      dotsWrap.innerHTML = "";
+      dots = slides.map((slide, i) => {
+        const d = document.createElement("button");
+        d.type = "button";
+        d.className = "slider-dot" + (i === 0 ? " active" : "");
+        d.setAttribute("aria-label", "اسلاید " + faDigits(i + 1));
+        d.addEventListener("click", () => {
+          track.scrollTo({
+            left: -slide.offsetLeft + GAP,
+            behavior: REDUCED ? "auto" : "smooth",
           });
-          dotsWrap.appendChild(d);
-          return d;
-        })
-      : null;
+        });
+        dotsWrap.appendChild(d);
+        return d;
+      });
+    };
+
+    // فیلتر عوض شده: اسکرول به ابتدا، بازسازی نقاط و مخفی کردن کنترل‌ها وقتی
+    // هیچ اسلاید مرئی‌ای نمانده است.
+    const refresh = () => {
+      const slides = visible();
+      track.scrollTo({ left: 0, behavior: "auto" });
+      buildDots(slides);
+      if (controlsWrap)
+        controlsWrap.classList.toggle("hidden", slides.length === 0);
+    };
+
+    buildDots(visible());
+    root.addEventListener("pf:changed", refresh);
 
     const maxScroll = () => track.scrollWidth - track.clientWidth;
     const progress = () =>
@@ -467,16 +492,22 @@ function initCarousels({ REDUCED, faDigits }) {
         if (ticking) return;
         ticking = true;
         requestAnimationFrame(() => {
-          const idx = Math.round(progress() * (slides.length - 1));
-          if (dots)
-            dots.forEach((d, i) => d.classList.toggle("active", i === idx));
+          const n = visible().length;
+          if (n) {
+            const idx = Math.round(progress() * (n - 1));
+            if (dots)
+              dots.forEach((d, i) => d.classList.toggle("active", i === idx));
+          }
           ticking = false;
         });
       },
       { passive: true },
     );
 
-    const step = () => slides[0].offsetWidth + GAP;
+    const step = () => {
+      const slides = visible();
+      return slides.length ? slides[0].offsetWidth + GAP : 0;
+    };
     const next = () => {
       if (progress() > 0.92)
         track.scrollTo({ left: 0, behavior: REDUCED ? "auto" : "smooth" });
@@ -722,6 +753,11 @@ function initPortfolioFilter({ hasGsap, REDUCED, faDigits }) {
     // فقط صفحهٔ آرشیو آدرس را با فیلتر همگام می‌کند (data-pf-sync).
     const syncUrl = root.hasAttribute("data-pf-sync");
 
+    // وقتی کارت‌ها پنهان/ظاهر می‌شوند، کاروسل باید نقاطش را بازسازی کند و
+    // اسکرول را به ابتدا برگرداند (data-carousel روی همین section listen می‌کند).
+    const announce = () =>
+      pfGrid.dispatchEvent(new CustomEvent("pf:changed", { bubbles: true }));
+
   const apply = (cat, skipUrl) => {
     let shown = 0;
     items.forEach((el) => {
@@ -748,13 +784,17 @@ function initPortfolioFilter({ hasGsap, REDUCED, faDigits }) {
             scale: 0.92,
             duration: 0.3,
             ease: "power2.in",
-            onComplete: () => el.classList.add("is-hidden"),
+            onComplete: () => {
+              el.classList.add("is-hidden");
+              announce();
+            },
           });
         }
       } else {
         el.classList.toggle("is-hidden", !match);
       }
     });
+    announce();
     if (pfCount) pfCount.textContent = `${faDigits(shown)} PROJECTS`;
     if (pfEmpty) pfEmpty.classList.toggle("hidden", shown > 0);
     if (syncUrl && !skipUrl) {

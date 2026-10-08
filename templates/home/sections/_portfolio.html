@@ -1,10 +1,10 @@
-{% load highlight_tags fa_digits %}
+{% load icon_tags highlight_tags fa_digits %}
 {# نمونه‌کارهای منتخب v2 — گرید قابل فیلتر #}
 {% comment %}داده‌ها: portfolio_section (FeaturedWorkSection)، portfolio_items
    (Portfolio[])، portfolio_categories (Category[]) — pixoria.js فیلتر و
    شمارشگر را مدیریت می‌کند{% endcomment %}
 {% if portfolio_items %}
-  <section id="portfolio" class="relative overflow-hidden bg-ink" data-pf-root>
+  <section id="portfolio" class="relative overflow-hidden bg-ink" data-pf-root data-carousel>
     {# خط تقسیم‌کنندهٔ روشن روی بخش روشنِ قبلی #}
     <svg class="divider" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true">
       <path d="M0,58 C320,12 640,78 960,42 C1200,14 1360,62 1440,32 L1440,0 L0,0 Z" fill="#efece5"></path>
@@ -52,12 +52,22 @@
         {{ portfolio_items|length|fa_digits }} PROJECTS
       </p>
 
-      <div class="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3" data-pf-grid>
+      {# کارت‌ها: بالای lg گرید ۳ ستونی، زیر lg یک ترکِ اسکرول-اسنپ (یک DOM). #}
+      <div class="mt-8 flex gap-6 overflow-x-auto snap-x snap-mandatory pb-3 no-scrollbar
+                  lg:grid lg:grid-cols-3 lg:overflow-visible lg:snap-none lg:pb-0"
+           data-pf-grid data-carousel-track>
         {% for item in portfolio_items %}
           {# شعاع گوشه‌ها بین کارت‌ها متغیر است تا گرید یکنواخت نباشد #}
           {% cycle '2.5rem' '2.75rem 0.75rem' '0.9rem' '0.75rem 2.75rem' '1.75rem' '1rem 4rem' as card_radius silent %}
-          {% include "components/_project_card.html" with project=item filter_key=item.categories.first.slug radius=card_radius %}
+          {% include "components/_project_card.html" with project=item filter_key=item.categories.first.slug radius=card_radius class="w-[min(86vw,420px)] shrink-0 snap-start md:w-[calc(50%-0.75rem)] lg:w-auto" %}
         {% endfor %}
+      </div>
+
+      {# کنترل‌های کاروسل — فقط زیر lg نمایش داده می‌شوند (دکمه‌های راست/چپ RTL) #}
+      <div class="mt-8 flex items-center justify-center gap-5 lg:hidden" data-carousel-controls data-reveal="up">
+        <button type="button" class="ctrl-btn" data-carousel-prev aria-label="نمونه‌کار قبلی">{% icon "chevron-right" class="h-5 w-5" %}</button>
+        <div class="flex items-center gap-2" data-carousel-dots></div>
+        <button type="button" class="ctrl-btn" data-carousel-next aria-label="نمونه‌کار بعدی">{% icon "chevron-left" class="h-5 w-5" %}</button>
       </div>
 
       {# پیام خالی — وقتی هیچ پروژه‌ای در دستهٔ انتخاب‌شده نیست #}
