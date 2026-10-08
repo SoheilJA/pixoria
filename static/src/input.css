@@ -1371,6 +1371,48 @@ a:hover .logo-mark {
 #mobile-menu.open .m-cta {
   transition-delay: 0.38s;
 }
+/* آکاردئون زیرمنوی خدمات در موبایل */
+.m-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.m-row .m-link {
+  flex: 1;
+}
+.m-chevron {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 999px;
+  color: rgba(245, 243, 238, 0.55);
+  transition: background 0.3s, color 0.3s;
+}
+.m-chevron:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--gold-l);
+}
+.m-chevron svg {
+  transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.3, 1);
+}
+.m-chevron[aria-expanded="true"] svg {
+  transform: rotate(180deg);
+}
+.m-chevron:focus-visible {
+  outline: 2px solid var(--gold-l);
+  outline-offset: 2px;
+}
+.m-sub {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.45s cubic-bezier(0.2, 0.8, 0.3, 1);
+}
+.m-has-sub.m-sub-open .m-sub {
+  max-height: 24rem;
+}
 
 /* ---------- buttons ---------- */
 .btn {
@@ -2223,7 +2265,38 @@ a:hover .logo-mark {
 }
 
 /* ---------- mega menu (services dropdown) ---------- */
-.nav-item-services { position: relative; }
+.nav-item-services {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+}
+.mega-chevron {
+  display: inline-grid;
+  place-items: center;
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 999px;
+  color: rgba(245, 243, 238, 0.5);
+  cursor: pointer;
+  transition: background 0.3s, color 0.3s;
+}
+.mega-chevron:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--gold-l);
+}
+.mega-chevron svg {
+  transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.3, 1);
+}
+.nav-item-services:hover .mega-chevron svg,
+.nav-item-services.open .mega-chevron svg,
+.mega-chevron[aria-expanded="true"] svg {
+  transform: rotate(180deg);
+}
+.mega-chevron:focus-visible {
+  outline: 2px solid var(--gold-l);
+  outline-offset: 2px;
+}
 .mega-menu {
   position: absolute;
   top: calc(100% + 14px);
@@ -2236,7 +2309,7 @@ a:hover .logo-mark {
     transform 0.35s cubic-bezier(0.2, 0.8, 0.3, 1),
     visibility 0.35s;
   z-index: 60;
-  min-width: 820px;
+  min-width: 700px;
   pointer-events: none;
 }
 .nav-item-services::after {
@@ -2257,41 +2330,186 @@ a:hover .logo-mark {
   z-index: -1;
 }
 .nav-item-services:hover .mega-menu,
-.nav-item-services:focus-within .mega-menu {
+.nav-item-services:focus-within .mega-menu,
+.nav-item-services.open .mega-menu {
   opacity: 1;
   visibility: visible;
   transform: translateX(50%) translateY(0);
   pointer-events: auto;
 }
 .nav-item-services:hover::after,
-.nav-item-services:focus-within::after {
+.nav-item-services:focus-within::after,
+.nav-item-services.open::after {
   transform: translateX(50%) scale(1);
 }
 .mega-menu-panel {
   background: rgba(10, 10, 12, 0.96);
   backdrop-filter: blur(40px);
   border: 1px solid rgba(201, 161, 90, 0.18);
-  border-radius: 2.5rem;
-  padding: 0;
+  border-radius: 2rem;
   box-shadow:
     0 50px 120px -40px rgba(0, 0, 0, 0.85),
     0 0 0 1px rgba(201, 161, 90, 0.05) inset;
   overflow: hidden;
 }
+/* کاشی‌های خدمات: سیارهٔ نورانی + عنوان — بدون توضیحات */
+.mega-tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.5rem;
+  padding: 1rem;
+}
+.mega-tile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 1.75rem 1.5rem 1.25rem;
+  border-radius: 1.25rem;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.012);
+  text-align: center;
+  overflow: hidden;
+  transition:
+    transform 0.4s cubic-bezier(0.2, 0.8, 0.3, 1),
+    border-color 0.35s,
+    background 0.35s,
+    box-shadow 0.35s;
+}
+.mega-tile::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(
+    to left,
+    #8f6b2c,
+    #c9a15a 30%,
+    #e8c47a 55%,
+    #c9a15a 80%,
+    #8f6b2c
+  );
+  opacity: 0;
+  transition: opacity 0.35s;
+}
+.mega-tile:hover,
+.mega-tile:focus-visible {
+  transform: translateY(-5px);
+  border-color: rgba(201, 161, 90, 0.25);
+  background: rgba(255, 255, 255, 0.028);
+  box-shadow: 0 22px 50px -22px rgba(201, 161, 90, 0.2);
+  outline: none;
+}
+.mega-tile:hover::before,
+.mega-tile:focus-visible::before {
+  opacity: 1;
+}
+.mega-tile-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--cream);
+  transition: color 0.3s;
+}
+.mega-tile:hover .mega-tile-title,
+.mega-tile:focus-visible .mega-tile-title {
+  color: var(--gold-l);
+}
+/* سیارهٔ شیشه‌ایِ هر خدمت — رنگ تاکید از حلقهٔ آن می‌تابد */
+.mega-orb {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 3.25rem;
+  height: 3.25rem;
+  border-radius: 50%;
+  color: #171207;
+  transition:
+    transform 0.4s cubic-bezier(0.2, 0.8, 0.3, 1),
+    box-shadow 0.4s;
+}
+.mega-orb > svg {
+  position: relative;
+  z-index: 2;
+}
+.mega-orb-gold {
+  --orb-c: #e8c47a;
+  background: radial-gradient(circle at 34% 28%, #f0d08f, #c9a15a 52%, #8f6b2c);
+  box-shadow:
+    0 10px 26px -8px rgba(201, 161, 90, 0.55),
+    rgba(232, 196, 122, 0.35) 0 0 0 1px inset;
+}
+.mega-orb-royal {
+  --orb-c: #8ba4ff;
+  background: radial-gradient(circle at 34% 28%, #9db2ff, #4470ff 52%, #244bcc);
+  color: #f5f3ee;
+  box-shadow:
+    0 10px 26px -8px rgba(46, 99, 255, 0.5),
+    rgba(139, 164, 255, 0.35) 0 0 0 1px inset;
+}
+.mega-orb-cream {
+  --orb-c: #f5f3ee;
+  background: radial-gradient(circle at 34% 28%, #ffffff, #efece5 52%, #c9c3b6);
+  box-shadow:
+    0 10px 26px -10px rgba(245, 243, 238, 0.45),
+    rgba(245, 243, 238, 0.4) 0 0 0 1px inset;
+}
+.mega-tile:hover .mega-orb,
+.mega-tile:focus-visible .mega-orb {
+  transform: scale(1.06);
+}
+/* حلقهٔ مدار + ماهواره — فقط هاور، با چرخش آرام */
+.mega-orbit {
+  position: absolute;
+  inset: -30%;
+  border-radius: 50%;
+  border: 1px solid var(--orb-c);
+  transform: rotateX(72deg) scale(0.5);
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 0.4s,
+    transform 0.5s cubic-bezier(0.2, 0.8, 0.3, 1);
+}
+.mega-orbit-moon {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 50%;
+  background: var(--orb-c);
+  box-shadow: 0 0 10px 1px var(--orb-c);
+  transform: translate(-50%, -50%);
+}
+.mega-tile:hover .mega-orbit,
+.mega-tile:focus-visible .mega-orbit {
+  opacity: 0.85;
+  transform: rotateX(72deg) scale(1);
+  animation: mega-orbit-spin 7s linear infinite;
+}
+@keyframes mega-orbit-spin {
+  to {
+    rotate: 360deg;
+  }
+}
+/* بنر پایین مگامنو (ساده) — وقتی mega_title خالی است رندر نمی‌شود */
 .mega-banner {
   position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1.5rem;
-  padding: 1.5rem 2.25rem;
+  gap: 1.25rem;
+  padding: 0.8rem 1.5rem;
   background: linear-gradient(
     135deg,
-    rgba(201, 161, 90, 0.12),
-    rgba(232, 196, 122, 0.04) 40%,
-    rgba(46, 99, 255, 0.04)
+    rgba(201, 161, 90, 0.1),
+    rgba(232, 196, 122, 0.03) 40%,
+    rgba(46, 99, 255, 0.03)
   );
-  border-bottom: 1px solid rgba(201, 161, 90, 0.1);
+  border-top: 1px solid rgba(201, 161, 90, 0.1);
   overflow: hidden;
 }
 .mega-banner::after {
@@ -2313,17 +2531,17 @@ a:hover .logo-mark {
   z-index: 1;
 }
 .mega-banner-title {
-  font-size: 1.05rem;
+  font-size: 0.95rem;
   font-weight: 700;
   color: #f5f3ee;
   display: flex;
   align-items: center;
-  gap: 0.6rem;
+  gap: 0.55rem;
 }
 .mega-banner-desc {
-  font-size: 0.76rem;
+  font-size: 0.72rem;
   color: rgba(245, 243, 238, 0.45);
-  margin-top: 0.3rem;
+  margin-top: 0.25rem;
 }
 .mega-banner-cta {
   position: relative;
@@ -2331,7 +2549,7 @@ a:hover .logo-mark {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.6rem 1.4rem;
+  padding: 0.5rem 1.1rem;
   border-radius: 999px;
   background: linear-gradient(
     135deg,
@@ -2342,175 +2560,19 @@ a:hover .logo-mark {
     #8f6b2c
   );
   color: #171207;
-  font-size: 0.78rem;
+  font-size: 0.75rem;
   font-weight: 600;
+  white-space: nowrap;
   transition: filter 0.3s, box-shadow 0.3s;
   box-shadow: 0 8px 30px -8px rgba(201, 161, 90, 0.4);
-  white-space: nowrap;
 }
 .mega-banner-cta:hover {
   filter: brightness(1.1);
   box-shadow: 0 12px 40px -8px rgba(232, 196, 122, 0.5);
 }
-.mega-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 0.75rem;
-  padding: 1.25rem;
-}
-.mega-card {
-  display: flex;
-  flex-direction: column;
-  gap: 0.55rem;
-  padding: 1.5rem 1.25rem;
-  border-radius: 1.5rem;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  background: rgba(255, 255, 255, 0.015);
-  transition:
-    transform 0.35s cubic-bezier(0.2, 0.8, 0.3, 1),
-    border-color 0.35s,
-    background 0.35s,
-    box-shadow 0.35s;
-  position: relative;
-  overflow: hidden;
-}
-.mega-card::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: linear-gradient(
-    to left,
-    #8f6b2c,
-    #c9a15a 30%,
-    #e8c47a 55%,
-    #c9a15a 80%,
-    #8f6b2c
-  );
-  opacity: 0;
-  transition: opacity 0.35s;
-}
-.mega-card::after {
-  content: "";
-  position: absolute;
-  top: -30%;
-  right: -20%;
-  width: 100px;
-  height: 100px;
-  background: radial-gradient(
-    circle,
-    rgba(201, 161, 90, 0.06),
-    transparent 70%
-  );
-  opacity: 0;
-  transition: opacity 0.35s;
-  pointer-events: none;
-}
-.mega-card:hover {
-  transform: translateY(-6px);
-  border-color: rgba(201, 161, 90, 0.22);
-  background: rgba(255, 255, 255, 0.03);
-  box-shadow: 0 25px 55px -20px rgba(201, 161, 90, 0.18);
-}
-.mega-card:hover::before {
-  opacity: 1;
-}
-.mega-card:hover::after {
-  opacity: 1;
-}
-.mega-card-num {
-  font-family: "Space Grotesk", monospace;
-  font-size: 0.6rem;
-  font-weight: 400;
-  letter-spacing: 0.12em;
-  color: rgba(201, 161, 90, 0.3);
-  direction: ltr;
-  unicode-bidi: isolate;
-  display: inline-block;
-}
-.mega-card-icon {
-  display: inline-grid;
-  place-items: center;
-  width: 2.75rem;
-  height: 2.75rem;
-  border-radius: 0.875rem;
-  border: 1px solid rgba(201, 161, 90, 0.12);
-  background: linear-gradient(
-    135deg, rgba(201, 161, 90, 0.12), rgba(255, 255, 255, 0.02)
-  );
-  color: #e8c47a;
-  transition:
-    background 0.35s,
-    border-color 0.35s,
-    transform 0.35s;
-}
-.mega-card:hover .mega-card-icon {
-  background: linear-gradient(
-    135deg, rgba(201, 161, 90, 0.25), rgba(232, 196, 122, 0.15)
-  );
-  border-color: rgba(201, 161, 90, 0.35);
-  transform: scale(1.08);
-}
-.mega-card-title {
-  font-size: 0.92rem;
-  font-weight: 700;
-  color: #f5f3ee;
-  transition: color 0.3s;
-}
-.mega-card:hover .mega-card-title {
-  color: #e8c47a;
-}
-.mega-card-desc {
-  font-size: 0.72rem;
-  line-height: 1.7;
-  color: rgba(245, 243, 238, 0.45);
-}
-.mega-card-link {
-  font-size: 0.75rem;
-  color: #e8c47a;
-  font-weight: 500;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3rem;
-  margin-top: auto;
-  padding-top: 0.25rem;
-  transition: gap 0.3s;
-}
-.mega-card:hover .mega-card-link {
-  gap: 0.6rem;
-}
-@media (max-width: 767px) {
-  .mega-menu {
-    min-width: 0;
-    width: calc(100vw - 2rem);
-    left: 1rem;
-    right: 1rem;
-    transform: translateY(10px);
-  }
-  .nav-item-services:hover .mega-menu,
-  .nav-item-services:focus-within .mega-menu {
-    transform: translateY(0);
-  }
-  .nav-item-services::after { display: none; }
-  .mega-banner {
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 1.25rem;
-    gap: 0.75rem;
-  }
-  .mega-banner-cta {
-    align-self: stretch;
-    justify-content: center;
-  }
-  .mega-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.5rem;
-    padding: 0.75rem;
-  }
-  .mega-card {
-    padding: 1rem;
+@media (prefers-reduced-motion: reduce) {
+  .mega-tile:hover .mega-orbit {
+    animation: none;
   }
 }
 

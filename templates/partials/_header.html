@@ -24,16 +24,40 @@
     <ul class="hidden items-center gap-8 text-sm lg:flex">
       {% for item in nav_items %}
         {% nav_url item.url as item_url %}
-        <li{% if item_url == services_url %} class="nav-item-services"{% endif %}>
-          <a class="nav-link" href="{{ item_url }}">{{ item.title }}</a>
-          {% if item_url == services_url and services_footer %}
-            <div class="mega-menu" aria-label="منوی خدمات">
+        {% if item_url == services_url and services_footer %}
+          {# خدمات: لینک + دکمهٔ چورون بازکنندهٔ مگامنو (مسیر صفجه حفظ می‌شود) #}
+          <li class="nav-item-services" data-mega-root>
+            <a class="nav-link" href="{{ item_url }}">{{ item.title }}</a>
+            <button
+              type="button"
+              class="mega-chevron"
+              data-mega-toggle
+              aria-haspopup="true"
+              aria-expanded="false"
+              aria-controls="mega-services"
+              aria-label="باز کردن منوی خدمات"
+            >
+              {% icon "chevron-down" class="h-3.5 w-3.5" %}
+            </button>
+            <div class="mega-menu" id="mega-services" role="region" aria-label="منوی خدمات">
               <div class="mega-menu-panel">
+                <div class="mega-tiles">
+                  {% for service in services_footer %}
+                    {% cycle "gold" "royal" "cream" as orb silent %}
+                    <a href="{% url 'services:detail' service.slug %}" class="mega-tile">
+                      <span class="mega-orb mega-orb-{{ orb }}" aria-hidden="true">
+                        <span class="mega-orbit"><span class="mega-orbit-moon"></span></span>
+                        {% icon service.icon|default:"sparkles" class="h-5 w-5" %}
+                      </span>
+                      <span class="mega-tile-title">{{ service.title }}</span>
+                    </a>
+                  {% endfor %}
+                </div>
                 {% if settings.mega_title %}
                   <div class="mega-banner">
                     <div class="mega-banner-content">
                       <p class="mega-banner-title">
-                        {% icon "sparkles" class="h-5 w-5 text-gold" %}
+                        {% icon "sparkles" class="h-4 w-4 text-gold" %}
                         {{ settings.mega_title|highlight }}
                       </p>
                       {% if settings.mega_description %}
@@ -46,23 +70,12 @@
                     </a>
                   </div>
                 {% endif %}
-                <div class="mega-grid">
-                  {% for service in services_footer %}
-                    <a href="{% url 'services:detail' service.slug %}" class="mega-card">
-                      <span class="mega-card-num">{{ forloop.counter|stringformat:"02d"|fa_digits }}</span>
-                      <span class="mega-card-icon" aria-hidden="true">
-                        {% icon service.icon|default:"sparkles" class="h-5 w-5" %}
-                      </span>
-                      <span class="mega-card-title">{{ service.title }}</span>
-                      <span class="mega-card-desc">{{ service.excerpt }}</span>
-                      <span class="mega-card-link">مشاهده {% icon "arrow-left" class="h-3 w-3" %}</span>
-                    </a>
-                  {% endfor %}
-                </div>
               </div>
             </div>
-          {% endif %}
-        </li>
+          </li>
+        {% else %}
+          <li><a class="nav-link" href="{{ item_url }}">{{ item.title }}</a></li>
+        {% endif %}
       {% endfor %}
     </ul>
 
@@ -123,14 +136,27 @@
     <ul class="mt-7 space-y-1">
       {% for item in nav_items %}
         {% nav_url item.url as item_url %}
-        <li>
-          <a
-            href="{{ item_url }}"
-            class="m-link flex items-center justify-between rounded-2xl px-4 py-3.5 text-xl font-bold hover:bg-white/[.05]"
-            >{{ item.title }}
-            {% icon "chevron-left" class="h-5 w-5 text-gold/60" %}</a>
-          {% if item_url == services_url and services_footer %}
-            <ul class="mt-1 space-y-1 pr-3">
+        {% if item_url == services_url and services_footer %}
+          {# خدمات: لینخ خود صفحه + آکاردئون زیرمنو #}
+          <li class="m-has-sub">
+            <div class="m-row">
+              <a
+                href="{{ item_url }}"
+                class="m-link flex items-center rounded-2xl px-4 py-3.5 text-xl font-bold hover:bg-white/[.05]"
+                >{{ item.title }}</a
+              >
+              <button
+                type="button"
+                class="m-chevron"
+                data-m-accordion
+                aria-expanded="false"
+                aria-controls="m-services"
+                aria-label="باز کردن زیرمنوی خدمات"
+              >
+                {% icon "chevron-down" class="h-4 w-4" %}
+              </button>
+            </div>
+            <ul class="m-sub" id="m-services">
               {% for service in services_footer %}
                 <li>
                   <a
@@ -141,8 +167,16 @@
                 </li>
               {% endfor %}
             </ul>
-          {% endif %}
-        </li>
+          </li>
+        {% else %}
+          <li>
+            <a
+              href="{{ item_url }}"
+              class="m-link flex items-center justify-between rounded-2xl px-4 py-3.5 text-xl font-bold hover:bg-white/[.05]"
+              >{{ item.title }}
+              {% icon "chevron-left" class="h-5 w-5 text-gold/60" %}</a>
+          </li>
+        {% endif %}
       {% endfor %}
     </ul>
     {% if header_settings and header_settings.show_cta %}

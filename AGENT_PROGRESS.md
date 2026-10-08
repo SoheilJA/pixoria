@@ -1258,7 +1258,62 @@ scope for this migration and can pick these templates up later.)_
   verified by rendering the markup and by code review against the
   `data-*` hooks.
 
-## Tasks
+- **D55 — Mega-menu redesign (T52).** The v1-style description cards are gone;
+  the services dropdown is now a wide glass panel of **orb tiles**: each tile is
+  a Lucide icon inside a glowing planet sphere (`.mega-orb` with `--orb-c`
+  accent variants gold / royal / cream, assigned with `{% cycle ... as orb
+  silent %}` in the template — the `silent` keyword is mandatory, D30, or the
+  accent name prints as literal text into the page; caught by dumping the
+  rendered markup) plus its title only — no excerpts, numbers or "مشاهده"
+  links. Hover/focus animates a tilted orbit ring (`.mega-orbit`, `rotateX(72deg)`
+  in `transform` + the individual `rotate` property spun by the
+  `mega-orbit-spin` keyframes so tilt and spin compose) with a glowing moon dot
+  on the ring; `prefers-reduced-motion` stops the spin. The panel keeps the
+  `.mega-banner` as a slim BOTTOM bar (moved below the tiles, `border-top`
+  instead of `border-bottom`, tighter padding) and it is still skipped entirely
+  when `mega_title` is empty (D12).
+  **The «خدمات» nav item is a split button now**: the `<a class="nav-link">`
+  still navigates to `services:list` (internal-link/SEO reachability preserved)
+  and a separate `.mega-chevron` button (`{% icon "chevron-down" %}` that
+  rotates 180° on hover/open) toggles the panel — a real `<button>` gets
+  Enter/Space natively. Accessibility: `aria-haspopup="true"` /
+  `aria-expanded` / `aria-controls="mega-services"` on the toggle, `role="region"`
+  + `aria-label` on the panel, `focus-visible` outlines on every interactive
+  piece (chevron, tiles, mobile accordion), and the tile's hover state mirrors
+  on `:focus-visible` so keyboard users see it too. `pixoria.js`'s
+  `initMegaMenu` opens on hover with a 300 ms close delay (skipped entirely on
+  `TOUCH` so a tap toggles instead of double-firing), toggles on click, closes
+  on `Escape` and returns focus to the toggle, closes on `focusout` when focus
+  leaves the whole root, and closes after a tile click. CSS still drives hover
+  and `:focus-within`, so the menu works without JS; the JS only adds the
+  `.open` class (the open-state selectors accept `:hover`/`:focus-within`/`.open`).
+  **Mobile:** services are an accordion under the same item — a `.m-row` with
+  the page link (flex: 1) + a `.m-chevron` button toggling the `.m-sub` list
+  (max-height 0 → 24 rem transition), `aria-expanded` on the button, and the
+  accordion resets when the menu closes (`resetAccordions` in `closeMenu`).
+  **Removed as unused** (verified by repo-wide grep — the only other hits were
+  the `new/` prototypes, deleted at the end of the project): `.mega-grid`,
+  `.mega-card`, `.mega-card-num`, `.mega-card-icon`, `.mega-card-title`,
+  `.mega-card-desc`, `.mega-card-link` and the whole `@media (max-width: 767px)`
+  block for the mega menu — the desktop `<ul>` is `hidden lg:flex`, so the menu
+  can never render below `lg`; the mobile services list is the overlay
+  accordion instead. The panel's `min-width` shrank 820 → 700 px and the tiles
+  use `repeat(auto-fit, minmax(140px, 1fr))` so 1–5 services lay out in one row
+  without orphan tiles. `.nav-item-services` is now `inline-flex` (link +
+  chevron side by side); the little rotated pointer square between pill and
+  panel was kept.
+  **Verified:** every URL still 200/404 and clean; the rendered home has
+  exactly 4 tiles + 4 accent orbs + 1 toggle + the banner, zero `mega-card*`
+  classes, zero stray cycle tokens; with an EMPTY database (rolled-back
+  transaction) the home still returns 200 and the mega menu + accordion are
+  absent (the services item degrades to a plain link); `manage.py check` +
+  `makemigrations --check` clean; `pixoria.js` passes the ES-module syntax
+  check; Tailwind rebuilt (new custom classes compiled, old ones gone from the
+  output). NOT verified in a real browser (no Playwright/Puppeteer in the
+  project) — the hover/keyboard/focus behaviour was verified by code review
+  against the markup and the CSS selectors.
+
+
 
 ### Phase 0 — Foundation
 
@@ -1605,7 +1660,7 @@ scope for this migration and can pick these templates up later.)_
   `apps/services/admin.py`, `templates/components/_testimonial_card.html`,
   `static/js/pixoria.js`, `static/admin/js/testimonial_kind.js` |
   commit: "feat(testimonials): real video and audio players"
-- [ ] T52 — Mega-menu redesign (`templates/partials/_header.html` + CSS): a
+- [x] T52 — Mega-menu redesign (`templates/partials/_header.html` + CSS): a
   completely new design in the site's space/glass language — NO per-service
   descriptions. A wide glass panel with a row/grid of service tiles, each tile =
   a Lucide icon inside a small glowing planet-orb (accent color per service) +
@@ -1889,9 +1944,11 @@ contact; descriptive alt texts; meta title/description per service.
 
 ## Current status
 
-T01–T51 done (T42 superseded by Phase 12; T47b was the template-comment leak
-sweep — D50). **Next: T52** — mega-menu redesign: glass panel of service
-orb tiles (icon + title only, orbit ring on hover), chevron on the «خدمات»
-nav item, hover + click/keyboard open, Esc close, mobile accordion.
+T01–T52 done (T42 superseded by Phase 12; T47b was the template-comment leak
+sweep — D50). **Next: T53** — initial preloader (first visit only): space-themed
+orbiting-planet + brand mark + thin gold progress ring, pure CSS, shown once
+per session via a `sessionStorage` flag + `has-preloader` class on `<html>`,
+CSS-only self-removal fallback, ≤800 ms visible, no LCP blockage,
+reduced-motion skip, hero entrance animations start after it hides.
 
 

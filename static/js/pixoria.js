@@ -72,6 +72,7 @@ function init() {
     if (!menu || !menu.classList.contains("open")) return;
     menu.classList.remove("open");
     if (menuOpenBtn) menuOpenBtn.setAttribute("aria-expanded", "false");
+    resetAccordions();
     bodyLock(false);
   };
   if (menu && menuOpenBtn) {
@@ -88,6 +89,58 @@ function init() {
       if (e.key === "Escape") closeMenu();
     });
   }
+
+  /* ---------------- mega menu (services dropdown) ----------------
+     باز شدن با هاور (با تأخیرِ کوچک در بستن) و با کلیک/کیبورد روی چورون.
+     روی صفحات لمسی فقط کلیدزار عمل می‌کند. */
+  document.querySelectorAll("[data-mega-root]").forEach((root) => {
+    const toggle = root.querySelector("[data-mega-toggle]");
+    if (!toggle) return;
+    let closeTimer = null;
+    const setOpen = (open) => {
+      clearTimeout(closeTimer);
+      root.classList.toggle("open", open);
+      toggle.setAttribute("aria-expanded", String(open));
+    };
+    if (!TOUCH) {
+      root.addEventListener("mouseenter", () => setOpen(true));
+      root.addEventListener("mouseleave", () => {
+        closeTimer = setTimeout(() => setOpen(false), 300);
+      });
+    }
+    toggle.addEventListener("click", () =>
+      setOpen(toggle.getAttribute("aria-expanded") !== "true"),
+    );
+    root.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && root.classList.contains("open")) {
+        setOpen(false);
+        toggle.focus();
+      }
+    });
+    // بستن وقتی焦点 از کل مجموعه خارج می‌شود
+    root.addEventListener("focusout", (e) => {
+      if (!root.contains(e.relatedTarget)) setOpen(false);
+    });
+    // بستن پس از کلیک روی یکی از کاشی‌ها
+    root.querySelectorAll(".mega-menu a").forEach((a) =>
+      a.addEventListener("click", () => setOpen(false)),
+    );
+  });
+
+  /* ---------------- mobile services accordion ---------------- */
+  const resetAccordions = () => {
+    document.querySelectorAll("[data-m-accordion]").forEach((btn) => {
+      btn.setAttribute("aria-expanded", "false");
+      btn.closest("li")?.classList.remove("m-sub-open");
+    });
+  };
+  document.querySelectorAll("[data-m-accordion]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const open = btn.getAttribute("aria-expanded") === "true";
+      btn.setAttribute("aria-expanded", String(!open));
+      btn.closest("li")?.classList.toggle("m-sub-open", !open);
+    });
+  });
 
   /* ---------------- anchor links ---------------- */
   const scrollToEl = (el) => {
