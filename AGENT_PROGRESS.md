@@ -1106,6 +1106,22 @@ scope for this migration and can pick these templates up later.)_
   `manage.py check` + `makemigrations --check` clean; node module check passes;
   Tailwind rebuilt (no token changes — the two arbitrary variants compiled).
 
+- **D50 — Template-comment leak sweep (T47b).** Three home partials still
+  carried the multi-line `{# … #}` pattern the D49 GOTCHA warns about, so their
+  whole comment block rendered as literal text in the page (verified by
+  rendering `/`: the `{# … #}` string was present in the response body).
+  `templates/home/sections/_portfolio.html` and `_stats.html` were already
+  converted to `{% comment %}…{% endcomment %}` in the working tree (uncommitted
+  — the report came from a cached page / the 2026-10-05 screenshot); the last
+  live leak was `templates/home/sections/_trusted.html:24`. All three are now
+  `{% comment %}` blocks. Confirmed against Django 5.2's actual lexer
+  (`tag_re = re.compile(r"({%.*?%}|{{.*?}}|{#.*?#})")` — **no** `re.DOTALL`, so
+  `{#.*?#}` can never span a newline) and verified by re-rendering: `/`, `/about/`,
+  `/contact/`, `/portfolio/`, `/blog/` all contain zero `{#` / `{% comment %}`
+  markers (home 130646 → 130517 bytes). A repo-wide scan for any remaining
+  `{#` without a same-line `#}` (the exact leak condition) now returns zero
+  hits. Rule stands: multi-line template notes use `{% comment %}`.
+
 ## Tasks
 
 ### Phase 0 — Foundation
@@ -1395,6 +1411,14 @@ scope for this migration and can pick these templates up later.)_
   files: `templates/components/_breadcrumb.html`, every page with crumbs,
   `apps/core/context_utils.py` (the `crumbs` helper) |
   commit: "feat(components): shared breadcrumb partial"
+- [x] T47b — Fix leaking template comments: the multi-line `{# … #}` blocks in
+  `templates/home/sections/_portfolio.html`, `_stats.html` and `_trusted.html`
+  rendered as literal text on the home page (the D49 lexer GOTCHA — Django's
+  `tag_re` has no DOTALL). Convert all three to `{% comment %}…{% endcomment %}`
+  and sweep the whole `templates/` tree for any remaining `{#` without a
+  same-line `#}` | files: `templates/home/sections/_portfolio.html`,
+  `templates/home/sections/_stats.html`, `templates/home/sections/_trusted.html` |
+  commit: "fix(templates): stop multiline comment leak into rendered pages"
 - [ ] T48 — Two phone numbers: verify `SiteSettings.phone` and `phone_secondary`
   are editable in the admin with Persian labels/help_text, and add optional
   `phone_label` / `phone_secondary_label` («دفتر مرکزی» / «پشتیبانی»). The
@@ -1729,8 +1753,9 @@ contact; descriptive alt texts; meta title/description per service.
 
 ## Current status
 
-T01–T47 done (T42 superseded by Phase 12). **Next: T48** — labeled dual phone
-numbers (`phone`/`phone_secondary` + new `*_label` fields) used everywhere a
-phone appears.
+T01–T47 done (T42 superseded by Phase 12), plus T47b (template-comment leak
+sweep — D50). **Next: T48** — labeled dual phone numbers
+(`phone`/`phone_secondary` + new `*_label` fields) used everywhere a phone
+appears.
 
 

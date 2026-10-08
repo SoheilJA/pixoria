@@ -1,8 +1,8 @@
 {% load icon_tags highlight_tags fa_digits %}
 {# دستاوردها v2 — چهار کارت شمارشی روی پس‌زمینهٔ تیره #}
 {# داده‌ها: stats_section (StatsSection)، stats (StatItem[]) #}
-{# pixoria.js هر data-count را هنگام رسیدن به دید شمارش می‌کند
-   (data-prefix / data-suffix دور عدد می‌آیند) #}
+{% comment %}pixoria.js هر data-count را هنگام رسیدن به دید شمارش می‌کند
+   (data-prefix / data-suffix دور عدد می‌آیند){% endcomment %}
 {% if stats_section and stats %}
   <section id="stats" class="relative overflow-hidden bg-ink3">
     <div class="grid-bg pointer-events-none absolute inset-0 opacity-30" aria-hidden="true"></div>
