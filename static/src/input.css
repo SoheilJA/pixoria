@@ -1303,23 +1303,14 @@ html.lenis body {
 .nav-link.active::after {
   transform: scaleX(1);
 }
-.logo-mark {
-  width: 2.4rem;
-  height: 2.4rem;
-  border-radius: 0.8rem;
-  transform: rotate(45deg);
-  background: linear-gradient(135deg, var(--gold-d), var(--gold-l));
-  box-shadow: 0 6px 18px -6px rgba(201, 161, 90, 0.6);
-  display: grid;
-  place-items: center;
+/* ---------- brand emblem ---------- */
+/* planet + ring + moon, no letter — see partials/_brand_mark.html */
+.brand-emblem {
+  flex: none;
+  color: var(--gold-l);
   transition: transform 0.5s;
 }
-.logo-mark span {
-  transform: rotate(-45deg);
-  color: #151109;
-  font-weight: 800;
-}
-a:hover .logo-mark {
+a:hover .brand-emblem {
   transform: rotate(135deg);
 }
 

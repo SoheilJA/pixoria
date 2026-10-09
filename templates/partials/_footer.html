@@ -23,10 +23,8 @@
       {# برند و اطلاعات تماس #}
       <div class="lg:col-span-4" data-reveal="up">
         <div class="flex items-center gap-3">
-          {% if settings.logo %}
-            <img src="{{ settings.logo.url }}" alt="{{ settings.site_name }}" class="h-9 w-auto" />
-          {% else %}
-            <span class="logo-mark" aria-hidden="true"><span>پ</span></span>
+          {% include "partials/_brand_mark.html" with class="h-9 w-9" %}
+          {% if not settings.logo %}
             <span class="flex flex-col leading-none">
               <span class="text-2xl font-extrabold">{{ settings.site_name }}</span>
               <span class="font-latin text-[9px] tracking-[.4em] text-gold/90">PIXORIA</span>

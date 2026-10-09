@@ -1,0 +1,12 @@
+{% comment %}مصورک تزئینی مدار و سیاره — جایگزینِ حرفِ بزرگ در جایگاه‌های بدون
+تصویر (در فارسی رایج نیست حرف اول نام را نشان داد). تماماً با currentColor
+رنگ می‌شود، پس روی پس‌زمینهٔ تیره text-gold و روی روشن text-gold-dark.
+class: str optional — سایز روی <svg> (پیش‌فرض h-40 w-40).{% endcomment %}
+<svg viewBox="0 0 200 150" fill="none" class="{{ class|default:'h-40 w-40' }}" aria-hidden="true">
+  <ellipse cx="100" cy="75" rx="82" ry="30" transform="rotate(-18 100 75)" stroke="currentColor" stroke-width="1.6" opacity="0.3" />
+  <ellipse cx="100" cy="75" rx="56" ry="20" transform="rotate(14 100 75)" stroke="currentColor" stroke-width="1.4" opacity="0.22" />
+  <circle cx="100" cy="75" r="20" fill="currentColor" opacity="0.12" />
+  <circle cx="100" cy="75" r="11" fill="currentColor" opacity="0.85" />
+  <circle cx="176" cy="52" r="4.5" fill="currentColor" opacity="0.55" />
+  <circle cx="34" cy="104" r="3" fill="currentColor" opacity="0.4" />
+</svg>

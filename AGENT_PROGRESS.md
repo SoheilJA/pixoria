@@ -1481,6 +1481,75 @@ scope for this migration and can pick these templates up later.)_
   three timers were verified by code review against the htmx 2 event contracts
   and the click semantics.
 
+- **D59 — No more letter-as-logo placeholders (T56).** Persian names are not
+  turned into an initial-logo, so every spot that rendered a bare «پ» (or any
+  person's initial) is gone. Two new partials carry the replacements, both
+  `currentColor`-based so they sit on dark and cream alike:
+  (1) `templates/partials/_brand_mark.html` — renders `settings.logo` (uploaded
+  file wins, `h-9 w-auto max-w-[10rem]`) OR an inline **planet emblem** SVG
+  (viewBox 36: ring ellipse `rotate(-20)` + filled planet + a moon riding the
+  ring's tip, `stroke/fill="currentColor"`, `aria-hidden`, class prop for
+  sizing, default `h-9 w-9`). This emblem is the one the T57 logo-concept set
+  builds on. It replaced the old `.logo-mark` (rotated gold SQUARE with «پ»)
+  in all five spots: `_header.html` (desktop + mobile menu), `_footer.html`,
+  `base.html` preloader (`.pl-mark`) and the about hero's orbital centre
+  (`about.html`). The header/footer keep the wordmark next to it via
+  `{% if not settings.logo %}` (an uploaded logo replaces the whole lockup, as
+  before). CSS: `.logo-mark` / `.logo-mark span` deleted from `input.css`,
+  replaced by `.brand-emblem { color: var(--gold-l); transition: transform .5s }`
+  + `a:hover .brand-emblem { transform: rotate(135deg) }` (same playful hover
+  spin the old square had). Sizes come from Tailwind utilities now.
+  (2) `templates/components/_orbit_art.html` — a decorative orbit/planet
+  illustration (two tilted rings, glowing planet, two moons) for image-less
+  tiles; replaced the giant «پ» in the about story fallback tile (`about.html`,
+  `text-gold-dark` on `bg-cream2`) and the blog featured-article cover
+  fallback (`blog/list.html`, `text-gold` on the dark gradient).
+  **Person avatars** now fall back to the Lucide `user-round` glyph inside the
+  existing gold-ringed `.avatar` orb instead of a letter:
+  `_testimonial_card.html` (was `{{ t.author_name|truncatechars:1 }}`, two
+  spots — audio + text cards) and `blog/detail.html` (was
+  `{{ article.author.initial }}`). The now-unused `Author.initial()` method is
+  deleted from `apps/blog/models.py` (grep confirmed no other caller; admin
+  uses `avatar` image only).
+  **Service-card artwork:** the graphic-design poster's `svc-poster-type` «پ»
+  became a glowing planet sphere (radial-gradient span) and the logo-design
+  diamond's `<text>پ</text>` became a dark planet + ring inside the gold
+  diamond — the mockups stay bespoke, just without a letter.
+  **Home about panel:** the `about-orb`'s center «پ» was removed; the orb is
+  already a planet (gradient sphere + tilted ring + three orbiting dots), so
+  the panel reads as pure solar-system scenery now.
+  **Checked, deliberately NOT changed:** `ClientMarqueeItem.mark` plates
+  (`_trusted.html` + the about clients wall) render short admin-supplied words
+  («رفاه»، «پپسی»، «تجارت» …), never a single letter, so the task's "only if
+  they render a single letter" clause does not apply; the pixel-art
+  `pixel_wordmark` on the login pages spells the full name «پیکسوریا» (not an
+  initial) and is T57's scope; `TeamMember` renders nowhere (D33) so its
+  avatar fallback is unreachable; no `|first` filter exists anywhere in
+  `templates/`. `_article_card.html`'s cover fallback is a plain gradient with
+  no letter.
+  **Icon sprite:** `user-round` was not in the public sprite, so
+  `python manage.py sync_icons` was re-run (91 → 92 symbols; the command scans
+  `{% icon %}` template usages too, which is how it picked the name up) and
+  Tailwind was rebuilt for the `.brand-emblem` rules.
+  **Verified** with `scripts/_t56_check.py`: `/`, `/about/`, `/contact/`,
+  `/portfolio/`, `/blog/`, `/services/`, `/services/web-design/` all 200; zero
+  `logo-mark`, zero standalone letter spans, zero `.initial` /
+  `truncatechars:1` in any rendered page; the emblem + orbit art + `user-round`
+  render where expected; no `[[ ]]` / `{% comment %}` / `{{ }}` leaks; the
+  uploaded-logo branch of the new partial renders the `<img>` and drops both
+  the emblem and the wordmark (tested by saving a throwaway `SiteSettings.logo`
+  and removing it again); `manage.py check` + `makemigrations --check` clean;
+  `scripts/render_check.py` clean.
+  **GOTCHA (caught hard way):** `with transaction.atomic():` COMMITS when the
+  block exits without an exception — it is not a sandbox. The first run of the
+  check script deleted the live `HomeSection` / `Portfolio` / `Article` /
+  `Service` / `ServiceTestimonial` rows. The DB is tracked in git
+  (`database/db.sqlite3`), so `git checkout -- database/db.sqlite3` restored it
+  byte-exact (12 sections / 4 services / 2 projects / 4 articles / 3
+  testimonials — verified against HEAD before restoring). Any future "empty
+  DB" test must call `transaction.set_rollback(True)` inside the block — the
+  script now does.
+
 ## Tasks
 
 
@@ -1895,7 +1964,7 @@ scope for this migration and can pick these templates up later.)_
   `apps/core/templatetags/icon_tags.py`, `static/admin/js/icon_picker.js`,
   `apps/core/management/commands/sync_icons.py`, `scripts/build_icon_sprite.js` |
   commit: "feat(admin): icon picker widget and sync_icons command"
-- [ ] T56 — Remove letter-as-logo placeholders: in Persian it is not customary
+- [x] T56 — Remove letter-as-logo placeholders: in Persian it is not customary
   to turn a name's first letter into a logo, and the «پ» tile looks bad. Grep
   all templates/CSS/JS for such placeholders (the about story fallback tile «پ»,
   header/footer brand mark, avatar initials in testimonials/team/author,
@@ -1905,10 +1974,14 @@ scope for this migration and can pick these templates up later.)_
   neutral Lucide `user-round` icon in a gold-ringed orb; client plates show the
   full brand name (or admin-supplied short text); the story image fallback = a
   decorative orbit/planet illustration. List every replaced spot in this file |
-  files: `templates/core/about.html`, `templates/partials/_header.html`,
-  `templates/partials/_footer.html`,
-  `templates/components/_testimonial_card.html`, `templates/blog/detail.html`, …
-  | commit: "feat(brand): replace letter placeholders with emblems"
+  files: `templates/partials/_brand_mark.html` (new),
+  `templates/components/_orbit_art.html` (new), `templates/partials/_header.html`,
+  `templates/partials/_footer.html`, `templates/base.html`,
+  `templates/core/about.html`, `templates/home/sections/_about.html`,
+  `templates/home/sections/_services.html`,
+  `templates/components/_testimonial_card.html`, `templates/blog/detail.html`,
+  `templates/blog/list.html`, `static/src/input.css`, `apps/blog/models.py` |
+  commit: "feat(brand): replace letter placeholders with emblems"
 - [ ] T57 — LOGO + FAVICON option set: create 5–6 distinct SPACE /
   SOLAR-SYSTEM-themed logo concepts for «پیکسوریا / Pixoria» in `static/brand/`
   (e.g. `static/brand/option-1-orbit/`, `option-2-eclipse/`,
@@ -2113,12 +2186,19 @@ contact; descriptive alt texts; meta title/description per service.
 
 ## Current status
 
-T01–T55 done (T42 superseded by Phase 12; T47b was the template-comment leak
-sweep — D50). **Next: T56** — remove letter-as-logo placeholders: grep every
-template/CSS/JS for the «پ» tile, header/footer brand-mark fallbacks, avatar
-initials and any `|first`/initial fallbacks, and replace them with the T57
-planet emblem (brand mark) / a neutral `user-round` orb (people) / the full
-brand name (client plates) / a decorative orbit illustration (story image
-fallback). Every replaced spot must be listed in this file.
+T01–T56 done (T42 superseded by Phase 12; T47b was the template-comment leak
+sweep — D50). **Next: T57** — LOGO + FAVICON option set: create 5–6 distinct
+space/solar-system-themed logo concepts for «پیکسوریا / Pixoria» in
+`static/brand/` (`option-1-orbit/`, `option-2-eclipse/`, `option-3-comet/`, …),
+each with `logo-full.svg` (mark + Persian wordmark as PATHS), `logo-mark.svg`,
+`logo-mono-light.svg`, `logo-mono-dark.svg`, `favicon.svg`, the PNG sizes, an
+`index.html` preview sheet and `scripts/build_brand.js` (opentype.js + sharp,
+devDependencies). The planet emblem the concepts build on is already live as
+`templates/partials/_brand_mark.html` (D59) — option 1 can ship that mark.
+Palette: gold `#c9a15a` / `#e8c47a` / `#8f6b2c`, ink `#0a0a0c`, cream `#f5f3ee`,
+royal `#2e63ff`. Note: `static/brand/` currently still holds the v1 pixel-art
+assets (`favicon.svg`, `mark-compact.svg`, `wordmark-*.svg`, the PNGs,
+`_preview.png`) in the old lime palette — T57 replaces them, and the
+`pixel_wordmark` tag + the login pages keep working until then.
 
 

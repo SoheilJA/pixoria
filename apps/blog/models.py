@@ -48,9 +48,6 @@ class Author(models.Model):
     def __str__(self):
         return self.name
 
-    def initial(self):
-        return self.name[:1] if self.name else "؟"
-
 
 class Article(models.Model):
     STATUS_CHOICES = [

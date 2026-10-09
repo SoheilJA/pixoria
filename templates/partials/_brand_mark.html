@@ -1,0 +1,15 @@
+{% comment %}نشان برند — لوگوی بارگذاری‌شده از مدیریت، وگرنه emblem سیاره‌ای
+(سیاره + حلقه + ماه) با currentColor. در فارسی رایج نیست حرفِ اول نام را
+به‌عنوان لوگو نشان داد، پس در fallback هیچ حرفی نیست. این همان emblemی
+است که مجموعهٔ گزینه‌های لوگوی T57 بر اساس آن ساخته می‌شود.
+class: str optional — فقط روی emblem اعمال می‌شود (مثل "h-9 w-9")؛
+تصویرِ آپلودشده همیشه با ارتفاع ثابت و عرضِ خود تصویر نشان داده می‌شود.{% endcomment %}
+{% if settings.logo %}
+  <img src="{{ settings.logo.url }}" alt="{{ settings.site_name }}" class="h-9 w-auto max-w-[10rem]" loading="lazy" />
+{% else %}
+  <svg class="brand-emblem {{ class|default:'h-9 w-9' }}" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+    <ellipse cx="18" cy="18" rx="15" ry="6" transform="rotate(-20 18 18)" stroke="currentColor" stroke-width="1.7" opacity="0.5" />
+    <circle cx="18" cy="18" r="7.4" fill="currentColor" />
+    <circle cx="32" cy="12.8" r="1.8" fill="currentColor" opacity="0.72" />
+  </svg>
+{% endif %}

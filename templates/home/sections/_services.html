@@ -149,7 +149,7 @@
                   <span class="svc-poster-disc svc-poster-disc-2 absolute left-14 top-14 h-24 w-24 rounded-full border border-royal/30"></span>
                   <span class="svc-poster-bar absolute bottom-16 right-6 h-2.5 w-24 rounded-full bg-gradient-to-l from-royal/70 to-transparent"></span>
                   <span class="svc-poster-bar absolute bottom-10 right-6 h-2.5 w-16 rounded-full bg-gold/50"></span>
-                  <span class="svc-poster-type absolute bottom-6 left-6 font-latin text-6xl font-bold text-gold/15">پ</span>
+                  <span class="absolute bottom-6 left-6 h-12 w-12 rounded-full" style="background: radial-gradient(circle at 34% 30%, rgba(244,236,217,0.95), rgba(232,196,122,0.6) 58%, rgba(143,107,44,0.35)); box-shadow: 0 0 26px -6px rgba(201,161,90,0.75);" aria-hidden="true"></span>
                   <div class="absolute left-6 top-6 flex gap-1.5" dir="ltr">
                     <span class="h-4 w-4 rounded-full bg-gold-light/90"></span>
                     <span class="h-4 w-4 rounded-full bg-royal/90"></span>
@@ -195,7 +195,8 @@
                       <circle class="svc-logo-ring-2" cx="110" cy="110" r="76" fill="none" stroke="url(#gld-{{ forloop.counter }})" stroke-width="1" stroke-dasharray="1 8" opacity=".55" />
                       <path class="svc-logo-diamond" d="M110 58 L162 110 L110 162 L58 110 Z" fill="none" stroke="url(#gld-{{ forloop.counter }})" stroke-width="2.5" />
                       <path class="svc-logo-diamond-inner" d="M110 84 L136 110 L110 136 L84 110 Z" fill="url(#gld-{{ forloop.counter }})" opacity=".92" />
-                      <text x="110" y="120" text-anchor="middle" font-size="26" font-weight="700" fill="#0d0d0f">پ</text>
+                      <ellipse cx="110" cy="110" rx="22" ry="7.5" transform="rotate(-20 110 110)" fill="none" stroke="#0d0d0f" stroke-width="2" opacity="0.5" />
+                      <circle cx="110" cy="110" r="12.5" fill="#0d0d0f" />
                     </svg>
                     {% if service.badge %}
                       <span data-float="8" class="glass absolute -top-3 right-4 rounded-full px-3 py-1.5 text-[11px] text-gold-light">{{ service.badge }}</span>

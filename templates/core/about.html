@@ -163,7 +163,7 @@
             <div
               class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
             >
-              <span class="logo-mark" aria-hidden="true"><span>پ</span></span>
+              {% include "partials/_brand_mark.html" with class="h-12 w-12" %}
             </div>
             {% for service in services %}
               <div
@@ -258,17 +258,14 @@
                 style="border-radius: 5rem 1.25rem 5rem 1.25rem; border: 1px solid rgba(201,161,90,0.5);"
               />
             {% else %}
-              {# تصویری بارگذاری نشده — یک تایلِ تزئینی به‌جای جای خالی #}
+              {# تصویری بارگذاری نشده — یک مصورکِ مدار/سیاره به‌جای جای خالی #}
               <div
                 class="grid aspect-[4/3] w-full place-items-center overflow-hidden bg-cream2"
                 style="border-radius: 5rem 1.25rem 5rem 1.25rem; border: 1px solid rgba(201,161,90,0.35);"
                 aria-hidden="true"
               >
                 <span class="grid-bg absolute inset-0 opacity-50"></span>
-                <span
-                  class="relative text-[7rem] font-extrabold text-goldgrad-dark"
-                  >پ</span
-                >
+                {% include "components/_orbit_art.html" with class="relative h-44 w-44 text-gold-dark" %}
               </div>
             {% endif %}
             {% if story.image_caption %}

@@ -239,7 +239,7 @@
                   {% if article.author.avatar %}
                     <img src="{{ article.author.avatar.url }}" alt="{{ article.author.name }}" loading="lazy" class="h-full w-full object-cover" />
                   {% else %}
-                    <span class="font-bold text-gold-dark">{{ article.author.initial }}</span>
+                    <span class="grid place-items-center text-gold-dark" aria-hidden="true">{% icon "user-round" class="h-6 w-6" %}</span>
                   {% endif %}
                 </div>
                 <div>

@@ -9,10 +9,8 @@
   >
     {# لوگو #}
     <a href="{% url 'home:home' %}" class="flex items-center gap-3" aria-label="{{ settings.site_name }}">
-      {% if settings.logo %}
-        <img src="{{ settings.logo.url }}" alt="{{ settings.site_name }}" class="h-8 w-auto max-w-[10rem]" />
-      {% else %}
-        <span class="logo-mark" aria-hidden="true"><span>پ</span></span>
+      {% include "partials/_brand_mark.html" with class="h-9 w-9" %}
+      {% if not settings.logo %}
         <span class="flex flex-col leading-none">
           <span class="text-xl font-extrabold tracking-tight">{{ settings.site_name }}</span>
           <span class="font-latin text-[9px] tracking-[.4em] text-gold/90">PIXORIA</span>
@@ -118,11 +116,7 @@
   <div class="menu-panel glass absolute inset-x-4 top-6 rounded-[2.25rem] p-7">
     <div class="flex items-center justify-between">
       <span class="flex items-center gap-3">
-        {% if settings.logo %}
-          <img src="{{ settings.logo.url }}" alt="{{ settings.site_name }}" class="h-7 w-auto" />
-        {% else %}
-          <span class="logo-mark" aria-hidden="true"><span>پ</span></span>
-        {% endif %}
+        {% include "partials/_brand_mark.html" with class="h-8 w-8" %}
         <span class="text-lg font-extrabold">{{ settings.site_name }}</span>
       </span>
       <button
