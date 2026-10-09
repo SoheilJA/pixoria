@@ -26,6 +26,7 @@
           "name": "{{ settings.site_name }}",
           "alternateName": "PIXORIA",
           "url": "{{ request.build_absolute_uri }}",
+          {% include "partials/_json_logo.html" %}
           {% if settings.email %}"email": "{{ settings.email }}",{% endif %}
           {% include "partials/_json_telephone.html" %}
           {% if settings.established_year %}"foundingDate": "{{ settings.established_year }}",{% endif %}

@@ -1,0 +1,24 @@
+{% comment %}قفل برند (نشان + واژه‌مارک) — منبع واحدِ هدر، فوتر و منوی
+موبایل. سه حالت دارد:
+۱) لوگوی آپلودشده در SiteSettings (اولویت — فایل دلخواهِ مدیریت)،
+۲) گزینهٔ برندِ انتخاب‌شده (logo-full.svg: نشان + واژه‌مارکِ فارسیِ
+   «پیکسوریا» به‌صورت مسیرِ واقعی SVG، بدون وابستگی به فونت)،
+۳) emblem سیاره‌ای + واژه‌مارکِ CSS (فقط وقتی هیچ گزینه‌ای ساخته نشده).
+
+Props:
+  mark_class  str  کلاسِ ابعادِ نشان در حالتِ سوم (پیش‌فرض "h-9 w-9" —
+                  این SVG ویژگی width/height ندارد و بدون عرضِ صریح ۳۰۰px می‌شود)
+  img_class   str  کلاسِ ارتفاعِ تصاویرِ حالت‌های ۱ و ۲ (پیش‌فرض "h-9")
+  word_class  str  اندازهٔ واژه‌مارکِ CSS در حالتِ سوم (پیش‌فرض "text-xl")
+{% endcomment %}
+{% if settings.logo %}
+  <img src="{{ settings.logo.url }}" alt="{{ settings.site_name }}" class="{{ img_class|default:'h-9' }} w-auto max-w-[12rem]" loading="lazy" />
+{% elif brand.logo_full %}
+  <img src="{{ brand.logo_full }}" alt="{{ settings.site_name }}" class="{{ img_class|default:'h-9' }} w-auto" loading="lazy" />
+{% else %}
+  {% include "partials/_brand_mark.html" with class=mark_class|default:'h-9 w-9' %}
+  <span class="flex flex-col leading-none">
+    <span class="{{ word_class|default:'text-xl' }} font-extrabold tracking-tight">{{ settings.site_name }}</span>
+    <span class="font-latin text-[9px] tracking-[.4em] text-gold/90">PIXORIA</span>
+  </span>
+{% endif %}

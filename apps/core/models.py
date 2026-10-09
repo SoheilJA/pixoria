@@ -1,5 +1,6 @@
 from django.db import models
 
+from .brand_utils import brand_choices, default_brand_option
 from .icon_utils import validate_icon_name
 
 # راهنمای مشترک فیلد آیکون — در چندین مدل تکرار می‌شود تا متن کمکی یکسانی داشته
@@ -163,6 +164,28 @@ class SiteSettings(models.Model):
         help_text=(
             "آیکون ۱۸۰×۱۸۰ پیکسل برای Home Screen در iOS. "
             "در صورت خالی گذاشتن، آیکون پیش‌فرض استفاده می‌شود."
+        ),
+    )
+    logo_choice = models.CharField(
+        max_length=64,
+        blank=True,
+        default=default_brand_option,
+        choices=brand_choices,
+        verbose_name="مجموعهٔ لوگوی پیش‌فرض",
+        help_text=(
+            "یکی از مفاهیم آمادهٔ لوگوی فضایی (در static/brand/). "
+            "این گزینه فقط تا زمانی که فایل لوگوی دلخواه آپلود نشده استفاده می‌شود. "
+            "خالی یا نامعتبر = گزینهٔ اول."
+        ),
+    )
+    favicon_choice = models.CharField(
+        max_length=64,
+        blank=True,
+        default=default_brand_option,
+        verbose_name="مجموعهٔ فاوآیکون پیش‌فرض",
+        help_text=(
+            "مجموعهٔ فاوآیکون و آیکون‌های PWA. اگر خالی باشد، از همان گزینهٔ لوگو "
+            "استفاده می‌شود. فاوآیکون آپلودشده اولویت دارد."
         ),
     )
 

@@ -1,8 +1,10 @@
 import math
 
 from django.shortcuts import render, get_object_or_404
+from .brand_utils import resolve_brand
 from .context_utils import crumbs
 from .models import (
+    SiteSettings,
     AboutPageHero,
     AboutStory,
     AboutJourneySection,
@@ -113,3 +115,23 @@ def proposal(request, slug):
         "optional_services": proposal.services.filter(service_type="optional"),
     }
     return render(request, "core/proposal.html", context)
+
+
+def manifest(request):
+    """site.webmanifest — آیکون‌های PWA از برندِ انتخاب‌شده می‌آیند (T58).
+
+    مانیفست باید از فاوآیکونِ گزینهٔ منتخب (یا فایل آپلودشده) بخواند، پس
+    نمی‌تواند استاتیک باشد. مقادیرها با فیلتر json دورریخته می‌شوند تا یک
+    کوتیشن داخل نام سایت کل JSON را نشکنند.
+    """
+    try:
+        site_settings = SiteSettings.objects.first()
+    except SiteSettings.DoesNotExist:
+        site_settings = None
+    brand = resolve_brand(site_settings, request=request)
+    return render(
+        request,
+        "manifest.webmanifest",
+        {"brand": brand},
+        content_type="application/manifest+json",
+    )

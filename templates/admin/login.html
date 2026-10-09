@@ -9,7 +9,12 @@
     <meta name="robots" content="noindex" />
 
     {# استایل‌های مشترک (بدون هدر و فوتر سایت) #}
-    <link rel="icon" href="{% if settings.favicon %}{{ settings.favicon.url }}{% else %}{% static 'brand/favicon.ico' %}{% endif %}" sizes="any" />
+    {% if settings.favicon %}
+      <link rel="icon" href="{{ settings.favicon.url }}" sizes="any" />
+    {% else %}
+      <link rel="icon" type="image/svg+xml" href="{{ brand.favicon_svg }}" />
+      <link rel="icon" type="image/png" sizes="32x32" href="{{ brand.favicon_32 }}" />
+    {% endif %}
     <link rel="stylesheet" href="{% static 'fonts/font_urls.css' %}" />
     <link rel="stylesheet" href="{% static 'css/tailwind.css' %}" />
     <style>

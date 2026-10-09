@@ -1,3 +1,4 @@
+from .brand_utils import resolve_brand
 from .models import SiteSettings, SocialLink, AboutStat, FooterLinkGroup
 from apps.home.models import CTASection, HeaderSettings, NavItem
 from apps.services.models import Service
@@ -22,6 +23,8 @@ def site_context(request):
 
     return {
         "settings": settings,
+        # برند: لوگوی آپلودشده یا گزینهٔ پیش‌فرض + فاوآیکون و آیکون‌های PWA (T58).
+        "brand": resolve_brand(settings, request=request),
         "socials": socials,
         "cta": cta,
         "services_footer": services_footer,

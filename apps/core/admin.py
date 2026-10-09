@@ -1,10 +1,26 @@
 from django.contrib import admin
+from django import forms
+
+from .brand_utils import BrandChoiceWidget
 from .icon_utils import IconPickerForm, IconPreviewMixin
 from .models import *
 
 
+class SiteSettingsForm(forms.ModelForm):
+    """فرم تنظیمات سایت — انتخاب برند با ویجتِ پیش‌نمایش‌دار (T58)."""
+
+    class Meta:
+        model = SiteSettings
+        fields = "__all__"
+        widgets = {
+            "logo_choice": BrandChoiceWidget,
+            "favicon_choice": BrandChoiceWidget,
+        }
+
+
 @admin.register(SiteSettings)
 class SiteSettingsAdmin(admin.ModelAdmin):
+    form = SiteSettingsForm
     list_display = ["site_name", "email", "phone", "status"]
     fieldsets = [
         (
@@ -16,10 +32,16 @@ class SiteSettingsAdmin(admin.ModelAdmin):
                     "established_year",
                     "status",
                     "logo",
+                    "logo_choice",
                     "favicon",
+                    "favicon_choice",
                     "apple_touch_icon",
                     "og_image",
-                ]
+                ],
+                "description": (
+                    "فایل‌های آپلودشده روی گزینه‌های پیش‌فرض اولویت دارند. "
+                    "گزینهٔ پیش‌فرض فقط تا زمانی که فایل آپلود نشده استفاده می‌شود."
+                ),
             },
         ),
         (

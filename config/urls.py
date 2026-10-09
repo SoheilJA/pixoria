@@ -36,6 +36,7 @@ urlpatterns = [
     ),
     path("logout/", auth_views.LogoutView.as_view(), name="logout"),
     path("proposal/<slug:slug>/", core_views.proposal, name="proposal"),
+    path("manifest.webmanifest", core_views.manifest, name="manifest"),
     path("tinymce/", include("tinymce.urls")),
     path("blog/", include("apps.blog.urls")),
     path(

@@ -168,6 +168,90 @@ scope for this migration and can pick these templates up later.)_
   body, `<head>`…`</head>` intact, `css/tailwind.css` linked; repo-wide grep for
   a dangling `{#` now returns zero hits; `scripts/render_check.py` clean.
 
+- **D62 — Brand choice wiring (T58).** The six T57 concepts are now selectable
+  from the admin and drive every branded surface of the site.
+  **Discovery, not enumeration:** `apps/core/brand_utils.py` scans
+  `static/brand/option-*/` (via `STATICFILES_DIRS`, sorted, a folder counting
+  only with `logo-mark.svg` + `favicon.svg` + `icon-512.png`), so a future
+  `option-7-*` is picked up with zero code change. `OPTION_NAMES` holds the
+  Persian concept labels keyed by folder id, falling back to the slug tail.
+  **Two new `SiteSettings` fields:** `logo_choice` and `favicon_choice`
+  (CharField, `default=default_brand_option` — a *callable*, so a fresh install
+  and the migration's backfill both get option 1 without a RunPython). They are
+  deliberately NOT on `favicon_choice`'s list of what an upload overrides.
+  **Resolution priority** (`resolve_brand(settings, request=…)`): uploaded file
+  wins; else the chosen preset; a missing/invalid choice (deleted folder, typo)
+  falls back to the FIRST option — a stale value never reaches the rendered
+  `id` or URLs (the first version returned the raw stale string as `id`; caught
+  by the check script). An EMPTY `favicon_choice` follows the `logo_choice`
+  (not the default), so an admin who only swaps the logo gets matching icons;
+  a set `favicon_choice` is independent. The function accepts `settings=None`
+  (empty DB) and never raises.
+  **Wired:** `base.html` — `<link rel="icon">` (uploaded, else the preset's
+  `favicon.svg` + `favicon-32.png`), `apple-touch-icon`, and the manifest;
+  a new `og:image` (+ `og:image:alt`) meta falling back to the preset's
+  `icon-512.png` when `SiteSettings.og_image` is empty (absolute URL — OG
+  requires one, built with `request.build_absolute_uri`). The **manifest is
+  dynamic now**: `config/urls.py` gained root-level `manifest.webmanifest` →
+  `core_views.manifest` (like `proposal`, root-level per the project
+  convention), rendering `templates/manifest.webmanifest` as
+  `application/manifest+json` with icons from the brand dict, every string
+  through the `json` filter (the library is `json_tags`, NOT `json` — see the
+  gotcha below). The old static `static/brand/site.webmanifest` is now
+  unreferenced (T43 deletes it).
+  **The lockup:** new `templates/partials/_brand_lockup.html` is the single
+  renderer of header + footer + mobile-menu brand: uploaded logo → chosen
+  `logo-full.svg` (mark + Persian wordmark as real SVG paths, so no font loads
+  at runtime) → the D59 inline planet emblem + CSS wordmark when NO option is
+  built at all. Props `mark_class` / `img_class` / `word_class` because the
+  three callers size the mark differently (the emblem SVG has no width/height
+  attributes, so `w-9`-style explicit width is mandatory — `h-9` alone makes it
+  the 300px replaced-element default). `partials/_brand_mark.html` (mark only —
+  the preloader's `pl-mark`) gained the same three branches.
+  **JSON-LD:** new `templates/partials/_json_logo.html` emits
+  `"logo": <absolute icon-512>,` and is included by the Organization nodes of
+  `home/index.html`, `core/about.html`, `contact/contact.html` — always placed
+  BEFORE the last key so the trailing comma can never break the JSON.
+  **Admin:** `SiteSettingsForm` (new) swaps both fields to
+  `BrandChoiceWidget`, a `RadioSelect` rendering
+  `core/widgets/brand_choice.html` — each option shows its mark on an ink chip
+  plus the full lockup, the selected one gets a gold ring, and the CSS lives in
+  the new `static/admin/css/brand_choice.css` loaded via the widget's `Media`.
+  **THREE gotchas, all caught by rendering:** (a) `{% load json %}` is wrong —
+  the tag library is registered under the FILE name `json_tags` while the FILTER
+  is `json`; (b) `{% include %}` needs the literal `with` keyword
+  (`{% include "x" with foo="1" %}`), and a bare prop raises
+  `TemplateSyntaxError: Unknown argument for 'include' tag`; (c) the form
+  renderer (`get_default_renderer()`) uses its OWN engine — `DIRS` is ONLY
+  `django/forms/templates` plus `APP_DIRS` — so a widget template in the root
+  `templates/` dir is invisible to it; widget templates must live at
+  `apps/<app>/templates/…` (moved to `apps/core/templates/core/widgets/`).
+  Also: `ChoiceWidget.get_context` puts ONLY `optgroups` in the context — there
+  is no `widget.options` key, so the template must iterate
+  `{% for group, options, index in widget.optgroups %}`.
+  **FileField GOTCHA:** `logo`/`favicon`/`apple_touch_icon` are `blank=True`
+  but NOT `null=True`, so clearing one needs `field = ""`, not `None` —
+  `update(field=None)` raises `IntegrityError: NOT NULL constraint`.
+  **Rollback GOTCHA (scripting):** `transaction.set_rollback(True)` poisons
+  this Django/SQLite connection — EVERY following query raises
+  `TransactionManagementError` (even with no prior error). The rollback pattern
+  that works here is a sentinel exception raised on the way OUT of the
+  `transaction.atomic()` block (wrapped in `rollback_block()` in the check
+  script). And remember a rollback restores the DB but NOT files written by
+  `save()` to `MEDIA_ROOT` — delete those explicitly.
+  **Verified** with `scripts/_t58_check.py` (78 checks): discovery, every
+  priority permutation (explicit/empty/stale choices, uploaded logo, uploaded
+  favicon), empty-DB rendering of home/about/contact, every public page 200
+  with zero v1 favicon references (`brand/favicon.ico`, `favicon-48.png`,
+  `site.webmanifest`) and no empty `href=""`, the manifest parsing as JSON with
+  3 icons pointing at the chosen option, JSON-LD parsing on all three pages
+  with a `logo` key, the admin change page rendering the radios + previews +
+  CSS, and the staticfiles finder. A real admin POST switches the choice and
+  the home page immediately renders the new lockup. `manage.py check` +
+  `makemigrations --check` clean, `collectstatic --dry-run` clean, Tailwind
+  rebuilt (`max-w-[12rem]` is new).
+
+
 - **D61 — Brand option set (T57).** Six space-themed logo concepts live in
   `static/brand/option-N-*/` (orbit, eclipse, comet, constellation, rocket,
   crescent), each a self-contained folder with exactly the files the task
@@ -2078,7 +2162,7 @@ scope for this migration and can pick these templates up later.)_
   must read well at 16–32 px (simple silhouettes) |
   files: `static/brand/**`, `scripts/build_brand.js` |
   commit: "feat(brand): space logo concept set"
-- [ ] T58 — Brand selection wiring: add to `SiteSettings` a `logo_choice` and a
+- [x] T58 — Brand selection wiring: add to `SiteSettings` a `logo_choice` and a
   `favicon_choice` (choices auto-discovered from the folders in
   `static/brand/`, shown in the admin with a small image preview next to each
   option and Persian help_text) while keeping the existing uploaded `logo` /
@@ -2265,18 +2349,27 @@ contact; descriptive alt texts; meta title/description per service.
 
 ## Current status
 
-T01–T57 done (T42 superseded by Phase 12; T47b/T47c were the template-comment
-leak sweeps — D50/D60). **Next: T58** — Brand selection wiring: add
-`logo_choice` / `favicon_choice` to `SiteSettings` (choices auto-discovered
-from the `static/brand/option-*/` folders T57 just created, shown in the admin
-with a small image preview per option and Persian help_text) while keeping the
-uploaded `logo` / `favicon` / `apple_touch_icon` fields as OVERRIDES that win
-over a preset. Wire a context-processor helper (a `brand` dict with resolved
-URLs) into `base.html` (`<link rel="icon">` svg + png fallbacks,
-apple-touch-icon, `site.webmanifest` icons, `theme-color`), the header, the
-footer, the JSON-LD logo and the OG image fallback. Default choice = option 1
-so nothing breaks on an empty DB; never overwrite existing uploads. Migration +
-admin + a `collectstatic --dry-run` check.
+T01–T58 done (T42 superseded by Phase 12; T47b/T47c were the template-comment
+leak sweeps — D50/D60). **Next: T59** — About hero visual → animated SOLAR
+SYSTEM: replace the CSS "orbit pills" artwork on the left of the about hero
+with a real solar-system composition — glowing gold sun in the centre,
+concentric elliptical orbit rings, one planet per `Service` (DB, max ~6; each
+with its own size/speed/accent, the service icon + a counter-rotated title
+chip), tiny moons/asteroid dots. Pure CSS/SVG, GPU-friendly, paused off-screen
+via IntersectionObserver on `animation-play-state`, static under
+`prefers-reduced-motion`, degrading with 1–6 services, hover/focus highlights
+the orbit and links to the service page, responsive without overflow.
+
+T58 (D62) is live: `SiteSettings.logo_choice` / `favicon_choice` (auto-
+discovered from the folders, admin radio with per-option mark + full-logo
+previews) drive the icon links, the dynamic `/manifest.webmanifest`, the
+header/footer/preloader lockup, the JSON-LD `logo` and the `og:image`
+fallback — an uploaded file always wins, a stale choice falls back to option
+1, and an empty DB still renders. The v1 root assets of `static/brand/`
+(`favicon.ico`, `favicon-48.png`, `mark-compact.svg`, `wordmark-*.svg`,
+`_preview.png`, `site.webmanifest`) are now UNREFERENCED and are T43's to
+delete; `pixel_wordmark` + the two login pages still read them, so keep them
+until T43 greps.
 
 The 6 concepts from T57 are in `static/brand/option-{1..6}-{orbit,eclipse,comet,
 constellation,rocket,crescent}/`, built idempotently by
