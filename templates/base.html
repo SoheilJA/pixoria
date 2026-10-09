@@ -5,9 +5,9 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <meta name="theme-color" content="#0a0a0c" />
-    {# پیش‌لودر: فقط یک بار در هر session — پرچم قبل از رنگ‌پاشی اولین فریم
-       ست می‌شود تا هیچ فلشی دیده نشود. بدون جاوااسکریپت کلاس اضافه نمی‌شود
-       و پیش‌لودر هرگز نمایش داده نمی‌شود (همان <noscript>). #}
+    {% comment %}پیش‌لودر: فقط یک بار در هر session — پرچم قبل از رنگ‌پاشی اولین فریم
+    ست می‌شود تا هیچ فلشی دیده نشود. بدون جاوااسکریپت کلاس اضافه نمی‌شود
+    و پیش‌لودر هرگز نمایش داده نمی‌شود (همان <noscript>).{% endcomment %}
     <script>
       (function () {
         try {
@@ -48,8 +48,8 @@
     {% endblock %}
   </head>
   <body class="overflow-x-hidden bg-ink font-sans text-cream antialiased">
-    {# پیش‌لودرِ اولین بازدید — فضایی، کاملاً CSS؛ خودش تا ۱.۲ ثانیه دیگر
-       محو می‌شود (pixoria.js زودتر، وقتی صفحه آماده شد، آن را برمی‌دارد) #}
+    {% comment %}پیش‌لودرِ اولین بازدید — فضایی، کاملاً CSS؛ خودش تا ۱.۲ ثانیه دیگر
+    محو می‌شود (pixoria.js زودتر، وقتی صفحه آماده شد، آن را برمی‌دارد){% endcomment %}
     <div id="preloader" class="preloader" role="presentation">
       <div class="pl-scene">
         <span class="pl-orbit" aria-hidden="true"><span class="pl-planet"></span></span>
@@ -73,9 +73,9 @@
       aria-hidden="true"
     ></div>
 
-    {# لودر انتقال بین صفحات — نوار طلایی نازک بالا + سیارهٔ مداری در گوشه
-       (فقط اگر ناوبری بیش از ~۴۰۰ms طول بکشد). هرگز صفحه را نمی‌پوشاند و
-       کلیک‌ها را مسدود نمی‌کند — pixoria.js آن را راه می‌اندازد (T54) #}
+    {% comment %}لودر انتقال بین صفحات — نوار طلایی نازک بالا + سیارهٔ مداری در گوشه
+    (فقط اگر ناوبری بیش از ~۴۰۰ms طول بکشد). هرگز صفحه را نمی‌پوشاند و
+    کلیک‌ها را مسدود نمی‌کند — pixoria.js آن را راه می‌اندازد (T54){% endcomment %}
     <div id="nav-progress" class="nav-progress" aria-hidden="true">
       <div class="nav-progress-bar"></div>
     </div>
