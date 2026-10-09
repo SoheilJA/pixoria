@@ -493,6 +493,20 @@ function init() {
     });
   }
 
+  /* ---------------- pause decorative animations off-screen ----------
+     المان‌های تزئینیِ متحرک (مثل سامانهٔ خورشیدیِ هیرویِ درباره ما) با
+     data-pause نشانه‌گذاری می‌شوند؛ وقتی از دید خارج شدند انیمیشنشان متوقف
+     می‌شود تا CPU/GPU بیکار بماند (animation-play-state در input.css). */
+  document.querySelectorAll("[data-pause]").forEach((el) => {
+    if (!("IntersectionObserver" in window)) return;
+    new IntersectionObserver(
+      (entries) => {
+        el.classList.toggle("is-paused", !entries[0].isIntersecting);
+      },
+      { rootMargin: "120px" },
+    ).observe(el);
+  });
+
   /* ---------------- hero mouse parallax ---------------- */
   // هر سکشن هیرو (خانه یا درباره ما) که data-mouse-parallax داشته باشد.
   if (!TOUCH && !REDUCED) {

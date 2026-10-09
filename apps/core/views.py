@@ -92,8 +92,8 @@ def about(request):
         "clients_section": AboutClientsSection.objects.first(),
         # دیوار برندها همان برندهای بخش «اعتماد» صفحه اصلی است — یک منبع داده.
         "clients": ClientMarqueeItem.objects.all(),
-        # کپسول‌های مدارِ هیرو از خدمات دیتابیس می‌آیند (تا ۴ مورد).
-        "services": Service.objects.all()[:4],
+        # سیاره‌های سامانهٔ خورشیدیِ هیرو از خدمات دیتابیس می‌آیند (تا ۶ مورد).
+        "services": Service.objects.all()[:6],
         "team": TeamMember.objects.all(),
         "values": AboutValue.objects.all(),
         "stats": AboutStat.objects.all(),

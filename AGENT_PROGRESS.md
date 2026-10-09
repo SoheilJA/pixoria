@@ -2177,7 +2177,7 @@ scope for this migration and can pick these templates up later.)_
   `apps/core/context_processors.py`, `templates/base.html`,
   `templates/partials/_header.html`, `templates/partials/_footer.html` |
   commit: "feat(core): brand choice wiring in site settings"
-- [ ] T59 — About hero visual → animated SOLAR SYSTEM: replace the CSS "orbit
+- [x] T59 — About hero visual → animated SOLAR SYSTEM: replace the CSS "orbit
   pills" artwork on the left of the about hero with a real solar-system
   composition — a glowing gold sun/star in the centre, concentric elliptical
   orbit rings, and one planet per `Service` (from the DB, max ~6; each planet
@@ -2349,16 +2349,29 @@ contact; descriptive alt texts; meta title/description per service.
 
 ## Current status
 
-T01–T58 done (T42 superseded by Phase 12; T47b/T47c were the template-comment
-leak sweeps — D50/D60). **Next: T59** — About hero visual → animated SOLAR
-SYSTEM: replace the CSS "orbit pills" artwork on the left of the about hero
-with a real solar-system composition — glowing gold sun in the centre,
-concentric elliptical orbit rings, one planet per `Service` (DB, max ~6; each
-with its own size/speed/accent, the service icon + a counter-rotated title
-chip), tiny moons/asteroid dots. Pure CSS/SVG, GPU-friendly, paused off-screen
-via IntersectionObserver on `animation-play-state`, static under
-`prefers-reduced-motion`, degrading with 1–6 services, hover/focus highlights
-the orbit and links to the service page, responsive without overflow.
+T01–T59 done (T42 superseded by Phase 12; T47b/T47c were the template-comment
+leak sweeps — D50/D60). **Next: T60** — space identity pass: define
+`.orbit-ring`, `.orbit-dot`, `.planet-orb` (accent variants) and `.star-field`
+in `input.css`, then apply them sparingly to the dark section backgrounds and
+inner-page heroes so the whole site reads as one solar system.
+
+T59 (D63) is live: the about hero's right column is now a real solar system —
+glowing gold sun (brand mark at its core) + one tilted-ellipse orbit per
+`Service` (max 6, DB-driven, `{% if %}`-guarded so it vanishes with no
+services), each planet carrying the service icon + a glass label chip. Motion
+is CSS `offset-path: ellipse()` with `offset-rotate: 0deg`, so labels stay
+perfectly upright (verified live: planet local transform is pure translation,
+`.ss-plane` −16° and `.ss-up` +16° cancel exactly); the orbit plane is rotated
+(not scaled) so nothing shears. Speeds/directions/sizes/accents cycle per
+planet, three debris dots orbit between them, `prefers-reduced-motion` stops
+everything and spreads the planets around their orbits via `--d`, and an
+IntersectionObserver on `[data-pause]` freezes the animations (`.is-paused` →
+`animation-play-state: paused`) while the system is off-screen. Hover/focus on
+a planet highlights its ring and lifts the orbit. `views.about` now sends
+`Service.objects.all()[:6]`. Verified by `scripts/_t59_check.py` (markup on the
+real DB, empty DB and 1–6 services; built CSS carries the motion rules) plus a
+one-off headless-Chrome/CDP run (planets move, labels upright, pause off-screen,
+no horizontal scroll at 375/768 px).
 
 T58 (D62) is live: `SiteSettings.logo_choice` / `favicon_choice` (auto-
 discovered from the folders, admin radio with per-option mark + full-logo

@@ -1198,6 +1198,208 @@ html.lenis body {
     animation: none !important;
   }
 }
+/* ---------- سامانهٔ خورشیدی (هیروِ صفحهٔ درباره ما) ----------
+   هر خدمت یک سیاره است که روی مدارِ بیضی‌شکلِ خودش دورِ خورشیدِ طلایی
+   می‌چرخد. حرکت با offset-path (مسیرِ بیضی) + offset-rotate: 0deg انجام
+   می‌شود، پس برچسبِ هر سیاره همیشه راست و خوانا می‌ماند. صفحهٔ مدار فقط
+   می‌چرخد (rotate خالص، بدون scale) تا هیچ چرخشی در نوشته‌ها نیاید.
+   وقتی از دید خارج شود انیمیشن متوقف می‌شود (data-pause در pixoria.js). */
+.ss-system {
+  container-type: size;
+  --ss-tilt: -16deg;
+}
+.ss-plane {
+  position: absolute;
+  inset: 0;
+  rotate: var(--ss-tilt);
+}
+.ss-sun {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+  width: clamp(5.5rem, 24cqw, 8rem);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: rgba(10, 10, 12, 0.7);
+  background: radial-gradient(
+    circle at 50% 42%,
+    #ffeab9 0%,
+    #e8c47a 32%,
+    #c9a15a 56%,
+    rgba(201, 161, 90, 0.25) 76%,
+    rgba(201, 161, 90, 0) 100%
+  );
+  box-shadow:
+    0 0 46px 6px rgba(232, 196, 122, 0.38),
+    0 0 110px 24px rgba(201, 161, 90, 0.16);
+  animation: ssSunPulse 6.5s ease-in-out infinite;
+  z-index: 1;
+}
+@keyframes ssSunPulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+.ss-orbit {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  z-index: 2;
+  transition: z-index 0s 0.3s;
+}
+.ss-orbit:hover,
+.ss-orbit:focus-within {
+  z-index: 6;
+  transition: z-index 0s;
+}
+.ss-ring {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+  width: calc(var(--rx, 30) * 2cqw);
+  height: calc(var(--ry, 20) * 2cqw);
+  border-radius: 50%;
+  border: 1px dashed color-mix(in srgb, var(--pa, #c9a15a) 50%, transparent);
+  opacity: 0.55;
+  transition:
+    opacity 0.35s,
+    border-color 0.35s,
+    box-shadow 0.35s;
+}
+.ss-orbit:hover .ss-ring,
+.ss-orbit:focus-within .ss-ring {
+  opacity: 1;
+  border-color: color-mix(in srgb, var(--pa, #c9a15a) 95%, transparent);
+  box-shadow: 0 0 26px -8px color-mix(in srgb, var(--pa, #c9a15a) 70%, transparent);
+}
+/* سیاره‌ها و سنگ‌خاره‌ها مسیرِ بیضیِ مشترکی دارند — انداره و رنگشان فرق می‌کند */
+.ss-planet,
+.ss-debris {
+  offset-path: ellipse(
+    calc(var(--rx, 30) * 1cqw) calc(var(--ry, 20) * 1cqw) at 50% 50%
+  );
+  offset-anchor: center;
+  offset-rotate: 0deg;
+  offset-distance: var(--d, 0%);
+  animation: ssTravel var(--dur, 30s) linear var(--dir, normal) infinite;
+  animation-delay: calc(var(--delay, 0) * 1s);
+}
+@keyframes ssTravel {
+  from {
+    offset-distance: 0%;
+  }
+  to {
+    offset-distance: 100%;
+  }
+}
+.ss-planet {
+  position: relative;
+  width: var(--size, 2.5rem);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  color: color-mix(in srgb, var(--pa, #c9a15a) 55%, #fff);
+  background: radial-gradient(
+    circle at 32% 28%,
+    color-mix(in srgb, var(--pa, #c9a15a) 48%, #16161b),
+    #0e0e12 64%
+  );
+  border: 1px solid color-mix(in srgb, var(--pa, #c9a15a) 72%, transparent);
+  box-shadow: 0 0 18px -3px color-mix(in srgb, var(--pa, #c9a15a) 80%, transparent);
+  transition:
+    transform 0.3s,
+    box-shadow 0.3s;
+}
+.ss-planet:hover,
+.ss-planet:focus-visible {
+  transform: scale(1.14);
+  box-shadow: 0 0 26px -2px color-mix(in srgb, var(--pa, #c9a15a) 90%, transparent);
+}
+/* برگرداندنِ کجیِ صفحهٔ مدار + نگه‌داشتنِ آیکون و برچسبِ سیاره راست */
+.ss-up {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  rotate: calc(var(--ss-tilt) * -1);
+}
+.ss-label {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  translate: -50% 0.6rem;
+  white-space: nowrap;
+  padding: 0.25rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: rgba(245, 243, 238, 0.85);
+  background: rgba(10, 10, 12, 0.72);
+  border: 1px solid color-mix(in srgb, var(--pa, #c9a15a) 45%, transparent);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 8px 22px -12px rgba(0, 0, 0, 0.8);
+  transition:
+    opacity 0.3s,
+    translate 0.3s;
+}
+.ss-orbit:hover .ss-label,
+.ss-orbit:focus-within .ss-label {
+  translate: -50% 0.8rem;
+}
+.ss-debris {
+  width: var(--size, 0.4rem);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--pa, #c9a15a), transparent 25%);
+  box-shadow: 0 0 8px -1px color-mix(in srgb, var(--pa, #c9a15a) 80%, transparent);
+}
+/* رنگِ هر سیاره — از پالتِ سایت */
+.ss-a-gold {
+  --pa: #c9a15a;
+}
+.ss-a-gold-light {
+  --pa: #e8c47a;
+}
+.ss-a-gold-dark {
+  --pa: #8f6b2c;
+}
+.ss-a-royal {
+  --pa: #2e63ff;
+}
+.ss-a-peri {
+  --pa: #8ea8ff;
+}
+.ss-a-cream {
+  --pa: #f5f3ee;
+}
+/* وقتی سامانه از دید خارج شد انیمیشن‌ها متوقف می‌شوند (pixoria.js) */
+.ss-system.is-paused .ss-planet,
+.ss-system.is-paused .ss-debris,
+.ss-system.is-paused .ss-sun {
+  animation-play-state: paused;
+}
+@media (prefers-reduced-motion: reduce) {
+  .ss-planet,
+  .ss-debris,
+  .ss-sun {
+    animation: none !important;
+  }
+  /* سیاره‌ها روی مدارشان پخش می‌شوند تا روی هم نیفتند */
+  .ss-planet,
+  .ss-debris {
+    offset-distance: var(--d, 0%) !important;
+  }
+}
+
 .text-goldgrad {
   background: linear-gradient(
     105deg,

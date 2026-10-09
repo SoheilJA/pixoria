@@ -137,53 +137,61 @@
           </div>
         </div>
 
-        {% comment %}مدارِ حوزه‌های فعالیت — کپسول‌ها از جدول خدمات{% endcomment %}
+        {% comment %}سامانهٔ خورشیدی — هر خدمت یک سیاره در مدارِ اختصاصی{% endcomment %}
         {% if services %}
-          <div
-            class="relative mx-auto aspect-square w-full max-w-[26rem]"
+          <nav
+            class="relative mx-auto w-full max-w-[27rem]"
             data-reveal="left"
             data-delay="0.15"
+            aria-label="خدمات پیکسوریا"
           >
-            <span
-              class="absolute inset-0 rounded-full border border-dashed border-gold/30 spin-slow"
-              aria-hidden="true"
-            ></span>
-            <span
-              class="absolute inset-[15%] rounded-full border border-gold/15"
-              aria-hidden="true"
-            ></span>
-            <span
-              class="absolute inset-[30%] rounded-full border border-gold/10"
-              aria-hidden="true"
-            ></span>
-            <span
-              class="orb absolute left-1/2 top-1/2 h-44 w-44 -translate-x-1/2 -translate-y-1/2"
-              style="background: radial-gradient(circle, rgba(201,161,90,0.28), transparent 65%);"
-              aria-hidden="true"
-            ></span>
-            <div
-              class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
-            >
-              {% include "partials/_brand_mark.html" with class="h-12 w-12" %}
-            </div>
-            {% for service in services %}
-              <div
-                data-float="{% cycle '10' '12' '9' '11' %}"
-                class="glass absolute flex items-center gap-2 rounded-full px-5 py-2.5 text-sm {% cycle '-top-2 left-1/2 -translate-x-1/2' 'top-1/2 -right-3 -translate-y-1/2' '-bottom-2 left-1/2 -translate-x-1/2' 'top-1/2 -left-3 -translate-y-1/2' %}"
-              >
-                {% icon service.icon class="h-4 w-4 text-gold-light" %}
-                {{ service.title }}
+            <div class="ss-system relative aspect-square w-full" data-pause>
+              <div class="ss-plane">
+                {% comment %}خورشیدِ درخشان در مرکز{% endcomment %}
+                <span class="ss-sun" aria-hidden="true">
+                  {% include "partials/_brand_mark.html" with class="h-1/3 w-1/3" %}
+                </span>
+
+                {% for service in services %}
+                  <div
+                    class="ss-orbit"
+                    style="--rx:{% cycle '20' '27' '34' '40' '45' '49' %}; --ry:{% cycle '13' '18' '22' '26' '30' '32' %}; --dur:{% cycle '30s' '42s' '26s' '50s' '34s' '46s' %}; --dir:{% cycle 'normal' 'reverse' 'reverse' 'normal' 'reverse' 'normal' %}; --delay:{% cycle '0' '-7' '-13' '-21' '-28' '-34' %}; --d:{% cycle '12%' '38%' '64%' '85%' '24%' '52%' %}; --size:{% cycle '3rem' '2.5rem' '3.25rem' '2.25rem' '2.75rem' '2.5rem' %};"
+                  >
+                    <span class="ss-ring" aria-hidden="true"></span>
+                    <a
+                      class="ss-planet {% cycle 'ss-a-gold' 'ss-a-royal' 'ss-a-gold-light' 'ss-a-cream' 'ss-a-gold-dark' 'ss-a-peri' %}"
+                      href="{% url 'services:detail' service.slug %}"
+                    >
+                      <span class="ss-up">
+                        {% icon service.icon class="h-1/2 w-1/2" %}
+                        <span class="ss-label">{{ service.title }}</span>
+                      </span>
+                    </a>
+                  </div>
+                {% endfor %}
+
+                {% comment %}سنگ‌خاره‌ها و قمرهای کوچک{% endcomment %}
+                <span
+                  class="ss-orbit"
+                  style="--rx: 31; --ry: 20; --dur: 18s; --dir: reverse; --delay: -4; --d: 30%; --size: 0.4rem;"
+                  aria-hidden="true"
+                  ><span class="ss-debris ss-a-gold-light"></span
+                ></span>
+                <span
+                  class="ss-orbit"
+                  style="--rx: 43; --ry: 29; --dur: 24s; --dir: normal; --delay: -11; --d: 72%; --size: 0.35rem;"
+                  aria-hidden="true"
+                  ><span class="ss-debris ss-a-royal"></span
+                ></span>
+                <span
+                  class="ss-orbit"
+                  style="--rx: 17; --ry: 11; --dur: 14s; --dir: reverse; --delay: -2; --d: 55%; --size: 0.5rem;"
+                  aria-hidden="true"
+                  ><span class="ss-debris ss-a-cream"></span
+                ></span>
               </div>
-            {% endfor %}
-            <span
-              class="absolute left-[16%] top-[24%] h-2.5 w-2.5 rounded-full bg-gold-light shadow-[0_0_14px_2px_rgba(232,196,122,.6)]"
-              aria-hidden="true"
-            ></span>
-            <span
-              class="absolute bottom-[20%] right-[15%] h-2.5 w-2.5 rounded-full bg-royal shadow-[0_0_14px_2px_rgba(46,99,255,.5)]"
-              aria-hidden="true"
-            ></span>
-          </div>
+            </div>
+          </nav>
         {% endif %}
       </div>
     </section>
