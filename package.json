@@ -22,7 +22,10 @@
   "homepage": "https://github.com/SoheilJA/pixoria#readme",
   "devDependencies": {
     "@tailwindcss/cli": "^4.3.3",
-    "tailwindcss": "^4.3.3"
+    "opentype.js": "^2.0.0",
+    "sharp": "^0.35.5",
+    "tailwindcss": "^4.3.3",
+    "wawoff2": "^2.0.1"
   },
   "dependencies": {
     "lenis": "^1.1.13",

@@ -145,7 +145,75 @@ _(none left — every URL renders in the v2 design now. T42 gave the services
 pages minimal placeholders; a full services redesign is deliberately out of
 scope for this migration and can pick these templates up later.)_
 
-## Decisions log
+- **D60 — base.html comment leak: the WHITE PAGE bug (T47c).** The user hit it
+  live: every page rendered as a white screen with a raw Persian sentence
+  visible («{# پیش‌لودر: فقط یک بار در هر session…»). Cause: the T53/T54
+  work added **three multi-line `{# … #}` comments** to `templates/base.html`
+  (the preloader flag script at line 8, the `#preloader` markup at 51, the
+  `#nav-progress`/`#nav-orbit` loader at 76). Per the D49/D50 lexer GOTCHA,
+  Django's `tag_re` (`{#.*?#}`, **no** `re.DOTALL`) cannot span a newline, so
+  an unterminated `{#` is not a comment at all — it is literal TEXT. All three
+  are now `{% comment %}…{% endcomment %}`. **Why the page went white rather
+  than merely showing text:** the leaked block sits inside `<head>` and the
+  leaked prose contains `<noscript>`, so the HTML5 parser closed `<head>` early
+  and dumped the text into `<body>`; the `<title>`/`<meta>`/`<link>` elements
+  that followed were then parsed in body context. (The stylesheet `<link>`s
+  were fostered back to `<head>`, so CSS still applied — the visible symptom was
+  the text, not actually missing styles.) **The D50 sweep missed this because
+  it ran before T53/T54 were written** — the sweep greps `templates/`, so any
+  new multi-line `{#` introduced later is a live bug. Rule going forward: the
+  `{#`-without-same-line-`#}` grep is part of the pre-commit ritual for ANY
+  template edit, not a one-off task. Verified by rendering `/`, `/about/`,
+  `/contact/`: zero `{#`, zero `#}`, zero `{% comment` strings in any response
+  body, `<head>`…`</head>` intact, `css/tailwind.css` linked; repo-wide grep for
+  a dangling `{#` now returns zero hits; `scripts/render_check.py` clean.
+
+- **D61 — Brand option set (T57).** Six space-themed logo concepts live in
+  `static/brand/option-N-*/` (orbit, eclipse, comet, constellation, rocket,
+  crescent), each a self-contained folder with exactly the files the task
+  lists: `logo-mark.svg` (gold, dark backgrounds), `logo-mono-light.svg`
+  (cream, on ink), `logo-mono-dark.svg` (ink, on cream), `logo-full.svg`
+  (mark + Persian wordmark «پیکسوریا»), `favicon.svg` (the chunky 16px-safe
+  variant), `favicon-16/32.png`, `apple-touch-icon.png` (180), `icon-192.png`,
+  `icon-512.png` — plus `static/brand/README.md` and a local-only
+  `static/brand/index.html` preview sheet showing all six side by side on dark
+  and cream.
+  **Wordmarks are real SVG paths, zero font dependency at runtime.**
+  `scripts/build_brand.js` loads the project's self-hosted woff2 with
+  `wawoff2` → `opentype.js`, traces each glyph and emits one `<path>` per
+  wordmark. Persian needs complex-text shaping (letter joining + visual RTL
+  order), which neither opentype.js nor Node has built in, so the shaped string
+  comes from the project's existing `arabic_reshaper` + `python-bidi` stack via
+  a one-shot `venv` child process (the same stack
+  `scripts/build_pixel_wordmark.py` uses) — the OUTLINES are opentype.js, only
+  the shaping is Python. Latin "PIXORIA" is plain ASCII. The `logo-full`
+  wordmark is filled with the gold gradient (`#e8c47a → #c9a15a → #8f6b2c`).
+  PNGs are rasterized with `sharp` from the `icon()` variant on an ink tile,
+  scaled to 74% so the mark sits inside the maskable safe zone.
+  **Three script bugs were fixed to get it running** (the file was committed
+  unexecuted): (a) the header comment said `static/brand/option-N-*/:` — the
+  literal `*/` inside a JSDoc block CLOSED the comment early and the file was a
+  syntax error; (b) `loadFont()` probed with the latin letter `"M"`, which does
+  not exist in the Vazirmatn **arabic** subset, so the font was falsely
+  rejected as unreadable — the probe char is now a parameter (`"ی"` for the
+  Persian font); (c) same class of bug as (b): the build verifies no shaped
+  glyph is `.notdef` before writing anything.
+  **16px legibility was measured, not assumed.** Since this model cannot view
+  images, gold-pixel coverage was sampled from the rendered 16×16 PNGs: the
+  first pass exposed two marks too thin to read at favicon size
+  (constellation 0.8% ink — its 4.5-unit strokes become sub-pixel — and rocket
+  2.3%). The `icon()` variants of both were bulked up (constellation: strokes
+  4.5→8 with round caps, dots r 4.8→7.5, star bigger; rocket: body widened;
+  comet core r 12→14, trail 10→13), after which every concept holds
+  3.9–14.5% gold mass at 16px. The `mark()` variants (used at large sizes) were
+  left delicate.
+  Verified: all 62 files exist with the exact required names; every SVG has a
+  `viewBox`, no embedded rasters; PNGs are exactly 16/32/180/192/512px; the
+  build is **idempotent** (a second run is byte-identical, sha256 over all 62
+  files); `logo-full.svg` carries the gradient wordmark path; the v1 root
+  assets (`favicon.ico`, `wordmark-*.svg`, PNGs) are untouched — T58 swaps them
+  in. NOT verified in a browser by eye — PNG pixel coverage and SVG geometry
+  review stand in for a visual check.
 
 - **D1 — Full replacement, no coexistence (user directive).**
   `static/src/input.css` is fully replaced by the V2 design (tokens + all
@@ -1840,6 +1908,17 @@ scope for this migration and can pick these templates up later.)_
   files: `templates/components/_breadcrumb.html`, every page with crumbs,
   `apps/core/context_utils.py` (the `crumbs` helper) |
   commit: "feat(components): shared breadcrumb partial"
+- [x] T47c — Fix the base.html multi-line `{# … #}` comment leak reported live:
+  entering the site showed a WHITE PAGE with the raw Persian comment text
+  («{# پیش‌لودر: فقط یک بار در هر session…»). The T53 preloader flag-script
+  comment, the `#preloader` markup comment and the T54 `#nav-progress` loader
+  comment in `templates/base.html` were all multi-line `{# … #}`, which
+  Django's lexer cannot parse (no DOTALL — D49/D50 GOTCHA), so they rendered as
+  literal text inside `<head>`, which made the HTML5 parser close `<head>` and
+  dump the text into `<body>`. Convert all three to
+  `{% comment %}…{% endcomment %}` and re-grep the whole `templates/` tree for
+  any remaining dangling `{#` | files: `templates/base.html` |
+  commit: "fix(base): leaking template comments broke the whole page"
 - [x] T47b — Fix leaking template comments: the multi-line `{# … #}` blocks in
   `templates/home/sections/_portfolio.html`, `_stats.html` and `_trusted.html`
   rendered as literal text on the home page (the D49 lexer GOTCHA — Django's
@@ -1982,7 +2061,7 @@ scope for this migration and can pick these templates up later.)_
   `templates/components/_testimonial_card.html`, `templates/blog/detail.html`,
   `templates/blog/list.html`, `static/src/input.css`, `apps/blog/models.py` |
   commit: "feat(brand): replace letter placeholders with emblems"
-- [ ] T57 — LOGO + FAVICON option set: create 5–6 distinct SPACE /
+- [x] T57 — LOGO + FAVICON option set: create 5–6 distinct SPACE /
   SOLAR-SYSTEM-themed logo concepts for «پیکسوریا / Pixoria» in `static/brand/`
   (e.g. `static/brand/option-1-orbit/`, `option-2-eclipse/`,
   `option-3-comet/`, …), each with `logo-full.svg` (mark + Persian wordmark),
@@ -2186,19 +2265,26 @@ contact; descriptive alt texts; meta title/description per service.
 
 ## Current status
 
-T01–T56 done (T42 superseded by Phase 12; T47b was the template-comment leak
-sweep — D50). **Next: T57** — LOGO + FAVICON option set: create 5–6 distinct
-space/solar-system-themed logo concepts for «پیکسوریا / Pixoria» in
-`static/brand/` (`option-1-orbit/`, `option-2-eclipse/`, `option-3-comet/`, …),
-each with `logo-full.svg` (mark + Persian wordmark as PATHS), `logo-mark.svg`,
-`logo-mono-light.svg`, `logo-mono-dark.svg`, `favicon.svg`, the PNG sizes, an
-`index.html` preview sheet and `scripts/build_brand.js` (opentype.js + sharp,
-devDependencies). The planet emblem the concepts build on is already live as
-`templates/partials/_brand_mark.html` (D59) — option 1 can ship that mark.
-Palette: gold `#c9a15a` / `#e8c47a` / `#8f6b2c`, ink `#0a0a0c`, cream `#f5f3ee`,
-royal `#2e63ff`. Note: `static/brand/` currently still holds the v1 pixel-art
-assets (`favicon.svg`, `mark-compact.svg`, `wordmark-*.svg`, the PNGs,
-`_preview.png`) in the old lime palette — T57 replaces them, and the
-`pixel_wordmark` tag + the login pages keep working until then.
+T01–T57 done (T42 superseded by Phase 12; T47b/T47c were the template-comment
+leak sweeps — D50/D60). **Next: T58** — Brand selection wiring: add
+`logo_choice` / `favicon_choice` to `SiteSettings` (choices auto-discovered
+from the `static/brand/option-*/` folders T57 just created, shown in the admin
+with a small image preview per option and Persian help_text) while keeping the
+uploaded `logo` / `favicon` / `apple_touch_icon` fields as OVERRIDES that win
+over a preset. Wire a context-processor helper (a `brand` dict with resolved
+URLs) into `base.html` (`<link rel="icon">` svg + png fallbacks,
+apple-touch-icon, `site.webmanifest` icons, `theme-color`), the header, the
+footer, the JSON-LD logo and the OG image fallback. Default choice = option 1
+so nothing breaks on an empty DB; never overwrite existing uploads. Migration +
+admin + a `collectstatic --dry-run` check.
+
+The 6 concepts from T57 are in `static/brand/option-{1..6}-{orbit,eclipse,comet,
+constellation,rocket,crescent}/`, built idempotently by
+`scripts/build_brand.js` (D61). The v1 pixel-art assets at the ROOT of
+`static/brand/` (`favicon.ico`, `favicon-48.png`, `mark-compact.svg`,
+`wordmark-*.svg`, `_preview.png`, `site.webmanifest`) are still the ones
+`base.html` actually references today — T58 swaps the choice in, and the
+`pixel_wordmark` tag + the login pages keep working until then (T43 decides
+their deletion).
 
 
