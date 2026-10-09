@@ -353,6 +353,9 @@
   .top-10 {
     top: calc(var(--spacing) * 10);
   }
+  .top-12 {
+    top: calc(var(--spacing) * 12);
+  }
   .top-14 {
     top: calc(var(--spacing) * 14);
   }
@@ -386,6 +389,12 @@
   .top-\[16\%\] {
     top: 16%;
   }
+  .top-\[18\%\] {
+    top: 18%;
+  }
+  .top-\[22\%\] {
+    top: 22%;
+  }
   .top-\[24\%\] {
     top: 24%;
   }
@@ -416,8 +425,14 @@
   .-right-24 {
     right: calc(var(--spacing) * -24);
   }
+  .-right-28 {
+    right: calc(var(--spacing) * -28);
+  }
   .-right-32 {
     right: calc(var(--spacing) * -32);
+  }
+  .-right-36 {
+    right: calc(var(--spacing) * -36);
   }
   .right-0 {
     right: 0px;
@@ -478,6 +493,12 @@
   }
   .right-\[12\%\] {
     right: 12%;
+  }
+  .right-\[13\%\] {
+    right: 13%;
+  }
+  .right-\[14\%\] {
+    right: 14%;
   }
   .right-\[15\%\] {
     right: 15%;
@@ -1157,8 +1178,20 @@
   .w-\[30rem\] {
     width: 30rem;
   }
+  .w-\[32rem\] {
+    width: 32rem;
+  }
   .w-\[34rem\] {
     width: 34rem;
+  }
+  .w-\[38rem\] {
+    width: 38rem;
+  }
+  .w-\[40rem\] {
+    width: 40rem;
+  }
+  .w-\[44rem\] {
+    width: 44rem;
   }
   .w-\[min\(86vw\,360px\)\] {
     width: min(86vw, 360px);
@@ -4529,7 +4562,7 @@ html.lenis, html.lenis body {
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .aurora-blob, .svc-scan, .cursor-blink, .svc-palette-ring, .svc-palette-dot, .icon-ring-pulse, .marquee-group, .spin-slow, .cities-spin, .cities-spin-rev, .h-float-1, .h-float-2, .h-float-3, .h-float-4, .h-float-5, .h-planet, .about-scan, .about-ring-1, .about-ring-2, .about-ring-3, .about-orb, .about-dot, .about-dot-1, .about-dot-2, .about-dot-3, .about-orbit-1, .about-orbit-2, .about-orbit-3, .svc-poster-disc, .svc-poster-disc-2, .svc-poster-sun, .gps-move, .gps-node::after {
+  .aurora-blob, .svc-scan, .cursor-blink, .svc-palette-ring, .svc-palette-dot, .icon-ring-pulse, .marquee-group, .spin-slow, .cities-spin, .cities-spin-rev, .h-float-1, .h-float-2, .h-float-3, .h-float-4, .h-float-5, .h-planet, .about-scan, .about-ring-1, .about-ring-2, .about-ring-3, .about-orb, .about-dot, .about-dot-1, .about-dot-2, .about-dot-3, .about-orbit-1, .about-orbit-2, .about-orbit-3, .svc-poster-disc, .svc-poster-disc-2, .svc-poster-sun, .gps-move, .gps-node::after, .orbit-ring--spin, .star-field::before {
     animation: none !important;
   }
 }
@@ -4722,6 +4755,100 @@ html.lenis, html.lenis body {
   .ss-planet, .ss-debris {
     offset-distance: var(--d, 0%) !important;
   }
+}
+.orbit-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px dashed var(--pa, #c9a15a);
+  @supports (color: color-mix(in lab, red, red)) {
+    border: 1px dashed color-mix(in srgb, var(--pa, #c9a15a) 45%, transparent);
+  }
+  rotate: -16deg;
+  opacity: 0.55;
+}
+.orbit-ring--spin {
+  animation: orbitRingSpin 160s linear infinite;
+}
+@keyframes orbitRingSpin {
+  to {
+    rotate: 344deg;
+  }
+}
+.orbit-dot {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient( circle at 40% 35%, rgba(245, 243, 238, 0.95), var(--pa, #c9a15a) );
+  @supports (color: color-mix(in lab, red, red)) {
+    background: radial-gradient( circle at 40% 35%, rgba(245, 243, 238, 0.95), color-mix(in srgb, var(--pa, #c9a15a) 80%, #0a0a0c) );
+  }
+  box-shadow: 0 0 10px 1px var(--pa, #c9a15a);
+  @supports (color: color-mix(in lab, red, red)) {
+    box-shadow: 0 0 10px 1px color-mix(in srgb, var(--pa, #c9a15a) 55%, transparent);
+  }
+}
+.planet-orb {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: var(--po, #c9a15a);
+  @supports (color: color-mix(in lab, red, red)) {
+    color: color-mix(in srgb, var(--po, #c9a15a) 55%, #fff);
+  }
+  background: radial-gradient( circle at 32% 30%, var(--po, #c9a15a), #0e0e12 68% );
+  @supports (color: color-mix(in lab, red, red)) {
+    background: radial-gradient( circle at 32% 30%, color-mix(in srgb, var(--po, #c9a15a) 46%, #16161b), #0e0e12 68% );
+  }
+  border: 1px solid var(--po, #c9a15a);
+  @supports (color: color-mix(in lab, red, red)) {
+    border: 1px solid color-mix(in srgb, var(--po, #c9a15a) 68%, transparent);
+  }
+  box-shadow: 0 0 20px -3px var(--po, #c9a15a);
+  @supports (color: color-mix(in lab, red, red)) {
+    box-shadow: 0 0 20px -3px color-mix(in srgb, var(--po, #c9a15a) 72%, transparent);
+  }
+}
+.planet-orb-gold {
+  --po: #c9a15a;
+}
+.planet-orb-gold-light {
+  --po: #e8c47a;
+}
+.planet-orb-gold-dark {
+  --po: #8f6b2c;
+}
+.planet-orb-royal {
+  --po: #2e63ff;
+}
+.planet-orb-cream {
+  --po: #f5f3ee;
+}
+.star-field {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.5;
+  background-image: radial-gradient(1.5px 1.5px at 7% 12%, rgba(245, 243, 238, 0.7), transparent 55%), radial-gradient(1.2px 1.2px at 19% 34%, rgba(245, 243, 238, 0.4), transparent 55%), radial-gradient(1.4px 1.4px at 31% 8%, rgba(245, 243, 238, 0.5), transparent 55%), radial-gradient(1px 1px at 44% 62%, rgba(245, 243, 238, 0.35), transparent 55%), radial-gradient(1.5px 1.5px at 57% 24%, rgba(232, 196, 122, 0.6), transparent 55%), radial-gradient(1.1px 1.1px at 68% 78%, rgba(245, 243, 238, 0.45), transparent 55%), radial-gradient(1.4px 1.4px at 79% 16%, rgba(245, 243, 238, 0.55), transparent 55%), radial-gradient(1px 1px at 91% 52%, rgba(245, 243, 238, 0.35), transparent 55%), radial-gradient(1.2px 1.2px at 12% 86%, rgba(245, 243, 238, 0.4), transparent 55%), radial-gradient(1.5px 1.5px at 38% 92%, rgba(232, 196, 122, 0.5), transparent 55%), radial-gradient(1.1px 1.1px at 63% 4%, rgba(245, 243, 238, 0.45), transparent 55%), radial-gradient(1.3px 1.3px at 86% 90%, rgba(245, 243, 238, 0.4), transparent 55%), radial-gradient(1px 1px at 52% 44%, rgba(245, 243, 238, 0.3), transparent 55%), radial-gradient(1.2px 1.2px at 25% 54%, rgba(46, 99, 255, 0.5), transparent 55%);
+  background-size: 560px 520px;
+}
+.star-field::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(1.8px 1.8px at 15% 22%, rgba(245, 243, 238, 0.9), transparent 55%), radial-gradient(1.6px 1.6px at 48% 14%, rgba(232, 196, 122, 0.8), transparent 55%), radial-gradient(1.8px 1.8px at 72% 66%, rgba(245, 243, 238, 0.85), transparent 55%), radial-gradient(1.6px 1.6px at 94% 30%, rgba(245, 243, 238, 0.7), transparent 55%), radial-gradient(1.7px 1.7px at 30% 74%, rgba(232, 196, 122, 0.7), transparent 55%);
+  background-size: 560px 520px;
+  animation: starTwinkle 9s ease-in-out infinite;
+}
+@keyframes starTwinkle {
+  0%, 100% {
+    opacity: 0.15;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+.is-paused .orbit-ring--spin, .is-paused .star-field::before {
+  animation-play-state: paused;
 }
 .text-goldgrad {
   background: linear-gradient( 105deg, var(--gold-d) 0%, var(--gold) 30%, var(--gold-l) 50%, var(--gold) 68%, var(--gold-d) 100% );
@@ -5730,7 +5857,7 @@ html.has-preloader .preloader.pl-done {
   transform-box: fill-box;
 }
 @media (prefers-reduced-motion: reduce) {
-  .marquee-track, .scroll-cue::after, .spin-slow, .fb-r2, .fb-r3, .nf-planet, .nf-ring-1, .nf-ring-2, .nf-orbit, .nf-orbit-2, .nf-star, .nf-shoot, .wave.playing .w-bar {
+  .marquee-track, .scroll-cue::after, .spin-slow, .fb-r2, .fb-r3, .nf-planet, .nf-ring-1, .nf-ring-2, .nf-orbit, .nf-orbit-2, .nf-star, .nf-shoot, .orbit-ring--spin, .star-field::before, .wave.playing .w-bar {
     animation: none !important;
   }
   .nf-star {

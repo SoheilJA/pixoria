@@ -1194,7 +1194,9 @@ html.lenis body {
   .svc-poster-disc-2,
   .svc-poster-sun,
   .gps-move,
-  .gps-node::after {
+  .gps-node::after,
+  .orbit-ring--spin,
+  .star-field::before {
     animation: none !important;
   }
 }
@@ -1398,6 +1400,117 @@ html.lenis body {
   .ss-debris {
     offset-distance: var(--d, 0%) !important;
   }
+}
+
+/* ---------- هویتِ فضایی (T60) ----------
+   یک دسته کوچک از ابزارهای تزئینیِ همه‌گیر تا کلِ سایت یک «سامانهٔ خورشیدی»
+   به‌نظر برسد: حلقهٔ مداری، نقطهٔ مداری، سیاره‌ی کوچک و میدانِ ستاره‌ای —
+   همگی فقط با CSS، بدون تصویر و بدون جاوااسکریپت. رنگ با --pa/--po داده
+   می‌شود (پیش‌فرض طلایی) و اندازه و جایگاه با کلاس‌های Tailwind. */
+.orbit-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px dashed color-mix(in srgb, var(--pa, #c9a15a) 45%, transparent);
+  rotate: -16deg;
+  opacity: 0.55;
+}
+.orbit-ring--spin {
+  animation: orbitRingSpin 160s linear infinite;
+}
+@keyframes orbitRingSpin {
+  to {
+    rotate: 344deg;
+  }
+}
+.orbit-dot {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 40% 35%,
+    rgba(245, 243, 238, 0.95),
+    color-mix(in srgb, var(--pa, #c9a15a) 80%, #0a0a0c)
+  );
+  box-shadow: 0 0 10px 1px color-mix(in srgb, var(--pa, #c9a15a) 55%, transparent);
+}
+.planet-orb {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: color-mix(in srgb, var(--po, #c9a15a) 55%, #fff);
+  background: radial-gradient(
+    circle at 32% 30%,
+    color-mix(in srgb, var(--po, #c9a15a) 46%, #16161b),
+    #0e0e12 68%
+  );
+  border: 1px solid color-mix(in srgb, var(--po, #c9a15a) 68%, transparent);
+  box-shadow: 0 0 20px -3px color-mix(in srgb, var(--po, #c9a15a) 72%, transparent);
+}
+.planet-orb-gold {
+  --po: #c9a15a;
+}
+.planet-orb-gold-light {
+  --po: #e8c47a;
+}
+.planet-orb-gold-dark {
+  --po: #8f6b2c;
+}
+.planet-orb-royal {
+  --po: #2e63ff;
+}
+.planet-orb-cream {
+  --po: #f5f3ee;
+}
+/* میدانِ ستاره‌ای: ستاره‌های کوچک روی یک کاشیِ ۵۶۰×۵۲۰ که تکرار می‌شود،
+   به‌علاوهٔ لایهٔ روشن‌تری که آرام چشمک می‌زند (::before). */
+.star-field {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.5;
+  background-image:
+    radial-gradient(1.5px 1.5px at 7% 12%, rgba(245, 243, 238, 0.7), transparent 55%),
+    radial-gradient(1.2px 1.2px at 19% 34%, rgba(245, 243, 238, 0.4), transparent 55%),
+    radial-gradient(1.4px 1.4px at 31% 8%, rgba(245, 243, 238, 0.5), transparent 55%),
+    radial-gradient(1px 1px at 44% 62%, rgba(245, 243, 238, 0.35), transparent 55%),
+    radial-gradient(1.5px 1.5px at 57% 24%, rgba(232, 196, 122, 0.6), transparent 55%),
+    radial-gradient(1.1px 1.1px at 68% 78%, rgba(245, 243, 238, 0.45), transparent 55%),
+    radial-gradient(1.4px 1.4px at 79% 16%, rgba(245, 243, 238, 0.55), transparent 55%),
+    radial-gradient(1px 1px at 91% 52%, rgba(245, 243, 238, 0.35), transparent 55%),
+    radial-gradient(1.2px 1.2px at 12% 86%, rgba(245, 243, 238, 0.4), transparent 55%),
+    radial-gradient(1.5px 1.5px at 38% 92%, rgba(232, 196, 122, 0.5), transparent 55%),
+    radial-gradient(1.1px 1.1px at 63% 4%, rgba(245, 243, 238, 0.45), transparent 55%),
+    radial-gradient(1.3px 1.3px at 86% 90%, rgba(245, 243, 238, 0.4), transparent 55%),
+    radial-gradient(1px 1px at 52% 44%, rgba(245, 243, 238, 0.3), transparent 55%),
+    radial-gradient(1.2px 1.2px at 25% 54%, rgba(46, 99, 255, 0.5), transparent 55%);
+  background-size: 560px 520px;
+}
+.star-field::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(1.8px 1.8px at 15% 22%, rgba(245, 243, 238, 0.9), transparent 55%),
+    radial-gradient(1.6px 1.6px at 48% 14%, rgba(232, 196, 122, 0.8), transparent 55%),
+    radial-gradient(1.8px 1.8px at 72% 66%, rgba(245, 243, 238, 0.85), transparent 55%),
+    radial-gradient(1.6px 1.6px at 94% 30%, rgba(245, 243, 238, 0.7), transparent 55%),
+    radial-gradient(1.7px 1.7px at 30% 74%, rgba(232, 196, 122, 0.7), transparent 55%);
+  background-size: 560px 520px;
+  animation: starTwinkle 9s ease-in-out infinite;
+}
+@keyframes starTwinkle {
+  0%,
+  100% {
+    opacity: 0.15;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+/* وقتی لایه از دید خارج شد انیمیشن‌هایش متوقف می‌شود (data-pause در pixoria.js) */
+.is-paused .orbit-ring--spin,
+.is-paused .star-field::before {
+  animation-play-state: paused;
 }
 
 .text-goldgrad {
@@ -2604,6 +2717,8 @@ html.has-preloader .preloader.pl-done {
   .nf-orbit-2,
   .nf-star,
   .nf-shoot,
+  .orbit-ring--spin,
+  .star-field::before,
   .wave.playing .w-bar {
     animation: none !important;
   }

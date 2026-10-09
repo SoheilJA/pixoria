@@ -1,0 +1,26 @@
+{% comment %}لایهٔ تزئینیِ «سامانهٔ خورشیدی» برای هیروهای داخلی — میدانِ ستاره‌ای
++ حلقهٔ مداریِ کج + یک سیارهٔ شناور. کاملاً CSS است (تصویر و
+جاوااسکریپتِ جدیدی ندارد) و از همان data-float/data-depth/data-pause که
+بقیهٔ تزئین‌های صفحه استفاده می‌کنند بهره می‌برد.
+
+جایگاه و رنگِ حلقه و سیاره را خودِ هر هیرو با include می‌دهد تا هر صفحه
+کمی متفاوت باشد؛ ring_spin="1" حلقه را می‌چرخاند، stars_only="1" فقط میدانِ
+ستاره‌ای می‌دهد (مثل هیروی درباره ما که سامانهٔ خورشیدیِ کامل خودش را
+دارد).{% endcomment %}
+<div
+  class="pointer-events-none absolute inset-0"
+  data-depth="0.04"
+  data-pause
+  aria-hidden="true"
+>
+  <span class="star-field absolute inset-0"></span>
+  {% if not stars_only %}
+    <span
+      class="orbit-ring{% if ring_spin %} orbit-ring--spin{% endif %} absolute {{ ring_class|default:'-right-32 top-12 h-80 w-[34rem]' }}"
+    ></span>
+    <span
+      class="planet-orb {{ orb_variant|default:'planet-orb-royal' }} absolute {{ orb_class|default:'right-[13%] top-[9%] h-7 w-7' }}"
+      data-float="7"
+    ></span>
+  {% endif %}
+</div>

@@ -1702,6 +1702,34 @@ scope for this migration and can pick these templates up later.)_
   DB" test must call `transaction.set_rollback(True)` inside the block — the
   script now does.
 
+### Space identity utilities (T60)
+
+Tiny CSS-only decorative set in `static/src/input.css` — no images, no JS:
+
+| utility | purpose |
+| --- | --- |
+| `.orbit-ring` | tilted (`rotate: -16deg`) dashed ellipse ring; size/placement via Tailwind classes, color via `--pa` (default gold); `.orbit-ring--spin` adds a 160s loop |
+| `.orbit-dot` | small glowing dot that sits on a ring (`--pa` for the accent) |
+| `.planet-orb` | sphere-like orb (dark disc + accent rim/glow) with `.planet-orb-{gold, gold-light, gold-dark, royal, cream}` variants driving `--po` |
+| `.star-field` | tiled 560×520 CSS starfield (14 static dots + 5 brighter dots in `::before` that twinkle on a 9s loop) |
+
+All four freeze under `prefers-reduced-motion`, and anything under an
+`.is-paused` ancestor stops too (the `data-pause` IntersectionObserver in
+`static/js/pixoria.js`).
+
+Used via `templates/partials/_space_layer.html` (star-field + ring + orb, with
+per-page `ring_class` / `orb_class` / `orb_variant` / `ring_spin` /
+`stars_only`):
+
+- inner heroes — `portfolio/list.html` (royal), `blog/list.html` (gold-light),
+  `contact/contact.html` (cream), `blog/detail.html` (royal),
+  `portfolio/detail.html` (gold); `core/about.html` takes `stars_only="1"`
+  because the T59 solar system is already its hero art
+- `partials/_cta.html` — centered static ring + royal orb behind the heading
+- `partials/_footer.html` — stars only
+- `.orbit-dot` is defined and ready but not used by any page yet (reserved for
+  the Phase 12 service heroes)
+
 ## Tasks
 
 
@@ -2191,7 +2219,7 @@ scope for this migration and can pick these templates up later.)_
   and links to the service page; responsive (scales down on mobile without
   overflow) | files: `templates/core/about.html`, `static/src/input.css`,
   `static/js/pixoria.js` | commit: "feat(about): animated solar system hero visual"
-- [ ] T60 — Space identity pass (light touch, performance-safe): define a tiny
+- [x] T60 — Space identity pass (light touch, performance-safe): define a tiny
   set of reusable decorative utilities in `input.css` (`.orbit-ring`,
   `.orbit-dot`, `.planet-orb` with accent variants, `.star-field` as a CSS-only
   subtle starfield for dark sections) and apply them sparingly to existing dark
@@ -2350,10 +2378,28 @@ contact; descriptive alt texts; meta title/description per service.
 ## Current status
 
 T01–T59 done (T42 superseded by Phase 12; T47b/T47c were the template-comment
-leak sweeps — D50/D60). **Next: T60** — space identity pass: define
-`.orbit-ring`, `.orbit-dot`, `.planet-orb` (accent variants) and `.star-field`
-in `input.css`, then apply them sparingly to the dark section backgrounds and
-inner-page heroes so the whole site reads as one solar system.
+leak sweeps — D50/D60). **Next: T61** — extend the service models for the
+dedicated service pages (per-service accent, hero fields, `ServiceSection`
+long-form blocks, `ServiceTool`, `ServiceUseCase`, related services, a real
+`Portfolio.service` relation with a data migration, SEO fields, 3-plan pricing
+with `is_included` flags, the `fa_price` filter) — see the T61 entry for the
+full list.
+
+T60 (D64) is live: the space identity utilities (`.orbit-ring`, `.orbit-dot`,
+`.planet-orb` + 5 accent variants, `.star-field`) are defined in `input.css`
+and applied through one shared partial, `templates/partials/_space_layer.html`
+— see the "Space identity utilities (T60)" table above for what each one does
+and where it is used. Inner heroes (portfolio/blog/contact + both detail
+heroes) each get a slowly spinning tilted ring + a floating accent orb over a
+twinkling starfield; the about hero takes stars only (T59's solar system stays
+the hero art); the CTA gets a centered static ring; the footer gets stars. All
+of it is pure CSS, all of it freezes under `prefers-reduced-motion` and when
+the layer is off-screen (`data-pause`). Verified by `scripts/_t60_check.py`
+(utilities + variants + keyframes in the built CSS, every intended hero
+carries the layer with its per-page placement, all pages 200 on the real and
+empty DB) plus a one-off headless-Chrome/CDP run (rings really tilt and spin,
+starfields paint, no horizontal scroll, pointer events pass through the decor
+to real content).
 
 T59 (D63) is live: the about hero's right column is now a real solar system —
 glowing gold sun (brand mark at its core) + one tilted-ellipse orbit per
