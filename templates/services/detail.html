@@ -1,369 +1,294 @@
 {% extends 'base.html' %}
-{% load icon_tags highlight_tags fa_digits testimonial_tags %}
+{% load icon_tags highlight_tags fa_digits nav_tags json_tags %}
 
-{% block title %}{{ service.title }} — {{ settings.site_name }}{% endblock %}
-{% block description %}{{ service.excerpt }}{% endblock %}
+{% block title %}{{ service.get_meta_title }} — {{ settings.site_name }}{% endblock %}
+{% block description %}{{ service.get_meta_description }}{% endblock %}
+{% block og_title %}{{ service.get_meta_title }} — {{ settings.site_name }}{% endblock %}
+{% block og_description %}{{ service.get_meta_description }}{% endblock %}
 
-{% comment %}
-  placeholder موقت (T42): صفحهٔ جزئیات خدمت هنوز طرح v2 ندارد، بنابراین این
-  قالب حداقلی است — فقط دادهٔ دیتابیس با کلاس‌های v2 موجود رندر می‌شود.
-  بازطراحی کامل این صفحه خارج از ترتیب این مهاجرت است.
-{% endcomment %}
-
-{% block content %}
-  {% comment %}هیرو — آیکون، تگ‌ها، عنوان و خلاصهٔ خدمت{% endcomment %}
-  <section class="relative overflow-hidden bg-ink" data-mouse-parallax>
-    <div class="pointer-events-none absolute inset-0" aria-hidden="true">
-      <div data-depth="0.05" class="absolute right-[9%] top-[12%]">
-        <span data-float="14" class="orb block h-20 w-20"
-              style="background: radial-gradient(circle at 32% 30%, rgba(232,196,122,0.42), rgba(201,161,90,0.07) 60%, transparent 72%);"></span>
-      </div>
-      <div data-depth="0.08" class="absolute bottom-[16%] left-[8%]">
-        <span data-float="12" class="shard block h-24 w-20 rotate-12"></span>
-      </div>
-    </div>
-    <span class="stroke-title font-latin pointer-events-none absolute -bottom-10 left-0 select-none text-[14vw] font-light leading-none"
-          aria-hidden="true">service</span>
-
-    <div class="relative z-10 mx-auto max-w-7xl px-6 pb-28 pt-36 md:pt-48">
-      {% include "components/_breadcrumb.html" %}
-
-      <span class="icon-ring mt-10 h-14 w-14" data-reveal="up">{% icon service.icon class="h-6 w-6" %}</span>
-
-      {% if service.get_tags_list %}
-        <div class="mt-6 flex flex-wrap gap-2" data-reveal="up" data-delay="0.06">
-          {% for tag in service.get_tags_list %}
-            <span class="s-chip">{{ tag }}</span>
-          {% endfor %}
-        </div>
-      {% endif %}
-
-      <h1 class="mt-6 max-w-3xl text-[2.4rem] font-extrabold leading-[1.25] sm:text-5xl lg:text-[3.4rem]"
-          data-reveal="right">
-        {{ service.title|highlight }}
-      </h1>
-      {% if service.excerpt %}
-        <p class="mt-6 max-w-2xl text-lg font-light leading-8 text-cream/70"
-           data-reveal="right" data-delay="0.12">
-          {{ service.excerpt }}
-        </p>
-      {% endif %}
-
-      <div class="mt-10 flex flex-wrap gap-4" data-reveal="up" data-delay="0.18">
-        <a href="{% url 'contact:contact' %}" class="btn btn-gold px-7 py-3.5" data-magnetic>
-          مشاوره رایگان
-          {% icon "arrow-left" class="h-4 w-4" %}
-        </a>
-        {% if plans %}
-          <a href="#pricing" class="btn btn-ghost px-7 py-3.5">مشاهده قیمت‌ها</a>
-        {% endif %}
-      </div>
-    </div>
-  </section>
-
-  {% comment %}آمار خدمت — فقط وقتی آماری ثبت شده باشد{% endcomment %}
-  {% if stats %}
-    <section class="relative overflow-hidden bg-ink2">
-      <svg class="divider divider-flip" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true">
-        <path d="M0,26 C260,84 520,82 760,44 C1000,6 1240,80 1440,30 L1440,0 L0,0 Z" fill="#0a0a0c"></path>
-      </svg>
-      <div class="relative z-10 mx-auto max-w-7xl px-6 pb-24 pt-28">
-        <div class="grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-6">
-          {% for stat in stats %}
-            <div class="stat-card" data-reveal="up" data-delay="{% cycle '0' '0.06' '0.12' '0.18' %}">
-              <div class="stat-num font-latin">{{ stat.number|fa_digits }}</div>
-              <p class="mt-2 text-sm font-medium text-cream/70">{{ stat.label }}</p>
-              {% if stat.description %}
-                <p class="mt-1 text-[0.8rem] text-cream/45">{{ stat.description }}</p>
-              {% endif %}
-            </div>
-          {% endfor %}
-        </div>
-      </div>
-    </section>
-  {% endif %}
-
-  {% comment %}توضیحات کامل — متن غنی روی پس‌زمینهٔ روشن{% endcomment %}
-  {% if service.description %}
-    <section class="relative bg-cream" style="border-radius: 3rem 9rem 0 0">
-      <div class="relative z-10 mx-auto max-w-7xl px-6 pb-28 pt-28 md:pt-36">
-        <div class="grid grid-cols-1 items-start gap-12 lg:grid-cols-[1fr_2fr] lg:gap-20">
-          <div class="lg:sticky lg:top-28" data-reveal="up">
-            <p class="eyebrow eyebrow-dark">درباره این خدمت</p>
-            <h2 class="mt-5 text-3xl font-extrabold leading-[1.3] text-paper md:text-[2.4rem]">
-              {{ service.title }} چیست؟
-            </h2>
-          </div>
-          <div class="prose-ink max-w-none" data-reveal="up" data-delay="0.08">
-            {{ service.description|safe }}
-          </div>
-        </div>
-      </div>
-    </section>
-  {% endif %}
-
-  {% comment %}خروجی‌ها و فرآیند — دو ستون شیشه‌ای روشن{% endcomment %}
-  {% if deliverables or processes %}
-    <section class="relative bg-cream2">
-      <div class="relative z-10 mx-auto max-w-7xl px-6 pb-28 pt-4">
-        <div class="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-8">
-          {% if deliverables %}
-            <div class="glass-light p-8 md:p-10" style="border-radius: 1.75rem 1rem" data-reveal="up">
-              <p class="eyebrow eyebrow-dark">چه چیزی تحویل می‌گیرید</p>
-              <h3 class="mt-4 text-2xl font-extrabold text-paper">خروجی‌های معمول</h3>
-              <ul class="mt-7 flex flex-col gap-3.5">
-                {% for item in deliverables %}
-                  <li class="flex items-baseline gap-3 text-[0.95rem] text-coy">
-                    {% icon "check" class="mt-1 h-4 w-4 shrink-0 text-gold-dark" %}
-                    <span>{{ item.title }}</span>
-                  </li>
-                {% endfor %}
-              </ul>
-            </div>
-          {% endif %}
-          {% if processes %}
-            <div class="glass-light p-8 md:p-10" style="border-radius: 1rem 1.75rem" data-reveal="up" data-delay="0.08">
-              <p class="eyebrow eyebrow-dark">چطور پیش می‌رویم</p>
-              <h3 class="mt-4 text-2xl font-extrabold text-paper">فرآیند کار</h3>
-              <ol class="mt-7 flex flex-col gap-3.5">
-                {% for step in processes %}
-                  <li class="flex items-baseline gap-3 text-[0.95rem] text-coy">
-                    <span class="font-latin text-sm font-bold text-gold-dark fa-num">{{ forloop.counter|stringformat:"02d"|fa_digits }}</span>
-                    <span>{{ step.title }}</span>
-                  </li>
-                {% endfor %}
-              </ol>
-            </div>
-          {% endif %}
-        </div>
-      </div>
-    </section>
-  {% endif %}
-
-  {% comment %}چرا ما — کارت‌های شیشه‌ای تیره{% endcomment %}
-  {% if why_us %}
-    <section class="relative overflow-hidden bg-ink2">
-      <svg class="divider divider-flip" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true">
-        <path d="M0,26 C260,84 520,82 760,44 C1000,6 1240,80 1440,30 L1440,0 L0,0 Z" fill="#efece5"></path>
-      </svg>
-      <div class="grid-bg pointer-events-none absolute inset-0 opacity-20" aria-hidden="true"></div>
-      <div class="relative z-10 mx-auto max-w-7xl px-6 pb-28 pt-28 md:pt-32">
-        <div class="max-w-2xl">
-          <p class="eyebrow" data-reveal="up">مزیت رقابتی</p>
-          <h2 class="mt-5 text-4xl font-extrabold leading-[1.3] md:text-[2.7rem]" data-reveal="up" data-delay="0.08">
-            چرا {{ settings.site_name|default:"پیکسوریا" }}؟
-          </h2>
-        </div>
-        <div class="mt-14 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {% for item in why_us %}
-            <div class="glass p-7" style="border-radius: {% cycle '1.5rem' '1rem' '1.75rem 0.75rem' %}"
-                 data-reveal="up" data-delay="{% cycle '0' '0.06' '0.12' %}">
-              <span class="icon-ring h-10 w-10">{% icon item.icon class="h-5 w-5" %}</span>
-              <h3 class="mt-5 text-lg font-bold text-cream">{{ item.title }}</h3>
-              <p class="mt-2.5 text-sm leading-7 text-cream/55">{{ item.description }}</p>
-            </div>
-          {% endfor %}
-        </div>
-      </div>
-    </section>
-  {% endif %}
-
-  {% comment %}قیمت‌گذاری — پلن‌ها و آیتم‌های دلخواه{% endcomment %}
-  {% if plans %}
-    <section id="pricing" class="relative bg-cream">
-      <div class="relative z-10 mx-auto max-w-7xl px-6 pb-28 pt-28 md:pt-36">
-        <div class="max-w-2xl">
-          <p class="eyebrow eyebrow-dark" data-reveal="up">قیمت‌گذاری شفاف</p>
-          <h2 class="mt-5 text-4xl font-extrabold leading-[1.3] text-paper md:text-[2.7rem]"
-              data-reveal="up" data-delay="0.08">
-            پلن مناسب خودتان را انتخاب کنید.
-          </h2>
-        </div>
-
-        <div class="mt-14 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {% for plan in plans %}
-            <article class="glass-light relative flex flex-col gap-5 p-7{% if plan.is_featured %} ring-1 ring-gold/40{% endif %}"
-                     style="border-radius: {% cycle '1.5rem' '1rem' '1.75rem 0.75rem' '0.75rem 1.75rem' %}"
-                     data-reveal="up" data-delay="{% cycle '0' '0.06' '0.12' '0.18' %}">
-              {% if plan.is_featured %}
-                <span class="absolute -top-3 right-6 rounded-full bg-gold px-3 py-1 text-[0.68rem] font-bold tracking-wider text-ink">
-                  پیشنهادی
-                </span>
-              {% endif %}
-              <div>
-                <span class="mb-2.5 block font-latin text-[10px] tracking-[.25em] text-coy/70">{{ plan.name }}</span>
-                <div class="flex flex-wrap items-baseline gap-1.5">
-                  {% if plan.old_price %}
-                    <span class="text-sm text-coy/50 line-through fa-num">{{ plan.old_price }}</span>
-                  {% endif %}
-                  <span class="font-latin text-[1.7rem] font-bold leading-none text-paper fa-num">{{ plan.price }}</span>
-                  <span class="text-[0.72rem] text-coy/60">میلیون تومان</span>
-                </div>
-                {% if plan.discount_label %}
-                  <div class="mt-1.5 text-[0.72rem] font-medium text-gold-dark">{{ plan.discount_label }}</div>
-                {% endif %}
-              </div>
-              <div class="h-px bg-gold-dark/20"></div>
-              <ul class="flex flex-1 flex-col gap-2.5">
-                {% for feature in plan.features.all %}
-                  {% if feature.included %}
-                    <li class="flex gap-2 text-[0.88rem] text-coy">
-                      {% icon "check" class="mt-1 h-4 w-4 shrink-0 text-gold-dark" %}
-                      <span>{{ feature.title }}</span>
-                    </li>
-                  {% else %}
-                    <li class="flex gap-2 text-[0.88rem] text-coy/40">
-                      <span aria-hidden="true">—</span>
-                      <span>{{ feature.title }}</span>
-                    </li>
-                  {% endif %}
-                {% endfor %}
-              </ul>
-              <a href="{% url 'contact:contact' %}" class="btn btn-gold w-full justify-center px-5 py-3 text-[0.9rem]">
-                شروع کنید
-                {% icon "arrow-left" class="h-4 w-4" %}
-              </a>
-            </article>
-          {% endfor %}
-        </div>
-
-        {% if custom_items %}
-          <div class="glass-light mt-8 p-8 md:p-10" style="border-radius: 1.5rem" data-custom-root data-reveal="up">
-            <div class="mb-8 grid grid-cols-1 items-start gap-8 lg:grid-cols-[1fr_auto]">
-              <div>
-                <p class="eyebrow eyebrow-dark">پلن دلخواه</p>
-                <h2 class="mt-4 text-2xl font-extrabold text-paper md:text-[2rem]">فقط چیزی که نیاز دارید.</h2>
-                <p class="mt-3 max-w-xl text-[0.95rem] text-coy">
-                  آیتم‌های موردنظر را انتخاب کنید — قیمت نهایی به‌صورت خودکار محاسبه می‌شود.
-                </p>
-              </div>
-              <div class="flex items-baseline gap-2.5 rounded-2xl bg-ink px-6 py-5 text-cream">
-                <span class="font-latin text-[10px] tracking-[.2em] text-cream/45">مجموع تخمینی</span>
-                <span class="font-latin text-[1.7rem] font-bold leading-none text-gold-light fa-num" data-custom-total>۰</span>
-                <span class="text-[0.72rem] text-cream/45">میلیون تومان</span>
-              </div>
-            </div>
-            <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
-              {% for item in custom_items %}
-                <label class="flex cursor-pointer items-center justify-between gap-4 rounded-2xl border border-gold-dark/20 px-5 py-4 transition-colors has-[:checked]:border-gold has-[:checked]:bg-gold/5"
-                       for="ci-{{ item.id }}" data-reveal="up" data-delay="{% cycle '0' '0.05' '0.1' '0.15' %}">
-                  <span class="flex items-center gap-3.5">
-                    <input type="checkbox" id="ci-{{ item.id }}" data-custom-price="{{ item.price }}"
-                           class="h-4 w-4 shrink-0 accent-gold" />
-                    <span class="flex flex-col">
-                      <span class="text-[0.95rem] font-medium text-paper">{{ item.title }}</span>
-                      {% if item.description %}
-                        <span class="mt-0.5 text-[0.82rem] text-coy/70">{{ item.description }}</span>
-                      {% endif %}
-                    </span>
-                  </span>
-                  <span class="shrink-0 font-latin text-[0.84rem] font-medium text-gold-dark fa-num">{{ item.price }}M</span>
-                </label>
-              {% endfor %}
-            </div>
-            <div class="mt-8 flex flex-col items-start justify-between gap-5 border-t border-gold-dark/20 pt-6 sm:flex-row sm:items-center">
-              <p class="text-[0.86rem] text-coy/70">قیمت‌ها تخمینی هستند. برآورد دقیق بعد از جلسه اولیه ارائه می‌شود.</p>
-              <a href="{% url 'contact:contact' %}" class="btn btn-gold px-7 py-3.5">
-                درخواست مشاوره
-                {% icon "arrow-left" class="h-4 w-4" %}
-              </a>
-            </div>
-          </div>
-        {% endif %}
-      </div>
-    </section>
-  {% endif %}
-
-  {% comment %}نظرات مشتریان — کامپوننتِ مشترک با service{% endcomment %}
-  {% testimonials_slider service=service %}
-
-  {% comment %}سوالات متداول — همان نشانه‌گذاری صفحه اصلی (initFaq در pixoria.js){% endcomment %}
-  {% if faqs %}
-    <section class="relative overflow-hidden bg-cream2">
-      <svg class="divider divider-flip" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true">
-        <path d="M0,26 C260,84 520,82 760,44 C1000,6 1240,80 1440,30 L1440,0 L0,0 Z" fill="#efece5"></path>
-      </svg>
-      <div class="relative z-10 mx-auto max-w-4xl px-6 pb-28 pt-28 md:pt-32">
-        <div class="max-w-2xl">
-          <p class="eyebrow eyebrow-dark" data-reveal="up">سوالات متداول</p>
-          <h2 class="mt-5 text-4xl font-extrabold leading-[1.3] text-paper md:text-[2.7rem]"
-              data-reveal="up" data-delay="0.08">
-            چیزی که معمولاً می‌پرسند.
-          </h2>
-        </div>
-        <div class="mt-12 space-y-3.5">
-          {% for faq in faqs %}
-            <div class="faq-item" data-reveal="up" data-delay="{% cycle '0' '0.06' '0.12' '0.18' '0.24' '0.3' %}">
-              <h3 class="m-0">
-                <button type="button" class="faq-q" aria-expanded="false">
-                  <span>{{ faq.question }}</span>
-                  <span class="faq-icon" aria-hidden="true">{% icon "plus" class="h-4 w-4" %}</span>
-                </button>
-              </h3>
-              <div class="faq-a" role="region">
-                <p>{{ faq.answer|linebreaksbr }}</p>
-              </div>
-            </div>
-          {% endfor %}
-        </div>
-      </div>
-    </section>
-  {% endif %}
-
-  {% comment %}سایر خدمات — فهرست حداقلی{% endcomment %}
-  {% if other_services %}
-    <section class="relative overflow-hidden bg-ink2">
-      <svg class="divider divider-flip" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true">
-        <path d="M0,26 C260,84 520,82 760,44 C1000,6 1240,80 1440,30 L1440,0 L0,0 Z" fill="#efece5"></path>
-      </svg>
-      <div class="grid-bg pointer-events-none absolute inset-0 opacity-20" aria-hidden="true"></div>
-      <div class="relative z-10 mx-auto max-w-7xl px-6 pb-28 pt-28 md:pt-32">
-        <div class="max-w-2xl">
-          <p class="eyebrow" data-reveal="up">سایر خدمات</p>
-          <h2 class="mt-5 text-4xl font-extrabold leading-[1.3] md:text-[2.7rem]"
-              data-reveal="up" data-delay="0.08">
-            خدمات دیگر ما را هم ببینید.
-          </h2>
-        </div>
-        <div class="mt-12 flex flex-col divide-y divide-cream/10">
-          {% for s in other_services %}
-            <a href="{% url 'services:detail' s.slug %}"
-               class="group grid grid-cols-1 items-start gap-4 py-8 transition-colors duration-300 hover:bg-white/[0.02] md:grid-cols-[56px_1fr_auto] md:gap-8"
-               data-reveal="up" data-delay="{% cycle '0' '0.06' '0.12' '0.18' %}">
-              <span class="icon-ring h-12 w-12 shrink-0">{% icon s.icon class="h-5 w-5" %}</span>
-              <div class="min-w-0">
-                <h3 class="text-xl font-bold text-cream transition-colors group-hover:text-gold-light">{{ s.title }}</h3>
-                {% if s.excerpt %}
-                  <p class="mt-2 max-w-2xl text-[0.92rem] leading-7 text-cream/55">{{ s.excerpt }}</p>
-                {% endif %}
-              </div>
-              <span class="hidden h-11 w-11 shrink-0 place-items-center rounded-full border border-cream/10 text-cream/50 transition-all duration-300 group-hover:border-gold/60 group-hover:bg-gold/10 group-hover:text-gold-light md:grid">
-                {% icon "arrow-left" class="h-5 w-5" %}
-              </span>
-            </a>
-          {% endfor %}
-        </div>
-      </div>
-    </section>
-  {% endif %}
+{% block extra_head %}
+  {% comment %}
+    داده‌های ساختاریافتهٔ صفحهٔ خدمت. مسیرِ نمایش کامل است؛ Service
+    (+ provider، areaServed)، Offer‌های ساخته‌شده از پلن‌ها و FAQPage را T67
+    با فیلترِ json در همین جایگاه اضافه می‌کند — تا آن موقع فقط مسیر نمایش
+    سالم می‌ماند تا هیچ‌وقت JSON خراب تولید نشود.
+  {% endcomment %}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "خانه",
+              "item": "{{ request.scheme }}://{{ request.get_host }}{% url 'home:home' %}"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "خدمات",
+              "item": "{{ request.scheme }}://{{ request.get_host }}{% url 'services:list' %}"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": {{ service.title|striptags|json }},
+              "item": "{{ request.build_absolute_uri }}"
+            }
+          ]
+        }
+      ]
+    }
+  </script>
 {% endblock %}
 
-{% block extra_js %}
-  <script>
-    // Sum of the custom-plan items (only present when custom_items exist).
-    (function () {
-      var root = document.querySelector("[data-custom-root]");
-      if (!root) return;
-      var total = root.querySelector("[data-custom-total]");
-      var boxes = root.querySelectorAll("[data-custom-price]");
-      var FA = ["۰","۱","۲","۳","۴","۵","۶","۷","۸","۹"];
-      function fa(num) { return String(num).replace(/\d/g, function (d) { return FA[d]; }); }
-      function update() {
-        var sum = 0;
-        boxes.forEach(function (cb) { if (cb.checked) sum += parseInt(cb.dataset.customPrice, 10) || 0; });
-        total.textContent = fa(sum);
-      }
-      boxes.forEach(function (cb) { cb.addEventListener("change", update); });
-    })();
-  </script>
+{% block content %}
+  {% comment %}
+    اسکلتِ صفحهٔ اختصاصیِ خدمت (T63). پوششِ بیرونی لهجهٔ رنگیِ خدمت را روی
+    کلِ صفحه تنظیم می‌کند (--pa/--po) تا حلقه‌ها، سیاره و تزئین‌های
+    «سامانهٔ خورشیدی» همرنگِ همان خدمت باشند. هر بخش با {% if %} محافظت
+    می‌شود تا صفحه با دیتابیسِ خالی هم بدون خطا رندر شود.
+    بخش‌های محتوایی (T64: خروجی‌ها/بخش‌های بلند/کاربردها/ابزارها،
+    T65: فرآیند/چرا ما/آمار، T66: قیمت‌گذاری، T67: نظرات/نمونه‌کارها/سوالات/
+    خدمات و مقالات مرتبط) در همین جایگاه‌های نشانه‌گذاری‌شده اضافه می‌شوند.
+  {% endcomment %}
+  <div class="{{ service.accent_class }}">
+
+    {# ── هیرو — مسیر صفحه، عنوان، مقدمه، دکمه‌ها و آرتورکِ اختصاصیِ خدمت ── #}
+    <section class="relative overflow-hidden bg-ink" data-mouse-parallax>
+      {% include "partials/_space_layer.html" with ring_spin="1" ring_class="-left-48 -bottom-24 h-[34rem] w-[46rem]" orb_variant="planet-orb-"|add:service.accent orb_class="left-[7%] top-[14%] h-7 w-7" %}
+      <div class="pointer-events-none absolute -right-40 top-1/4 h-[32rem] w-[32rem] rounded-full opacity-25"
+           style="background: radial-gradient(circle, color-mix(in srgb, var(--pa, #c9a15a) 22%, transparent 65%));"
+           aria-hidden="true"></div>
+      <span class="stroke-title font-latin pointer-events-none absolute -bottom-10 left-0 select-none text-[15vw] font-light leading-none"
+            aria-hidden="true">service</span>
+
+      <div class="relative z-10 mx-auto max-w-7xl px-6 pb-28 pt-36 md:pt-48">
+        {% include "components/_breadcrumb.html" %}
+
+        <div class="mt-10 grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-16">
+          {# ستونِ متن #}
+          <div data-reveal="right">
+            {% if service.hero_eyebrow %}
+              <p class="eyebrow">{{ service.hero_eyebrow }}</p>
+            {% endif %}
+            <h1 class="mt-6 text-[2.6rem] font-extrabold leading-[1.2] sm:text-5xl lg:text-[3.5rem]">
+              {{ service.hero_title|default:service.title|highlight }}
+            </h1>
+            {% if service.hero_lead or service.excerpt %}
+              <p class="mt-6 max-w-xl text-lg font-light leading-8 text-cream/70"
+                 data-reveal="up" data-delay="0.06">
+                {{ service.hero_lead|default:service.excerpt }}
+              </p>
+            {% endif %}
+            {% if service.get_chips_list %}
+              <div class="mt-7 flex flex-wrap gap-2.5" data-reveal="up" data-delay="0.1">
+                {% for chip in service.get_chips_list %}
+                  <span class="s-chip">{{ chip }}</span>
+                {% endfor %}
+              </div>
+            {% endif %}
+            <div class="mt-10 flex flex-wrap gap-4" data-reveal="up" data-delay="0.16">
+              {% if service.hero_cta_primary_text %}
+                <a href="{% nav_url service.hero_cta_primary_url %}" class="btn btn-gold px-8 py-4" data-magnetic>
+                  {{ service.hero_cta_primary_text }}
+                  {% icon "arrow-left" class="h-4 w-4" %}
+                </a>
+              {% else %}
+                <a href="{% url 'contact:contact' %}" class="btn btn-gold px-8 py-4" data-magnetic>
+                  درخواست مشاوره
+                  {% icon "arrow-left" class="h-4 w-4" %}
+                </a>
+              {% endif %}
+              {% if service.hero_cta_secondary_text and service.hero_cta_secondary_url %}
+                <a href="{% nav_url service.hero_cta_secondary_url %}" class="btn btn-ghost px-8 py-4" data-magnetic>
+                  {{ service.hero_cta_secondary_text }}
+                </a>
+              {% endif %}
+            </div>
+          </div>
+
+          {# ستونِ آرتورک — تصویرسازیِ مختصِ نوعِ `visual` خدمت (T68 آن را گسترش می‌دهد) #}
+          <div class="relative mx-auto w-full max-w-xl" data-reveal="left" data-delay="0.12">
+            <span class="orbit-ring orbit-ring--spin absolute -right-14 -top-16 h-80 w-80 opacity-60"
+                  aria-hidden="true"></span>
+            <span class="orbit-dot absolute -right-3 top-2 h-3.5 w-3.5" aria-hidden="true"></span>
+
+            {% if service.visual == 'browser' %}
+              {# ماکت مرورگر #}
+              <div class="svc-browser relative w-full overflow-hidden border border-white/[.08] bg-ink/60 shadow-2xl"
+                   style="border-radius: 1.25rem 1.25rem 0.75rem 0.75rem">
+                <div class="flex items-center gap-2.5 border-b border-white/[.06] px-5 py-4">
+                  <span class="h-3 w-3 rounded-full bg-gold/50"></span>
+                  <span class="h-3 w-3 rounded-full bg-cream/20"></span>
+                  <span class="h-3 w-3 rounded-full bg-royal/50"></span>
+                  <span class="mr-3.5 flex-1 truncate rounded-full bg-white/[.05] px-4 py-1.5 text-left font-latin text-[10px] text-cream/40">pixoria.ir</span>
+                </div>
+                <div class="relative grid-bg p-7">
+                  <div class="svc-scan absolute inset-x-0 top-0 h-32"></div>
+                  <div class="h-24 rounded-xl bg-gradient-to-l from-gold/25 to-transparent"></div>
+                  <div class="mt-4 grid grid-cols-3 gap-3">
+                    <div class="h-14 rounded-lg bg-white/[.06]"></div>
+                    <div class="h-14 rounded-lg bg-white/[.06]"></div>
+                    <div class="h-14 rounded-lg bg-white/[.06]"></div>
+                  </div>
+                  <div class="mt-4 space-y-2.5">
+                    <div class="h-2.5 w-3/4 rounded-full bg-white/[.07]"></div>
+                    <div class="h-2.5 w-1/2 rounded-full bg-white/[.05]"></div>
+                  </div>
+                </div>
+              </div>
+
+            {% elif service.visual == 'terminal' %}
+              {# ترمینال #}
+              <div class="svc-terminal relative flex flex-col overflow-hidden border border-white/[.08] bg-ink3/80 shadow-2xl"
+                   style="border-radius: 1rem; min-height: 18rem">
+                <div class="flex flex-none items-center justify-between border-b border-white/[.06] px-5 py-3.5">
+                  <span class="font-latin text-[10px] tracking-[.2em] text-cream/40">BASH</span>
+                  <div class="flex gap-2">
+                    <span class="h-2.5 w-2.5 rounded-full bg-gold/50"></span>
+                    <span class="h-2.5 w-2.5 rounded-full bg-cream/15"></span>
+                    <span class="h-2.5 w-2.5 rounded-full bg-royal/50"></span>
+                  </div>
+                </div>
+                <div class="flex flex-1 flex-col p-5 font-latin text-xs leading-relaxed" dir="ltr">
+                  <p class="text-cream/45"><span class="text-gold-light">$</span> pixoria build --prod</p>
+                  <p class="mt-2 text-cream/55"><span class="text-royal">✓</span> compiling modules <span class="text-cream/30">… ۱۲۴ فایل</span></p>
+                  <p class="mt-1.5 text-cream/55"><span class="text-royal">✓</span> running test suite <span class="text-gold/70">۸۱۲ passed</span></p>
+                  <p class="mt-1.5 text-cream/55"><span class="text-royal">✓</span> deploying to edge <span class="cursor-blink">▋</span></p>
+                  <div class="mt-auto pt-4">
+                    <div class="h-1.5 overflow-hidden rounded-full bg-white/[.08]">
+                      <span class="svc-build-bar block h-full w-0 rounded-full bg-gradient-to-l from-gold-light to-gold"></span>
+                    </div>
+                    <p class="mt-2.5 text-[10px] text-cream/35">deploying to production…</p>
+                  </div>
+                </div>
+              </div>
+
+            {% elif service.visual == 'palette' %}
+              {# پالت رنگی + پوستر #}
+              <div class="relative flex items-center gap-6">
+                <div class="svc-palette relative h-40 w-40 shrink-0">
+                  <span class="svc-palette-ring absolute inset-0 rounded-full">
+                    <span class="absolute left-1/2 top-0 h-5 w-5 -translate-x-1/2 rounded-full bg-gold-light shadow-[0_0_14px_rgba(232,196,122,0.8)]"></span>
+                    <span class="svc-palette-dot absolute right-1 top-1/3 h-4 w-4 rounded-full bg-royal shadow-[0_0_14px_rgba(46,99,255,0.8)]"></span>
+                    <span class="svc-palette-dot absolute bottom-2 right-1/4 h-4 w-4 rounded-full bg-cream shadow-[0_0_14px_rgba(245,243,238,0.6)]"></span>
+                    <span class="svc-palette-dot absolute bottom-2 left-1/4 h-4 w-4 rounded-full bg-gold-dark shadow-[0_0_14px_rgba(143,107,44,0.8)]"></span>
+                  </span>
+                  <span class="absolute inset-[34%] rounded-full bg-ink2 ring-1 ring-gold/25"></span>
+                </div>
+                <div class="svc-poster relative aspect-[16/11] flex-1 overflow-hidden border border-white/[.08] bg-ink/50"
+                     style="border-radius: 1rem" aria-hidden="true">
+                  <span class="grid-bg absolute inset-0 opacity-60"></span>
+                  <span class="svc-poster-sun absolute -right-10 -top-12 h-44 w-44 rounded-full"
+                        style="background: radial-gradient(circle, rgba(232,196,122,0.55), rgba(201,161,90,0.12) 55%, transparent 72%);"></span>
+                  <span class="svc-poster-disc absolute left-6 top-7 h-24 w-24 rounded-full border-2 border-dashed border-gold/40"></span>
+                  <span class="svc-poster-disc svc-poster-disc-2 absolute left-14 top-14 h-24 w-24 rounded-full border border-royal/30"></span>
+                  <span class="svc-poster-bar absolute bottom-16 right-6 h-2.5 w-24 rounded-full bg-gradient-to-l from-royal/70 to-transparent"></span>
+                  <span class="svc-poster-bar absolute bottom-10 right-6 h-2.5 w-16 rounded-full bg-gold/50"></span>
+                  <div class="absolute left-6 top-6 flex gap-1.5" dir="ltr">
+                    <span class="h-4 w-4 rounded-full bg-gold-light/90"></span>
+                    <span class="h-4 w-4 rounded-full bg-royal/90"></span>
+                    <span class="h-4 w-4 rounded-full bg-cream/80"></span>
+                    <span class="h-4 w-4 rounded-full bg-gold-dark/90"></span>
+                  </div>
+                  <div class="absolute inset-x-4 bottom-3">
+                    <div class="h-1 rounded-full bg-white/15">
+                      <span class="block h-full w-2/3 rounded-full bg-gradient-to-l from-gold-light to-gold" aria-hidden="true"></span>
+                    </div>
+                    <p class="mt-2 flex items-center justify-between text-[10px] text-cream/70">
+                      <span>پوستر و هویت بصری</span><span>CMYK آمادهٔ چاپ</span>
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+            {% elif service.visual == 'diamond' %}
+              {# شبکهٔ راهنمای لوگو #}
+              <div class="svc-diamond relative grid aspect-square w-full max-w-sm place-items-center overflow-hidden border border-white/[.07] bg-ink/40 shadow-2xl"
+                   style="border-radius: 1.75rem">
+                <span class="grid-bg absolute inset-0 opacity-70"></span>
+                <svg viewBox="0 0 220 220" class="absolute inset-0 h-full w-full" fill="none" aria-hidden="true">
+                  <defs>
+                    <linearGradient id="svc-hero-diamond" x1="0" y1="0" x2="1" y2="1">
+                      <stop offset="0" stop-color="#e8c47a" />
+                      <stop offset="0.55" stop-color="#c9a15a" />
+                      <stop offset="1" stop-color="#8f6b2c" />
+                    </linearGradient>
+                  </defs>
+                  <g stroke="rgba(232,196,122,.16)" stroke-dasharray="2 6">
+                    <line x1="110" y1="0" x2="110" y2="220" />
+                    <line x1="0" y1="110" x2="220" y2="110" />
+                    <line x1="36" y1="36" x2="184" y2="184" />
+                    <line x1="184" y1="36" x2="36" y2="184" />
+                    <circle cx="110" cy="110" r="96" />
+                    <circle cx="110" cy="110" r="32" />
+                  </g>
+                  <circle class="spin-slow" cx="110" cy="110" r="104" fill="none" stroke="url(#svc-hero-diamond)" stroke-width="1.5" stroke-dasharray="3 10" opacity=".8" />
+                  <circle class="svc-logo-ring-2" cx="110" cy="110" r="76" fill="none" stroke="url(#svc-hero-diamond)" stroke-width="1" stroke-dasharray="1 8" opacity=".55" />
+                  <path class="svc-logo-diamond" d="M110 58 L162 110 L110 162 L58 110 Z" fill="none" stroke="url(#svc-hero-diamond)" stroke-width="2.5" />
+                  <path class="svc-logo-diamond-inner" d="M110 84 L136 110 L110 136 L84 110 Z" fill="url(#svc-hero-diamond)" opacity=".92" />
+                  <ellipse cx="110" cy="110" rx="22" ry="7.5" transform="rotate(-20 110 110)" fill="none" stroke="#0d0d0f" stroke-width="2" opacity="0.5" />
+                  <circle cx="110" cy="110" r="12.5" fill="#0d0d0f" />
+                </svg>
+              </div>
+
+            {% else %}
+              {# بدون تصویرسازی — مدالِ آیکونِ خدمت #}
+              <div class="glass relative grid aspect-square w-full max-w-sm place-items-center" style="border-radius: 2rem">
+                <span class="icon-ring icon-ring-pulse h-24 w-24">{% icon service.icon class="h-10 w-10" %}</span>
+              </div>
+            {% endif %}
+
+            {% if service.badge %}
+              <span data-float="10" class="glass absolute -top-3 right-4 rounded-full px-3.5 py-1.5 text-[11px] text-gold-light">
+                {{ service.badge }}
+              </span>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {# ── مرور کلی — اولین بخشِ محتوای فعال (یا توضیحاتِ کاملِ خدمت) ── #}
+    {% if overview or service.description %}
+      <section class="relative bg-cream" style="border-radius: 3rem 9rem 0 0">
+        <div class="relative z-10 mx-auto max-w-3xl px-6 pb-28 pt-28 md:pt-36">
+          {% if overview %}
+            {% if overview.eyebrow %}
+              <p class="eyebrow eyebrow-dark" data-reveal="up">{{ overview.eyebrow }}</p>
+            {% endif %}
+            <h2 class="mt-5 text-3xl font-extrabold leading-[1.3] text-paper md:text-[2.4rem]"
+                data-reveal="up" data-delay="0.06">
+              {{ overview.title|highlight }}
+            </h2>
+            <div class="prose-ink mt-8" data-reveal="up" data-delay="0.12">
+              {{ overview.body|safe }}
+            </div>
+          {% else %}
+            <p class="eyebrow eyebrow-dark" data-reveal="up">مرور کلی</p>
+            <h2 class="mt-5 text-3xl font-extrabold leading-[1.3] text-paper md:text-[2.4rem]"
+                data-reveal="up" data-delay="0.06">
+              {{ service.title|highlight }} چیست؟
+            </h2>
+            <div class="prose-ink mt-8" data-reveal="up" data-delay="0.12">
+              {{ service.description|linebreaksbr|safe }}
+            </div>
+          {% endif %}
+        </div>
+      </section>
+    {% endif %}
+
+    {# ── T64: خروجی‌ها، بخش‌های بلندِ `sections`، کاربردها/صنایع، ابزارها ── #}
+
+    {# ── T65: خطِ زمانِ فرآیند، چرا ما، شمارشگرهای آمار ── #}
+
+    {# ── T66: قیمت‌گذاری (سه پلن + درخواستِ سفارشی) ── #}
+
+    {# ── T67: نظرات مشتریان، نمونه‌کارهای مرتبط، سوالات متداول،
+         خدمات و مقالاتِ مرتبط + JSON-LD های Service/FAQPage ── #}
+  </div>
 {% endblock %}

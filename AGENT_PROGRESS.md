@@ -2341,7 +2341,7 @@ header/footer/CTA) and the existing models `services.Service`, `ServiceStat`,
   plans per service with placeholder prices the admin will change |
   files: `apps/services/management/commands/seed_services_content.py` |
   commit: "feat(services): seed per-service content"
-- [ ] T63 — `templates/services/detail.html` skeleton on `base.html` (the D27
+- [x] T63 — `templates/services/detail.html` skeleton on `base.html` (the D27
   language): per-service theme classes, the breadcrumb partial (T47), JSON-LD
   placeholders in `extra_head`, a hero by `visual` type (bespoke artwork,
   CSS/SVG only) and the intro/overview section. Every section `{% if %}`-guarded;
@@ -2441,13 +2441,40 @@ contact; descriptive alt texts; meta title/description per service.
 
 ## Current status
 
-T01–T62 done (T42 superseded by Phase 12; T47b/T47c were the template-comment
-leak sweeps — D50/D60). **Next: T63** — the `templates/services/detail.html`
-skeleton on `base.html`: per-service theme classes (`service.accent_class`), the
-breadcrumb partial, JSON-LD placeholders in `extra_head`, a hero by `visual`
-type (bespoke CSS/SVG artwork — T68 fleshes out the four atmospheres) and the
-intro/overview section, every section `{% if %}`-guarded so an empty DB still
-renders. All the data it needs is now in place (see the T62 note below).
+T01–T63 done (T42 superseded by Phase 12; T47b/T47c were the template-comment
+leak sweeps — D50/D60). **Next: T64** — content sections part 1 on the new
+skeleton: «چه کاری انجام می‌دهیم» (deliverables), the long-form `ServiceSection`
+blocks (`sections` in the context, alternating `.prose-ink`/`.prose-cream` by
+`layout`), the use-cases/industries grid and the tools marquee/chips. All the
+data is already in the context (see the T63 note below) and in the DB (T62).
+
+T63 is live: `templates/services/detail.html` is rebuilt on `base.html` in the
+D27 language and `apps/services/views.py` sends every child queryset
+(`overview`, `sections`, `deliverables`, `tools`, `use_cases`, `stats`,
+`why_us`, `processes`, `plans`+`features`, `custom_items`, `faqs`,
+`related_services`) so each section can be `{% if %}`-guarded. Live now: the
+theme wrapper (`service.accent_class` → `.svc-accent-*` sets `--pa`/`--po` for
+the whole page, so rings/orbs/dots take the service's accent — six variants
+added to `input.css`, plus the missing `.planet-orb-peri`), the hero (space
+layer with a spinning tilted ring + accent planet over a starfield, halo,
+`service` watermark word, breadcrumb, eyebrow, `[[ ]]` h1 with a `hero_title`
+→ `title` fallback, lead → `excerpt` fallback, chips, two CTAs via `nav_url`
+with a «درخواست مشاوره» default), the four bespoke `visual` artworks at hero
+scale (browser mockup / terminal build log / palette + poster / logo
+construction grid — all CSS/SVG reusing the `svc-*` classes from the home
+cards, plus a glass icon panel for `visual=none`), and the overview section
+(first active `ServiceSection`, falling back to `service.description` when
+there are no sections). `extra_head` ships a real `BreadcrumbList`; the
+`Service`/`FAQPage`/`Offer` graphs are marked placeholders for T67 so the page
+never emits broken JSON. Hook comments mark the T64–T67 slots. Verified:
+`manage.py check` + `makemigrations --check` clean; all four pages 200 on the
+real DB and on a throwaway empty test DB (all five `visual` types, a service
+with no children and even no description, missing service → 404); a headless-
+Chrome/CDP pass at 1440 px and 375 px shows no horizontal overflow anywhere,
+each page carries its own artwork, and the ring/orb computed colors match the
+accent exactly (#c9a15a / #2e63ff / #e8c47a / #f5f3ee). `npm run build` was
+re-run; the rebuilt `tailwind.css` prunes the utilities only the deleted v1
+markup used (tree-shaking, nothing shared was lost).
 
 T62 is live: `apps/services/management/commands/seed_services_content.py` fills
 all four services (`web-design`, `programming`, `logo-design`, `graphic-design`)
