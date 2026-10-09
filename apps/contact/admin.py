@@ -1,4 +1,7 @@
 from django.contrib import admin
+
+from apps.core.icon_utils import IconPickerForm
+
 from .models import (
     ContactPageSection,
     ContactInfo,
@@ -44,6 +47,7 @@ class ContactInfoAdmin(admin.ModelAdmin):
 
 
 class ContactFormPointInline(admin.TabularInline):
+    form = IconPickerForm
     model = ContactFormPoint
     extra = 1
     list_editable = ["order"]

@@ -32,6 +32,12 @@ def icon(name, class_name="", size=None, **kwargs):
     # attribute value and drop anything that isn't a valid Lucide slug.
     if not name or not _NAME_RE.match(str(name)):
         return ""
+    # Fail soft: an icon that is not (yet) in the public sprite renders nothing
+    # instead of a dangling <use> — run `manage.py sync_icons` after picking a
+    # new icon in the admin (T55).
+    available = available_icons()
+    if available and name not in available:
+        return ""
     href = f"{static(SPRITE)}#i-{name}"
     cls = class_name or kwargs.get("class", "")
     attrs = 'aria-hidden="true" focusable="false"'

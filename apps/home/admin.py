@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from apps.core.icon_utils import IconPreviewMixin
+from apps.core.icon_utils import IconPickerForm, IconPreviewMixin
 from .models import *
 
 
@@ -29,6 +29,7 @@ class HeroSectionAdmin(admin.ModelAdmin):
 
 @admin.register(HeroStat)
 class HeroStatAdmin(IconPreviewMixin, admin.ModelAdmin):
+    form = IconPickerForm
     list_display = ["icon_preview", "value", "label", "icon", "order", "is_active"]
     list_editable = ["value", "label", "icon", "order", "is_active"]
     list_display_links = ["icon_preview"]
@@ -40,6 +41,7 @@ class HeroMarqueeItemAdmin(admin.ModelAdmin):
 
 
 class HomeAboutStatInline(IconPreviewMixin, admin.TabularInline):
+    form = IconPickerForm
     model = HomeAboutStat
     extra = 1
     fields = ["icon_preview", "icon", "value", "prefix", "suffix", "label", "order", "is_active"]
@@ -59,6 +61,7 @@ class HomeAboutSectionAdmin(admin.ModelAdmin):
 
 @admin.register(HomeAboutStat)
 class HomeAboutStatAdmin(IconPreviewMixin, admin.ModelAdmin):
+    form = IconPickerForm
     list_display = ["icon_preview", "label", "value", "prefix", "suffix", "icon", "order", "is_active"]
     list_editable = ["value", "prefix", "suffix", "icon", "order", "is_active"]
     list_display_links = ["icon_preview", "label"]
@@ -163,6 +166,7 @@ class StatsSectionAdmin(admin.ModelAdmin):
 
 @admin.register(StatItem)
 class StatItemAdmin(IconPreviewMixin, admin.ModelAdmin):
+    form = IconPickerForm
     list_display = ["icon_preview", "label", "value", "prefix", "suffix", "icon", "order", "is_active"]
     list_editable = ["value", "prefix", "suffix", "icon", "order", "is_active"]
     list_display_links = ["icon_preview", "label"]
@@ -178,6 +182,7 @@ class ProcessSectionAdmin(admin.ModelAdmin):
 
 @admin.register(ProcessStep)
 class ProcessStepAdmin(IconPreviewMixin, admin.ModelAdmin):
+    form = IconPickerForm
     list_display = ["icon_preview", "title", "icon", "order", "is_active"]
     list_editable = ["icon", "order", "is_active"]
     list_display_links = ["icon_preview", "title"]
@@ -193,6 +198,7 @@ class WhySectionAdmin(admin.ModelAdmin):
 
 @admin.register(WhyFeature)
 class WhyFeatureAdmin(admin.ModelAdmin):
+    form = IconPickerForm
     list_display = ["title", "icon", "size", "order", "is_active"]
     list_editable = ["order", "is_active"]
     list_display_links = ["title"]
@@ -209,6 +215,7 @@ class TechSectionAdmin(admin.ModelAdmin):
 
 @admin.register(TechSkill)
 class TechSkillAdmin(IconPreviewMixin, admin.ModelAdmin):
+    form = IconPickerForm
     list_display = ["icon_preview", "name", "icon", "level", "category", "order", "is_active"]
     list_editable = ["icon", "level", "order", "is_active"]
     list_display_links = ["icon_preview", "name"]

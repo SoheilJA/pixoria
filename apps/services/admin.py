@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from apps.core.icon_utils import IconPreviewMixin
+from apps.core.icon_utils import IconPickerForm, IconPreviewMixin
 from .models import (
     ServicesPageSection,
     Service,
@@ -30,6 +30,7 @@ class ServiceStatInline(admin.TabularInline):
 
 
 class ServiceWhyUsInline(IconPreviewMixin, admin.TabularInline):
+    form = IconPickerForm
     model = ServiceWhyUs
     extra = 1
     fields = ["icon_preview", "icon", "title", "description", "order"]
@@ -147,6 +148,7 @@ class ServiceTestimonialAdmin(admin.ModelAdmin):
 
 @admin.register(Service)
 class ServiceAdmin(IconPreviewMixin, admin.ModelAdmin):
+    form = IconPickerForm
     list_display = ["icon_preview", "title", "visual", "card_span", "order", "featured"]
     list_editable = ["visual", "card_span", "order", "featured"]
     list_display_links = ["icon_preview", "title"]

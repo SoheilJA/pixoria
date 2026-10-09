@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from apps.core.icon_utils import IconPreviewMixin
+from apps.core.icon_utils import IconPickerForm, IconPreviewMixin
 from .models import (
     Category,
     Portfolio,
@@ -25,6 +25,7 @@ class CategoryAdmin(admin.ModelAdmin):
 
 
 class ProjectStatInline(IconPreviewMixin, admin.TabularInline):
+    form = IconPickerForm
     model = ProjectStat
     extra = 1
     fields = ["icon_preview", "icon", "number", "label", "description", "order"]

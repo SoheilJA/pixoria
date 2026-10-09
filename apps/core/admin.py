@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .icon_utils import IconPreviewMixin
+from .icon_utils import IconPickerForm, IconPreviewMixin
 from .models import *
 
 
@@ -65,6 +65,7 @@ class SiteSettingsAdmin(admin.ModelAdmin):
 
 @admin.register(SocialLink)
 class SocialLinkAdmin(admin.ModelAdmin):
+    form = IconPickerForm
     list_display = ["label", "name", "icon", "url", "order"]
     list_editable = ["order"]
 
@@ -146,6 +147,7 @@ class AboutStoryAdmin(admin.ModelAdmin):
 
 @admin.register(AboutJourneySection)
 class AboutJourneySectionAdmin(admin.ModelAdmin):
+    form = IconPickerForm
     list_display = ["__str__", "badge_text"]
 
     def has_add_permission(self, request):
@@ -180,6 +182,7 @@ class AboutValueAdmin(admin.ModelAdmin):
 
 @admin.register(AboutStat)
 class AboutStatAdmin(IconPreviewMixin, admin.ModelAdmin):
+    form = IconPickerForm
     list_display = ["label", "icon_preview", "value", "prefix", "suffix", "order"]
     list_editable = ["order"]
     fieldsets = [

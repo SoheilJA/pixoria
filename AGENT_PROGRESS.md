@@ -1313,7 +1313,76 @@ scope for this migration and can pick these templates up later.)_
   project) — the hover/keyboard/focus behaviour was verified by code review
   against the markup and the CSS selectors.
 
-
+- **D58 — Admin icon picker (T55).** Every model icon field now edits through
+  one reusable widget. `IconPickerWidget` (`apps/core/icon_utils.py`, a
+  `forms.TextInput` subclass) renders the text input + a live preview button +
+  a searchable popup grid of ALL Lucide icons, with the Persian warning
+  «این آیکون هنوز در اسپریتِ سایت نیست — دستور <code>python manage.py
+  sync_icons</code> را اجرا کنید» when the chosen icon is not yet in the
+  public sprite and an error line when the name does not exist in Lucide at
+  all. Vanilla JS (`static/admin/js/icon_picker.js`, no jQuery/CDN): opens on
+  click of the preview, `Escape` closes (and returns focus to the input),
+  arrows move between the search box and the grid, `Enter`/click selects,
+  outside mousedown closes, the grid caps at 240 items with an «N از M آیکون»
+  hint, and the grid is rebuilt on every keystroke. RTL-safe CSS
+  (`static/admin/css/icon_picker.css`, `inset-inline` + a `min-width` so the
+  popup stays usable inside a narrow changelist cell) with `focus-visible`
+  outlines everywhere.
+  **The generic wiring is `IconPickerForm`** — a ModelForm that reads the
+  MODEL's icon fields (via `self._meta.model`) and swaps their widgets; `form
+  = IconPickerForm` on any admin/inline is all it takes. **GOTCHA:** the first
+  attempt detected the fields by the `validate_icon_name` entry in the FORM
+  field's `validators`, but Django's `Field.formfield()` does not copy model
+  validators into the form field (observed: the form field's validators were a
+  fresh `MaxLengthValidator` + `ProhibitNullCharactersValidator`), so no
+  widget was ever swapped — the add pages rendered 200 with a plain
+  `AdminTextInputWidget`. The model-side lookup fixed it.
+  Wired: core (`SocialLink`, `AboutJourneySection`, `AboutStat`), home
+  (`HeroStat`, `HomeAboutStat` + its inline, `StatItem`, `ProcessStep`,
+  `WhyFeature`, `TechSkill`), services (`Service`, `ServiceWhyUsInline`),
+  portfolio (`ProjectStatInline`), contact (`ContactFormPointInline`).
+  `HeroStat.icon` and `WhyFeature.icon` were the two icon fields still missing
+  the `validate_icon_name` validator (so the picker would never cover them and
+  the admin could store any string); both got it — migration `home.0012`,
+  `WhyFeature`'s help_text unified to `ICON_HELP`.
+  **Two sprites** (the task's architecture): the public
+  `icons/lucide.sprite.svg` stays SMALL (91 icons / 28.8 KB — only what the
+  templates and the DB use) and a new admin-only `icons/lucide.full.sprite.svg`
+  (2124 icons / 717 KB) that only the picker ever loads; `lucide-static`
+  (^1.49.0) is already in `package.json`. **The brand-glyph duplication is
+  fixed:** `scripts/brand-icons/` (figma/instagram/linkedin) was added when
+  lucide-static lacked them, but v1.49.0 ships identical copies (byte-identical
+  SVG, same `lucide-static v0.462.0` license header), so both sprites carried
+  DUPLICATE `<symbol id="i-figma">` entries and the name list had each name
+  twice — a duplicate id breaks `<use>` resolution. The folder is deleted and
+  the build script's `EXTRA` merge with it; every name now maps to exactly one
+  symbol (verified: 2124/2124 and 91/91 unique).
+  **`python manage.py sync_icons`** (`apps/core/management/commands/`) collects
+  every icon value from every model field carrying `validate_icon_name` and
+  hands them to `node scripts/build_icon_sprite.js --extra <tmpfile>`, which
+  rebuilds BOTH sprites + the picker name lists
+  (`window.__LUCIDE_FULL_ICONS` / `__LUCIDE_PUBLIC_ICONS` in
+  `static/admin/js/lucide_full_icons.js`). Idempotent — a second run produced
+  byte-identical output (sha256).
+  **`{% icon %}` fails soft now** (`icon_tags.py`): a name that is not in the
+  public sprite renders NOTHING instead of a dangling `<use>` (verified with a
+  template render: `A[]B[<svg…rocket…>]`), and `icon_exists` stays True while
+  the sprite is unbuilt so a fresh checkout does not false-negative.
+  `IconPreviewMixin`'s list previews read the FULL sprite (`full=True`) so an
+  admin sees an icon it has not synced yet.
+  **Verified** with `scripts/_t55_check.py`: 9 add pages (every icon-field
+  model) contain `data-icon-picker` + the popup parts + the full-sprite URL +
+  the widget Media (`icon_picker.js`, `lucide_full_icons.js`,
+  `icon_picker.css`); change pages with icon inlines render one picker per
+  inline row (service 7, portfolio 2, contact-form 5); changelists 200;
+  `validate_icon_name` rejects `nope-icon`/`UPPER`/`spaces here` and accepts
+  `rocket`/`code-xml`/empty; every `{% icon "…" %}` usage in `templates/`
+  resolves to a public-sprite symbol (zero missing); staticfiles finders
+  resolve all five new assets; `/`, `/about/`, `/contact/`, `/portfolio/`,
+  `/blog/` all 200; `manage.py check` + `makemigrations --check` clean;
+  `node --check` on the picker JS passes. NOT verified in a real browser (no
+  Playwright/Puppeteer) — keyboard/popup behaviour verified by code review
+  against the markup and the CSS.
 
 - **D56 — First-visit space preloader (T53).** A pure-CSS overlay rendered by
   `base.html` as the FIRST child of `<body>` (`role="presentation"`, opaque
@@ -1804,7 +1873,7 @@ scope for this migration and can pick these templates up later.)_
   dropped — confirm) and record the finding |
   files: `static/js/pixoria.js`, `static/src/input.css` |
   commit: "feat(base): page transition progress bar"
-- [ ] T55 — Icon picker with live preview in admin: every Lucide icon field
+- [x] T55 — Icon picker with live preview in admin: every Lucide icon field
   (all models using `validate_icon_name`, including `SocialLink`, Service,
   WhyFeature, ProcessStep, StatItem, TechSkill, AboutStat, ProjectStat,
   ContactFormPoint, …) gets a reusable admin widget `IconPickerWidget` (in
@@ -2044,13 +2113,12 @@ contact; descriptive alt texts; meta title/description per service.
 
 ## Current status
 
-T01–T54 done (T42 superseded by Phase 12; T47b was the template-comment leak
-sweep — D50). **Next: T55** — admin icon picker with live preview: reusable
-`IconPickerWidget` (text input + preview + searchable popup grid, keyboard
-accessible, tiny vanilla JS), a full admin-only Lucide sprite
-(`static/icons/lucide.full.sprite.svg`) while the public sprite stays small, a
-`python manage.py sync_icons` command rebuilding the public sprite from DB
-fields + `{% icon %}` usages, a Persian warning when an icon is not yet in the
-public sprite, and `{% icon %}` failing soft for unknown names.
+T01–T55 done (T42 superseded by Phase 12; T47b was the template-comment leak
+sweep — D50). **Next: T56** — remove letter-as-logo placeholders: grep every
+template/CSS/JS for the «پ» tile, header/footer brand-mark fallbacks, avatar
+initials and any `|first`/initial fallbacks, and replace them with the T57
+planet emblem (brand mark) / a neutral `user-round` orb (people) / the full
+brand name (client plates) / a decorative orbit illustration (story image
+fallback). Every replaced spot must be listed in this file.
 
 

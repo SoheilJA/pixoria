@@ -93,6 +93,7 @@ class HeroStat(models.Model):
         blank=True,
         verbose_name="آیکون",
         help_text="اختیاری. مثال: map-pin. " + ICON_HELP,
+        validators=[validate_icon_name],
     )
     order = models.PositiveIntegerField(default=0, verbose_name="ترتیب")
     is_active = models.BooleanField(default=True, verbose_name="فعال")
@@ -667,10 +668,8 @@ class WhyFeature(models.Model):
         max_length=64,
         default="sparkles",
         verbose_name="آیکون",
-        help_text=(
-            "نام انگلیسی یک آیکون Lucide. مثال: zap، palette، shield-check. "
-            "لیست کامل: lucide.dev/icons"
-        ),
+        help_text=ICON_HELP,
+        validators=[validate_icon_name],
     )
     title = models.CharField(max_length=100, verbose_name="عنوان")
     description = models.TextField(verbose_name="توضیحات")
