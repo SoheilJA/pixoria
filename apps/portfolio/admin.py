@@ -40,9 +40,9 @@ class ProjectImageInline(admin.TabularInline):
 
 @admin.register(Portfolio)
 class PortfolioAdmin(admin.ModelAdmin):
-    list_display = ["title", "client_name", "year", "featured", "order"]
+    list_display = ["title", "client_name", "service", "year", "featured", "order"]
     list_editable = ["featured", "order"]
-    list_filter = ["categories", "featured"]
+    list_filter = ["categories", "service", "featured"]
     search_fields = ["title", "client_name"]
     prepopulated_fields = {"slug": ("title",)}
     filter_horizontal = ["categories"]
@@ -72,6 +72,7 @@ class PortfolioAdmin(admin.ModelAdmin):
                 "fields": [
                     "client_name",
                     "year",
+                    "service",
                     "service_type",
                     "client_url",
                     "categories",

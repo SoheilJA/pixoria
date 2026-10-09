@@ -35,3 +35,17 @@ def fa_duration(seconds):
         return ""
     minutes, rest = divmod(total, 60)
     return f"{minutes}:{rest:02d}".translate(_DIGITS)
+
+
+@register.filter
+def fa_price(value):
+    """قیمت (عدد) → فارسی با جداکنندهٔ هزارگان.
+
+    15000000 → "۱۵٬۰۰۰٬۰۰۰" (با U+066C، جداسازِ هزارگانِ فارسی).
+    برای قیمت‌های پلن‌ها استفاده می‌شود؛ مقدارِ غیرعددی خالی برمی‌گردد.
+    """
+    try:
+        amount = int(value)
+    except (TypeError, ValueError):
+        return ""
+    return f"{amount:,}".replace(",", "٬").translate(_DIGITS)

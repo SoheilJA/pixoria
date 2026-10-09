@@ -1702,8 +1702,72 @@ scope for this migration and can pick these templates up later.)_
   DB" test must call `transaction.set_rollback(True)` inside the block — the
   script now does.
 
-### Space identity utilities (T60)
+- **D65 — Service model extensions (T61).** The models for the dedicated
+  service pages are in place, all of it OPTIONAL so a bare service still renders.
+  **`Service`** gained: `accent` (gold/gold-light/gold-dark/royal/cream/peri →
+  the `svc-accent-*` classes T68 will style) with the `accent_class` property,
+  a full hero block (`hero_eyebrow` / `hero_title` with `[[ ]]` help /
+  `hero_lead` / two CTA text+url pairs, the same `nav_url`-resolvable pattern
+  as `HeroSection` and `AboutPageHero`), `meta_title` / `meta_description` /
+  `og_image` with `get_meta_*()` fallbacks mirroring `Article`/`Portfolio`, and
+  a self-M2M `related_services`.
+  **Three new children:** `ServiceSection` (eyebrow, `[[ ]]` title, TinyMCE
+  `body`, optional `image`/`image_alt`, `layout` right/left/full, `order`,
+  `is_active`) for the long-form SEO blocks; `ServiceTool` (name + optional
+  Lucide icon) for the tech chips; `ServiceUseCase` (title + icon + short text)
+  for industries. All ordered, all `order`-sorted.
+  **Pricing became real numbers:** `ServicePlan.price` and `old_price` went
+  CharField → `PositiveBigIntegerField(null=True)`, and gained `tagline`,
+  `price_prefix` (default «از»), `price_currency` (default «تومان»), `price_note`
+  (the «تماس بگیرید» shown when the price is empty), `cta_label` / `cta_url`
+  and `is_active`. `clean()` already rejects a second `is_featured` plan per
+  service; the inline is now `max_num=3, extra=3`.
+  **Migrations:** `services.0008` (schema), `services.0009_plan_prices_to_toman`
+  — the three live plans held free-text «۱۵/۳۰/۶۰» which the old help text and
+  `ServiceCustomItem.price` («میلیون تومان») show were MILLION tomans, so the
+  RunPython multiplies by ۱۰۰۰۰۰۰ (۱۵ → ۱۵٬۰۰۰٬۰۰۰) and nulls any value that
+  survived the SQLite CAST as 0 (broken text → the `price_note` path, never
+  «۰ تومان»); reverse is a documented no-op because the original strings are
+  gone. `portfolio.0006` adds `Portfolio.service` (nullable FK, `SET_NULL`,
+  `related_name="projects"`) and `portfolio.0007_map_service_type_to_service`
+  does the best-effort mapping — exact title, then a containment pass with
+  ZWNJ/ی/ک normalization — and never deletes `service_type`; the live rows
+  («فروش عطر و ادکلن»، «تست») match nothing, so nothing was mapped, which is
+  the correct outcome. `blog.0006` adds the `Article.related_services` M2M.
+  **Components now use the real relations:** `projects_carousel(service=…)`
+  filters `Q(service=service) | Q(service_type=service.title)` (FK first, the
+  free-text field as fallback) — a STRING `service` still matches only the text
+  field, because `Q(service=<str>)` raises at query time (str has a `.title`
+  method, so the old `hasattr` guard was wrong too); `articles_carousel` gained
+  a `service` parameter filtering the M2M; `testimonials_slider` already used
+  the FK.
+  **`fa_price` filter** (`fa_digits.py`): `15000000` → «۱۵٬۰۰۰٬۰۰۰» (U+066C,
+  the Persian thousands separator) and `""` for anything non-numeric.
+  **Admin:** `ServiceAdmin` got four new fieldsets (تم / هیرو / خدمات مرتبط /
+  سئو) and three new inlines — `ServiceSectionInline` is *Stacked* (its `body`
+  is rich text), `ServiceToolInline` + `ServiceUseCaseInline` are Tabular with
+  `IconPickerForm` + the `icon_preview` column; `ServicePlanInline` is capped
+  at 3. `PortfolioAdmin` shows `service` in the fieldset, `list_display` and
+  `list_filter`; `ArticleAdmin` got a «خدمات مرتبط» fieldset for the M2M.
+  **Verified** with `scripts/_t61_check.py` (48 checks): 8 public pages 200;
+  the FK and M2M round-trip; all four `projects_carousel` permutations (FK,
+  text fallback, unmatched service, free string); both `articles_carousel`
+  paths; the three `fa_price` cases; the converted plan prices; the
+  one-featured-plan rule raising `ValidationError`; the admin add/change/
+  changelist pages for service/plan/portfolio/article all 200 with the new
+  fieldsets + inlines rendered; a real admin POST creating a service with
+  `accent=royal`, the hero fields and a `related_services` M2M entry
+  (NOTE: the POST needs `visual`/`card_span`/`order` — they are required form
+  fields despite having model defaults — and the inline management forms, whose
+  prefixes are the related_names: `sections`, `stats`, `why_us`, `deliverables`,
+  `processes`, `tools`, `use_cases`, `plans`, `custom_items`, `faqs`,
+  `testimonials`); and an EMPTY database inside a sentinel-exception rollback
+  (`/services/` 200, `/services/web-design/` correctly 404, home/portfolio/blog
+  200) with all 4 services + 3 plans restored afterwards. `manage.py check` +
+  `makemigrations --check` + `collectstatic --dry-run` clean; the template
+  `{#` sweep clean (no templates touched anyway).
 
+### Space identity utilities (T60)
 Tiny CSS-only decorative set in `static/src/input.css` — no images, no JS:
 
 | utility | purpose |
@@ -2238,7 +2302,7 @@ header/footer/CTA) and the existing models `services.Service`, `ServiceStat`,
 `ServiceCustomItem`, `ServiceFAQ`, `ServiceTestimonial`. Services already have
 `icon`, `visual` (none/browser/terminal/palette/diamond), `chips` and `badge`.
 
-- [ ] T61 — Review and extend the service models (reuse first; add only what is
+- [x] T61 — Review and extend the service models (reuse first; add only what is
   missing; everything optional): a per-service theme/accent (`accent` color
   choice mapped to CSS classes; the hero `visual` kept), hero fields (eyebrow,
   h1 with `[[ ]]`, lead paragraph, two CTA labels/URLs), long-form SEO content
@@ -2377,13 +2441,23 @@ contact; descriptive alt texts; meta title/description per service.
 
 ## Current status
 
-T01–T59 done (T42 superseded by Phase 12; T47b/T47c were the template-comment
-leak sweeps — D50/D60). **Next: T61** — extend the service models for the
-dedicated service pages (per-service accent, hero fields, `ServiceSection`
-long-form blocks, `ServiceTool`, `ServiceUseCase`, related services, a real
-`Portfolio.service` relation with a data migration, SEO fields, 3-plan pricing
-with `is_included` flags, the `fa_price` filter) — see the T61 entry for the
-full list.
+T01–T61 done (T42 superseded by Phase 12; T47b/T47c were the template-comment
+leak sweeps — D50/D60). **Next: T62** — the `seed_services_content` command:
+verbatim/adapted Persian copy from the four `new/services/*.html` pages plus
+newly written unique Persian copy per service for the extra sections
+(`ServiceSection` long-form blocks, `ServiceTool`, `ServiceUseCase`, three
+plans per service with placeholder prices), idempotent and never overwriting
+admin edits — see the content plan at the end of Phase 12.
+
+T61 (D65) is live: `Service` has the accent + hero + SEO + related-services
+fields, three new children (`ServiceSection` / `ServiceTool` /
+`ServiceUseCase`), real numeric plan pricing (`max_num=3`, one featured per
+service), a real `Portfolio.service` FK (best-effort mapped from the free-text
+`service_type`, which stays as the fallback) and an `Article.related_services`
+M2M. `projects_carousel(service=…)` and `articles_carousel(service=…)` use the
+real relations with the text fallback kept; the `fa_price` filter formats
+toman prices. All of it is optional, so the existing pages render unchanged
+and an empty DB still renders (a missing service detail correctly 404s).
 
 T60 (D64) is live: the space identity utilities (`.orbit-ring`, `.orbit-dot`,
 `.planet-orb` + 5 accent variants, `.star-field`) are defined in `input.css`

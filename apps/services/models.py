@@ -1,7 +1,10 @@
+from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+from tinymce.models import HTMLField
 
 from apps.core.icon_utils import validate_icon_name
+from apps.core.models import EYEBROW_HELP, ICON_HELP, TITLE_HELP, URL_HELP
 
 
 class ServicesPageSection(models.Model):
@@ -37,6 +40,16 @@ class Service(models.Model):
     SPAN_CHOICES = [
         ("wide", "عریض (۷ ستون)"),
         ("narrow", "کوچک (۵ ستون)"),
+    ]
+    # لهجهٔ رنگیِ صفحهٔ اختصاصیِ خدمت — به کلاسِ svc-accent-* در input.css
+    # نگاشت می‌شود (T60) و حلقه‌ها/سیاره/خطوطِ صفحه را رنگ می‌کند.
+    ACCENT_CHOICES = [
+        ("gold", "طلایی"),
+        ("gold-light", "طلاییِ روشن"),
+        ("gold-dark", "طلاییِ تیره"),
+        ("royal", "آبیِ سلطنتی"),
+        ("cream", "کرم"),
+        ("peri", "آبیِ کم‌رنگ"),
     ]
 
     title = models.CharField(max_length=200, verbose_name="عنوان")
@@ -87,6 +100,69 @@ class Service(models.Model):
     featured = models.BooleanField(default=True, verbose_name="نمایش در صفحه اصلی")
     order = models.PositiveIntegerField(default=0, verbose_name="ترتیب")
 
+    # --- لهجهٔ رنگیِ صفحهٔ اختصاصی ---
+    accent = models.CharField(
+        max_length=20,
+        choices=ACCENT_CHOICES,
+        default="gold",
+        verbose_name="رنگِ تم (لهجه)",
+        help_text="رنگِ حلقه‌ها، سیاره و خطوطِ صفحهٔ اختصاصیِ این خدمت",
+    )
+
+    # --- هیروی صفحهٔ اختصاصی ---
+    hero_eyebrow = models.CharField(
+        max_length=100,
+        blank=True,
+        verbose_name="متن بالای عنوان",
+        help_text=EYEBROW_HELP + ". مثال: خدمات طراحی سایت در مشهد",
+    )
+    hero_title = models.CharField(
+        max_length=200,
+        blank=True,
+        verbose_name="عنوان هیرو",
+        help_text=TITLE_HELP + " مثال: طراحی سایتی که [[می‌فروشد]]",
+    )
+    hero_lead = models.TextField(
+        blank=True, verbose_name="مقدمهٔ هیرو", help_text="پاراگرافِ زیرِ عنوان"
+    )
+    hero_cta_primary_text = models.CharField(
+        max_length=50, blank=True, verbose_name="متن دکمهٔ اصلی"
+    )
+    hero_cta_primary_url = models.CharField(
+        max_length=200, blank=True, verbose_name="لینک دکمهٔ اصلی", help_text=URL_HELP
+    )
+    hero_cta_secondary_text = models.CharField(
+        max_length=50, blank=True, verbose_name="متن دکمهٔ دوم"
+    )
+    hero_cta_secondary_url = models.CharField(
+        max_length=200,
+        blank=True,
+        verbose_name="لینک دکمهٔ دوم",
+        help_text=URL_HELP + ". خالی بگذارید تا دکمه نمایش داده نشود",
+    )
+
+    # --- سئو ---
+    meta_title = models.CharField(
+        max_length=70, blank=True, verbose_name="عنوان متا (سئو)"
+    )
+    meta_description = models.CharField(
+        max_length=160, blank=True, verbose_name="توضیحات متا (سئو)"
+    )
+    og_image = models.ImageField(
+        upload_to="services/og/",
+        blank=True,
+        verbose_name="تصویر شبکه‌های اجتماعی",
+        help_text="اختیاری. تصویرِ og:this صفحه؛ خالی → از لوگوی سایت استفاده می‌شود",
+    )
+
+    # --- خدمات مرتبط ---
+    related_services = models.ManyToManyField(
+        "self",
+        blank=True,
+        verbose_name="خدمات مرتبط",
+        help_text="اختیاری. کارتِ خدماتِ مرتبط پایینِ صفحهٔ اختصاصی نشان داده می‌شود",
+    )
+
     class Meta:
         verbose_name = "خدمت"
         verbose_name_plural = "خدمات"
@@ -95,11 +171,134 @@ class Service(models.Model):
     def __str__(self):
         return self.title
 
+    @property
+    def accent_class(self):
+        """کلاس CSSِ تمِ این خدمت — svc-accent-* در input.css."""
+        return f"svc-accent-{self.accent}"
+
+    def get_meta_title(self):
+        """عنوان متا یا fallback به عنوانِ خدمت."""
+        return self.meta_title or self.title
+
+    def get_meta_description(self):
+        """توضیحات متا یا fallback به توضیحات کوتاه."""
+        return self.meta_description or self.excerpt
+
     def get_tags_list(self):
         return [tag.strip() for tag in self.tags.split(",") if tag.strip()]
 
     def get_chips_list(self):
         return [chip.strip() for chip in self.chips.split(",") if chip.strip()]
+
+
+class ServiceSection(models.Model):
+    """بخشِ محتوای بلندِ صفحهٔ اختصاصیِ خدمت — سئو-friendly، هر تعداد که ادمین
+    بخواهد. چیدمانِ تصویر را ``layout`` تعیین می‌کند و ``is_active`` یک بخش را
+    بدون حذف کردن مخفی می‌کند."""
+
+    LAYOUT_CHOICES = [
+        ("right", "تصویر سمت راست"),
+        ("left", "تصویر سمت چپ"),
+        ("full", "تمام‌عرض (بدون تصویر کناری)"),
+    ]
+
+    service = models.ForeignKey(
+        Service,
+        on_delete=models.CASCADE,
+        related_name="sections",
+        verbose_name="خدمت",
+    )
+    eyebrow = models.CharField(
+        max_length=100, blank=True, verbose_name="متن بالای عنوان", help_text=EYEBROW_HELP
+    )
+    title = models.CharField(
+        max_length=200, verbose_name="عنوان", help_text=TITLE_HELP
+    )
+    body = HTMLField(verbose_name="متن")
+    image = models.ImageField(
+        upload_to="services/sections/", blank=True, verbose_name="تصویر"
+    )
+    image_alt = models.CharField(
+        max_length=250,
+        blank=True,
+        verbose_name="متن جایگزین تصویر",
+        help_text="برای دسترس‌پذیری و سئو. مثال: پروسهٔ طراحیِ سایت پیکسوریا",
+    )
+    layout = models.CharField(
+        max_length=10,
+        choices=LAYOUT_CHOICES,
+        default="right",
+        verbose_name="چیدمان",
+    )
+    order = models.PositiveIntegerField(default=0, verbose_name="ترتیب")
+    is_active = models.BooleanField(default=True, verbose_name="فعال")
+
+    class Meta:
+        verbose_name = "بخش محتوا"
+        verbose_name_plural = "بخش‌های محتوا"
+        ordering = ["order"]
+
+    def __str__(self):
+        return f"{self.service.title} — {self.title}"
+
+
+class ServiceTool(models.Model):
+    """ابزارها و فناوری‌های یک خدمت — چیپ‌های صفحهٔ اختصاصی."""
+
+    service = models.ForeignKey(
+        Service,
+        on_delete=models.CASCADE,
+        related_name="tools",
+        verbose_name="خدمت",
+    )
+    name = models.CharField(max_length=100, verbose_name="نام")
+    icon = models.CharField(
+        max_length=64,
+        blank=True,
+        verbose_name="آیکون",
+        help_text="اختیاری. " + ICON_HELP,
+        validators=[validate_icon_name],
+    )
+    order = models.PositiveIntegerField(default=0, verbose_name="ترتیب")
+
+    class Meta:
+        verbose_name = "ابزار"
+        verbose_name_plural = "ابزارها"
+        ordering = ["order"]
+
+    def __str__(self):
+        return self.name
+
+
+class ServiceUseCase(models.Model):
+    """صنایع و کاربردهای یک خدمت."""
+
+    service = models.ForeignKey(
+        Service,
+        on_delete=models.CASCADE,
+        related_name="use_cases",
+        verbose_name="خدمت",
+    )
+    title = models.CharField(max_length=100, verbose_name="عنوان")
+    icon = models.CharField(
+        max_length=64,
+        blank=True,
+        verbose_name="آیکون",
+        help_text="اختیاری. " + ICON_HELP,
+        validators=[validate_icon_name],
+    )
+    description = models.CharField(
+        max_length=200, verbose_name="متن کوتاه", blank=True
+    )
+    order = models.PositiveIntegerField(default=0, verbose_name="ترتیب")
+
+    class Meta:
+        verbose_name = "کاربرد / صنعت"
+        verbose_name_plural = "کاربردها / صنایع"
+        ordering = ["order"]
+
+    def __str__(self):
+        return f"{self.service.title} — {self.title}"
 
 
 class ServiceStat(models.Model):
@@ -196,7 +395,9 @@ class ServiceProcess(models.Model):
 
 
 class ServicePlan(models.Model):
-    """پلن قیمت‌گذاری"""
+    """پلن قیمت‌گذاری — دقیقاً سه پلن برای هر خدمت (max_num=3 در ادمین).
+    قیمت یک عددِ اختیاری است (تومان)؛ وقتی خالی باشد ``price_note`` نمایش
+    داده می‌شود (مثل «تماس بگیرید»)."""
 
     PLAN_TYPE_CHOICES = [
         ("starter", "استارتر"),
@@ -210,19 +411,54 @@ class ServicePlan(models.Model):
         max_length=20, choices=PLAN_TYPE_CHOICES, verbose_name="نوع پلن"
     )
     name = models.CharField(max_length=100, verbose_name="نام پلن")
-    price = models.CharField(
-        max_length=50, verbose_name="قیمت", help_text="مثلاً ۱۲ یا از ۵۰"
+    tagline = models.CharField(
+        max_length=120,
+        blank=True,
+        verbose_name="خلاصهٔ کوتاه",
+        help_text="یک جملهٔ زیرِ نام پلن. مثلاً: برای کسب‌وکارهای تازه شروع‌شده",
     )
-    old_price = models.CharField(
-        max_length=50, verbose_name="قیمت قبل از تخفیف", blank=True
+    price = models.PositiveBigIntegerField(
+        blank=True,
+        null=True,
+        verbose_name="قیمت (تومان)",
+        help_text="عددِ اختیاری. مثلاً 15000000. خالی → قیمت نهایی «تماس بگیرید» است",
+    )
+    price_prefix = models.CharField(
+        max_length=20,
+        blank=True,
+        default="از",
+        verbose_name="پیشوندِ قیمت",
+        help_text="مثلاً «از». قبل از قیمت می‌آید: از ۱۵٬۰۰۰٬۰۰۰ تومان",
+    )
+    price_currency = models.CharField(
+        max_length=20, default="تومان", verbose_name="واحدِ پول"
+    )
+    price_note = models.CharField(
+        max_length=100,
+        blank=True,
+        verbose_name="متنِ جایگزینِ قیمت",
+        help_text="وقتی قیمت خالی است نمایش داده می‌شود. مثلاً: تماس بگیرید",
+    )
+    old_price = models.PositiveBigIntegerField(
+        blank=True,
+        null=True,
+        verbose_name="قیمت قبل از تخفیف",
+        help_text="عددِ اختیاری. خط‌خورده بالای قیمت نشان داده می‌شود",
     )
     discount_label = models.CharField(
         max_length=50,
-        verbose_name="برچسب تخفیف",
         blank=True,
+        verbose_name="برچسب تخفیف",
         help_text="مثلاً ۲۰٪ تخفیف",
     )
+    cta_label = models.CharField(
+        max_length=50, blank=True, verbose_name="متن دکمهٔ پلن"
+    )
+    cta_url = models.CharField(
+        max_length=200, blank=True, verbose_name="لینک دکمهٔ پلن", help_text=URL_HELP
+    )
     is_featured = models.BooleanField(default=False, verbose_name="پلن پیشنهادی؟")
+    is_active = models.BooleanField(default=True, verbose_name="فعال")
     order = models.PositiveIntegerField(default=0, verbose_name="ترتیب")
 
     class Meta:
@@ -232,6 +468,25 @@ class ServicePlan(models.Model):
 
     def __str__(self):
         return f"{self.service.title} — {self.name}"
+
+    def clean(self):
+        super().clean()
+        # فقط یک پلنِ پیشنهادی برای هر خدمت — در غیر این صورت نشانِ
+        # «محبوب‌ترین» بی‌معنی می‌شود.
+        if self.is_featured and self.service_id:
+            others = ServicePlan.objects.filter(
+                service_id=self.service_id, is_featured=True
+            )
+            if self.pk:
+                others = others.exclude(pk=self.pk)
+            if others.exists():
+                raise ValidationError(
+                    {
+                        "is_featured": (
+                            "برای هر خدمت فقط یک پلن می‌تواند «پیشنهادی» باشد."
+                        )
+                    }
+                )
 
 
 class ServicePlanFeature(models.Model):

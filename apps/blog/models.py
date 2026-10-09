@@ -110,6 +110,14 @@ class Article(models.Model):
         max_length=160, blank=True, verbose_name="توضیحات متا (سئو)"
     )
 
+    related_services = models.ManyToManyField(
+        "services.Service",
+        blank=True,
+        related_name="articles",
+        verbose_name="خدمات مرتبط",
+        help_text="اختیاری. کاروسلِ «مقالاتِ این خدمت» در صفحهٔ اختصاصیِ خدمت",
+    )
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

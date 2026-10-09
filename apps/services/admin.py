@@ -4,6 +4,9 @@ from apps.core.icon_utils import IconPickerForm, IconPreviewMixin
 from .models import (
     ServicesPageSection,
     Service,
+    ServiceSection,
+    ServiceTool,
+    ServiceUseCase,
     ServiceStat,
     ServiceWhyUs,
     ServiceDeliverable,
@@ -27,6 +30,33 @@ class ServicesPageSectionAdmin(admin.ModelAdmin):
 class ServiceStatInline(admin.TabularInline):
     model = ServiceStat
     extra = 1
+
+
+class ServiceSectionInline(admin.StackedInline):
+    """بخش‌های محتوای بلند — Stacked چون body یک rich-text است."""
+
+    model = ServiceSection
+    extra = 1
+    fields = ["eyebrow", "title", "body", "image", "image_alt", "layout", "order", "is_active"]
+    ordering = ["order"]
+
+
+class ServiceToolInline(IconPreviewMixin, admin.TabularInline):
+    form = IconPickerForm
+    model = ServiceTool
+    extra = 1
+    fields = ["icon_preview", "icon", "name", "order"]
+    readonly_fields = ["icon_preview"]
+    ordering = ["order"]
+
+
+class ServiceUseCaseInline(IconPreviewMixin, admin.TabularInline):
+    form = IconPickerForm
+    model = ServiceUseCase
+    extra = 1
+    fields = ["icon_preview", "icon", "title", "description", "order"]
+    readonly_fields = ["icon_preview"]
+    ordering = ["order"]
 
 
 class ServiceWhyUsInline(IconPreviewMixin, admin.TabularInline):
@@ -53,9 +83,29 @@ class ServicePlanFeatureInline(admin.TabularInline):
 
 
 class ServicePlanInline(admin.StackedInline):
+    """دقیقاً سه پلن برای هر خدمت — max_num/validationِ «یک پلنِ پیشنهادی»
+    در مدل است (ServicePlan.clean)."""
+
     model = ServicePlan
-    extra = 1
+    extra = 3
+    max_num = 3
     show_change_link = True
+    fields = [
+        "plan_type",
+        "name",
+        "tagline",
+        "price",
+        "price_prefix",
+        "price_currency",
+        "price_note",
+        "old_price",
+        "discount_label",
+        "cta_label",
+        "cta_url",
+        "is_featured",
+        "is_active",
+        "order",
+    ]
 
 
 class ServiceCustomItemInline(admin.TabularInline):
@@ -160,12 +210,60 @@ class ServiceAdmin(IconPreviewMixin, admin.ModelAdmin):
             {"fields": ["visual", "card_span", "chips", "badge", "featured", "order"]},
         ),
         ("تگ‌ها", {"fields": ["tags"]}),
+        (
+            "صفحهٔ اختصاصی — تم",
+            {
+                "fields": ["accent"],
+                "description": (
+                    "رنگِ لهجهٔ صفحهٔ اختصاصیِ این خدمت (حلقه‌ها، سیاره و خطوط)."
+                ),
+            },
+        ),
+        (
+            "صفحهٔ اختصاصی — هیرو",
+            {
+                "fields": [
+                    "hero_eyebrow",
+                    "hero_title",
+                    "hero_lead",
+                    "hero_cta_primary_text",
+                    "hero_cta_primary_url",
+                    "hero_cta_secondary_text",
+                    "hero_cta_secondary_url",
+                ],
+                "description": (
+                    "همهٔ این فیلدها اختیاری هستند؛ خالی → از عنوان و توضیحات کوتاه "
+                    "استفاده می‌شود. عنوانِ خالی → h1 همان «عنوان» بالاست. "
+                    "لینکِ دکمهٔ دومِ خالی → دکمه نشان داده نمی‌شود."
+                ),
+            },
+        ),
+        (
+            "صفحهٔ اختصاصی — خدمات مرتبط",
+            {
+                "fields": ["related_services"],
+                "description": "کارتِ خدماتِ مرتبط پایینِ صفحهٔ اختصاصی.",
+            },
+        ),
+        (
+            "سئو",
+            {
+                "fields": ["meta_title", "meta_description", "og_image"],
+                "description": (
+                    "در صورت خالی گذاشتن، از عنوان/توضیحات کوتاه و لوگوی سایت "
+                    "استفاده می‌شود."
+                ),
+            },
+        ),
     ]
     inlines = [
+        ServiceSectionInline,
         ServiceStatInline,
         ServiceWhyUsInline,
         ServiceDeliverableInline,
         ServiceProcessInline,
+        ServiceToolInline,
+        ServiceUseCaseInline,
         ServicePlanInline,
         ServiceCustomItemInline,
         ServiceFAQInline,

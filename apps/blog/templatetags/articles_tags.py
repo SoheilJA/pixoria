@@ -2,8 +2,9 @@
 
 {% load articles_tags %}
 {% articles_carousel %}                                     ← آخرین مقالات منتشرشده
-{% articles_carousel exclude=article %}                     ← مقالات مرتبط (جز مقالهٔ فعلی)
-{% articles_carousel category=article.category limit=4 %}   ← مقالات یک دسته‌بندی
+{% articles_carousel exclude=article %}                     ← مقالاتِ مرتبط (جز مقالهٔ فعلی)
+{% articles_carousel category=article.category limit=4 %}   ← مقالاتِ یک دسته‌بندی
+{% articles_carousel service=service limit=6 %}             ← مقالاتِ یک خدمت
 
 کاروسل خودش کوئری می‌زند و وقتی مقاله‌ای نیست چیزی چاپ نمی‌کند.
 """
@@ -17,11 +18,13 @@ register = template.Library()
 
 
 @register.inclusion_tag("components/articles_carousel.html")
-def articles_carousel(exclude=None, category=None, limit=8):
+def articles_carousel(exclude=None, category=None, service=None, limit=8):
     """کاروسل کارت‌های مقاله.
 
     exclude:  مقاله‌ای که نباید نمایش داده شود (نمونهٔ Article؛ مثلاً مقالهٔ فعلی).
     category: دسته‌بندی برای فیلتر (نمونهٔ Category یا اسلاگ)؛ None → همهٔ دسته‌ها.
+    service:  خدمت برای فیلتر از طریقِ M2Mِ `Article.related_services` (T61).
+              None → همهٔ مقالات.
     limit:    حداکثر تعداد کارت."""
 
     queryset = Article.objects.filter(
@@ -32,6 +35,8 @@ def articles_carousel(exclude=None, category=None, limit=8):
     if category is not None:
         slug = category.slug if hasattr(category, "slug") else category
         queryset = queryset.filter(category__slug=slug)
+    if service is not None:
+        queryset = queryset.filter(related_services=service)
     try:
         limit = int(limit)
     except (TypeError, ValueError):

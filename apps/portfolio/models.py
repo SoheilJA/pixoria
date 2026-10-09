@@ -83,6 +83,19 @@ class Portfolio(models.Model):
     client_name = models.CharField(max_length=200, verbose_name="نام مشتری")
     year = models.CharField(max_length=10, verbose_name="سال")
     service_type = models.CharField(max_length=200, verbose_name="حوزه کاری")
+    service = models.ForeignKey(
+        "services.Service",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="projects",
+        verbose_name="خدمتِ مرتبط",
+        help_text=(
+            "اختیاری. ارتباطِ واقعی با یک خدمت — کاروسلِ «پروژه‌های این خدمت» "
+            "از همین فیلد استفاده می‌کند. فیلدِ متنیِ «حوزه کاری» همچنان "
+            "به‌عنوان fallback نگه داشته می‌شود."
+        ),
+    )
     client_url = models.URLField(verbose_name="لینک سایت مشتری", blank=True)
     challenge = models.TextField(verbose_name="چالش ها", blank=True)
     solution = models.TextField(verbose_name="راهکار ها", blank=True)
