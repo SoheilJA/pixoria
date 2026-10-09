@@ -2330,7 +2330,7 @@ header/footer/CTA) and the existing models `services.Service`, `ServiceStat`,
   `apps/services/admin.py`, `apps/portfolio/models.py`, `apps/blog/models.py`,
   `apps/core/templatetags/fa_digits.py` |
   commit: "feat(services): extend models for dedicated pages"
-- [ ] T62 — Seed command `seed_services_content.py` (idempotent; never
+- [x] T62 — Seed command `seed_services_content.py` (idempotent; never
   overwrite admin edits; the D21/D25 collection-cleanup pattern only for rows
   it created): verbatim/adapted Persian copy from the four `new/services/*.html`
   pages PLUS newly written, high-quality, UNIQUE Persian copy per service for
@@ -2441,13 +2441,38 @@ contact; descriptive alt texts; meta title/description per service.
 
 ## Current status
 
-T01–T61 done (T42 superseded by Phase 12; T47b/T47c were the template-comment
-leak sweeps — D50/D60). **Next: T62** — the `seed_services_content` command:
-verbatim/adapted Persian copy from the four `new/services/*.html` pages plus
-newly written unique Persian copy per service for the extra sections
-(`ServiceSection` long-form blocks, `ServiceTool`, `ServiceUseCase`, three
-plans per service with placeholder prices), idempotent and never overwriting
-admin edits — see the content plan at the end of Phase 12.
+T01–T62 done (T42 superseded by Phase 12; T47b/T47c were the template-comment
+leak sweeps — D50/D60). **Next: T63** — the `templates/services/detail.html`
+skeleton on `base.html`: per-service theme classes (`service.accent_class`), the
+breadcrumb partial, JSON-LD placeholders in `extra_head`, a hero by `visual`
+type (bespoke CSS/SVG artwork — T68 fleshes out the four atmospheres) and the
+intro/overview section, every section `{% if %}`-guarded so an empty DB still
+renders. All the data it needs is now in place (see the T62 note below).
+
+T62 is live: `apps/services/management/commands/seed_services_content.py` fills
+all four services (`web-design`, `programming`, `logo-design`, `graphic-design`)
+end to end — hero (eyebrow / `[[ ]]` title / lead / two CTAs), `meta_title` +
+`meta_description`, 4 stats, 4–5 why-us, 6 deliverables, 4 process steps, 6
+tools, 4 use-cases, 4 long-form `ServiceSection` blocks (overview, روند کار,
+انتخاب‌های فنی, اشتباهاتِ رایج — alternating `full`/`right`/`left` layouts,
+2 paragraphs + `<h3>` each, `[[ ]]` highlights, unique copy per service, no
+shared paragraphs), 8 FAQs, exactly 3 `ServicePlan`s with one featured each and
+4–6 `ServicePlanFeature`s including crossed-out items, plus the
+`related_services` M2M (3/1/1/3). Idempotent by design: hero/SEO/accent are
+written only on empty fields, children are `get_or_create`d on their natural
+key with stale-key cleanup (the D21/D25 pattern), plans only when the service
+has none, `related_services` only when the selection is empty, and
+`ServiceTestimonial` / `ServiceCustomItem` are never touched. Verified: three
+consecutive runs → 3 / 0 / 0 new rows; `manage.py check` and
+`makemigrations --check` clean; every seeded row passes `full_clean`-style
+length limits (`meta_title` ≤ 70, `meta_description` ≤ 160, …); all 37 icon
+values are real Lucide names AND in the public sprite — `snake` → `square-code`
+and `file-vector` → `shapes` were fixed (Lucide has neither), then
+`manage.py sync_icons` rebuilt `static/icons/lucide.sprite.svg` (92 → 107
+symbols, additions only) + `static/admin/js/lucide_full_icons.js`; home, about,
+services list, all four service details, portfolio, blog and contact render
+200. Note the `management/` package needed its `__init__.py` files created
+(the other apps already had them).
 
 T61 (D65) is live: `Service` has the accent + hero + SEO + related-services
 fields, three new children (`ServiceSection` / `ServiceTool` /
