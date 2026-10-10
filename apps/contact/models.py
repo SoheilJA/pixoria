@@ -46,43 +46,6 @@ class ContactPageSection(models.Model):
         super().save(*args, **kwargs)
 
 
-class ContactInfo(models.Model):
-    """اطلاعات تماس سمت راست"""
-
-    office_title = models.CharField(
-        max_length=100, verbose_name="عنوان دفتر", help_text="مثال: مشهد"
-    )
-    office_address = models.TextField(verbose_name="آدرس دفتر")
-    phone = models.CharField(max_length=20, verbose_name="شماره تماس")
-    working_hours = models.CharField(max_length=100, verbose_name="ساعت کاری")
-    email_project = models.EmailField(
-        verbose_name="ایمیل پروژه‌های جدید", blank=True,
-        help_text="مثال: project@example.com"
-    )
-    email_press = models.EmailField(
-        verbose_name="ایمیل رسانه", blank=True
-    )
-    email_career = models.EmailField(
-        verbose_name="ایمیل فرصت‌های شغلی", blank=True
-    )
-    tagline = models.CharField(
-        max_length=200, verbose_name="جمله کوتاه / شعار", blank=True,
-        help_text="یک جمله کوتاه در ستون تماس نمایش داده می‌شود"
-    )
-
-    class Meta:
-        verbose_name = "اطلاعات تماس"
-        verbose_name_plural = "اطلاعات تماس"
-
-    def __str__(self):
-        return self.office_title
-
-    def save(self, *args, **kwrgs):
-        if not self.pk and ContactInfo.objects.exists():
-            raise ValueError("فقط یک اطلاعات تماس مجاز است")
-        super().save(*args, **kwrgs)
-
-
 class ContactFormSection(models.Model):
     """تنظیمات بخش فرم تماس (روشن) — ستون کنار فرم"""
 

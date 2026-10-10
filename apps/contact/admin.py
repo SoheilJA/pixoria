@@ -4,7 +4,6 @@ from apps.core.icon_utils import IconPickerForm
 
 from .models import (
     ContactPageSection,
-    ContactInfo,
     ProjectTypeChoice,
     BudgetChoice,
     StartTimeChoice,
@@ -36,14 +35,6 @@ class ContactPageSectionAdmin(admin.ModelAdmin):
 
     def has_add_permission(self, request):
         return not ContactPageSection.objects.exists()
-
-
-@admin.register(ContactInfo)
-class ContactInfoAdmin(admin.ModelAdmin):
-    list_display = ["office_title", "phone", "office_address"]
-
-    def has_add_permission(self, request):
-        return not ContactInfo.objects.exists()
 
 
 class ContactFormPointInline(admin.TabularInline):
