@@ -282,7 +282,171 @@
       </section>
     {% endif %}
 
-    {# ── T64: خروجی‌ها، بخش‌های بلندِ `sections`، کاربردها/صنایع، ابزارها ── #}
+    {# ── T64: خروجی‌ها — چه چیزی تحویل می‌گیرید ── #}
+    {% if deliverables %}
+      <section class="relative bg-cream2">
+        <div class="relative z-10 mx-auto max-w-7xl px-6 pb-28 pt-24 md:pt-28">
+          <div class="max-w-2xl">
+            <p class="eyebrow eyebrow-dark" data-reveal="up">خروجی‌های پروژه</p>
+            <h2 class="mt-5 text-4xl font-extrabold leading-[1.3] text-paper md:text-[2.7rem]"
+                data-reveal="up" data-delay="0.06">
+              چه چیزی تحویل می‌گیرید؟
+            </h2>
+          </div>
+          <div class="mt-14 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {% for item in deliverables %}
+              <div class="glass-light flex items-center gap-4 p-6"
+                   style="border-radius: {% cycle '1.5rem' '1rem' '1.75rem 0.75rem' %}"
+                   data-reveal="up" data-delay="{% cycle '0' '0.06' '0.12' %}">
+                <span class="icon-ring h-11 w-11 shrink-0">{% icon "check" class="h-5 w-5" %}</span>
+                <span class="text-[0.95rem] font-medium leading-7 text-paper">{{ item.title }}</span>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </section>
+    {% endif %}
+
+    {# ── T64: بخش‌های بلندِ محتوای سئو — چیدمانِ متناوبِ روشن/تیره ── #}
+    {% for section in sections %}
+      {% with dark=forloop.counter0|divisibleby:2 %}
+        <section class="relative overflow-hidden {% if dark %}bg-ink2{% else %}bg-cream2{% endif %}">
+          <svg class="divider divider-flip" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true">
+            <path d="M0,26 C260,84 520,82 760,44 C1000,6 1240,80 1440,30 L1440,0 L0,0 Z"
+                  fill="{% if dark %}#121214{% else %}#efece5{% endif %}"></path>
+          </svg>
+
+          {% if section.layout == 'full' %}
+            <div class="relative z-10 mx-auto max-w-3xl px-6 pb-28 pt-28 md:pt-36">
+              {% if section.eyebrow %}
+                <p class="{% if dark %}eyebrow{% else %}eyebrow-dark{% endif %}" data-reveal="up">
+                  {{ section.eyebrow }}
+                </p>
+              {% endif %}
+              <h2 class="mt-5 text-3xl font-extrabold leading-[1.3] {% if dark %}text-cream{% else %}text-paper{% endif %} md:text-[2.4rem]"
+                  data-reveal="up" data-delay="0.06">
+                {{ section.title|highlight }}
+              </h2>
+              <div class="{% if dark %}prose-cream{% else %}prose-ink{% endif %} mt-8"
+                   data-reveal="up" data-delay="0.12">
+                {{ section.body|safe }}
+              </div>
+            </div>
+          {% else %}
+            {# چیدمانِ left/right: پنلِ تصویر با order در RTL جابه‌جا می‌شود #}
+            <div class="relative z-10 mx-auto max-w-7xl px-6 pb-28 pt-28 md:pt-32">
+              <div class="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-16">
+                <div class="{% if section.layout == 'left' %}lg:order-2{% endif %}"
+                     data-reveal="{% if section.layout == 'left' %}left{% else %}right{% endif %}">
+                  {% if section.image %}
+                    <figure class="relative overflow-hidden border border-gold/20 shadow-2xl"
+                            style="border-radius: 1.75rem">
+                      <img src="{{ section.image.url }}"
+                           alt="{{ section.image_alt|default:section.title }}"
+                           loading="lazy" decoding="async"
+                           class="aspect-[4/3] h-full w-full object-cover">
+                    </figure>
+                  {% else %}
+                    {# پنلِ سیاره‌ای — پنجره‌ای تیره با حلقهٔ مداریِ همرنگِ خدمت #}
+                    <div class="glass relative grid aspect-square w-full max-w-xs place-items-center overflow-hidden mx-auto"
+                         style="border-radius: 2rem">
+                      <span class="grid-bg absolute inset-0 opacity-40" aria-hidden="true"></span>
+                      <span class="orbit-ring orbit-ring--spin absolute inset-5 opacity-60" aria-hidden="true"></span>
+                      <span class="orbit-dot absolute right-7 top-9 h-3 w-3" aria-hidden="true"></span>
+                      <span class="planet-orb absolute right-4 top-6 h-8 w-8" data-float="8" aria-hidden="true"></span>
+                      <span class="icon-ring icon-ring-pulse h-20 w-20">{% icon service.icon class="h-9 w-9" %}</span>
+                    </div>
+                  {% endif %}
+                </div>
+                <div class="{% if section.layout == 'left' %}lg:order-1{% endif %}">
+                  {% if section.eyebrow %}
+                    <p class="{% if dark %}eyebrow{% else %}eyebrow-dark{% endif %}" data-reveal="up">
+                      {{ section.eyebrow }}
+                    </p>
+                  {% endif %}
+                  <h2 class="mt-5 text-3xl font-extrabold leading-[1.3] {% if dark %}text-cream{% else %}text-paper{% endif %} md:text-[2.3rem]"
+                      data-reveal="up" data-delay="0.06">
+                    {{ section.title|highlight }}
+                  </h2>
+                  <div class="{% if dark %}prose-cream{% else %}prose-ink{% endif %} mt-7"
+                       data-reveal="up" data-delay="0.12">
+                    {{ section.body|safe }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% endif %}
+        </section>
+      {% endwith %}
+    {% endfor %}
+
+    {# ── T64: کاربردها و صنایع ── #}
+    {% if use_cases %}
+      <section class="relative overflow-hidden bg-ink2">
+        <svg class="divider divider-flip" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M0,26 C260,84 520,82 760,44 C1000,6 1240,80 1440,30 L1440,0 L0,0 Z" fill="#121214"></path>
+        </svg>
+        <div class="grid-bg pointer-events-none absolute inset-0 opacity-20" aria-hidden="true"></div>
+        <div class="relative z-10 mx-auto max-w-7xl px-6 pb-28 pt-28 md:pt-32">
+          <div class="max-w-2xl">
+            <p class="eyebrow" data-reveal="up">کاربردها و صنایع</p>
+            <h2 class="mt-5 text-4xl font-extrabold leading-[1.3] md:text-[2.7rem]"
+                data-reveal="up" data-delay="0.06">
+              این خدمت کجا کار می‌کند؟
+            </h2>
+          </div>
+          <div class="mt-14 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            {% for use_case in use_cases %}
+              <div class="glass p-7" style="border-radius: {% cycle '1.5rem' '1rem' '1.75rem 0.75rem' %}"
+                   data-reveal="up" data-delay="{% cycle '0' '0.06' '0.12' '0.18' %}">
+                <span class="icon-ring h-11 w-11">{% icon use_case.icon class="h-5 w-5" %}</span>
+                <h3 class="mt-5 text-lg font-bold text-cream">{{ use_case.title }}</h3>
+                {% if use_case.description %}
+                  <p class="mt-2.5 text-sm leading-7 text-cream/55">{{ use_case.description }}</p>
+                {% endif %}
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </section>
+    {% endif %}
+
+    {# ── T64: ابزارها و فناوری‌ها — مارکوی پیوسته (دو نسخه از لیست = حلقهٔ بی‌درنگ) ── #}
+    {% if tools %}
+      <section class="relative bg-cream2">
+        <svg class="divider divider-flip" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M0,26 C260,84 520,82 760,44 C1000,6 1240,80 1440,30 L1440,0 L0,0 Z" fill="#efece5"></path>
+        </svg>
+        <div class="relative z-10 mx-auto max-w-7xl px-6 pb-28 pt-28 md:pt-32">
+          <div class="max-w-2xl">
+            <p class="eyebrow eyebrow-dark" data-reveal="up">ابزارها و فناوری‌ها</p>
+            <h2 class="mt-5 text-4xl font-extrabold leading-[1.3] text-paper md:text-[2.7rem]"
+                data-reveal="up" data-delay="0.06">
+              با چه ابزارهایی کار می‌کنیم؟
+            </h2>
+          </div>
+          <div class="mt-14" data-reveal="up">
+            <div class="marquee marquee-slow" dir="ltr">
+              <div class="marquee-group">
+                {% for tool in tools %}
+                  <span class="s-chip-light gap-2 text-[0.9rem] font-medium">
+                    {% if tool.icon %}{% icon tool.icon class="h-4 w-4 text-gold-dark" %}{% endif %}
+                    {{ tool.name }}
+                  </span>
+                {% endfor %}
+                {# نسخهٔ دومِ همان آیتم‌ها — translateX(-50%) را بی‌درنگ می‌کند #}
+                {% for tool in tools %}
+                  <span class="s-chip-light gap-2 text-[0.9rem] font-medium" aria-hidden="true">
+                    {% if tool.icon %}{% icon tool.icon class="h-4 w-4 text-gold-dark" %}{% endif %}
+                    {{ tool.name }}
+                  </span>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    {% endif %}
 
     {# ── T65: خطِ زمانِ فرآیند، چرا ما، شمارشگرهای آمار ── #}
 

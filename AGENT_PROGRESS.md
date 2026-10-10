@@ -2348,7 +2348,7 @@ header/footer/CTA) and the existing models `services.Service`, `ServiceStat`,
   the page must render with an empty DB for that service's children |
   files: `templates/services/detail.html`, `apps/services/views.py` |
   commit: "feat(services): v2 detail page skeleton"
-- [ ] T64 — Content sections part 1: «چه کاری انجام می‌دهیم»
+- [x] T64 — Content sections part 1: «چه کاری انجام می‌دهیم»
   (features/deliverables), the long-form `ServiceSection` blocks (alternating
   layout, `.prose-ink` / `.prose-cream`), use-cases/industries, and the tools &
   technologies marquee/chips | files: `templates/services/detail.html` |
@@ -2441,12 +2441,31 @@ contact; descriptive alt texts; meta title/description per service.
 
 ## Current status
 
-T01–T63 done (T42 superseded by Phase 12; T47b/T47c were the template-comment
-leak sweeps — D50/D60). **Next: T64** — content sections part 1 on the new
-skeleton: «چه کاری انجام می‌دهیم» (deliverables), the long-form `ServiceSection`
-blocks (`sections` in the context, alternating `.prose-ink`/`.prose-cream` by
-`layout`), the use-cases/industries grid and the tools marquee/chips. All the
-data is already in the context (see the T63 note below) and in the DB (T62).
+T01–T64 done (T42 superseded by Phase 12; T47b/T47c were the template-comment
+leak sweeps — D50/D60). **Next: T65** — content sections part 2: the process
+timeline (`processes`), why-us (`why_us`) and the stats counters (`stats`, the
+`data-count` animation in `pixoria.js`), plus the delivery/timeline note. All
+data is already in the context from T63 and in the DB from T62.
+
+T64 is live: four `{% if %}`-guarded blocks on `templates/services/detail.html`
+— «چه چیزی تحویل می‌گیرید؟» (six `deliverables` as glass-light cards with
+check icon-rings), the long-form `ServiceSection` blocks (background alternates
+ink2/cream2 per block so `.prose-cream`/`.prose-ink` take turns, each block
+opens with the wave divider in its own fill; `layout full` is a centered
+max-w-3xl prose column, `left`/`right` swap columns with `lg:order-*` in RTL and
+show either the section's uploaded image or a CSS "planet panel" — dark glass
+tile, accent orbit ring + planet + the service icon — since no section has an
+image yet), «این خدمت کجا کار می‌کند؟» (`use_cases` as four glass cards) and
+«با چه ابزارهایی کار می‌کنیم؟» (a seamless `.marquee` of `tools` — the list is
+rendered twice inside one `.marquee-group` so `translateX(-50%)` loops without a
+seam and without touching `pixoria.js`, whose duplication is scoped to
+`#tech`/`#trusted`). Verified: `manage.py check` clean, `render_check.py` shows
+every page 200 with no `[[`/CDN leaks, the four service pages carry 9 sections /
+6 deliverables / 4 prose blocks / the marquee each, and a headless-Chrome pass
+at 1440 px and 375 px shows no horizontal overflow (the few elements wider than
+the 375 px viewport are decorative rings inside `overflow-hidden` heroes, same
+as the rest of the site). The empty-DB guards still hold: a service with no
+children renders nothing but the hero + overview.
 
 T63 is live: `templates/services/detail.html` is rebuilt on `base.html` in the
 D27 language and `apps/services/views.py` sends every child queryset

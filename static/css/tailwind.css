@@ -278,6 +278,9 @@
   .inset-0 {
     inset: 0px;
   }
+  .inset-5 {
+    inset: calc(var(--spacing) * 5);
+  }
   .inset-\[15\%\] {
     inset: 15%;
   }
@@ -352,6 +355,9 @@
   }
   .top-7 {
     top: calc(var(--spacing) * 7);
+  }
+  .top-9 {
+    top: calc(var(--spacing) * 9);
   }
   .top-10 {
     top: calc(var(--spacing) * 10);
@@ -463,6 +469,9 @@
   }
   .right-6 {
     right: calc(var(--spacing) * 6);
+  }
+  .right-7 {
+    right: calc(var(--spacing) * 7);
   }
   .right-10 {
     right: calc(var(--spacing) * 10);
@@ -1707,6 +1716,12 @@
     border-color: color-mix(in srgb, #c9a15a 15%, transparent);
     @supports (color: color-mix(in lab, red, red)) {
       border-color: color-mix(in oklab, var(--color-gold) 15%, transparent);
+    }
+  }
+  .border-gold\/20 {
+    border-color: color-mix(in srgb, #c9a15a 20%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      border-color: color-mix(in oklab, var(--color-gold) 20%, transparent);
     }
   }
   .border-gold\/25 {
@@ -3379,6 +3394,9 @@
       font-size: var(--text-xl);
       line-height: var(--tw-leading, var(--text-xl--line-height));
     }
+    .md\:text-\[2\.3rem\] {
+      font-size: 2.3rem;
+    }
     .md\:text-\[2\.4rem\] {
       font-size: 2.4rem;
     }
@@ -3401,6 +3419,12 @@
     }
     .lg\:left-\[27\%\] {
       left: 27%;
+    }
+    .lg\:order-1 {
+      order: 1;
+    }
+    .lg\:order-2 {
+      order: 2;
     }
     .lg\:col-span-2 {
       grid-column: span 2 / span 2;
