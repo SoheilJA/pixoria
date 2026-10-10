@@ -1922,6 +1922,60 @@ scope for this migration and can pick these templates up later.)_
   raises `UnicodeEncodeError` in the writer thread and HANGS `subprocess.run` —
   pass `input=data.encode("utf-8")` (no `text=True`).
 
+- **D69 — Per-service atmospheres (T68).** The four hero artworks from T63
+  gained their motif layer: each artwork column now carries
+  `service-theme-{{ service.visual }}` and the motif children that belong to
+  that visual, every colour derived from the page's `--pa` (the `svc-accent-*`
+  wrapper from T63), so web-design's grid is gold, programming's code is royal,
+  logo-design's guides are gold-light and graphic-design's swatches are cream.
+  **web-design** — `.svc-blueprint`: an accent-coloured guide-grid overlay
+  inside the browser mockup (two `repeating` gradients, masked with a radial
+  fade so it fades out toward the bottom-right, slowly panning) plus a
+  `.svc-device` mini phone mockup floating behind the browser (`z-index: -1`,
+  notch + bars + tile as pseudo/child spans) and two `.svc-chip` glass pills
+  («فروشگاه آنلاین» / «موبایل‌اول») that float on `data-float`.
+  **programming** — three `.svc-glyph` latin code-token pills (`</>`, `{ }`,
+  `git`, `font-latin`, `dir: ltr`) floating around the terminal plus `.svc-type`:
+  a typing band with an accent hairline that travels down the build log on a
+  5.5 s loop (starts and ends at opacity 0 so it never seams).
+  **graphic-design** — two `.svc-swatch` cards (six colour tiles each, the first
+  tile always the service's `--pa`, tilted by `data-float-spin`) and two
+  `.svc-drip` accent streams down the poster (`transform-origin: top`,
+  staggered by an inline `animation-delay`).
+  **logo-design** — the construction grid is now accent-tinted through
+  `.svc-guide` (CSS `stroke` with `color-mix` — a presentation attribute cannot
+  use `var()`, so the class is mandatory), ten `.svc-tick` ruler marks on the
+  axes pulsing with staggered `nth-child` delays, and the outer diamond
+  **draws itself**: `pathLength="1"` + `stroke-dasharray/offset: 1` with the
+  one-shot `svcLogoDraw` animation (`forwards`, 0.5 s delay so the reveal
+  settles first). **Pause discipline:** the hero `<section>` gained `data-pause`
+  so every motif's animation stops when scrolled away, and all five new
+  animated classes are in BOTH the `prefers-reduced-motion` block and the
+  `.is-paused` block — including `.svc-logo-draw`, which additionally needs
+  `stroke-dashoffset: 0 !important` there, or a reduced-motion visitor would
+  see no diamond at all (the dashoffset stays at 1 when the animation is
+  killed mid-delay). **The chips/glyphs/swatches/device float via GSAP, not
+  CSS** (`data-float` / `data-float-spin` — the D16 layer), so a "computed
+  animation-name" check on them is meaningless; the browser pass asserts
+  `el._gsap` instead.
+  **Verified** with `scripts/_t68_check.py` (all four pages 200 with their own
+  motif set and no other theme's, `[[ ]]`/`{#`/CDN clean, the other six pages
+  200, an empty DB still 200/404s) and `scripts/_t68_browser.py` (headless
+  Chrome at 1440/390: no horizontal overflow, every motif laid out and either
+  CSS-animated or GSAP-driven, no motif crossing the viewport edge, `--pa`
+  resolving to the right accent per page, and the diamond's dashoffset
+  0.965 → 0 across the animation). **Two measurement gotchas** the pass
+  exposed: (a) `getComputedStyle(el).strokeDashoffset` comes back WITH a px
+  unit, so `+"0.96px"` is `NaN`, which JSON-serializes to `null` and looks
+  like a missing element — use `parseFloat`; (b) below-the-fold motifs sit at
+  their pre-reveal offset (`data-reveal="left"` holds `x: -60` until the
+  ScrollTrigger fires), so the harness must scroll-and-return before measuring
+  or it reports a phantom overflow. Also: a decorative bleed is fine at desktop
+  but gets clipped at the page edge on a 390 px viewport — `.svc-device`'s
+  `right` was -2.4 rem (38 px outside the wrapper, clipped by the section's
+  `overflow: hidden`) and is now -1 rem, so the phone peeks from behind the
+  mockup instead of being cut.
+
 - **D65 — Service model extensions (T61).** The models for the dedicated
   service pages are in place, all of it OPTIONAL so a bare service still renders.
   **`Service`** gained: `accent` (gold/gold-light/gold-dark/royal/cream/peri →
@@ -2597,7 +2651,7 @@ header/footer/CTA) and the existing models `services.Service`, `ServiceStat`,
   `BreadcrumbList` — all built with the `json` filter and skipping pieces with
   no data so the JSON never breaks | files: `templates/services/detail.html` |
   commit: "feat(services): social proof and discovery sections"
-- [ ] T68 — Per-service atmosphere: web-design (browser mockup + layout-grid
+- [x] T68 — Per-service atmosphere: web-design (browser mockup + layout-grid
   motifs), programming (terminal/code motifs), graphic-design (palette/swatch
   motifs), logo-design (diamond/geometry/construction-grid motifs). Implement
   these as `service-theme-*` class sets + the four hero artworks, all CSS/SVG
@@ -2717,14 +2771,34 @@ production, and `.env` / `.env.production` are confirmed ignored by
 
 ---
 
-T01–T67 done (T42 superseded by Phase 12; T47b/T47c were the template-comment
-leak sweeps — D50/D60). **Next: T68** — per-service atmosphere on
-`templates/services/detail.html` + `static/src/input.css`: the four hero
-artworks already exist from T63 (browser / terminal / palette / diamond, all
-CSS-SVG); T68 turns them into full `service-theme-*` class sets (layout-grid,
-code, swatch, construction-grid motifs) each tied to the service's
-`accent_class` planet/orb accent, reduced-motion safe. After that: T69 (the
-services LIST page redesign) and then Phase 13 cleanup (T43/T44).
+T01–T68 done (T42 superseded by Phase 12; T47b/T47c were the template-comment
+leak sweeps — D50/D60). **Next: T69** — the services LIST page redesign
+(`templates/services/list.html` + `apps/services/views.py`): hero, service
+cards in the same orb/planet language as the T52 mega menu, a «how we choose»
+section, FAQ if available, CTA from base; then the render pass with an empty
+and a seeded DB. After that: Phase 13 cleanup (T43/T44).
+
+T68 (D69) is live: each service hero now carries its own atmosphere on top of
+the T63 mockups — the artwork column is wrapped in
+`service-theme-{{ service.visual }}` and the motif children of that visual:
+web-design gets an accent guide-grid (`.svc-blueprint`, masked + panning)
+inside the browser plus a floating mini-phone (`.svc-device`) and two glass
+chips; programming gets three latin code-token pills (`.svc-glyph`: `</>`,
+`{ }`, `git`) plus a typing band (`.svc-type`) that travels the build log;
+graphic-design gets two tilted swatch cards (`.svc-swatch`, first tile always
+the service accent) and two accent drips on the poster (`.svc-drip`);
+logo-design gets an accent-tinted construction grid (`.svc-guide`), ten ruler
+ticks (`.svc-tick`) and a self-drawing diamond (`pathLength="1"` +
+`svcLogoDraw`). Everything reads the page's `--pa` from the T63 `svc-accent-*`
+wrapper, the hero `<section>` gained `data-pause` so the motifs stop off-screen,
+and every new animation is registered in both the `prefers-reduced-motion` and
+`.is-paused` blocks (the draw animation additionally pins `stroke-dashoffset: 0`
+there — without it a reduced-motion visitor would see an invisible diamond).
+Verified with `scripts/_t68_check.py` (four pages + six others + empty DB) and
+`scripts/_t68_browser.py` (headless Chrome at 1440/390: no overflow, every
+motif laid out and animated, accent colours correct, dashoffset 0.965 → 0).
+`manage.py check` + `makemigrations --check` + `collectstatic --dry-run`
+clean, `npm run build` re-run, the `{#` sweep clean.
 
 T67 (D68) is live: the discovery half of the service detail page. Two new
 sections on `templates/services/detail.html` — the related-projects carousel

@@ -1199,11 +1199,20 @@ html.lenis body {
   .svc-poster-disc,
   .svc-poster-disc-2,
   .svc-poster-sun,
+  .svc-blueprint,
+  .svc-type,
+  .svc-drip,
+  .svc-tick,
   .gps-move,
   .gps-node::after,
   .orbit-ring--spin,
   .star-field::before {
     animation: none !important;
+  }
+  /* الماسِ لوگو با خط‌چینِ پنهان رسم می‌شود؛ بدون حرکت باید کامل دیده شود */
+  .svc-logo-draw {
+    animation: none !important;
+    stroke-dashoffset: 0 !important;
   }
 }
 /* ---------- سامانهٔ خورشیدی (هیروِ صفحهٔ درباره ما) ----------
@@ -1551,6 +1560,253 @@ html.lenis body {
 .svc-accent-cream {
   --pa: #f5f3ee;
   --po: #f5f3ee;
+}
+
+/* ---------- اتمسفرِ مختصِ هر خدمت (T68) ----------
+   هر هیرویِ صفحهٔ خدمت، در کنارِ ماکتِ اصلی، لایه‌ای از موتیف‌های همان
+   حوزه با خود دارد: شبکهٔ طرح‌بندی و ماکتِ موبایل (طراحی وب)، گلیف‌های
+   کد و خطِ تایپ‌کننده (برنامه‌نویسی)، نمونه‌های رنگ و قطرهٔ رنگ (طراحی
+   گرافیک)، شبکهٔ راهنما و خطِ کشیده‌شدنِ الماس (طراحی لوگو). همهٔ
+   موتیف‌ها با لهجهٔ خدمت (--pa) رنگ می‌شوند که خود از svc-accent-* رویِ
+   پوششِ بیرونیِ صفحهٔ خدمت می‌آید، با data-pause از دید خارج می‌شوند و
+   زیرِ prefers-reduced-motion کاملاً بی‌حرکت می‌مانند.
+   استفاده: کلاسِ ``service-theme-<visual>`` رویِ پوششِ آرتورک + فرزندانِ
+   موتیفِ همان visual. */
+
+/* چیپِ شناورِ مشترک — برچسبِ کوتاهِ کنارِ هر ماکت */
+.svc-chip {
+  position: absolute;
+  z-index: 5;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.42rem 0.8rem;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--pa, #c9a15a) 34%, transparent);
+  background: color-mix(in srgb, var(--pa, #c9a15a) 9%, rgba(10, 10, 12, 0.8));
+  color: color-mix(in srgb, var(--pa, #c9a15a) 82%, #f5f3ee);
+  font-size: 0.7rem;
+  font-weight: 600;
+  white-space: nowrap;
+  box-shadow: 0 16px 34px -22px rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+}
+.svc-chip svg {
+  flex: none;
+  color: color-mix(in srgb, var(--pa, #c9a15a) 92%, #fff);
+}
+
+/* ── موتیفِ شبکهٔ طرح‌بندی (web-design) ── */
+.service-theme-browser .svc-blueprint {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(
+      to right,
+      color-mix(in srgb, var(--pa, #c9a15a) 24%, transparent) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      to bottom,
+      color-mix(in srgb, var(--pa, #c9a15a) 24%, transparent) 1px,
+      transparent 1px
+    );
+  background-size: 2.25rem 2.25rem;
+  opacity: 0.4;
+  -webkit-mask-image: radial-gradient(
+    ellipse at 30% 16%,
+    #000 22%,
+    transparent 80%
+  );
+  mask-image: radial-gradient(ellipse at 30% 16%, #000 22%, transparent 80%);
+  animation: svcBlueprintPan 24s linear infinite;
+}
+@keyframes svcBlueprintPan {
+  to {
+    background-position:
+      2.25rem 2.25rem,
+      2.25rem 2.25rem;
+  }
+}
+.svc-device {
+  position: absolute;
+  right: -1rem;
+  bottom: -1.4rem;
+  z-index: -1;
+  width: 6.4rem;
+  padding: 0.5rem 0.5rem 0.65rem;
+  overflow: hidden;
+  border-radius: 1rem 1rem 1.2rem 1.2rem;
+  border: 1px solid color-mix(in srgb, var(--pa, #c9a15a) 30%, transparent);
+  background: linear-gradient(
+    165deg,
+    color-mix(in srgb, var(--pa, #c9a15a) 12%, #141417),
+    #08080a
+  );
+  box-shadow: 0 26px 54px -26px rgba(0, 0, 0, 0.9);
+}
+.svc-device::before {
+  display: block;
+  width: 1.7rem;
+  height: 0.18rem;
+  margin: 0 auto 0.5rem;
+  content: "";
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--pa, #c9a15a) 60%, transparent);
+}
+.svc-device-bar {
+  display: block;
+  height: 0.3rem;
+  margin-bottom: 0.4rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--pa, #c9a15a) 38%, rgba(255, 255, 255, 0.1));
+}
+.svc-device-tile {
+  display: block;
+  height: 3.1rem;
+  border-radius: 0.4rem;
+  background: color-mix(in srgb, var(--pa, #c9a15a) 15%, rgba(255, 255, 255, 0.04));
+}
+
+/* ── موتیفِ کد (programming) ── */
+.svc-glyph {
+  position: absolute;
+  z-index: 5;
+  display: inline-grid;
+  place-items: center;
+  min-width: 2.5rem;
+  padding: 0.4rem 0.7rem;
+  border-radius: 0.65rem;
+  border: 1px solid color-mix(in srgb, var(--pa, #2e63ff) 36%, transparent);
+  background: color-mix(in srgb, var(--pa, #2e63ff) 11%, rgba(6, 6, 7, 0.82));
+  color: color-mix(in srgb, var(--pa, #2e63ff) 84%, #f5f3ee);
+  font-family: var(--font-latin);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  direction: ltr;
+  unicode-bidi: isolate;
+  box-shadow: 0 16px 34px -22px rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+}
+.service-theme-terminal .svc-type {
+  position: absolute;
+  inset-inline: 0;
+  height: 1.35rem;
+  pointer-events: none;
+  border-bottom: 1px solid color-mix(in srgb, var(--pa, #2e63ff) 62%, transparent);
+  background: linear-gradient(
+    180deg,
+    transparent,
+    color-mix(in srgb, var(--pa, #2e63ff) 12%, transparent)
+  );
+  animation: svcType 5.5s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+}
+@keyframes svcType {
+  0% {
+    transform: translateY(0.4rem);
+    opacity: 0;
+  }
+  12% {
+    opacity: 1;
+  }
+  82% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(9.5rem);
+    opacity: 0;
+  }
+}
+
+/* ── موتیفِ نمونه‌های رنگ (graphic-design) ── */
+.svc-swatch {
+  position: absolute;
+  z-index: 5;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.25rem;
+  width: 5.4rem;
+  padding: 0.45rem;
+  border-radius: 0.8rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(10, 10, 12, 0.78);
+  box-shadow: 0 20px 40px -24px rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+}
+.svc-swatch span {
+  aspect-ratio: 1;
+  border-radius: 0.3rem;
+}
+.service-theme-palette .svc-drip {
+  position: absolute;
+  top: 0;
+  width: 0.15rem;
+  transform-origin: top;
+  border-radius: 999px;
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--pa, #e8c47a) 70%, transparent),
+    transparent
+  );
+  animation: svcDrip 7s ease-in-out infinite;
+}
+@keyframes svcDrip {
+  0%,
+  100% {
+    transform: scaleY(0.3);
+    opacity: 0.2;
+  }
+  50% {
+    transform: scaleY(1);
+    opacity: 0.75;
+  }
+}
+
+/* ── موتیفِ شبکهٔ راهنما (logo-design) ── */
+.service-theme-diamond .svc-guide {
+  stroke: color-mix(in srgb, var(--pa, #e8c47a) 24%, transparent);
+}
+.svc-tick {
+  stroke: color-mix(in srgb, var(--pa, #e8c47a) 75%, transparent);
+  animation: svcTickPulse 3.2s ease-in-out infinite;
+}
+.svc-ticks line:nth-child(2n) {
+  animation-delay: 0.6s;
+}
+.svc-ticks line:nth-child(3n) {
+  animation-delay: 1.2s;
+}
+.svc-ticks line:nth-child(5n) {
+  animation-delay: 1.8s;
+}
+@keyframes svcTickPulse {
+  0%,
+  100% {
+    opacity: 0.18;
+  }
+  50% {
+    opacity: 0.9;
+  }
+}
+.svc-logo-draw {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: svcLogoDraw 2.2s cubic-bezier(0.4, 0, 0.2, 1) 0.5s forwards;
+}
+@keyframes svcLogoDraw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+/* وقتی هیرو از دید خارج شد موتیف‌ها متوقف می‌شوند (data-pause در pixoria.js) */
+.is-paused .svc-blueprint,
+.is-paused .svc-type,
+.is-paused .svc-drip,
+.is-paused .svc-tick,
+.is-paused .svc-logo-draw {
+  animation-play-state: paused;
 }
 
 .text-goldgrad {
