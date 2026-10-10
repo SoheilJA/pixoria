@@ -1702,7 +1702,74 @@ scope for this migration and can pick these templates up later.)_
   DB" test must call `transaction.set_rollback(True)` inside the block — the
   script now does.
 
-- **D66 — Service detail content sections two (T65).** Three more
+- **D67 — Pricing section + plan CTA prefill (T66).** The pricing section on
+  `templates/services/detail.html` is `{% if plans %}`-guarded (the view
+  filters `is_active=True` + `prefetch_related("features")`), so a service
+  with no plans renders nothing at all. Three cards in `md:grid-cols-3` with
+  `items-start` (required: the featured card is lifted, so a default stretch
+  would distort the row); the featured one is a gold-gradient card
+  (`linear-gradient(150deg, rgba(232,196,122,.32), rgba(255,255,255,.92) 55%)`
+  + a 1.5px gold-dark border + a big warm shadow) with `md:-mt-6` and a
+  gradient «محبوب‌ترین» pill at `-top-4`, and the other two are `glass-light`
+  with the `{% cycle %}` radius pair from the rest of the site. The price
+  block is `plan.price` through `|fa_price` (the D65 filter, «۱۵٬۰۰۰٬۰۰۰»)
+  flanked by `price_prefix` and `price_currency` as baseline siblings,
+  `old_price` as a struck line ABOVE it, and a price-less plan renders
+  `price_note` (default «تماس بگیرید») — `programming`'s enterprise plan
+  exercises that live. Features: `check` gold for included, `x` muted for
+  excluded with the text dimmed, and `ul` has `flex-1` so the CTA pins to the
+  bottom even when one plan has fewer features. **The CTA:** a plan's own
+  `cta_url` wins via `{% nav_url %}`; otherwise the button points at
+  `{% url 'contact:contact' %}?plan={{ plan.plan_type }}&amp;service=
+  {{ service.slug }}` (the entity form — a bare `&` would render identically,
+  but the entity is the correct HTML). Note the plan key is `plan_type`
+  (starter/pro/enterprise), NOT a slug — `ServicePlan` has no slug field, so
+  the task's `<slug>` resolves to that choice key. Label resolution:
+  `cta_label` → «درخواست مشاوره» (featured) / «ثبت سفارش».
+  **The custom-request block** reuses the D46 `data-custom-root` /
+  `data-custom-price` / `data-custom-total` hooks but with NO element ids:
+  each checkbox is nested inside its `<label>` (so no `for`/`id` pair, per
+  the D26 rule), and the summing moved out of a dead inline script into
+  `pixoria.js`'s `initCustomCalculator` (the D46 inline script died with the
+  placeholder template), which reuses the module-level `faDigits`. Prices are
+  in **million tomans** (`ServiceCustomItem.price` is documented that way),
+  so the rows read «+۸ میلیون» and the total pill says «میلیون تومان» — a
+  different unit from the plan cards' full-toman `fa_price`, and the labels
+  say so explicitly.
+  **The prefill** (`apps/contact/views.py`): `_prefill(request)` reads
+  `?service=` and `?plan=`, resolves the service by slug and the plan by
+  `plan_type` ON THAT SERVICE, and returns `(initial, note)` for the form.
+  **Stale/broken links degrade to nothing:** an unknown service slug, or a
+  plan type that is not one of that service's plans, makes the whole function
+  return `({}, "")` — the page renders like a plain `/contact/`, never a
+  half-filled broken form. The subject is `ORDER_SUBJECT` («درخواست سفارش
+  پروژه») when a plan is present, else `SERVICE_SUBJECT` («مشاورهٔ خدمات»),
+  but only if that label still exists as a `SubjectChoice` (an admin who
+  deletes it gets an empty subject, never a value `clean_subject` would
+  reject). The message is prefilled with a natural Persian sentence naming
+  the service and the plan, and the note (a `·`-joined string) renders as a
+  gold info bar in `contact.html` ABOVE the form include — deliberately
+  outside the htmx target so it survives the form swap, and deliberately not
+  in `_contact_form.html` (which the POST re-renders without the request, so
+  the note would vanish on a validation error). `_page_context()` gained the
+  optional `request` param; the POST path still calls it bare, so T34's
+  validation/rate-limit/honeypot behavior is untouched.
+  **Verified** with `scripts/_t66_check.py` + `scripts/_t66_browser.py`
+  (headless Chrome over CDP — see the three environment notes in Current
+  status for the next CDP script). Check: all four pages 200 with 3 cards,
+  one badge, every `fa_price` value and every feature row present with the
+  right included/excluded class, the CTA query on every plan, the custom
+  block + `data-custom-price` hooks only where `custom_items` exist, zero
+  `[[`/`{#` leaks; all six prefill permutations; a real POST still saves and
+  the honeypot still does not; all plans deleted → section + calculator
+  fully absent and a stale `/contact/?plan=…` link still 200s. Browser:
+  1440 px shows three side-by-side cards with the featured one 24 px higher
+  and the badge above it, `scrollWidth == clientWidth`, calculator ۰ → ۸,
+  390 px shows three 342 px cards with no overflow, and the prefill link
+  selects the subject, shows the note, prefills the message and raises no
+  validation errors.
+
+ Three more
   `{% if %}`-guarded sections on `templates/services/detail.html`, all in the
   D27 language and reusing the home partials' class vocabulary (zero new
   markup idioms): the **process timeline** (`processes`), **why-us**
@@ -2446,7 +2513,7 @@ header/footer/CTA) and the existing models `services.Service`, `ServiceStat`,
   why-us (`ServiceWhyUs`), the stats counters (`ServiceStat`) and the
   delivery/timeline note | files: `templates/services/detail.html`,
   `static/js/pixoria.js` | commit: "feat(services): detail content sections two"
-- [ ] T66 — PRICING section: three plan cards (the featured one elevated with a
+- [x] T66 — PRICING section: three plan cards (the featured one elevated with a
   gold border + a «محبوب‌ترین» badge), a features list with included/excluded
   icons, the price formatted via `fa_price`, a CTA per plan (defaulting to
   `contact:contact` with `?plan=<slug>&service=<slug>` so the contact form can
@@ -2530,14 +2597,90 @@ contact; descriptive alt texts; meta title/description per service.
 
 ## Current status
 
-T01–T65 done (T42 superseded by Phase 12; T47b/T47c were the template-comment
-leak sweeps — D50/D60). **Next: T66** — the pricing section: three plan cards
-(the featured one elevated, gold border + «محبوب‌ترین»), features with
-included/excluded icons, `fa_price` prices, a CTA per plan defaulting to
-`contact:contact?plan=<slug>&service=<slug>` with the prefill implemented in
-the contact view/form, and the custom-request block from `ServiceCustomItem`.
-All data is in the context from T63 (`plans` + prefetched `features`,
-`custom_items`) and the DB from T62.
+T01–T66 done (T42 superseded by Phase 12; T47b/T47c were the template-comment
+leak sweeps — D50/D60). **Next: T67** — social proof + discovery sections on
+`templates/services/detail.html`: `{% testimonials_slider service=service %}`,
+`{% projects_carousel service=service %}`, the FAQ accordion, related-services
+cards, `{% articles_carousel %}` filtered by the service's related articles,
+and the real JSON-LD (`Service` + provider/`areaServed`/`offers`/`FAQPage`,
+built with the `json` filter so no stray comma can break it). All data is
+already in the context from T63.
+
+T66 (D67) is live: the pricing section (`templates/services/detail.html`)
+renders three plan cards on `bg-cream2` with rounded top corners (the same
+seam treatment as the stats section, so it reads correctly whether the
+preceding section is dark `ink3` or not). The **featured** plan is the gold
+gradient card, lifted with `md:-mt-6`, with a gradient «محبوب‌ترین» pill at
+`-top-4`; the other two are `glass-light` with the rotating `{% cycle %}`
+radii. Prices come through `|fa_price` («۱۵٬۰۰۰٬۰۰۰»), `price_prefix`
+(«از») + `price_currency` («تومان») as baseline siblings, `old_price` as a
+struck line above, and a price-less plan shows `price_note` (default
+«تماس بگیرید») plus a "قیمت در جلسهٔ مشاوره" line instead of a number —
+`programming` exercises that path live. Features use `check` (gold) /
+`x` (muted) from the local sprite with the excluded rows dimmed to
+`text-coy/55`, and the flex column (`flex-1` on the list) keeps the CTA
+pinned to the card bottom. **CTA wiring:** a plan's own `cta_url` wins
+(`{% nav_url %}`), otherwise the CTA is `{% url 'contact:contact' %}?plan=
+<plan_type>&service=<slug>` with `&amp;` (a bare `&` in an attribute is
+fine here, but the entity is the correct form), the label resolving
+`cta_label` → «درخواست مشاوره» (featured) / «ثبت سفارش» (default). The
+**custom-request block** (`ServiceCustomItem`) is a `glass-light` panel
+under the grid: checkbox rows (the `<input>` is nested in the `<label>`, so
+no `for`/`id` pair is needed — per the D26 no-hardcoded-ids rule) each with
+`data-custom-price`, a dark total pill with `data-custom-total`, and
+`initCustomCalculator` in `pixoria.js` sums checked boxes and writes the
+total with the module's `faDigits`. The whole section is `{% if plans %}`
+guarded (the view already filters `is_active=True`), so it renders nothing
+with no plans — and the custom block is separately `{% if custom_items %}`
+guarded inside it.
+**The prefill** (`apps/contact/views.py`): `_prefill(request)` reads
+`?service=` + `?plan=`, resolves the `Service` by slug and the plan by
+`plan_type` **on that service**, and returns `(initial, note)`. A bad
+service slug OR a plan type that is not one of that service's plans makes
+the whole thing return `({}, "")` — a stale/broken link behaves exactly
+like a plain `/contact/`, never a half-filled form. The subject is
+`ORDER_SUBJECT` («درخواست سفارش پروژه») when a plan is given, else
+`SERVICE_SUBJECT` («مشاورهٔ خدمات»), but only when that label still exists
+in `SubjectChoice` (an admin who deletes the choice gets an empty subject,
+never an invalid one that `clean_subject` would reject). The message is
+prefilled with «درخواستِ مشاوره برای خدمتِ «…» — پلنِ «….».» and the note
+is the same `·`-joined string shown in a gold info bar **above** the form in
+`contact.html` — outside the htmx target, so it survives the form swap.
+`_page_context()` now takes the optional request; the POST path keeps
+calling it with no argument, so validation re-renders are unchanged (T34
+behavior intact). The `SubjectChoice` / `Service` / `ServicePlan` imports
+were added to the view.
+**GOTCHA (two self-inflicted):** (a) while writing the prefill note comment
+in `contact.html` I produced a multi-line `{# … #}` — the D49/D60 lexer
+bug, caught by the pre-commit `{#` grep before committing and converted to
+`{% comment %}`; (b) the check script searched for a Persian string with a
+kasra-e that the DB label does not carry («درخواستِ» vs «درخواست»), which
+looked like a prefill failure until the exact label was diffed — always
+compare against the model value, not a typed copy.
+**Verified** with `scripts/_t66_check.py`: all four service pages carry 3
+cards, exactly one «محبوب‌ترین» badge, every plan's `fa_price` value, all
+feature rows with the right included/excluded class, the CTA query on every
+plan, the custom block + price hooks only on `web-design`, zero `[[`/`{#`
+leaks; the prefill permutations (service only, service + plan, bad plan,
+bad service, plan without service, no params) each resolve the right
+subject or nothing; a real POST still saves a submission and the honeypot
+still saves nothing (rolled back); with ALL plans deleted the section,
+eyebrow, custom block and calculator total are fully absent and `/contact/`
+with a stale link still 200s; home/about/contact/portfolio/blog/services-list
+all 200; `manage.py check` + `makemigrations --check` clean; `pixoria.js`
+passes the ES-module syntax check. **Plus a headless-Chrome/CDP pass**
+(`scripts/_t66_browser.py`, needs Chrome; `pip install websockets`): at
+1440 px the three cards sit side by side with the featured one elevated
+24 px, the badge is above its card, `scrollWidth == clientWidth` on every
+service page, the calculator starts at ۰ and sums to ۸ on the first check,
+and at 390 px the three cards are 342 px wide with no horizontal overflow;
+the prefill link selects the right subject, shows the note, prefills the
+message and shows no validation errors. (Three environment notes for the
+next CDP script: the machine runs a local HTTP proxy, so `HTTP_PROXY` must
+be cleared or `urllib` gets a 502 talking to CDP on 127.0.0.1; Chrome needs
+its own `--user-data-dir` or it refuses to open the debugging port; and
+Django DB queries must happen before `asyncio.run` — `Service.objects.all()`
+inside the coroutine raises `SynchronousOnlyOperation`.)
 
 T65 (D66) is live: the process timeline (GPS line drawn right→left with
 numbered nodes spread by `widthratio` + `calc`), why-us (the home `why-card`

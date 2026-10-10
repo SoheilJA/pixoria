@@ -601,7 +601,173 @@
       </section>
     {% endif %}
 
-    {# ── T66: قیمت‌گذاری (سه پلن + درخواستِ سفارشی) ── #}
+    {# ── T66: قیمت‌گذاری — سه پلن + بلوکِ پلنِ دلخواه ── #}
+    {# سکشن وقتی هیچ پلنِ فعالی نباشد کاملًا رندر نمی‌شود. #}
+    {% if plans %}
+      <section class="relative overflow-hidden bg-cream2" style="border-radius: 3rem 9rem 0 0">
+        <div class="aurora-blob pointer-events-none absolute -right-32 top-10 h-96 w-96 rounded-full opacity-40"
+             style="background: radial-gradient(circle, color-mix(in srgb, var(--pa, #c9a15a) 16%, transparent 65%))" aria-hidden="true"></div>
+
+        <div class="relative z-10 mx-auto max-w-7xl px-6 pb-28 pt-28 md:pt-36">
+          <div class="text-center">
+            <p class="eyebrow eyebrow-dark eyebrow-c justify-center" data-reveal="up">قیمت‌گذاری</p>
+            <h2 class="mt-5 text-4xl font-extrabold leading-[1.3] text-paper md:text-[2.5rem]"
+                data-reveal="up" data-delay="0.08">
+              تعرفهٔ {{ service.title|highlight:"dark" }}
+            </h2>
+            <p class="mx-auto mt-4 max-w-xl font-light leading-8 text-coy"
+               data-reveal="up" data-delay="0.14">
+              قیمت‌ها «شروع از» است؛ در جلسهٔ مشاورهٔ رایگان بر اساسِ حجم و ماژول‌های پروژه دقیق می‌شود.
+            </p>
+          </div>
+
+          <div class="mt-16 grid items-start gap-6 md:grid-cols-3">
+            {% for plan in plans %}
+              {% cycle '0' '0.08' '0.16' as plan_delay silent %}
+              {% if plan.is_featured %}
+                {# پلنِ پیشنهادی: کارتِ طلاییِ برآمده با برچسبِ «محبوب‌ترین» #}
+                <article class="relative flex flex-col p-8 text-paper md:-mt-6"
+                         style="border-radius: 0.75rem 1.75rem 0.75rem 1.75rem;
+                                background: linear-gradient(150deg, rgba(232,196,122,0.32), rgba(255,255,255,0.92) 55%);
+                                border: 1.5px solid rgba(143,107,44,0.55);
+                                box-shadow: 0 30px 70px -25px rgba(143,107,44,0.55)"
+                         data-reveal="up" data-delay="{{ plan_delay }}">
+                  <span class="absolute -top-4 right-1/2 translate-x-1/2 whitespace-nowrap rounded-full px-5 py-1.5 text-xs font-bold text-[#171207] shadow-lg"
+                        style="background: linear-gradient(135deg, #8f6b2c, #e8c47a)">محبوب‌ترین</span>
+              {% else %}
+                <article class="glass-light relative flex flex-col p-8"
+                         style="border-radius: {% cycle '1.75rem 1.75rem 1.75rem 0.75rem' '1.75rem 0.75rem 1.75rem 0.75rem' %}"
+                         data-reveal="up" data-delay="{{ plan_delay }}">
+              {% endif %}
+
+                <div class="flex flex-wrap items-center gap-3">
+                  <h3 class="text-xl font-bold text-paper">{{ plan.name }}</h3>
+                  {% if plan.discount_label %}
+                    <span class="rounded-full bg-gold/15 px-3 py-1 text-xs font-medium text-gold-dark">{{ plan.discount_label }}</span>
+                  {% endif %}
+                </div>
+                {% if plan.tagline %}
+                  <p class="mt-2 text-sm font-light leading-7 text-coy">{{ plan.tagline }}</p>
+                {% endif %}
+
+                {# قیمت: عدد به تومان (با Optional قیمتِ خط‌خورده)، یا متنِ جایگزین #}
+                {% if plan.price %}
+                  <div class="mt-6">
+                    {% if plan.old_price %}
+                      <p class="line-through fa-num text-sm text-coy/60">{{ plan.old_price|fa_price }} {{ plan.price_currency }}</p>
+                    {% endif %}
+                    <p class="mt-2 flex flex-wrap items-baseline gap-x-2 gap-y-1">
+                      {% if plan.price_prefix %}
+                        <span class="text-sm text-coy">{{ plan.price_prefix }}</span>
+                      {% endif %}
+                      <span class="fa-num text-[2.5rem] font-extrabold leading-none text-goldgrad-dark">{{ plan.price|fa_price }}</span>
+                      {% if plan.price_currency %}
+                        <span class="text-sm text-coy">{{ plan.price_currency }}</span>
+                      {% endif %}
+                    </p>
+                  </div>
+                {% else %}
+                  <div class="mt-6">
+                    <p class="flex flex-wrap items-baseline gap-x-2 gap-y-1">
+                      <span class="text-2xl font-extrabold leading-none text-goldgrad-dark">{{ plan.price_note|default:"تماس بگیرید" }}</span>
+                    </p>
+                    <p class="mt-2 text-xs text-coy/80">قیمتِ نهایی در جلسهٔ مشاورهٔ رایگان مشخص می‌شود.</p>
+                  </div>
+                {% endif %}
+
+                {# ویژگی‌ها: تیک برای شامل‌شده، ضربدر برای شامل‌نشده #}
+                {% if plan.features.all %}
+                  <ul class="mt-7 flex-1 space-y-3.5 border-t border-gold-dark/15 pt-7 text-sm text-coy">
+                    {% for feature in plan.features.all %}
+                      <li class="flex gap-2.5">
+                        {% if feature.included %}
+                          {% icon "check" class="mt-1 h-4 w-4 flex-none text-gold-dark" %}
+                          <span>{{ feature.title }}</span>
+                        {% else %}
+                          {% icon "x" class="mt-1 h-4 w-4 flex-none text-coy/45" %}
+                          <span class="text-coy/55">{{ feature.title }}</span>
+                        {% endif %}
+                      </li>
+                    {% endfor %}
+                  </ul>
+                {% else %}
+                  {# بدونِ ویژگی هم دکمه باید پایینِ کارت بماند #}
+                  <div class="flex-1"></div>
+                {% endif %}
+
+                {# دکمهٔ پلن: cta_url دلخواه، وگرنه فرم تماس با پارامترهای پیش‌پر #}
+                {% if plan.cta_url %}
+                  <a href="{% nav_url plan.cta_url %}"
+                     class="btn mt-8 w-full px-6 py-3.5 text-paper"
+                     style="border: 1.5px solid rgba(143,107,44,0.5); background: rgba(255,255,255,0.5);"
+                     data-magnetic>
+                {% elif plan.is_featured %}
+                  <a href="{% url 'contact:contact' %}?plan={{ plan.plan_type }}&amp;service={{ service.slug }}"
+                     class="btn btn-gold mt-8 w-full px-6 py-3.5" data-magnetic>
+                {% else %}
+                  <a href="{% url 'contact:contact' %}?plan={{ plan.plan_type }}&amp;service={{ service.slug }}"
+                     class="btn mt-8 w-full px-6 py-3.5 text-paper"
+                     style="border: 1.5px solid rgba(143,107,44,0.5); background: rgba(255,255,255,0.5);"
+                     data-magnetic>
+                {% endif %}
+                  {% if plan.cta_label %}
+                    {{ plan.cta_label }}
+                  {% elif plan.is_featured %}
+                    درخواست مشاوره
+                  {% else %}
+                    ثبت سفارش
+                  {% endif %}
+                  {% if plan.is_featured %}
+                    {% icon "arrow-left" class="h-4 w-4" %}
+                  {% endif %}
+                </a>
+              </article>
+            {% endfor %}
+          </div>
+
+          {# پلنِ دلخواه — آیتم‌های انتخابی با جمعِ تخمینی (pixoria.js) #}
+          {% if custom_items %}
+            <div class="glass-light mt-16 p-8 md:p-10" style="border-radius: 1.5rem"
+                 data-custom-root data-reveal="up">
+              <div class="mb-8 grid grid-cols-1 items-start gap-8 lg:grid-cols-[1fr_auto]">
+                <div>
+                  <p class="eyebrow eyebrow-dark">پلن دلخواه</p>
+                  <h3 class="mt-4 text-2xl font-extrabold text-paper md:text-[1.9rem]">فقط چیزی که نیاز دارید.</h3>
+                  <p class="mt-3 max-w-xl text-[0.95rem] leading-7 text-coy">
+                    آیتم‌های موردنظر را انتخاب کنید — جمعِ تخمینی به‌صورتِ خودکار به‌روز می‌شود.
+                  </p>
+                </div>
+                <div class="flex items-baseline gap-2.5 rounded-2xl bg-ink px-6 py-5 text-cream">
+                  <span class="font-latin text-[10px] tracking-[.2em] text-cream/45">مجموع تخمینی</span>
+                  <span class="text-[1.7rem] font-bold leading-none text-gold-light fa-num" data-custom-total>۰</span>
+                  <span class="text-[0.72rem] text-cream/45">میلیون تومان</span>
+                </div>
+              </div>
+              <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                {% for item in custom_items %}
+                  <label class="flex cursor-pointer items-center justify-between gap-4 rounded-2xl border border-gold-dark/20 px-5 py-4 transition-colors has-[:checked]:border-gold has-[:checked]:bg-gold/5">
+                    <span class="flex items-center gap-3.5">
+                      <input type="checkbox" data-custom-price="{{ item.price }}"
+                             class="h-4 w-4 shrink-0 accent-gold" />
+                      <span class="flex flex-col">
+                        <span class="text-[0.95rem] font-medium text-paper">{{ item.title }}</span>
+                        {% if item.description %}
+                          <span class="mt-0.5 text-[0.82rem] text-coy/70">{{ item.description }}</span>
+                        {% endif %}
+                      </span>
+                    </span>
+                    <span class="shrink-0 whitespace-nowrap text-[0.84rem] font-medium text-gold-dark fa-num">+{{ item.price|fa_digits }} میلیون</span>
+                  </label>
+                {% endfor %}
+              </div>
+              <p class="mt-6 text-center text-xs leading-6 text-coy/80">
+                جمعِ بالا تخمینی است و قیمتِ نهایی در جلسهٔ مشاورهٔ رایگان مشخص می‌شود.
+              </p>
+            </div>
+          {% endif %}
+        </div>
+      </section>
+    {% endif %}
 
     {% comment %}T67: نظرات مشتریان، نمونه‌کارهای مرتبط، سوالات متداول،
          خدمات و مقالاتِ مرتبط + JSON-LD های Service/FAQPage{% endcomment %}

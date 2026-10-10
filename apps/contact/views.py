@@ -13,6 +13,7 @@ from django.views.decorators.http import require_http_methods
 
 from apps.core.context_utils import crumbs
 from apps.core.models import SiteSettings, SocialLink
+from apps.services.models import Service
 
 from .forms import ContactSubmissionForm
 from .models import (
@@ -23,11 +24,17 @@ from .models import (
     ContactFaqSection,
     ContactFaq,
     ContactSubmission,
+    SubjectChoice,
 )
 
 # محدودیت نرخ — مثل فرم تماس سریعِ صفحه اصلی.
 RATE_LIMIT = 5  # حداکثر ارسال در هر پنجره
 RATE_WINDOW = 3600  # ثانیه
+
+# موضوعِ پیش‌پر شدهٔ فرم — لینک‌های «ثبت سفارش» پلن‌ها این کلیدواژه‌ها را
+# می‌فرستند (در SubjectChoice هستند تا clean_subject آن‌ها را بپذیرد).
+SERVICE_SUBJECT = "مشاورهٔ خدمات"
+ORDER_SUBJECT = "درخواست سفارش پروژه"
 
 
 def _rate_key(request):
@@ -36,7 +43,71 @@ def _rate_key(request):
     return f"pixoria:contact:{ip}"
 
 
-def _page_context():
+def _prefill(request):
+    """موضوع و متنِ فرمِ تماس را از پارامترهای ``?service=<slug>&plan=<type>``
+    پر می‌کند (لینکِ دکمهٔ پلن‌های صفحهٔ خدمت).
+
+    فقط مقادیرِ معتبر پیش‌پر می‌شوند: خدمت باید وجود داشته باشد و نوعِ پلن
+    باید یکی از پلن‌های همان خدمت باشد. یک لینکِ خراب هرگز فرم را نمی‌شکند —
+    مثلِ رفتارِ بدونِ پارامتر برمی‌گردد. موضوع هم فقط وقتی تنظیم می‌شود که
+    در SubjectChoice وجود داشته باشد (admin ممکن است آن را حذف کرده باشد).
+
+    خروجی: (initial, note) — initial برای ModelForm و note یک خطِ اطلاع‌رسانی
+    بالایِ فرم.
+    """
+    if request is None:
+        return {}, ""
+
+    service_slug = request.GET.get("service", "").strip()
+    plan_type = request.GET.get("plan", "").strip()
+    if not service_slug and not plan_type:
+        return {}, ""
+
+    service = None
+    if service_slug:
+        service = Service.objects.filter(slug=service_slug).first()
+        # slug نادرست → لینک خراب است؛ هیچ پیش‌پر‌ای نکنیم.
+        if service is None:
+            return {}, ""
+
+    plan_name = ""
+    if plan_type:
+        if service is None:
+            # پلن بدونِ خدمت: فقط موضوعِ «سفارش پروژه» کافی است.
+            pass
+        else:
+            plan = service.plans.filter(plan_type=plan_type).first()
+            # نوعِ پلنِ نادرست برای این خدمت → باز هم لینکِ خراب.
+            if plan is None:
+                return {}, ""
+            plan_name = plan.name
+
+    # موضوع: سفارشِ پروژه وقتی پلن داده شده، وگرنه مشاورهٔ خدمات.
+    subject = ORDER_SUBJECT if plan_type else SERVICE_SUBJECT
+    if not SubjectChoice.objects.filter(label=subject).exists():
+        subject = ""
+
+    parts = []
+    if service is not None:
+        parts.append(f"خدمتِ «{service.title}»")
+    if plan_name:
+        parts.append(f"پلنِ «{plan_name}»")
+
+    initial = {}
+    if subject:
+        initial["subject"] = subject
+    if parts:
+        initial["message"] = "درخواستِ مشاوره برای " + " — ".join(parts) + "."
+
+    note = ""
+    if parts:
+        note = " · ".join(parts)
+
+    return initial, note
+
+
+def _page_context(request=None):
+    initial, note = _prefill(request)
     return {
         "crumbs": crumbs(("خانه", "home:home"), ("تماس با ما", None)),
         "page_section": ContactPageSection.objects.first(),
@@ -46,7 +117,8 @@ def _page_context():
         "faq_section": ContactFaqSection.objects.first(),
         "faq_items": ContactFaq.objects.all(),
         "socials": SocialLink.objects.all(),
-        "form": ContactSubmissionForm(),
+        "form": ContactSubmissionForm(initial=initial),
+        "prefill_note": note,
     }
 
 
@@ -55,7 +127,7 @@ def _page_context():
 def contact(request):
     if request.method == "POST":
         return _handle_submit(request)
-    return render(request, "contact/contact.html", _page_context())
+    return render(request, "contact/contact.html", _page_context(request))
 
 
 def _handle_submit(request):

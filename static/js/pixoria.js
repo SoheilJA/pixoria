@@ -537,6 +537,7 @@ function init() {
   initBuildBars({ hasGsap, ScrollTrigger });
   initGpsDraw({ hasGsap, ScrollTrigger, REDUCED });
   initFaq();
+  initCustomCalculator();
   initArticleChrome();
 
   window.addEventListener("load", () => {
@@ -1218,6 +1219,29 @@ function initFaq() {
       q.setAttribute("aria-expanded", String(!isOpen));
       a.style.maxHeight = isOpen ? "0" : a.scrollHeight + "px";
     });
+  });
+}
+
+/* ------------------------------------------------- custom plan calculator
+   ``[data-custom-root]``: بلوکِ «پلن دلخواه» در صفحهٔ خدمت. هر چک‌باکس
+   ``data-custom-price`` (قیمت به میلیون تومان) دارد و ``[data-custom-total]``
+   جمعِ انتخابی‌ها را به فارسی نشان می‌دهد. بدونِ JS هم قیمتِ هر آیتم روی
+   کارت دیده می‌شود. */
+
+function initCustomCalculator() {
+  document.querySelectorAll("[data-custom-root]").forEach((root) => {
+    const total = root.querySelector("[data-custom-total]");
+    const boxes = root.querySelectorAll("[data-custom-price]");
+    if (!total || !boxes.length) return;
+    const update = () => {
+      let sum = 0;
+      boxes.forEach((cb) => {
+        if (cb.checked) sum += Number(cb.dataset.customPrice) || 0;
+      });
+      total.textContent = faDigits(String(sum));
+    };
+    boxes.forEach((cb) => cb.addEventListener("change", update));
+    update();
   });
 }
 

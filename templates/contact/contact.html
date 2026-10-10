@@ -213,6 +213,15 @@
       </div>
 
       <div class="lg:col-span-8" data-reveal="left">
+        {% comment %}خطِ «در حالِ مشاوره برای …» از لینکِ پلن‌های صفحهٔ خدمت
+          می‌آید؛ بیرونِ فرم قرار دارد تا بعد از تعویضِ htmx هم سر جای خود
+          بماند.{% endcomment %}
+        {% if prefill_note %}
+          <div class="mb-6 flex items-center gap-3 rounded-[1.25rem] border border-gold-dark/30 bg-gold/[.07] p-4 text-[0.92rem] text-paper">
+            {% icon "sparkles" class="h-5 w-5 shrink-0 text-gold-dark" %}
+            <span>در حالِ مشاوره برای <strong class="font-bold">{{ prefill_note }}</strong> — فرم را پر کنید تا جزئیات را هماهنگ کنیم.</span>
+          </div>
+        {% endif %}
         {% include "contact/_contact_form.html" %}
       </div>
     </div>
