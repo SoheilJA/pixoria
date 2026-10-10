@@ -464,40 +464,6 @@ class AboutJourneyStep(models.Model):
         return self.title
 
 
-class TeamMember(models.Model):
-    """اعضای تیم"""
-
-    name = models.CharField(max_length=100, verbose_name="نام")
-    role = models.TextField(verbose_name="نقش")
-    bio = models.TextField(verbose_name="توضیحات")
-    image = models.ImageField(upload_to="team/", verbose_name="تصویر")
-    order = models.PositiveIntegerField(default=0, verbose_name="ترتیب")
-
-    class Meta:
-        verbose_name = "عضو تیم"
-        verbose_name_plural = "اعضای تیم"
-        ordering = ["order"]
-
-    def __str__(self):
-        return self.name
-
-
-class AboutValue(models.Model):
-    """ارزش های سئو ران"""
-
-    title = models.CharField(max_length=200, verbose_name="عنوان")
-    description = models.TextField(verbose_name="توضیحات")
-    order = models.PositiveIntegerField(default=0, verbose_name="ترتیب")
-
-    class Meta:
-        verbose_name = "ارزش"
-        verbose_name_plural = "ارزش ها"
-        ordering = ["order"]
-
-    def __str__(self):
-        return self.title
-
-
 class AboutStat(models.Model):
     """آمار و ارقام"""
 
@@ -578,83 +544,6 @@ class AboutClientsSection(models.Model):
         if not self.pk and AboutClientsSection.objects.exists():
             raise ValueError("فقط یک سکشن مجاز است")
         super().save(*args, **kwargs)
-
-
-class AboutPre(models.Model):
-    """پریفوتر درباره ما"""
-
-    label = models.CharField(max_length=100, verbose_name="ساب تایتل")
-    title = models.CharField(max_length=200, verbose_name="عنوان")
-    description = models.TextField(verbose_name="توضیحات")
-    button_text = models.CharField(max_length=100, verbose_name="متن دکمه")
-    button_url = models.CharField(max_length=200, verbose_name="لینک دکمه")
-
-    class Meta:
-        verbose_name = "سکشن پریفوتر درباه ما"
-        verbose_name_plural = "سکشن پریفوتر درباره ما"
-
-    def __str__(self):
-        return self.title
-
-    def save(self, *args, **kwargs):
-        if not self.pk and AboutPre.objects.exists():
-            raise ValueError("فقط یک سکشن مجاز است")
-        super().save(*args, **kwargs)
-
-
-class AboutMission(models.Model):
-    """ماموریت و چشم‌انداز — تک‌سکشن"""
-
-    label = models.CharField(max_length=100, verbose_name="ساب تایتل", default="ماموریت ما")
-    title = models.CharField(max_length=200, verbose_name="عنوان")
-    description = models.TextField(verbose_name="توضیحات")
-    image = models.ImageField(
-        upload_to="about/mission/", verbose_name="تصویر", blank=True, null=True
-    )
-
-    class Meta:
-        verbose_name = "ماموریت ما"
-        verbose_name_plural = "ماموریت ما"
-
-    def __str__(self):
-        return self.title
-
-    def save(self, *args, **kwargs):
-        if not self.pk and AboutMission.objects.exists():
-            raise ValueError("فقط یک سکشن مجاز است")
-        super().save(*args, **kwargs)
-
-
-class AboutProcessStep(models.Model):
-    """مراحل همکاری"""
-
-    title = models.CharField(max_length=200, verbose_name="عنوان مرحله")
-    description = models.TextField(verbose_name="توضیحات")
-    order = models.PositiveIntegerField(default=0, verbose_name="ترتیب")
-
-    class Meta:
-        verbose_name = "مرحله همکاری"
-        verbose_name_plural = "مراحل همکاری"
-        ordering = ["order"]
-
-    def __str__(self):
-        return self.title
-
-
-class AboutFaq(models.Model):
-    """سوالات متداول درباره ما"""
-
-    question = models.CharField(max_length=300, verbose_name="سوال")
-    answer = models.TextField(verbose_name="پاسخ")
-    order = models.PositiveIntegerField(default=0, verbose_name="ترتیب")
-
-    class Meta:
-        verbose_name = "سوال متداول"
-        verbose_name_plural = "سوالات متداول"
-        ordering = ["order"]
-
-    def __str__(self):
-        return self.question
 
 
 """مدل های پروپوزال"""

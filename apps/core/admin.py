@@ -190,18 +190,6 @@ class AboutClientsSectionAdmin(admin.ModelAdmin):
         return not AboutClientsSection.objects.exists()
 
 
-@admin.register(TeamMember)
-class TeamMemberAdmin(admin.ModelAdmin):
-    list_display = ["name", "role", "order"]
-    list_editable = ["order"]
-
-
-@admin.register(AboutValue)
-class AboutValueAdmin(admin.ModelAdmin):
-    list_display = ["title", "order"]
-    list_editable = ["order"]
-
-
 @admin.register(AboutStat)
 class AboutStatAdmin(IconPreviewMixin, admin.ModelAdmin):
     form = IconPickerForm
@@ -222,34 +210,6 @@ class AboutStatAdmin(IconPreviewMixin, admin.ModelAdmin):
         ("متن", {"fields": ["label", "description"]}),
         ("نمایش", {"fields": ["icon"]}),
     ]
-
-
-@admin.register(AboutPre)
-class AboutPreAdmin(admin.ModelAdmin):
-    list_display = ["title", "button_text"]
-
-    def has_add_permission(self, request):
-        return not AboutPre.objects.exists()
-
-
-@admin.register(AboutMission)
-class AboutMissionAdmin(admin.ModelAdmin):
-    list_display = ["title"]
-
-    def has_add_permission(self, request):
-        return not AboutMission.objects.exists()
-
-
-@admin.register(AboutProcessStep)
-class AboutProcessStepAdmin(admin.ModelAdmin):
-    list_display = ["title", "order"]
-    list_editable = ["order"]
-
-
-@admin.register(AboutFaq)
-class AboutFaqAdmin(admin.ModelAdmin):
-    list_display = ["question", "order"]
-    list_editable = ["order"]
 
 
 class ProposalStatInline(admin.TabularInline):

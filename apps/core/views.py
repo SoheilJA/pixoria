@@ -10,13 +10,7 @@ from .models import (
     AboutJourneySection,
     AboutJourneyStep,
     AboutClientsSection,
-    TeamMember,
-    AboutValue,
     AboutStat,
-    AboutPre,
-    AboutMission,
-    AboutProcessStep,
-    AboutFaq,
     Proposal,
 )
 from apps.home.models import ClientMarqueeItem
@@ -94,13 +88,7 @@ def about(request):
         "clients": ClientMarqueeItem.objects.all(),
         # سیاره‌های سامانهٔ خورشیدیِ هیرو از خدمات دیتابیس می‌آیند (تا ۶ مورد).
         "services": Service.objects.all()[:6],
-        "team": TeamMember.objects.all(),
-        "values": AboutValue.objects.all(),
         "stats": AboutStat.objects.all(),
-        "pre": AboutPre.objects.first(),
-        "mission": AboutMission.objects.first(),
-        "process_steps": AboutProcessStep.objects.all(),
-        "faqs": AboutFaq.objects.all(),
     }
     return render(request, "core/about.html", context)
 
