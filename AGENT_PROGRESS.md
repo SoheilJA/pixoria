@@ -2803,7 +2803,7 @@ contact; descriptive alt texts; meta title/description per service.
   **Still open:** the unreferenced TEMPLATE and STATIC file sweep — done, see
   the D71 entry under `## Current status` (templates: nothing left to delete;
   static: twelve files + two dead `@font-face` rules).
-- [ ] T44 — Final checks: `python manage.py check`,
+- [x] T44 — Final checks: `python manage.py check`,
   `makemigrations --check --dry-run`, `collectstatic --dry-run`, render
   home/about/contact/404/portfolio/blog (list + detail) with an EMPTY database
   and with seeded data, Lighthouse-minded review; then delete `new/` as a
@@ -2874,7 +2874,34 @@ they verify completed tasks and are not v1 frontend files.
 **Out of scope / left for the user:** the pre-existing working-tree deletions
 (`AGENT.md`, `AGENTS.md`, `PIXORIA_AGENT_PROMPT.md`, root `index.html`,
 `dark-home.png`) were sitting unstaged before this session and were NOT touched
-— commit them separately if you want them gone. `new/` is T44's final commit.
+— commit them separately if you want them gone.
+
+### T44 — final checks (done)
+
+- `manage.py check` — no issues.
+- `makemigrations --check --dry-run` — no changes detected.
+- `collectstatic --dry-run` — 85 files (down from 95 before T43's static
+  cleanup), no errors.
+- **Empty database** (rolled-back transaction; all content models emptied,
+  non-superusers removed): every URL still responds — `/` 24KB, `/about/` 42KB,
+  `/contact/` 40KB, `/portfolio/` 30KB, `/blog/` 30KB, `/services/` 42KB,
+  `/login/`, `/who-are-you/login/`, `/manifest.webmanifest`, `/sitemap.xml`
+  all 200, and a bogus URL still 404s. Data was restored afterwards (4 services,
+  2 portfolios).
+- **Seeded database:** `scripts/render_check.py` clean on all 16 URLs.
+- **Lighthouse-minded structural review:** exactly one `<h1>` on every page
+  (home/about/contact, both list and both detail pages, 404); a meta
+  description or `og:description` on every page; zero CDN references;
+  zero leaked `[[ ]]` markers; `lang="fa"`/`dir="rtl"` and a viewport meta on
+  every page. (One false alarm first: the about page's `<h1>` is written across
+  multiple lines, so a naive `<h1[ >]` regex misses it — `<h1[\s>]` finds it.)
+- **`new/` deleted** (23 MB, 543 files, 0 git-tracked). It was entirely
+  untracked, so there is nothing to commit — the task's "separate final commit"
+  assumed a tracked directory; the deletion is simply absent from git history.
+  Confirmed with the user first, since untracked files are unrecoverable.
+
+**Migration is complete: every task T01–T69 is done, T42 was superseded by the
+Phase 12 services redesign, and the Phase 13 cleanup (T43/T44) is finished.**
 
 ### Environment files + admin URL change (between T66 and T67)
 
