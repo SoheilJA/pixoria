@@ -10,7 +10,12 @@ from apps.core.models import EYEBROW_HELP, ICON_HELP, TITLE_HELP, URL_HELP
 class ServicesPageSection(models.Model):
     """هیرو صفحه همه خدمات"""
 
-    title = models.CharField(max_length=200, verbose_name="عنوان")
+    eyebrow = models.CharField(
+        max_length=100, verbose_name="متن بالای عنوان", blank=True, help_text=EYEBROW_HELP
+    )
+    title = models.CharField(
+        max_length=200, verbose_name="عنوان", help_text=TITLE_HELP
+    )
     description = models.TextField(verbose_name="توضیحات")
 
     class Meta:
@@ -24,6 +29,63 @@ class ServicesPageSection(models.Model):
         if not self.pk and ServicesPageSection.objects.exists():
             raise ValueError("فقط یک سکشن مجاز است")
         super().save(*args, **kwargs)
+
+
+class ServicesHowSection(models.Model):
+    """بخشِ «چطور خدمتِ درست را انتخاب کنیم؟» در صفحهٔ فهرستِ خدمات.
+
+    تک‌سکشن است (مثل بقیهٔ singleton‌ها) و گام‌هایش را به‌عنوانِ فرزندِ
+    مرتب‌شده نگه می‌دارد.
+    """
+
+    eyebrow = models.CharField(
+        max_length=100, verbose_name="متن بالای عنوان", blank=True, help_text=EYEBROW_HELP
+    )
+    title = models.CharField(
+        max_length=200, verbose_name="عنوان", help_text=TITLE_HELP
+    )
+    subtitle = models.TextField(verbose_name="توضیح کوتاه", blank=True)
+
+    class Meta:
+        verbose_name = "بخشِ انتخابِ خدمت"
+        verbose_name_plural = "بخشِ انتخابِ خدمت"
+
+    def __str__(self):
+        return self.title
+
+    def save(self, *args, **kwargs):
+        if not self.pk and ServicesHowSection.objects.exists():
+            raise ValueError("فقط یک سکشن مجاز است")
+        super().save(*args, **kwargs)
+
+
+class ServicesHowStep(models.Model):
+    """یک گام از روندِ انتخاب و شروعِ یک خدمت."""
+
+    section = models.ForeignKey(
+        ServicesHowSection,
+        on_delete=models.CASCADE,
+        related_name="steps",
+        verbose_name="بخش",
+    )
+    icon = models.CharField(
+        max_length=64,
+        blank=True,
+        validators=[validate_icon_name],
+        verbose_name="آیکون",
+        help_text=ICON_HELP,
+    )
+    title = models.CharField(max_length=200, verbose_name="عنوان")
+    description = models.TextField(verbose_name="توضیح", blank=True)
+    order = models.PositiveIntegerField(default=0, verbose_name="ترتیب")
+
+    class Meta:
+        ordering = ["order", "id"]
+        verbose_name = "گام"
+        verbose_name_plural = "گام‌ها"
+
+    def __str__(self):
+        return self.title
 
 
 class Service(models.Model):
@@ -175,6 +237,19 @@ class Service(models.Model):
     def accent_class(self):
         """کلاس CSSِ تمِ این خدمت — svc-accent-* در input.css."""
         return f"svc-accent-{self.accent}"
+
+    @property
+    def orb_variant(self):
+        """نگاشتِ لهجه به نوعِ سیارهٔ mega-orb (T52): gold / royal / cream.
+
+        mega-orb تنها سه رنگِ اصلی دارد؛ لهجه‌های میانی به نزدیک‌ترین کلاس
+        می‌روند تا سیارهٔ هر خدمت در منو و در صفحهٔ فهرست یکی بماند.
+        """
+        if self.accent in ("royal", "peri"):
+            return "royal"
+        if self.accent == "cream":
+            return "cream"
+        return "gold"
 
     def get_meta_title(self):
         """عنوان متا یا fallback به عنوانِ خدمت."""

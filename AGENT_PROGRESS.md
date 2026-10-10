@@ -136,14 +136,15 @@ only scope). The portfolio and blog pages had no `new/` design either but were
 designed in the v2 language directly (T35–T40, see D27) and are done. The
 remaining ones still use v1 templates; they extend `base.html`, so the new
 base restyles their chrome, but their own markup still assumes old tokens and
-needs the T41/T42 pass. Service detail pages exist in `new/services/` but are
-out of scope for this migration order (home/about/contact/404 only).
+needs the T41/T42 pass. Service detail pages exist in `new/services/`; the
+T63–T69 phase redesigned both services pages in the v2 language directly (same
+D27 precedent as portfolio/blog), so the `new/services/` files are now only
+reference material for T44's final `new/` deletion.
 
 ### Pending pages
 
-_(none left — every URL renders in the v2 design now. T42 gave the services
-pages minimal placeholders; a full services redesign is deliberately out of
-scope for this migration and can pick these templates up later.)_
+_(none left — every URL renders in the v2 design now, including both services
+pages after T63–T69.)_
 
 - **D60 — base.html comment leak: the WHITE PAGE bug (T47c).** The user hit it
   live: every page rendered as a white screen with a raw Persian sentence
@@ -2659,7 +2660,7 @@ header/footer/CTA) and the existing models `services.Service`, `ServiceStat`,
   planet/orb accent so it sits inside the site's "solar system" identity |
   files: `templates/services/detail.html`, `static/src/input.css` |
   commit: "feat(services): per-service hero atmospheres"
-- [ ] T69 — Services LIST page `templates/services/list.html` redesign: hero,
+- [x] T69 — Services LIST page `templates/services/list.html` redesign: hero,
   service cards using the same orb/planet language as the mega menu (T52), a
   "how we choose" section, FAQ if available, CTA from base; then a
   view/sitemap/internal-links check and a render of every service page + the
@@ -2771,12 +2772,59 @@ production, and `.env` / `.env.production` are confirmed ignored by
 
 ---
 
-T01–T68 done (T42 superseded by Phase 12; T47b/T47c were the template-comment
-leak sweeps — D50/D60). **Next: T69** — the services LIST page redesign
-(`templates/services/list.html` + `apps/services/views.py`): hero, service
-cards in the same orb/planet language as the T52 mega menu, a «how we choose»
-section, FAQ if available, CTA from base; then the render pass with an empty
-and a seeded DB. After that: Phase 13 cleanup (T43/T44).
+T01–T69 done (T42 superseded by Phase 12; T47b/T47c were the template-comment
+leak sweeps — D50/D60). **Next: Phase 13 cleanup** — T43 (delete the remaining
+obsolete v1 frontend files; the first group — the v1 static assets — is already
+staged, and the remaining candidates are listed in the task) and then T44 (the
+final check pass + deleting `new/`).
+
+T69 (D70) is live: the services LIST page (`templates/services/list.html`) is
+the last page that still used the T42 placeholder. Three sections on
+`base.html`: hero (breadcrumb trail, `eyebrow` + `highlight` h1 + description
+from `ServicesPageSection`, a «N خدمت» + «مشاورهٔ رایگان» chip row that only
+prints when services exist) → the planet-card archive → «چطور خدمتِ درست را
+انتخاب کنیم؟» → the site-wide FAQ accordion; the CTA/footer come from base.
+**The cards speak the mega-menu's planet language (T52)**: each is an
+`svc-accent-*` wrapper (so it carries its own `--pa`) holding a `mega-orb` with
+its orbiting moon, a `badge`, an excerpt, `s-chip` tags and a «مشاهده و شروع»
+link — the same `mega-orb`/`mega-orbit` classes the header menu uses, so a
+service's planet is identical in both places. The new `Service.orb_variant`
+property maps the service's `accent` to one of the three orb tints
+(gold/royal/cream) the mega-orb actually comes in, so mid-range accents fall to
+the nearest real variant instead of a missing class.
+**Two new models** (migration `0011`): `ServicesHowSection` (singleton with the
+usual `eyebrow`/`title`(`[[ ]]`)/`subtitle` trio) + a `ServicesHowStep` child
+(icon + title + description + order) rendered as four `why-card glass-light`
+tiles with `{% cycle %}` radii; and `eyebrow` on `ServicesPageSection` (its
+`title` also gained the `[[ ]]` `help_text`). The FAQ is NOT a new model — it
+reuses home's `FaqSection` + `FaqItem` (the site's general questions), rendered
+with the home `.faq-item`/`.faq-q`/`.faq-a` markup so `pixoria.js`'s `initFaq`
+drives it unchanged.
+**New CSS** (`.svc-list-card` + `.svc-list-more` in `input.css`, Tailwind
+rebuilt): a flex-column card with a hover top-border gradient, a `--pa`-tinted
+border/glow/background shift, and an arrow that slides out on hover — all
+colour-mixed from the service's own accent, and `:focus-visible` mirrors
+`:hover` for keyboard users. `margin-top: auto` on the link keeps it pinned to
+the card bottom. The hover-orb-scale rule was extended to `.svc-list-card` too.
+The view (`apps/services/views.py`) was rewritten: `services` is a plain list,
+`how_section` + its ordered `steps`, and `faq_section` + active `faq_items` —
+each `{% if %}`-guarded in the template so an empty DB renders 200 with the
+«در حال حاضر خدمتی ثبت نشده است.» empty state and no orphan headings.
+**Verified**: `manage.py check` + `makemigrations --check` + `collectstatic
+--dry-run` clean; list 200 (61 KB) with 4 cards and every section, 200 with an
+EMPTY database (28 KB — empty state, all optional sections skipped, exactly one
+`<h1>`, no leaked `[[ ]]`); all four detail pages 200; `scripts/render_check.py`
+clean on every page (home/about/contact/portfolio/blog/login/admin/proposal/
+404); admin renders the new singleton's change page with the 4-step inline +
+the eyebrow field; the sitemap still lists `/services/`; the seed re-run is a
+clean no-op (0 new rows); the `{#` sweep over `templates/` finds zero
+unterminated comments. `scripts/_t69_check.py` (headless Chrome, 1440/390px):
+no horizontal overflow, 4 cards laid out with visible 64px orbs, the 4
+how-choose cards in one row, 6 FAQ items, the accordion opens on click, and no
+page exceptions. **GOTCHA in that script, fixed:** the "cards spread across the
+row" assertion compared EVERY card against card 0 — including card 0 itself,
+whose offset is always 0 — so it could never pass; it now compares only
+`how[1:]` and prints the measured x positions.
 
 T68 (D69) is live: each service hero now carries its own atmosphere on top of
 the T63 mockups — the artwork column is wrapped in

@@ -3,6 +3,8 @@ from django.contrib import admin
 from apps.core.icon_utils import IconPickerForm, IconPreviewMixin
 from .models import (
     ServicesPageSection,
+    ServicesHowSection,
+    ServicesHowStep,
     Service,
     ServiceSection,
     ServiceTool,
@@ -22,9 +24,27 @@ from .models import (
 @admin.register(ServicesPageSection)
 class ServicesPageSectionAdmin(admin.ModelAdmin):
     list_display = ["title"]
+    fields = ["eyebrow", "title", "description"]
 
     def has_add_permission(self, request):
         return not ServicesPageSection.objects.exists()
+
+
+class ServicesHowStepInline(IconPreviewMixin, admin.TabularInline):
+    model = ServicesHowStep
+    extra = 1
+    form = IconPickerForm
+    fields = ["icon", "title", "description", "order"]
+
+
+@admin.register(ServicesHowSection)
+class ServicesHowSectionAdmin(admin.ModelAdmin):
+    list_display = ["title"]
+    fields = ["eyebrow", "title", "subtitle"]
+    inlines = [ServicesHowStepInline]
+
+    def has_add_permission(self, request):
+        return not ServicesHowSection.objects.exists()
 
 
 class ServiceStatInline(admin.TabularInline):

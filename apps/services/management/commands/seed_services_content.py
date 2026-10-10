@@ -36,6 +36,9 @@ from apps.services.models import (
     ServicePlan,
     ServicePlanFeature,
     ServiceFAQ,
+    ServicesPageSection,
+    ServicesHowSection,
+    ServicesHowStep,
 )
 
 CONTACT = "contact:contact"
@@ -1040,6 +1043,7 @@ class Command(BaseCommand):
         sys.stdout.reconfigure(encoding="utf-8")
 
         total_created = 0
+        total_created += self.seed_page_sections()
         for slug, spec in SERVICES.items():
             service = Service.objects.filter(slug=slug).first()
             if service is None:
@@ -1052,6 +1056,75 @@ class Command(BaseCommand):
                 f"محتوای صفحات اختصاصیِ خدمات آماده شد ({total_created} ردیفِ جدید)."
             )
         )
+
+    # ── بخش‌های صفحهٔ فهرستِ خدمات (T69): eyebrowِ هیرو + بخشِ «انتخابِ
+    # خدمت» با گام‌هایش. فقط پرکردنِ فیلدهای خالی + get_or_create روی کلید. ──
+    def seed_page_sections(self):
+        created = 0
+        page = ServicesPageSection.objects.first()
+        if page and not page.eyebrow:
+            page.eyebrow = "از طراحی تا توسعهٔ محصول"
+            page.save(update_fields=["eyebrow"])
+
+        how, created_now = ServicesHowSection.objects.get_or_create(
+            defaults={
+                "eyebrow": "انتخابِ خدمت",
+                "title": "چطور خدمتِ [[درست]] را انتخاب کنیم؟",
+                "subtitle": (
+                    "از مشاورهٔ رایگان تا تحویل، مسیرِ همکاری در چهار گام روشن است؛ "
+                    "پیش از هر قراردایی مطمئن می‌شویم که درست‌ترین خدمت را انتخاب کرده‌اید."
+                ),
+            },
+        )
+        created += int(created_now)
+        if not created_now:
+            # تک‌سکشنِ موجود: فقط فیلدهای خالی پر می‌شوند (قاعدهٔ D25).
+            updates = {
+                "eyebrow": "انتخابِ خدمت",
+                "subtitle": (
+                    "از مشاورهٔ رایگان تا تحویل، مسیرِ همکاری در چهار گام روشن است؛ "
+                    "پیش از هر قراردایی مطمئن می‌شویم که درست‌ترین خدمت را انتخاب کرده‌اید."
+                ),
+            }
+            to_write = {k: v for k, v in updates.items() if v and not getattr(how, k)}
+            if to_write:
+                ServicesHowSection.objects.filter(pk=how.pk).update(**to_write)
+
+        steps = [
+            (
+                "search",
+                "نیازتان را مشخص می‌کنیم",
+                "در جلسهٔ مشاورهٔ رایگان می‌گوییم چه می‌خواهید، برای چه کسی و با چه بودجه‌ای.",
+            ),
+            (
+                "message-circle",
+                "خدمتِ متناسب را پیشنهاد می‌دهیم",
+                "مطابقِ نیاز و بودجه، یکی از این خدمات یا ترکیبی از آن‌ها را توصیه می‌کنیم.",
+            ),
+            (
+                "file-text",
+                "پیشنهاد و قیمت را می‌بینید",
+                "یک سندِ شفاف از مراحل، زمان و هزینه — بدون پکیج‌های آماده و هزینهٔ پنهان.",
+            ),
+            (
+                "rocket",
+                "کار شروع می‌شود",
+                "پس از تاییدِ پیشنهاد، تیمِ پروژه شروع می‌کند و در هر مرحله گزارش می‌دهیم.",
+            ),
+        ]
+        titles = []
+        for index, (icon, title, description) in enumerate(steps):
+            titles.append(title)
+            _, created_now = ServicesHowStep.objects.get_or_create(
+                section=how,
+                title=title,
+                defaults={"icon": icon, "description": description, "order": index},
+            )
+            created += int(created_now)
+        ServicesHowStep.objects.filter(section=how).exclude(
+            title__in=titles
+        ).delete()
+        return created
 
     def seed_service(self, service, spec):
         created = 0

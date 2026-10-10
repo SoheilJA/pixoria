@@ -4,61 +4,77 @@
 {% block title %}{{ page_section.title|default:"خدمات"|striptags }} — {{ settings.site_name }}{% endblock %}
 {% block description %}{{ page_section.description|default:"خدمات طراحی و توسعهٔ محصول‌های دیجیتال پیکسوریا" }}{% endblock %}
 
-{% comment %}
-  placeholder موقت (T42): صفحهٔ خدمات هنوز طرح v2 ندارد، بنابراین این قالب
-  حداقلی است — فقط دادهٔ دیتابیس با کلاس‌های v2 موجود رندر می‌شود. بازطراحی
-  کامل این صفحه خارج از ترتیب این مهاجرت است.
-{% endcomment %}
+{% block extra_head %}
+  {% if page_section and page_section.description %}
+    <meta property="og:description" content="{{ page_section.description|striptags }}">
+  {% endif %}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type": "ListItem", "position": 1, "name": "خانه", "item": "{% url 'home:home' %}"},
+      {"@type": "ListItem", "position": 2, "name": "خدمات"}
+    ]
+  }
+  </script>
+{% endblock %}
 
 {% block content %}
-  {% comment %}هیرو — عنوان آرشیو خدمات با مادرِ شناور{% endcomment %}
-  <section class="relative overflow-hidden bg-ink" data-mouse-parallax>
-    <div class="pointer-events-none absolute inset-0" aria-hidden="true">
-      <div data-depth="0.05" class="absolute right-[9%] top-[12%]">
-        <span data-float="14" class="orb block h-20 w-20"
-              style="background: radial-gradient(circle at 32% 30%, rgba(232,196,122,0.42), rgba(201,161,90,0.07) 60%, transparent 72%);"></span>
-      </div>
-      <div data-depth="0.08" class="absolute bottom-[16%] left-[8%]">
-        <span data-float="12" class="shard block h-24 w-20 rotate-12"></span>
-      </div>
-      <div data-depth="0.05" class="absolute left-[32%] top-[14%]">
-        <span data-float="10" class="orb block h-10 w-10"
-              style="background: radial-gradient(circle, rgba(46,99,255,0.5), transparent 70%);"></span>
-      </div>
-    </div>
+  {% comment %}
+    صفحهٔ فهرستِ خدمات (T69). هر بخش با {% if %} محافظت می‌شود تا صفحه با
+    دیتابیسِ خالی (هیچ خدمتی، هیچ بخشِ انتخاب، هیچ FAQ) هم بدون خطا رندر
+    شود. کارتِ خدمات به زبانِ سیاره‌ایِ مگامنو (T52) حرف می‌زند: هر کارت
+    یک سیارهٔ mega-orb با حلقهٔ مداریِ هاوری و لهجهٔ رنگیِ خودِ خدمت.
+  {% endcomment %}
+
+  {# ── هیرو — مسیر صفحه، عنوان و مقدمهٔ آرشیو خدمات ── #}
+  <section class="relative overflow-hidden bg-ink" data-mouse-parallax data-pause>
+    {% include "partials/_space_layer.html" with ring_spin="1" ring_class="-left-48 -bottom-24 h-[34rem] w-[46rem]" orb_variant="planet-orb-gold" orb_class="left-[8%] top-[16%] h-7 w-7" %}
+    <div class="pointer-events-none absolute -right-40 top-1/4 h-[32rem] w-[32rem] rounded-full opacity-20"
+         style="background: radial-gradient(circle, rgba(201,161,90,0.22), transparent 65%);"
+         aria-hidden="true"></div>
     <span class="stroke-title font-latin pointer-events-none absolute -bottom-10 left-0 select-none text-[16vw] font-light leading-none"
           aria-hidden="true">services</span>
 
     <div class="relative z-10 mx-auto max-w-7xl px-6 pb-28 pt-36 md:pt-48">
       {% include "components/_breadcrumb.html" %}
 
-      <h1 class="mt-8 max-w-3xl text-[2.6rem] font-extrabold leading-[1.25] sm:text-5xl lg:text-6xl"
-          data-reveal="right">
-        {% if page_section and page_section.title %}
-          {{ page_section.title|highlight }}
-        {% else %}
-          خدمات
+      <div class="mt-10 max-w-3xl" data-reveal="right">
+        {% if page_section and page_section.eyebrow %}
+          <p class="eyebrow">{{ page_section.eyebrow }}</p>
         {% endif %}
-      </h1>
-      {% if page_section and page_section.description %}
-        <p class="mt-6 max-w-2xl text-lg font-light leading-8 text-cream/70"
-           data-reveal="right" data-delay="0.12">
-          {{ page_section.description }}
-        </p>
-      {% endif %}
+        <h1 class="mt-6 text-[2.6rem] font-extrabold leading-[1.2] sm:text-5xl lg:text-[3.5rem]">
+          {% if page_section and page_section.title %}
+            {{ page_section.title|highlight }}
+          {% else %}
+            خدمات
+          {% endif %}
+        </h1>
+        {% if page_section and page_section.description %}
+          <p class="mt-6 max-w-2xl text-lg font-light leading-8 text-cream/70"
+             data-reveal="up" data-delay="0.06">
+            {{ page_section.description }}
+          </p>
+        {% endif %}
+      </div>
 
       {% if services %}
-        <div class="mt-10 flex flex-wrap items-center gap-3" data-reveal="up" data-delay="0.2">
+        <div class="mt-10 flex flex-wrap items-center gap-3" data-reveal="up" data-delay="0.16">
           <span class="inline-flex items-center gap-2 rounded-full border border-cream/10 bg-white/[0.02] px-4 py-2 text-sm text-cream/60">
             {% icon "sparkles" class="h-4 w-4 text-gold" %}
             <b class="font-bold text-cream fa-num">{{ services|length|fa_digits }}</b> خدمت
+          </span>
+          <span class="inline-flex items-center gap-2 rounded-full border border-cream/10 bg-white/[0.02] px-4 py-2 text-sm text-cream/60">
+            {% icon "message-circle" class="h-4 w-4 text-royal" %}
+            مشاورهٔ رایگان
           </span>
         </div>
       {% endif %}
     </div>
   </section>
 
-  {% comment %}آرشیو خدمات — فهرست حداقلی{% endcomment %}
+  {# ─ـ آرشیو خدمات — کارت‌های سیاره‌ای ── #}
   <section class="relative overflow-hidden bg-ink2">
     <svg class="divider divider-flip" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true">
       <path d="M0,26 C260,84 520,82 760,44 C1000,6 1240,80 1440,30 L1440,0 L0,0 Z" fill="#0a0a0c"></path>
@@ -67,36 +83,153 @@
 
     <div class="relative z-10 mx-auto max-w-7xl px-6 pb-28 pt-32 md:pt-40">
       {% if services %}
-        <div class="flex flex-col divide-y divide-cream/10">
+        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {% for service in services %}
             <a href="{% url 'services:detail' service.slug %}"
-               class="group grid grid-cols-1 items-start gap-5 py-10 transition-colors duration-300 hover:bg-white/[0.02] md:grid-cols-[56px_1fr_auto] md:gap-8 md:py-12"
-               data-reveal="up" data-delay="{% cycle '0' '0.06' '0.12' '0.18' %}">
-              <span class="icon-ring h-12 w-12 shrink-0">{% icon service.icon class="h-5 w-5" %}</span>
-              <div class="min-w-0">
-                <h2 class="text-[clamp(1.4rem,2.4vw,2rem)] font-extrabold leading-[1.2] text-cream transition-colors group-hover:text-gold-light">
+               class="{{ service.accent_class }} svc-list-card tilt group h-full"
+               data-reveal="up" data-delay="{% cycle '0' '0.06' '0.12' '0.18' %}"
+               aria-label="{{ service.title }}">
+              <span class="glare" aria-hidden="true"></span>
+
+              <div class="flex items-start justify-between gap-4">
+                <span class="mega-orb mega-orb-{{ service.orb_variant }} shrink-0" aria-hidden="true">
+                  <span class="mega-orbit"><span class="mega-orbit-moon"></span></span>
+                  {% icon service.icon|default:"sparkles" class="h-6 w-6" %}
+                </span>
+                {% if service.badge %}
+                  <span class="rounded-full border border-cream/10 bg-white/[0.03] px-3 py-1 text-[0.72rem] font-medium text-cream/55">
+                    {{ service.badge }}
+                  </span>
+                {% endif %}
+              </div>
+
+              <div class="relative z-10">
+                <h2 class="text-[clamp(1.35rem,2.2vw,1.75rem)] font-extrabold leading-[1.25] text-cream">
                   {{ service.title }}
                 </h2>
                 {% if service.excerpt %}
-                  <p class="mt-3 max-w-2xl text-[0.95rem] leading-7 text-cream/55">{{ service.excerpt }}</p>
-                {% endif %}
-                {% if service.get_tags_list %}
-                  <div class="mt-4 flex flex-wrap gap-2">
-                    {% for tag in service.get_tags_list %}
-                      <span class="s-chip">{{ tag }}</span>
-                    {% endfor %}
-                  </div>
+                  <p class="mt-3 text-[0.92rem] leading-7 text-cream/55">{{ service.excerpt }}</p>
                 {% endif %}
               </div>
-              <span class="hidden h-12 w-12 shrink-0 place-items-center rounded-full border border-cream/10 text-cream/50 transition-all duration-300 group-hover:border-gold/60 group-hover:bg-gold/10 group-hover:text-gold-light md:grid">
-                {% icon "arrow-left" class="h-5 w-5" %}
+
+              {% if service.get_chips_list %}
+                <div class="relative z-10 flex flex-wrap gap-2">
+                  {% for chip in service.get_chips_list %}
+                    <span class="s-chip">{{ chip }}</span>
+                  {% endfor %}
+                </div>
+              {% endif %}
+
+              <span class="svc-list-more">
+                مشاهده و شروع
+                {% icon "arrow-left" class="h-3.5 w-3.5" %}
               </span>
             </a>
           {% endfor %}
         </div>
       {% else %}
-        <p class="py-16 text-center text-cream/50" data-reveal="up">در حال حاضر خدمتی ثبت نشده است.</p>
+        <div class="flex flex-col items-center gap-5 py-24 text-center" data-reveal="up">
+          <span class="mega-orb mega-orb-gold" aria-hidden="true">
+            <span class="mega-orbit"><span class="mega-orbit-moon"></span></span>
+            {% icon "rocket" class="h-6 w-6" %}
+          </span>
+          <p class="max-w-md text-cream/50">در حال حاضر خدمتی ثبت نشده است.</p>
+        </div>
       {% endif %}
     </div>
   </section>
+
+  {# ─ـ «چطور خدمتِ درست را انتخاب کنیم؟» ── #}
+  {% if how_section and steps %}
+    <section class="relative overflow-hidden bg-cream2" data-pause>
+      <svg class="divider divider-flip" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0,26 C260,84 520,82 760,44 C1000,6 1240,80 1440,30 L1440,0 L0,0 Z" fill="#121214"></path>
+      </svg>
+      <div class="grid-bg pointer-events-none absolute inset-0 opacity-50" aria-hidden="true"></div>
+
+      <div class="relative z-10 mx-auto max-w-7xl px-6 pb-28 pt-32 md:pt-40">
+        <div class="max-w-2xl">
+          {% if how_section.eyebrow %}
+            <p class="eyebrow eyebrow-dark" data-reveal="up">{{ how_section.eyebrow }}</p>
+          {% endif %}
+          <h2 class="mt-5 text-4xl font-extrabold leading-[1.3] text-paper md:text-[2.7rem]"
+              data-reveal="up" data-delay="0.08">
+            {{ how_section.title|highlight:"dark" }}
+          </h2>
+          {% if how_section.subtitle %}
+            <p class="mt-5 font-light leading-8 text-coy" data-reveal="up" data-delay="0.14">
+              {{ how_section.subtitle }}
+            </p>
+          {% endif %}
+        </div>
+
+        <div class="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {% for step in steps %}
+            <article class="why-card glass-light group relative overflow-hidden p-7"
+                     style="border-radius: {% cycle '1.75rem 0.75rem 1.75rem 0.75rem' '0.75rem 1.75rem 0.75rem 1.75rem' %}"
+                     data-reveal="up" data-delay="{% cycle '0' '0.08' '0.16' '0.24' %}">
+              <span class="glare" aria-hidden="true"></span>
+              <span class="why-idx" aria-hidden="true">{{ forloop.counter|stringformat:"02d"|fa_digits }}</span>
+              <span class="why-corner" aria-hidden="true"></span>
+              <div class="relative z-10 flex items-center gap-3">
+                <span class="icon-ring icon-ring-pulse shrink-0">
+                  {% icon step.icon|default:"check" class="h-5 w-5" %}
+                </span>
+                <h3 class="font-bold text-paper">{{ step.title }}</h3>
+              </div>
+              {% if step.description %}
+                <p class="relative z-10 mt-3 text-sm leading-7 text-coy">{{ step.description }}</p>
+              {% endif %}
+              <span class="why-line" aria-hidden="true"></span>
+            </article>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+  {% endif %}
+
+  {# ── سوالات متداول (FAQ عمومی سایت) ── #}
+  {% if faq_section and faq_items %}
+    <section class="relative overflow-hidden bg-ink2">
+      <svg class="divider divider-flip" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0,26 C260,84 520,82 760,44 C1000,6 1240,80 1440,30 L1440,0 L0,0 Z" fill="#efece5"></path>
+      </svg>
+      <div class="pointer-events-none absolute -left-32 top-1/4 h-96 w-96 rounded-full opacity-25 aurora-blob"
+           style="background: radial-gradient(circle, rgba(201,161,90,0.2), transparent 65%)"
+           aria-hidden="true"></div>
+
+      <div class="relative z-10 mx-auto max-w-4xl px-6 pb-28 pt-32 md:pt-40">
+        <div class="text-center">
+          <p class="eyebrow eyebrow-c justify-center" data-reveal="up">سوالات متداول</p>
+          <h2 class="mt-5 text-4xl font-extrabold leading-[1.3] text-cream md:text-[2.7rem]"
+              data-reveal="up" data-delay="0.08">
+            {{ faq_section.title|default:"سوالاتِ رایج"|highlight }}
+          </h2>
+          {% if faq_section.subtitle %}
+            <p class="mx-auto mt-4 max-w-xl font-light leading-8 text-cream/55"
+               data-reveal="up" data-delay="0.14">
+              {{ faq_section.subtitle }}
+            </p>
+          {% endif %}
+        </div>
+
+        <div class="mt-12 space-y-3.5">
+          {% for item in faq_items %}
+            <div class="faq-item" data-reveal="up" data-delay="{% cycle '0' '0.06' '0.12' '0.18' '0.24' '0.3' '0.36' '0.42' %}">
+              <h3 class="m-0">
+                <button type="button" class="faq-q"
+                        aria-expanded="false" aria-controls="svc-list-faq-panel-{{ forloop.counter }}">
+                  <span>{{ item.question }}</span>
+                  <span class="faq-icon" aria-hidden="true">{% icon "plus" class="h-4 w-4" %}</span>
+                </button>
+              </h3>
+              <div id="svc-list-faq-panel-{{ forloop.counter }}" class="faq-a" role="region">
+                <p>{{ item.answer|linebreaksbr }}</p>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+  {% endif %}
 {% endblock %}

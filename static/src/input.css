@@ -1809,6 +1809,87 @@ html.lenis body {
   animation-play-state: paused;
 }
 
+/* ---------- کارتِ خدمت در صفحهٔ فهرست (T69) ----------
+   همان زبانِ سیاره‌ایِ مگامنو (T52): هر کارت یک سیارهٔ mega-orb با حلقهٔ
+   مداریِ هاوری دارد و رنگِ تاکیدش را از لهجهٔ خودِ خدمت (--pa) می‌گیرد که
+   کلاسِ svc-accent-* رویِ همان کارت تنظیم می‌کند. */
+.svc-list-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 2rem;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: linear-gradient(
+    165deg,
+    rgba(255, 255, 255, 0.035),
+    rgba(255, 255, 255, 0.008)
+  );
+  transition:
+    transform 0.5s cubic-bezier(0.2, 0.8, 0.3, 1),
+    border-color 0.4s,
+    box-shadow 0.4s,
+    background 0.4s;
+}
+.svc-list-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(
+    to left,
+    color-mix(in srgb, var(--pa, #c9a15a) 35%, transparent),
+    var(--pa, #c9a15a) 50%,
+    color-mix(in srgb, var(--pa, #c9a15a) 35%, transparent)
+  );
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+.svc-list-card:hover,
+.svc-list-card:focus-visible {
+  transform: translateY(-6px);
+  border-color: color-mix(in srgb, var(--pa, #c9a15a) 38%, transparent);
+  background: linear-gradient(
+    165deg,
+    color-mix(in srgb, var(--pa, #c9a15a) 10%, rgba(255, 255, 255, 0.03)),
+    rgba(255, 255, 255, 0.008)
+  );
+  box-shadow: 0 30px 60px -30px color-mix(in srgb, var(--pa, #c9a15a) 40%, transparent);
+  outline: none;
+}
+.svc-list-card:hover::before,
+.svc-list-card:focus-visible::before {
+  opacity: 1;
+}
+.svc-list-card .mega-orb {
+  width: 4rem;
+  height: 4rem;
+}
+.svc-list-card .mega-orb > svg {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+.svc-list-more {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: auto;
+  padding-top: 0.5rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: color-mix(in srgb, var(--pa, #c9a15a) 82%, #f5f3ee);
+}
+.svc-list-more svg {
+  transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.3, 1);
+}
+.svc-list-card:hover .svc-list-more svg,
+.svc-list-card:focus-visible .svc-list-more svg {
+  transform: translateX(-0.3rem);
+}
+
 .text-goldgrad {
   background: linear-gradient(
     105deg,
@@ -3236,6 +3317,8 @@ html.has-preloader .preloader.pl-done {
     0 10px 26px -10px rgba(245, 243, 238, 0.45),
     rgba(245, 243, 238, 0.4) 0 0 0 1px inset;
 }
+.svc-list-card:hover .mega-orb,
+.svc-list-card:focus-visible .mega-orb,
 .mega-tile:hover .mega-orb,
 .mega-tile:focus-visible .mega-orb {
   transform: scale(1.06);

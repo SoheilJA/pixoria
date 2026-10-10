@@ -4,18 +4,37 @@ from django.utils import timezone
 
 from apps.blog.models import Article
 from apps.core.context_utils import crumbs
+from apps.home.models import FaqItem, FaqSection
 from apps.portfolio.models import Portfolio
 
-from .models import Service, ServicesPageSection
+from .models import Service, ServicesHowSection, ServicesPageSection
 
 
 def services_list(request):
-    context = {
-        "crumbs": crumbs(("خانه", "home:home"), ("خدمات", None)),
-        "page_section": ServicesPageSection.objects.first(),
-        "services": list(Service.objects.all()),
-    }
-    return render(request, "services/list.html", context)
+    """صفحهٔ فهرستِ خدمات (v2 — T69).
+
+    هر بخش با ``{% if %}``` در قالب محافظت می‌شود، تا صفحه با دیتابیسِ خالی
+    (هیچ خدمتی، هیچ بخشِ FAQ) هم بدون خطا رندر شود.
+    """
+    faq_section = FaqSection.objects.first()
+    how_section = ServicesHowSection.objects.first()
+    return render(
+        request,
+        "services/list.html",
+        {
+            "crumbs": crumbs(("خانه", "home:home"), ("خدمات", None)),
+            "page_section": ServicesPageSection.objects.first(),
+            "services": list(Service.objects.all()),
+            # بخشِ «چطور انتخاب کنیم» — تک‌سکشن + گام‌های مرتب‌شده (T69).
+            "how_section": how_section,
+            "steps": how_section.steps.all() if how_section else [],
+            # FAQِ عمومیِ سایت (همان سوالاتِ صفحهٔ اصلی) — فقط وقتی وجود دارد.
+            "faq_section": faq_section,
+            "faq_items": (
+                FaqItem.objects.filter(is_active=True) if faq_section else []
+            ),
+        },
+    )
 
 
 def services_detail(request, slug):
