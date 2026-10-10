@@ -383,6 +383,12 @@ class ServiceProcess(models.Model):
         Service, on_delete=models.CASCADE, related_name="processes", verbose_name="خدمت"
     )
     title = models.CharField(max_length=200, verbose_name="عنوان مرحله")
+    description = models.TextField(
+        max_length=400,
+        blank=True,
+        verbose_name="توضیح کوتاه مرحله",
+        help_text="یک جمله دربارهٔ این مرحله (الزامى نیست).",
+    )
     order = models.PositiveIntegerField(default=0, verbose_name="ترتیب")
 
     class Meta:

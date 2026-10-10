@@ -1119,9 +1119,14 @@ class Command(BaseCommand):
         )
         created += self._seed_collection(
             ServiceProcess, service, spec.get("process", []),
-            # ServiceProcess فقط title دارد؛ توضیحاتِ مرحله در spec نادیده
-            # گرفته می‌شود (مدل فیلدِ جداگانه‌ای برایش ندارد).
-            key="title", fields=lambda row: {"title": row[0] if isinstance(row, tuple) else row},
+            key="title",
+            fields=lambda row: {
+                "title": row[0] if isinstance(row, tuple) else row,
+                "description": row[1] if isinstance(row, tuple) and len(row) > 1 else "",
+            },
+            # توضیحاتِ مراحل فقط برای ردیف‌هایی پر می‌شوند که خالی‌اند — یعنی
+            # ردیف‌هایی که خودِ این seed ساخته. ویرایشِ ادمین هرگز بازنویسی نمی‌شود.
+            fill_empty=("description",),
         )
         created += self._seed_collection(
             ServiceTool, service, spec.get("tools", []),
@@ -1142,20 +1147,33 @@ class Command(BaseCommand):
         created += self._seed_faqs(service, spec.get("faqs", []))
         return created
 
-    def _seed_collection(self, model, service, rows, key, fields):
+    def _seed_collection(self, model, service, rows, key, fields, fill_empty=()):
         """الگوی D21: ردیف‌هایی که کلیدشان در لیستِ جدید نیست حذف می‌شوند
-        (همان محتوای v1 که این seed ساخته)، بقیه get_or_create می‌شوند."""
+        (همان محتوای v1 که این seed ساخته)، بقیه get_or_create می‌شوند.
+
+        ``fill_empty`` فیلدهایی هستند که روی ردیف‌های از پیش موجود فقط وقتی
+        نوشته می‌شوند که خالی باشند — برای پرکردنِ یک فیلدِ جدیدِ اختیاری روی
+        ردیف‌هایی که این seed قبلاً ساخته، بدون بازنویسیِ ویرایشِ ادمین."""
         keys = []
         created = 0
         for index, row in enumerate(rows):
             attrs = fields(row)
             keys.append(attrs[key])
-            _, created_now = model.objects.get_or_create(
+            obj, created_now = model.objects.get_or_create(
                 service=service,
                 **{key: attrs[key]},
                 defaults={**attrs, "order": index},
             )
             created += int(created_now)
+            if created_now or not fill_empty:
+                continue
+            updates = {
+                name: attrs[name]
+                for name in fill_empty
+                if attrs.get(name) and not getattr(obj, name)
+            }
+            if updates:
+                model.objects.filter(pk=obj.pk).update(**updates)
         stale = model.objects.filter(service=service).exclude(**{f"{key}__in": keys})
         stale.delete()
         return created

@@ -3,7 +3,7 @@
 {# داده‌ها: process_section (ProcessSection)، process_steps (ProcessStep[]) #}
 {# pixoria.js مسیر gps-draw را هنگام اسکرول رسم می‌کند و مهره را جابه‌جا می‌کند #}
 {% if process_section and process_steps %}
-  <section id="process" class="relative overflow-hidden bg-ink">
+  <section id="process" data-gps-root class="relative overflow-hidden bg-ink">
     {# خط تقسیم‌کنندهٔ روشن روی بخش روشنِ قبلی #}
     <svg class="divider" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true">
       <path d="M0,58 C320,12 640,78 960,42 C1200,14 1360,62 1440,32 L1440,0 L0,0 Z" fill="#efece5"></path>

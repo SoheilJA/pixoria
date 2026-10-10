@@ -533,6 +533,7 @@ function init() {
   initPortfolioFilter({ hasGsap, REDUCED, faDigits });
   initMarquees();
   initStatCounts({ hasGsap, ScrollTrigger });
+  initStatCountText({ hasGsap, ScrollTrigger });
   initBuildBars({ hasGsap, ScrollTrigger });
   initGpsDraw({ hasGsap, ScrollTrigger, REDUCED });
   initFaq();
@@ -1121,19 +1122,25 @@ function initGpsDraw({ hasGsap, ScrollTrigger, REDUCED }) {
   const gpsDraws = [...document.querySelectorAll(".gps-draw")];
   if (!gpsDraws.length) return;
 
-  const paths = gpsDraws.map((p) => {
-    p.style.strokeDasharray = "1";
-    p.style.strokeDashoffset = REDUCED ? "0" : "1";
-    return { p, len: p.getTotalLength() };
-  });
-  const dots = [...document.querySelectorAll(".gps-dot")];
-  if (hasGsap && ScrollTrigger && !REDUCED) {
+  // هر مسیر مال خودِ نزدیک‌ترین [data-gps-root] است (صفحهٔ خانه و صفحهٔ
+  // خدمت هر کدام یک نمونه دارند) تا trigger مستقل باشد.
+  const roots = [
+    ...new Set(gpsDraws.map((p) => p.closest("[data-gps-root]")).filter(Boolean)),
+  ];
+  roots.forEach((root) => {
+    const paths = [...root.querySelectorAll(".gps-draw")].map((p) => {
+      p.style.strokeDasharray = "1";
+      p.style.strokeDashoffset = REDUCED ? "0" : "1";
+      return { p, len: p.getTotalLength() };
+    });
+    const dots = [...root.querySelectorAll(".gps-dot")];
+    if (!hasGsap || !ScrollTrigger || REDUCED) return;
     const o = { v: 0 };
     gsap.to(o, {
       v: 1,
       ease: "none",
       scrollTrigger: {
-        trigger: "#process",
+        trigger: root,
         start: "top 65%",
         end: "bottom 75%",
         scrub: 0.6,
@@ -1150,7 +1157,45 @@ function initGpsDraw({ hasGsap, ScrollTrigger, REDUCED }) {
         });
       },
     });
-  }
+  });
+}
+
+/* ------------------------------------------------- free-text stat counters
+   ``data-count-text``: برای اعدادی که متنِ آزاد هستند (مثل «۹۸/۱۰۰» یا
+   «زیر ۲ ثانیه»). اولین رشتهٔ رقم (فارسی یا لاتین) شمارش می‌شود و بقیهٔ
+   متن دورش ثابت می‌ماند. عنصر بدونِ JS هم مقدارِ واقعی را از سرور می‌گیرد. */
+
+function initStatCountText({ hasGsap, ScrollTrigger }) {
+  const gsap = window.gsap;
+  const toLatin = (str) =>
+    str.replace(/[۰-۹]/g, (d) => String("۰۱۲۳۴۵۶۷۸۹".indexOf(d)));
+  document.querySelectorAll("[data-count-text]").forEach((el) => {
+    const match = el.dataset.countText.match(/^([^\d۰-۹]*)([\d۰-۹][\d۰-۹,،]*)(.*)$/);
+    if (!match) return;
+    const [, head, digits, tail] = match;
+    const target = Number(toLatin(digits).replace(/[,،]/g, ""));
+    if (!Number.isFinite(target)) return;
+    const render = (v) => {
+      el.textContent = head + faDigits(Math.round(v)) + tail;
+    };
+    if (hasGsap && ScrollTrigger) {
+      const obj = { v: 0 };
+      ScrollTrigger.create({
+        trigger: el,
+        start: "top 85%",
+        once: true,
+        onEnter: () =>
+          gsap.to(obj, {
+            v: target,
+            duration: 2,
+            ease: "power2.out",
+            onUpdate: () => render(obj.v),
+          }),
+      });
+    } else {
+      render(target);
+    }
+  });
 }
 
 /* ------------------------------------------------------- FAQ accordion */

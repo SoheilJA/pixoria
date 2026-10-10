@@ -1702,6 +1702,95 @@ scope for this migration and can pick these templates up later.)_
   DB" test must call `transaction.set_rollback(True)` inside the block — the
   script now does.
 
+- **D66 — Service detail content sections two (T65).** Three more
+  `{% if %}`-guarded sections on `templates/services/detail.html`, all in the
+  D27 language and reusing the home partials' class vocabulary (zero new
+  markup idioms): the **process timeline** (`processes`), **why-us**
+  (`why_us`) and the **stats counters** (`stats`), plus the delivery/timeline
+  note.
+  **One model change was needed:** `ServiceProcess` had only `title` + `order`,
+  but the T62 seed spec already carries a one-sentence description per step
+  (it was being discarded — the seed said so in a comment) and every
+  `new/services/*.html` renders step descriptions. Added an OPTIONAL
+  `description` (TextField, `blank=True`, `max_length=400`) + migration
+  `services.0010`. `_seed_collection` gained a `fill_empty` parameter so the
+  re-run backfilled the 16 descriptions (4 per service) — it only writes a
+  field that is EMPTY, so it can never overwrite an admin edit, unlike a
+  blanket `update_or_create`.
+  **The timeline is the home GPS vocabulary, generalized:** `pixoria.js`'s
+  `initGpsDraw` was hard-wired to `trigger: "#process"` and matched dots to
+  paths by GLOBAL index, so a second instance on a service page would have
+  scrolled both or neither. It now groups `.gps-draw` paths by their closest
+  `[data-gps-root]` ancestor and creates one independent ScrollTrigger per
+  root with dots scoped to that root — `templates/home/sections/_process.html`
+  got the attribute added so the home animation is unchanged. The path is a
+  straight line (`M960,60 L40,60`, `pathLength="1"`, `preserveAspectRatio="none"`
+  with the CSS `vector-effect: non-scaling-stroke`) drawn RIGHT→LEFT so the
+  draw direction and the dot travel match RTL step order, and the nodes are
+  positioned with `left: calc({% widthratio forloop.revcounter|add:"-1" steps 92 %}% + 4%)`
+  — **two template gotchas in one line:** (a) `|add:"4"` CANNOT be piped after
+  a `{% widthratio %}` tag (a tag's output is not a filter input — it rendered
+  the literal string `92|add:"4"%` into the style attribute, caught by dumping
+  the markup), so the +4% base moved into a CSS `calc()`; (b) `widthratio`
+  only multiplies/divides, and there is no `sub` filter, so the RTL fraction
+  comes from `forloop.revcounter` (which counts DOWN) instead of arithmetic.
+  One step skips the line entirely and centers its node (`left: 50%`) since
+  `widthratio` would divide by zero. The step number lives in `.process-node`
+  (services have no per-step icon field, unlike home's `ProcessStep.icon`) and
+  the delivery note is a `glass` pill with the `clock` icon under the cards.
+  **The stats counters keep their text.** `ServiceStat.number` is free Persian
+  text («۱۲۰+» / «۹۸/۱۰۰» / «زیر ۲ ثانیه» / «۶ ماه»), so the home
+  `data-count` trio (value + prefix + suffix) cannot express it — the same
+  shape as `ProjectStat` on the portfolio detail, which D39 renders
+  statically. A NEW opt-in hook `data-count-text` (new `initStatCountText` in
+  `pixoria.js`) splits the string into head/digits/tail (the first Persian- OR
+  latin-digit run, Persian digits reversed to latin via a local table, the
+  thousands separators `٬`/`,` stripped), animates only the digit run with the
+  same 2 s `power2.out` and writes it back with `faDigits`, so «زیر ۲ ثانیه»
+  counts its ۲ and keeps its words. The server renders the real number as the
+  element's initial text, so no-JS and no-GSAP both show the truth; a string
+  with no digit run is left untouched. `.stat-num` sets `direction: ltr;
+  unicode-bidi: isolate` (fine for pure numbers), which would mis-order mixed
+  Persian text, so a `.stat-num-fa` variant (`direction: rtl`) was added to
+  `input.css` — later in the file, same specificity, so it wins.
+  **Section seams made order-independent:** the process divider's fill is the
+  section's OWN ink2 (`#121214`, matching the T64 convention — the wave
+  feathers the current section's colour into whatever precedes, so it is
+  correct whether `tools` is present or not), and the stats section uses
+  rounded top corners (`border-radius: 3rem 9rem 0 0`, the overview's
+  treatment) instead of a wave, which reads correctly over both cream and ink.
+  Verified with `scripts/_t65_check.py`: all four pages 200 with node/card/stat
+  counts matching the DB; node positions an even RTL spread (4 steps →
+  ۹۶/۶۵/۳۵/۴٪, first step rightmost); 1/2/3/5/6 steps on a throwaway test DB
+  all render with the right node count, the endpoints pinned at ۰/۹۲٪, and the
+  single-step branch drawing no path; a service with NO children skips all
+  three sections AND the delivery note; the JS string-split matches the four
+  seeded values (۱۲۰ → ۱۲۰, ۹۸/۱۰۰ → ۹۸, زیر ۲ ثانیه → ۲, ۶ ماه → ۶); no
+  `[[`/`{#`/`{{`/CDN leaks; `clock` resolves in the sprite; the home GPS draw
+  still carries its hooks. `manage.py check` + `makemigrations --check` clean,
+  Tailwind rebuilt, `pixoria.js` passes the ES-module syntax check.
+  **GSAP `onUpdate` GOTCHA (caught by the browser pass, invisible to the
+  render checks):** `gsap.to(obj, {..., onUpdate: (o) => render(o.v)})` does
+  NOT work — GSAP calls `onUpdate` with NO arguments, so `o` is `undefined`
+  and the tween threw `TypeError: Cannot read properties of undefined
+  (reading 'v')` on EVERY frame (four stats = four exceptions per page). The
+  counter path now uses the same closure pattern `initStatCounts` uses
+  (`const obj = { v: 0 }; onUpdate: () => render(obj.v)`). This is why the
+  headless pass exists: the Python checks only see markup.
+  **Headless-Chrome/CDP pass** (the probe must connect to the target with
+  `type === "page"` — `targets[0]` is a Chrome *extension* background page):
+  at 1440 px the four nodes sit exactly on the line (all cy == lineY, cx
+  ۱۲۸۷/۹۰۵/۵۳۵/۱۵۳ with the line spanning ۱۰۴–۱۳۳۶), the first step is
+  rightmost, the dot starts at the path's right end (۹۶۰/۱۰۰۰ of the viewBox)
+  and after a scroll has travelled to cx=40 with `dashoffset` reaching 0
+  (line fully drawn right→left), the four process cards reveal to opacity
+  100, the counter tween completes with ZERO page exceptions, and at 375 px
+  `scrollWidth == clientWidth` (the only elements wider than the viewport are
+  the hero halo and the marquee chips — both clipped by ancestors; the
+  `.marquee` clip comes from `input.css`, not a Tailwind `overflow-hidden`
+  utility, so a naive ancestor grep misses it).
+
+
 - **D65 — Service model extensions (T61).** The models for the dedicated
   service pages are in place, all of it OPTIONAL so a bare service still renders.
   **`Service`** gained: `accent` (gold/gold-light/gold-dark/royal/cream/peri →
@@ -2353,7 +2442,7 @@ header/footer/CTA) and the existing models `services.Service`, `ServiceStat`,
   layout, `.prose-ink` / `.prose-cream`), use-cases/industries, and the tools &
   technologies marquee/chips | files: `templates/services/detail.html` |
   commit: "feat(services): detail content sections one"
-- [ ] T65 — Content sections part 2: the process timeline (`ServiceProcess`),
+- [x] T65 — Content sections part 2: the process timeline (`ServiceProcess`),
   why-us (`ServiceWhyUs`), the stats counters (`ServiceStat`) and the
   delivery/timeline note | files: `templates/services/detail.html`,
   `static/js/pixoria.js` | commit: "feat(services): detail content sections two"
@@ -2441,11 +2530,24 @@ contact; descriptive alt texts; meta title/description per service.
 
 ## Current status
 
-T01–T64 done (T42 superseded by Phase 12; T47b/T47c were the template-comment
-leak sweeps — D50/D60). **Next: T65** — content sections part 2: the process
-timeline (`processes`), why-us (`why_us`) and the stats counters (`stats`, the
-`data-count` animation in `pixoria.js`), plus the delivery/timeline note. All
-data is already in the context from T63 and in the DB from T62.
+T01–T65 done (T42 superseded by Phase 12; T47b/T47c were the template-comment
+leak sweeps — D50/D60). **Next: T66** — the pricing section: three plan cards
+(the featured one elevated, gold border + «محبوب‌ترین»), features with
+included/excluded icons, `fa_price` prices, a CTA per plan defaulting to
+`contact:contact?plan=<slug>&service=<slug>` with the prefill implemented in
+the contact view/form, and the custom-request block from `ServiceCustomItem`.
+All data is in the context from T63 (`plans` + prefetched `features`,
+`custom_items`) and the DB from T62.
+
+T65 (D66) is live: the process timeline (GPS line drawn right→left with
+numbered nodes spread by `widthratio` + `calc`), why-us (the home `why-card`
+vocabulary on the clip-path cream section) and the stats counters (free-text
+numbers via the new `data-count-text` hook in `pixoria.js`, which animates
+only the digit run and keeps «زیر ۲ ثانیه»’s words) + the delivery note. One
+optional field was added (`ServiceProcess.description`, migration `0010`) and
+backfilled from the seed. `initGpsDraw` is now per-`[data-gps-root]` so both
+the home and a service page animate independently. Verified with
+`scripts/_t65_check.py` + a headless-Chrome pass.
 
 T64 is live: four `{% if %}`-guarded blocks on `templates/services/detail.html`
 — «چه چیزی تحویل می‌گیرید؟» (six `deliverables` as glass-light cards with

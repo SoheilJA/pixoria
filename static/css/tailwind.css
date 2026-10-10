@@ -2455,6 +2455,9 @@
   .text-\[0\.78rem\] {
     font-size: 0.78rem;
   }
+  .text-\[0\.85rem\] {
+    font-size: 0.85rem;
+  }
   .text-\[0\.88rem\] {
     font-size: 0.88rem;
   }
@@ -3231,6 +3234,9 @@
     }
     .sm\:inline-flex {
       display: inline-flex;
+    }
+    .sm\:h-32 {
+      height: calc(var(--spacing) * 32);
     }
     .sm\:h-52 {
       height: calc(var(--spacing) * 52);
@@ -4157,6 +4163,10 @@ html.lenis, html.lenis body {
   background-clip: text;
   color: transparent;
   direction: ltr;
+  unicode-bidi: isolate;
+}
+.stat-num-fa {
+  direction: rtl;
   unicode-bidi: isolate;
 }
 .stat-icon {

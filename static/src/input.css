@@ -731,6 +731,12 @@ html.lenis body {
   direction: ltr;
   unicode-bidi: isolate;
 }
+/* آمارِ صفحاتِ خدمت متنِ آزاد است (مثل «زیر ۲ ثانیه»)؛ پس direction باید rtl
+   بماند تا ترکیبِ فارسی و عدد درست بنشیند. */
+.stat-num-fa {
+  direction: rtl;
+  unicode-bidi: isolate;
+}
 .stat-icon {
   display: inline-grid;
   place-items: center;

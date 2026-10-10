@@ -448,7 +448,158 @@
       </section>
     {% endif %}
 
-    {# ── T65: خطِ زمانِ فرآیند، چرا ما، شمارشگرهای آمار ── #}
+    {# ── T65: خطِ زمانِ فرآیند — مسیرِ GPS با گره‌های شماره‌گذاری‌شده ── #}
+    {% if processes %}
+      <section class="relative overflow-hidden bg-ink2">
+        {# fill همرنگِ خودِ بخش است: رنگِ تیره را به هر بخشِ بالایی ریشه می‌کند #}
+        <svg class="divider divider-flip" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M0,26 C260,84 520,82 760,44 C1000,6 1240,80 1440,30 L1440,0 L0,0 Z" fill="#121214"></path>
+        </svg>
+        <div class="grid-bg pointer-events-none absolute inset-0 opacity-20" aria-hidden="true"></div>
+
+        <div class="relative z-10 mx-auto max-w-7xl px-6 pb-28 pt-28 md:pt-32">
+          <div class="text-center">
+            <p class="eyebrow" data-reveal="up">مراحل پروژه</p>
+            <h2 class="mt-5 text-4xl font-extrabold leading-[1.3] md:text-[2.7rem]"
+                data-reveal="up" data-delay="0.06">
+              {{ "از ایده تا [[انتشار]]"|highlight }}
+            </h2>
+          </div>
+
+          {# مسیر: خطِ چراغ‌دار از راست (اولین مرحله) به چپ — یک گره برای هر مرحله #}
+          <div class="relative mt-16 lg:mt-20" data-gps-root>
+            {% if processes|length > 1 %}
+              {% with steps=processes|length|add:"-1" %}
+                <div class="relative h-28 sm:h-32">
+                  <svg class="absolute inset-0 h-full w-full" viewBox="0 0 1000 120" preserveAspectRatio="none" aria-hidden="true">
+                    <defs>
+                      <linearGradient id="gpsGrad" x1="1" y1="0" x2="0" y2="0">
+                        <stop offset="0" stop-color="#e8c47a"></stop>
+                        <stop offset="0.5" stop-color="#c9a15a"></stop>
+                        <stop offset="1" stop-color="#8f6b2c"></stop>
+                      </linearGradient>
+                    </defs>
+                    {# preserveAspectRatio="none" viewBox را کش می‌دهد #}
+                    {# stroke با vector-effect نازک می‌ماند (input.css) #}
+                    <path class="gps-base" d="M960,60 L40,60"></path>
+                    <path class="gps-move" d="M960,60 L40,60"></path>
+                    <path class="gps-draw" pathLength="1" d="M960,60 L40,60"></path>
+                    <circle class="gps-dot" cx="960" cy="60" r="7"></circle>
+                  </svg>
+                  {% comment %}widthratio فقط ضرب‌و‌تقسیم بلد است؛ پایهٔ ۴٪
+                    را calc اضافه می‌کند تا گره‌ها دقیقاً روی دو سرِ خط
+                    (۴٪ تا ۹۶٪ عرض) بنشینند — همان جاهایی که خط تمام می‌شود.{% endcomment %}
+                  {% for step in processes %}
+                    <span class="gps-node" style="left: calc({% widthratio forloop.revcounter|add:"-1" steps 92 %}% + 4%); top: 50%"
+                          aria-hidden="true">{{ forloop.counter|stringformat:"02d"|fa_digits }}</span>
+                  {% endfor %}
+                </div>
+              {% endwith %}
+            {% else %}
+              <div class="relative h-20">
+                <span class="gps-node" style="left: 50%; top: 50%" aria-hidden="true">۰۱</span>
+              </div>
+            {% endif %}
+
+            <div class="grid gap-6 {% if processes|length > 1 %}lg:grid-cols-{{ processes|length }}{% endif %}">
+              {% for step in processes %}
+                <article class="process-step glass tilt group relative overflow-hidden p-7"
+                         style="border-radius: 1.5rem 1.5rem 1.5rem 0.6rem"
+                         data-reveal="up" data-delay="{% cycle '0' '0.08' '0.16' '0.24' '0.32' %}">
+                  <span class="glare" aria-hidden="true"></span>
+                  <span class="process-node">{{ forloop.counter|stringformat:"02d"|fa_digits }}</span>
+                  <h3 class="mt-4 text-lg font-bold text-cream">{{ step.title }}</h3>
+                  {% if step.description %}
+                    <p class="mt-2.5 text-sm leading-7 text-cream/55">{{ step.description }}</p>
+                  {% endif %}
+                </article>
+              {% endfor %}
+            </div>
+          </div>
+
+          {# یادداشتِ تحویل و زمان‌بندی #}
+          <div class="mt-14 flex justify-center" data-reveal="up">
+            <p class="glass inline-flex items-center gap-3 rounded-full px-6 py-3.5 text-[0.85rem] leading-7 text-cream/70">
+              {% icon "clock" class="h-4 w-4 shrink-0 text-gold-light" %}
+              زمانِ تحویل به دامنه و حجمِ پروژه بستگی دارد؛ در جلسهٔ مشاورهٔ رایگان
+              زمان‌بندیِ دقیق را دریافت می‌کنید.
+            </p>
+          </div>
+        </div>
+      </section>
+    {% endif %}
+
+    {# ── T65: چرا ما — مزایای همکاری با لهجهٔ رنگیِ خدمت ── #}
+    {% if why_us %}
+      <section class="relative overflow-hidden bg-cream" style="clip-path: polygon(0 0, 100% 5.5%, 100% 100%, 0 100%)">
+        <div class="grid-bg pointer-events-none absolute inset-0 opacity-60" aria-hidden="true"></div>
+        <div class="aurora-blob pointer-events-none absolute -top-20 right-[10%] h-96 w-96 rounded-full opacity-50"
+             style="background: radial-gradient(circle, color-mix(in srgb, var(--pa, #c9a15a) 22%, transparent 65%))" aria-hidden="true"></div>
+
+        <div class="relative mx-auto max-w-7xl px-6 pb-28 pt-40 md:pt-48">
+          <div class="text-center">
+            <p class="eyebrow eyebrow-dark eyebrow-c justify-center" data-reveal="up">چرا پیکسوریا؟</p>
+            <h2 class="mt-5 text-4xl font-extrabold leading-[1.3] text-paper md:text-[2.7rem]"
+                data-reveal="up" data-delay="0.08">
+              {{ "چرا این پروژه را به [[ما]] بسپارید؟"|highlight:"dark" }}
+            </h2>
+          </div>
+
+          <div class="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {% for item in why_us %}
+              <article class="why-card glass-light tilt group relative overflow-hidden p-7"
+                       style="border-radius: {% cycle '1.75rem 0.75rem 1.75rem 0.75rem' '0.75rem 1.75rem 0.75rem 1.75rem' %}"
+                       data-reveal="up" data-delay="{% cycle '0' '0.08' '0.16' '0.24' '0.32' %}">
+                <span class="glare" aria-hidden="true"></span>
+                <span class="why-idx" aria-hidden="true">{{ forloop.counter|stringformat:"02d"|fa_digits }}</span>
+                <span class="why-corner" aria-hidden="true"></span>
+                <div class="relative z-10 flex items-center gap-3">
+                  <span class="icon-ring icon-ring-pulse shrink-0">{% icon item.icon class="h-5 w-5" %}</span>
+                  <h3 class="font-bold text-paper">{{ item.title }}</h3>
+                </div>
+                <p class="relative z-10 mt-3 text-sm leading-7 text-coy">{{ item.description }}</p>
+                <span class="why-line" aria-hidden="true"></span>
+              </article>
+            {% endfor %}
+          </div>
+        </div>
+      </section>
+    {% endif %}
+
+    {# ── T65: آمار — شمارشگرهای متنِ آزاد (data-count-text در pixoria.js) ── #}
+    {% if stats %}
+      {# گوشه‌های گرد به جای موج: چه بخشِ قبلی روشن باشد چه تیره، درست می‌نشیند #}
+      <section class="relative overflow-hidden bg-ink3" style="border-radius: 3rem 9rem 0 0">
+        <div class="grid-bg pointer-events-none absolute inset-0 opacity-30" aria-hidden="true"></div>
+        <div class="pointer-events-none absolute left-1/2 top-0 h-96 w-96 -translate-x-1/2 rounded-full opacity-25 aurora-blob"
+             style="background: radial-gradient(circle, color-mix(in srgb, var(--pa, #c9a15a) 30%, transparent 65%))" aria-hidden="true"></div>
+
+        <div class="relative z-10 mx-auto max-w-7xl px-6 pb-24 pt-28 md:pt-32">
+          <div class="text-center">
+            <p class="eyebrow" data-reveal="up">در یک نگاه</p>
+            <h2 class="mt-5 text-3xl font-extrabold leading-[1.3] md:text-[2.4rem]"
+                data-reveal="up" data-delay="0.08">
+              {{ "پیکسوریا به [[عدد]]"|highlight }}
+            </h2>
+          </div>
+
+          <div class="mt-14 grid grid-cols-2 gap-5 lg:grid-cols-4">
+            {% for stat in stats %}
+              <div class="stat-card glass tilt relative overflow-hidden p-8 text-center"
+                   style="border-radius: {% cycle '1.75rem' '1.25rem' %}"
+                   data-reveal="up" data-delay="{% cycle '0' '0.1' '0.2' '0.3' %}">
+                <span class="glare" aria-hidden="true"></span>
+                <p class="stat-num fa-num stat-num-fa" data-count-text="{{ stat.number }}">{{ stat.number|fa_digits }}</p>
+                <p class="mt-2 text-sm text-cream/55">{{ stat.label }}</p>
+                {% if stat.description %}
+                  <p class="mt-1 text-xs text-cream/35">{{ stat.description }}</p>
+                {% endif %}
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </section>
+    {% endif %}
 
     {# ── T66: قیمت‌گذاری (سه پلن + درخواستِ سفارشی) ── #}
 
