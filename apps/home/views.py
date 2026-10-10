@@ -9,7 +9,6 @@ from .models import (
     FaqSection,
     FeaturedWorkSection,
     HeaderSettings,
-    HeroMarqueeItem,
     HeroSection,
     HeroStat,
     HomeAboutSection,
@@ -44,18 +43,12 @@ def home(request):
 
     context = {
         "sections": sections,
-        "portfolio_url": reverse("portfolio:list"),
         "blog_url": reverse("blog:list"),
         # ── بخش‌های موجود (جریان داده دست‌نخورده) ──
         "hero": HeroSection.objects.first() if "hero" in keys else None,
-        "hero_marquee": HeroMarqueeItem.objects.all(),
         "hero_stats": HeroStat.objects.filter(is_active=True) if "hero" in keys else [],
         "services_section": ServicesSection.objects.first() if "services" in keys else None,
         "services": featured_services,
-        "services_with_delay": [
-            {"service": service, "delay": (index % 5) * 100}
-            for index, service in enumerate(featured_services)
-        ],
         "testimonials_section": TestimonialSection.objects.first() if "testimonials" in keys else None,
         # ── بخش‌های جدید ──
         "about_section": HomeAboutSection.objects.first() if "about" in keys else None,

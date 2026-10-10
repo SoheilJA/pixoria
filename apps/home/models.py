@@ -107,21 +107,6 @@ class HeroStat(models.Model):
         return f"{self.value} — {self.label}"
 
 
-class HeroMarqueeItem(models.Model):
-    """آیتم های مارکویی"""
-
-    text = models.CharField(max_length=100, verbose_name="متن")
-    order = models.PositiveIntegerField(default=0, verbose_name="ترتیب")
-
-    class Meta:
-        verbose_name = "آیتم مارکویی اول هیروسکشن"
-        verbose_name_plural = "آیتم های مارکویی هیروسکشن"
-        ordering = ["order"]
-
-    def __str__(self):
-        return self.text
-
-
 class HomeAboutSection(models.Model):
     """بخش «درباره پیکسوریا» در صفحه اصلی — معرفی کوتاه و شمارنده‌ها"""
 
@@ -347,30 +332,6 @@ class ClientMarqueeItem(models.Model):
 
     def __str__(self):
         return self.name
-
-
-class ManifestoSection(models.Model):
-    """سکشن برتری های ما"""
-
-    label = models.CharField(max_length=100, verbose_name="ساب تایتل ")
-    title = models.CharField(max_length=200, verbose_name="عنوان")
-    highlighted_word = models.CharField(max_length=50, verbose_name="کلمه هایلایت شده")
-    paragraph_one = models.TextField(verbose_name="پاراگراف اول")
-    paragraph_two = models.TextField(verbose_name="پاراگراف دوم")
-    signature_name = models.CharField(max_length=100, verbose_name="نام امضا")
-    signature_title = models.CharField(max_length=100, verbose_name="عنوان امضا")
-
-    class Meta:
-        verbose_name = "سکشن برتری های ما"
-        verbose_name_plural = "سکشن برتری های ما"
-
-    def __str__(self):
-        return self.title
-
-    def save(self, *args, **kwargs):
-        if not self.pk and ManifestoSection.objects.exists():
-            raise ValueError("فقط یک سکشن برتری مجاز است")
-        super().save(*args, **kwargs)
 
 
 class CTASection(models.Model):
@@ -747,90 +708,6 @@ class TechSkill(models.Model):
 
     def __str__(self):
         return self.name
-
-
-class PackagesSection(models.Model):
-    """تنظیمات بخش پکیج‌ها و قیمت‌ها"""
-
-    subtitle = models.CharField(max_length=100, verbose_name="ساب تایتل")
-    title = models.CharField(max_length=200, verbose_name="عنوان")
-    description = models.TextField(verbose_name="توضیحات")
-    note = models.CharField(
-        max_length=200,
-        verbose_name="یادداشت پایین",
-        blank=True,
-        help_text="مثلاً: قیمت‌ها به تومان است و برای پروژه‌های سفارشی متفاوت است",
-    )
-
-    class Meta:
-        verbose_name = "سکشن پکیج‌ها"
-        verbose_name_plural = "سکشن پکیج‌ها"
-
-    def __str__(self):
-        return self.title
-
-    def save(self, *args, **kwargs):
-        if not self.pk and PackagesSection.objects.exists():
-            raise ValueError("فقط یک سکشن پکیج‌ها مجاز است")
-        super().save(*args, **kwargs)
-
-
-class Package(models.Model):
-    """یک پکیج قیمت‌گذاری"""
-
-    section = models.ForeignKey(
-        PackagesSection,
-        on_delete=models.CASCADE,
-        related_name="packages",
-        verbose_name="سکشن",
-        null=True,
-        blank=True,
-    )
-    name = models.CharField(max_length=100, verbose_name="نام پکیج")
-    description = models.CharField(max_length=200, verbose_name="توضیح کوتاه", blank=True)
-    price = models.CharField(
-        max_length=100,
-        verbose_name="قیمت",
-        blank=True,
-        help_text="مثلاً ۱۲٬۰۰۰٬۰۰۰. خالی بگذارید تا «استعلام قیمت» نمایش داده شود",
-    )
-    price_note = models.CharField(
-        max_length=100, verbose_name="یادداشت قیمت", blank=True, help_text="مثلاً ماهانه یا هر پروژه"
-    )
-    is_featured = models.BooleanField(default=False, verbose_name="پکیج پیشنهادی")
-    badge = models.CharField(max_length=50, verbose_name="نشان پکیج", blank=True, help_text="مثلاً پرطرفدار")
-    order = models.PositiveIntegerField(default=0, verbose_name="ترتیب")
-    is_active = models.BooleanField(default=True, verbose_name="فعال")
-
-    class Meta:
-        verbose_name = "پکیج"
-        verbose_name_plural = "پکیج‌ها"
-        ordering = ["order"]
-
-    def __str__(self):
-        return self.name
-
-
-class PackageFeature(models.Model):
-    """ویژگی‌های هر پکیج"""
-
-    package = models.ForeignKey(
-        Package,
-        on_delete=models.CASCADE,
-        related_name="features",
-        verbose_name="پکیج",
-    )
-    title = models.CharField(max_length=200, verbose_name="عنوان ویژگی")
-    included = models.BooleanField(default=True, verbose_name="شامل می‌شود")
-    order = models.PositiveIntegerField(default=0, verbose_name="ترتیب")
-
-    class Meta:
-        verbose_name = "ویژگی پکیج"
-        verbose_name_plural = "ویژگی‌های پکیج"
-        ordering = ["order"]
-
-    def __str__(self):
-        return self.title
 
 
 class FaqSection(models.Model):

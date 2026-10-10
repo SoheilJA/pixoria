@@ -4,12 +4,6 @@ from apps.core.icon_utils import IconPickerForm, IconPreviewMixin
 from .models import *
 
 
-class PackageFeatureInline(admin.TabularInline):
-    model = PackageFeature
-    extra = 1
-    ordering = ["order"]
-
-
 @admin.register(HeroSection)
 class HeroSectionAdmin(admin.ModelAdmin):
     list_display = ["title"]
@@ -33,11 +27,6 @@ class HeroStatAdmin(IconPreviewMixin, admin.ModelAdmin):
     list_display = ["icon_preview", "value", "label", "icon", "order", "is_active"]
     list_editable = ["value", "label", "icon", "order", "is_active"]
     list_display_links = ["icon_preview"]
-
-
-@admin.register(HeroMarqueeItem)
-class HeroMarqueeItemAdmin(admin.ModelAdmin):
-    list_display = ["text", "order"]
 
 
 class HomeAboutStatInline(IconPreviewMixin, admin.TabularInline):
@@ -106,14 +95,6 @@ class ClientMarqueeItemAdmin(admin.ModelAdmin):
     list_display = ["name", "mark", "accent", "order"]
     list_editable = ["mark", "accent", "order"]
     list_display_links = ["name"]
-
-
-@admin.register(ManifestoSection)
-class ManifestoSectionAdmin(admin.ModelAdmin):
-    list_display = ["title", "label"]
-
-    def has_add_permission(self, request):
-        return not ManifestoSection.objects.exists()
 
 
 @admin.register(CTASection)
@@ -220,22 +201,6 @@ class TechSkillAdmin(IconPreviewMixin, admin.ModelAdmin):
     list_editable = ["icon", "level", "order", "is_active"]
     list_display_links = ["icon_preview", "name"]
     search_fields = ["name", "category"]
-
-
-@admin.register(PackagesSection)
-class PackagesSectionAdmin(admin.ModelAdmin):
-    list_display = ["title", "subtitle"]
-
-    def has_add_permission(self, request):
-        return not PackagesSection.objects.exists()
-
-
-@admin.register(Package)
-class PackageAdmin(admin.ModelAdmin):
-    list_display = ["name", "price", "is_featured", "order", "is_active"]
-    list_editable = ["order", "is_active"]
-    list_display_links = ["name"]
-    inlines = [PackageFeatureInline]
 
 
 @admin.register(FaqSection)

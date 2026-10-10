@@ -18,11 +18,9 @@ from apps.home.models import (
     NavItem,
     HeroSection,
     HeroStat,
-    HeroMarqueeItem,
     FeaturedWorkSection,
     ServicesSection,
     ClientMarqueeItem,
-    ManifestoSection,
     CTASection,
     LatestArticlesSection,
     HomeSection,
@@ -177,22 +175,6 @@ class Command(BaseCommand):
         if added:
             self.stdout.write(f"  + {added} آمار هیرو")
 
-        marquee = [
-            "طراحی وب‌سایت",
-            "توسعهٔ فرانت‌اند",
-            "طراحی لوگو و هویت بصری",
-            "گرافیک دیجیتال",
-            "سئو و بهینه‌سازی",
-            "تجربهٔ کاربری",
-        ]
-        added = 0
-        for i, text in enumerate(marquee):
-            if not HeroMarqueeItem.objects.filter(text=text).exists():
-                HeroMarqueeItem.objects.create(text=text, order=i * 10)
-                added += 1
-        if added:
-            self.stdout.write(f"  + {added} آیتم مارکی هیرو")
-
     # ── Section singletons ──
     def seed_sections(self):
         _, c = first_or_create(
@@ -271,25 +253,6 @@ class Command(BaseCommand):
             ),
         )
         self.log("خدمات", c)
-
-        _, c = first_or_create(
-            ManifestoSection,
-            label="چرا پیکسوریا",
-            title="جزئیات، تفاوت اصلی است",
-            highlighted_word="جزئیات",
-            paragraph_one=(
-                "ما به کوچک‌ترین جزئیات اهمیت می‌دهیم؛ از فاصلهٔ بین حروف تا سرعت "
-                "بارگذاری هر تصویر. چون می‌دانیم کیفیت، حاصلِ توجه به چیزی است که "
-                "بقیه از آن می‌گذرند."
-            ),
-            paragraph_two=(
-                "تیم ما طراح و توسعه‌دهنده است، اما قبل از همه شریک کاری شما. "
-                "شفاف می‌گوییم، به‌موقع تحویل می‌دهیم و بعد از انتشار هم کنارتان می‌مانیم."
-            ),
-            signature_name="پیکسوریا",
-            signature_title="استودیوی طراحی دیجیتال",
-        )
-        self.log("مانیفست", c)
 
         _, c = first_or_create(
             CTASection,
