@@ -23,7 +23,7 @@ pages = [
     ("/portfolio/", "portfolio list"),
     ("/blog/", "blog list"),
     ("/login/", "login"),
-    ("/admin/login/", "admin login"),
+    ("/who-are-you/login/", "admin login"),
     ("/services/", "services list"),
     ("/does-not-exist-xyz/", "404"),
 ]

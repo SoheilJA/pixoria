@@ -2597,6 +2597,62 @@ contact; descriptive alt texts; meta title/description per service.
 
 ## Current status
 
+### Environment files + admin URL change (between T66 and T67)
+
+Three env files at the repo root, all documented in `.gitignore`:
+
+- **`.env`** — local/dev. `DEBUG=True`, `ALLOWED_HOSTS=127.0.0.1,localhost`,
+  `CSRF_TRUSTED_ORIGINS=http://127.0.0.1:8000,http://localhost:8000`, empty
+  `DATABASE_URL` (SQLite), empty `EMAIL_*` (no mail leaves the dev machine),
+  empty `SITE_BASE_URL` (absolute URLs come from the request).
+- **`.env.production`** — the online server, exactly the same keys.
+  `DEBUG=False`, `ALLOWED_HOSTS=pixoria.ir,www.pixoria.ir`,
+  `CSRF_TRUSTED_ORIGINS=https://pixoria.ir,https://www.pixoria.ir`,
+  `SITE_BASE_URL=https://pixoria.ir`, and a **placeholder** `SECRET_KEY`
+  that MUST be regenerated before going live (`python -c "from
+  django.core.management.utils import get_random_secret_key; print
+  (get_random_secret_key())"`). Both real files are gitignored; only
+  **`.env.example`** (same keys, no values) is committed.
+- **`config/settings.py`** loads one of them with `python-dotenv` (added to
+  `requirements.txt`, which is UTF-16 — every write must keep the BOM or git
+  sees a binary blob) via `load_dotenv(Base_DIR / file, override=False)` —
+  the choice is `DJANGO_SETTINGS_MODULE`: ends with `settings_production` →
+  `.env.production`, else `.env`. `override=False` means a real shell env var
+  always wins, which is how a PaaS host injects its own secrets. Every value
+  has a fallback equal to the old hard-coded one, so a fresh checkout with
+  **no** `.env` at all still runs — the old insecure key is the last-resort
+  default and `manage.py check --deploy` flags it loudly.
+  **`DATABASE_URL`** is parsed by a small regex supporting
+  `postgres://user:pass@host:port/name` (also `postgresql`, `mysql`, plain
+  sqlite) — empty falls back to the existing SQLite file. Note `SITE_BASE_URL`
+  is read but **nothing consumes it yet** (all absolute URLs use
+  `request.build_absolute_uri`); it is there for the day a sitemap or
+  JSON-LD needs a host-independent base.
+- **`config/settings_production.py`** is the thin production module:
+  `from .settings import *` + `DEBUG=False` as a hard last-resort trap (the
+  `.env.production` value would be enough, but a second wall costs nothing) +
+  `SESSION_COOKIE_SECURE`, `CSRF_COOKIE_SECURE`, `SECURE_SSL_REDIRECT`,
+  HSTS (1 year + subdomains + preload), `SECURE_REFERRER_POLICY`,
+  `SECURE_PROXY_SSL_HEADER` and `X_FRAME_OPTIONS="DENY"`. Passes
+  `manage.py check --deploy` clean once `DJANGO_SETTINGS_MODULE` points at
+  it. The throwaway `config/settings_preview.py` (the old DEBUG=False hack
+  for screenshot sessions) is untouched.
+
+**Admin URL:** `config/urls.py` `admin/` → **`who-are-you/`**. The URL
+**names** are unchanged (`admin:index`, `admin:login`, …), so
+`templates/admin/login.html` (`{% url 'admin:login' %}`) and every admin
+link keep working — only the path changed. `scripts/render_check.py` was the
+one file with a hard-coded `/admin/login/` path; updated. The task-specific
+`scripts/_t5*_check.py` scripts still use `/admin/...` paths; they are
+throwaway verification scripts for completed tasks and were left alone.
+Verified: `admin:index` → `/who-are-you/`, `admin:login` →
+`/who-are-you/login/`, every page 200 (the admin login page included),
+`manage.py check` clean on both modules, `check --deploy` clean on
+production, and `.env` / `.env.production` are confirmed ignored by
+`git check-ignore` while `.env.example` is tracked.
+
+---
+
 T01–T66 done (T42 superseded by Phase 12; T47b/T47c were the template-comment
 leak sweeps — D50/D60). **Next: T67** — social proof + discovery sections on
 `templates/services/detail.html`: `{% testimonials_slider service=service %}`,

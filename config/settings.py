@@ -10,27 +10,60 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
+import os
 from pathlib import Path
+
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# ── تنظیماتِ محیط ──
+# مقادیرِ حساس از فایل‌های .env خوانده می‌شوند (هیچ‌وقت commit نمی‌شوند).
+#   `.env`            → محیطِ لوکال/توسعه (پیش‌فرض)
+#   `.env.production` → سرورِ آنلاین (با DJANGO_SETTINGS_MODULE=config.settings_production)
+# وقتی فایل موجود نباشد، مقادیرِ پیش‌فرضِ امن استفاده می‌شوند تا یک
+# checkoutِ تازه بدون تنظیم‌ manual هم `manage.py check` را رد کند.
+_env_file = ".env.production" if os.environ.get(
+    "DJANGO_SETTINGS_MODULE", ""
+).endswith("settings_production") else ".env"
+load_dotenv(BASE_DIR / _env_file, override=False)
+
+
+def _env_bool(name, default=False):
+    """یک کلیدِ بولی از .env می‌خواند (true/1/yes/on → True)."""
+    value = os.environ.get(name, "")
+    if value == "":
+        return default
+    return value.strip().lower() in ("1", "true", "yes", "on")
+
+
+def _env_list(name, default=None):
+    """یک کلیدِ لیستی (کاما جدا شده) را پارس می‌کند؛ فاصله‌ها حذف می‌شوند."""
+    value = os.environ.get(name, "")
+    if value == "":
+        return list(default or [])
+    return [item.strip() for item in value.split(",") if item.strip()]
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-&i^(qejd(3ad!89zlcdeezds717=dmpfas4vmp5f9(lh3=a1*v"
+SECRET_KEY = os.environ.get(
+    "SECRET_KEY",
+    "django-insecure-&i^(qejd(3ad!89zlcdeezds717=dmpfas4vmp5f9(lh3=a1*v",
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = _env_bool("DEBUG", default=True)
 
-ALLOWED_HOSTS = ["127.0.0.1", "localhost", "pixoria.ir"]
+ALLOWED_HOSTS = _env_list("ALLOWED_HOSTS", default=["127.0.0.1", "localhost", "pixoria.ir"])
 
-CSRF_TRUSTED_ORIGINS = [
-    "https://pixoria.ir",
-    "https://www.pixoria.ir",
-]
+CSRF_TRUSTED_ORIGINS = _env_list(
+    "CSRF_TRUSTED_ORIGINS",
+    default=["https://pixoria.ir", "https://www.pixoria.ir"],
+)
 
 # Application definition
 
@@ -108,13 +141,50 @@ WSGI_APPLICATION = "config.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
+#
+# پیش‌فرض SQLite است. اگر DATABASE_URL در .env پر باشد (مثلاً PostgreSQL
+# روی سرور)، اولویت با آن است. مثال:
+#   postgres://user:password@127.0.0.1:5432/dbname
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "database" / "db.sqlite3",
+DATABASE_URL = os.environ.get("DATABASE_URL", "")
+
+if DATABASE_URL:
+    import re
+
+    _m = re.match(
+        r"^(?P<engine>postgres(?:ql)?|mysql|sqlite)://"
+        r"(?:(?P<user>[^:@]+)(?::(?P<password>[^@]*))?@)?"
+        r"(?P<host>[^:/]+)?(?::(?P<port>\d+))?"
+        r"(?:/(?P<name>.+))?$",
+        DATABASE_URL,
+    )
+    if not _m:
+        raise ValueError(f"DATABASE_URL در .env معتبر نیست: {DATABASE_URL!r}")
+
+    _ENGINE_MAP = {
+        "postgres": "django.db.backends.postgresql",
+        "postgresql": "django.db.backends.postgresql",
+        "mysql": "django.db.backends.mysql",
+        "sqlite": "django.db.backends.sqlite3",
     }
-}
+    _db_name = _m.group("name") or ""
+    DATABASES = {
+        "default": {
+            "ENGINE": _ENGINE_MAP[_m.group("engine")],
+            "NAME": _db_name or BASE_DIR / "database" / "db.sqlite3",
+            "USER": _m.group("user") or "",
+            "PASSWORD": _m.group("password") or "",
+            "HOST": _m.group("host") or "",
+            "PORT": _m.group("port") or "",
+        }
+    }
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "database" / "db.sqlite3",
+        }
+    }
 
 
 # Password validation
@@ -160,10 +230,22 @@ LOGIN_URL = "/login/"
 LOGIN_REDIRECT_URL = "/"
 
 
-import os
+# ── ایمیل ──
+# فقط وقتی EMAIL_HOST تنظیم شده باشد فرم‌ها رونوشت می‌فرستند (D36).
+EMAIL_HOST = os.environ.get("EMAIL_HOST", "")
+EMAIL_PORT = int(os.environ.get("EMAIL_PORT", "587"))
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "")
+EMAIL_USE_TLS = _env_bool("EMAIL_USE_TLS", default=True)
+DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", "")
 
-STATIC_URL = "/public/static/"
+# ── URL پایهٔ سایت ──
+# برای ساختِ URLهای مطلق در sitemap و JSON-LD. روی لوکال خالی = از
+# request.build_absolute_uri استفاده می‌شود.
+SITE_BASE_URL = os.environ.get("SITE_BASE_URL", "").rstrip("/")
+
+STATIC_URL = os.environ.get("STATIC_URL", "/public/static/")
 STATIC_ROOT = os.path.join(BASE_DIR, "public", "static")
 
-MEDIA_URL = "/public/media/"
+MEDIA_URL = os.environ.get("MEDIA_URL", "/public/media/")
 MEDIA_ROOT = os.path.join(BASE_DIR, "public", "media")

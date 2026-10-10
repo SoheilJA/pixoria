@@ -23,7 +23,9 @@ sitemaps = {
 
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
+    # مسیرِ ورود به ادمین عمداً مبهم است (who-are-you) تا اسکنرها
+    # مسیرِ پیش‌فرضِ /admin/ را پیدا نکنند. نام URL تغییر نکرده است.
+    path("who-are-you/", admin.site.urls),
     path("", include("apps.home.urls")),
     path("portfolio/", include("apps.portfolio.urls")),
     path("services/", include("apps.services.urls")),
