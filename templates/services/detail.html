@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load icon_tags highlight_tags fa_digits nav_tags json_tags %}
+{% load icon_tags highlight_tags fa_digits nav_tags json_tags projects_tags articles_tags testimonial_tags %}
 
 {% block title %}{{ service.get_meta_title }} — {{ settings.site_name }}{% endblock %}
 {% block description %}{{ service.get_meta_description }}{% endblock %}
@@ -8,15 +8,52 @@
 
 {% block extra_head %}
   {% comment %}
-    داده‌های ساختاریافتهٔ صفحهٔ خدمت. مسیرِ نمایش کامل است؛ Service
-    (+ provider، areaServed)، Offer‌های ساخته‌شده از پلن‌ها و FAQPage را T67
-    با فیلترِ json در همین جایگاه اضافه می‌کند — تا آن موقع فقط مسیر نمایش
-    سالم می‌ماند تا هیچ‌وقت JSON خراب تولید نشود.
+    داده‌های ساختاریافتهٔ صفحهٔ خدمت: خودِ خدمت (+ ارائه‌دهنده، منطقهٔ سرویس و
+    Offer‌های ساخته‌شده از پلن‌ها)، FAQPage و مسیر نمایش. هر کلیدِ اختیاری
+    قبل از کلیدهای اجباریِ بعدش می‌آید تا کامایِ تهِ خط هیچ‌وقت JSON را
+    نشکند (همان قاعدهٔ D39). گرافِ FAQ فقط وقتی سوال هست چاپ می‌شود.
   {% endcomment %}
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@graph": [
+        {
+          "@type": "Service",
+          "name": {{ service.title|striptags|json }},
+          "description": {{ service.get_meta_description|striptags|json }},
+          "url": "{{ request.build_absolute_uri }}",
+          "inLanguage": "fa-IR",
+          "provider": {
+            "@type": "Organization",
+            "name": {{ settings.site_name|json }},
+            "url": "{{ request.scheme }}://{{ request.get_host }}{% url 'home:home' %}"
+          },
+          {% if service.get_tags_list %}"category": {{ service.get_tags_list|join:"، "|json }},
+          {% endif %}"areaServed": { "@type": "Country", "name": "Iran" }
+          {% if plans %},
+          "offers": [
+            {% for plan in plans %}{
+              "@type": "Offer",
+              "name": {{ plan.name|json }},
+              {% if plan.price %}"price": "{{ plan.price }}",
+              "priceCurrency": "{{ plan.price_currency_code }}",
+              {% endif %}{% if plan.tagline %}"description": {{ plan.tagline|json }},
+              {% endif %}"url": "{{ request.scheme }}://{{ request.get_host }}{% url 'contact:contact' %}?plan={{ plan.plan_type }}&service={{ service.slug }}"
+            }{% if not forloop.last %},{% endif %}{% endfor %}
+          ]
+          {% endif %}
+        },
+        {% if faqs %}{
+          "@type": "FAQPage",
+          "mainEntity": [
+            {% for item in faqs %}{
+              "@type": "Question",
+              "name": {{ item.question|striptags|json }},
+              "acceptedAnswer": { "@type": "Answer", "text": {{ item.answer|striptags|json }} }
+            }{% if not forloop.last %},{% endif %}{% endfor %}
+          ]
+        },
+        {% endif %}
         {
           "@type": "BreadcrumbList",
           "itemListElement": [
@@ -771,5 +808,145 @@
 
     {% comment %}T67: نظرات مشتریان، نمونه‌کارهای مرتبط، سوالات متداول،
          خدمات و مقالاتِ مرتبط + JSON-LD های Service/FAQPage{% endcomment %}
+
+    {# ── T67: نظرات مشتریانِ این خدمت (اسلایدرِ مشترک) ── #}
+    {% testimonials_slider service=service title="مشتریانِ این خدمت چه می‌گویند؟" eyebrow="نظرات مشتریان" id="service-testimonials" %}
+
+    {# ── T67: نمونه‌کارهای مرتبط با این خدمت (کاروسلِ مشترک) ── #}
+    {# هدر فقط وقتی چاپ می‌شود که کارتی وجود داشته باشد (has_projects در ویو، #}
+    {# هم‌زمان با کوئریِ کامپوننت) — وگرنه بخش کامل غیب می‌شود. #}
+    {% if has_projects %}
+      <section class="relative overflow-hidden bg-cream2" style="border-radius: 3rem 9rem 0 0">
+        <div class="aurora-blob pointer-events-none absolute -left-32 top-10 h-96 w-96 rounded-full opacity-40"
+             style="background: radial-gradient(circle, color-mix(in srgb, var(--pa, #c9a15a) 16%, transparent 65%))" aria-hidden="true"></div>
+
+        <div class="relative z-10 mx-auto max-w-7xl px-6 pb-28 pt-28 md:pt-36">
+          <div class="flex flex-wrap items-end justify-between gap-6">
+            <div>
+              <p class="eyebrow eyebrow-dark" data-reveal="up">نمونه‌کارها</p>
+              <h2 class="mt-5 text-4xl font-extrabold leading-[1.3] text-paper md:text-[2.7rem]"
+                  data-reveal="right" data-delay="0.08">
+                {{ "کارهایی که با [[این خدمت]] کردیم"|highlight:"dark" }}
+              </h2>
+            </div>
+            <a href="{% url 'portfolio:list' %}" class="more-link more-link-light text-base" data-reveal="left">
+              همهٔ نمونه‌کارها
+              {% icon "arrow-left" class="h-4 w-4" %}
+            </a>
+          </div>
+
+          {# کاروسل نمونه‌کارهای همین خدمت — خودش کوئری می‌زند #}
+          <div class="mt-14" data-reveal="up">
+            {% projects_carousel service=service limit=6 %}
+          </div>
+        </div>
+      </section>
+    {% endif %}
+
+    {# ── T67: سوالات متداولِ این خدمت (همان آکاردئونِ صفحهٔ اصلی) ── #}
+    {% if faqs %}
+      <section id="service-faq" class="relative overflow-hidden bg-cream">
+        <div class="grid-bg pointer-events-none absolute inset-0 opacity-50" aria-hidden="true"></div>
+        <div class="pointer-events-none absolute left-[-4rem] top-1/3 h-72 w-72 rounded-full opacity-40 aurora-blob"
+             style="background: radial-gradient(circle, color-mix(in srgb, var(--pa, #c9a15a) 0.2, transparent 65%))" aria-hidden="true"></div>
+
+        <div class="relative mx-auto max-w-4xl px-6 pb-28 pt-32 md:pt-40">
+          <div class="text-center">
+            <p class="eyebrow eyebrow-dark eyebrow-c justify-center" data-reveal="up">سوالات متداول</p>
+            <h2 class="mt-5 text-4xl font-extrabold leading-[1.3] text-paper md:text-[2.7rem]"
+                data-reveal="up" data-delay="0.08">
+              {{ "سوالاتِ رایج دربارهٔ [[این خدمت]]"|highlight:"dark" }}
+            </h2>
+            <p class="mx-auto mt-4 max-w-xl font-light leading-8 text-coy" data-reveal="up" data-delay="0.14">
+              اگر سوالِ شما اینجا نیست، در جلسهٔ مشاورهٔ رایگان پاسخ می‌دهیم.
+            </p>
+          </div>
+
+          <div class="mt-12 space-y-3.5">
+            {% for item in faqs %}
+              <div class="faq-item" data-reveal="up" data-delay="{% cycle '0' '0.06' '0.12' '0.18' '0.24' '0.3' '0.36' '0.42' %}">
+                <h3 class="m-0">
+                  <button type="button" class="faq-q"
+                          aria-expanded="false" aria-controls="svc-faq-panel-{{ forloop.counter }}">
+                    <span>{{ item.question }}</span>
+                    <span class="faq-icon" aria-hidden="true">{% icon "plus" class="h-4 w-4" %}</span>
+                  </button>
+                </h3>
+                <div id="svc-faq-panel-{{ forloop.counter }}" class="faq-a" role="region">
+                  <p>{{ item.answer|linebreaksbr }}</p>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </section>
+    {% endif %}
+
+    {# ── T67: خدماتِ مرتبط ── #}
+    {% if related_services %}
+      <section class="relative overflow-hidden bg-ink2">
+        <div class="grid-bg pointer-events-none absolute inset-0 opacity-30" aria-hidden="true"></div>
+        <div class="pointer-events-none absolute -left-32 top-1/4 h-96 w-96 rounded-full opacity-25 aurora-blob"
+             style="background: radial-gradient(circle, color-mix(in srgb, var(--pa, #c9a15a) 20%, transparent 65%))" aria-hidden="true"></div>
+
+        <div class="relative z-10 mx-auto max-w-7xl px-6 pb-28 pt-32 md:pt-40">
+          <div class="text-center">
+            <p class="eyebrow" data-reveal="up">خدماتِ مرتبط</p>
+            <h2 class="mt-5 text-4xl font-extrabold leading-[1.3] md:text-[2.7rem]"
+                data-reveal="up" data-delay="0.08">
+              {{ "با این خدمت [[یکجا]] ببرید"|highlight }}
+            </h2>
+          </div>
+
+          <div class="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {% for rel in related_services %}
+              <a href="{% url 'services:detail' slug=rel.slug %}"
+                 class="glass tilt group relative flex items-center gap-5 overflow-hidden p-6 transition-transform hover:-translate-y-1"
+                 style="border-radius: {% cycle '1.5rem' '1rem 1.75rem' '1.75rem 0.75rem' %}"
+                 data-reveal="up" data-delay="{% cycle '0' '0.08' '0.16' %}">
+                <span class="glare" aria-hidden="true"></span>
+                <span class="icon-ring icon-ring-pulse shrink-0 transition-transform group-hover:scale-110">{% icon rel.icon|default:"sparkles" class="h-5 w-5" %}</span>
+                <span class="relative z-10 flex flex-1 flex-col">
+                  <span class="font-bold text-cream">{{ rel.title }}</span>
+                  {% if rel.excerpt %}
+                    <span class="mt-1 line-clamp-2 text-xs leading-6 text-cream/50">{{ rel.excerpt }}</span>
+                  {% endif %}
+                </span>
+                {% icon "arrow-left" class="relative z-10 h-5 w-5 shrink-0 text-gold transition-transform group-hover:-translate-x-1" %}
+              </a>
+            {% endfor %}
+          </div>
+        </div>
+      </section>
+    {% endif %}
+
+    {# ── T67: مقالاتِ مرتبط با این خدمت (کاروسلِ مشترک) ── #}
+    {% if has_articles %}
+      <section class="relative overflow-hidden bg-cream2" style="border-radius: 3rem 9rem 0 0">
+        <div class="aurora-blob pointer-events-none absolute -right-32 top-10 h-96 w-96 rounded-full opacity-40"
+             style="background: radial-gradient(circle, color-mix(in srgb, var(--pa, #c9a15a) 16%, transparent 65%))" aria-hidden="true"></div>
+
+        <div class="relative z-10 mx-auto max-w-7xl px-6 pb-28 pt-28 md:pt-36">
+          <div class="flex flex-wrap items-end justify-between gap-6">
+            <div>
+              <p class="eyebrow eyebrow-dark" data-reveal="up">مجلهٔ پیکسوریا</p>
+              <h2 class="mt-5 text-4xl font-extrabold leading-[1.3] text-paper md:text-[2.7rem]"
+                  data-reveal="right" data-delay="0.08">
+                {{ "بیشتر دربارهٔ [[این خدمت]] بخوانید"|highlight:"dark" }}
+              </h2>
+            </div>
+            <a href="{% url 'blog:list' %}" class="more-link more-link-light text-base" data-reveal="left">
+              همهٔ مقالات
+              {% icon "arrow-left" class="h-4 w-4" %}
+            </a>
+          </div>
+
+          {# کاروسل مقالاتِ مرتبط — خودش کوئری می‌زند #}
+          <div class="mt-14" data-reveal="up">
+            {% articles_carousel service=service limit=6 %}
+          </div>
+        </div>
+      </section>
+    {% endif %}
   </div>
 {% endblock %}

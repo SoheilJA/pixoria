@@ -887,6 +887,12 @@
   .ml-auto {
     margin-left: auto;
   }
+  .line-clamp-2 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
   .line-clamp-3 {
     overflow: hidden;
     display: -webkit-box;
@@ -3115,6 +3121,10 @@
     user-select: none;
   }
   @media (hover: hover) {
+    .group-hover\:-translate-x-1:is(:where(.group):hover *) {
+      --tw-translate-x: calc(var(--spacing) * -1);
+      translate: var(--tw-translate-x) var(--tw-translate-y);
+    }
     .group-hover\:-translate-x-1\.5:is(:where(.group):hover *) {
       --tw-translate-x: calc(var(--spacing) * -1.5);
       translate: var(--tw-translate-x) var(--tw-translate-y);
@@ -3182,6 +3192,10 @@
     background-color: var(--color-gold-dark);
   }
   @media (hover: hover) {
+    .hover\:-translate-y-1:hover {
+      --tw-translate-y: calc(var(--spacing) * -1);
+      translate: var(--tw-translate-x) var(--tw-translate-y);
+    }
     .hover\:-translate-y-1\.5:hover {
       --tw-translate-y: calc(var(--spacing) * -1.5);
       translate: var(--tw-translate-x) var(--tw-translate-y);
@@ -5164,6 +5178,12 @@ a:hover .brand-emblem {
 }
 .more-link:hover svg {
   transform: translateX(-4px);
+}
+.more-link-light {
+  color: var(--gold-d);
+}
+.more-link-light::after {
+  background: linear-gradient(to left, var(--gold-d), transparent);
 }
 .tilt {
   transform-style: preserve-3d;

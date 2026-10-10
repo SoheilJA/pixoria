@@ -1,6 +1,10 @@
+from django.db.models import Q
 from django.shortcuts import get_object_or_404, render
+from django.utils import timezone
 
+from apps.blog.models import Article
 from apps.core.context_utils import crumbs
+from apps.portfolio.models import Portfolio
 
 from .models import Service, ServicesPageSection
 
@@ -46,5 +50,16 @@ def services_detail(request, slug):
         "custom_items": service.custom_items.all(),
         "faqs": service.faqs.all(),
         "related_services": list(service.related_services.all()),
+        # هدرِ کاروسلِ نمونه‌کارها فقط وقتی کارتی هست چاپ می‌شود؛ همین کوئریِ
+        # کامپوننتِ projects_carousel (FK + فیلدِ متنیِ fallback) از T61.
+        "has_projects": Portfolio.objects.filter(
+            Q(service=service) | Q(service_type=service.title)
+        ).exists(),
+        # همان قاعده برای کاروسلِ مقالات (M2Mِ related_services از T61).
+        "has_articles": Article.objects.filter(
+            status="published",
+            published_at__lte=timezone.now(),
+            related_services=service,
+        ).exists(),
     }
     return render(request, "services/detail.html", context)

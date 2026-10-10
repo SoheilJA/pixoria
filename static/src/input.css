@@ -1834,6 +1834,14 @@ a:hover .brand-emblem {
   transform: translateX(-4px);
 }
 
+/* variant for light (cream) backgrounds — gold-light has no contrast there */
+.more-link-light {
+  color: var(--gold-d);
+}
+.more-link-light::after {
+  background: linear-gradient(to left, var(--gold-d), transparent);
+}
+
 /* ---------- tilt & glare ---------- */
 .tilt {
   transform-style: preserve-3d;

@@ -467,10 +467,19 @@ class ServicePlan(models.Model):
     is_active = models.BooleanField(default=True, verbose_name="فعال")
     order = models.PositiveIntegerField(default=0, verbose_name="ترتیب")
 
+    # کدِ ISO 4217 برای داده‌های ساختاریافته — schema.org فقط کدِ سه‌حرفیِ
+    # واحدِ پول را می‌پذیرد (IRT = تومانِ ایران، IRR = ریالِ ایران).
+    CURRENCY_CODES = {"تومان": "IRT", "ریال": "IRR"}
+
     class Meta:
         verbose_name = "پلن"
         verbose_name_plural = "پلن‌ها"
         ordering = ["order"]
+
+    @property
+    def price_currency_code(self):
+        """کدِ ISO 4217ِ واحدِ پول برای JSON-LD (پیش‌فرض: IRT)."""
+        return self.CURRENCY_CODES.get((self.price_currency or "").strip(), "IRT")
 
     def __str__(self):
         return f"{self.service.title} — {self.name}"

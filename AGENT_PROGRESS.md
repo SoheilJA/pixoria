@@ -1858,6 +1858,70 @@ scope for this migration and can pick these templates up later.)_
   utility, so a naive ancestor grep misses it).
 
 
+- **D68 — Social proof + discovery sections (T67).** The task was already
+  half-written in the working tree when this session started (the testimonials
+  slider call, the FAQ accordion and the related-services grid were live; the
+  two carousels were dead `{% ... as x %}{% if x %}{% endif %}` stubs and the
+  JSON-LD was a BreadcrumbList-only placeholder). Finished:
+  **(a) the two carousels.** The projects section («کارهایی که با [[این خدمت]]
+  کردیم») and the articles section («بیشتر دربارهٔ [[این خدمت]] بخوانید») are
+  both `bg-cream2` with the D66 rounded-top-corner seam, a header row in the
+  blog-detail shape (eyebrow + h2 + `more-link`) and the shared component inside
+  a `data-reveal="up"` wrapper. The header is guarded by **`has_projects` /
+  `has_articles` computed in `apps/services/views.py`** — `.exists()` queries
+  that mirror the components' own queries exactly (`Portfolio` FK + the
+  `service_type` text fallback; `Article` published + non-future + the
+  `related_services` M2M). This is the D42 `has_related` precedent: an
+  inclusion tag renders nothing on an empty query, so without the flag the
+  heading would print alone over an empty track. Do NOT "simplify" this by
+  dropping the flag — the section looks broken with data missing.
+  **(b) `more-link-light`** — a new `input.css` variant of `.more-link`
+  (`--gold-d` text + `--gold-d` underline sweep) for the two cream sections;
+  the original is `--gold-l`, which has no contrast on cream. Reused nowhere
+  else yet (every existing `more-link` sits on ink).
+  **(c) JSON-LD.** `extra_head` now ships a `@graph` of three nodes: `Service`
+  (name / description / url / `inLanguage` / `provider` Organization /
+  optional `category` from the service tags / `areaServed` Country) with
+  `offers` built from the active plans (each an `Offer` with name, optional
+  `price` + `priceCurrency`, optional tagline `description`, and the absolute
+  prefill URL `.../contact/?plan=<type>&service=<slug>`), then `FAQPage` (only
+  when the service has FAQs), then the existing `BreadcrumbList`.
+  **`priceCurrency` is a real ISO 4217 code**, not the Persian label: new
+  `ServicePlan.price_currency_code` maps `تومان → IRT` / `ریال → IRR` with an
+  IRT default, because schema.org rejects «تومان».
+  **COMMA GOTCHA (hit live, caught by the check script's `json.loads`):**
+  trailing-comma discipline in a `{% if %}`-guarded key must put the comma at
+  the START of the optional block, not the end of the previous line —
+  `"areaServed": ...,` followed by an absent `"offers"` yields
+  `"areaServed": {...},}` which is invalid JSON. The correct shape is
+  `"areaServed": {...}` then `{% if plans %},` + newline + `"offers": [...]`.
+  Rule stands for every future conditional JSON key.
+  **Verified** with `scripts/_t67_check.py`: all four pages 200 with FAQ counts
+  matching the DB, the slider present exactly where the service has a playable
+  testimonial, the JSON graph parses on every page (Service always, FAQPage
+  when faqs exist, `offers` absent with no plans, 8 Question entries with
+  answers, offer prices/currencies/URLs), projects+articles carousels on
+  throwaway rows in a rolled-back transaction (FK-linked AND text-matched
+  projects both appear, an unrelated project excluded, the M2M-linked article
+  in and the unlinked one out, a service with neither shows neither header nor
+  `more-link`), the empty test DB (list 200, detail 404), and the other six
+  pages unaffected. **Plus a headless-Chrome/CDP pass**
+  (`scripts/_t67_browser.py`): it links the live projects/articles to web-design
+  for the run and REVERTS them in a `finally` (verified: 0 projects linked
+  afterwards, and the only DB diff was an internal `sqlite_sequence` counter —
+  restored with `git checkout -- database/db.sqlite3`). At 1440 px both
+  carousels render one row of equal-width cards with nothing past the right
+  edge, the slider carries the one playable testimonial, 8 FAQ items, 3
+  related-service cards, and the in-browser JSON-LD parses to
+  [Service, FAQPage, BreadcrumbList] with 3 offers; at 390 px the cards are
+  335 px and `scrollWidth == clientWidth`.
+  **Two environment notes for the next node check:** node v24 no longer accepts
+  `--input-type=module` together with a FILE argument (`ERR_INPUT_TYPE_NOT_
+  ALLOWED`) — pipe the module through stdin instead; and on Windows the
+  subprocess stdin defaults to cp1252, so a JS file with Persian text in it
+  raises `UnicodeEncodeError` in the writer thread and HANGS `subprocess.run` —
+  pass `input=data.encode("utf-8")` (no `text=True`).
+
 - **D65 — Service model extensions (T61).** The models for the dedicated
   service pages are in place, all of it OPTIONAL so a bare service still renders.
   **`Service`** gained: `accent` (gold/gold-light/gold-dark/royal/cream/peri →
@@ -2523,7 +2587,7 @@ header/footer/CTA) and the existing models `services.Service`, `ServiceStat`,
   section is hidden when there are no active plans and renders 1–3 plans
   gracefully | files: `templates/services/detail.html`, `apps/contact/views.py`,
   `apps/contact/forms.py` | commit: "feat(services): pricing section with plan cta"
-- [ ] T67 — Social proof + discovery sections: `{% testimonials_slider
+- [x] T67 — Social proof + discovery sections: `{% testimonials_slider
   service=service %}`, `{% projects_carousel service=service %}` (related work),
   the FAQ accordion (`ServiceFAQ`, reusing `.faq-item` + `initFaq`),
   related-services cards, `{% articles_carousel %}` filtered by the service's
@@ -2653,14 +2717,46 @@ production, and `.env` / `.env.production` are confirmed ignored by
 
 ---
 
-T01–T66 done (T42 superseded by Phase 12; T47b/T47c were the template-comment
-leak sweeps — D50/D60). **Next: T67** — social proof + discovery sections on
-`templates/services/detail.html`: `{% testimonials_slider service=service %}`,
-`{% projects_carousel service=service %}`, the FAQ accordion, related-services
-cards, `{% articles_carousel %}` filtered by the service's related articles,
-and the real JSON-LD (`Service` + provider/`areaServed`/`offers`/`FAQPage`,
-built with the `json` filter so no stray comma can break it). All data is
-already in the context from T63.
+T01–T67 done (T42 superseded by Phase 12; T47b/T47c were the template-comment
+leak sweeps — D50/D60). **Next: T68** — per-service atmosphere on
+`templates/services/detail.html` + `static/src/input.css`: the four hero
+artworks already exist from T63 (browser / terminal / palette / diamond, all
+CSS-SVG); T68 turns them into full `service-theme-*` class sets (layout-grid,
+code, swatch, construction-grid motifs) each tied to the service's
+`accent_class` planet/orb accent, reduced-motion safe. After that: T69 (the
+services LIST page redesign) and then Phase 13 cleanup (T43/T44).
+
+T67 (D68) is live: the discovery half of the service detail page. Two new
+sections on `templates/services/detail.html` — the related-projects carousel
+(«کارهایی که با این خدمت کردیم») and the related-articles carousel («بیشتر
+دربارهٔ این خدمت بخوانید») — both `bg-cream2` with the D66 rounded-corner
+seam, a blog-detail-style header row (eyebrow + h2 + `more-link`) and the
+shared `{% projects_carousel %}` / `{% articles_carousel %}` components with
+`service=service`. The headers are `{% if has_projects %}` / `{% if
+has_articles %}` guarded by **two new `.exists()` flags in
+`apps/services/views.py`** that mirror the components' own queries (FK +
+`service_type` fallback for projects, the `related_services` M2M + published
+filter for articles) — the D42 `has_related` precedent, because an inclusion
+tag renders nothing on an empty query and the heading would otherwise print
+alone. A new `.more-link-light` variant in `input.css` (`--gold-d`) puts the
+link on cream; the original `--gold-l` had no contrast there. The JSON-LD is
+real now: a `@graph` of `Service` (provider Organization, `areaServed`
+Country, optional `category` from the tags) with `offers` built from the plans
+— each an `Offer` with an absolute prefill URL and a real ISO 4217
+`priceCurrency` from the new `ServicePlan.price_currency_code` property
+(`تومان → IRT`، `ریال → IRR`) — plus `FAQPage` (only when the service has
+FAQs) and the existing `BreadcrumbList`. **The trailing-comma trap:** the
+comma before an optional JSON key must LEAD the block (`"areaServed": {...}`
+then `{% if plans %},\n"offers": [...]`), never trail the previous line — an
+absent `offers` otherwise leaves `"areaServed": {...},}`, which is invalid
+JSON (caught by the check script's `json.loads`, fixed). The final CTA comes
+from base as before. Verified with `scripts/_t67_check.py` (JSON parses on
+every page, `offers` absent with no plans, carousels on rolled-back throwaway
+rows with FK/text/M2M matching and exclusion, empty test DB, other pages
+unaffected) and `scripts/_t67_browser.py` (headless Chrome at 1440/390: both
+carousels one row of equal-width cards inside the viewport, 8 FAQ items, 3
+related-service cards, in-browser JSON parses to 3 offers, no horizontal
+overflow).
 
 T66 (D67) is live: the pricing section (`templates/services/detail.html`)
 renders three plan cards on `bg-cream2` with rounded top corners (the same
