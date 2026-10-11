@@ -14,8 +14,11 @@
    style="border-radius: {{ radius|default:"1.75rem" }};{% if style %} {{ style }}{% endif %}"
    aria-label="{{ project.title }}">
   {% if project.image %}
+    {# نسبت طبیعیِ تصویر حفظ می‌شود: مستطیلِ افقی برای اسکرین‌شات سایت‌ها،#}
+    {# مربعی برای گرافیک و لوگو. h-auto باعث می‌شود کارت به جای ارتفاع      #}
+    {# تصویرِ بلندتر در همان ردیف، بلندای تصویرِ خودش را بگیرد.            #}
     <img src="{{ project.image.url }}" alt="{{ project.title }}" loading="lazy" decoding="async"
-         class="aspect-[4/3] h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.06]">
+         class="block h-auto w-full object-cover transition-transform duration-700 group-hover:scale-[1.06]">
   {% else %}
     {# جایگاه تصویر وقتی پروژه عکس ندارد #}
     <div class="aspect-[4/3] w-full bg-gradient-to-br from-ink2 via-ink3 to-ink2"></div>

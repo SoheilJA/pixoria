@@ -1,6 +1,7 @@
 from django.db import models
 
 from apps.core.icon_utils import validate_icon_name
+from apps.core.image_utils import compress_to_webp
 
 # راهنمای مشترک فیلد آیکون — آیکون‌ها از اسپرایت محلی لوساید بارگذاری می‌شوند.
 ICON_HELP = (
@@ -140,6 +141,14 @@ class Portfolio(models.Model):
         """توضیحات متا یا fallback به توضیحات کوتاه. مثل Article."""
         return self.meta_description or self.excerpt
 
+    def save(self, *args, **kwargs):
+        # تصویر اصلی موقعِ آپلود به WebPِ فشرده تبدیل می‌شود — حجم کمتر،
+        # کیفیت حفظ‌شده و نسبت ابعادِ اصلی تصویر (افقی برای اسکرین‌شاتِ
+        # سایت، مربعی برای گرافیک و لوگو) دست‌نخورده می‌ماند.
+        if self.image and not self.image.name.endswith(".webp"):
+            self.image = compress_to_webp(self.image.file)
+        super().save(*args, **kwargs)
+
 
 class ProjectStat(models.Model):
     """آمار و نتایح نمونه کار"""
@@ -201,3 +210,9 @@ class ProjectImage(models.Model):
 
     def __str__(self):
         return f"تصویر گالری — {self.portfolio.title}"
+
+    def save(self, *args, **kwargs):
+        # مثلِ تصویر اصلی: گالری هم موقعِ آپلود WebPِ فشرده می‌شود.
+        if self.image and not self.image.name.endswith(".webp"):
+            self.image = compress_to_webp(self.image.file)
+        super().save(*args, **kwargs)
