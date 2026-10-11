@@ -38,10 +38,20 @@
 - **`templates/components/_project_card.html`** — `aspect-[4/3] ... object-cover` → `h-auto w-full object-cover` (برش حذف)
 - **`templates/portfolio/detail.html`** — تصویر اصلی `aspect-[16/9]` و گالری `aspect-[4/3]` → `h-auto w-full object-cover`
 
+### ۳. رفعِ خطای `runserver` ✅
+کاربر: «مشکل چیه؟»
+
+خطا: `ModuleNotFoundError: No module named 'whitenoise'`
+
+انجام شد:
+- نصبِ `whitenoise==6.12.0` در venv (در `requirements.txt` بود ولی نصب نبود)
+- اجرای `manage.py migrate` → مایگریشنِ `core.0013_delete_proposal_models` اعمال شد و جداولِ پروپوزال از دیتابیس حذف شدند
+- `manage.py check` پاس شد؛ تستِ `runserver`: `/` و `/portfolio/` هر دو `200`
+
 ## کارهای باقی‌مانده (اولویت به ترتیب)
 
 ### ضروری — قبل از کامل‌شدن تسک تصاویر
-1. **اجرای مایگریشنِ حذف پروپوزال:** `venv/Scripts/python manage.py migrate`
+1. ~~اجرای مایگریشنِ حذف پروپوزال~~ ✅ انجام شد
 2. **تستِ واقعیِ فشرده‌سازی:** آپلود یک JPEG/PNG در ادمین و بررسی:
    - فایل در `public/media/portfolio/` با پسوند `.webp` ذخیره می‌شود؟
    - حجم کاهش یافته و نسبت ابعاد حفظ شده؟
