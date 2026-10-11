@@ -48,6 +48,27 @@
 - اجرای `manage.py migrate` → مایگریشنِ `core.0013_delete_proposal_models` اعمال شد و جداولِ پروپوزال از دیتابیس حذف شدند
 - `manage.py check` پاس شد؛ تستِ `runserver`: `/` و `/portfolio/` هر دو `200`
 
+### ۴. مارکویی برندها + مارکویی ابزارها ✅
+کاربر: «در صفحه اصلی سکشنی که برندهایی که به ما اعتماد کردن به صورت مارکویی رد میشن میخوام فقط اسم برند نوشته شده باشه و اسم برند هم به صورت داینامیک از اسم برندی که زمان بارگذاری نمونه کارها از ادمین خونده بشه. همچنین دایره حذف بشه. و بعدش مارکویی بهترین ابزارها، همون که دوتا مارکویی داره که خلاف جهت همدیگه حرکت میکنن مشکل داره»
+
+کامیت: `0cc5e88 feat: trusted marquee reads brand names from portfolio, fix tech marquee`
+
+**الف) سکشن برندها (`#trusted`):**
+- نشانِ دایره‌ای (`brand-mark` + `brand-mark-gold/royal`) و پلاک (`brand-plate`) کلاً حذف شد
+- حالا فقط `.brand-name` (متنِ سادهٔ نام برند) در مارکویی حرکت می‌کنه
+- منبعِ داده از `ClientMarqueeItem` به `Portfolio.client_name` تغییر کرد — هر نمونه‌کاری که در ادمین بارگذاری بشه، برندش خودکار اینجا ظاهر می‌شه:
+  - `apps/home/views.py`: کوئری `Portfolio.objects.exclude(client_name="").values_list("client_name", flat=True).distinct()`
+  - ایمپورتِ `ClientMarqueeItem` از `apps/home/views.py` حذف شد
+- `templates/home/sections/_trusted.html` بازنویسی شد
+- CSS های `brand-plate`/`brand-mark*` از `static/src/input.css` پاک شدند؛ `.brand-name` حالا `flex: none` داره تا در مارکویی فشرده نشه
+
+**ب) مارکویی ابزارها (`#tech`):**
+- `dir="ltr"` به هر دو ردیفِ مارکویی در `templates/home/sections/_tech.html` اضافه شد (قبلاً فقط `#trusted` و `services/detail.html` داشتند؛ بدون اون در صفحهٔ RTL چیپ‌ها برعکس چیده می‌شدن)
+- به‌جای `animation-direction: reverse`، keyframe صریح `@keyframes marquee-rev` (از `-50%` به `0`) ساختم تا پرشِ شروع از بین بره
+- `flex: none` به `.marquee-group` اضافه شد
+
+**نکته:** `npm run build` بعد از تغییر `input.css` زده شد (خروجی در `static/css/tailwind.css`). این فایل سرو می‌شه، نه `public/static/`.
+
 ## کارهای باقی‌مانده (اولویت به ترتیب)
 
 ### ضروری — قبل از کامل‌شدن تسک تصاویر
@@ -61,7 +82,11 @@
    - `apps/blog/models.py`: `avatar` (خط ۳۹)، `cover_image` (خط ۷۷)
    - `apps/services/models.py`: `og_image` (۲۱۳)، `image` (۲۹۳)، `author_image` (۶۷۵)، `video_poster` (۶۹۵)
    - `apps/core/models.py`: `image` (۳۶۲)
-   - تازه‌ترین قالب‌های `_project_card` و `detail.html` باید در پروژهٔ کامل بررسی شوند.
+5. **بررسیِ بصریِ مارکویی‌ها در مرورگر واقعی:** من نتونستم تصاویر را ببینم (محیط multimodal نداره)؛ تغییرات منطقی بودن ولی باید با چشم چک بشن. به‌خصوص اینکه آیا ردیف reverse هم‌اکنون روان حرکت می‌کنه.
+
+### تصمیماتِ باز
+- **مدل `ClientMarqueeItem`:** الان فقط صفحهٔ درباره (`apps/core/views.py:87` و `templates/core/about.html`) ازش استفاده می‌کنه. آیا اون هم باید از `Portfolio.client_name` بخونه و مدل کلاً حذف بشه؟ از کاربر پرسیده شد، جواب نداده.
+- نام برندهای فعلی در دیتابیس هنوز نمونه‌های تستی هستن («احمدی»، «مشتری ۲») — با بارگذاریِ نمونه‌کارهای واقعی در ادمین، مارکویی خودکار پر می‌شه.
 
 ### نکاتِ فنی
 - `requirements.txt` شامل `pillow==12.3.0` است (نصب شده در `venv`)
