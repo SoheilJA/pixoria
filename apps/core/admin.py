@@ -210,25 +210,3 @@ class AboutStatAdmin(IconPreviewMixin, admin.ModelAdmin):
         ("متن", {"fields": ["label", "description"]}),
         ("نمایش", {"fields": ["icon"]}),
     ]
-
-
-class ProposalStatInline(admin.TabularInline):
-    model = ProposalStat
-    extra = 1
-
-
-class ProposalProblemInline(admin.StackedInline):
-    model = ProposalProblem
-    extra = 1
-
-
-class ProposalServiceInline(admin.TabularInline):
-    model = ProposalService
-    extra = 1
-
-
-@admin.register(Proposal)
-class ProposalAdmin(admin.ModelAdmin):
-    list_display = ["client_name", "client_website", "slug", "created_at"]
-    prepopulated_fields = {"slug": ("client_name",)}
-    inlines = [ProposalStatInline, ProposalProblemInline, ProposalServiceInline]

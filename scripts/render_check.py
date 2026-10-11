@@ -43,17 +43,10 @@ for url, name in pages:
     except Exception as exc:  # noqa: BLE001
         print(f"{name:16} {url:24} -> EXC {type(exc).__name__}: {exc}")
 
-# proposal needs a slug; detail pages need slugs too
-from apps.core.models import Proposal
+# detail pages need slugs
 from apps.portfolio.models import Portfolio
 from apps.blog.models import Article
 from apps.services.models import Service
-
-for slug in Proposal.objects.values_list("slug", flat=True)[:3]:
-    r = c.get(f"/proposal/{slug}/", **H)
-    print(f"{'proposal':16} /proposal/{slug}/ -> {r.status_code}")
-if not Proposal.objects.exists():
-    print("proposal       (no Proposal rows in DB)")
 
 for slug in Portfolio.objects.values_list("slug", flat=True)[:2]:
     r = c.get(f"/portfolio/{slug}/", **H)

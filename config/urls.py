@@ -1,7 +1,8 @@
 from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
-from django.conf.urls.static import static
+from django.urls import path, include, re_path
+from django.views.static import serve
 from django.contrib.auth import views as auth_views
 from apps.core import views as core_views
 from django.contrib.sitemaps.views import sitemap
@@ -37,7 +38,6 @@ urlpatterns = [
         name="login",
     ),
     path("logout/", auth_views.LogoutView.as_view(), name="logout"),
-    path("proposal/<slug:slug>/", core_views.proposal, name="proposal"),
     path("manifest.webmanifest", core_views.manifest, name="manifest"),
     path("tinymce/", include("tinymce.urls")),
     path("blog/", include("apps.blog.urls")),
@@ -47,4 +47,9 @@ urlpatterns = [
         {"sitemaps": sitemaps},
         name="django.contrib.sitemaps.views.sitemap",
     ),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    re_path(
+        r"^public/media/(?P<path>.*)$",
+        serve,
+        {"document_root": settings.MEDIA_ROOT},
+    ),
+]

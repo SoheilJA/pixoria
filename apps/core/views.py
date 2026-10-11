@@ -1,6 +1,6 @@
 import math
 
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render
 from .brand_utils import resolve_brand
 from .context_utils import crumbs
 from .models import (
@@ -11,7 +11,6 @@ from .models import (
     AboutJourneyStep,
     AboutClientsSection,
     AboutStat,
-    Proposal,
 )
 from apps.home.models import ClientMarqueeItem
 from apps.services.models import Service
@@ -91,18 +90,6 @@ def about(request):
         "stats": AboutStat.objects.all(),
     }
     return render(request, "core/about.html", context)
-
-
-def proposal(request, slug):
-    proposal = get_object_or_404(Proposal, slug=slug)
-    context = {
-        "proposal": proposal,
-        "stats": proposal.stats.all(),
-        "problems": proposal.problems.all(),
-        "essential_services": proposal.services.filter(service_type="essential"),
-        "optional_services": proposal.services.filter(service_type="optional"),
-    }
-    return render(request, "core/proposal.html", context)
 
 
 def manifest(request):
