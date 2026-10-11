@@ -120,12 +120,12 @@
         {% icon "x" class="h-5 w-5" %}
       </button>
     </div>
-    <ul class="mt-7 space-y-1">
+    <ul class="menu-nav mt-7 space-y-1">
       {% for item in nav_items %}
         {% nav_url item.url as item_url %}
         {% if item_url == services_url and services_footer %}
           {# خدمات: لینخ خود صفحه + آکاردئون زیرمنو #}
-          <li class="m-has-sub">
+          <li class="m-has-sub" style="--m-i:{{ forloop.counter0 }}">
             <div class="m-row">
               <a
                 href="{{ item_url }}"
@@ -156,7 +156,7 @@
             </ul>
           </li>
         {% else %}
-          <li>
+          <li style="--m-i:{{ forloop.counter0 }}">
             <a
               href="{{ item_url }}"
               class="m-link flex items-center justify-between rounded-2xl px-4 py-3.5 text-xl font-bold hover:bg-white/[.05]"
@@ -173,21 +173,31 @@
         >{{ header_settings.cta_text }}</a
       >
     {% endif %}
-    {% if settings.phone %}
-      <a
-        href="tel:{{ settings.phone }}"
-        class="m-cta mt-5 flex items-center justify-center gap-2 text-sm text-cream/60"
-        >{% icon "phone" class="h-4 w-4 text-gold" %}
-        <span class="fa-num">{{ settings.phone|fa_digits }}</span></a
-      >
-    {% endif %}
-    {% if settings.phone_secondary %}
-      <a
-        href="tel:{{ settings.phone_secondary }}"
-        class="m-cta mt-3 flex items-center justify-center gap-2 text-sm text-cream/60"
-        >{% icon "smartphone" class="h-4 w-4 text-gold" %}
-        <span class="fa-num">{{ settings.phone_secondary|fa_digits }}</span></a
-      >
+    {% if settings.phone or settings.phone_secondary %}
+      <div class="m-contact">
+        {% if settings.phone %}
+          <a href="tel:{{ settings.phone }}" class="m-contact-item">
+            {% icon "phone" class="h-4 w-4 shrink-0 text-gold" %}
+            <span class="min-w-0">
+              <span class="fa-num block font-medium">{{ settings.phone|fa_digits }}</span>
+              {% if settings.phone_label %}
+                <span class="mt-0.5 block text-[11px] text-cream/40">{{ settings.phone_label }}</span>
+              {% endif %}
+            </span>
+          </a>
+        {% endif %}
+        {% if settings.phone_secondary %}
+          <a href="tel:{{ settings.phone_secondary }}" class="m-contact-item">
+            {% icon "smartphone" class="h-4 w-4 shrink-0 text-gold" %}
+            <span class="min-w-0">
+              <span class="fa-num block font-medium">{{ settings.phone_secondary|fa_digits }}</span>
+              {% if settings.phone_secondary_label %}
+                <span class="mt-0.5 block text-[11px] text-cream/40">{{ settings.phone_secondary_label }}</span>
+              {% endif %}
+            </span>
+          </a>
+        {% endif %}
+      </div>
     {% endif %}
   </div>
 </div>

@@ -2113,6 +2113,48 @@ pages after T63–T69.)_
   nothing outside migrations, `manage.py check` clean, each migration applied,
   and `scripts/render_check.py` clean on all 16 URLs before each commit.
 
+- **D72 — Mobile menu: scrollable nav, pinned CTA + contact (post-T69
+  polish).** The mobile overlay menu had three hard limits: the panel was a
+  plain block, so with the services accordion open on a short viewport it
+  grew past the bottom edge and the CTA / phone numbers fell off-screen and
+  unreachable; the entrance stagger was five hardcoded
+  `li:nth-child(N)` rules (a sixth nav item would enter with no delay); and
+  the two phone numbers were bare `tel:` text links. Fixes, all in
+  `static/src/input.css` + `templates/partials/_header.html`:
+  **(a) the panel is a flex column capped at the viewport**
+  (`max-height: calc(100dvh - 3rem)` with a `100vh` fallback, `overflow:
+  hidden`), and ONLY the `<ul class="menu-nav">` scrolls
+  (`flex: 0 1 auto; min-height: 0; overflow-y: auto`). The header row, the
+  CTA button and the contact block are `flex: none`, so they stay pinned and
+  visible no matter how tall the list gets. **FLEX GOTCHA (caught by the
+  check script):** the first attempt used `flex: 1 1 0` on the nav — the
+  panel has only `max-height` (no fixed `height`), so its height is
+  content-driven and a `flex-basis: 0` child collapses to **0 px**, making
+  every nav link invisible while the panel shrank from 657 px to 301 px.
+  `flex: 0 1 auto` (content-sized, shrinks only when the panel is capped) is
+  the correct shape for a max-height container.
+  **(b) the stagger is data-driven now:** `--m-i:{{ forloop.counter0 }}` on
+  each `<li>` and `transition-delay: calc(0.08s + var(--m-i, 0) * 0.06s)`, so
+  any number of nav items enters in sequence (live: 6 items →
+  ۰.۰۸ … ۰.۳۸ s). The CTA enters at 0.44 s and the contact block at 0.5 s,
+  after the last item.
+  **(c) the contact block** is a divider-separated `.m-contact` grid of
+  `.m-contact-item` rows — 48 px (`min-height: 3rem`) tap targets, icon +
+  Persian digits + the `phone_label` / `phone_secondary_label` (D51) as a
+  small sub-line, with `:hover` and `:focus-visible` states.
+  **Verified** with `scripts/_menu_check.py` (headless Chrome at 390×844 and
+  320×700, kept untracked like the other throwaway `_t*_check.py` scripts):
+  the panel never overflows the viewport, the nav is the scroll region and
+  does not collapse (`clientH` 356/351), the first item sits inside the nav
+  box, every nav item carries a stagger delay, all tap targets are ≥ 32 px,
+  the accordion opens, and with the submenu OPEN at 320×700 the panel caps
+  at 676 ≤ 700 with both the CTA and the second phone visible. Plus
+  `scripts/render_check.py` clean on all 16 URLs and the `{#` sweep clean.
+  `.menu-chrome-profile/` (the script's `--user-data-dir`) is now in
+  `.gitignore`. NOT committed: the pre-existing working-tree deletions
+  (`AGENT.md`, `AGENTS.md`, `PIXORIA_AGENT_PROMPT.md`, `dark-home.png`, root
+  `index.html`), still the user's call per D71.
+
 ### Space identity utilities (T60)
 Tiny CSS-only decorative set in `static/src/input.css` — no images, no JS:
 
@@ -2810,6 +2852,20 @@ contact; descriptive alt texts; meta title/description per service.
   separate final commit | commit: "chore: remove new/ prototype after migration"
 
 ## Current status
+
+### Post-migration polish — mobile menu (done)
+
+The v2 migration (T01–T69) is complete; this pass finished uncommitted
+mobile-menu work found in the working tree. Three fixes in
+`static/src/input.css` + `templates/partials/_header.html`: the menu panel is
+a viewport-capped flex column where only the nav list scrolls (CTA + phone
+numbers stay pinned and reachable with the services accordion open on a short
+screen), the entrance stagger is data-driven via `--m-i` instead of five
+hardcoded `:nth-child` rules, and the two phone numbers are a 48px-tap-target
+contact block with labels. One real bug was caught by the check script on the
+way (the `flex: 1 1 0` collapse) — see D72. Verified with
+`scripts/_menu_check.py` at 390px and 320px plus `render_check.py` on all 16
+URLs. Committed as `feat(header): mobile menu scrolls internally, pins cta`.
 
 ### T69 — services list page redesign (done)
 

@@ -2022,10 +2022,33 @@ a:hover .brand-emblem {
   transform: translateY(-16px) scale(0.98);
   opacity: 0;
   transition: 0.45s 0.05s cubic-bezier(0.2, 0.9, 0.3, 1);
+  /* پنل هرگز از صفحه بیرون نمی‌زند: حداکثرِ ارتفاعِ ثابت + ستونِ فلِکس.
+     فقط خودِ لیستِ ناوبری (menu-nav) اسکرول می‌شود، بنابراین سربرگ،
+     دکمهٔ CTA و شماره‌های تماس — حتی وقتی زیرمنوی خدمات باز است —
+     همیشه بی‌حرکت و در دسترس می‌مانند. */
+  max-height: calc(100vh - 3rem);
+  max-height: calc(100dvh - 3rem);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+#mobile-menu .menu-panel > :first-child {
+  flex: none;
 }
 #mobile-menu.open .menu-panel {
   transform: none;
   opacity: 1;
+}
+/* لیستِ ناوبری: تنها ناحیهٔ اسکرولِ پنل. flex-basis: auto تا در حالتِ
+   عادی به اندازهٔ محتوایش بلند شود و فقط وقتی پنل به حداکثرِ ارتفاع
+   می‌رسد جمع شود (shrink) و اسکرول گردد — basis: 0 در یک ظرفِ بدون
+   ارتفاعِ ثابت لیست را جمع می‌کرد. min-height: 0 برای امکانِ کوچک‌شدن. */
+#mobile-menu .menu-nav {
+  flex: 0 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
 }
 #mobile-menu .m-link {
   opacity: 0;
@@ -2036,23 +2059,58 @@ a:hover .brand-emblem {
   opacity: 1;
   transform: none;
 }
-#mobile-menu.open li:nth-child(1) .m-link {
-  transition-delay: 0.08s;
+/* تأخیرِ ورود از روی شمارندهٔ هر آیتم محاسبه می‌شود (--m-i در قالب
+   تنظیم می‌شود) تا هر تعداد آیتم منو — حتی بیش از پنج — به‌درستی
+   پشت‌سر هم وارد شوند. */
+#mobile-menu.open li .m-link {
+  transition-delay: calc(0.08s + var(--m-i, 0) * 0.06s);
 }
-#mobile-menu.open li:nth-child(2) .m-link {
-  transition-delay: 0.14s;
-}
-#mobile-menu.open li:nth-child(3) .m-link {
-  transition-delay: 0.2s;
-}
-#mobile-menu.open li:nth-child(4) .m-link {
-  transition-delay: 0.26s;
-}
-#mobile-menu.open li:nth-child(5) .m-link {
-  transition-delay: 0.32s;
+/* دکمهٔ CTA و بلاک تماس پس از آخرین آیتمِ منو وارد می‌شوند و
+   همیشه چسبیده به پایینِ پنل می‌مانند (اسکرول نمی‌شوند). */
+#mobile-menu .m-cta,
+#mobile-menu .m-contact {
+  flex: none;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: 0.4s;
 }
 #mobile-menu.open .m-cta {
-  transition-delay: 0.38s;
+  opacity: 1;
+  transform: none;
+  transition-delay: 0.44s;
+}
+#mobile-menu.open .m-contact {
+  opacity: 1;
+  transform: none;
+  transition-delay: 0.5s;
+}
+/* بلاک تماس — اهداف لمسی بزرگ (۴۸px) با برچسبِ کوچک زیر هر شماره،
+   جدا شده از لیستِ ناوبری با یک خطِ نازک. */
+#mobile-menu .m-contact {
+  margin-top: 1.25rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: grid;
+  gap: 0.5rem;
+}
+#mobile-menu .m-contact-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 3rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 1rem;
+  color: rgba(245, 243, 238, 0.72);
+  font-size: 0.9rem;
+  transition: background 0.3s, color 0.3s;
+}
+#mobile-menu .m-contact-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--cream);
+}
+#mobile-menu .m-contact-item:focus-visible {
+  outline: 2px solid var(--gold-l);
+  outline-offset: 2px;
 }
 /* آکاردئون زیرمنوی خدمات در موبایل */
 .m-row {

@@ -30,6 +30,9 @@ static/css/tailwind.css
 .DS_Store
 Thumbs.db
 
+# Headless-Chrome profile created by local verification scripts
+.menu-chrome-profile/
+
 # Kilo
 .kilo/
 
