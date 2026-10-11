@@ -232,9 +232,6 @@
   .collapse {
     visibility: collapse;
   }
-  .invisible {
-    visibility: hidden;
-  }
   .visible {
     visibility: visible;
   }
@@ -666,9 +663,6 @@
   .left-\[36\%\] {
     left: 36%;
   }
-  .isolate {
-    isolation: isolate;
-  }
   .z-10 {
     z-index: 10;
   }
@@ -987,6 +981,9 @@
   .h-\[34rem\] {
     height: 34rem;
   }
+  .h-auto {
+    height: auto;
+  }
   .h-full {
     height: 100%;
   }
@@ -1205,9 +1202,6 @@
   }
   .shrink-0 {
     flex-shrink: 0;
-  }
-  .grow {
-    flex-grow: 1;
   }
   .origin-right {
     transform-origin: 100%;
@@ -1676,12 +1670,6 @@
       background-color: color-mix(in oklab, var(--color-gold-light) 90%, transparent);
     }
   }
-  .bg-gold\/10 {
-    background-color: color-mix(in srgb, #c9a15a 10%, transparent);
-    @supports (color: color-mix(in lab, red, red)) {
-      background-color: color-mix(in oklab, var(--color-gold) 10%, transparent);
-    }
-  }
   .bg-gold\/15 {
     background-color: color-mix(in srgb, #c9a15a 15%, transparent);
     @supports (color: color-mix(in lab, red, red)) {
@@ -1905,13 +1893,6 @@
     }
     --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));
   }
-  .from-ink2\/95 {
-    --tw-gradient-from: color-mix(in srgb, #121214 95%, transparent);
-    @supports (color: color-mix(in lab, red, red)) {
-      --tw-gradient-from: color-mix(in oklab, var(--color-ink2) 95%, transparent);
-    }
-    --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));
-  }
   .from-ink3 {
     --tw-gradient-from: var(--color-ink3);
     --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));
@@ -2103,12 +2084,6 @@
   .pt-\[44vh\] {
     padding-top: 44vh;
   }
-  .pt-\[clamp\(\.\.\.\)\] {
-    padding-top: clamp(...);
-  }
-  .pt-\[clamp\(64px\,9vw\,130px\)\] {
-    padding-top: clamp(64px, 9vw, 130px);
-  }
   .pt-\[clamp\(120px\,16vh\,180px\)\] {
     padding-top: clamp(120px, 16vh, 180px);
   }
@@ -2144,9 +2119,6 @@
   }
   .font-latin {
     font-family: var(--font-latin);
-  }
-  .font-mono {
-    font-family: var(--font-mono);
   }
   .font-sans {
     font-family: var(--font-sans);
@@ -2228,9 +2200,6 @@
   .text-\[1\.7rem\] {
     font-size: 1.7rem;
   }
-  .text-\[2\.2rem\] {
-    font-size: 2.2rem;
-  }
   .text-\[2\.4rem\] {
     font-size: 2.4rem;
   }
@@ -2305,9 +2274,6 @@
   }
   .text-\[clamp\(2\.1rem\,5\.4vw\,4rem\)\] {
     font-size: clamp(2.1rem, 5.4vw, 4rem);
-  }
-  .text-\[clamp\(2\.2rem\,6vw\,3\.8rem\)\] {
-    font-size: clamp(2.2rem, 6vw, 3.8rem);
   }
   .leading-6 {
     --tw-leading: calc(var(--spacing) * 6);
@@ -3020,29 +2986,14 @@
     .md\:flex-row {
       flex-direction: row;
     }
-    .md\:items-center {
-      align-items: center;
-    }
-    .md\:justify-between {
-      justify-content: space-between;
-    }
     .md\:justify-end {
       justify-content: flex-end;
-    }
-    .md\:self-center {
-      align-self: center;
-    }
-    .md\:p-8 {
-      padding: calc(var(--spacing) * 8);
     }
     .md\:p-10 {
       padding: calc(var(--spacing) * 10);
     }
     .md\:p-12 {
       padding: calc(var(--spacing) * 12);
-    }
-    .md\:p-14 {
-      padding: calc(var(--spacing) * 14);
     }
     .md\:px-7 {
       padding-inline: calc(var(--spacing) * 7);
@@ -3091,10 +3042,6 @@
     .md\:text-base {
       font-size: var(--text-base);
       line-height: var(--tw-leading, var(--text-base--line-height));
-    }
-    .md\:text-xl {
-      font-size: var(--text-xl);
-      line-height: var(--tw-leading, var(--text-xl--line-height));
     }
     .md\:text-\[1\.9rem\] {
       font-size: 1.9rem;
@@ -3261,9 +3208,6 @@
     .lg\:text-7xl {
       font-size: var(--text-7xl);
       line-height: var(--tw-leading, var(--text-7xl--line-height));
-    }
-    .lg\:text-\[3\.4rem\] {
-      font-size: 3.4rem;
     }
     .lg\:text-\[3\.5rem\] {
       font-size: 3.5rem;
@@ -3596,8 +3540,16 @@ html.lenis, html.lenis body {
   transform: translateY(-5px);
   box-shadow: 0 35px 70px -40px rgba(201, 161, 90, 0.3);
 }
+@keyframes marquee-rev {
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
 .marquee-track.marquee-rev {
-  animation-direction: reverse;
+  animation-name: marquee-rev;
 }
 .tech-chip {
   display: inline-flex;
@@ -3620,52 +3572,16 @@ html.lenis, html.lenis body {
   border-color: rgba(201, 161, 90, 0.55);
   box-shadow: 0 12px 26px -14px rgba(201, 161, 90, 0.55);
 }
-.brand-plate {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.85rem;
-  flex: none;
-  border: 1px solid rgba(143, 107, 44, 0.28);
-  border-radius: 999px;
-  padding: 0.65rem 1.5rem 0.65rem 0.7rem;
-  background: rgba(255, 255, 255, 0.55);
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
-  box-shadow: 0 12px 30px -18px rgba(120, 95, 40, 0.5);
-  transition: border-color 0.35s, box-shadow 0.35s, transform 0.35s cubic-bezier(0.2, 0.8, 0.3, 1);
-}
-.brand-plate:hover {
-  border-color: rgba(201, 161, 90, 0.65);
-  box-shadow: 0 18px 38px -18px rgba(201, 161, 90, 0.55);
-  transform: translateY(-3px);
-}
-.brand-mark {
-  display: grid;
-  place-items: center;
-  flex: none;
-  width: 3rem;
-  height: 3rem;
-  border-radius: 999px;
-  font-size: 0.78rem;
-  font-weight: 800;
-  color: #171207;
-  text-align: center;
-  line-height: 1.1;
-}
-.brand-mark-gold {
-  background: linear-gradient(135deg, #e8c47a, #c9a15a 60%, #8f6b2c);
-  box-shadow: 0 8px 20px -8px rgba(201, 161, 90, 0.75);
-}
-.brand-mark-royal {
-  color: #fff;
-  background: linear-gradient(135deg, #6b8bff, #2e63ff 60%, #1c44c9);
-  box-shadow: 0 8px 20px -8px rgba(46, 99, 255, 0.7);
-}
 .brand-name {
-  font-size: 0.95rem;
+  flex: none;
+  font-size: 1.35rem;
   font-weight: 600;
   color: #4c4638;
   white-space: nowrap;
+  transition: color 0.3s;
+}
+.marquee-group > .brand-name:hover {
+  color: #8f6b2c;
 }
 .marquee-slow .marquee-track {
   animation-duration: 62s;
@@ -5626,6 +5542,7 @@ html.has-preloader .preloader.pl-done {
   align-items: center;
   gap: 2.75rem;
   padding-left: 2.75rem;
+  flex: none;
 }
 @keyframes marquee {
   to {

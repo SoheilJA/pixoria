@@ -1,7 +1,7 @@
 {% load icon_tags highlight_tags fa_digits %}
-{# برندهای همکار v2 — مارکویی پلاک‌های برند #}
+{# برندهای همکار v2 — مارکویی نام برندها #}
 {# داده‌ها: trusted_section (TrustedSection)، clients (ClientMarqueeItem[]) #}
-{# هر برند: mark (نشان کوتاه)، name (نام کامل)، accent (gold/royal) #}
+{# هر برند فقط نامِ کاملش را نشان می‌دهد — نشانِ دایره‌ای حذف شده است. #}
 {% if clients %}
   <section id="trusted" class="relative bg-cream2" style="border-radius: 3rem 9rem 0 0">
     <div class="relative z-10 mx-auto max-w-7xl px-6 pb-20 pt-28 text-center md:pt-36">
@@ -21,19 +21,14 @@
         {% endif %}
       {% endif %}
 
-      {% comment %}مارکویی لوگوی برندها — pixoria.js محتوای هر گروه را دو برابر می‌کند
+      {% comment %}مارکویی نام برندها — pixoria.js محتوای هر گروه را دو برابر می‌کند
          تا انیمیشن translateX(-50%) حلقهٔ پیوسته بسازد{% endcomment %}
       <div class="relative mt-16" data-reveal="up" data-delay="0.2">
         <div class="marquee marquee-slow" dir="ltr">
           <div class="marquee-track">
             <div class="marquee-group">
               {% for client in clients %}
-                <span class="brand-plate">
-                  <span class="brand-mark {% if client.accent == 'royal' %}brand-mark-royal{% else %}brand-mark-gold{% endif %}">
-                    {{ client.mark|default:client.name }}
-                  </span>
-                  <span class="brand-name">{{ client.name }}</span>
-                </span>
+                <span class="brand-name">{{ client.name }}</span>
               {% endfor %}
             </div>
           </div>
