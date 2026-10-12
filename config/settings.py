@@ -68,7 +68,7 @@ CSRF_TRUSTED_ORIGINS = _env_list(
 # Application definition
 
 INSTALLED_APPS = [
-    # "unfold",
+    "unfold",
     "django.contrib.admin",
     # sitemaps
     "django.contrib.sitemaps",
@@ -76,6 +76,14 @@ INSTALLED_APPS = [
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
+    # این جایگزینِ staticfiles است، نه یک اپ اضافه. runserver_nostatic
+    # سروِ فایل‌های استاتیکِ خودِ Django را غیرفعال می‌کند تا WhiteNoise
+    # آن‌ها را (با gzip و کشِ طولانی) سرو کند. بدون این، فایل ۱.۲MBیِ
+    # three.module.js فشرده‌نشده دانلود می‌شود.
+    # نکته: Django دستورات را بر اساسِ ترتیبِ معکوسِ INSTALLED_APPS حل
+    # می‌کند (آخرینِ معکوس = اولِ لیست برنده)، پس این باید قبل از
+    # staticfiles بیاید.
+    "whitenoise.runserver_nostatic",
     "django.contrib.staticfiles",
     # اپ های پروژه
     "apps.core",
@@ -110,6 +118,8 @@ TINYMCE_DEFAULT_CONFIG = {
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
+    "django.middleware.gzip.GZipMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -226,6 +236,10 @@ TEMPLATES[0]["DIRS"] = [BASE_DIR / "templates"]
 
 STATICFILES_DIRS = [BASE_DIR / "static"]
 
+# این الگوها بر اساسِ نامِ فایل بررسی می‌شوند (نه مسیر کامل) — پارامترِ
+# ignore_patterns در Django فقط basename را می‌سنجد.
+STATICFILES_IGNORE_PATTERNS = ["*.map", "*.md"]
+
 LOGIN_URL = "/login/"
 LOGIN_REDIRECT_URL = "/"
 
@@ -249,3 +263,22 @@ STATIC_ROOT = os.path.join(BASE_DIR, "public", "static")
 
 MEDIA_URL = os.environ.get("MEDIA_URL", "/public/media/")
 MEDIA_ROOT = os.path.join(BASE_DIR, "public", "media")
+
+# ── فشرده‌سازیِ فایل‌های استاتیک ──
+# three.module.js حدود ۱.۲MB است؛ بدون gzip، دانلودِ آن صفحه را به‌شدت کند
+# می‌کند. WhiteNoise نسخهٔ .gz هر فایل را می‌سازد و برای درخواست‌هایی که
+# Accept-Encoding: gzip دارند سرو می‌کند (۱.۲MB → ~۳۰۰KB).
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
+
+# در حالتِ پیش‌فرض WhiteNoise در DEBUG از finders می‌خواند (پوشهٔ static/)
+# و نسخه‌های .gz که در STATIC_ROOT ساخته شده‌اند را نادیده می‌گیرد. با
+# خاموش کردنِ این گزینه، فایل‌ها از STATIC_ROOT سرو می‌شوند و gzip فعال
+# می‌شود. collectstatic باید بعد از هر تغییرِ فایل‌های استاتیک اجرا شود.
+WHITENOISE_USE_FINDERS = False
