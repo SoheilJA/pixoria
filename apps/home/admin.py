@@ -122,14 +122,6 @@ class HeaderSettingsAdmin(admin.ModelAdmin):
         return not HeaderSettings.objects.exists()
 
 
-@admin.register(NavItem)
-class NavItemAdmin(admin.ModelAdmin):
-    list_display = ["title", "url", "order", "is_active"]
-    list_editable = ["order", "is_active"]
-    list_display_links = ["title"]
-    search_fields = ["title", "url"]
-
-
 @admin.register(HomeSection)
 class HomeSectionAdmin(admin.ModelAdmin):
     list_display = ["title", "key", "order", "is_active"]

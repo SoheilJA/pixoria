@@ -1,6 +1,7 @@
 from .brand_utils import resolve_brand
 from .models import SiteSettings, SocialLink, AboutStat, FooterLinkGroup
-from apps.home.models import CTASection, HeaderSettings, NavItem
+from .nav import NAV_ITEMS
+from apps.home.models import CTASection, HeaderSettings
 from apps.services.models import Service
 
 
@@ -30,6 +31,7 @@ def site_context(request):
         "services_footer": services_footer,
         "stats": stats,
         "header_settings": HeaderSettings.objects.first(),
-        "nav_items": NavItem.objects.filter(is_active=True),
+        # منو ثابت است — از apps/core/nav.py خوانده می‌شود، نه دیتابیس.
+        "nav_items": NAV_ITEMS,
         "footer_groups": footer_groups,
     }

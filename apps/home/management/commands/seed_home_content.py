@@ -15,7 +15,6 @@ from django.core.management.base import BaseCommand
 from apps.core.models import SiteSettings, SocialLink
 from apps.home.models import (
     HeaderSettings,
-    NavItem,
     HeroSection,
     HeroStat,
     FeaturedWorkSection,
@@ -118,7 +117,7 @@ class Command(BaseCommand):
         self.seed_site()
         self.stdout.write(self.style.SUCCESS("محتوای پیش‌فرض پیکسوریا آماده شد."))
 
-    # ── Header: CTA + nav items ──
+    # ── Header: CTA (nav items are hardcoded in apps/core/nav.py) ──
     def seed_header(self):
         _, created = first_or_create(
             HeaderSettings,
@@ -127,22 +126,6 @@ class Command(BaseCommand):
             show_cta=True,
         )
         self.log("هدر", created)
-
-        defaults = [
-            ("خانه", "home:home", 0),
-            ("نمونه‌کارها", "portfolio:list", 10),
-            ("خدمات", "services:list", 20),
-            ("بلاگ", "blog:list", 30),
-            ("درباره ما", "core:about", 40),
-            ("تماس", "contact:contact", 50),
-        ]
-        created_count = 0
-        for title, url, order in defaults:
-            if not NavItem.objects.filter(url=url).exists():
-                NavItem.objects.create(title=title, url=url, order=order)
-                created_count += 1
-        if created_count:
-            self.stdout.write(f"  + {created_count} آیتم منو")
 
     # ── Hero ──
     def seed_hero(self):

@@ -22,7 +22,6 @@ node_modules/
 # Generated Tailwind / deployment output
 public/static/
 public/media/
-static/css/tailwind.css
 
 # Editors / OS
 .idea/
@@ -32,6 +31,10 @@ Thumbs.db
 
 # Headless-Chrome profile created by local verification scripts
 .menu-chrome-profile/
+
+# Scratch / throwaway dev tooling — فایل‌های موقتِ بررسی و تست
+scripts/_*.py
+config/settings_preview.py
 
 # Kilo
 .kilo/

@@ -413,27 +413,6 @@ class HeaderSettings(models.Model):
         super().save(*args, **kwargs)
 
 
-class NavItem(models.Model):
-    """آیتم‌های منوی بالای سایت"""
-
-    title = models.CharField(max_length=100, verbose_name="عنوان")
-    url = models.CharField(
-        max_length=200,
-        verbose_name="لینک",
-        help_text="نام آدرس جنگو (مثل portfolio:list) یا مسیر مستقیم (مثل /blog/)",
-    )
-    order = models.PositiveIntegerField(default=0, verbose_name="ترتیب")
-    is_active = models.BooleanField(default=True, verbose_name="فعال")
-
-    class Meta:
-        verbose_name = "آیتم منو"
-        verbose_name_plural = "آیتم‌های منو"
-        ordering = ["order"]
-
-    def __str__(self):
-        return self.title
-
-
 class HomeSection(models.Model):
     """ثبت بخش‌های صفحه اصلی — ترتیب و نمایش از همینجا مدیریت می‌شود.
 

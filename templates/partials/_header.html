@@ -1,6 +1,7 @@
 {% load icon_tags nav_tags highlight_tags fa_digits %}
-{% comment %}هدر و منوی موبایل — محتوا از دیتابیس: NavItem (منو)، HeaderSettings
-(دکمهٔ CTA)، Service (مگامنو) و SiteSettings (لوگو و بنر مگامنو).{% endcomment %}
+{% comment %}هدر و منوی موبایل — آیتم‌های منو ثابت هستند (apps/core/nav.py) و
+دیگر از دیتابیس خوانده نمی‌شوند. از دیتابیس فقط: HeaderSettings (دکمهٔ CTA)،
+Service (مگامنو) و SiteSettings (لوگو و بنر مگامنو).{% endcomment %}
 {% url 'services:list' as services_url %}
 <header id="site-header" class="fixed inset-x-0 top-0 z-50 px-4 pt-4">
   <nav
@@ -12,7 +13,7 @@
       {% include "partials/_brand_lockup.html" %}
     </a>
 
-    {# ناوبری دسکتاپ — آیتم‌ها از پنل ادمین #}
+    {# ناوبری دسکتاپ — آیتم‌ها ثابت (apps/core/nav.py) #}
     <ul class="hidden items-center gap-8 text-sm lg:flex">
       {% for item in nav_items %}
         {% nav_url item.url as item_url %}
@@ -148,9 +149,8 @@
                 <li>
                   <a
                     href="{% url 'services:detail' service.slug %}"
-                    class="m-link flex items-center justify-between rounded-2xl px-4 py-2.5 text-base font-medium text-cream/70 hover:bg-white/[.05]"
-                    >{{ service.title }}
-                    {% icon "chevron-left" class="h-4 w-4 text-gold/40" %}</a>
+                    class="m-link flex items-center rounded-2xl px-4 py-2.5 text-base font-medium text-cream/70 hover:bg-white/[.05]"
+                    >{{ service.title }}</a>
                 </li>
               {% endfor %}
             </ul>
@@ -159,9 +159,8 @@
           <li style="--m-i:{{ forloop.counter0 }}">
             <a
               href="{{ item_url }}"
-              class="m-link flex items-center justify-between rounded-2xl px-4 py-3.5 text-xl font-bold hover:bg-white/[.05]"
-              >{{ item.title }}
-              {% icon "chevron-left" class="h-5 w-5 text-gold/60" %}</a>
+              class="m-link flex items-center rounded-2xl px-4 py-3.5 text-xl font-bold hover:bg-white/[.05]"
+              >{{ item.title }}</a>
           </li>
         {% endif %}
       {% endfor %}
