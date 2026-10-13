@@ -25,25 +25,30 @@
             </h2>
           {% endif %}
         </div>
+        {# کنترل‌های ناوبری فقط وقتی معنا دارند که بیش از یک کارت باشد؛ #}
+        {# در غیر این صورت دکمه‌ها و راهنمای کشیدن یک رابطِ شکسته‌اند. #}
+        {% if testimonials|length > 1 %}
         <div class="flex items-center gap-4" data-reveal="left">
           <button data-slider-prev class="ctrl-btn" aria-label="نظر قبلی">{% icon "chevron-right" class="h-5 w-5" %}</button>
           <div data-slider-dots class="flex items-center gap-2"></div>
           <button data-slider-next class="ctrl-btn" aria-label="نظر بعدی">{% icon "chevron-left" class="h-5 w-5" %}</button>
         </div>
-      </div>
+        {% endif %}      </div>
 
       <div data-slider
-           class="no-scrollbar -mx-6 mt-12 flex snap-x snap-mandatory gap-6 overflow-x-auto px-6 pb-6"
+           class="no-scrollbar edge-fade -mx-6 mt-12 flex snap-x snap-mandatory gap-6 overflow-x-auto px-6 pb-6"
            data-lenis-prevent data-reveal="up">
         {% for t in testimonials %}
           {% include "components/_testimonial_card.html" with t=t class="w-[min(88vw,400px)] shrink-0 snap-center" %}
         {% endfor %}
       </div>
 
+      {% if testimonials|length > 1 %}
       <p class="mt-2 flex items-center justify-center gap-2 text-xs text-cream/35">
         {% icon "move-horizontal" class="h-3.5 w-3.5" %}
         برای مرور کارت‌ها، بکشید یا از دکمه‌ها استفاده کنید
       </p>
+      {% endif %}
     </div>
   </section>
 {% endif %}

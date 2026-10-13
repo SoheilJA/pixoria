@@ -232,9 +232,6 @@
   .collapse {
     visibility: collapse;
   }
-  .invisible {
-    visibility: hidden;
-  }
   .visible {
     visibility: visible;
   }
@@ -875,6 +872,9 @@
   }
   .h-1\.5 {
     height: calc(var(--spacing) * 1.5);
+  }
+  .h-1\/2 {
+    height: calc(1 / 2 * 100%);
   }
   .h-1\/3 {
     height: calc(1 / 3 * 100%);
@@ -2566,6 +2566,9 @@
   .text-royal {
     color: var(--color-royal);
   }
+  .capitalize {
+    text-transform: capitalize;
+  }
   .lowercase {
     text-transform: lowercase;
   }
@@ -3151,6 +3154,9 @@
     }
     .lg\:flex-row {
       flex-direction: row;
+    }
+    .lg\:items-start {
+      align-items: flex-start;
     }
     .lg\:items-stretch {
       align-items: stretch;
@@ -5517,6 +5523,10 @@ html.has-preloader .preloader.pl-done {
     transform: translateX(118vw);
     opacity: 0;
   }
+}
+.edge-fade {
+  -webkit-mask-image: linear-gradient( 90deg, transparent, #000 6%, #000 94%, transparent );
+  mask-image: linear-gradient( 90deg, transparent, #000 6%, #000 94%, transparent );
 }
 .marquee {
   overflow: hidden;

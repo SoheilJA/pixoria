@@ -5,7 +5,7 @@
 {# inside a template comment; the lexer does not skip multi-line comments). #}
 {# Track: CSS scroll-snap. JS: per-instance init in pixoria.js (data-carousel*). #}
 <div class="carousel{% if class %} {{ class }}{% endif %}" data-carousel{% if id %} id="{{ id }}"{% endif %}>
-  <div class="no-scrollbar -mx-6 flex snap-x snap-mandatory gap-6 overflow-x-auto px-6 pb-6"
+  <div class="no-scrollbar -mx-6 flex snap-x snap-mandatory gap-6 overflow-x-auto px-6 pb-6{% if track_class %} {{ track_class }}{% endif %}"
        data-carousel-track data-lenis-prevent tabindex="0" aria-label="کاروسل">{{ content }}</div>
   <div class="mt-2 flex items-center justify-center gap-3">
     <button type="button" class="ctrl-btn" data-carousel-prev aria-label="اسلاید قبلی">{% icon "chevron-right" class="h-5 w-5" %}</button>

@@ -2763,6 +2763,26 @@ html.has-preloader .preloader.pl-done {
 }
 
 /* ---------- marquee ---------- */
+/* محویِ لبه‌ها برای کاروسل‌ها — همان افکتِ .marquee بالا (نگاه کنید)،
+   ولی با نوارِ باریک‌تر: کارت‌های کاروسل در حالتِ استراحت روی لبه می‌ایستند و
+   نباید مثلِ چیپِ در حالِ حرکتِ مارکویی محو شوند. ۶٪ یعنی ~۷۷px روی
+   کانتینرِ ۱۲۸۰pxیِ دسکتاپ. */
+.edge-fade {
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    transparent,
+    #000 6%,
+    #000 94%,
+    transparent
+  );
+  mask-image: linear-gradient(
+    90deg,
+    transparent,
+    #000 6%,
+    #000 94%,
+    transparent
+  );
+}
 .marquee {
   overflow: hidden;
   -webkit-mask-image: linear-gradient(

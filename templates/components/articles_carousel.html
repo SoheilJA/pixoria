@@ -3,7 +3,7 @@
 {# شامل یک کارت برای هر مقالهٔ منتشرشده؛ خالی چیزی چاپ نمی‌کند. #}
 {# پلکانِ زمانِ ظهور کارت‌ها با cycle در همین حلقه تولید می‌شود (در include ریست می‌شود). #}
 {% if articles %}
-  {% carousel %}
+  {% carousel track_class="edge-fade" %}
     {% for article in articles %}
       {% cycle '0' '0.1' '0.2' '0.3' '0.4' '0.5' as card_delay silent %}
       {% include "components/_article_card.html" with article=article delay=card_delay class="w-[min(86vw,360px)] shrink-0 snap-start md:w-[min(46vw,400px)] lg:w-[min(30vw,400px)]" %}
