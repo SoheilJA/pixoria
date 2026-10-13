@@ -120,7 +120,7 @@ class Service(models.Model):
     description = models.TextField(verbose_name="توضیحات کامل صفحه خدمت")
     icon = models.CharField(
         max_length=64,
-        default="sparkles",
+        default="wand-magic-sparkles",
         verbose_name="آیکون",
         help_text=(
             "نام انگلیسی یک آیکون Lucide، بدون فاصله. "
@@ -408,7 +408,7 @@ class ServiceWhyUs(models.Model):
     )
     icon = models.CharField(
         max_length=64,
-        default="sparkles",
+        default="wand-magic-sparkles",
         verbose_name="آیکون",
         help_text=(
             "نام انگلیسی یک آیکون Lucide، بدون فاصله. "

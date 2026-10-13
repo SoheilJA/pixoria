@@ -1330,6 +1330,11 @@ html.lenis body {
   place-items: center;
   rotate: calc(var(--ss-tilt) * -1);
 }
+/* آیکونِ هر سیاره نصفِ قطرِ همان سیاره است — از همان توکنِ --size که خودش
+   استفاده می‌کند، چون هر مدار اندازهٔ متفاوتی دارد. */
+.ss-up > i {
+  font-size: calc(var(--size, 2.5rem) * 0.5);
+}
 .ss-label {
   position: absolute;
   top: 100%;

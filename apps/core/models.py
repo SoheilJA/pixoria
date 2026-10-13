@@ -4,11 +4,11 @@ from .brand_utils import brand_choices, default_brand_option
 from .icon_utils import validate_icon_name
 
 # راهنمای مشترک فیلد آیکون — در چندین مدل تکرار می‌شود تا متن کمکی یکسانی داشته
-# باشد. آیکون‌ها از اسپرایت محلی لوساید بارگذاری می‌شوند (بدون CDN).
+# باشد. آیکون‌ها از فونتِ محلی Font Awesome بارگذاری می‌شوند (بدون CDN).
 ICON_HELP = (
-    "نام انگلیسی یک آیکون Lucide، بدون فاصله. "
-    "مثال: zap، palette، shield-check. "
-    "لیست کامل آیکون‌ها: lucide.dev/icons"
+    "نام انگلیسی یک آیکون Font Awesome (نسخهٔ رایگان)، بدون فاصله. "
+    "مثال: bolt، palette، shield-halved. "
+    "لیست کامل آیکون‌ها: fontawesome.com/icons"
 )
 # راهنمای مشترک فیلد متن بالای عنوان (eyebrow) که در سکشن‌های v2 بالای عنوان
 # می‌آید.
@@ -218,8 +218,8 @@ class SocialLink(models.Model):
         default="globe",
         validators=[validate_icon_name],
         help_text=(
-            "نام انگلیسی یک آیکون Lucide. مثال: instagram، linkedin، send (تلگرام)، "
-            "globe. لیست کامل: lucide.dev/icons"
+            "نام انگلیسی یک آیکون Font Awesome. مثال: instagram، linkedin، "
+            "telegram، globe. لیست کامل: fontawesome.com/icons"
         ),
     )
 

@@ -1,19 +1,18 @@
-"""Helpers for the local Lucide icon sprites.
+"""پشتیبانی آیکونِ Font Awesome (رایگان) برای ادمین و قالب‌ها.
 
-Two sprites are generated from the pinned ``lucide-static`` npm package by
-``node scripts/build_icon_sprite.js``:
+کاملاً لوکال: اسکریپتِ ``scripts/build_fontawesome.js`` فونت وبِ پکیجِ
+pinned شدهٔ ``@fortawesome/fontawesome-free`` را به ``static/fontawesome/``
+کپی می‌کند و ``static/fontawesome/icons.json`` را می‌سازد — فهرستِ نامِ
+آیکون‌های رایگان، دسته‌بندی‌شده بر اساس سبک (solid / regular / brands).
+بدون CDN، و برخلافِ اسپرایتِ قدیمیِ Lucide هیچ چیز برای sync وجود ندارد:
+فونت شاملِ همهٔ آیکون‌های رایگان است، پس هر چیزی که ادمین انتخاب کند
+فوراً روی سایت نمایش داده می‌شود.
 
-* ``icons/lucide.sprite.svg`` — the PUBLIC sprite: only the icons the site
-  actually uses, so the public payload stays small.
-* ``icons/lucide.full.sprite.svg`` — the ADMIN-ONLY full sprite (every icon in
-  the package plus a few brand glyphs), loaded only on admin pages by the
-  ``IconPickerWidget``.
-
-``python manage.py sync_icons`` (T55) rebuilds the public sprite from the icon
-values stored in the DB plus every ``{% icon "…" %}`` usage in the templates,
-so an admin can pick any Lucide icon and then sync it to the public site.
+سبکِ پیش‌فرض solid است (تصمیمِ کاربر)؛ آیکون‌های برند (مثل linkedin)
+خودکار با fa-brands رندر می‌شوند.
 """
 
+import json
 import re
 from functools import lru_cache
 from pathlib import Path
@@ -27,101 +26,200 @@ from django.templatetags.static import static
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
 
-SPRITE_REL_PATH = Path("icons") / "lucide.sprite.svg"
-FULL_SPRITE_REL_PATH = Path("icons") / "lucide.full.sprite.svg"
-_SYMBOL_RE = re.compile(r'<symbol id="i-([^"]+)"')
-DEFAULT_ICON = "sparkles"
+ICONS_REL_PATH = Path("fontawesome") / "icons.json"
+FA_CSS_REL_PATH = "fontawesome/css/all.min.css"
+DEFAULT_ICON = "wand-magic-sparkles"
+DEFAULT_STYLE = "solid"
+
+# نگاشتِ نام‌های قدیمیِ Lucide به نامِ معادل در Font Awesome. تمام نام‌های
+# استفاده‌شده در قالب‌ها و دیتابیسِ فعلی را پوشش می‌دهد؛ اسکریپتِ بیلد این
+# جدول را در برابر فهرستِ رسمی آیکون‌های رایگان اعتبارسنجی می‌کند.
+LUCIDE_TO_FA = {
+    # قالب‌ها
+    "alert-circle": "circle-exclamation",
+    "alert-triangle": "triangle-exclamation",
+    "arrow-down": "arrow-down",
+    "arrow-left": "arrow-left",
+    "arrow-right": "arrow-right",
+    "badge-check": "certificate",
+    "book-open": "book-open",
+    "briefcase": "briefcase",
+    "calendar-days": "calendar-days",
+    "check": "check",
+    "chevron-down": "chevron-down",
+    "chevron-left": "chevron-left",
+    "chevron-right": "chevron-right",
+    "clock": "clock",
+    "external-link": "arrow-up-right-from-square",
+    "globe": "globe",
+    "layers": "layer-group",
+    "link": "link",
+    "linkedin": "linkedin-in",
+    "mail": "envelope",
+    "map-pin": "location-dot",
+    "menu": "bars",
+    "message-circle": "comment",
+    "mic": "microphone",
+    "move-horizontal": "left-right",
+    "pause": "pause",
+    "pen-tool": "pen-nib",
+    "phone": "phone",
+    "play": "play",
+    "plus": "plus",
+    "quote": "quote-right",
+    "rocket": "rocket",
+    "ruler": "ruler",
+    "send": "paper-plane",
+    "shield-check": "shield-halved",
+    "shopping-cart": "cart-shopping",
+    "smartphone": "mobile-screen-button",
+    "sparkles": "wand-magic-sparkles",
+    "star": "star",
+    "user-round": "user",
+    "users": "users",
+    "x": "xmark",
+    # دیتابیس
+    "at-sign": "at",
+    "award": "award",
+    "box": "box",
+    "boxes": "boxes-stacked",
+    "braces": "code",
+    "building-2": "building",
+    "code-2": "code",
+    "code-xml": "code",
+    "component": "cube",
+    "container": "box",
+    "credit-card": "credit-card",
+    "database": "database",
+    "diamond": "gem",
+    "figma": "figma",
+    "file-text": "file-lines",
+    "film": "film",
+    "gauge": "gauge",
+    "gem": "gem",
+    "heart-handshake": "handshake-angle",
+    "image": "image",
+    "layout-dashboard": "table-columns",
+    "layout-panel-top": "table-columns",
+    "layout-template": "table",
+    "megaphone": "bullhorn",
+    "monitor-smartphone": "mobile-screen",
+    "newspaper": "newspaper",
+    "orbit": "circle-nodes",
+    "palette": "palette",
+    "party-popper": "cake-candles",
+    "printer": "newspaper",
+    "refresh-cw": "arrows-rotate",
+    "search": "magnifying-glass",
+    "shapes": "shapes",
+    "smile": "face-smile",
+    "square-code": "code",
+    "square-terminal": "terminal",
+    "store": "store",
+    "terminal": "terminal",
+    "trending-up": "arrow-trend-up",
+    "type": "font",
+    "webhook": "plug",
+    "workflow": "diagram-project",
+    "zap": "bolt",
+}
 
 
-def sprite_path(full=False):
-    """Absolute path of the sprite inside the static source tree, or ``None``."""
-    rel = FULL_SPRITE_REL_PATH if full else SPRITE_REL_PATH
+@lru_cache(maxsize=1)
+def _load_icons():
+    """دیکشنریِ {style: [names]} از icons.json، یا {} اگر هنوز بیلد نشده."""
     for base in settings.STATICFILES_DIRS:
-        candidate = Path(base) / rel
+        candidate = Path(base) / ICONS_REL_PATH
         if candidate.is_file():
-            return candidate
-    return None
+            try:
+                return json.loads(candidate.read_text(encoding="utf-8")).get("styles", {})
+            except (OSError, ValueError):
+                pass
+    return {}
 
 
 @lru_cache(maxsize=2)
 def available_icons(full=False):
-    """frozenset of the icon names found in the sprite (empty if not built yet).
+    """frozenset از همهٔ نام‌های آیکون‌های رایگان Font Awesome (همهٔ سبک‌ها).
 
-    ``full=True`` reads the admin-only full sprite; the default is the public
-    sprite the site actually ships."""
-    path = sprite_path(full=full)
-    if path is None:
-        return frozenset()
-    try:
-        content = path.read_text(encoding="utf-8")
-    except OSError:
-        return frozenset()
-    return frozenset(_SYMBOL_RE.findall(content))
+    آرگومان ``full`` برای سازگاری با کد قدیمی نگه داشته شده و دیگر معنایی
+    ندارد — فونت شاملِ همهٔ آیکون‌هاست و نیازی به sync نیست."""
+
+    styles = _load_icons()
+    out = set()
+    for names in styles.values():
+        out.update(names)
+    return frozenset(out)
+
+
+def icon_style(name):
+    """سبکِ رندر: 'brands' برای آیکون‌های برند، در غیر این صورت 'solid'."""
+    if name in _load_icons().get("brands", ()):
+        return "brands"
+    return DEFAULT_STYLE
+
+
+def map_icon_name(name):
+    """تبدیل یک نام قدیمیِ Lucide به معادلِ Font Awesome آن."""
+    return LUCIDE_TO_FA.get(name, name)
 
 
 def validate_icon_name(value):
-    """Django field validator — the value must be a real Lucide icon name.
+    """ولیدیتورِ فیلدِ آیکون — مقدار باید یک نام واقعی در Font Awesome رایگان باشد.
 
-    Validated against the FULL set: an admin may pick any Lucide icon, and
-    ``manage.py sync_icons` then adds it to the (small) public sprite. When the
-    full sprite is not built yet, nothing is blocked (fresh checkout)."""
+    وقتی icons.json هنوز ساخته نشده (fresh checkout بدون بیلد)، چیزی مسدود
+    نمی‌شود."""
+
     if not value:
         return
-    names = available_icons(full=True)
+    names = available_icons()
     if not names:
-        # Full sprite not built yet (no `npm run build:icons`) — don't block.
         return
     if value not in names:
         raise ValidationError(
-            "این نام آیکون در مجموعه Lucide وجود ندارد. "
-            "نام انگلیسی آیکون را از https://lucide.dev/icons انتخاب کنید."
+            "این نام آیکون در Font Awesome (نسخهٔ رایگان) وجود ندارد. "
+            "نام انگلیسی آیکون را از https://fontawesome.com/icons انتخاب کنید."
         )
 
 
 def icon_preview_html(name, *, size=22, color="#c9a15a", full=False):
-    """اسنیپت SVG یک آیکون لوساید از اسپرایت محلی — برای پیش‌نمایش در ادمین.
+    """اسنیپت یک آیکون Font Awesome — برای پیش‌نمایش در ادمین.
 
-    رنگ پیش‌فرض طلاییِ پالت v2 است. ``full=True`` از اسپرایت کامل ادمین
-    استفاده می‌کند تا حتی آیکون‌های هنوز-syncنشده هم دیده شوند."""
+    رنگ پیش‌فرض طلاییِ پالت v2 است. ``full=True`` برای سازگاری با کد قدیمی
+    نگه داشته شده و اثری ندارد (فونت همهٔ آیکون‌ها را دارد)."""
 
     if not name:
         return "—"
-    rel = FULL_SPRITE_REL_PATH if full else SPRITE_REL_PATH
-    url = static(str(rel).replace("\\", "/"))
+    name = map_icon_name(name)
+    style = icon_style(name)
     return format_html(
-        '<svg aria-hidden="true" width="{}" height="{}" viewBox="0 0 24 24" '
-        'fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" '
-        'stroke-linejoin="round" style="color:{}">'
-        '<use href="{}#i-{}" xlink:href="{}#i-{}"></use></svg>',
-        size,
+        '<i class="fa-{} fa-{}" aria-hidden="true" '
+        'style="font-size:{}px;line-height:1;color:{}"></i>',
+        style,
+        name,
         size,
         color,
-        url,
-        name,
-        url,
-        name,
     )
 
 
 class IconPreviewMixin:
-    """ستون «پیش‌نمایش آیکون» را برای مدل‌هایی با فیلد ``icon`` فراهم می‌کند.
-
-    از اسپرایت کامل ادمین استفاده می‌کند تا هر آیکونی که ادمین انتخاب
-    کرده دیده شود، حتی اگر هنوز در اسپریت عمومی sync نشده باشد."""
+    """ستون «پیش‌نمایش آیکون» را برای مدل‌هایی با فیلد ``icon`` فراهم می‌کند."""
 
     @display(description="آیکون")
     def icon_preview(self, obj):
-        return icon_preview_html(getattr(obj, "icon", "") or getattr(obj, "badge_icon", ""), full=True)
+        return icon_preview_html(getattr(obj, "icon", "") or getattr(obj, "badge_icon", ""))
 
 
 class IconPickerWidget(forms.TextInput):
     """پیکر آیکون: فیلد متنی + پیش‌نمایش زنده + یک جدولِ جستجوپذیر از همهٔ
-    آیکون‌های Lucide (فقط ادمین، بدون CDN). کلیدها کار می‌کنند: Escape می‌بندد،
-    فلش‌ها جابه‌جا می‌شوند و Enter انتخاب می‌کند."""
+    آیکون‌های رایگان Font Awesome (فقط ادمین، بدون CDN). کلیدها کار می‌کنند:
+    Escape می‌بندد، فلش‌ها جابه‌جا می‌شوند و Enter انتخاب می‌کند."""
 
     class Media:
-        css = {"all": ["admin/css/icon_picker.css"]}
-        js = ["admin/js/lucide_full_icons.js", "admin/js/icon_picker.js"]
+        css = {
+            "all": [FA_CSS_REL_PATH, "admin/css/icon_picker.css"],
+        }
+        js = ["admin/js/fa_icons.js", "admin/js/icon_picker.js"]
 
     def build_attrs(self, base_attrs, extra_attrs=None):
         attrs = super().build_attrs(base_attrs, extra_attrs)
@@ -137,19 +235,15 @@ class IconPickerWidget(forms.TextInput):
             value,
             mark_safe(flatatt(final_attrs)),
         )
-        preview = icon_preview_html(value, full=True, size=20)
-        sprite_url = static(str(FULL_SPRITE_REL_PATH).replace("\\", "/"))
+        preview = icon_preview_html(value, size=20)
         return format_html(
-            '<div class="icon-picker" data-icon-picker data-ip-sprite="{}">'
+            '<div class="icon-picker" data-icon-picker>'
             "<div class=\"ip-row\">{}"
             '<button type="button" class="ip-preview" data-ip-preview '
             'aria-label="انتخاب از میان آیکون‌ها" title="انتخاب آیکون">{}</button>'
             "</div>"
-            '<p class="ip-warn" data-ip-warn hidden>این آیکون هنوز در اسپریتِ سایت '
-            "نیست — دستور <code>python manage.py sync_icons</code> را اجرا کنید "
-            "تا روی سایت نمایش داده شود.</p>"
-            '<p class="ip-error" data-ip-error hidden>چنین آیکونی در Lucide وجود '
-            "ندارد. نام انگلیسی درست را از lucide.dev/icons پیدا کنید.</p>"
+            '<p class="ip-error" data-ip-error hidden>چنین آیکونی در Font Awesome '
+            "وجود ندارد. نام انگلیسی درست را از fontawesome.com/icons پیدا کنید.</p>"
             '<div class="ip-popup" data-ip-popup hidden role="dialog" '
             'aria-label="انتخاب آیکون">'
             '<input type="search" class="ip-search" data-ip-search '
@@ -158,7 +252,6 @@ class IconPickerWidget(forms.TextInput):
             '<p class="ip-count" data-ip-count></p>'
             "</div>"
             "</div>",
-            sprite_url,
             mark_safe(input_html),
             mark_safe(preview),
         )

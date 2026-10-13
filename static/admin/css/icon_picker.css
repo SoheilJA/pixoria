@@ -47,35 +47,19 @@
   outline-offset: 2px;
 }
 
-.ip-preview svg {
-  width: 1.25rem;
-  height: 1.25rem;
+.ip-preview i {
+  font-size: 1.25rem;
+  line-height: 1;
 }
 
 .ip-preview.ip-empty {
   color: #9aa3ad;
 }
 
-.ip-warn,
 .ip-error {
   margin: 0;
   font-size: 0.8rem;
   line-height: 1.5;
-}
-
-.ip-warn {
-  color: #8a5a12;
-}
-
-.ip-warn code {
-  background: #fdf3e0;
-  border: 1px solid #ecd9b8;
-  border-radius: 0.3rem;
-  padding: 0 0.3rem;
-  font-size: 0.78rem;
-}
-
-.ip-error {
   color: #b3261e;
 }
 
@@ -144,9 +128,9 @@
   outline-offset: 1px;
 }
 
-.ip-item svg {
-  width: 1.15rem;
-  height: 1.15rem;
+.ip-item i {
+  font-size: 1.15rem;
+  line-height: 1;
 }
 
 .ip-count {

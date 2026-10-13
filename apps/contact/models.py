@@ -2,11 +2,11 @@ from django.db import models
 
 from apps.core.icon_utils import validate_icon_name
 
-# راهنمای مشترک فیلد آیکون — آیکون‌ها از اسپرایت محلی لوساید بارگذاری می‌شوند.
+# راهنمای مشترک فیلد آیکون — آیکون‌ها از فونتِ محلی Font Awesome بارگذاری می‌شوند.
 ICON_HELP = (
-    "نام انگلیسی یک آیکون Lucide، بدون فاصله. "
-    "مثال: zap، palette، shield-check. "
-    "لیست کامل آیکون‌ها: lucide.dev/icons"
+    "نام انگلیسی یک آیکون Font Awesome (نسخهٔ رایگان)، بدون فاصله. "
+    "مثال: bolt، palette، shield-halved. "
+    "لیست کامل آیکون‌ها: fontawesome.com/icons"
 )
 # راهنمای مشترک فیلد متن بالای عنوان (eyebrow).
 EYEBROW_HELP = "متن کوچک و طلاییِ بالای عنوان. مثلاً: تماس با ما"
@@ -96,7 +96,7 @@ class ContactFormPoint(models.Model):
     icon = models.CharField(
         max_length=64,
         verbose_name="آیکون",
-        default="message-circle",
+        default="comment",
         validators=[validate_icon_name],
         help_text=ICON_HELP,
     )

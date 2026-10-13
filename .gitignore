@@ -29,12 +29,17 @@ public/media/
 .DS_Store
 Thumbs.db
 
-# Headless-Chrome profile created by local verification scripts
+# Headless-Chrome profiles created by local verification scripts
 .menu-chrome-profile/
+.fa-chrome-profile*/
+.admin-chrome-profile/
 
 # Scratch / throwaway dev tooling — فایل‌های موقتِ بررسی و تست
 scripts/_*.py
 config/settings_preview.py
+
+# Data dumps for moving content between environments
+#content.json
 
 # Kilo
 .kilo/

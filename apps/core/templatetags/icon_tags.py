@@ -1,62 +1,84 @@
-"""Lucide icon template tag.
+"""Font Awesome icon template tag.
 
 Usage:  {% icon "rocket" class="h-6 w-6 text-lime" %}
-Renders an inline <svg> that references the local Lucide sprite
-(static/icons/lucide.sprite.svg) via <use>, so icons are crisp,
+Renders an inline <i class="fa-solid fa-rocket …"> referencing the local
+self-hosted Font Awesome webfont (static/fontawesome/), so icons are
 styleable with currentColor and served locally (no CDN).
 
+Icons are fonts, so Tailwind sizing utilities (h-6 w-6) would do nothing on
+an inline element — the tag converts them to an inline font-size instead,
+which keeps every existing call site working unchanged. Color classes
+(text-gold …) pass through untouched because the glyphs use currentColor.
+
 Props:
-  name   str  required — lucide icon name (e.g. "arrow-left")
-  class  str  optional — CSS classes for the <svg> element
-  size   str  optional — shorthand, sets width/height attributes (e.g. "24")
+  name   str  required — Font Awesome icon name (e.g. "arrow-left")
+  class  str  optional — CSS classes for the <i> element
+  size   str  optional — explicit font-size (e.g. "20px" or "1.25rem")
 """
 
 import re
 
 from django import template
-from django.templatetags.static import static
 from django.utils.html import escape
 from django.utils.safestring import mark_safe
 
-from apps.core.icon_utils import available_icons
+from apps.core.icon_utils import available_icons, icon_style, map_icon_name
 
 register = template.Library()
 
-SPRITE = "icons/lucide.sprite.svg"
 _NAME_RE = re.compile(r"^[a-z0-9][a-z0-9-]*$")
+# h-6 / w-4.5 / h-[20px] / h-[1.5rem]. کسرهای تیلویند (h-1/2) و کلیدواژه‌ها
+# (h-full) عمداً تشخیص داده نمی‌شوند: تبدیلِ آنها به font-size ممکن نیست،
+# پس بهتر است دست‌نخورده باقی بمانند و مرورگر خودش رویِ عنصر اعمالشان کند.
+_SIZE_RE = re.compile(
+    r"(?:^|\s)(?:h|w)-"
+    r"(?:\[([0-9.]+)(px|rem)\]|([0-9]+(?:\.[0-9]+)?)(?![0-9/.-]))"
+)
+_DIM_RE = re.compile(
+    r"(?:^|\s)(?:h|w)-"
+    r"(?:\[[0-9.]+(?:px|rem)\]|[0-9]+(?:\.[0-9]+)?(?![0-9/.-]))"
+)
+
+
+def _font_size_from_classes(cls):
+    """اولین کلاسِ اندازهٔ Tailwind (h-N/w-N) را به font-size تبدیل می‌کند."""
+    m = _SIZE_RE.search(cls)
+    if not m:
+        return None
+    if m.group(1):  # h-[20px] / h-[1.5rem]
+        return f"{m.group(1)}{m.group(2)}"
+    return f"{float(m.group(3)) * 0.25}rem"
 
 
 @register.simple_tag
 def icon(name, class_name="", size=None, **kwargs):
-    # Names come from templates (literals) or the DB (admin-edited) — guard the
-    # attribute value and drop anything that isn't a valid Lucide slug.
+    # نام‌ها از قالب‌ها (literal) یا دیتابیس (ویرایشِ ادمین) می‌آیند — فقط
+    # اسلاگ‌های معادل قبول می‌شوند و نام‌های قدیمیِ Lucide نگاشت می‌گردند.
     if not name or not _NAME_RE.match(str(name)):
         return ""
-    # Fail soft: an icon that is not (yet) in the public sprite renders nothing
-    # instead of a dangling <use> — run `manage.py sync_icons` after picking a
-    # new icon in the admin (T55).
+    name = map_icon_name(str(name))
+    # fail soft: آیکونی که در فونت نیست به جای یک گلیفِ نامعتبر هیچ چاپ نمی‌کند.
     available = available_icons()
     if available and name not in available:
         return ""
-    href = f"{static(SPRITE)}#i-{name}"
+
     cls = class_name or kwargs.get("class", "")
-    attrs = 'aria-hidden="true" focusable="false"'
-    if size:
-        attrs += f' width="{size}" height="{size}"'
+    font_size = size or _font_size_from_classes(cls)
+    cls = _DIM_RE.sub(" ", cls).strip()
+
+    classes = f"fa-{icon_style(name)} fa-{name}"
     if cls:
-        attrs += f' class="{escape(cls)}"'
+        classes += f" {escape(cls)}"
+    style = f' style="font-size:{escape(font_size)}"' if font_size else ""
     return mark_safe(
-        f'<svg {attrs} fill="none" stroke="currentColor" '
-        f'stroke-width="2" stroke-linecap="round" stroke-linejoin="round" '
-        f'viewBox="0 0 24 24">'
-        f'<use href="{href}" xlink:href="{href}"></use></svg>'
+        f'<i class="{classes}" aria-hidden="true" focusable="false"{style}></i>'
     )
 
 
 @register.simple_tag
 def icon_exists(name):
-    """True if the icon name exists in the local sprite (used by admin preview)."""
+    """True اگر نام آیکون در فونتِ محلی وجود داشته باشد (پیش‌نمایش ادمین)."""
     names = available_icons()
     if not names:
-        return True  # sprite not built yet — don't false-negative during setup
-    return name in names
+        return True  # icons.json هنوز بیلد نشده — موقعِ setup اشتباهِ منفی نده
+    return map_icon_name(str(name)) in names

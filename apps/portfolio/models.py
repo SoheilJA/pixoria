@@ -3,11 +3,11 @@ from django.db import models
 from apps.core.icon_utils import validate_icon_name
 from apps.core.image_utils import compress_to_webp
 
-# راهنمای مشترک فیلد آیکون — آیکون‌ها از اسپرایت محلی لوساید بارگذاری می‌شوند.
+# راهنمای مشترک فیلد آیکون — آیکون‌ها از فونتِ محلی Font Awesome بارگذاری می‌شوند.
 ICON_HELP = (
-    "نام انگلیسی یک آیکون Lucide، بدون فاصله. "
-    "مثال: zap، palette، shield-check. "
-    "لیست کامل آیکون‌ها: lucide.dev/icons"
+    "نام انگلیسی یک آیکون Font Awesome (نسخهٔ رایگان)، بدون فاصله. "
+    "مثال: bolt، palette، shield-halved. "
+    "لیست کامل آیکون‌ها: fontawesome.com/icons"
 )
 # راهنمای مشترک فیلد متن بالای عنوان (eyebrow).
 EYEBROW_HELP = "متن کوچک و طلاییِ بالای عنوان. مثلاً: نمونه‌کارها"
@@ -168,7 +168,7 @@ class ProjectStat(models.Model):
         max_length=64,
         blank=True,
         verbose_name="آیکون",
-        help_text="اختیاری. مثال: trending-up. " + ICON_HELP,
+        help_text="اختیاری. مثال: arrow-trend-up. " + ICON_HELP,
         validators=[validate_icon_name],
     )
     order = models.PositiveIntegerField(default=0, verbose_name="ترتیب")

@@ -95,6 +95,43 @@
 
 **نکته:** این محیط ورودی multimodal نمی‌پذیرد — اسکرین‌شات‌ها خوانده نمی‌شوند؛ تأیید با اعدادِ CDP و رندرِ قالب انجام شد.
 
+### ۶. جایگزینیِ Lucide با Font Awesome (لوکال + انتخاب از ادمین) ✅
+کاربر: «آیکون های کتابخانه lucide محدود هستن و میخوام بجاش از فونت آوسام استفاده کنم اونم به همینصورت به حالت لوکال و با قابلیت انتخاب آیکون از طریق ادمین پنل [...] فایل های مربوط به lucide رو پاک کن و فونت آوسام رو دانلود و استفاده کن»
+
+**تصمیمات (با پرسش از کاربر):** Font Awesome **6 Free** (`@fortawesome/fontawesome-free@^6.7.2` از npm، خودمیزبانی)، سبکِ پیش‌فرض **solid**، آیکون‌های برند خودکار `fa-brands`.
+
+**چرا webfont به‌جای SVG sprite:** فونت شاملِ همهٔ آیکون‌های رایگان است، پس هر چیزی که ادمین در پیکر انتخاب کند **فوراً** روی سایت می‌افتد — مرحلهٔ `manage.py sync_icons` حذف شد. گلیف‌ها از `currentColor` استفاده می‌کنند، پس تمام کلاس‌های رنگ (`text-gold` و غیره) بدون تغییر کار می‌کنند.
+
+فایل‌های جدید:
+- **`scripts/build_fontawesome.js`** — از `node_modules` کپی می‌کند به `static/fontawesome/`: `css/all.min.css` (فقط سورس‌های woff2 نگه داشته می‌شوند)، چهار `webfonts/*.woff2`، و `icons.json` (فهرستِ ۲۰۶۰ آیکونِ رایگان، دسته‌بندی‌شده بر اساس سبک — مرجعِ ولیدیشنِ پایتون). `static/admin/js/fa_icons.js` (`window.__FA_ICONS`) را هم برای پیکر می‌سازد.
+  - **ولیدیشنِ زمانِ بیلد:** نگاشتِ `LUCIDE_TO_FA` و تمامِ `{% icon "x" %}`های قالب‌ها را در برابر فهرستِ رسمی چک می‌کند؛ اگر یک نام معادلِ رایگان نداشته باشد، بیلد **fail** می‌شود (`npm run build:icons`).
+- **`scripts/_fa_render_check.py`** و **`scripts/_admin_icon_check.py`** — تأیید با CDP (مرورگر واقعی). صفحه‌های اصلی + ادمین: لاگین، باز شدنِ پاپ‌آپِ پیکر، ۲۴۰ آیکون در گرید، فیلترِ جستجو، انتخاب، پیش‌نمایشِ گلیف با اندازهٔ غیرصفر، هشدارِ نامِ نامعتبر. **ALL PASS**.
+
+فایل‌های ادیت‌شده:
+- **`apps/core/icon_utils.py`** — بازنویسی کامل: دیکشنریِ `LUCIDE_TO_FA` (۹۰ نام)، `map_icon_name()`، `icon_style()` (brands خودکار)، `validate_icon_name()` (چک در برابر `icons.json`)، `icon_preview_html()` → `<i class="fa-solid fa-x">`. `IconPickerWidget` حالا CSS فونت آوسام را در `Media` دارد.
+- **`apps/core/templatetags/icon_tags.py`** — خروجی `<svg><use>` → `<i class="fa-solid fa-x" style="font-size:...">`. **سینتکسِ قالب‌ها دست‌نخورده است**؛ کلاس‌های `h-N/w-N` به inline font-size تبدیل می‌شوند (آیکون inline است و height/width اثر ندارد — `h-1/2` و `h-full` عمداً دست‌نخورده می‌مانند). ~۱۳۰ نقطهٔ استفاده در قالب‌ها نیاز به ویرایش نداشتند.
+- **`apps/home/models.py`**، `apps/core/models.py`، `apps/portfolio/models.py`، `apps/services/models.py`، `apps/contact/models.py` — `ICON_HELP`ها و مثال‌ها (lucide.dev → fontawesome.com)، `default`ها (`sparkles` → `wand-magic-sparkles`، `message-circle` → `comment`).
+- **`static/admin/js/icon_picker.js`** — رندرِ سلول‌ها `<i class="fa-...">`، خواندن `__FA_ICONS`، حذفِ منطقِ «هنوز sync نشده».
+- **`templates/base.html`** — `<link>` فونت آوسام بعد از `tailwind.css`.
+- **`templates/core/about.html`** + `styles/input.css` — آیکونِ سیاره‌های صحنهٔ فضایی: `h-1/2 w-1/2` → اندازه از `--size` (`font-size: calc(var(--size) * 0.5)`) چون هر مدار اندازهٔ متفاوتی دارد.
+- **`templates/components/README.md`** و `package.json` (`build:icons`).
+
+مایگریشن‌های داده (۵ تا، **همگی اعمال شدند**): `core.0014`، `home.0015`، `portfolio.0008`، `services.0012`، `contact.0005` — هر کدام `RunPython` برای نگاشتِ مقادیرِ ذخیره‌شده + `AlterField` برای defaults/help_text. نام‌های ناشناخته دست‌نخورده می‌مانند (fail-safe). تمام مقادیرِ دیتابیس بعد از مهاجرت نام‌های معتبر فونت آوسام هستند.
+
+حذف شد:
+- `static/icons/lucide.sprite.svg`، `static/icons/lucide.full.sprite.svg` (و دایرکتوری `static/icons/`)
+- `static/admin/js/lucide_full_icons.js`
+- `scripts/build_icon_sprite.js`
+- `apps/core/management/commands/sync_icons.py`
+- `lucide-static` از npm
+
+**سه تا باگ در حینِ تأیید پیدا و رفع شد:**
+1. خروجیِ `{% icon %}` HTML-escape می‌شد (`mark_safe` در تگِ جدید جا افتاده بود) — آیکون‌ها به‌شکلِ `&lt;i class=...` در صفحه می‌آمدند. رفع با `mark_safe`.
+2. `h-1/2` با regex به `4px` تبدیل می‌شد (فقط `1` خوانده می‌شد). ریش: regex فقط اعدادِ تمام‌شده را می‌پذیرد؛ اندازهٔ این نقطه به CSS منتقل شد.
+3. **پیکرِ ادمین کاملاً مُرده بود:** ادمینِ جنگو `{{ media }}` را داخلِ `<head>` رندر می‌کند، پس `icon_picker.js` قبل ازِ وجودِ DOM اجرا می‌شد و `querySelectorAll("[data-icon-picker]")` خالی بود. رفع: `DOMContentLoaded` + `MutationObserver` (برای اینلاین‌های داینامیک) + گاردِ `data-ip-ready`.
+
+**نکتهٔ مهم:** ادمین فایل‌های استاتیک را از `public/static/` (STATIC_ROOT) سرو می‌کند، نه `static/`. بعد از هر تغییر در `static/admin/js/` یا `static/admin/css/` باید `manage.py collectstatic --noinput` زده شود. همچنین پروفایلِ Chromeِ اسکریپت‌های بررسی (`_fa_render_check.py` و `_admin_icon_check.py`) بین اجراها دوباره استفاده می‌شود — اگر فایلِ استاتیک را عوض کردید، پروفایل‌ها را پاک کنید تا کشِ مرورگر invalidate شود.
+
 ## کارهای باقی‌مانده (اولویت به ترتیب)
 
 ### ضروری — قبل از کامل‌شدن تسک تصاویر

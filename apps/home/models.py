@@ -4,11 +4,11 @@ from django.db import models
 from apps.core.icon_utils import validate_icon_name
 
 # راهنمای مشترک فیلد آیکون — در چندین مدل تکرار می‌شود تا متن کمکی یکسانی داشته
-# باشد. آیکون‌ها از اسپرایت محلی لوساید بارگذاری می‌شوند (بدون CDN).
+# باشد. آیکون‌ها از فونتِ محلی Font Awesome بارگذاری می‌شوند (بدون CDN).
 ICON_HELP = (
-    "نام انگلیسی یک آیکون Lucide، بدون فاصله. "
-    "مثال: zap، palette، shield-check. "
-    "لیست کامل آیکون‌ها: lucide.dev/icons"
+    "نام انگلیسی یک آیکون Font Awesome (نسخهٔ رایگان)، بدون فاصله. "
+    "مثال: bolt، palette، shield-halved. "
+    "لیست کامل آیکون‌ها: fontawesome.com/icons"
 )
 # راهنمای مشترک فیلد متن بالای عنوان (eyebrow) که در سکشن‌های v2 بالای عنوان
 # می‌آید.
@@ -92,7 +92,7 @@ class HeroStat(models.Model):
         max_length=64,
         blank=True,
         verbose_name="آیکون",
-        help_text="اختیاری. مثال: map-pin. " + ICON_HELP,
+        help_text="اختیاری. مثال: location-dot. " + ICON_HELP,
         validators=[validate_icon_name],
     )
     order = models.PositiveIntegerField(default=0, verbose_name="ترتیب")
@@ -553,7 +553,7 @@ class ProcessStep(models.Model):
     description = models.TextField(verbose_name="توضیحات")
     icon = models.CharField(
         max_length=64,
-        default="message-circle",
+        default="comment",
         verbose_name="آیکون",
         help_text=ICON_HELP,
         validators=[validate_icon_name],
@@ -606,7 +606,7 @@ class WhyFeature(models.Model):
     )
     icon = models.CharField(
         max_length=64,
-        default="sparkles",
+        default="wand-magic-sparkles",
         verbose_name="آیکون",
         help_text=ICON_HELP,
         validators=[validate_icon_name],
