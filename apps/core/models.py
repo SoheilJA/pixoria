@@ -2,6 +2,7 @@ from django.db import models
 
 from .brand_utils import brand_choices, default_brand_option
 from .icon_utils import validate_icon_name
+from .image_utils import WebPImageMixin
 
 # راهنمای مشترک فیلد آیکون — در چندین مدل تکرار می‌شود تا متن کمکی یکسانی داشته
 # باشد. آیکون‌ها از فونتِ محلی Font Awesome بارگذاری می‌شوند (بدون CDN).
@@ -327,8 +328,10 @@ class AboutPageHero(models.Model):
         super().save(*args, **kwargs)
 
 
-class AboutStory(models.Model):
+class AboutStory(WebPImageMixin, models.Model):
     """داستان ما"""
+
+    WEBP_FIELDS = ["image"]
 
     description = models.TextField(
         verbose_name="پاراگراف اصلی",

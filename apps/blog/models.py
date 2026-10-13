@@ -5,6 +5,8 @@ from django.utils import timezone
 from django.utils.html import strip_tags
 from tinymce.models import HTMLField
 
+from apps.core.image_utils import WebPImageMixin
+
 
 class Category(models.Model):
     title = models.CharField(max_length=100, verbose_name="عنوان")
@@ -29,7 +31,9 @@ class Tag(models.Model):
         return self.title
 
 
-class Author(models.Model):
+class Author(WebPImageMixin, models.Model):
+    WEBP_FIELDS = ["avatar"]
+
     name = models.CharField(max_length=100, verbose_name="نام")
     role = models.CharField(
         max_length=150,
@@ -49,7 +53,8 @@ class Author(models.Model):
         return self.name
 
 
-class Article(models.Model):
+class Article(WebPImageMixin, models.Model):
+    WEBP_FIELDS = ["cover_image"]
     STATUS_CHOICES = [
         ("draft", "پیش‌نویس"),
         ("published", "منتشر شده"),

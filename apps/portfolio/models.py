@@ -1,7 +1,7 @@
 from django.db import models
 
 from apps.core.icon_utils import validate_icon_name
-from apps.core.image_utils import compress_to_webp_if_smaller
+from apps.core.image_utils import WebPImageMixin
 
 # راهنمای مشترک فیلد آیکون — آیکون‌ها از فونتِ محلی Font Awesome بارگذاری می‌شوند.
 ICON_HELP = (
@@ -62,8 +62,10 @@ class Category(models.Model):
         return f"{reverse('portfolio:list')}?category={self.slug}"
 
 
-class Portfolio(models.Model):
+class Portfolio(WebPImageMixin, models.Model):
     """نمونه کار"""
+
+    WEBP_FIELDS = ["image"]
 
     title = models.CharField(
         max_length=200,
@@ -141,18 +143,6 @@ class Portfolio(models.Model):
         """توضیحات متا یا fallback به توضیحات کوتاه. مثل Article."""
         return self.meta_description or self.excerpt
 
-    def save(self, *args, **kwargs):
-        # تصویر اصلی موقعِ آپلود به WebPِ فشرده تبدیل می‌شود — حجم کمتر،
-        # کیفیت حفظ‌شده و نسبت ابعادِ اصلی تصویر (افقی برای اسکرین‌شاتِ
-        # سایت، مربعی برای گرافیک و لوگو) دست‌نخورده می‌ماند.
-        if self.image and not self.image.name.endswith(".webp"):
-            # فقط وقتی WebP واقعاً کوچک‌تر است جایگزین می‌شود؛ تصاویرِ
-            # ازقبل‌فشرده ممکن است با تبدیلِ دوباره بزرگ‌تر شوند.
-            smaller = compress_to_webp_if_smaller(self.image.file)
-            if smaller:
-                self.image = smaller
-        super().save(*args, **kwargs)
-
 
 class ProjectStat(models.Model):
     """آمار و نتایح نمونه کار"""
@@ -186,8 +176,10 @@ class ProjectStat(models.Model):
         return f"{self.label} - {self.number}"
 
 
-class ProjectImage(models.Model):
+class ProjectImage(WebPImageMixin, models.Model):
     """تصاویر گالریِ یک نمونه کار — فقط وقتی پر شوند نمایش داده می‌شوند."""
+
+    WEBP_FIELDS = ["image"]
 
     portfolio = models.ForeignKey(
         Portfolio,
@@ -214,13 +206,3 @@ class ProjectImage(models.Model):
 
     def __str__(self):
         return f"تصویر گالری — {self.portfolio.title}"
-
-    def save(self, *args, **kwargs):
-        # مثلِ تصویر اصلی: گالری هم موقعِ آپلود WebPِ فشرده می‌شود.
-        if self.image and not self.image.name.endswith(".webp"):
-            # فقط وقتی WebP واقعاً کوچک‌تر است جایگزین می‌شود؛ تصاویرِ
-            # ازقبل‌فشرده ممکن است با تبدیلِ دوباره بزرگ‌تر شوند.
-            smaller = compress_to_webp_if_smaller(self.image.file)
-            if smaller:
-                self.image = smaller
-        super().save(*args, **kwargs)

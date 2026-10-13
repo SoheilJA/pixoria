@@ -11,7 +11,6 @@ from pathlib import Path
 
 from PIL import Image
 from django.core.files.base import ContentFile
-
 # کیفیت ۸۵ برای WebP از نظر بصری تقریباً تلفات‌ناپذیر است و حجم را
 # نسبت به JPEG باکیفیتِ ۹۰ معمولاً ۲۵–۳۵٪ کمتر می‌کند.
 DEFAULT_QUALITY = 85
@@ -98,3 +97,31 @@ def compress_to_webp_if_smaller(
     if new_size >= original_size * (1 - min_gain):
         return None
     return compressed
+
+
+class WebPImageMixin:
+    """میکسینی برای فشرده‌کردنِ تصاویرِ یک مدل به WebP موقعِ ذخیره.
+
+    مدل باید نامِ فیلدهای تصویری را در ``WEBP_FIELDS`` فهرست کند. هر تصویری
+    که هنوز WebP نیست، فقط وقتی واقعاً کوچک‌تر شود جایگزین می‌شود (رفتارِ
+    ``compress_to_webp_if_smaller``). به‌جای بازنویسیِ save در هر مدل، این
+    میکسین را به مدل اضافه کنید::
+
+        class Article(WebPImageMixin, models.Model):
+            WEBP_FIELDS = ["cover_image"]
+
+    ترتیب مهم است: میکسین باید قبل از ``models.Model`` بیاید تا saveِ آن
+    ابتدا اجرا شود و سپس super().save زنجیرهٔ مدل را فرابخواند.
+    """
+
+    WEBP_FIELDS: list[str] = []
+
+    def save(self, *args, **kwargs):
+        for field_name in self.WEBP_FIELDS:
+            field = getattr(self, field_name)
+            if not field.name or field.name.endswith(".webp"):
+                continue
+            smaller = compress_to_webp_if_smaller(field.file)
+            if smaller:
+                setattr(self, field_name, smaller)
+        super().save(*args, **kwargs)

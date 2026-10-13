@@ -4,6 +4,7 @@ from django.db import models
 from tinymce.models import HTMLField
 
 from apps.core.icon_utils import validate_icon_name
+from apps.core.image_utils import WebPImageMixin
 from apps.core.models import EYEBROW_HELP, ICON_HELP, TITLE_HELP, URL_HELP
 
 
@@ -88,9 +89,11 @@ class ServicesHowStep(models.Model):
         return self.title
 
 
-class Service(models.Model):
+class Service(WebPImageMixin, models.Model):
     """خدمت — در صفحه اصلی به‌صورت کارت‌های اختصاصی v2 با تصویرسازی اختصاصی رندر
     می‌شود."""
+
+    WEBP_FIELDS = ["og_image"]
 
     VISUAL_CHOICES = [
         ("none", "بدون تصویرسازی"),
@@ -266,10 +269,12 @@ class Service(models.Model):
         return [chip.strip() for chip in self.chips.split(",") if chip.strip()]
 
 
-class ServiceSection(models.Model):
+class ServiceSection(WebPImageMixin, models.Model):
     """بخشِ محتوای بلندِ صفحهٔ اختصاصیِ خدمت — سئو-friendly، هر تعداد که ادمین
     بخواهد. چیدمانِ تصویر را ``layout`` تعیین می‌کند و ``is_active`` یک بخش را
     بدون حذف کردن مخفی می‌کند."""
+
+    WEBP_FIELDS = ["image"]
 
     LAYOUT_CHOICES = [
         ("right", "تصویر سمت راست"),
@@ -645,12 +650,14 @@ class ServiceFAQ(models.Model):
         return self.question
 
 
-class ServiceTestimonial(models.Model):
+class ServiceTestimonial(WebPImageMixin, models.Model):
     """نظرات مشتریان — سه نوع کارت در اسلایدر: متنی، ویدیویی و صوتی.
 
     ویدیو و صوت واقعی هستند: فایل آپلودشده یا یک آدرس مستقیم، و پخش واقعی
     مرورگر روی کارت. مدت زمان اختیاری است و وقتی خالی گذاشته شود از روی
     فرادادهٔ فایل خوانده می‌شود."""
+
+    WEBP_FIELDS = ["author_image", "video_poster"]
 
     KIND_CHOICES = [
         ("text", "متن"),

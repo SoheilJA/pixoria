@@ -15,10 +15,18 @@ from django.core.management.base import BaseCommand
 
 from apps.core.image_utils import compress_to_webp_if_smaller
 
-# فیلدهای تصویری که باید بررسی شوند — app/model/field
+# فیلدهای تصویری که باید بررسی شوند — app/model/field. باید با
+# WEBP_FIELDSِ هر مدل (در image_utils.py) هماهنگ باشد.
 FIELDS = [
     ("portfolio", "Portfolio", "image"),
     ("portfolio", "ProjectImage", "image"),
+    ("blog", "Author", "avatar"),
+    ("blog", "Article", "cover_image"),
+    ("services", "Service", "og_image"),
+    ("services", "ServiceSection", "image"),
+    ("services", "ServiceTestimonial", "author_image"),
+    ("services", "ServiceTestimonial", "video_poster"),
+    ("core", "AboutStory", "image"),
 ]
 
 
