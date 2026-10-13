@@ -170,6 +170,18 @@
   - **اجرای واقعی:** `images_XOwXvqo.jpg` (۱۹KB) → `images_XOwXvqo.webp` (**۹KB، ۵۴٪ کوچک‌تر**)، فایلِ قدیمی حذف شد. `images.jpg` رد شد (WebP بزرگ‌تر می‌شد).
 - **نکتهٔ فنی برای ویندوز:** کنسولِ ویندوز cp1252 است و فارسی را پشتیبانی نمی‌کند؛ کامندهای مدیریت را با `PYTHONUTF8=1 venv/Scripts/python manage.py ...` اجرا کنید.
 
+### ۱۰. گسترشِ فشرده‌سازیِ WebP به همهٔ تصاویر سایت ✅
+کاربر: «همهٔ تصاویر سایت»
+
+کامیت: `e14ae66 feat: compress all uploaded images to WebP via a shared mixin`
+
+- **`WebPImageMixin`** جدید در `apps/core/image_utils.py` — به‌جای بازنویسیِ `save()` در هر مدل، مدل فیلدهایش را در `WEBP_FIELDS` فهرست می‌کند و میکسین از `compress_to_webp_if_smaller` برای هر کدام استفاده می‌کند. **ترتیبِ ارث‌بری مهم است:** `class Article(WebPImageMixin, models.Model)` تا saveِ میکسین اول اجرا شود.
+- مدل‌های پوشش‌یافته: `Author.avatar`، `Article.cover_image`، `Service.og_image`، `ServiceSection.image`، `ServiceTestimonial.author_image`/`video_poster`، `AboutStory.image`، `Portfolio.image`، `ProjectImage.image` (دو موردِ آخری که قبلاً `save()`.inline داشتند حالا از میکسین استفاده می‌کنند).
+- `FIELDS` در `compress_images.py` همگام شد با `WEBP_FIELDS` همهٔ مدل‌ها.
+- **تستِ واقعیِ مسیرِ آپلود:** آپلود یک فایلِ `.jpg` به `Author.avatar` باعث شد `test-avatar.webp` ذخیره شود. در مسیرِ ادمین فایلِ اصلی هرگز روی دیسک نوشته نمی‌شود (در حافظه است و میکسین قبل از `super().save()` آن را جایگزین می‌کند) — نکتهٔ ظریف: صدا زدنِ دستیِ `field.save(name, file, save=True)` ابتدا فایلِ اصلی را می‌نویسد و سپس نسخهٔ WebP، یعنی یک فایلِ یتیمِ `.jpg` باقی می‌ماند.
+- **تبدیلِ تصاویرِ موجود (اجرا شد):** ۴ کاورِ blog: `CS50x.png` ۴۳۵KB→۹۲KB (۷۹٪)، `check1.png` ۲۶KB→۱۹KB، `images.jpg` ۱۹KB→۹KB، `django-cover.png` ۶KB→۳KB.
+- **تصمیمِ کاربر دربارهٔ git:** تصاویرِ فعلی تستی هستند و سرورِ آنلاین هنوز تصویری ندارد؛ پس فایل‌های webpِ جدید به git اضافه **نشدند**. حذفِ ۴ فایلِ tracked شده (` D public/media/blog/covers/*.png|.jpg`) هنوز **unstaged روی working tree** است — کامیت نشده. اگر بعداً خواستید، یا با `git add -f` فایل‌های جدید را به مخزن ببرید یا `git checkout` قدیمی‌ها را برگردانید.
+
 ## کارهای باقی‌مانده (اولویت به ترتیب)
 1. ~~اجرای مایگریشنِ حذف پروپوزال~~ ✅ انجام شد
    ~~مايگریشن ۰۰۱۴ (حذف NavItem) هم ساخته و اعمال شد~~ ✅
@@ -178,16 +190,13 @@
 5. ~~بررسیِ بصریِ کارت‌ها~~ ✅ تسک ۸-ج — باگِ ۱۳۳px پیدا و رفع شد (`items-start`)
 7. ~~بررسیِ بصریِ مارکویی‌ها~~ ✅ تسک ۸-ب (CDP: ۳ ردیف، marquee-rev فعال، در حالِ اجرا)
 
-6. **سایر تصاویر سایت (تنها موردِ باز):** کاربر فقط نمونه‌کارها را گفت، ولی `ImageField` های دیگری هم هستن که هنوز تبدیل نمی‌شوند:
-   - `apps/blog/models.py`: `avatar` (خط ۳۹)، `cover_image` (خط ۷۷)
-   - `apps/services/models.py`: `og_image` (۲۱۳)، `image` (۲۹۳)، `author_image` (۶۷۵)، `video_poster` (۶۹۵)
-   - `apps/core/models.py`: `image` (۳۶۲)
-   - پیاده‌سازی مثلِ تسک ۹ است: `compress_to_webp_if_smaller` در `save()` هر مدل + اضافه‌کردنِ فیلد به `FIELDS` در `compress_images.py`. **از کاربر پرسیده نشده** — آیا دامنهٔ فشرده‌سازی به همهٔ تصاویر سایت گسترش یابد؟
-   - **دقت:** `og_image` برای کارتِ شبکه‌های اجتماعی استفاده می‌شود؛ WebP توسط اکثرِ پلتفرم‌ها پشتیبانی می‌شود ولی Twitter/X در برخی موارد هنوز JPEG ترجیح می‌دهد.
+6. ~~سایر تصاویر سایت~~ ✅ تسک ۱۰ — WebPImageMixin روی همهٔ مدل‌ها، ۴ کاورِ blog تبدیل شد
+   - **باز:** حذفِ ۴ فایلِ tracked شدهٔ `public/media/blog/covers/` هنوز unstaged است (تصمیم با کاربر).
 
 ### تصمیماتِ باز
-- **مدل `ClientMarqueeItem`:** الان فقط صفحهٔ درباره (`apps/core/views.py:87` و `templates/core/about.html`) ازش استفاده می‌کنه. آیا اون هم باید از `Portfolio.client_name` بخونه و مدل کلاً حذف بشه؟ از کاربر پرسیده شد، جواب نداده.
+- ~~مدل `ClientMarqueeItem`~~ — کاربر: «مارکویی خوبه و نیازی نیست که تغییرش بدم». دست‌نخورده باقی می‌ماند.
 - نام برندهای فعلی در دیتابیس هنوز نمونه‌های تستی هستن («احمدی»، «مشتری ۲») — با بارگذاریِ نمونه‌کارهای واقعی در ادمین، مارکویی خودکار پر می‌شه.
+- **تصاویرِ یتیم در `public/media/`:** `public/media/team/*.jpg` (۳ فایل) و `public/media/proposals/*` (۳ فایل) در git tracked هستند ولی به هیچ مدلی متصل نیستند (proposals در تسک ۱ حذف شدند). احتمالاً باید `git rm` شوند.
 
 ### نکاتِ فنی
 - `requirements.txt` شامل `pillow==12.3.0` است (نصب شده در `venv`)
