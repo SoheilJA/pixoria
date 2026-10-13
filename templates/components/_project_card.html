@@ -17,7 +17,10 @@
     {# نسبت طبیعیِ تصویر حفظ می‌شود: مستطیلِ افقی برای اسکرین‌شات سایت‌ها،#}
     {# مربعی برای گرافیک و لوگو. h-auto باعث می‌شود کارت به جای ارتفاع      #}
     {# تصویرِ بلندتر در همان ردیف، بلندای تصویرِ خودش را بگیرد.            #}
+    {# width/height از فرادادهٔ فایل خوانده می‌شوند تا مرورگر جای تصویرِ #}
+    {# lazy را از قبل رزرو کند و صفحه هنگام بارگذاری نپرد (CLS). #}
     <img src="{{ project.image.url }}" alt="{{ project.title }}" loading="lazy" decoding="async"
+         width="{{ project.image.width }}" height="{{ project.image.height }}"
          class="block h-auto w-full object-cover transition-transform duration-700 group-hover:scale-[1.06]">
   {% else %}
     {# جایگاه تصویر وقتی پروژه عکس ندارد #}

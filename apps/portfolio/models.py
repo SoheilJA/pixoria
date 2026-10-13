@@ -1,7 +1,7 @@
 from django.db import models
 
 from apps.core.icon_utils import validate_icon_name
-from apps.core.image_utils import compress_to_webp
+from apps.core.image_utils import compress_to_webp_if_smaller
 
 # راهنمای مشترک فیلد آیکون — آیکون‌ها از فونتِ محلی Font Awesome بارگذاری می‌شوند.
 ICON_HELP = (
@@ -146,7 +146,11 @@ class Portfolio(models.Model):
         # کیفیت حفظ‌شده و نسبت ابعادِ اصلی تصویر (افقی برای اسکرین‌شاتِ
         # سایت، مربعی برای گرافیک و لوگو) دست‌نخورده می‌ماند.
         if self.image and not self.image.name.endswith(".webp"):
-            self.image = compress_to_webp(self.image.file)
+            # فقط وقتی WebP واقعاً کوچک‌تر است جایگزین می‌شود؛ تصاویرِ
+            # ازقبل‌فشرده ممکن است با تبدیلِ دوباره بزرگ‌تر شوند.
+            smaller = compress_to_webp_if_smaller(self.image.file)
+            if smaller:
+                self.image = smaller
         super().save(*args, **kwargs)
 
 
@@ -214,5 +218,9 @@ class ProjectImage(models.Model):
     def save(self, *args, **kwargs):
         # مثلِ تصویر اصلی: گالری هم موقعِ آپلود WebPِ فشرده می‌شود.
         if self.image and not self.image.name.endswith(".webp"):
-            self.image = compress_to_webp(self.image.file)
+            # فقط وقتی WebP واقعاً کوچک‌تر است جایگزین می‌شود؛ تصاویرِ
+            # ازقبل‌فشرده ممکن است با تبدیلِ دوباره بزرگ‌تر شوند.
+            smaller = compress_to_webp_if_smaller(self.image.file)
+            if smaller:
+                self.image = smaller
         super().save(*args, **kwargs)

@@ -33,6 +33,8 @@ Thumbs.db
 .menu-chrome-profile/
 .fa-chrome-profile*/
 .admin-chrome-profile/
+.carousel-chrome-profile/
+.geom-chrome-profile/
 
 # Scratch / throwaway dev tooling — فایل‌های موقتِ بررسی و تست
 scripts/_*.py

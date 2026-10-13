@@ -115,8 +115,11 @@
       </p>
 
       {# کارت‌ها: بالای lg گرید ۳ ستونی، زیر lg یک ترکِ اسکرول-اسنپ (یک DOM). #}
-      <div class="mt-8 flex gap-6 overflow-x-auto snap-x snap-mandatory pb-3 no-scrollbar
-                  lg:grid lg:grid-cols-3 lg:overflow-visible lg:snap-none lg:pb-0"
+      {# items-start: هر کارت ارتفاعِ تصویرِ خودش را حفظ می‌کند — چون تصاویر #}
+      {# نسبتِ طبیعیِ متفاوتی دارند، stretch کردن فضای مرده زیر تصویرِ #}
+      {# کوتاه‌تر و کپشنِ را به پایینِ کارت می‌اندازد. #}
+      <div class="mt-8 flex items-start gap-6 overflow-x-auto snap-x snap-mandatory pb-3 no-scrollbar
+                  lg:grid lg:grid-cols-3 lg:items-start lg:overflow-visible lg:snap-none lg:pb-0"
            data-pf-grid data-carousel-track>
         {% for project in portfolios %}
           {# شعاع گوشه‌ها بین کارت‌ها متغیر است تا گرید یکنواخت نباشد #}

@@ -74,3 +74,27 @@ def compress_to_webp(
 
     original_name = getattr(source, "name", "") or "image"
     return ContentFile(buffer.getvalue(), name=_webp_name(original_name))
+
+
+def compress_to_webp_if_smaller(
+    source, *, max_width: int = 1600, quality: int = DEFAULT_QUALITY,
+    method: int = DEFAULT_METHOD, min_gain: float = 0.02
+):
+    """تصویر را فقط وقتی به WebP تبدیل می‌کند که واقعاً کوچک‌تر شود.
+
+    برخلافِ compress_to_webp (که همیشه تبدیل می‌کند)، اگر نسخهٔ WebP
+    حداقل به اندازهٔ min_gain کوچک‌تر نشد، None برمی‌گرداند تا فایلِ
+    اصلی دست‌نخورده باقی بماند. این برای تصاویری است که از قبل فشرده
+    شده‌اند (مثلاً JPEGِ باکیفیتِ پایین) که تبدیلِ دوباره فقط حجم را
+    زیاد و کیفیت را کم می‌کند.
+
+    بازگشت: ContentFileِ WebP، یا None اگر تبدیل سودی نداشت.
+    """
+    original_size = getattr(source, "size", None)
+    compressed = compress_to_webp(source, max_width=max_width, quality=quality, method=method)
+    if original_size is None:
+        return compressed
+    new_size = compressed.size
+    if new_size >= original_size * (1 - min_gain):
+        return None
+    return compressed
