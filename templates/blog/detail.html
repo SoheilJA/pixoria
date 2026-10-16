@@ -14,7 +14,7 @@
       "@graph": [
         {
           "@type": "BlogPosting",
-          "headline": {{ article.title|striptags|json }},
+          "headline": {{ article.title|plain|striptags|json }},
           "description": {{ article.get_meta_description|striptags|json }},
           "datePublished": "{{ article.published_at|date:'c' }}",
           "dateModified": "{{ article.updated_at|date:'c' }}",
@@ -42,7 +42,7 @@
             {
               "@type": "ListItem",
               "position": 3,
-              "name": {{ article.title|striptags|json }},
+              "name": {{ article.title|plain|striptags|json }},
               "item": "{{ request.build_absolute_uri }}"
             }
           ]
@@ -193,7 +193,7 @@
                  title="اشتراک‌گذاری در لینکدین" aria-label="اشتراک‌گذاری در لینکدین" class="share-btn">
                 {% icon "linkedin" %}<span class="hidden sm:inline">لینکدین</span>
               </a>
-              <a href="https://t.me/share/url?url={{ request.build_absolute_uri|urlencode }}&text={{ article.title|urlencode }}"
+              <a href="https://t.me/share/url?url={{ request.build_absolute_uri|urlencode }}&text={{ article.title|plain|urlencode }}"
                  target="_blank" rel="noopener noreferrer"
                  title="اشتراک‌گذاری در تلگرام" aria-label="اشتراک‌گذاری در تلگرام" class="share-btn">
                 {% icon "send" %}<span class="hidden sm:inline">تلگرام</span>
@@ -315,7 +315,7 @@
                   مقالهٔ قبلی
                 </span>
                 <span class="text-lg font-bold text-cream transition-colors group-hover:text-gold-light">
-                  {{ prev_article.title }}
+                  {{ prev_article.title|highlight }}
                 </span>
                 <span class="font-latin text-[10px] tracking-wider text-cream/45">
                   <span class="fa-num">{{ prev_article.published_at|fa_jdate }}</span> ·
@@ -332,7 +332,7 @@
                   {% icon "arrow-left" class="h-3.5 w-3.5" %}
                 </span>
                 <span class="text-lg font-bold text-cream transition-colors group-hover:text-gold-light">
-                  {{ next_article.title }}
+                  {{ next_article.title|highlight }}
                 </span>
                 <span class="font-latin text-[10px] tracking-wider text-cream/45">
                   <span class="fa-num">{{ next_article.published_at|fa_jdate }}</span> ·

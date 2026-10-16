@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
 {% load icon_tags highlight_tags fa_digits projects_tags json_tags %}
 
-{% block title %}{{ portfolio.title|striptags }} — {{ settings.site_name }}{% endblock %}
+{% block title %}{{ portfolio.title|plain|striptags }} — {{ settings.site_name }}{% endblock %}
 {% block description %}{{ portfolio.get_meta_description|striptags }}{% endblock %}
-{% block og_title %}{{ portfolio.title|striptags }} — {{ settings.site_name }}{% endblock %}
+{% block og_title %}{{ portfolio.title|plain|striptags }} — {{ settings.site_name }}{% endblock %}
 {% block og_description %}{{ portfolio.get_meta_description|striptags }}{% endblock %}
 
 {% block extra_head %}
@@ -14,7 +14,7 @@
       "@graph": [
         {
           "@type": "CreativeWork",
-          "name": {{ portfolio.title|striptags|json }},
+          "name": {{ portfolio.title|plain|striptags|json }},
           "description": {{ portfolio.get_meta_description|striptags|json }},
           "url": "{{ request.build_absolute_uri }}",
           {% if portfolio.image %}"image": "{{ request.build_absolute_uri }}{{ portfolio.image.url }}",{% endif %}
@@ -42,7 +42,7 @@
             {
               "@type": "ListItem",
               "position": 3,
-              "name": {{ portfolio.title|striptags|json }},
+              "name": {{ portfolio.title|plain|striptags|json }},
               "item": "{{ request.build_absolute_uri }}"
             }
           ]
@@ -159,7 +159,7 @@
                 style="border-radius: 2.5rem 1rem 2.5rem 1rem"
                 data-reveal="up">
           <img src="{{ portfolio.image.url }}"
-                 alt="{{ portfolio.image_alt|default:portfolio.title }}"
+                 alt="{{ portfolio.image_alt|default:portfolio.title|plain }}"
                  loading="eager" fetchpriority="high" decoding="async"
                  class="block h-auto w-full object-cover">
         </figure>
@@ -304,7 +304,7 @@
                     style="border-radius: {% cycle '1.75rem' '1rem' '1.5rem 0.75rem' %}"
                     data-reveal="up" data-delay="{% cycle '0' '0.08' '0.16' %}">
               <img src="{{ image.image.url }}"
-                   alt="{{ image.alt|default:portfolio.title }}"
+                   alt="{{ image.alt|default:portfolio.title|plain }}"
                    loading="lazy" decoding="async"
                    class="block h-auto w-full object-cover transition-transform duration-700 group-hover:scale-[1.05]">
               {% if image.caption %}
@@ -359,7 +359,7 @@
               پروژهٔ قبلی
             </span>
             <span class="text-lg font-bold text-cream transition-colors group-hover:text-gold-light">
-              {{ prev_portfolio.title }}
+              {{ prev_portfolio.title|highlight }}
             </span>
             {% if prev_portfolio.service_type %}
               <span class="text-xs text-cream/45">{{ prev_portfolio.service_type }}</span>
@@ -375,7 +375,7 @@
               {% icon "arrow-left" class="h-3.5 w-3.5" %}
             </span>
             <span class="text-lg font-bold text-cream transition-colors group-hover:text-gold-light">
-              {{ next_portfolio.title }}
+              {{ next_portfolio.title|highlight }}
             </span>
             {% if next_portfolio.service_type %}
               <span class="text-xs text-cream/45">{{ next_portfolio.service_type }}</span>

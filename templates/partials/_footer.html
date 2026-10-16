@@ -1,4 +1,4 @@
-{% load icon_tags nav_tags fa_digits %}
+{% load icon_tags nav_tags fa_digits highlight_tags %}
 {% comment %}فوتر — برند و تماس، ستون‌های لینک (FooterLinkGroup)، خدمات و کارت‌های
 اعتماد (اینماد/ساماندهی)؛ همهٔ محتوا از دیتابیس می‌آید.{% endcomment %}
 <footer id="contact" class="relative overflow-hidden bg-ink3">
@@ -108,7 +108,7 @@
           <h3 class="footer-h">خدمات</h3>
           <ul class="space-y-3.5 text-sm">
             {% for service in services_footer %}
-              <li><a class="f-link" href="{% url 'services:detail' service.slug %}">{{ service.title }}</a></li>
+              <li><a class="f-link" href="{% url 'services:detail' service.slug %}">{{ service.title|plain }}</a></li>
             {% endfor %}
           </ul>
         </nav>

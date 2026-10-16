@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load icon_tags highlight_tags fa_digits %}
 
-{% block title %}{{ page_section.title|default:"نمونه‌کارها"|striptags }} — {{ settings.site_name }}{% endblock %}
+{% block title %}{{ page_section.title|plain|default:"نمونه‌کارها"|striptags }} — {{ settings.site_name }}{% endblock %}
 {% block description %}{{ page_section.description|default:"گزیده‌ای از پروژه‌های طراحی و توسعه‌شده در پیکسوریا" }}{% endblock %}
 
 {% block extra_head %}

@@ -1,4 +1,4 @@
-{% load icon_tags fa_digits jalali_tags %}
+{% load icon_tags fa_digits highlight_tags jalali_tags %}
 {# کارت مقاله — کارتِ مجله برای گرید و کاروسل‌ها. #}
 {# article: obj  required — نمونه‌ی Article #}
 {# delay:   str  optional — تاخیر انیمیشن ظهور (پیش‌فرض ۰)؛ چون cycle درون #}
@@ -28,7 +28,7 @@
     <p class="font-latin text-[10px] tracking-[.25em] text-gold/60">
       <span class="fa-num">{{ article.published_at|fa_jdate }}</span> · {{ article.reading_time|fa_digits }} دقیقه
     </p>
-    <h3 class="mt-3 text-lg font-bold leading-7">{{ article.title }}</h3>
+    <h3 class="mt-3 text-lg font-bold leading-7">{{ article.title|highlight }}</h3>
     {% if article.excerpt %}
       <p class="mt-3 text-sm leading-7 text-cream/55">{{ article.excerpt }}</p>
     {% endif %}

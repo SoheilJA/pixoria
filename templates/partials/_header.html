@@ -42,7 +42,7 @@ Service (مگامنو) و SiteSettings (لوگو و بنر مگامنو).{% endc
                         <span class="mega-orbit"><span class="mega-orbit-moon"></span></span>
                         {% icon service.icon|default:"sparkles" class="h-5 w-5" %}
                       </span>
-                      <span class="mega-tile-title">{{ service.title }}</span>
+                      <span class="mega-tile-title">{{ service.title|plain }}</span>
                     </a>
                   {% endfor %}
                 </div>
@@ -150,7 +150,7 @@ Service (مگامنو) و SiteSettings (لوگو و بنر مگامنو).{% endc
                   <a
                     href="{% url 'services:detail' service.slug %}"
                     class="m-link flex items-center rounded-2xl px-4 py-2.5 text-base font-medium text-cream/70 hover:bg-white/[.05]"
-                    >{{ service.title }}</a>
+                    >{{ service.title|plain }}</a>
                 </li>
               {% endfor %}
             </ul>

@@ -19,7 +19,7 @@
       "@graph": [
         {
           "@type": "Service",
-          "name": {{ service.title|striptags|json }},
+          "name": {{ service.title|plain|striptags|json }},
           "description": {{ service.get_meta_description|striptags|json }},
           "url": "{{ request.build_absolute_uri }}",
           "inLanguage": "fa-IR",
@@ -72,7 +72,7 @@
             {
               "@type": "ListItem",
               "position": 3,
-              "name": {{ service.title|striptags|json }},
+              "name": {{ service.title|plain|striptags|json }},
               "item": "{{ request.build_absolute_uri }}"
             }
           ]
@@ -429,7 +429,7 @@
                     <figure class="relative overflow-hidden border border-gold/20 shadow-2xl"
                             style="border-radius: 1.75rem">
                       <img src="{{ section.image.url }}"
-                           alt="{{ section.image_alt|default:section.title }}"
+                           alt="{{ section.image_alt|default:section.title|plain }}"
                            loading="lazy" decoding="async"
                            class="aspect-[4/3] h-full w-full object-cover">
                     </figure>
