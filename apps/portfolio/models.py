@@ -2,6 +2,7 @@ from django.db import models
 
 from apps.core.icon_utils import validate_icon_name
 from apps.core.image_utils import WebPImageMixin
+from apps.core.text_utils import strip_highlight
 
 # راهنمای مشترک فیلد آیکون — آیکون‌ها از فونتِ محلی Font Awesome بارگذاری می‌شوند.
 ICON_HELP = (
@@ -140,8 +141,8 @@ class Portfolio(WebPImageMixin, models.Model):
         return [t.strip() for t in self.technologies.split(",") if t.strip()]
 
     def get_meta_description(self):
-        """توضیحات متا یا fallback به توضیحات کوتاه. مثل Article."""
-        return self.meta_description or self.excerpt
+        """توضیحات متا یا fallback به توضیحات کوتاه. مثل Article — متنِ ساده."""
+        return strip_highlight(self.meta_description or self.excerpt)
 
 
 class ProjectStat(models.Model):

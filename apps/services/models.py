@@ -6,6 +6,7 @@ from tinymce.models import HTMLField
 from apps.core.icon_utils import validate_icon_name
 from apps.core.image_utils import WebPImageMixin
 from apps.core.models import EYEBROW_HELP, ICON_HELP, TITLE_HELP, URL_HELP
+from apps.core.text_utils import strip_highlight
 
 
 class ServicesPageSection(models.Model):
@@ -255,12 +256,12 @@ class Service(WebPImageMixin, models.Model):
         return "gold"
 
     def get_meta_title(self):
-        """عنوان متا یا fallback به عنوانِ خدمت."""
-        return self.meta_title or self.title
+        """عنوان متا یا fallback به عنوانِ خدمت — متنِ ساده (بدونِ مارکرِ [[ ]])."""
+        return strip_highlight(self.meta_title or self.title)
 
     def get_meta_description(self):
-        """توضیحات متا یا fallback به توضیحات کوتاه."""
-        return self.meta_description or self.excerpt
+        """توضیحات متا یا fallback به توضیحات کوتاه — متنِ ساده."""
+        return strip_highlight(self.meta_description or self.excerpt)
 
     def get_tags_list(self):
         return [tag.strip() for tag in self.tags.split(",") if tag.strip()]
