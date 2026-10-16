@@ -50,11 +50,17 @@ function init() {
   const hasGsap = typeof gsap !== "undefined";
   if (hasGsap && ScrollTrigger) gsap.registerPlugin(ScrollTrigger);
 
-  /* ---------------- smooth scroll (Lenis) ---------------- */
+  /* ---------------- smooth scroll (Lenis) ----------------
+     روی دستگاه‌های کم‌توان اسکرولِ نرم را کامل رد می‌کنیم: Lenis هر فریم به
+     main thread وابسته است و همان چیزی است که روی سخت‌افزار ضعیف «گیر» حس
+     می‌شود. بدون آن، اسکرول بومی مرورگر است و انیمیشن‌ها سر جایشان می‌مانند. */
+  const LOW_POWER =
+    (navigator.hardwareConcurrency || 8) <= 4 ||
+    (navigator.deviceMemory || 8) <= 4;
   let lenis = null;
-  if (!REDUCED && hasGsap) {
-    lenis = new Lenis({ duration: 1.1, smoothWheel: true });
-    lenis.on("scroll", ScrollTrigger.update);
+  if (!REDUCED && hasGsap && !LOW_POWER) {
+    lenis = new Lenis({ duration: 0.9, smoothWheel: true });
+    if (ScrollTrigger) lenis.on("scroll", ScrollTrigger.update);
     gsap.ticker.add((t) => lenis.raf(t * 1000));
     gsap.ticker.lagSmoothing(0);
   } else {
@@ -315,28 +321,48 @@ function init() {
   // کارت‌هایی که بعد از یک تعویضِ HTMX (مثلاً «مقالات بیشتر») وارد صفحه
   // می‌شوند را با data-blog-reveal علامت‌گذاری می‌کنیم؛ آن‌ها در زمانِ boot
   // هنوز وجود ندارند و باید پس از settle دوباره راه‌اندازی شوند.
-  const revealEl = (el) => {
+  const revealStart = (el) => {
     const type = el.dataset.reveal || "up";
-    const vars = {
-      opacity: 0,
-      duration: 1,
-      ease: "power3.out",
-      delay: parseFloat(el.dataset.delay || 0),
-    };
-    if (type === "up") vars.y = 50;
-    else if (type === "right") vars.x = 60;
-    else if (type === "left") vars.x = -60;
-    else if (type === "scale") vars.scale = 0.92;
-    gsap.from(el, {
-      ...vars,
-      scrollTrigger: { trigger: el, start: "top 88%", once: true },
+    const start = { opacity: 0 };
+    if (type === "up") start.y = 50;
+    else if (type === "right") start.x = 60;
+    else if (type === "left") start.x = -60;
+    else if (type === "scale") start.scale = 0.92;
+    return start;
+  };
+  const revealEl = (el) => {
+    if (el.dataset.revealDone === "1") return;
+    el.dataset.revealDone = "1";
+    if (!hasGsap || REDUCED) return; // بدون GSAP هیچ‌چیز پنهان نمی‌شود
+    gsap.set(el, revealStart(el));
+    // تورِ اطمینان: اگر این کارت هرگز نرسید (یا انیمیشنش جلو نرفت) متن و
+    // تصویرش دیده می‌شود؛ با نوشتنِ مستقیمِ style، نه با GSAP (که به rAF
+    // وابسته است). به‌محض پایانِ انیمیشن از صف بیرون می‌رود.
+    const safety = onContentTimeout(() => {
+      el.style.opacity = "1";
+      el.style.transform = "none";
+    }, el);
+    onceIntersecting(el, () => {
+      const type = el.dataset.reveal || "up";
+      const to = {
+        opacity: 1,
+        duration: 1,
+        delay: parseFloat(el.dataset.delay || 0),
+        ease: "power3.out",
+        overwrite: "auto",
+        onComplete: () => clearSafety(safety),
+      };
+      if (type === "up") to.y = 0;
+      else if (type === "right" || type === "left") to.x = 0;
+      else if (type === "scale") to.scale = 1;
+      gsap.to(el, to);
     });
   };
   let revealsStarted = false;
   const initReveals = () => {
     if (revealsStarted || !hasGsap || REDUCED) return;
     revealsStarted = true;
-    gsap.utils.toArray("[data-reveal]").forEach(revealEl);
+    document.querySelectorAll("[data-reveal]").forEach(revealEl);
   };
 
   /* ---------------- first-visit preloader ----------------
@@ -393,7 +419,6 @@ function init() {
     if (!hasGsap || REDUCED) return;
     document.querySelectorAll("[data-blog-reveal]").forEach((el) => {
       if (el.dataset.revealDone) return;
-      el.dataset.revealDone = "1";
       revealEl(el);
       if (!TOUCH) tiltCard(el);
     });
@@ -412,15 +437,22 @@ function init() {
     }
     const o = { v: 0 };
     el.textContent = fmt(0);
-    gsap.to(o, {
-      v: target,
-      duration: 1.8,
-      ease: "power2.out",
-      onUpdate: () => {
-        el.textContent = fmt(Math.round(o.v));
-      },
-      scrollTrigger: { trigger: el, start: "top 92%", once: true },
-    });
+    const safety = onContentTimeout(() => {
+      el.textContent = fmt(target);
+    }, el);
+    onceIntersecting(
+      el,
+      () =>
+        gsap.to(o, {
+          v: target,
+          duration: 1.8,
+          ease: "power2.out",
+          onUpdate: () => {
+            el.textContent = fmt(Math.round(o.v));
+          },
+          onComplete: () => clearSafety(safety),
+        }),
+    );
   });
 
   /* ---------------- magnetic buttons ---------------- */
@@ -544,6 +576,81 @@ function init() {
     if (hasGsap && ScrollTrigger) ScrollTrigger.refresh();
   });
 }
+
+/* ------------------------------------------- fire-once viewport watcher
+   یک IntersectionObserverِ مشترک برای کل صفحه: هر عنصر یک بار — به‌محض
+   رسیدن به دید — صدا زده و از observer جدا می‌شود. همهٔ ورودها/شمارنده‌ها از
+   همین عبور می‌کنند (نه ScrollTrigger): هم ارزان‌تر است، هم — برخلاف تریگرِ
+   اسکرولی — اگر اسکرول یا درایورِ انیمیشن از کار بیفتد باز هم «هرچه در دید
+   است» را گزارش می‌کند، پس هیچ محتوایی روی صفحهٔ خالی جا نمی‌ماند. */
+const viewCallbacks = new WeakMap();
+let viewObserver = null;
+function onceIntersecting(el, cb) {
+  if (!("IntersectionObserver" in window)) {
+    cb();
+    return;
+  }
+  // عناصری که از قبل داخلِ دید یا از آن رد شده‌اند (مثلاً صفحه پيش از
+  // راه‌افتادنِ ورودها اسکرول شده) بلافاصله اجرا می‌شوند؛ فقط عناصرِ هنوز
+  // پایین‌تر از دید مشاهده می‌شوند. هم «گذشته» را از پنهان‌ماندن نجات
+  // می‌دهد، هم اولین صفحه را به frameِ بعدی وابسته نمی‌کند.
+  const rect = el.getBoundingClientRect();
+  if (rect.top < (window.innerHeight || 800) * 0.88) {
+    cb();
+    return;
+  }
+  if (!viewObserver) {
+    viewObserver = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          const fn = viewCallbacks.get(entry.target);
+          viewObserver.unobserve(entry.target);
+          viewCallbacks.delete(entry.target);
+          if (fn) fn();
+        }
+      },
+      { rootMargin: "0px 0px -12% 0px" },
+    );
+  }
+  viewCallbacks.set(el, cb);
+  viewObserver.observe(el);
+}
+
+/* ------------------------------------------------- content safety net
+   هر چیزی که با انیمیشن «دیده می‌شود» (ورودِ کارت‌ها، شمارنده‌ها، نوارهای
+   پیشرفت) یک تابعِ «مقدارِ نهایی» در این صف ثبت می‌کند و فقط وقتی انیمیشنش
+   کامل شد از صف بیرون می‌رود. اگر بنا به هر دلیلی انیمیشن‌ها جلو نروند —
+   خطای زمان‌اجرا، تبِ پس‌زمینه، پرینت/اسکرین‌شات، توقفِ رندر یا توقفِ ticker
+   — این توابع در زمانِ مشخصی مقدارِ نهایی را مستقیم می‌نویسند تا صفحه هرگز
+   بدونِ متن و عدد جا نماند. */
+const safetyQueue = new Set();
+function onContentTimeout(apply, el = null) {
+  const entry = { apply, el };
+  safetyQueue.add(entry);
+  return entry;
+}
+function clearSafety(entry) {
+  if (entry) safetyQueue.delete(entry);
+}
+function runContentSafety(scope = "viewport") {
+  const vh = window.innerHeight || 800;
+  for (const entry of [...safetyQueue]) {
+    if (scope !== "all" && entry.el) {
+      const r = entry.el.getBoundingClientRect();
+      if (r.top > vh) continue; // هنوز پایین‌تر از دید است
+    }
+    safetyQueue.delete(entry);
+    try {
+      entry.apply();
+    } catch {
+      /* تورِ اطمینان هرگز نباید صفحه را خراب کند */
+    }
+  }
+}
+window.addEventListener("error", () => runContentSafety("all"));
+setTimeout(() => runContentSafety("viewport"), 2500);
+setTimeout(() => runContentSafety("all"), 8000);
 
 /* ------------------------------------------------------- shared track drag */
 
@@ -1057,62 +1164,70 @@ function initMarquees() {
 
 /* ------------------------------------------------------- stat counts (data-count) */
 
-function initStatCounts({ hasGsap, ScrollTrigger }) {
+function initStatCounts({ hasGsap }) {
   const gsap = window.gsap;
   document.querySelectorAll("[data-count]").forEach((el) => {
     const target = parseFloat(el.dataset.count);
     const prefix = el.dataset.prefix || "";
     const suffix = el.dataset.suffix || "";
-    if (hasGsap && ScrollTrigger) {
-      const obj = { v: 0 };
-      ScrollTrigger.create({
-        trigger: el,
-        start: "top 85%",
-        once: true,
-        onEnter: () =>
-          gsap.to(obj, {
-            v: target,
-            duration: 2,
-            ease: "power2.out",
-            onUpdate: () => {
-              el.textContent = prefix + faDigits(Math.round(obj.v)) + suffix;
-            },
-          }),
-      });
-    } else {
+    const settle = () => {
       el.textContent = prefix + faDigits(target) + suffix;
+    };
+    if (!hasGsap) {
+      settle();
+      return;
     }
+    const obj = { v: 0 };
+    const safety = onContentTimeout(settle, el);
+    onceIntersecting(
+      el,
+      () =>
+        gsap.to(obj, {
+          v: target,
+          duration: 2,
+          ease: "power2.out",
+          onUpdate: () => {
+            el.textContent = prefix + faDigits(Math.round(obj.v)) + suffix;
+          },
+          onComplete: () => clearSafety(safety),
+        }),
+    );
   });
 }
 
 /* ------------------------------------------------------- service build bars */
 
-function initBuildBars({ hasGsap, ScrollTrigger }) {
+function initBuildBars({ hasGsap }) {
   const gsap = window.gsap;
   document.querySelectorAll(".svc-build-bar").forEach((bar) => {
     const pct = bar.closest(".svc-card")?.querySelector("[data-build-pct]");
-    if (hasGsap && ScrollTrigger) {
-      ScrollTrigger.create({
-        trigger: bar,
-        start: "top 80%",
-        once: true,
-        onEnter: () => {
-          bar.style.width = "100%";
-          if (pct) {
-            const obj = { v: 0 };
-            gsap.to(obj, {
-              v: 100,
-              duration: 1.8,
-              ease: "power2.out",
-              onUpdate: () => (pct.textContent = faDigits(Math.round(obj.v)) + "٪"),
-            });
-          }
-        },
-      });
-    } else {
+    const settle = () => {
       bar.style.width = "100%";
       if (pct) pct.textContent = "۱۰۰٪";
+    };
+    if (!hasGsap) {
+      onceIntersecting(bar, settle);
+      return;
     }
+    const safety = onContentTimeout(settle, bar);
+    onceIntersecting(
+      bar,
+      () => {
+        bar.style.width = "100%";
+        if (!pct) {
+          clearSafety(safety);
+          return;
+        }
+        const obj = { v: 0 };
+        gsap.to(obj, {
+          v: 100,
+          duration: 1.8,
+          ease: "power2.out",
+          onUpdate: () => (pct.textContent = faDigits(Math.round(obj.v)) + "٪"),
+          onComplete: () => clearSafety(safety),
+        });
+      },
+    );
   });
 }
 
@@ -1166,7 +1281,7 @@ function initGpsDraw({ hasGsap, ScrollTrigger, REDUCED }) {
    «زیر ۲ ثانیه»). اولین رشتهٔ رقم (فارسی یا لاتین) شمارش می‌شود و بقیهٔ
    متن دورش ثابت می‌ماند. عنصر بدونِ JS هم مقدارِ واقعی را از سرور می‌گیرد. */
 
-function initStatCountText({ hasGsap, ScrollTrigger }) {
+function initStatCountText({ hasGsap }) {
   const gsap = window.gsap;
   const toLatin = (str) =>
     str.replace(/[۰-۹]/g, (d) => String("۰۱۲۳۴۵۶۷۸۹".indexOf(d)));
@@ -1179,23 +1294,23 @@ function initStatCountText({ hasGsap, ScrollTrigger }) {
     const render = (v) => {
       el.textContent = head + faDigits(Math.round(v)) + tail;
     };
-    if (hasGsap && ScrollTrigger) {
-      const obj = { v: 0 };
-      ScrollTrigger.create({
-        trigger: el,
-        start: "top 85%",
-        once: true,
-        onEnter: () =>
-          gsap.to(obj, {
-            v: target,
-            duration: 2,
-            ease: "power2.out",
-            onUpdate: () => render(obj.v),
-          }),
-      });
-    } else {
+    if (!hasGsap) {
       render(target);
+      return;
     }
+    const obj = { v: 0 };
+    const safety = onContentTimeout(() => render(target), el);
+    onceIntersecting(
+      el,
+      () =>
+        gsap.to(obj, {
+          v: target,
+          duration: 2,
+          ease: "power2.out",
+          onUpdate: () => render(obj.v),
+          onComplete: () => clearSafety(safety),
+        }),
+    );
   });
 }
 
