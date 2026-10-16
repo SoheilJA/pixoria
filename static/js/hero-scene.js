@@ -47,7 +47,7 @@ function boot() {
       alpha: true,
       powerPreference: "high-performance",
     });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.15;
 
@@ -202,29 +202,29 @@ ${shader.fragmentShader}`.replace(
 
     const WARM = [0xfff4e0, 0xe8c47a, 0xfff4e0, 0xfff4e0, 0xc9a15a];
     const COOL = [0x2e63ff, 0x6b8bff, 0x8fa8ff];
-    makeStarLayer(630, 0.16, -DEPTH * 0.35, DEPTH * 0.65, WARM); // far layer — small, slow
-    makeStarLayer(360, 0.27, -DEPTH * 0.2, DEPTH * 0.8, [...WARM, ...COOL]); // middle
-    makeStarLayer(168, 0.42, -DEPTH * 0.1, DEPTH * 0.9, COOL.concat([0xfff4e0])); // near — big, fast
+    makeStarLayer(420, 0.16, -DEPTH * 0.35, DEPTH * 0.65, WARM); // far layer — small, slow
+    makeStarLayer(240, 0.27, -DEPTH * 0.2, DEPTH * 0.8, [...WARM, ...COOL]); // middle
+    makeStarLayer(120, 0.42, -DEPTH * 0.1, DEPTH * 0.9, COOL.concat([0xfff4e0])); // near — big, fast
 
 
     // Central crystal planet
     const planet = new THREE.Group();
     scene.add(planet);
 
+    // دانهٔ طلایی (پیش‌تر شیشه‌ای با transmission بود): transmission در هر فریم
+    // کلِ صحنه را در یک render target دوم می‌کشد و گران‌ترین بخشِ این صحنه
+    // بود؛ با envMap + clearcoat همان درخششِ مرواریدی بدون آن هزینه به دست
+    // می‌آید. سگمنت‌ها هم به ۴۸×۳۲ کم شدند (تفاوت دیداری ندارد).
     const core = new THREE.Mesh(
-      new THREE.SphereGeometry(1.5, 64, 48),
+      new THREE.SphereGeometry(1.5, 48, 32),
       new THREE.MeshPhysicalMaterial({
-        color: 0xf4ecd9,
-        metalness: 0.1,
+        color: 0xf6eeda,
+        metalness: 0.18,
         roughness: 0.12,
-        transmission: 0.92,
-        thickness: 2.4,
         ior: 1.42,
-        attenuationColor: new THREE.Color(0xd9b26a),
-        attenuationDistance: 3.2,
         clearcoat: 1,
-        clearcoatRoughness: 0.1,
-        envMapIntensity: 1.5,
+        clearcoatRoughness: 0.08,
+        envMapIntensity: 1.6,
       }),
     );
     planet.add(core);
@@ -361,12 +361,18 @@ ${shader.fragmentShader}`.replace(
       renderer.setAnimationLoop(null);
     };
 
+    let lastRender = 0;
     function frame() {
       // Animation time lives in our own accumulator: it survives loop pauses
       // (hidden tab / hero off-screen) and each delta is clamped so a long
       // pause cannot teleport the stars when the loop resumes.
       starTime += Math.min(clock.getDelta(), 0.05);
       const t = starTime;
+
+      // ~۳۰ فریم بر ثانیه کافی است: حرکتِ این صحنه آرام است و نصف‌کردنِ نرخِ
+      // رندر هزینهٔ GPU را تقریباً نصف می‌کند (اسکرول روان‌تر، باتری کمتر).
+      if (t - lastRender < 1 / 30) return;
+      lastRender = t;
 
       // Travel speed: very slow at rest, gentle at peak scroll
       const speed = 0.12 + state.travel * 0.5;
