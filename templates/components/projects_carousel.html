@@ -1,0 +1,12 @@
+{% load component_tags %}
+{# کامپوننتِ کاروسل نمونه‌کارها — خودش کوئری می‌زند (projects_tags). #}
+{# شامل یک کارت برای هر نمونه‌کار؛ خالی چیزی چاپ نمی‌کند. #}
+{# شعاع گوشه‌های متغیر با cycle در همین حلقه تولید می‌شود (در include ریست می‌شود). #}
+{% if projects %}
+  {% carousel %}
+    {% for project in projects %}
+      {% cycle '2.5rem' '2.75rem 0.75rem' '0.9rem' '0.75rem 2.75rem' '1.75rem' '1rem 4rem' as card_radius silent %}
+      {% include "components/_project_card.html" with project=project radius=card_radius class="w-[min(86vw,360px)] shrink-0 snap-start md:w-[min(46vw,400px)] lg:w-[min(30vw,400px)]" %}
+    {% endfor %}
+  {% endcarousel %}
+{% endif %}

@@ -1,0 +1,28 @@
+{% comment %}رادیوی انتخابِ برند — هر گزینه نشانِ خودش را به‌عنوان پیش‌نمایش
+نشان می‌دهد (T58). URL تصاویر در BrandChoiceWidget.create_option به هر
+گزینه اضافه می‌شود. (ChoiceWidget فقط optgroups را در context می‌گذارد —
+کلید options وجود ندارد.){% endcomment %}
+<div class="brand-choice" dir="rtl">
+  {% for group, options, group_index in widget.optgroups %}
+    {% for option in options %}
+      <label class="brand-choice-item{% if option.selected %} selected{% endif %}" for="{{ option.attrs.id }}">
+        <input
+          type="radio"
+          name="{{ option.name }}"
+          value="{{ option.value|stringformat:'s' }}"
+          id="{{ option.attrs.id }}"
+          {% if option.selected %}checked{% endif %}
+        />
+        <span class="brand-choice-preview">
+          <img src="{{ option.src }}" alt="" loading="lazy" width="44" height="44" />
+        </span>
+        <span class="brand-choice-text">
+          <strong>{{ option.label }}</strong>
+          <span class="brand-choice-full">
+            <img src="{{ option.src_full }}" alt="" loading="lazy" height="26" />
+          </span>
+        </span>
+      </label>
+    {% endfor %}
+  {% endfor %}
+</div>

@@ -1,0 +1,5 @@
+{% load json_tags %}{% comment %}کلیدِ "logo" برای گرهٔ Organization در JSON-LD — آیکونِ ۵۱۲ پیکسلیِ
+برندِ منتخب با URL مطلق (آپلودشده یا گزینهٔ پیش‌فرض، T58). وقتی برندی
+وجود ندارد هیچ کلیدی چاپ نمی‌شود. باید قبل از کلیدِ آخری قرار گیرد تا
+کامایِ ته‌آخرِ احتمالی JSON را نشکند.{% endcomment %}
+{% if brand.schema_logo %}"logo": {{ brand.schema_logo|json }},{% endif %}

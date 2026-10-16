@@ -1,0 +1,35 @@
+{
+  "name": "pixoria",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "tailwindcss -i ./styles/input.css -o ./static/css/tailwind.css",
+    "build:icons": "node scripts/build_fontawesome.js",
+    "watch": "tailwindcss -i ./styles/input.css -o ./static/css/tailwind.css --watch",
+    "test": "echo \"no tests specified\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SoheilJA/pixoria.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/SoheilJA/pixoria/issues"
+  },
+  "homepage": "https://github.com/SoheilJA/pixoria#readme",
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.3.3",
+    "opentype.js": "^2.0.0",
+    "sharp": "^0.35.5",
+    "tailwindcss": "^4.3.3",
+    "wawoff2": "^2.0.1"
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-free": "^6.7.2",
+    "lenis": "^1.1.13"
+  }
+}

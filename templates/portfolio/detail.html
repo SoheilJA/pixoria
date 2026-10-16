@@ -1,0 +1,389 @@
+{% extends 'base.html' %}
+{% load icon_tags highlight_tags fa_digits projects_tags json_tags %}
+
+{% block title %}{{ portfolio.title|striptags }} — {{ settings.site_name }}{% endblock %}
+{% block description %}{{ portfolio.get_meta_description|striptags }}{% endblock %}
+{% block og_title %}{{ portfolio.title|striptags }} — {{ settings.site_name }}{% endblock %}
+{% block og_description %}{{ portfolio.get_meta_description|striptags }}{% endblock %}
+
+{% block extra_head %}
+  {# داده‌های ساختاریافته — اثر خلاقانه + مسیر نمایش #}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "CreativeWork",
+          "name": {{ portfolio.title|striptags|json }},
+          "description": {{ portfolio.get_meta_description|striptags|json }},
+          "url": "{{ request.build_absolute_uri }}",
+          {% if portfolio.image %}"image": "{{ request.build_absolute_uri }}{{ portfolio.image.url }}",{% endif %}
+          "author": {
+            "@type": "Organization",
+            "name": "{{ settings.site_name }}"
+          },
+          "inLanguage": "fa-IR"
+        },
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "خانه",
+              "item": "{{ request.scheme }}://{{ request.get_host }}{% url 'home:home' %}"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "نمونه‌کارها",
+              "item": "{{ request.scheme }}://{{ request.get_host }}{% url 'portfolio:list' %}"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": {{ portfolio.title|striptags|json }},
+              "item": "{{ request.build_absolute_uri }}"
+            }
+          ]
+        }
+      ]
+    }
+  </script>
+{% endblock %}
+
+{% block content %}
+  {% comment %}هیرو — عنوان پروژه، خلاصه و اطلاعات مشتری با کلمهٔ حک‌شدهٔ project{% endcomment %}
+  <section class="relative overflow-hidden bg-ink" data-mouse-parallax>
+    <div class="pointer-events-none absolute inset-0" aria-hidden="true">
+      <div data-depth="0.05" class="absolute right-[10%] top-[14%]">
+        <span data-float="14" class="orb block h-20 w-20"
+              style="background: radial-gradient(circle at 32% 30%, rgba(232,196,122,0.42), rgba(201,161,90,0.07) 60%, transparent 72%);"></span>
+      </div>
+      <div data-depth="0.08" class="absolute bottom-[18%] left-[9%]">
+        <span data-float="12" class="shard block h-24 w-20 rotate-12"></span>
+      </div>
+      <div data-depth="0.05" class="absolute left-[34%] top-[16%]">
+        <span data-float="10" class="orb block h-10 w-10"
+              style="background: radial-gradient(circle, rgba(46,99,255,0.5), transparent 70%);"></span>
+      </div>
+    </div>
+    <div class="pointer-events-none absolute -left-32 top-1/3 h-[30rem] w-[30rem] rounded-full opacity-30"
+         style="background: radial-gradient(circle, rgba(201,161,90,0.22), transparent 65%);"
+         aria-hidden="true"></div>
+    {% include "partials/_space_layer.html" with ring_spin="1" ring_class="-left-40 bottom-10 h-96 w-[38rem]" orb_variant="planet-orb-gold" orb_class="left-[10%] top-[14%] h-7 w-7" %}
+    <span class="stroke-title font-latin pointer-events-none absolute -bottom-10 left-0 select-none text-[18vw] font-light leading-none"
+          aria-hidden="true">project</span>
+
+    <div class="relative z-10 mx-auto max-w-7xl px-6 pb-28 pt-36 md:pt-48">
+      {# مسیر نمایش — خانه ← نمونه‌کارها ← پروژهٔ فعلی #}
+      {% include "components/_breadcrumb.html" %}
+
+      {# دسته‌بندی‌های پروژه — هر چیپ به آرشیو فیلترشده لینک می‌شود #}
+      {% if portfolio.categories.all %}
+        <div class="mt-7 flex flex-wrap gap-2.5" data-reveal="up" data-delay="0.06">
+          {% for category in portfolio.categories.all %}
+            <a href="{{ category.filter_url }}" class="s-chip transition-colors hover:border-gold/60 hover:text-gold-light">
+              {% icon "layers" class="h-3.5 w-3.5 text-gold" %}
+              {{ category.name }}
+            </a>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      <h1 class="mt-7 max-w-3xl text-[2.4rem] font-extrabold leading-[1.2] sm:text-5xl lg:text-6xl"
+          data-reveal="right">
+        {{ portfolio.title|highlight }}
+      </h1>
+
+      {% if portfolio.excerpt %}
+        <p class="mt-6 max-w-2xl text-lg font-light leading-8 text-cream/70"
+           data-reveal="right" data-delay="0.12">
+          {{ portfolio.excerpt }}
+        </p>
+      {% endif %}
+
+      {# اطلاعات مشتری — کپسول‌های شیشه‌ای #}
+      <div class="mt-12 grid max-w-4xl grid-cols-2 gap-4 md:grid-cols-4" data-reveal="up" data-delay="0.18">
+        <div class="glass flex flex-col gap-2 p-5" style="border-radius: 1.5rem 0.6rem 1.5rem 0.6rem">
+          <span class="icon-ring h-9 w-9">{% icon "users" class="h-4 w-4" %}</span>
+          <span class="text-[10px] font-medium tracking-wider text-cream/40">مشتری</span>
+          <span class="text-sm font-bold text-cream">{{ portfolio.client_name }}</span>
+        </div>
+        <div class="glass flex flex-col gap-2 p-5" style="border-radius: 0.6rem 1.5rem 0.6rem 1.5rem">
+          <span class="icon-ring h-9 w-9">{% icon "calendar-days" class="h-4 w-4" %}</span>
+          <span class="text-[10px] font-medium tracking-wider text-cream/40">سال</span>
+          <span class="text-sm font-bold text-cream fa-num">{{ portfolio.year|fa_digits }}</span>
+        </div>
+        <div class="glass flex flex-col gap-2 p-5" style="border-radius: 1.5rem 0.6rem 1.5rem 0.6rem">
+          <span class="icon-ring h-9 w-9">{% icon "briefcase" class="h-4 w-4" %}</span>
+          <span class="text-[10px] font-medium tracking-wider text-cream/40">حوزه کاری</span>
+          <span class="text-sm font-bold text-cream">{{ portfolio.service_type }}</span>
+        </div>
+        {% if portfolio.client_url %}
+          <a href="{{ portfolio.client_url }}" target="_blank" rel="noopener noreferrer"
+             class="glass group flex flex-col gap-2 p-5 transition-colors hover:border-gold/60"
+             style="border-radius: 0.6rem 1.5rem 0.6rem 1.5rem">
+            <span class="icon-ring h-9 w-9">{% icon "external-link" class="h-4 w-4" %}</span>
+            <span class="text-[10px] font-medium tracking-wider text-cream/40">سایت پروژه</span>
+            <span class="text-sm font-bold text-gold-light">مشاهدهٔ سایت</span>
+          </a>
+        {% endif %}
+      </div>
+
+      {# دکمه‌ها — بازگشت به آرشیو و سایت پروژه #}
+      <div class="mt-10 flex flex-wrap gap-4" data-reveal="up" data-delay="0.24">
+        <a href="{% url 'portfolio:list' %}" class="btn btn-ghost px-7 py-3.5" data-magnetic>
+          {% icon "arrow-right" class="h-4 w-4" %}
+          همهٔ نمونه‌کارها
+        </a>
+        {% if portfolio.client_url %}
+          <a href="{{ portfolio.client_url }}" target="_blank" rel="noopener noreferrer"
+             class="btn btn-gold px-7 py-3.5" data-magnetic>
+            مشاهدهٔ سایت پروژه
+            {% icon "external-link" class="h-4 w-4" %}
+          </a>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+
+  {% comment %}تصویر اصلی پروژه — تایل بزرگ روی پس‌زمینهٔ ملایم‌تر{% endcomment %}
+  {% if portfolio.image %}
+    <section class="relative overflow-hidden bg-ink2">
+      <svg class="divider divider-flip" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0,26 C260,84 520,82 760,44 C1000,6 1240,80 1440,30 L1440,0 L0,0 Z" fill="#0a0a0c"></path>
+      </svg>
+      <div class="relative z-10 mx-auto max-w-7xl px-6 pb-24 pt-20 md:pt-28">
+        <figure class="relative overflow-hidden border border-gold/25"
+                style="border-radius: 2.5rem 1rem 2.5rem 1rem"
+                data-reveal="up">
+          <img src="{{ portfolio.image.url }}"
+                 alt="{{ portfolio.image_alt|default:portfolio.title }}"
+                 loading="eager" fetchpriority="high" decoding="async"
+                 class="block h-auto w-full object-cover">
+        </figure>
+      </div>
+    </section>
+  {% endif %}
+
+  {% comment %}دربارهٔ پروژه (روشن) — ستون چسبان + متن کامل{% endcomment %}
+  <section class="relative bg-cream" style="border-radius: 3rem 9rem 0 0">
+    <div class="relative z-10 mx-auto max-w-7xl px-6 pb-24 pt-28 md:pt-36">
+      <div class="grid items-start gap-14 lg:grid-cols-12">
+        {# ستون کناری — چسبان می‌ماند تا همراه متن اسکرول شود #}
+        <div class="lg:col-span-4 lg:sticky lg:top-28" data-reveal="right">
+          <p class="eyebrow eyebrow-dark">دربارهٔ پروژه</p>
+          <h2 class="mt-5 text-3xl font-extrabold leading-[1.3] text-paper md:text-4xl">
+            ماجرا چه بود؟
+          </h2>
+          {% if portfolio.get_technologies_list %}
+            <div class="mt-8">
+              <p class="text-[10px] font-medium tracking-wider text-coy/70">تکنولوژی‌ها</p>
+              <ul class="mt-3 flex flex-wrap gap-2.5">
+                {% for tech in portfolio.get_technologies_list %}
+                  <li class="s-chip-light">{{ tech }}</li>
+                {% endfor %}
+              </ul>
+            </div>
+          {% endif %}
+        </div>
+
+        {# متن کامل — تایپوگرافیِ محتوای غنی (T38) #}
+        <div class="prose-ink lg:col-span-8" data-reveal="right" data-delay="0.1">
+          {{ portfolio.description|linebreaks }}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {% comment %}چالش و راهکار (روشن) — دو کارت شیشه‌ای روشن{% endcomment %}
+  {% if portfolio.challenge or portfolio.solution %}
+    <section class="relative bg-cream2">
+      <div class="relative z-10 mx-auto max-w-7xl px-6 pb-28 pt-4">
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+          {% if portfolio.challenge %}
+            <article class="glass-light relative overflow-hidden p-8 md:p-10"
+                     style="border-radius: 2.5rem 1rem 2.5rem 1rem"
+                     data-reveal="up">
+              <span class="icon-ring mb-6">{% icon "alert-circle" class="h-5 w-5" %}</span>
+              <p class="eyebrow eyebrow-dark">چالش</p>
+              <h3 class="mt-4 text-2xl font-extrabold leading-tight text-paper">مشکل کجا بود؟</h3>
+              <div class="prose-ink mt-5">
+                {{ portfolio.challenge|linebreaks }}
+              </div>
+            </article>
+          {% endif %}
+          {% if portfolio.solution %}
+            <article class="glass-light relative overflow-hidden p-8 md:p-10"
+                     style="border-radius: 1rem 2.5rem 1rem 2.5rem"
+                     data-reveal="up" data-delay="0.1">
+              <span class="icon-ring mb-6">{% icon "rocket" class="h-5 w-5" %}</span>
+              <p class="eyebrow eyebrow-dark">راهکار</p>
+              <h3 class="mt-4 text-2xl font-extrabold leading-tight text-paper">چطور حلش کردیم؟</h3>
+              <div class="prose-ink mt-5">
+                {{ portfolio.solution|linebreaks }}
+              </div>
+            </article>
+          {% endif %}
+        </div>
+      </div>
+    </section>
+  {% endif %}
+
+  {% comment %}نتایج و آمار (تیره) — شمارشگرها و کارت نظر مشتری{% endcomment %}
+  {% if portfolio.stats.all or portfolio.testimonial %}
+    <section class="relative overflow-hidden bg-ink2">
+      <svg class="divider divider-flip" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0,26 C260,84 520,82 760,44 C1000,6 1240,80 1440,30 L1440,0 L0,0 Z" fill="#efece5"></path>
+      </svg>
+      <div class="grid-bg pointer-events-none absolute inset-0 opacity-20" aria-hidden="true"></div>
+
+      <div class="relative z-10 mx-auto max-w-7xl px-6 pb-28 pt-32 md:pt-40">
+        {% if portfolio.stats.all %}
+          <div class="text-center">
+            <p class="eyebrow eyebrow-c justify-center" data-reveal="up">نتایج</p>
+            <h2 class="mt-5 text-4xl font-extrabold leading-[1.3] md:text-[2.7rem]"
+                data-reveal="up" data-delay="0.08">
+              چه دستاوردی داشتیم؟
+            </h2>
+          </div>
+
+          <div class="mt-14 grid grid-cols-2 gap-5 lg:grid-cols-4">
+            {% for stat in portfolio.stats.all %}
+              <div class="stat-card glass tilt relative overflow-hidden p-7 text-center"
+                   style="border-radius: {% cycle '1.75rem' '1.25rem' %}"
+                   data-reveal="up" data-delay="{% cycle '0' '0.1' '0.2' '0.3' %}">
+                <span class="glare" aria-hidden="true"></span>
+                {% if stat.icon %}
+                  <span class="stat-icon">{% icon stat.icon class="h-5 w-5" %}</span>
+                {% endif %}
+                <p class="stat-num fa-num mt-4">{{ stat.number|fa_digits }}</p>
+                {% if stat.label %}
+                  <p class="mt-2 text-sm text-cream/55">{{ stat.label }}</p>
+                {% endif %}
+                {% if stat.description %}
+                  <p class="mt-1 text-xs text-cream/35">{{ stat.description }}</p>
+                {% endif %}
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        {# نظر مشتری — کارت متنی کنار نتایج #}
+        {% if portfolio.testimonial %}
+          <div class="mt-16" data-reveal="up">
+            <div class="mx-auto max-w-2xl">
+              {% include "components/_testimonial_card.html" with t=portfolio.testimonial %}
+            </div>
+          </div>
+        {% endif %}
+      </div>
+    </section>
+  {% endif %}
+
+  {% comment %}گالری — فقط وقتی تصویری ثبت شده باشد{% endcomment %}
+  {% if portfolio.gallery.all %}
+    <section class="relative overflow-hidden bg-ink">
+      <svg class="divider divider-flip" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0,26 C260,84 520,82 760,44 C1000,6 1240,80 1440,30 L1440,0 L0,0 Z" fill="#121214"></path>
+      </svg>
+
+      <div class="relative z-10 mx-auto max-w-7xl px-6 pb-28 pt-32 md:pt-40">
+        <div class="text-center">
+          <p class="eyebrow eyebrow-c justify-center" data-reveal="up">گالری</p>
+          <h2 class="mt-5 text-4xl font-extrabold leading-[1.3] md:text-[2.7rem]"
+              data-reveal="up" data-delay="0.08">
+            نگاهی دقیق‌تر
+          </h2>
+        </div>
+
+        <div class="mt-14 grid grid-cols-2 gap-5 md:grid-cols-3">
+          {% for image in portfolio.gallery.all %}
+            <figure class="group relative overflow-hidden border border-white/8"
+                    style="border-radius: {% cycle '1.75rem' '1rem' '1.5rem 0.75rem' %}"
+                    data-reveal="up" data-delay="{% cycle '0' '0.08' '0.16' %}">
+              <img src="{{ image.image.url }}"
+                   alt="{{ image.alt|default:portfolio.title }}"
+                   loading="lazy" decoding="async"
+                   class="block h-auto w-full object-cover transition-transform duration-700 group-hover:scale-[1.05]">
+              {% if image.caption %}
+                <figcaption class="absolute inset-x-0 bottom-0 translate-y-full bg-gradient-to-t from-ink/90 to-transparent p-4 pt-10 text-sm text-cream/90 transition-transform duration-500 group-hover:translate-y-0">
+                  {{ image.caption }}
+                </figcaption>
+              {% endif %}
+            </figure>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+  {% endif %}
+
+  {% comment %}پروژه‌های دیگر — کاروسل + ناوبری پروژهٔ قبلی/بعدی.
+     وقتی پروژهٔ دیگری نیست کل بخش (هدر و کاروسل) حذف می‌شود.{% endcomment %}
+  {% if prev_portfolio or next_portfolio %}
+  <section class="relative overflow-hidden bg-ink2">
+    <svg class="divider divider-flip" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0,26 C260,84 520,82 760,44 C1000,6 1240,80 1440,30 L1440,0 L0,0 Z" fill="#0a0a0c"></path>
+    </svg>
+
+    <div class="relative z-10 mx-auto max-w-7xl px-6 pb-28 pt-32 md:pt-40">
+      <div class="flex flex-wrap items-end justify-between gap-6">
+        <div>
+          <p class="eyebrow" data-reveal="up">پروژه‌های دیگر</p>
+          <h2 class="mt-5 text-4xl font-extrabold leading-[1.3] md:text-[2.7rem]"
+              data-reveal="right" data-delay="0.08">
+            کارهای دیگرِ ما
+          </h2>
+        </div>
+        <a href="{% url 'portfolio:list' %}" class="more-link text-base" data-reveal="left">
+          همهٔ نمونه‌کارها
+          {% icon "arrow-left" class="h-4 w-4" %}
+        </a>
+      </div>
+
+      {# کاروسل پروژه‌های مرتبط — پروژهٔ فعلی حذف می‌شود #}
+      <div class="mt-14" data-reveal="up">
+        {% projects_carousel exclude=portfolio limit=6 %}
+      </div>
+
+      {# ناوبری پروژهٔ قبلی و بعدی #}
+      <nav class="mt-16 grid grid-cols-1 gap-5 border-t border-white/8 pt-10 md:grid-cols-2"
+           aria-label="پروژه‌های دیگر" data-reveal="up">
+        {% if prev_portfolio %}
+          <a href="{% url 'portfolio:detail' prev_portfolio.slug %}"
+             class="glass group flex flex-col gap-2.5 p-7 transition-colors hover:border-gold/50"
+             style="border-radius: 1.75rem 0.75rem 1.75rem 0.75rem">
+            <span class="flex items-center gap-2 text-[10px] font-medium tracking-wider text-cream/40">
+              {% icon "arrow-right" class="h-3.5 w-3.5" %}
+              پروژهٔ قبلی
+            </span>
+            <span class="text-lg font-bold text-cream transition-colors group-hover:text-gold-light">
+              {{ prev_portfolio.title }}
+            </span>
+            {% if prev_portfolio.service_type %}
+              <span class="text-xs text-cream/45">{{ prev_portfolio.service_type }}</span>
+            {% endif %}
+          </a>
+        {% endif %}
+        {% if next_portfolio %}
+          <a href="{% url 'portfolio:detail' next_portfolio.slug %}"
+             class="glass group flex flex-col gap-2.5 p-7 transition-colors hover:border-gold/50 md:text-left"
+             style="border-radius: 0.75rem 1.75rem 0.75rem 1.75rem">
+            <span class="flex items-center gap-2 text-[10px] font-medium tracking-wider text-cream/40 md:justify-end">
+              پروژهٔ بعدی
+              {% icon "arrow-left" class="h-3.5 w-3.5" %}
+            </span>
+            <span class="text-lg font-bold text-cream transition-colors group-hover:text-gold-light">
+              {{ next_portfolio.title }}
+            </span>
+            {% if next_portfolio.service_type %}
+              <span class="text-xs text-cream/45">{{ next_portfolio.service_type }}</span>
+            {% endif %}
+          </a>
+        {% endif %}
+      </nav>
+    </div>
+  </section>
+  {% endif %}
+{% endblock %}

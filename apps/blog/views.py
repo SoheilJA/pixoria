@@ -1,0 +1,138 @@
+from django.contrib.admin.views.decorators import staff_member_required
+from django.core.files.storage import default_storage
+from django.core.paginator import Paginator
+from django.http import JsonResponse, HttpResponseBadRequest
+from django.shortcuts import render, get_object_or_404
+from django.urls import reverse
+from django.utils import timezone
+from django.views.decorators.http import require_POST
+
+from .models import Article, Category, BlogPageSettings
+from .utils import process_content_toc
+from apps.core.context_utils import crumbs
+
+PAGE_SIZE = 9
+
+
+def _get_articles(category_slug):
+    qs = Article.objects.filter(status="published", published_at__lte=timezone.now())
+    if category_slug and category_slug != "all":
+        qs = qs.filter(category__slug=category_slug)
+    return qs.select_related("category", "author").order_by("-published_at")
+
+
+def article_list(request):
+    qs = _get_articles("all")
+    paginator = Paginator(qs, PAGE_SIZE)
+    page_obj = paginator.get_page(1)
+
+    # مقالهٔ ویژه — جدیدترین مقالهٔ منتشرشده با پرچم featured. فقط یک اسلات
+    # در بالای آرشیو وجود دارد و وقتی چیزی-flag گذاری نشده خالی می‌ماند.
+    featured_article = (
+        Article.objects.filter(
+            status="published",
+            published_at__lte=timezone.now(),
+            featured=True,
+        )
+        .select_related("category", "author")
+        .order_by("-published_at")
+        .first()
+    )
+
+    context = {
+        "crumbs": crumbs(("خانه", "home:home"), ("بلاگ", None)),
+        "page_settings": BlogPageSettings.objects.first(),
+        "categories": Category.objects.all(),
+        "articles": page_obj.object_list,
+        "featured_article": featured_article,
+        "has_next": page_obj.has_next(),
+        "next_page": 2,
+        "current_category": "all",
+        "load_more_url": f"{reverse('blog:load')}?category=all&page=2",
+    }
+    return render(request, "blog/list.html", context)
+
+
+def load_articles(request):
+    category_slug = request.GET.get("category", "all")
+    page_number = request.GET.get("page", 1)
+
+    qs = _get_articles(category_slug)
+    paginator = Paginator(qs, PAGE_SIZE)
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        "articles": page_obj.object_list,
+        "has_next": page_obj.has_next(),
+        "next_page": page_obj.next_page_number() if page_obj.has_next() else None,
+        "current_category": category_slug,
+    }
+    return render(request, "blog/partials/load_response.html", context)
+
+
+def article_detail(request, slug):
+    article = get_object_or_404(
+        Article.objects.select_related("author", "category").prefetch_related("tags"),
+        slug=slug,
+        status="published",
+        published_at__lte=timezone.now(),
+    )
+
+    content_html, toc = process_content_toc(article.content)
+
+    # آیا مقالهٔ دیگری در این دسته هست؟ این پرچم از برابرمجموعهٔ کوئریِ
+    # articles_carousel (exclude + category) می‌آید، پس هدرِ بخشِ مطالب مرتبط
+    # هرگز بدون کارت رندر نمی‌شود.
+    has_related = (
+        Article.objects.filter(status="published", category=article.category)
+        .exclude(pk=article.pk)
+        .exists()
+    )
+
+    # مقاله قبلی (بر اساس تاریخ منتشر شدن)
+    prev_article = (
+        Article.objects.filter(
+            status="published",
+            published_at__lt=article.published_at,
+            category=article.category,
+        )
+        .order_by("-published_at")
+        .first()
+    )
+    # مقاله بعدی (بر اساس تاریخ منتشر شدن)
+    next_article = (
+        Article.objects.filter(
+            status="published",
+            published_at__gt=article.published_at,
+            category=article.category,
+        )
+        .order_by("published_at")
+        .first()
+    )
+
+    context = {
+        "crumbs": crumbs(
+            ("خانه", "home:home"),
+            ("بلاگ", "blog:list"),
+            (article.title, None),
+        ),
+        "article": article,
+        "content_html": content_html,
+        "toc": toc,
+        "has_related": has_related,
+        "prev_article": prev_article,
+        "next_article": next_article,
+    }
+    return render(request, "blog/detail.html", context)
+
+
+@staff_member_required
+@require_POST
+def tinymce_image_upload(request):
+    file = request.FILES.get("file")
+    if not file:
+        return HttpResponseBadRequest("no file")
+
+    path = default_storage.save(f"blog/content/{file.name}", file)
+    url = default_storage.url(path)
+    return JsonResponse({"location": url})

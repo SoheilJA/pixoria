@@ -1,0 +1,144 @@
+{% load static icon_tags %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#0a0a0c" />
+    {% comment %}پیش‌لودر: فقط یک بار در هر session — پرچم قبل از رنگ‌پاشی اولین فریم
+    ست می‌شود تا هیچ فلشی دیده نشود. بدون جاوااسکریپت کلاس اضافه نمی‌شود
+    و پیش‌لودر هرگز نمایش داده نمی‌شود (همان <noscript>).{% endcomment %}
+    <script>
+      (function () {
+        try {
+          if (sessionStorage.getItem("pixoria-pl")) return;
+          sessionStorage.setItem("pixoria-pl", "1");
+          document.documentElement.classList.add("has-preloader");
+        } catch (e) {}
+      })();
+    </script>
+    <title>
+      {% block title %}
+        {{ settings.site_name }}
+      {% endblock %}
+    </title>
+    <meta name="description"
+      content="{% block description %}
+      {% endblock %}" />
+    <link rel="canonical" href="{{ request.build_absolute_uri }}" />
+
+    {# Open Graph — برای سئو و اشتراک‌گذاری در شبکه‌های اجتماعی #}
+    <meta property="og:site_name" content="{{ settings.site_name }}" />
+    <meta property="og:locale" content="fa_IR" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="{{ request.build_absolute_uri }}" />
+    <meta property="og:title" content="{% block og_title %}{{ settings.site_name }}{% endblock %}" />
+    <meta property="og:description" content="{% block og_description %}{{ settings.site_description }}{% endblock %}" />
+    <meta name="twitter:card" content="summary_large_image" />
+    {% if brand.og_image %}
+      <meta property="og:image" content="{{ brand.og_image }}" />
+      <meta property="og:image:alt" content="{{ settings.site_name }}" />
+    {% endif %}
+    {% comment %}فاوآیکون — فایل آپلودشده در SiteSettings اولویت دارد، وگرنه
+    گزینهٔ منتخبِ برند (T58). مانیفست از یک view رندر می‌شود تا آیکون‌های PWA
+    هم از همان گزینه بخوانند.{% endcomment %}
+    {% if settings.favicon %}
+      <link rel="icon" href="{{ settings.favicon.url }}" sizes="any" />
+    {% else %}
+      {% if brand.favicon_svg %}<link rel="icon" type="image/svg+xml" href="{{ brand.favicon_svg }}" />{% endif %}
+      {% if brand.favicon_32 %}<link rel="icon" type="image/png" sizes="32x32" href="{{ brand.favicon_32 }}" />{% endif %}
+    {% endif %}
+    {% if settings.apple_touch_icon %}
+      <link rel="apple-touch-icon" href="{{ settings.apple_touch_icon.url }}" />
+    {% elif brand.apple_touch %}
+      <link rel="apple-touch-icon" href="{{ brand.apple_touch }}" />
+    {% endif %}
+    <link rel="manifest" href="{% url 'manifest' %}" />
+    <link rel="stylesheet" href="{% static 'fonts/font_urls.css' %}" />
+    <link rel="stylesheet" href="{% static 'fontawesome/css/all.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/tailwind.css' %}" />
+    {% block extra_css %}
+    {% endblock %}
+    {% block extra_head %}
+    {% endblock %}
+  </head>
+  <body class="overflow-x-hidden bg-ink font-sans text-cream antialiased">
+    {% comment %}پیش‌لودرِ اولین بازدید — فضایی، کاملاً CSS؛ خودش تا ۱.۲ ثانیه دیگر
+    محو می‌شود (pixoria.js زودتر، وقتی صفحه آماده شد، آن را برمی‌دارد){% endcomment %}
+    <div id="preloader" class="preloader" role="presentation">
+      <div class="pl-scene">
+        <span class="pl-orbit" aria-hidden="true"><span class="pl-planet"></span></span>
+        <span class="pl-mark" aria-hidden="true">{% include "partials/_brand_mark.html" with class="h-10 w-10" %}</span>
+      </div>
+      <span class="pl-line" aria-hidden="true"><span class="pl-fill"></span></span>
+    </div>
+
+    {# پرش به محتوای اصلی — دسترس‌پذیری #}
+    <a
+      href="#main"
+      class="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:right-2 focus:z-[200] focus:rounded-full focus:bg-gold focus:px-5 focus:py-2 focus:text-ink"
+      >پرش به محتوای اصلی</a
+    >
+
+    {# نوار پیشرفت اسکرول #}
+    <div
+      id="scroll-progress"
+      class="fixed top-0 right-0 left-0 z-[85] h-[3px] origin-right scale-x-0"
+      style="background: linear-gradient(to left, #8f6b2c, #c9a15a 30%, #e8c47a 55%, #2e63ff);"
+      aria-hidden="true"
+    ></div>
+
+    {% comment %}لودر انتقال بین صفحات — نوار طلایی نازک بالا + سیارهٔ مداری در گوشه
+    (فقط اگر ناوبری بیش از ~۴۰۰ms طول بکشد). هرگز صفحه را نمی‌پوشاند و
+    کلیک‌ها را مسدود نمی‌کند — pixoria.js آن را راه می‌اندازد (T54){% endcomment %}
+    <div id="nav-progress" class="nav-progress" aria-hidden="true">
+      <div class="nav-progress-bar"></div>
+    </div>
+    <div id="nav-orbit" class="nav-orbit" aria-hidden="true">
+      <span class="nav-orbit-ring"></span><span class="nav-orbit-planet"></span>
+    </div>
+
+    {# بافت نویز ظریف #}
+    <div class="grain" aria-hidden="true"></div>
+
+    {% include "partials/_header.html" %}
+
+    <main id="main" class="min-w-0">
+      {% block content %}
+      {% endblock %}
+      {% include "partials/_cta.html" %}
+      {% block afterPrefooter %}
+      {% endblock %}
+    </main>
+
+    {% include "partials/_footer.html" %}
+
+    {# اعلان (Toast) — توسط pixoria.js نمایش داده می‌شود #}
+    <div
+      id="toast"
+      class="fixed inset-x-0 bottom-6 z-[100] flex justify-center px-4"
+      role="status"
+      aria-live="polite"
+    >
+      <div class="glass flex items-center gap-3 rounded-full px-6 py-4">
+        <span
+          class="grid h-7 w-7 flex-none place-items-center rounded-full bg-gold/20 text-gold-light"
+          >{% icon "check" class="h-4 w-4" %}</span
+        >
+        <p id="toast-text" class="text-sm text-cream/85"></p>
+      </div>
+    </div>
+
+    {# کتابخانه‌ها — همه محلی، بدون CDN #}
+    <script defer src="{% static 'js/vendor/gsap.min.js' %}"></script>
+    <script defer src="{% static 'js/vendor/ScrollTrigger.min.js' %}"></script>
+    {# لایهٔ تعاملات (Lenis، reveal، counters، منو، …) — T10 #}
+    <script type="module" src="{% static 'js/pixoria.js' %}"></script>
+    {# صحنهٔ سه‌بعدی هیرو — فقط در صورت وجود #hero-3d و نزدیک بودن به دید مقداردهی می‌شود — T11 #}
+    <script type="module" src="{% static 'js/hero-scene.js' %}"></script>
+    {# HTMX — برای فرم‌های ارسال بدون بازبارگذاری صفحه #}
+    <script defer src="{% static 'js/htmx.min.js' %}"></script>
+    {% block extra_js %}
+    {% endblock %}
+  </body>
+</html>

@@ -1,0 +1,202 @@
+{% load icon_tags nav_tags highlight_tags fa_digits %}
+{% comment %}هدر و منوی موبایل — آیتم‌های منو ثابت هستند (apps/core/nav.py) و
+دیگر از دیتابیس خوانده نمی‌شوند. از دیتابیس فقط: HeaderSettings (دکمهٔ CTA)،
+Service (مگامنو) و SiteSettings (لوگو و بنر مگامنو).{% endcomment %}
+{% url 'services:list' as services_url %}
+<header id="site-header" class="fixed inset-x-0 top-0 z-50 px-4 pt-4">
+  <nav
+    class="glass mx-auto flex max-w-6xl items-center justify-between rounded-full px-5 py-3 md:px-7"
+    aria-label="ناوبری اصلی"
+  >
+    {# لوگو #}
+    <a href="{% url 'home:home' %}" class="flex items-center gap-3" aria-label="{{ settings.site_name }}">
+      {% include "partials/_brand_lockup.html" %}
+    </a>
+
+    {# ناوبری دسکتاپ — آیتم‌ها ثابت (apps/core/nav.py) #}
+    <ul class="hidden items-center gap-8 text-sm lg:flex">
+      {% for item in nav_items %}
+        {% nav_url item.url as item_url %}
+        {% if item_url == services_url and services_footer %}
+          {# خدمات: لینک + دکمهٔ چورون بازکنندهٔ مگامنو (مسیر صفجه حفظ می‌شود) #}
+          <li class="nav-item-services" data-mega-root>
+            <a class="nav-link" href="{{ item_url }}">{{ item.title }}</a>
+            <button
+              type="button"
+              class="mega-chevron"
+              data-mega-toggle
+              aria-haspopup="true"
+              aria-expanded="false"
+              aria-controls="mega-services"
+              aria-label="باز کردن منوی خدمات"
+            >
+              {% icon "chevron-down" class="h-3.5 w-3.5" %}
+            </button>
+            <div class="mega-menu" id="mega-services" role="region" aria-label="منوی خدمات">
+              <div class="mega-menu-panel">
+                <div class="mega-tiles">
+                  {% for service in services_footer %}
+                    {% cycle "gold" "royal" "cream" as orb silent %}
+                    <a href="{% url 'services:detail' service.slug %}" class="mega-tile">
+                      <span class="mega-orb mega-orb-{{ orb }}" aria-hidden="true">
+                        <span class="mega-orbit"><span class="mega-orbit-moon"></span></span>
+                        {% icon service.icon|default:"sparkles" class="h-5 w-5" %}
+                      </span>
+                      <span class="mega-tile-title">{{ service.title }}</span>
+                    </a>
+                  {% endfor %}
+                </div>
+                {% if settings.mega_title %}
+                  <div class="mega-banner">
+                    <div class="mega-banner-content">
+                      <p class="mega-banner-title">
+                        {% icon "sparkles" class="h-4 w-4 text-gold" %}
+                        {{ settings.mega_title|highlight }}
+                      </p>
+                      {% if settings.mega_description %}
+                        <p class="mega-banner-desc">{{ settings.mega_description }}</p>
+                      {% endif %}
+                    </div>
+                    <a href="{{ services_url }}" class="mega-banner-cta">
+                      {{ settings.mega_cta_text|default:"مشاهده همه خدمات" }}
+                      {% icon "arrow-left" class="h-3.5 w-3.5" %}
+                    </a>
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+          </li>
+        {% else %}
+          <li><a class="nav-link" href="{{ item_url }}">{{ item.title }}</a></li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+
+    {# سمت چپ: دکمهٔ CTA + همبرگر #}
+    <div class="flex items-center gap-3">
+      {% if header_settings and header_settings.show_cta %}
+        <a
+          href="{% nav_url header_settings.cta_url|default:'contact:contact' %}"
+          class="btn btn-gold hidden px-6 py-2.5 text-sm sm:inline-flex"
+          data-magnetic
+          >{{ header_settings.cta_text }}</a
+        >
+      {% endif %}
+      <button
+        id="menu-open"
+        class="grid h-11 w-11 cursor-pointer place-items-center rounded-full border border-gold/30 bg-white/[.04] lg:hidden"
+        aria-label="باز کردن منو"
+        aria-controls="mobile-menu"
+        aria-expanded="false"
+      >
+        {% icon "menu" class="h-5 w-5" %}
+      </button>
+    </div>
+  </nav>
+</header>
+
+{# منوی موبایل — اورلی شیشه‌ای؛ خدمات به‌صورت زیرمنو باز می‌شوند #}
+<div
+  id="mobile-menu"
+  class="fixed inset-0 z-[55] lg:hidden"
+  role="dialog"
+  aria-modal="true"
+  aria-label="منوی موبایل"
+>
+  <button
+    class="absolute inset-0 cursor-pointer bg-ink/70 backdrop-blur-md"
+    data-menu-close
+    aria-label="بستن منو"
+  ></button>
+  <div class="menu-panel glass absolute inset-x-4 top-6 rounded-[2.25rem] p-7">
+    <div class="flex items-center justify-between">
+      <span class="flex items-center gap-3">
+        {% include "partials/_brand_lockup.html" with mark_class="h-8 w-8" img_class="h-8" word_class="text-lg" %}
+      </span>
+      <button
+        class="grid h-10 w-10 cursor-pointer place-items-center rounded-full border border-white/10"
+        data-menu-close
+        aria-label="بستن"
+      >
+        {% icon "x" class="h-5 w-5" %}
+      </button>
+    </div>
+    <ul class="menu-nav mt-7 space-y-1">
+      {% for item in nav_items %}
+        {% nav_url item.url as item_url %}
+        {% if item_url == services_url and services_footer %}
+          {# خدمات: لینخ خود صفحه + آکاردئون زیرمنو #}
+          <li class="m-has-sub" style="--m-i:{{ forloop.counter0 }}">
+            <div class="m-row">
+              <a
+                href="{{ item_url }}"
+                class="m-link flex items-center rounded-2xl px-4 py-3.5 text-xl font-bold hover:bg-white/[.05]"
+                >{{ item.title }}</a
+              >
+              <button
+                type="button"
+                class="m-chevron"
+                data-m-accordion
+                aria-expanded="false"
+                aria-controls="m-services"
+                aria-label="باز کردن زیرمنوی خدمات"
+              >
+                {% icon "chevron-down" class="h-4 w-4" %}
+              </button>
+            </div>
+            <ul class="m-sub" id="m-services">
+              {% for service in services_footer %}
+                <li>
+                  <a
+                    href="{% url 'services:detail' service.slug %}"
+                    class="m-link flex items-center rounded-2xl px-4 py-2.5 text-base font-medium text-cream/70 hover:bg-white/[.05]"
+                    >{{ service.title }}</a>
+                </li>
+              {% endfor %}
+            </ul>
+          </li>
+        {% else %}
+          <li style="--m-i:{{ forloop.counter0 }}">
+            <a
+              href="{{ item_url }}"
+              class="m-link flex items-center rounded-2xl px-4 py-3.5 text-xl font-bold hover:bg-white/[.05]"
+              >{{ item.title }}</a>
+          </li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+    {% if header_settings and header_settings.show_cta %}
+      <a
+        href="{% nav_url header_settings.cta_url|default:'contact:contact' %}"
+        class="m-cta btn btn-gold mt-6 w-full px-6 py-4"
+        >{{ header_settings.cta_text }}</a
+      >
+    {% endif %}
+    {% if settings.phone or settings.phone_secondary %}
+      <div class="m-contact">
+        {% if settings.phone %}
+          <a href="tel:{{ settings.phone }}" class="m-contact-item">
+            {% icon "phone" class="h-4 w-4 shrink-0 text-gold" %}
+            <span class="min-w-0">
+              <span class="fa-num block font-medium">{{ settings.phone|fa_digits }}</span>
+              {% if settings.phone_label %}
+                <span class="mt-0.5 block text-[11px] text-cream/40">{{ settings.phone_label }}</span>
+              {% endif %}
+            </span>
+          </a>
+        {% endif %}
+        {% if settings.phone_secondary %}
+          <a href="tel:{{ settings.phone_secondary }}" class="m-contact-item">
+            {% icon "smartphone" class="h-4 w-4 shrink-0 text-gold" %}
+            <span class="min-w-0">
+              <span class="fa-num block font-medium">{{ settings.phone_secondary|fa_digits }}</span>
+              {% if settings.phone_secondary_label %}
+                <span class="mt-0.5 block text-[11px] text-cream/40">{{ settings.phone_secondary_label }}</span>
+              {% endif %}
+            </span>
+          </a>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+</div>

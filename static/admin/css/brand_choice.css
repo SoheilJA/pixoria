@@ -1,0 +1,84 @@
+/* انتخاب برند در SiteSettings — شبکه‌ای از گزینه‌ها با پیش‌نمایش (T58). */
+
+.brand-choice {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 0.75rem;
+  margin: 0.4rem 0 0.2rem;
+}
+
+.brand-choice-item {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.65rem 0.8rem;
+  border: 1px solid rgba(10, 10, 12, 0.18);
+  border-radius: 0.85rem;
+  cursor: pointer;
+  transition: border-color 0.18s, background 0.18s, box-shadow 0.18s;
+  background: rgba(245, 243, 238, 0.55);
+}
+
+.brand-choice-item:hover {
+  border-color: rgba(143, 107, 44, 0.6);
+}
+
+/* روی کاشیِ تیرهٔ آیتمِ انتخاب‌شده (پس‌زمینهٔ ورودیِ انتخاب‌شده در ادمین) */
+.brand-choice-item.selected {
+  border-color: #c9a15a;
+  background: rgba(201, 161, 90, 0.12);
+  box-shadow: 0 0 0 1px #c9a15a inset;
+}
+
+.brand-choice-item input[type="radio"] {
+  order: -1;
+  width: 1.1rem;
+  height: 1.1rem;
+  accent-color: #8f6b2c;
+  cursor: inherit;
+}
+
+.brand-choice-preview {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 0.7rem;
+  background: #0a0a0c;
+  flex: none;
+}
+
+.brand-choice-preview img {
+  width: 40px;
+  height: 40px;
+}
+
+.brand-choice-text {
+  display: grid;
+  gap: 0.3rem;
+  min-width: 0;
+}
+
+.brand-choice-text strong {
+  font-size: 0.85rem;
+}
+
+.brand-choice-full {
+  display: flex;
+  align-items: center;
+  height: 28px;
+  opacity: 0.85;
+}
+
+.brand-choice-full img {
+  height: 26px;
+  width: auto;
+  max-width: 100%;
+}
+
+@media (max-width: 640px) {
+  .brand-choice {
+    grid-template-columns: 1fr;
+  }
+}

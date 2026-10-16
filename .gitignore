@@ -1,0 +1,49 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# Environment secrets — never commit
+# تنظیماتِ محیطی (کلیدِ رمز، دیتابیس، ایمیل). هر سرور نسخهٔ خودش را دارد.
+.env
+.env.*
+!.env.example
+
+# Node / build
+node_modules/
+.npm/
+
+# Generated Tailwind / deployment output
+public/static/
+public/media/
+
+# Editors / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Headless-Chrome profiles created by local verification scripts
+.menu-chrome-profile/
+.fa-chrome-profile*/
+.admin-chrome-profile/
+.carousel-chrome-profile/
+.geom-chrome-profile/
+
+# Scratch / throwaway dev tooling — فایل‌های موقتِ بررسی و تست
+scripts/_*.py
+config/settings_preview.py
+
+# Data dumps for moving content between environments
+#content.json
+
+# Kilo
+.kilo/
+
+Pixoria-tailwind-version/

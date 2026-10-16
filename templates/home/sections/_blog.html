@@ -1,0 +1,41 @@
+{% load icon_tags highlight_tags articles_tags %}
+{# مجلهٔ پیکسوریا v2 — کاروسل مقالات روی پس‌زمینهٔ تیره #}
+{# داده‌ها: blog_section (LatestArticlesSection)، blog_url #}
+{# خود کاروسل (articles_tags) کوئری می‌زند و وقتی مقاله‌ای نیست چیزی چاپ #}
+{# نمی‌کند. pixoria.js هر [data-carousel] را مستقل راه‌اندازی می‌کند. #}
+{% if blog_section %}
+  <section id="blog" class="relative overflow-hidden bg-ink2">
+    {# موج روشنِ بالای بخش — گذار از بخش دستاوردهای تیره #}
+    <svg class="divider" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0,58 C320,12 640,78 960,42 C1200,14 1360,62 1440,32 L1440,0 L0,0 Z" fill="#f5f3ee"></path>
+    </svg>
+    <div class="pointer-events-none absolute right-[-5rem] top-20 h-80 w-80 rounded-full opacity-20 aurora-blob"
+         style="background: radial-gradient(circle, rgba(201, 161, 90, 0.3), transparent 65%)" aria-hidden="true"></div>
+
+    <div class="relative z-10 mx-auto max-w-7xl px-6 pb-28 pt-36 md:pt-44">
+      <div class="flex flex-wrap items-end justify-between gap-6">
+        <div>
+          {% if blog_section.eyebrow %}
+            <p class="eyebrow" data-reveal="up">{{ blog_section.eyebrow }}</p>
+          {% endif %}
+          {% if blog_section.title %}
+            <h2 class="mt-5 text-4xl font-extrabold leading-[1.3] md:text-[2.7rem]" data-reveal="right">
+              {{ blog_section.title|highlight }}
+            </h2>
+          {% endif %}
+        </div>
+        {% if blog_url %}
+          <a href="{{ blog_url }}" class="more-link text-base" data-reveal="left">
+            همهٔ مقالات
+            {% icon "arrow-left" class="h-4 w-4" %}
+          </a>
+        {% endif %}
+      </div>
+
+      {# نهایتاً هشت مقالهٔ منتشرشده در کاروسل #}
+      <div class="mt-14" data-reveal="up">
+        {% articles_carousel %}
+      </div>
+    </div>
+  </section>
+{% endif %}
