@@ -563,3 +563,58 @@ html:not(.motion) [data-reveal] {
 @media (min-width: 1280px) {
   .cw-4 { width: min(22vw, 292px); }
 }
+
+
+/* ═══════════════ نقطه‌های کاروسل — نوارِ پیشرفتِ زنده ═══════════════
+   نقطه‌ها دیگر دودویی نیستند: هر نقطه باریکه‌ای است که سه فاز دارد و
+   هنگامِ کشیدن، پرشدنِ طلایی آن پیوسته (per-frame از JS با متغیرِ
+   --fd) حرکت میکند؛ نقطهٔ کارتی که دقیقاً مرکزِ قاب است بزرگتر میشود.
+   این قانون جایگزینِ هم‌نامش در tailwind.css است (بعدِ آن لود میشود)؛
+   در motion.css چون بدونِ بازسازیِ tailwind است.
+   ═══════════════════════════════════════════════════════════════════ */
+.slider-dot {
+  position: relative;
+  display: block;
+  flex: none;
+  width: 20px;
+  height: 4px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(245, 243, 238, 0.14);
+  overflow: hidden;
+  cursor: pointer;
+  transition:
+    width 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    background 0.3s ease,
+    transform 0.3s ease;
+}
+.slider-dot::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(to left, var(--gold), var(--gold-l));
+  transform: scaleX(var(--fd, 0));
+  transform-origin: 100% 50%; /* در RTL از سمتِ راست پر میشود */
+  opacity: 0.75;
+  transition: opacity 0.3s ease;
+}
+.slider-dot:hover {
+  transform: scaleY(1.5);
+  background: rgba(245, 243, 238, 0.26);
+}
+.slider-dot:focus-visible {
+  outline: 1px solid rgba(232, 196, 122, 0.7);
+  outline-offset: 3px;
+}
+.slider-dot.active {
+  width: 30px;
+  background: rgba(245, 243, 238, 0.22);
+  box-shadow: 0 0 14px -4px rgba(232, 196, 122, 0.55);
+}
+.slider-dot.active::before { opacity: 1; }
+@media (prefers-reduced-motion: reduce) {
+  .slider-dot,
+  .slider-dot::before { transition: none; }
+}

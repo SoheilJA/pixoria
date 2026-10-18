@@ -735,6 +735,30 @@ function enableTrackDrag(track) {
 
 /* ------------------------------------------------------- testimonial slider */
 
+/* نقطههای کاروسل — دینامیک: پرشدن هر نقطه نشانِ «چسبندگی» کارتِ متناظر
+   به مرکزِ قاب است؛ هنگامِ کشیدن، موجِ طلاییِ پرشدن پیوسته از نقطهای
+   به نقطهٔ دیگر میرود و نقطهٔ کارتِ مرکزی بزرگتر میشود.
+   (چون تبدیلاتِ RTL در شمارشها دامدار است، مرکزها با getBoundingClientRect
+   نسبی حساب میشوند و کارتِ مخفی (پهنای صفر) هم بیضرر است.) */
+function fillDots(scroller, cards, dots) {
+  if (!dots || !dots.length || !cards) return;
+  const box = scroller.getBoundingClientRect();
+  const w = box.width;
+  let best = -1;
+  let bestDist = Infinity;
+  for (let i = 0; i < cards.length && i < dots.length; i++) {
+    const r = cards[i].getBoundingClientRect();
+    const dist = Math.abs(r.left - box.left + r.width / 2 - w / 2);
+    const fd = Math.max(0, Math.min(1, 1 - dist / Math.max(r.width, 1)));
+    dots[i].style.setProperty("--fd", fd.toFixed(3));
+    if (dist < bestDist) {
+      bestDist = dist;
+      best = i;
+    }
+  }
+  dots.forEach((d, i) => d.classList.toggle("active", i === best));
+}
+
 function initSliders({ REDUCED, faDigits }) {
   // هر [data-slider] یک نمونهٔ مستقل است؛ دکمه‌ها و نقاط داخل همان
   // data-slider-root جستجو می‌شوند تا چند اسلایدر در یک صفحه کار کنند.
@@ -767,13 +791,13 @@ function initSliders({ REDUCED, faDigits }) {
         if (ticking) return;
         ticking = true;
         requestAnimationFrame(() => {
-          const idx = Math.round(progress() * (cards.length - 1));
-          dots.forEach((d, i) => d.classList.toggle("active", i === idx));
+          fillDots(slider, cards, dots);
           ticking = false;
         });
       },
       { passive: true },
     );
+    fillDots(slider, cards, dots);
 
     const step = () => cards[0].offsetWidth + 24;
     const next = () => {
@@ -855,11 +879,13 @@ function initCarousels({ REDUCED, faDigits }) {
       const slides = visible();
       track.scrollTo({ left: 0, behavior: "auto" });
       buildDots(slides);
+      if (dots && dots.length) fillDots(track, slides, dots);
       if (controlsWrap)
         controlsWrap.classList.toggle("hidden", slides.length === 0);
     };
 
     buildDots(visible());
+    if (dots && dots.length) fillDots(track, visible(), dots);
     root.addEventListener("pf:changed", refresh);
 
     const maxScroll = () => track.scrollWidth - track.clientWidth;
@@ -874,12 +900,7 @@ function initCarousels({ REDUCED, faDigits }) {
         if (ticking) return;
         ticking = true;
         requestAnimationFrame(() => {
-          const n = visible().length;
-          if (n) {
-            const idx = Math.round(progress() * (n - 1));
-            if (dots)
-              dots.forEach((d, i) => d.classList.toggle("active", i === idx));
-          }
+          if (dots && dots.length) fillDots(track, visible(), dots);
           ticking = false;
         });
       },
