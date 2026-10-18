@@ -558,7 +558,7 @@
   position: relative;
   padding-block: 40px;
   padding-inline-start: 118px;
-  padding-inline-end: 170px; /* جا برای برچسبِ PHASE */
+  padding-inline-end: 32px;
   border-block-end: 1px solid rgba(245, 243, 238, 0.08);
   min-height: 130px;
 }
@@ -588,19 +588,23 @@
     background 0.35s ease;
 }
 
-/* عددِ بزرگِ خطکشی‌شده */
-.pr-step__num {
-  position: absolute;
-  inset-inline-start: 86px;
-  top: 26px;
-  font-size: clamp(3.2rem, 5.4vw, 5.2rem);
-  line-height: 1;
-  font-weight: 800;
-  color: transparent;
-  -webkit-text-stroke: 1px rgba(245, 243, 238, 0.18);
-  pointer-events: none;
-  user-select: none;
-  transition: -webkit-text-stroke-color 0.45s ease, color 0.45s ease;
+/* شمارهٔ مرحله — کوچکِ طلایی بالای عنوان (نسخهٔ دوم: بدونِ عددِ پشتِ متن) */
+.pr-step__body .pr-step__idx {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--gold-l);
+  opacity: 0.85;
+}
+
+.pr-step__idx i {
+  width: 46px;
+  height: 1px;
+  background: linear-gradient(to left, rgba(201, 161, 90, 0.65), transparent);
+  transition: width 0.4s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 /* متنها */
@@ -609,17 +613,6 @@
 }
 .pr-step__body p {
   color: rgba(245, 243, 238, 0.55);
-}
-
-/* برچسبِ فاز — انتهای ردیف */
-.pr-step__tag {
-  position: absolute;
-  top: 46px;
-  inset-inline-end: 0;
-  font-size: 10px;
-  letter-spacing: 0.28em;
-  color: rgba(245, 243, 238, 0.28);
-  transition: color 0.35s ease;
 }
 
 /* ── hover: مرحله «فعال» میشود ── */
@@ -632,14 +625,17 @@
     0 0 30px -6px rgba(201, 161, 90, 0.65);
   transform: scale(1.08);
 }
-.pr-step:hover .pr-step__num,
-.pr-step:focus-within .pr-step__num {
-  -webkit-text-stroke-color: rgba(232, 196, 122, 0.75);
-  color: rgba(232, 196, 122, 0.12);
+.pr-step:hover .pr-step__idx,
+.pr-step:focus-within .pr-step__idx {
+  opacity: 1;
 }
-.pr-step:hover .pr-step__tag,
-.pr-step:focus-within .pr-step__tag {
-  color: rgba(232, 196, 122, 0.7);
+.pr-step:hover .pr-step__idx i,
+.pr-step:focus-within .pr-step__idx i {
+  width: 76px;
+}
+.pr-step:hover .pr-step__body p,
+.pr-step:focus-within .pr-step__body p {
+  color: rgba(245, 243, 238, 0.75);
 }
 
 /* موبایل: عدد کوچکتر و بالا، برچسب حذف */
@@ -657,17 +653,9 @@
     width: 50px;
     height: 50px;
   }
-  .pr-step__num {
-    inset-inline-start: 64px;
-    top: 18px;
-    font-size: 2.6rem;
-  }
-  .pr-step__tag { display: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .pr-rail__bead { display: none; }
   .pr-step__node,
-  .pr-step__num,
-  .pr-step__tag { transition: none; }
 }

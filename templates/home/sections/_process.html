@@ -35,12 +35,14 @@
           {% for step in process_steps %}
             <li class="pr-step" data-reveal="up" data-delay="{% cycle '0' '0.08' '0.16' '0.24' '0.32' %}">
               <span class="pr-step__node">{% icon step.icon class="h-5 w-5" %}</span>
-              <span class="pr-step__num" aria-hidden="true">{{ forloop.counter|stringformat:"02d"|fa_digits }}</span>
               <div class="pr-step__body">
-                <h3 class="text-2xl font-extrabold">{{ step.title }}</h3>
+                <p class="pr-step__idx">
+                  <b>{{ forloop.counter|stringformat:"02d"|fa_digits }}</b>
+                  <i aria-hidden="true"></i>
+                </p>
+                <h3 class="mt-2.5 text-2xl font-extrabold">{{ step.title }}</h3>
                 <p class="mt-2.5 max-w-2xl text-sm leading-7 text-cream/55">{{ step.description }}</p>
               </div>
-              <span class="pr-step__tag font-latin" dir="ltr" aria-hidden="true">PHASE {{ forloop.counter|stringformat:"02d"|fa_digits }}</span>
             </li>
           {% endfor %}
         </ol>
