@@ -10,6 +10,7 @@
 {% with category=project.categories.first %}
 <a href="{% url 'portfolio:detail' project.slug %}"
    class="tile group relative block overflow-hidden{% if filter_key %} pf-item{% endif %}{% if class %} {{ class }}{% endif %}"
+   data-reveal="clip"
    {% if filter_key %}data-cat="{{ filter_key }}"{% endif %}
    style="border-radius: {{ radius|default:"1.75rem" }};{% if style %} {{ style }}{% endif %}"
    aria-label="{{ project.title|plain }}">

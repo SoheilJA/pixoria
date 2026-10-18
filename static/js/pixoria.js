@@ -1102,6 +1102,10 @@ function initPortfolioFilter({ REDUCED, faDigits }) {
       // در فیلتر نیست.
       if (match) {
         el.classList.remove("is-hidden");
+        // کارتی که با فیلتر برمی‌گردد باید بلافاصله «رسیده» باشد، وگرنه
+        // پشتِ حالتِ پنهانِ ورودِ اولیه می‌ماند؛ حرکتِ ورود را همان
+        // keyframesِ pf-in می‌سازد.
+        el.classList.add("is-in");
         el.style.setProperty("--pf-i", String(Math.min(shown, 10)));
         el.classList.remove("pf-in");
         void el.offsetWidth;
