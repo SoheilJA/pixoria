@@ -1,0 +1,490 @@
+/* ==========================================================================
+   Pixoria — لایهٔ حرکتِ CSS  (motion.css)
+   --------------------------------------------------------------------------
+   تمام انیمیشن‌های سایت اینجا و به‌صورت CSS تعریف می‌شوند؛ دیگر هیچ GSAP یا
+   ScrollTrigger ای در پروژه نیست. جاوااسکریپت فقط سه کار می‌کند:
+     ۱) کلاسِ is-in را با IntersectionObserver اضافه می‌کند (ماشه)،
+     ۲) متغیرهای CSS را ست می‌کند (شماره‌ی پلکان، مکانِ ماوس، مسیرِ GPS)،
+     ۳) تورِ اطمینان (اگر ماژول بالا نیامد، محتوا هرگز پنهان نمی‌ماند).
+   خودِ حرکت، زمان‌بندی و کششِ آن کاملاً در همین فایل است.
+
+   نکتهٔ ایمنی: حالتِ پنهانِ اولیه فقط وقتی اعمال می‌شود که <html> کلاسِ
+   motion داشته باشد. آن کلاس را یک اسکریپتِ inline در <head> می‌گذارد و اگر
+   ماژولِ جاوااسکریپت تا ۳ ثانیه بالا نیاید، خودش کلاس را برمی‌دارد؛ پس
+   محتوا در هیچ شرایطی (خطای JS، مرورگرِ قدیمی، بدونِ JS) ناپدید نمی‌ماند.
+   ========================================================================== */
+
+:root {
+  /* منحنی‌های حرکت — پایهٔ «نرمی» و شخصیتِ هر انیمیشن */
+  --rv-ease: cubic-bezier(0.16, 1, 0.3, 1); /* خروجیِ سریع، توقفِ آرام (expo) */
+  --rv-ease-soft: cubic-bezier(0.22, 0.61, 0.36, 1); /* نرم و بی‌لرزش */
+  --rv-ease-pop: cubic-bezier(0.34, 1.4, 0.64, 1); /* کمی سرریز — برای پاپ */
+  --rv-ease-in: cubic-bezier(0.7, 0, 0.84, 0); /* ورودِ آرام، خروجِ تند */
+
+  --rv-dur: 900ms; /* مدتِ پیش‌فرض */
+  --rv-stagger: 70ms; /* فاصلهٔ پلکانِ عناصر هم‌گروه */
+}
+
+/* ------------------------------------------------------------------ پایه
+   فقط سه مقدارِ اولیه + ترنزیشن‌ها. هر واریانت با ست‌کردنِ متغیرها شخصیتِ
+   خودش را می‌سازد، پس یک قاعده برای همه کافی است. */
+
+html.motion [data-reveal] {
+  opacity: 0;
+  translate: var(--rv-x, 0px) var(--rv-y, 46px);
+  scale: var(--rv-scale, 1);
+  rotate: var(--rv-rot, 0deg);
+  filter: var(--rv-blur, none);
+  clip-path: var(--rv-clip, inset(0 0 0 0 round 0));
+  transition:
+    opacity calc(var(--rv-dur) * 0.72) var(--rv-ease-soft),
+    translate var(--rv-dur) var(--rv-ease),
+    scale var(--rv-dur) var(--rv-ease),
+    rotate var(--rv-dur) var(--rv-ease),
+    filter var(--rv-dur) var(--rv-ease-soft),
+    clip-path calc(var(--rv-dur) * 1.15) var(--rv-ease);
+  transition-delay: calc(var(--rv-delay, 0ms) + var(--rv-i, 0) * var(--rv-stagger));
+  will-change: opacity, translate, scale;
+}
+
+html.motion [data-reveal].is-in {
+  opacity: 1;
+  translate: 0 0;
+  scale: 1;
+  rotate: 0deg;
+  filter: none;
+  clip-path: inset(0 0 0 0 round 0);
+  will-change: auto;
+}
+
+/* --------------------------------------------------------- واریانت‌ها
+   هر واریانت یک حسِ متفاوت دارد: بعضی از پایین «می‌رسند»، بعضی پرده‌برداری
+   می‌شوند، بعضی از فوکوس بیرون می‌آیند و بعضی با کمی چرخش می‌نشینند. */
+
+/* رسیدنِ نرم از پایین (پیش‌فرض) */
+html.motion [data-reveal="up"],
+html.motion [data-reveal=""] {
+  --rv-y: 46px;
+  --rv-blur: blur(7px);
+}
+
+/* آمدنِ کوتاه و بی‌لرزش — برای ردیف‌های متن */
+html.motion [data-reveal="rise"] {
+  --rv-y: 22px;
+  --rv-scale: 0.976;
+  --rv-dur: 760ms;
+}
+
+/* افتادن از بالا — تیترهای سکشن‌ها */
+html.motion [data-reveal="down"] {
+  --rv-y: -34px;
+  --rv-blur: blur(6px);
+  --rv-dur: 820ms;
+}
+
+/* ورود از راست/چپ با چرخشِ خیلی کم (کادرها) */
+html.motion [data-reveal="right"] {
+  --rv-x: 62px;
+  --rv-y: 0px;
+  --rv-rot: 0.7deg;
+  --rv-blur: blur(5px);
+}
+html.motion [data-reveal="left"] {
+  --rv-x: -62px;
+  --rv-y: 0px;
+  --rv-rot: -0.7deg;
+  --rv-blur: blur(5px);
+}
+
+/* از فوکوس درآمدن — بلوک‌های متنی */
+html.motion [data-reveal="blur"] {
+  --rv-y: 14px;
+  --rv-blur: blur(18px);
+  --rv-dur: 1150ms;
+}
+
+/* باز شدنِ نرم از مرکز با کمی بزرگ‌نمایی */
+html.motion [data-reveal="scale"] {
+  --rv-y: 18px;
+  --rv-scale: 0.9;
+  --rv-blur: blur(8px);
+  --rv-dur: 1000ms;
+}
+
+/* پاپِ دکمه‌ها و چیپ‌ها */
+html.motion [data-reveal="pop"] {
+  --rv-y: 12px;
+  --rv-scale: 0.78;
+  --rv-dur: 620ms;
+  transition-timing-function: var(--rv-ease-pop);
+}
+
+/* پرده‌برداری عمودی (تصاویر و مدیا) */
+html.motion [data-reveal="clip"] {
+  --rv-y: 14px;
+  --rv-clip: inset(0 0 100% 0);
+  --rv-scale: 1.045;
+  --rv-dur: 1050ms;
+}
+
+/* پرده‌برداری افقیِ راست‌به‌چپ (RTL) — تیترهای اصلی */
+html.motion [data-reveal="mask"] {
+  --rv-y: 0px;
+  --rv-clip: inset(0 0 0 100%);
+  --rv-dur: 1150ms;
+}
+html.motion [data-reveal="mask-ltr"] {
+  --rv-y: 0px;
+  --rv-clip: inset(0 100% 0 0);
+  --rv-dur: 1150ms;
+}
+
+/* زوم‌اوتِ تصاویر: از بزرگ و تار به نقطهٔ ثابت */
+html.motion [data-reveal="zoom"] {
+  --rv-scale: 1.16;
+  --rv-y: 0px;
+  --rv-blur: blur(10px);
+  --rv-dur: 1250ms;
+}
+
+/* چرخشِ سه‌بعدی روی محور Y (کاشی‌های تصویری) */
+html.motion [data-reveal="flip"],
+html.motion [data-reveal="tilt"] {
+  transition:
+    opacity calc(var(--rv-dur) * 0.7) var(--rv-ease-soft),
+    translate var(--rv-dur) var(--rv-ease),
+    scale var(--rv-dur) var(--rv-ease),
+    rotate var(--rv-dur) var(--rv-ease),
+    transform var(--rv-dur) var(--rv-ease),
+    filter var(--rv-dur) var(--rv-ease-soft);
+}
+html.motion [data-reveal="tilt"] {
+  --rv-y: 30px;
+  --rv-tilt: 15deg;
+  transform: perspective(1000px) rotateX(var(--rv-tilt));
+}
+html.motion [data-reveal="tilt"].is-in {
+  --rv-tilt: 0deg;
+  transform: perspective(1000px) rotateX(0deg);
+}
+html.motion [data-reveal="flip"] {
+  --rv-y: 26px;
+  --rv-flip: -26deg;
+  transform: perspective(1100px) rotateY(var(--rv-flip)) rotateX(6deg);
+}
+html.motion [data-reveal="flip"].is-in {
+  --rv-flip: 0deg;
+  transform: perspective(1100px) rotateY(0deg) rotateX(0deg);
+}
+
+/* ------------------------------------------------- تعدیل به‌تفکیکِ نقش
+   تا همه‌چیز شبیه هم نباشد: تیترها تارتر، تصاویر بزرگ‌تر، کارت‌ها کمی
+   آهسته‌تر و دکمه‌ها تندتر وارد می‌شوند. */
+
+html.motion :is(h1, h2, h3)[data-reveal] {
+  --rv-blur: blur(10px);
+  --rv-y: 30px;
+}
+html.motion :is(img, figure)[data-reveal] {
+  --rv-scale: 1.07;
+}
+html.motion :is(a, button, .btn, .flt-btn, [role="button"])[data-reveal] {
+  --rv-dur: 700ms;
+  --rv-y: 20px;
+}
+html.motion :is(.tile, .blog-card, .t-card, .svc-card, .glass)[data-reveal] {
+  --rv-dur: 980ms;
+  --rv-y: 40px;
+  --rv-scale: 0.985;
+}
+
+/* --------------------------------------------------------------- پلکان
+   جاوااسکریپت فقط شمارهٔ هر عنصر را در --rv-i می‌گذارد؛ فاصلهٔ زمانی و
+   الگوی آن اینجاست (سه‌تایی و چهارتایی برای اینکه ریتم یکنواخت نشود). */
+
+html.motion [data-reveal][style*="--rv-i"] {
+  transition-delay: calc(var(--rv-delay, 0ms) + var(--rv-i, 0) * var(--rv-stagger));
+}
+@media (max-width: 640px) {
+  :root {
+    --rv-stagger: 55ms;
+  }
+}
+
+/* --------------------------------------------------- مغناطیسی و تیلت
+   حرکت‌دهندهٔ اصلی CSS است؛ JS فقط مکانِ اشاره‌گر را در متغیر می‌ریزد. */
+
+html.motion [data-magnetic] {
+  transform: translate3d(var(--mg-x, 0px), var(--mg-y, 0px), 0);
+  transition: transform 480ms var(--rv-ease);
+}
+html.motion [data-magnetic]:active {
+  transition-duration: 120ms;
+  scale: 0.97;
+}
+
+html.motion [data-tilt] {
+  transform: perspective(900px) rotateX(var(--tx, 0deg)) rotateY(var(--ty, 0deg));
+  transition: transform 520ms var(--rv-ease);
+}
+
+/* برقِ گوشهٔ کارت هم با CSS حرکت می‌کند، نه با GSAP. */
+.glare {
+  transition: opacity 520ms var(--rv-ease-soft);
+}
+[data-tilt]:hover .glare,
+.tile:hover .glare {
+  opacity: 1;
+}
+
+/* ------------------------------------------------------------ شناوری
+   عناصر تزئینی (سیاره، ماه، ذرات). JS فقط دامنه/تأخیرِ تصادفی را می‌گذارد
+   تا هیچ دو عنصری هم‌زمان حرکت نکنند. */
+
+html.motion [data-float] {
+  animation: rvFloat var(--float-dur, 4.4s) ease-in-out var(--float-delay, 0s) infinite alternate;
+}
+html.motion [data-float-spin] {
+  animation:
+    rvFloat calc(var(--float-dur, 4.4s) * 1.15) ease-in-out var(--float-delay, 0s) infinite alternate,
+    rvSpin var(--float-spin, 26s) linear infinite;
+}
+@keyframes rvFloat {
+  from {
+    translate: 0 calc(var(--float-amp, 10px) * -1);
+  }
+  to {
+    translate: 0 var(--float-amp, 10px);
+  }
+}
+@keyframes rvSpin {
+  to {
+    rotate: 360deg;
+  }
+}
+
+/* توقفِ انیمیشن‌های تزئینی ِخارج از دید (JS کلاس را می‌گذارد) */
+.is-paused [data-float],
+.is-paused [data-float-spin],
+[data-pause].is-paused,
+html.motion [data-pause].is-paused * {
+  animation-play-state: paused !important;
+}
+
+/* ------------------------------------------------ پخشِ مدیا (کن‌برنز) */
+html.motion .is-playing [data-v-el] {
+  animation: rvKenBurns 18s ease-in-out infinite alternate;
+}
+@keyframes rvKenBurns {
+  from {
+    scale: 1.02;
+  }
+  to {
+    scale: 1.12;
+  }
+}
+
+/* ------------------------------------------------------ فیلترِ نمونه‌کار
+   نمایش/پنهان‌شدن با ترنزیشن و کمی پلکان؛ هیچ GSAP ای در میان نیست. */
+
+html.motion .pf-item {
+  transition:
+    opacity 420ms var(--rv-ease-soft),
+    translate 520ms var(--rv-ease),
+    scale 520ms var(--rv-ease);
+}
+html.motion .pf-item.is-hidden {
+  display: none;
+}
+html.motion .pf-item.pf-in {
+  animation: rvTileIn 560ms var(--rv-ease) both;
+  animation-delay: calc(var(--pf-i, 0) * 55ms);
+}
+@keyframes rvTileIn {
+  from {
+    opacity: 0;
+    translate: 0 18px;
+    scale: 0.96;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+    scale: 1;
+  }
+}
+
+/* ------------------------------------------------------- مسیرِ فرآیند (GPS)
+   اگر مرورگر انیمیشنِ وابسته به اسکرول را پشتیبانی کند، مسیر با اسکرول
+   کشیده می‌شود و نقطهٔ نورانی روی همان مسیر حرکت می‌کند — همه در CSS. */
+
+.gps-draw {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+@supports (animation-timeline: view()) {
+  html.motion .gps-draw {
+    animation: rvGpsDraw linear both;
+    animation-timeline: view();
+    animation-range: entry 30% cover 62%;
+  }
+  html.motion .gps-dot {
+    animation: rvGpsTravel linear both;
+    animation-timeline: view();
+    animation-range: entry 30% cover 62%;
+    offset-distance: 0%;
+  }
+}
+@keyframes rvGpsDraw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes rvGpsTravel {
+  to {
+    offset-distance: 100%;
+  }
+}
+/* بدونِ پشتیبانی: مسیر کامل کشیده و نقطه بی‌حرکت می‌ماند */
+@supports not (animation-timeline: view()) {
+  html.motion .gps-draw {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* --------------------------------------------- نوارهای پیشرفت (اسکرولی) */
+
+@supports (animation-timeline: scroll()) {
+  html.motion #scroll-progress {
+    transform: none;
+    animation: rvProgress linear both;
+    animation-timeline: scroll(root block);
+  }
+  html.motion [data-reading-bar] {
+    animation: rvProgress linear both;
+    animation-timeline: scroll(root block);
+  }
+}
+@keyframes rvProgress {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* --------------------------------------------------- خروجِ صحنهٔ سه‌بعدی
+   جایگزینِ ScrollTrigger هیرو: با اسکرولِ صفحه، صحنه آرام عقب می‌رود. */
+
+@supports (animation-timeline: scroll()) {
+  html.motion #hero-3d {
+    animation: rvHeroExit linear both;
+    animation-timeline: scroll(root block);
+    animation-range: 0 88vh;
+  }
+}
+@keyframes rvHeroExit {
+  0% {
+    opacity: 1;
+    translate: 0 0;
+  }
+  55% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    translate: 0 16%;
+  }
+}
+
+/* ------------------------------------------------- جست‌وخیزهای صفحه‌ای
+   هر صفحه شخصیتِ خودش را دارد؛ اینها پایهٔ مشترکی‌اند که قالبی‌ها با
+   کلاس‌های کوچک (hb-*، pf-*، sv-*، bl-*، ct-*) آن را دقیق‌تر می‌کنند. */
+
+/* تیترهای هیرو: خطِ زیرینِ طلایی که هم‌زمان با متن کشیده می‌شود */
+.rv-underline {
+  position: relative;
+}
+.rv-underline::after {
+  content: "";
+  position: absolute;
+  inset-inline-start: 0;
+  bottom: -0.35em;
+  height: 2px;
+  width: 100%;
+  transform-origin: right center;
+  scale: 0 1;
+  background: linear-gradient(90deg, transparent, var(--color-gold, #c9a15a), transparent);
+  transition: scale 1100ms var(--rv-ease) 220ms;
+}
+.rv-underline.is-in::after,
+.is-in .rv-underline::after {
+  scale: 1 1;
+}
+
+/* خطِ جداکنندهٔ سکشن‌ها که از وسط باز می‌شود */
+.rv-rule {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(201, 161, 90, 0.5), transparent);
+  transform-origin: center;
+  scale: 0 1;
+  transition: scale 1200ms var(--rv-ease) 120ms;
+}
+.rv-rule.is-in {
+  scale: 1 1;
+}
+
+/* درخششِ کوتاهِ کارت‌ها بعد از رسیدن (جزئیاتِ ریز) */
+html.motion [data-reveal].is-in.rv-flash {
+  animation: rvFlash 900ms var(--rv-ease-soft) both;
+}
+@keyframes rvFlash {
+  0%,
+  100% {
+    box-shadow: inherit;
+  }
+  35% {
+    box-shadow: 0 0 0 1px rgba(201, 161, 90, 0.55), 0 30px 70px -40px rgba(201, 161, 90, 0.5);
+  }
+}
+
+/* ---------------------------------------------------- کاهشِ حرکت / ایمنی */
+
+@media (prefers-reduced-motion: reduce) {
+  html.motion [data-reveal],
+  html.motion [data-reveal].is-in {
+    opacity: 1 !important;
+    translate: none !important;
+    scale: none !important;
+    rotate: none !important;
+    filter: none !important;
+    clip-path: none !important;
+    transform: none !important;
+    transition: none !important;
+    animation: none !important;
+  }
+  html.motion [data-float],
+  html.motion [data-float-spin],
+  html.motion .gps-draw,
+  html.motion .gps-dot,
+  html.motion #hero-3d,
+  html.motion .pf-item.pf-in,
+  html.motion .is-playing [data-v-el] {
+    animation: none !important;
+  }
+  html.motion .gps-draw {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* بدونِ کلاسِ motion (JS بالا نیامده یا مرورگر قدیمی) هیچ محتوایی پنهان
+   نمی‌ماند؛ حالتِ نهایی روی همه اعمال می‌شود. */
+html:not(.motion) [data-reveal] {
+  opacity: 1 !important;
+  translate: none !important;
+  scale: none !important;
+  rotate: none !important;
+  filter: none !important;
+  clip-path: none !important;
+  transform: none !important;
+}
