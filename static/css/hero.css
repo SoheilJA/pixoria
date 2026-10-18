@@ -129,7 +129,7 @@
   position: absolute;
   z-index: 20;
   inset-inline-start: 50%;
-  bottom: clamp(18px, 3svh, 34px);
+  bottom: clamp(26px, 4.5svh, 52px);
   translate: -50% 0;
   display: grid;
   justify-items: center;
@@ -227,6 +227,18 @@
   margin-top: clamp(26px, 4svh, 44px);
   width: fit-content;
   margin-inline: auto;
+}
+/* محویِ نرمِ لبهٔ پایین — نقطه‌ها و کلمهٔ غول پیش از مرزِ بخشِ بعد داخلِ مرکبِ خودشان
+   محو میشوند تا برشِ خطِ صاف در محلِ اتصالِ فرمِ موجیِ بخشِ دوم دیده نشود */
+.hx-a::after {
+  content: "";
+  position: absolute;
+  z-index: 4;
+  inset-inline: 0;
+  bottom: 0;
+  height: clamp(90px, 16vh, 180px);
+  pointer-events: none;
+  background: linear-gradient(to bottom, rgba(10, 10, 12, 0) 0%, var(--ink) 82%);
 }
 
 /* ─────────────────────── mobile ─────────────────────── */
