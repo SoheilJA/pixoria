@@ -518,39 +518,43 @@
    بزرگِ خطکشی‌شده؛ hover: عدد طلایی میشود و گره روشن.
    ───────────────────────────────────────────────────────────────── */
 
+/* ریلِ موجی — SVG با view Boxِ چسبیده؛ وسطِ موج روی محورِ گرهها میماند
+   (گرهها با هالهٔ ink روی موج مینشینند، پس همپوشانی مشکلی نمیسازد) */
 .pr-rail {
   position: absolute;
-  inset-inline-start: 31px; /* وسطِ گره (گره ۵۶px، ریل ۲px) */
-  top: 18px;
-  bottom: 18px;
-  width: 2px;
-  margin-inline-start: -1px;
-  background: repeating-linear-gradient(
-    to bottom,
-    rgba(245, 243, 238, 0.18) 0 7px,
-    transparent 7px 15px
-  );
+  inset-inline-start: 9px; /* مرکزِ svg با عرضِ ۴۴px روی محورِ قبلی (۳۱px) */
+  top: 20px;
+  bottom: 20px;
+  width: 44px;
+  height: auto;
+  margin: 0;
+  overflow: visible;
   z-index: 0;
+}
+.pr-rail__line {
+  fill: none;
+  stroke: rgba(245, 243, 238, 0.17);
+  stroke-width: 1.6;
+  stroke-dasharray: 7 10;
+  vector-effect: non-scaling-stroke;
 }
 
 /* مهرهٔ نورانی — روی ریل بالا و پایین میرود (جریانی که مراحل را طی میکند) */
 .pr-rail__bead {
-  position: absolute;
-  left: 50%;
-  margin-left: -2px;
-  top: 0;
-  width: 4px;
-  height: 64px;
-  border-radius: 999px;
-  background: linear-gradient(to bottom, transparent, #e8c47a 60%, #fff);
-  filter: drop-shadow(0 0 9px rgba(232, 196, 122, 0.9));
+  offset-path: path(
+    "M22,6 C32,60 12,120 22,176 C32,232 12,292 22,348 C32,404 12,464 22,520 C32,576 12,636 22,692 C32,748 12,808 22,864 C32,920 12,980 22,996"
+  );
+  offset-rotate: 0deg;
+  offset-distance: 0%;
+  fill: #e8c47a;
+  filter: drop-shadow(0 0 7px rgba(232, 196, 122, 0.9));
   opacity: 0;
   animation: prBead 9s linear infinite;
 }
 @keyframes prBead {
-  0% { top: -4%; opacity: 0; }
+  0% { offset-distance: 0%; opacity: 0; }
   8% { opacity: 1; }
-  90%, 100% { top: 96%; opacity: 0; }
+  90%, 100% { offset-distance: 100%; opacity: 0; }
 }
 
 /* هر مرحله: ردیفِ تمام‌عرض؛ هیچ جعبهای نیست */
@@ -646,7 +650,7 @@
     padding-inline-end: 18px;
     min-height: 0;
   }
-  .pr-rail { inset-inline-start: 23px; }
+  .pr-rail { inset-inline-start: -2px; }
   .pr-step__node {
     inset-inline-start: -5px;
     top: 24px;

@@ -30,7 +30,11 @@
 
       {# ═══ خط‌تولید — مهرهٔ نورانی پیوسته روی ریل از مرحله‌ای به مرحلهٔ بعد میرسد ═══ #}
       <div class="pr-wrap relative mt-16 lg:mt-20">
-        <span class="pr-rail" aria-hidden="true"><i class="pr-rail__bead"></i></span>
+        <svg class="pr-rail" viewBox="0 0 44 1000" preserveAspectRatio="none" aria-hidden="true">
+          <path class="pr-rail__line"
+                d="M22,6 C32,60 12,120 22,176 C32,232 12,292 22,348 C32,404 12,464 22,520 C32,576 12,636 22,692 C32,748 12,808 22,864 C32,920 12,980 22,996"></path>
+          <circle class="pr-rail__bead" r="3.4" cx="0" cy="0"></circle>
+        </svg>
         <ol class="pr-steps">
           {% for step in process_steps %}
             <li class="pr-step" data-reveal="up" data-delay="{% cycle '0' '0.08' '0.16' '0.24' '0.32' %}">
