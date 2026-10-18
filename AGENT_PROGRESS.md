@@ -330,3 +330,13 @@
 - mismatch دیوایدرها: `_process` fill #efece5→#f5f3ee (رنگِ why) — قبلاً باندِ کرم۲ روی کرم مینشست. `_blog` بعد از فلیپِ stats خودکار درست شد (#f5f3ee = رنگِ تازهٔ stats).
 - کاراییِ اسکرول: (۱) blur(8px) از aurora-blobها حذف (۱۰ بلاب را هرفریمِ اسکرول دوباره بلور میکرد؛ گرادیان شعاعی خودش نرم است) + will-change:transform برای کامپوزیت. (۲) backdrop-filter از همهٔ عناصر داخلِ سکشنها حذف شد — لیستِ کلاسها (glass*/btn-ghost/ctrl-btn/tech-chip/faq-item/pill-outline/play-badge/shard/svc-swatch/ab-tile__tag/backdrop-blur-*) از خودِ CSS استخراج و مهره شد؛ سربرگ/مگامنو blur برای شناوری. قبل: ۷۷ عنصر backdrop + ۶۲ blur فعال؛ بعد: فقط ۲ عنصر سربرگ.
 - صحت: check PASS؛ دام: تناوبِ کامل، پنل تیره، stats روشن (کارت rgba(255,255,255,.6) برچسب coy، عدد گرادیان تیره)، دیوایدرهای همرنگ، backdrop داخل سکشن‌ها=۰، بدون خطا/سرریز.
+
+
+
+### دنبالهٔ ۲۱ — سویچِ کاملِ آیکون‌ها به Tabler Icons
+- وبفونتِ Tabler 3.49 (outline، ~۵۲۴۷ آیکون) لوکال شد: `static/tabler/tabler-icons.min.css` (تریم‌شده: فقط سورس woff2) + `fonts/tabler-icons.woff2`.
+- موتورِ آیکون بازنویسی شد: `icon_utils.py` نام‌ها را مستقیم از خودِ CSS پارِس می‌کند (icons.json لازم نیست)؛ `LEGACY_ALIASES` نام‌های قدیمیِ Lucide/دیتابیس را به معادلِ Tabler می‌برد و ولیدیتور بعد از نگاشت چک می‌کند؛ تگِ قالب حالا `<i class="ti ti-x">` می‌دهد؛ پیش‌نمایشِ ادمین و متنهای خطا هم ti/tabler شدند.
+- پیکرِ ادمین: `static/admin/js/tabler_icons.js` (آیکون‌ها + ALIASES) با `scripts/build_tabler_icons.py` تولید می‌شود که هدف‌های جدولِ نگاشت را هم در برابر فونت اعتبارسنجی می‌کند؛ JS خودش نامِ قدیمی را قبل از جستجو نرمال می‌کند.
+- راهنماهای ۵ اپ (core/home/services/portfolio/contact) از Font Awesome/Lucide به Tabler به‌روز و ۶ مایگریشنِ help-text ساخته/اعمال شد — دادهٔ آیکون‌ها همان نام‌های قدیمی ماندند و در رندر نگاشت می‌شوند.
+- حذفِ خطِ تولیدِ FA: پکیجِ `@fortawesome/fontawesome-free`، اسکریپتِ `build_fontawesome.js`، اطلاعاتِ `static/fontawesome` و `fa_icons.js` ادمین.
+- صحت: check PASS؛ صفحهٔ اصلی ۱۲۴ آیکون با فونتِ لودشده و صفر خطا، صفر کلاسِ `fa-`؛ `/about /blog /services /contact` همه 200؛ `/portfolio` همان 500ِ شناخته‌شدهٔ مدیای گمشدهٔ pk=9 (بی‌رِبط). کامیته‌ها: وبفونت، موتور، حذفِ FA، تریمِ CSS.
