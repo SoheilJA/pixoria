@@ -2,11 +2,11 @@ from django.db import models
 
 from apps.core.icon_utils import validate_icon_name
 
-# راهنمای مشترک فیلد آیکون — آیکون‌ها از فونتِ محلی Font Awesome بارگذاری می‌شوند.
+# راهنمای مشترک فیلد آیکون — آیکون‌ها از فونتِ محلی Tabler Icons بارگذاری می‌شوند.
 ICON_HELP = (
-    "نام انگلیسی یک آیکون Font Awesome (نسخهٔ رایگان)، بدون فاصله. "
-    "مثال: bolt، palette، shield-halved. "
-    "لیست کامل آیکون‌ها: fontawesome.com/icons"
+    "نام انگلیسی یک آیکون Tabler، بدون فاصله. "
+    "مثال: bolt، palette، shield-check. "
+    "لیست کامل آیکون‌ها: tabler.io/icons"
 )
 # راهنمای مشترک فیلد متن بالای عنوان (eyebrow).
 EYEBROW_HELP = "متن کوچک و طلاییِ بالای عنوان. مثلاً: تماس با ما"

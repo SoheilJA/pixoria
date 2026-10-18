@@ -1,9 +1,9 @@
-"""Font Awesome icon template tag.
+"""Tabler Icons template tag.
 
 Usage:  {% icon "rocket" class="h-6 w-6 text-lime" %}
-Renders an inline <i class="fa-solid fa-rocket …"> referencing the local
-self-hosted Font Awesome webfont (static/fontawesome/), so icons are
-styleable with currentColor and served locally (no CDN).
+Renders an inline <i class="ti ti-rocket …"> referencing the local
+self-hosted Tabler webfont (static/tabler/), so icons are styleable with
+currentColor and served locally (no CDN).
 
 Icons are fonts, so Tailwind sizing utilities (h-6 w-6) would do nothing on
 an inline element — the tag converts them to an inline font-size instead,
@@ -11,7 +11,8 @@ which keeps every existing call site working unchanged. Color classes
 (text-gold …) pass through untouched because the glyphs use currentColor.
 
 Props:
-  name   str  required — Font Awesome icon name (e.g. "arrow-left")
+  name   str  required — Tabler icon name (e.g. "arrow-left"); legacy
+              Lucide-style names are mapped automatically
   class  str  optional — CSS classes for the <i> element
   size   str  optional — explicit font-size (e.g. "20px" or "1.25rem")
 """
@@ -22,7 +23,7 @@ from django import template
 from django.utils.html import escape
 from django.utils.safestring import mark_safe
 
-from apps.core.icon_utils import available_icons, icon_style, map_icon_name
+from apps.core.icon_utils import available_icons, map_icon_name
 
 register = template.Library()
 
@@ -53,7 +54,7 @@ def _font_size_from_classes(cls):
 @register.simple_tag
 def icon(name, class_name="", size=None, **kwargs):
     # نام‌ها از قالب‌ها (literal) یا دیتابیس (ویرایشِ ادمین) می‌آیند — فقط
-    # اسلاگ‌های معادل قبول می‌شوند و نام‌های قدیمیِ Lucide نگاشت می‌گردند.
+    # اسلاگ‌های معتبر قبول می‌شوند و نام‌های قدیمیِ Lucide نگاشت می‌گردند.
     if not name or not _NAME_RE.match(str(name)):
         return ""
     name = map_icon_name(str(name))
@@ -66,7 +67,7 @@ def icon(name, class_name="", size=None, **kwargs):
     font_size = size or _font_size_from_classes(cls)
     cls = _DIM_RE.sub(" ", cls).strip()
 
-    classes = f"fa-{icon_style(name)} fa-{name}"
+    classes = f"ti ti-{name}"
     if cls:
         classes += f" {escape(cls)}"
     style = f' style="font-size:{escape(font_size)}"' if font_size else ""
@@ -77,8 +78,8 @@ def icon(name, class_name="", size=None, **kwargs):
 
 @register.simple_tag
 def icon_exists(name):
-    """True اگر نام آیکون در فونتِ محلی وجود داشته باشد (پیش‌نمایش ادمین)."""
+    """True اگر نام آیکون (بعد از نگاشت) در فونتِ محلی موجود باشد."""
     names = available_icons()
     if not names:
-        return True  # icons.json هنوز بیلد نشده — موقعِ setup اشتباهِ منفی نده
+        return True  # CSS هنوز خوانده نشده — موقعِ setup اشتباهِ منفی نده
     return map_icon_name(str(name)) in names

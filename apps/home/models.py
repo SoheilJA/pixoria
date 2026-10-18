@@ -4,11 +4,11 @@ from django.db import models
 from apps.core.icon_utils import validate_icon_name
 
 # راهنمای مشترک فیلد آیکون — در چندین مدل تکرار می‌شود تا متن کمکی یکسانی داشته
-# باشد. آیکون‌ها از فونتِ محلی Font Awesome بارگذاری می‌شوند (بدون CDN).
+# باشد. آیکون‌ها از فونتِ محلی Tabler Icons بارگذاری می‌شوند (بدون CDN).
 ICON_HELP = (
-    "نام انگلیسی یک آیکون Font Awesome (نسخهٔ رایگان)، بدون فاصله. "
-    "مثال: bolt، palette، shield-halved. "
-    "لیست کامل آیکون‌ها: fontawesome.com/icons"
+    "نام انگلیسی یک آیکون Tabler، بدون فاصله. "
+    "مثال: bolt، palette، shield-check. "
+    "لیست کامل آیکون‌ها: tabler.io/icons"
 )
 # راهنمای مشترک فیلد متن بالای عنوان (eyebrow) که در سکشن‌های v2 بالای عنوان
 # می‌آید.
@@ -92,7 +92,7 @@ class HeroStat(models.Model):
         max_length=64,
         blank=True,
         verbose_name="آیکون",
-        help_text="اختیاری. مثال: location-dot. " + ICON_HELP,
+        help_text="اختیاری. مثال: map-pin. " + ICON_HELP,
         validators=[validate_icon_name],
     )
     order = models.PositiveIntegerField(default=0, verbose_name="ترتیب")

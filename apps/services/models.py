@@ -127,9 +127,9 @@ class Service(WebPImageMixin, models.Model):
         default="wand-magic-sparkles",
         verbose_name="آیکون",
         help_text=(
-            "نام انگلیسی یک آیکون Lucide، بدون فاصله. "
+            "نام انگلیسی یک آیکون Tabler، بدون فاصله. "
             "مثال: monitor-smartphone، code-xml، palette، diamond. "
-            "لیست کامل آیکون‌ها: lucide.dev/icons"
+            "لیست کامل آیکون‌ها: tabler.io/icons"
         ),
         validators=[validate_icon_name],
     )
@@ -417,9 +417,9 @@ class ServiceWhyUs(models.Model):
         default="wand-magic-sparkles",
         verbose_name="آیکون",
         help_text=(
-            "نام انگلیسی یک آیکون Lucide، بدون فاصله. "
+            "نام انگلیسی یک آیکون Tabler، بدون فاصله. "
             "مثال: zap، palette، shield-check. "
-            "لیست کامل آیکون‌ها: lucide.dev/icons"
+            "لیست کامل آیکون‌ها: tabler.io/icons"
         ),
         validators=[validate_icon_name],
     )
