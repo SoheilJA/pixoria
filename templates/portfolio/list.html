@@ -55,10 +55,10 @@
       {% include "components/_breadcrumb.html" %}
       <div class="mt-8 max-w-2xl">
         {% if page_section and page_section.eyebrow %}
-          <p class="eyebrow" data-reveal="up">{{ page_section.eyebrow }}</p>
+          <p class="eyebrow" data-reveal="rise">{{ page_section.eyebrow }}</p>
         {% endif %}
         <h1 class="mt-6 text-[2.6rem] font-extrabold leading-[1.25] sm:text-5xl lg:text-6xl"
-            data-reveal="right">
+            data-reveal="mask">
           {% if page_section and page_section.title %}
             {{ page_section.title|highlight }}
           {% else %}
@@ -67,13 +67,13 @@
         </h1>
         {% if page_section and page_section.description %}
           <p class="mt-6 max-w-xl text-lg font-light leading-8 text-cream/70"
-             data-reveal="right" data-delay="0.12">
+             data-reveal="blur" data-delay="0.12">
             {{ page_section.description }}
           </p>
         {% endif %}
 
         {# خلاصهٔ آرشیو — تعداد پروژه‌ها و دسته‌بندی‌ها #}
-        <div class="mt-10 flex flex-wrap items-center gap-3" data-reveal="up" data-delay="0.2">
+        <div class="mt-10 flex flex-wrap items-center gap-3" data-reveal="pop" data-delay="0.2">
           <span class="inline-flex items-center gap-2 rounded-full border border-cream/10 bg-white/[0.02] px-4 py-2 text-sm text-cream/60">
             {% icon "briefcase" class="h-4 w-4 text-gold" %}
             <b class="font-bold text-cream fa-num">{{ portfolios|length|fa_digits }}</b> پروژه
@@ -100,7 +100,7 @@
     <div class="relative z-10 mx-auto max-w-7xl px-6 pb-28 pt-32">
       {# فیلتر دسته‌بندی — کلید فیلتر = اسلاگ دسته‌بندی #}
       {% if categories %}
-        <div class="flex flex-wrap gap-2.5" data-reveal="up" data-pf-filters>
+        <div class="flex flex-wrap gap-2.5" data-reveal="pop" data-pf-filters>
           <button class="flt-btn{% if not selected_category %} active{% endif %}" data-filter="all">همه</button>
           {% for category in categories %}
             <button class="flt-btn{% if selected_category.slug == category.slug %} active{% endif %}"
@@ -110,7 +110,7 @@
       {% endif %}
 
       {# شمارشگر — مقدار اولیه از سمت سرور؛ pixoria.js هنگام فیلتر به‌روز می‌شود #}
-      <p class="mt-5 font-latin text-[10px] tracking-[.3em] text-gold/60" data-pf-count data-reveal="up" data-delay="0.1">
+      <p class="mt-5 font-latin text-[10px] tracking-[.3em] text-gold/60" data-pf-count data-reveal="rise" data-delay="0.1">
         {{ portfolios|length|fa_digits }} PROJECTS
       </p>
 
@@ -129,7 +129,7 @@
       </div>
 
       {# کنترل‌های کاروسل — فقط زیر lg نمایش داده می‌شوند (دکمه‌های راست/چپ RTL) #}
-      <div class="mt-8 flex items-center justify-center gap-5 lg:hidden" data-carousel-controls data-reveal="up">
+      <div class="mt-8 flex items-center justify-center gap-5 lg:hidden" data-carousel-controls data-reveal="pop">
         <button type="button" class="ctrl-btn" data-carousel-prev aria-label="نمونه‌کار قبلی">{% icon "chevron-right" class="h-5 w-5" %}</button>
         <div class="flex items-center gap-2" data-carousel-dots></div>
         <button type="button" class="ctrl-btn" data-carousel-next aria-label="نمونه‌کار بعدی">{% icon "chevron-left" class="h-5 w-5" %}</button>
