@@ -323,3 +323,10 @@
 - مهرهٔ نورانی حالا با `offset-path: path(...)` و انیمیشنِ `offset-distance: 0%→100%` روی همان منحنی سفر میکند (بدونِ JS). خطِ موج، خطچینِ کرم با `vector-effect: non-scaling-stroke`.
 - موبایل: مرکزِ svg با `inset-inline-start:-2px` روی ستونِ گرهها.
 - صحت: check PASS؛ دام: خط `dashed/1.6px`، مهره روی offset-path با prBead 9s، هر ۵ گره دقیقاً وسطِ محور (CCCCC)، بدون خطا/سرریز.
+
+### دنبالهٔ ۲۰ — پسزمینههای سکشنها: لایهنگاری، ریتم رنگ و کاراییِ اسکرول
+- «دیوِ باریک روی دیو پهن»: پنلِ about (کرِم۲ روی کرم) تیره شد (bg-ink2) — کاشیها/چیپها/EST/آدرس به شیشهٔ تیره و متنِ کرم تغییر؛ دکمهٔ نمونهکارها هم در sections.css متنِ کرم گرفت. strokeِ سالِ بالای پنل کمی چیرهتر.
+- ریتمِ رنگ: ترتیب سکشنها حالا کاملاً یکدرمیانی است D L D L D L D L D L D L D (فقط جابهجاییِ order بین tech و testimonials در DB) + فلیپِ stats به bg-cream: h2/eyebrow/برچسبها/کارتها روشن شدند (glass-light) و آمارها با گرادیانِ تیرهترِ طلایی (`.stats-light` overrideها در sections.css چون tailwind بازسازی نمیشود). PIXORIA استروک → stroke-title-light + divider بالای stats (#efece5 = tech).
+- mismatch دیوایدرها: `_process` fill #efece5→#f5f3ee (رنگِ why) — قبلاً باندِ کرم۲ روی کرم مینشست. `_blog` بعد از فلیپِ stats خودکار درست شد (#f5f3ee = رنگِ تازهٔ stats).
+- کاراییِ اسکرول: (۱) blur(8px) از aurora-blobها حذف (۱۰ بلاب را هرفریمِ اسکرول دوباره بلور میکرد؛ گرادیان شعاعی خودش نرم است) + will-change:transform برای کامپوزیت. (۲) backdrop-filter از همهٔ عناصر داخلِ سکشنها حذف شد — لیستِ کلاسها (glass*/btn-ghost/ctrl-btn/tech-chip/faq-item/pill-outline/play-badge/shard/svc-swatch/ab-tile__tag/backdrop-blur-*) از خودِ CSS استخراج و مهره شد؛ سربرگ/مگامنو blur برای شناوری. قبل: ۷۷ عنصر backdrop + ۶۲ blur فعال؛ بعد: فقط ۲ عنصر سربرگ.
+- صحت: check PASS؛ دام: تناوبِ کامل، پنل تیره، stats روشن (کارت rgba(255,255,255,.6) برچسب coy، عدد گرادیان تیره)، دیوایدرهای همرنگ، backdrop داخل سکشن‌ها=۰، بدون خطا/سرریز.
