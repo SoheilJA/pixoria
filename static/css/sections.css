@@ -245,3 +245,268 @@
     transition: none;
   }
 }
+
+
+/* ─────────────────────────────────────────────────────────────────
+   «چرا پیکسوریا» v3 — بردِ مدارِ زنده
+   باسِ تغذیه در وسط + ماژولها با سیم و پین به آن؛ جرقههای جریان
+   روی سیمها پیوسته حرکت میکنند. جهتها با inset-inline منطقی تا
+   RTL و موبایل خودکار درست بمانند.
+   ───────────────────────────────────────────────────────────────── */
+
+.why-board {
+  --reach: calc(var(--bus-w) / 2 + 6px);
+}
+
+/* ستونبندی: دو ستون با گپِ مرکزی برای باس */
+.why-grid {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  column-gap: var(--bus-w);
+  row-gap: clamp(54px, 6vw, 84px);
+}
+
+/* ── باسِ تغذیه ── */
+.why-bus {
+  position: absolute;
+  top: 6px;
+  bottom: 6px;
+  left: 50%;
+  width: 2px;
+  margin-left: -1px;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(143, 107, 44, 0.5) 6%,
+    rgba(143, 107, 44, 0.5) 94%,
+    transparent
+  );
+  z-index: 0;
+}
+.why-bus__spark {
+  position: absolute;
+  left: 50%;
+  margin-left: -2px;
+  width: 4px;
+  height: 72px;
+  border-radius: 999px;
+  background: linear-gradient(to bottom, transparent, #e8c47a 55%, #fff);
+  filter: drop-shadow(0 0 9px rgba(232, 196, 122, 0.95));
+  opacity: 0;
+  animation: whyBusSpark 5.6s linear infinite;
+}
+@keyframes whyBusSpark {
+  0% { top: -6%; opacity: 0; }
+  7% { opacity: 1; }
+  90%, 100% { top: 98%; opacity: 0; }
+}
+
+/* ── هستهٔ تغذیه (لوزیِ وسط) ── */
+.why-bus__core {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 46px;
+  height: 46px;
+  border: 1px solid rgba(143, 107, 44, 0.55);
+  background: #faf8f3;
+  transform: translate(-50%, -50%) rotate(45deg);
+  box-shadow:
+    0 0 0 7px rgba(245, 243, 238, 0.9),
+    0 0 34px -8px rgba(201, 161, 90, 0.6);
+  z-index: 2;
+}
+.why-bus__core i {
+  position: absolute;
+  inset: 9px;
+  border-radius: 5px;
+  background: linear-gradient(140deg, #e8c47a, #8f6b2c);
+  animation: whyCorePulse 2.8s ease-in-out infinite;
+}
+@keyframes whyCorePulse {
+  0%, 100% { opacity: 0.75; box-shadow: none; }
+  50% { opacity: 1; box-shadow: 0 0 18px 2px rgba(232, 196, 122, 0.75); }
+}
+
+/* ── ماژول (تراشه) ── */
+.why-cell {
+  position: relative;
+  min-width: 0;
+}
+.why-chip {
+  position: relative;
+  z-index: 1;
+  height: 100%;
+  padding: 22px 24px 24px;
+  border: 1px solid rgba(143, 107, 44, 0.3);
+  border-radius: 20px;
+  background: linear-gradient(165deg, rgba(251, 249, 244, 0.85), rgba(241, 237, 227, 0.6) 70%);
+  transition:
+    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.35s ease,
+    box-shadow 0.45s ease,
+    background 0.45s ease;
+}
+
+/* پینهای تراشه — سمتِ رو به باس */
+.why-chip__pins {
+  position: absolute;
+  top: 20px;
+  bottom: 20px;
+  width: 5px;
+  border-radius: 2px;
+  opacity: 0.85;
+  background: repeating-linear-gradient(
+    to bottom,
+    var(--gold-d) 0 6px,
+    transparent 6px 13px
+  );
+  transition: opacity 0.3s ease;
+}
+.why-cell--r .why-chip__pins { inset-inline-end: -5px; }
+.why-cell:not(.why-cell--r) .why-chip__pins { inset-inline-start: -5px; }
+
+/* علامتِ IC (مثل مدار واقعی) */
+.why-chip__mark {
+  position: absolute;
+  top: 14px;
+  inset-inline-end: 18px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: rgba(143, 107, 44, 0.55);
+  pointer-events: none;
+  user-select: none;
+}
+
+/* ── سیمِ رد — از ماژول تا باس ── */
+.why-trace {
+  position: absolute;
+  top: 44px; /* مرکزِ ردیفِ آیکنِ تراشه */
+  height: 2px;
+  width: var(--reach);
+  border-radius: 999px;
+  z-index: 0;
+}
+/* سلولِ سمتِ راست: سیم از لبهٔ inline-end ماژول به باس */
+.why-cell--r .why-trace {
+  inset-inline-end: calc(var(--reach) * -1);
+  background: linear-gradient(to left, var(--gold-d), rgba(143, 107, 44, 0.2));
+}
+/* سلولِ سمتِ چپ: سیم از لبهٔ inline-start ماژول به باس */
+.why-cell:not(.why-cell--r) .why-trace {
+  inset-inline-start: calc(var(--reach) * -1);
+  background: linear-gradient(to right, var(--gold-d), rgba(143, 107, 44, 0.2));
+}
+
+/* نقطهٔ اتصال روی بدنهٔ ماژول */
+.why-trace::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 7px;
+  height: 7px;
+  margin-top: -3.5px;
+  border-radius: 50%;
+  background: var(--gold-d);
+  box-shadow: 0 0 0 3px rgba(201, 161, 90, 0.25);
+  transition: box-shadow 0.35s ease;
+}
+.why-cell--r .why-trace::after { left: -3px; }
+.why-cell:not(.why-cell--r) .why-trace::after { left: auto; right: -3px; }
+
+/* ── جرقهٔ جریان روی سیم (جهت با inset-inline منطقی؛ دو ستون خودکار معکوس) ── */
+.why-trace__spark {
+  position: absolute;
+  top: -1px;
+  width: 26px;
+  height: 4px;
+  border-radius: 999px;
+  background: linear-gradient(to left, rgba(232, 196, 122, 0), #e8c47a);
+  filter: drop-shadow(0 0 7px rgba(232, 196, 122, 0.9));
+  opacity: 0;
+  animation: whyFlow 4.2s linear infinite;
+}
+@keyframes whyFlow {
+  0% { inset-inline-start: 0; opacity: 0; }
+  12% { opacity: 1; }
+  86%, 100% { inset-inline-start: calc(100% - 26px); opacity: 0; }
+}
+/* جلوهای نامتقارن: جرقههای ساعتیِ متفاوت */
+.why-cell:nth-child(1) .why-trace__spark { animation-delay: 0.15s; animation-duration: 4.6s; }
+.why-cell:nth-child(2) .why-trace__spark { animation-delay: 1.7s; animation-duration: 5s; }
+.why-cell:nth-child(3) .why-trace__spark { animation-delay: 3.1s; animation-duration: 4.2s; }
+.why-cell:nth-child(4) .why-trace__spark { animation-delay: 0.9s; animation-duration: 5.4s; }
+.why-cell:nth-child(5) .why-trace__spark { animation-delay: 2.4s; animation-duration: 4.8s; }
+.why-cell:nth-child(6) .why-trace__spark { animation-delay: 3.8s; animation-duration: 4.4s; }
+
+/* ── hover: جریانِ جلبتعظیم، تراشه روشن میشود ── */
+.why-cell:hover .why-chip,
+.why-cell:focus-within .why-chip {
+  transform: translateY(-4px);
+  border-color: rgba(201, 161, 90, 0.85);
+  background: linear-gradient(165deg, #fdfbf7, #f2ede1);
+  box-shadow:
+    0 20px 44px -26px rgba(30, 27, 21, 0.5),
+    0 0 34px -12px rgba(201, 161, 90, 0.6);
+}
+.why-cell:hover .why-chip__pins,
+.why-cell:focus-within .why-chip__pins {
+  opacity: 1;
+}
+.why-cell:hover .why-trace,
+.why-cell:focus-within .why-trace {
+  background-color: rgba(201, 161, 90, 0.1);
+  box-shadow: 0 0 14px -2px rgba(201, 161, 90, 0.55);
+}
+.why-cell:hover .why-trace__spark,
+.why-cell:focus-within .why-trace__spark {
+  filter: drop-shadow(0 0 12px rgba(232, 196, 122, 1));
+  width: 38px;
+}
+.why-cell:hover .why-trace::after,
+.why-cell:focus-within .why-trace::after {
+  box-shadow: 0 0 0 4px rgba(201, 161, 90, 0.45), 0 0 14px 0 rgba(201, 161, 90, 0.7);
+}
+.why-cell:hover .icon-ring,
+.why-cell:focus-within .icon-ring {
+  box-shadow: 0 0 26px -7px rgba(201, 161, 90, 0.9);
+}
+
+/* ── موبایل: باس کنار (سمتِ شروع در RTL) و ماژولها زیر هم ── */
+@media (max-width: 899px) {
+  .why-grid {
+    grid-template-columns: 1fr;
+    column-gap: 0;
+    row-gap: 30px;
+    padding-inline-start: 46px;
+  }
+  .why-board { --reach: 34px; }
+  .why-bus {
+    left: auto;
+    inset-inline-start: 11px;
+    top: 0;
+    bottom: 0;
+    margin: 0;
+  }
+  .why-bus__core {
+    left: 0;
+    inset-inline-start: 11px;
+    top: 50%;
+  }
+  .why-trace { top: 44px; }
+  .why-cell--r .why-trace { inset-inline-end: auto; }
+  .why-cell--r .why-trace::after { left: auto; right: auto; inset-inline-end: -3px; }
+  .why-cell--r .why-chip__pins { inset-inline-end: auto; inset-inline-start: -5px; }
+}
+
+/* ── کاهشِ حرکت ── */
+@media (prefers-reduced-motion: reduce) {
+  .why-trace__spark,
+  .why-bus__spark { display: none; }
+  .why-bus__core i { animation: none; }
+  .why-chip,
+  .why-trace,
+  .why-trace::after { transition: none; }
+}

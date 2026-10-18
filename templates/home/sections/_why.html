@@ -1,15 +1,15 @@
 {% load icon_tags highlight_tags fa_digits %}
-{# چرا پیکسوریا v2 — شش کارت شیشه‌ای روی پس‌زمینهٔ روشن #}
-{# داده‌ها: why_section (WhySection)، why_features (WhyFeature[]) #}
+{# چرا پیکسوریا v3 — «بردِ مدارِ زنده»: باسِ تغذیه در وسط، شش ماژولِ دو طرفِ آن #}
+{# و ردِ جریان روی سیمها؛ داده‌ها: why_section (WhySection)، why_features (WhyFeature[]) #}
 {% if why_section and why_features %}
-  <section id="why" class="relative bg-cream" style="clip-path: polygon(0 0, 100% 5.5%, 100% 100%, 0 100%)">
+  <section id="why" class="relative overflow-hidden bg-cream" style="clip-path: polygon(0 0, 100% 5.5%, 100% 100%, 0 100%)">
     <div class="grid-bg pointer-events-none absolute inset-0 opacity-60" aria-hidden="true"></div>
     <div class="aurora-blob pointer-events-none absolute -top-20 right-[10%] h-96 w-96 rounded-full opacity-50"
          style="background: radial-gradient(circle, rgba(201, 161, 90, 0.22), transparent 65%)" aria-hidden="true"></div>
     <div class="aurora-blob pointer-events-none absolute bottom-0 left-[6%] h-80 w-80 rounded-full opacity-40"
          style="background: radial-gradient(circle, rgba(46, 99, 255, 0.18), transparent 70%)" aria-hidden="true"></div>
 
-    <div class="relative mx-auto max-w-7xl px-6 pb-28 pt-40 md:pt-48">
+    <div class="relative z-10 mx-auto max-w-7xl px-6 pb-32 pt-36 md:pt-40">
       <div class="text-center">
         {% if why_section.eyebrow %}
           <p class="eyebrow eyebrow-dark eyebrow-c justify-center" data-reveal="up">{{ why_section.eyebrow }}</p>
@@ -27,22 +27,30 @@
         {% endif %}
       </div>
 
-      <div class="rv-fan mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {% for feature in why_features %}
-          <article class="why-card glass-light tilt group relative overflow-hidden p-7"
-                   style="border-radius: {% cycle '1.75rem 0.75rem 1.75rem 0.75rem' '0.75rem 1.75rem 0.75rem 1.75rem' %}"
-                   data-reveal="up" data-delay="{% cycle '0' '0.08' '0.16' '0.24' '0.32' '0.4' %}">
-            <span class="glare" aria-hidden="true"></span>
-            <span class="why-idx" aria-hidden="true">{{ forloop.counter|stringformat:"02d"|fa_digits }}</span>
-            <span class="why-corner" aria-hidden="true"></span>
-            <div class="relative z-10 flex items-center gap-3">
-              <span class="icon-ring icon-ring-pulse">{% icon feature.icon class="h-5 w-5" %}</span>
-              <h3 class="font-bold text-paper">{{ feature.title }}</h3>
-            </div>
-            <p class="relative z-10 mt-3 text-sm leading-7 text-coy">{{ feature.description }}</p>
-            <span class="why-line" aria-hidden="true"></span>
-          </article>
-        {% endfor %}
+      {# ═══ بردِ مدار — باسِ تغذیه در ستونِ میانی، ماژولها با سیمِ زنده به آن وصلند ═══ #}
+      <div class="why-board relative mt-20" style="--bus-w: clamp(72px, 9vw, 110px)">
+        {# باسِ مرکزی + جرقهٔ جریان که مرتب از بالا به پایین میرسد #}
+        <span class="why-bus" aria-hidden="true"><i class="why-bus__spark"></i></span>
+        {# هستهٔ تغذیه — لوزیِ نورانیِ وسطِ باس #}
+        <span class="why-bus__core" aria-hidden="true"><i></i></span>
+
+        <ul class="why-grid">
+          {% for feature in why_features %}
+            <li class="why-cell{% cycle ' why-cell--r' '' %}"
+                data-reveal="up" data-delay="{% cycle '0' '0.12' '0.2' '0.32' '0.4' '0.52' %}">
+              <span class="why-trace" aria-hidden="true"><i class="why-trace__spark"></i></span>
+              <article class="why-chip">
+                <span class="why-chip__pins" aria-hidden="true"></span>
+                <b class="why-chip__mark" dir="ltr" aria-hidden="true">PIX&middot;{{ forloop.counter|stringformat:"02d"|fa_digits }}</b>
+                <div class="flex items-center gap-3">
+                  <span class="icon-ring">{% icon feature.icon class="h-5 w-5" %}</span>
+                  <h3 class="text-lg font-bold text-paper">{{ feature.title }}</h3>
+                </div>
+                <p class="mt-3 text-sm leading-7 text-coy">{{ feature.description }}</p>
+              </article>
+            </li>
+          {% endfor %}
+        </ul>
       </div>
     </div>
   </section>
