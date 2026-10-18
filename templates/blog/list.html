@@ -57,10 +57,10 @@
 
       <div class="mt-10 max-w-2xl">
         {% if page_settings and page_settings.eyebrow %}
-          <p class="eyebrow" data-reveal="up">{{ page_settings.eyebrow }}</p>
+          <p class="eyebrow" data-reveal="rise">{{ page_settings.eyebrow }}</p>
         {% endif %}
         <h1 class="mt-6 text-[2.6rem] font-extrabold leading-[1.25] sm:text-5xl lg:text-6xl"
-            data-reveal="right">
+            data-reveal="mask">
           {% if page_settings and page_settings.title %}
             {{ page_settings.title|highlight }}
           {% else %}
@@ -69,13 +69,13 @@
         </h1>
         {% if page_settings and page_settings.description %}
           <p class="mt-6 max-w-xl text-lg font-light leading-8 text-cream/70"
-             data-reveal="right" data-delay="0.12">
+             data-reveal="blur" data-delay="0.12">
             {{ page_settings.description }}
           </p>
         {% endif %}
 
         {# خلاصهٔ آرشیو — تعداد مقاله‌ها و دسته‌بندی‌ها #}
-        <div class="mt-10 flex flex-wrap items-center gap-3" data-reveal="up" data-delay="0.2">
+        <div class="mt-10 flex flex-wrap items-center gap-3" data-reveal="pop" data-delay="0.2">
           <span class="inline-flex items-center gap-2 rounded-full border border-cream/10 bg-white/[0.02] px-4 py-2 text-sm text-cream/60">
             {% icon "book-open" class="h-4 w-4 text-gold" %}
             <b class="font-bold text-cream fa-num">{{ articles|length|fa_digits }}</b> مقاله
@@ -105,7 +105,7 @@
         <a href="{% url 'blog:detail' featured_article.slug %}"
            class="glass tilt group relative mb-16 grid overflow-hidden lg:grid-cols-2"
            style="border-radius: 2.5rem 1.25rem 2.5rem 1.25rem"
-           data-tilt data-reveal="up">
+           data-tilt data-reveal="lift">
           <span class="glare" aria-hidden="true"></span>
           <figure class="relative overflow-hidden" style="border-radius: 2.5rem 1.25rem 0 0">
             {% if featured_article.cover_image %}
@@ -146,7 +146,7 @@
       {% if categories %}
         <div class="flex flex-wrap gap-2.5"
              id="blog-filters" role="toolbar" aria-label="دسته‌بندی مقالات"
-             data-reveal="up">
+             data-reveal="rise">
           <button type="button"
                   class="flt-btn active"
                   aria-pressed="true"
