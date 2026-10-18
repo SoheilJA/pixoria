@@ -1,0 +1,59 @@
+{% load icon_tags highlight_tags nav_tags fa_digits %}
+{# مدل A — «میدانِ زنده»: بومِ نقطه‌های پیکسلیِ محیطی + تایپِ مرکزیِ مینیمال #}
+{# موتور: static/js/hero-lab.js (دوبعدیِ سبک، بدونِ three.js) #}
+<section id="lab-a" class="hx hx-a" data-hx="a" aria-label="هیرو مدل یک">
+  {# بومِ نقطه‌ها #}
+  <canvas class="hx-a__field" data-hx-field aria-hidden="true"></canvas>
+
+  {# هاله و کلمهٔ غولِ لاتین #}
+  <div class="hx-a__haze" aria-hidden="true"></div>
+  <span class="hx-a__ghost font-latin" aria-hidden="true">pixoria</span>
+
+  {# HUD گوشه‌ها #}
+  <div class="hx-corners" aria-hidden="true">
+    <span dir="ltr">pixoria® studio</span>
+    <span dir="ltr">est. 2018 — tehran</span>
+    <span dir="ltr">field: active</span>
+    <span dir="ltr">35.6892 N / 51.3890 E</span>
+  </div>
+
+  <div class="hx-head hx-a__body">
+    {% if hero.eyebrow %}
+      <p class="eyebrow" data-reveal="rise">{{ hero.eyebrow }}</p>
+    {% endif %}
+    <h1 class="hx-title" data-reveal="mask">
+      {{ hero.title|highlight }}
+    </h1>
+    <p class="hx-sub" data-reveal="blur" data-delay="0.12">
+      {{ hero.description|linebreaksbr }}
+    </p>
+    <div class="hx-cta" data-reveal="pop" data-delay="0.2">
+      {% if hero.cta_primary_text %}
+        <a href="{% nav_url hero.cta_primary_url %}" class="btn btn-gold px-8 py-4" data-magnetic>
+          {{ hero.cta_primary_text }} {% icon "arrow-left" class="h-4 w-4" %}
+        </a>
+      {% endif %}
+      {% if hero.cta_secondary_text and hero.cta_secondary_url %}
+        <a href="{% nav_url hero.cta_secondary_url %}" class="btn btn-ghost px-8 py-4" data-magnetic>
+          {{ hero.cta_secondary_text }}
+        </a>
+      {% endif %}
+    </div>
+    {% if hero_stats %}
+      <div class="hx-metrics" data-reveal="rise" data-delay="0.3">
+        {% for stat in hero_stats %}
+          <span>
+            <b>{{ stat.value }}</b>
+            {{ stat.label }}
+          </span>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+
+  {# سرنخِ اسکرول + برچسبِ زنده #}
+  <div class="hx-scroll" aria-hidden="true">
+    <span>اسکرول</span>
+    <i></i>
+  </div>
+</section>

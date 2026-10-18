@@ -1,0 +1,90 @@
+{% load icon_tags highlight_tags nav_tags %}
+{# مدل C — «شوریلِ زنده»: نوارِ واقعیِ نمونهکارها با پرسپکتیوِ ملایم؛ بدونِ بومِ گرافیکی #}
+<section id="lab-c" class="hx hx-c" data-hx="c" aria-label="هیرو مدل سه">
+  {# هالهٔ پشتِ متن #}
+  <div class="hx-c__glow" aria-hidden="true"></div>
+
+  {# HUD گوشه‌ها #}
+  <div class="hx-corners" aria-hidden="true">
+    <span dir="ltr">showreel: live feed</span>
+    <span dir="ltr">hover = pause</span>
+    <span dir="ltr">real work — real pixels</span>
+    <span dir="ltr">autoplay: 46s loop</span>
+  </div>
+
+  <div class="hx-head hx-c__head">
+    {% if hero.eyebrow %}
+      <p class="eyebrow" data-reveal="rise">{{ hero.eyebrow }}</p>
+    {% endif %}
+    <h1 class="hx-title" data-reveal="mask">
+      {{ hero.title|highlight }}
+    </h1>
+    <p class="hx-sub" data-reveal="blur" data-delay="0.12">
+      {{ hero.description|linebreaksbr }}
+    </p>
+    <div class="hx-cta" data-reveal="pop" data-delay="0.2">
+      {% if hero.cta_primary_text %}
+        <a href="{% nav_url hero.cta_primary_url %}" class="btn btn-gold px-8 py-4" data-magnetic>
+          {{ hero.cta_primary_text }} {% icon "arrow-left" class="h-4 w-4" %}
+        </a>
+      {% endif %}
+      {% if hero.cta_secondary_text and hero.cta_secondary_url %}
+        <a href="{% nav_url hero.cta_secondary_url %}" class="btn btn-ghost px-8 py-4" data-magnetic>
+          {{ hero.cta_secondary_text }}
+        </a>
+      {% endif %}
+    </div>
+  </div>
+
+  {# صحنهٔ شوریل — دو ردیفِ خلافِ جهتِ هم #}
+  <div class="hx-c__stage" aria-hidden="{% if not lab_works %}true{% else %}false{% endif %}">
+    <div class="hx-c__strip hx-c__strip--1" dir="ltr">
+      {% for i in "12" %}
+        <div class="hx-c__row">
+          {% if lab_works %}
+            {% for work in lab_works %}
+              <span
+                class="hx-c__card"
+                {% if work.image %}style="background-image:url('{{ work.image.url }}')"{% endif %}
+              >
+                <span class="hx-c__tag">
+                  <i></i>
+                  <span>{{ work.title|plain|truncatechars:36 }}</span>
+                  <b>{{ work.client_name|default:"pixoria"|truncatechars:14 }}</b>
+                </span>
+              </span>
+            {% endfor %}
+          {% else %}
+            {% for n in lab_fallback %}
+              <span class="hx-c__card hx-c__card--ph"><span class="hx-c__tag"><i></i><span>پروژهٔ نمونه</span><b>pixoria</b></span></span>
+            {% endfor %}
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+    <div class="hx-c__strip hx-c__strip--2" dir="ltr" aria-hidden="true">
+      {% for i in "12" %}
+        <div class="hx-c__row">
+          {% if lab_works %}
+            {% for work in lab_works reversed %}
+              <span
+                class="hx-c__card"
+                {% if work.image %}style="background-image:url('{{ work.image.url }}')"{% endif %}
+              ></span>
+            {% endfor %}
+          {% else %}
+            {% for n in lab_fallback %}
+              <span class="hx-c__card hx-c__card--ph"></span>
+            {% endfor %}
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  {# HUD «در حالِ پخش» #}
+  <div class="hx-c__hud" aria-hidden="true">
+    <i></i>
+    <span dir="ltr">reel — rolling</span>
+  </div>
+</section>
