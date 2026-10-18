@@ -15,6 +15,15 @@
     {% endif %}
     <link rel="stylesheet" href="{% static 'fonts/font_urls.css' %}" />
     <link rel="stylesheet" href="{% static 'css/tailwind.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/motion.css' %}" />
+    <script>
+      (function () {
+        document.documentElement.classList.add("motion");
+        setTimeout(function () {
+          if (!window.__pixoriaBooted) document.documentElement.classList.remove("motion");
+        }, 3000);
+      })();
+    </script>
   </head>
   <body class="min-h-screen bg-ink font-sans text-cream antialiased">
     <div class="grid min-h-screen grid-cols-1 md:grid-cols-2">
@@ -117,9 +126,8 @@
       </section>
     </div>
 
-    {# کتابخانه‌ها — همه محلی، بدون CDN #}
-    <script defer src="{% static 'js/vendor/gsap.min.js' %}"></script>
-    <script defer src="{% static 'js/vendor/ScrollTrigger.min.js' %}"></script>
+    {# کتابخانه‌ها — همه محلی و بدون CDN؛ هیچ GSAP ای در پروژه نیست #}
+    {# لایهٔ تعاملات + حرکتِ CSS (static/css/motion.css) #}
     <script type="module" src="{% static 'js/pixoria.js' %}"></script>
   </body>
 </html>

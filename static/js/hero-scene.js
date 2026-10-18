@@ -277,7 +277,7 @@ ${shader.fragmentShader}`.replace(
     }
 
     /* ---------------- animation state ---------------- */
-    const state = { mx: 0, my: 0, travel: 0 }; // travel = journey progress (0 → 1 with scroll)
+    const state = { mx: 0, my: 0, travel: 0, travelTarget: 0 }; // travel = journey progress (0 → 1 with scroll)
     const cur = { rx: 0, ry: 0, roll: 0 };
 
     /* ---------------- layout (desktop vs mobile planet position) ---------------- */
@@ -314,35 +314,20 @@ ${shader.fragmentShader}`.replace(
       { passive: true },
     );
 
-    /* ---------------- scroll-driven journey ---------------- */
-    const gsap = window.gsap;
-    const ScrollTrigger = window.ScrollTrigger;
-    if (gsap && ScrollTrigger) {
-      gsap.registerPlugin(ScrollTrigger);
-      if (!REDUCED) {
-        gsap.to(state, {
-          travel: 1,
-          ease: "none",
-          scrollTrigger: {
-            trigger: heroSection,
-            start: "top top",
-            end: "bottom top",
-            scrub: 0.7,
-          },
-        });
-        // Fade the scene out by the end of the hero
-        gsap.to(mount, {
-          yPercent: 16,
-          opacity: 0,
-          ease: "none",
-          scrollTrigger: {
-            trigger: heroSection,
-            start: "top top",
-            end: "bottom 40%",
-            scrub: 0.6,
-          },
-        });
-      }
+    /* ---------------- scroll-driven journey ----------------
+       قبلاً ScrollTrigger این سفر را می‌چرخاند؛ حالا فقط یک شنوندهٔ پسیوِ
+       اسکرول «هدف» را می‌شمارد و حلقهٔ رندر با نرمی به آن می‌رسد (همان حسِ
+       scrub). محو‌شدنِ خودِ صحنه هم یک انیمیشنِ CSS است که در motion.css با
+       animation-timeline به اسکرول گره خورده — بدونِ هیچ کتابخانه‌ای. */
+    if (!REDUCED) {
+      const syncTravel = () => {
+        const r = heroSection.getBoundingClientRect();
+        const h = r.height || 1;
+        state.travelTarget = Math.min(1, Math.max(0, -r.top / h));
+      };
+      syncTravel();
+      window.addEventListener("scroll", syncTravel, { passive: true });
+      window.addEventListener("resize", syncTravel, { passive: true });
     }
 
     /* ---------------- render loop (pausable) ---------------- */
@@ -368,6 +353,10 @@ ${shader.fragmentShader}`.replace(
       // pause cannot teleport the stars when the loop resumes.
       starTime += Math.min(clock.getDelta(), 0.05);
       const t = starTime;
+
+      // رسیدنِ نرم به هدفِ اسکرول (جای scrubِ ScrollTrigger): چند فریم دیگر
+      // همان حسِ «کشیده‌شدن» را می‌دهد، بدونِ هیچ کتابخانه‌ای.
+      state.travel += (state.travelTarget - state.travel) * 0.09;
 
       // ~۳۰ فریم بر ثانیه کافی است: حرکتِ این صحنه آرام است و نصف‌کردنِ نرخِ
       // رندر هزینهٔ GPU را تقریباً نصف می‌کند (اسکرول روان‌تر، باتری کمتر).
@@ -471,9 +460,6 @@ ${shader.fragmentShader}`.replace(
     window.addEventListener("pagehide", dispose, { once: true });
 
     window.__hero3d = true;
-
-    // The triggers above were added after load; let ScrollTrigger measure them.
-    if (gsap && ScrollTrigger) ScrollTrigger.refresh();
   } catch (e) {
     showFallback();
   }
