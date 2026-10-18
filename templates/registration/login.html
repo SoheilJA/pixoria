@@ -48,7 +48,7 @@
           {% endif %}
         </a>
 
-        <div class="relative z-10 my-16 max-w-md" data-reveal="up">
+        <div class="relative z-10 my-16 max-w-md" data-reveal="rise">
           <p class="eyebrow mb-6">پنل کاربری</p>
           <h2 class="text-[clamp(1.8rem,3vw,3rem)] font-extrabold leading-[1.15]">
             به <span class="text-goldgrad">داشبورد</span> خوش آمدید.
@@ -59,7 +59,7 @@
         </div>
 
         {% if stats %}
-          <div class="relative z-10 hidden flex-col gap-4 md:flex" data-reveal="up" data-delay="0.1">
+          <div class="relative z-10 hidden flex-col gap-4 md:flex" data-reveal="rise" data-delay="0.1">
             {% for stat in stats %}
               <div class="flex items-baseline gap-3 border-t border-white/10 pt-4">
                 <span class="font-latin text-[1.5rem] font-bold leading-none text-gold-light fa-num">{{ stat.prefix }}{{ stat.value|fa_digits }}{{ stat.suffix }}</span>
@@ -71,7 +71,7 @@
       </section>
 
       {# ─── پنل فرم (روشن) ─── #}
-      <section class="flex flex-col justify-center bg-cream px-[clamp(28px,6vw,72px)] py-12" data-reveal="up">
+      <section class="flex flex-col justify-center bg-cream px-[clamp(28px,6vw,72px)] py-12" data-reveal="rise">
         <div class="w-full max-w-[420px]">
           <div class="mb-10">
             <p class="font-latin text-[10px] tracking-[.3em] text-coy/70">

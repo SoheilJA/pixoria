@@ -58,16 +58,16 @@
     <div class="relative z-10 flex w-full max-w-2xl flex-col items-center"
          style="padding-top: clamp(150px, 22vh, 260px)">
       <div class="mb-6 flex justify-center">{% include "components/_breadcrumb.html" %}</div>
-      <p class="eyebrow eyebrow-c justify-center" data-reveal="up">خطا · ۴۰۴</p>
+      <p class="eyebrow eyebrow-c justify-center" data-reveal="rise">خطا · ۴۰۴</p>
       <h1 class="mt-6 text-[clamp(2.1rem,5.4vw,4rem)] font-extrabold leading-[1.25]"
-          data-reveal="up" data-delay="0.08">
+          data-reveal="mask" data-delay="0.08">
         {{ "این صفحه در [[کهکشان]] ما نیست"|highlight }}
       </h1>
-      <p class="mt-5 max-w-xl font-light leading-8 text-cream/65" data-reveal="up" data-delay="0.14">
+      <p class="mt-5 max-w-xl font-light leading-8 text-cream/65" data-reveal="blur" data-delay="0.14">
         صفحه‌ای که دنبالش هستی یا حذف شده، یا آدرسش عوض شده، یا اصلاً وجود نداشته.
         بیا بریمت بگردیم.
       </p>
-      <div class="mt-10 flex flex-wrap items-center justify-center gap-4" data-reveal="up" data-delay="0.2">
+      <div class="mt-10 flex flex-wrap items-center justify-center gap-4" data-reveal="pop" data-delay="0.2">
         <a href="{% url 'home:home' %}" class="btn btn-gold px-8 py-4" data-magnetic>
           برگشت به خانه
           {% icon "arrow-left" class="h-4 w-4" %}
@@ -78,7 +78,7 @@
       </div>
     </div>
 
-    <div class="relative z-10 flex flex-col items-center gap-4" data-reveal="up" data-delay="0.28">
+    <div class="relative z-10 flex flex-col items-center gap-4" data-reveal="scale" data-delay="0.28">
       <span class="font-latin text-[10px] tracking-[.3em] text-gold/60">شاید دنبال این بودی</span>
       <div class="flex flex-wrap items-center justify-center gap-2.5">
         <a href="{% url 'portfolio:list' %}" class="s-chip">نمونه‌کارها</a>
