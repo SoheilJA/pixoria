@@ -17,10 +17,10 @@
       <div class="flex flex-wrap items-end justify-between gap-8">
         <div>
           {% if eyebrow %}
-            <p class="eyebrow" data-reveal="up">{{ eyebrow }}</p>
+            <p class="eyebrow" data-reveal="rise">{{ eyebrow }}</p>
           {% endif %}
           {% if title %}
-            <h2 class="mt-5 text-4xl font-extrabold leading-[1.3] md:text-[2.7rem]" data-reveal="right">
+            <h2 class="mt-5 text-4xl font-extrabold leading-[1.3] md:text-[2.7rem]" data-reveal="mask">
               {{ title|highlight }}
             </h2>
           {% endif %}
@@ -28,7 +28,7 @@
         {# کنترل‌های ناوبری فقط وقتی معنا دارند که بیش از یک کارت باشد؛ #}
         {# در غیر این صورت دکمه‌ها و راهنمای کشیدن یک رابطِ شکسته‌اند. #}
         {% if testimonials|length > 1 %}
-        <div class="flex items-center gap-4" data-reveal="left">
+        <div class="flex items-center gap-4" data-reveal="pop">
           <button data-slider-prev class="ctrl-btn" aria-label="نظر قبلی">{% icon "chevron-right" class="h-5 w-5" %}</button>
           <div data-slider-dots class="flex items-center gap-2"></div>
           <button data-slider-next class="ctrl-btn" aria-label="نظر بعدی">{% icon "chevron-left" class="h-5 w-5" %}</button>
@@ -37,7 +37,7 @@
 
       <div data-slider
            class="no-scrollbar edge-fade -mx-6 mt-12 flex snap-x snap-mandatory gap-6 overflow-x-auto px-6 pb-6"
-           data-lenis-prevent data-reveal="up">
+           data-lenis-prevent data-reveal="scale">
         {% for t in testimonials %}
           {% include "components/_testimonial_card.html" with t=t class="w-[min(88vw,400px)] shrink-0 snap-center" %}
         {% endfor %}
