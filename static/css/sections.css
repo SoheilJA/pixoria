@@ -510,3 +510,164 @@
   .why-trace,
   .why-trace::after { transition: none; }
 }
+
+
+/* ─────────────────────────────────────────────────────────────────
+   «فرآیند کار» v3 — خط‌تولیدِ بدونِ جعبه
+   ریلِ عمودیِ مسی با مهرهٔ نورانی + ردیفهای editorial با اعدادِ
+   بزرگِ خطکشی‌شده؛ hover: عدد طلایی میشود و گره روشن.
+   ───────────────────────────────────────────────────────────────── */
+
+.pr-rail {
+  position: absolute;
+  inset-inline-start: 31px; /* وسطِ گره (گره ۵۶px، ریل ۲px) */
+  top: 18px;
+  bottom: 18px;
+  width: 2px;
+  margin-inline-start: -1px;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(245, 243, 238, 0.18) 0 7px,
+    transparent 7px 15px
+  );
+  z-index: 0;
+}
+
+/* مهرهٔ نورانی — روی ریل بالا و پایین میرود (جریانی که مراحل را طی میکند) */
+.pr-rail__bead {
+  position: absolute;
+  left: 50%;
+  margin-left: -2px;
+  top: 0;
+  width: 4px;
+  height: 64px;
+  border-radius: 999px;
+  background: linear-gradient(to bottom, transparent, #e8c47a 60%, #fff);
+  filter: drop-shadow(0 0 9px rgba(232, 196, 122, 0.9));
+  opacity: 0;
+  animation: prBead 9s linear infinite;
+}
+@keyframes prBead {
+  0% { top: -4%; opacity: 0; }
+  8% { opacity: 1; }
+  90%, 100% { top: 96%; opacity: 0; }
+}
+
+/* هر مرحله: ردیفِ تمام‌عرض؛ هیچ جعبهای نیست */
+.pr-step {
+  position: relative;
+  padding-block: 40px;
+  padding-inline-start: 118px;
+  padding-inline-end: 170px; /* جا برای برچسبِ PHASE */
+  border-block-end: 1px solid rgba(245, 243, 238, 0.08);
+  min-height: 130px;
+}
+.pr-step:last-child {
+  border-block-end: 0;
+}
+
+/* گرهٔ آیکن — نشسته روی ریل */
+.pr-step__node {
+  position: absolute;
+  inset-inline-start: 2px;
+  top: 34px;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  color: var(--gold-l);
+  background: var(--ink2);
+  border: 1px solid rgba(201, 161, 90, 0.35);
+  box-shadow: 0 0 0 6px var(--ink);
+  transition:
+    border-color 0.35s ease,
+    box-shadow 0.4s ease,
+    transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+    background 0.35s ease;
+}
+
+/* عددِ بزرگِ خطکشی‌شده */
+.pr-step__num {
+  position: absolute;
+  inset-inline-start: 86px;
+  top: 26px;
+  font-size: clamp(3.2rem, 5.4vw, 5.2rem);
+  line-height: 1;
+  font-weight: 800;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(245, 243, 238, 0.18);
+  pointer-events: none;
+  user-select: none;
+  transition: -webkit-text-stroke-color 0.45s ease, color 0.45s ease;
+}
+
+/* متنها */
+.pr-step__body h3 {
+  color: var(--cream);
+}
+.pr-step__body p {
+  color: rgba(245, 243, 238, 0.55);
+}
+
+/* برچسبِ فاز — انتهای ردیف */
+.pr-step__tag {
+  position: absolute;
+  top: 46px;
+  inset-inline-end: 0;
+  font-size: 10px;
+  letter-spacing: 0.28em;
+  color: rgba(245, 243, 238, 0.28);
+  transition: color 0.35s ease;
+}
+
+/* ── hover: مرحله «فعال» میشود ── */
+.pr-step:hover .pr-step__node,
+.pr-step:focus-within .pr-step__node {
+  border-color: rgba(232, 196, 122, 0.8);
+  background: rgba(201, 161, 90, 0.12);
+  box-shadow:
+    0 0 0 6px var(--ink),
+    0 0 30px -6px rgba(201, 161, 90, 0.65);
+  transform: scale(1.08);
+}
+.pr-step:hover .pr-step__num,
+.pr-step:focus-within .pr-step__num {
+  -webkit-text-stroke-color: rgba(232, 196, 122, 0.75);
+  color: rgba(232, 196, 122, 0.12);
+}
+.pr-step:hover .pr-step__tag,
+.pr-step:focus-within .pr-step__tag {
+  color: rgba(232, 196, 122, 0.7);
+}
+
+/* موبایل: عدد کوچکتر و بالا، برچسب حذف */
+@media (max-width: 720px) {
+  .pr-step {
+    padding-block: 28px 30px;
+    padding-inline-start: 92px;
+    padding-inline-end: 18px;
+    min-height: 0;
+  }
+  .pr-rail { inset-inline-start: 23px; }
+  .pr-step__node {
+    inset-inline-start: -5px;
+    top: 24px;
+    width: 50px;
+    height: 50px;
+  }
+  .pr-step__num {
+    inset-inline-start: 64px;
+    top: 18px;
+    font-size: 2.6rem;
+  }
+  .pr-step__tag { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pr-rail__bead { display: none; }
+  .pr-step__node,
+  .pr-step__num,
+  .pr-step__tag { transition: none; }
+}

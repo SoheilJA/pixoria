@@ -1,9 +1,8 @@
 {% load icon_tags highlight_tags fa_digits %}
-{# فرآیند کار v2 — تایم‌لاین GPS پنج‌گام + کارت‌های شیشه‌ای #}
+{# فرآیند کار v3 — «خط‌تولید» بدون جعبه: ریلِ عمودی با مهرهٔ نورانی + اعدادِ بزرگِ خطکشی‌شده #}
 {# داده‌ها: process_section (ProcessSection)، process_steps (ProcessStep[]) #}
-{# pixoria.js مسیر gps-draw را هنگام اسکرول رسم می‌کند و مهره را جابه‌جا می‌کند #}
 {% if process_section and process_steps %}
-  <section id="process" data-gps-root class="relative overflow-hidden bg-ink">
+  <section id="process" class="relative overflow-hidden bg-ink">
     {# خط تقسیم‌کنندهٔ روشن روی بخش روشنِ قبلی #}
     <svg class="divider" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true">
       <path d="M0,58 C320,12 640,78 960,42 C1200,14 1360,62 1440,32 L1440,0 L0,0 Z" fill="#efece5"></path>
@@ -12,7 +11,7 @@
     <div class="pointer-events-none absolute left-[-5rem] top-24 h-80 w-80 rounded-full opacity-20 aurora-blob"
          style="background: radial-gradient(circle, rgba(201, 161, 90, 0.3), transparent 65%)" aria-hidden="true"></div>
 
-    <div class="relative z-10 mx-auto max-w-7xl px-6 pb-28 pt-36 md:pt-44">
+    <div class="relative z-10 mx-auto max-w-7xl px-6 pb-32 pt-36 md:pt-44">
       <div class="text-center">
         {% if process_section.eyebrow %}
           <p class="eyebrow" data-reveal="up">{{ process_section.eyebrow }}</p>
@@ -29,45 +28,22 @@
         {% endif %}
       </div>
 
-      {# تایم‌لاین — مسیر GPS: جادهٔ خط‌چینِ در حال طی شدن #}
-      <div class="relative mt-14 lg:mt-20">
-        <div class="relative h-40 sm:h-52 lg:h-60">
-          <svg class="absolute inset-0 h-full w-full" viewBox="0 0 1000 240" preserveAspectRatio="none" aria-hidden="true">
-            <defs>
-              <linearGradient id="gpsGrad" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0" stop-color="#8f6b2c"></stop>
-                <stop offset="0.5" stop-color="#c9a15a"></stop>
-                <stop offset="1" stop-color="#e8c47a"></stop>
-              </linearGradient>
-            </defs>
-            <path class="gps-base"
-                  d="M100,120 C166,120 234,60 300,60 C366,60 434,150 500,150 C566,150 634,60 700,60 C766,60 834,120 900,120"></path>
-            <path class="gps-move"
-                  d="M100,120 C166,120 234,60 300,60 C366,60 434,150 500,150 C566,150 634,60 700,60 C766,60 834,120 900,120"></path>
-            <path class="gps-draw" pathLength="1"
-                  d="M100,120 C166,120 234,60 300,60 C366,60 434,150 500,150 C566,150 634,60 700,60 C766,60 834,120 900,120"></path>
-            <circle class="gps-dot" cx="100" cy="120" r="7"></circle>
-          </svg>
-          {# گره‌های مسیر — یکی برای هر مرحله #}
+      {# ═══ خط‌تولید — مهرهٔ نورانی پیوسته روی ریل از مرحله‌ای به مرحلهٔ بعد میرسد ═══ #}
+      <div class="pr-wrap relative mt-16 lg:mt-20">
+        <span class="pr-rail" aria-hidden="true"><i class="pr-rail__bead"></i></span>
+        <ol class="pr-steps">
           {% for step in process_steps %}
-            <span class="gps-node" style="{% cycle 'left: 10%; top: 50%' 'left: 30%; top: 25%' 'left: 50%; top: 62.5%' 'left: 70%; top: 25%' 'left: 90%; top: 50%' %}"
-                  aria-hidden="true">{{ forloop.counter|stringformat:"02d"|fa_digits }}</span>
+            <li class="pr-step" data-reveal="up" data-delay="{% cycle '0' '0.08' '0.16' '0.24' '0.32' %}">
+              <span class="pr-step__node">{% icon step.icon class="h-5 w-5" %}</span>
+              <span class="pr-step__num" aria-hidden="true">{{ forloop.counter|stringformat:"02d"|fa_digits }}</span>
+              <div class="pr-step__body">
+                <h3 class="text-2xl font-extrabold">{{ step.title }}</h3>
+                <p class="mt-2.5 max-w-2xl text-sm leading-7 text-cream/55">{{ step.description }}</p>
+              </div>
+              <span class="pr-step__tag font-latin" dir="ltr" aria-hidden="true">PHASE {{ forloop.counter|stringformat:"02d"|fa_digits }}</span>
+            </li>
           {% endfor %}
-        </div>
-
-        <div class="rv-alt grid gap-6 {% if process_steps|length > 1 %}lg:grid-cols-{{ process_steps|length }}{% endif %}">
-          {% for step in process_steps %}
-            <article class="process-step glass tilt group relative overflow-hidden p-7"
-                     style="border-radius: 1.5rem 1.5rem 1.5rem 0.6rem"
-                     data-reveal="up" data-delay="{% cycle '0' '0.08' '0.16' '0.24' '0.32' %}">
-              <span class="glare" aria-hidden="true"></span>
-              <span class="process-node">{% icon step.icon class="h-5 w-5" %}</span>
-              <span class="process-idx font-latin" aria-hidden="true">{{ forloop.counter|stringformat:"02d"|fa_digits }}</span>
-              <h3 class="mt-4 text-lg font-bold">{{ step.title }}</h3>
-              <p class="mt-2.5 text-sm leading-7 text-cream/55">{{ step.description }}</p>
-            </article>
-          {% endfor %}
-        </div>
+        </ol>
       </div>
     </div>
   </section>
