@@ -42,12 +42,12 @@
 
         {# قابِ شیشه‌ای — مرکز: نشانِ طلایی، پیرامون: نمونههای واقعیِ کارها #}
         <div class="relative lg:col-span-7" data-reveal="clip">
-          <span class="stroke-title-light pointer-events-none absolute -top-14 left-0 select-none text-[8.5rem] font-extrabold leading-none" aria-hidden="true">
+          <span class="stroke-title-light pointer-events-none absolute -top-14 left-0 select-none text-[8.5rem] font-extrabold leading-none opacity-60" aria-hidden="true">
             {{ settings.established_year|default:"۱۳۸۹"|fa_digits }}
           </span>
           <span class="pointer-events-none absolute -bottom-10 -right-10 h-48 w-48 rounded-full aurora-blob" style="background: radial-gradient(circle, rgba(201,161,90,0.35), transparent 65%);" aria-hidden="true"></span>
 
-          <div class="about-panel relative grid aspect-[4/3] place-items-center overflow-hidden border border-gold-dark/30 bg-cream2" style="border-radius: 6rem 1.25rem 6rem 1.25rem">
+          <div class="about-panel relative grid aspect-[4/3] place-items-center overflow-hidden border border-gold/25 bg-ink2" style="border-radius: 6rem 1.25rem 6rem 1.25rem">
             <span class="grid-bg absolute inset-0 opacity-60" aria-hidden="true"></span>
             <span class="about-scan absolute inset-x-0 top-0 h-40" aria-hidden="true"></span>
             <span class="about-ring about-ring-1 absolute rounded-full border border-dashed border-gold-dark/30" aria-hidden="true"></span>
@@ -75,8 +75,8 @@
                   </i>
                 </a>
               {% endfor %}
-              <a href="{% url 'portfolio:list' %}" class="glass-light ab-link" data-magnetic>
-                {% icon "table-cells-large" class="h-4 w-4 text-gold-dark" %}
+              <a href="{% url 'portfolio:list' %}" class="glass ab-link" data-magnetic>
+                {% icon "table-cells-large" class="h-4 w-4 text-gold-light" %}
                 نمونه‌کارها
                 {% icon "arrow-left" class="h-3.5 w-3.5" %}
               </a>
@@ -84,13 +84,13 @@
             {% endif %}
 
             {% if settings.address %}
-              <figcaption class="glass-light absolute bottom-6 right-6 z-10 flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium text-paper">
-                {% icon "map-pin" class="h-4 w-4 text-gold-dark" %}
+              <figcaption class="glass absolute bottom-6 right-6 z-10 flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium text-cream">
+                {% icon "map-pin" class="h-4 w-4 text-gold" %}
                 {{ settings.address }}
               </figcaption>
             {% endif %}
             {% if settings.established_year %}
-              <span class="glass-light absolute left-6 top-6 z-10 rounded-full px-4 py-2 text-xs font-latin tracking-[.2em] text-gold-dark">
+              <span class="glass absolute left-6 top-6 z-10 rounded-full px-4 py-2 text-xs font-latin tracking-[.2em] text-gold-light">
                 EST. {{ settings.established_year }}
               </span>
             {% endif %}
