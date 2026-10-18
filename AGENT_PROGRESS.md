@@ -264,3 +264,11 @@
 - بعد از هر تغییر در `styles/input.css`: `npm run build` و سپس `manage.py collectstatic --noinput`.
 - پروفایل‌های Chromeِ اسکریپت‌های بررسی (`.*-chrome-profile/`) اگر فایلِ استاتیک عوض شد باید پاک شوند تا کش invalidate شود.
 - **`FieldFile.save(name, content, save=False)` فایل را روی دیسک می‌نویسد** — فقط ذخیرهٔ مدل را رد می‌کند. برای dry-run واقعی، اصلاً صدا نزنید.
+
+## ۱۴) هیروی جدید صفحهٔ اصلی — «میدانِ زنده» (حذف three.js)
+- سه مدل هیرو در صفحهٔ آزمایشی /hero-lab/ ساخته شد (بومِ دوبعدیِ نقطه‌ها، پوستریِ CSS خالص، شوریلِ نمونهکارها)؛ کاربر مدل اول را انتخاب کرد.
+- مدل منتخب به Production منتقل شد:
+  - `templates/home/sections/_hero.html` بازنویسی شد — بومِ `data-hx-field` + تایپِ مرکزی + HUD گوشه‌ها + ردیفِ آمار؛ محتوا همچنان از `HeroSection`/`HeroStat` دیتابیس.
+  - استایل در `static/css/hero.css` (کلاس‌های `hx-`)؛ موتورِ بوم در `static/js/hero-field.js` — سقفِ نقطه (~۱۵۰۰ موبایل/۲۶۰۰ دسکتاپ)، خوابِ راف هنگام خروج از دید/تبِ پنهان، فریمِ ساکن در حالتِ کاهشِ حرکت، رانندهٔ خودکار وقتی موش بی‌حرکت است، و `ensure()` روی `htmx:afterSwap` چون hx-boost کل بدنه را جابه‌جا میکند.
+- حذف شد: `static/js/hero-scene.js`، `static/js/vendor/three.module.js` (تنها مصرف‌کننده)، لودِ آن از `base.html`، و صفحهٔ آزمایشی `/hero-lab/` (ویو + url + قالب‌ها + `hero-lab.css/js`).
+- صحت‌سنجی: `manage.py check`، `node --check hero-field.js`، collectstatic، smoketest همهٔ صفحات 200 (جز 500 پیشِ موجودِ /portfolio/ که به `pk=9` بی‌ربط است)، بدونِ overflow افقی، تک‌H1، بدونِ خطای کنسول.

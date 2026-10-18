@@ -72,6 +72,8 @@
     <link rel="stylesheet" href="{% static 'css/tailwind.css' %}" />
     {# لایهٔ حرکت — همهٔ انیمیشن‌ها به‌صورت CSS (بدون GSAP) #}
     <link rel="stylesheet" href="{% static 'css/motion.css' %}" />
+    {# هیرو — بومِ «میدانِ زنده» (برای همهٔ صفحات لود میشود چون hx-boost سربرگ را جابه‌جا نمیکند) #}
+    <link rel="stylesheet" href="{% static 'css/hero.css' %}" />
     {% block extra_css %}
     {% endblock %}
     {% block extra_head %}
@@ -149,7 +151,7 @@
     {# لایهٔ تعاملات (ماشه‌ها، شمارنده‌ها، منو، …) — T10 #}
     <script type="module" src="{% static 'js/pixoria.js' %}"></script>
     {# صحنهٔ سه‌بعدی هیرو — فقط در صورت وجود #hero-3d و نزدیک بودن به دید مقداردهی می‌شود — T11 #}
-    <script type="module" src="{% static 'js/hero-scene.js' %}"></script>
+    <script defer src="{% static 'js/hero-field.js' %}"></script>
     {# HTMX — برای فرم‌های ارسال بدون بازبارگذاری صفحه #}
     <script defer src="{% static 'js/htmx.min.js' %}"></script>
     {% block extra_js %}

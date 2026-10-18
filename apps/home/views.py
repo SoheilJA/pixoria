@@ -1,4 +1,3 @@
-from django.db.models import Q
 from django.shortcuts import render
 from django.urls import reverse
 from django.utils.safestring import mark_safe
@@ -30,31 +29,6 @@ from .models import (
 )
 from apps.portfolio.models import Category, Portfolio
 from apps.services.models import Service
-
-
-def hero_lab(request):
-    """صفحهٔ آزمایشیِ هیرو — سه مدل برای مقایسه؛ بعد از انتخابِ نهایی حذف میشود."""
-    hero = HeroSection.objects.first()
-    hero_stats = hero.stats.filter(is_active=True) if hero else []
-    works = list(
-        Portfolio.objects.exclude(Q(image="") | Q(image__isnull=True))[:12]
-    )
-    # نوارِ بی‌درز باید از عرضِ صفحه پهن‌تر باشد؛ اگر پروژهٔ عکس‌دار کم است
-    # مجموعه تا حداقل ۸ کارت تکرار میشود تا حرکتِ حلقه‌ای کامل بماند.
-    if works and len(works) < 8:
-        from math import ceil
-
-        works = works * ceil(8 / len(works))
-    return render(
-        request,
-        "home/hero_lab.html",
-        {
-            "hero": hero,
-            "hero_stats": hero_stats,
-            "lab_works": works,
-            "lab_fallback": list(range(8)),
-        },
-    )
 
 
 def home(request):
