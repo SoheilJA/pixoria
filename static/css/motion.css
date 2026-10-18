@@ -198,13 +198,72 @@ html.motion :is(.tile, .blog-card, .t-card, .svc-card, .glass)[data-reveal] {
   --rv-scale: 0.985;
 }
 
+/* ------------------------------------------------- مُهرهای سطحِ ظرف
+   کلاس‌های کوچک روی ظرف، ریتمِ فرزندان را متنوع می‌کنند تا ردیف‌ها یک‌شکل
+   و «همه فید از پایین» نباشند. فقط فرزندانِ دارای data-reveal اثر می‌گیرند
+   (متغیرها ارثی‌اند، پس نباید به فرزندانِ بی‌انیمیشن نشت کنند). */
+
+/* یکی از راست، یکی از چپ — برای ردیف‌های زوج */
+html.motion .rv-alt > [data-reveal]:nth-child(odd) {
+  --rv-x: -46px;
+  --rv-y: 0px;
+  --rv-rot: -0.5deg;
+  --rv-blur: blur(6px);
+}
+html.motion .rv-alt > [data-reveal]:nth-child(even) {
+  --rv-x: 46px;
+  --rv-y: 0px;
+  --rv-rot: 0.5deg;
+  --rv-blur: blur(6px);
+}
+
+/* ریتمِ سه‌تایی برای شبکه‌های بنتو */
+html.motion .rv-fan > [data-reveal]:nth-child(3n + 2) {
+  --rv-y: 36px;
+  --rv-scale: 0.93;
+  --rv-dur: 1060ms;
+}
+html.motion .rv-fan > [data-reveal]:nth-child(3n) {
+  --rv-y: 26px;
+  --rv-rot: 0.9deg;
+  --rv-dur: 880ms;
+}
+
+/* پلکانِ بازتر برای ردیف‌های افقی */
+html.motion .rv-cascade > * {
+  --rv-stagger: 110ms;
+}
+
+/* --------------------------------------------------- خروجِ موجودیت‌ها
+   موجِ ملایم برای لوگوها/ذراتِ تزئینی (بدونِ GSAP). */
+
+@keyframes rvDrift {
+  0%,
+  100% {
+    translate: 0 0;
+    rotate: 0deg;
+  }
+  33% {
+    translate: 0 -8px;
+    rotate: 0.6deg;
+  }
+  66% {
+    translate: 0 5px;
+    rotate: -0.5deg;
+  }
+}
+html.motion .rv-drift {
+  animation: rvDrift var(--drift-dur, 9s) ease-in-out var(--drift-delay, 0s) infinite;
+}
+
 /* --------------------------------------------------------------- پلکان
    جاوااسکریپت فقط شمارهٔ هر عنصر را در --rv-i می‌گذارد؛ فاصلهٔ زمانی و
-   الگوی آن اینجاست (سه‌تایی و چهارتایی برای اینکه ریتم یکنواخت نشود). */
+   الگوی آن اینجاست. */
 
 html.motion [data-reveal][style*="--rv-i"] {
   transition-delay: calc(var(--rv-delay, 0ms) + var(--rv-i, 0) * var(--rv-stagger));
 }
+
 @media (max-width: 640px) {
   :root {
     --rv-stagger: 55ms;
