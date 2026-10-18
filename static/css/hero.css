@@ -168,8 +168,8 @@
 .hx-a {
   padding-top: clamp(44px, 8svh, 92px);
 }
-/* بومِ نقطه‌ها */
-.hx-a__field {
+/* بومِ میدان — مشترک بین هیرو و فوتر (موتور: hero-field.js) */
+[data-hx-field] {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -178,7 +178,7 @@
   opacity: 0;
   transition: opacity 1400ms var(--hx-ease);
 }
-.hx-a__field.on { opacity: 1; }
+[data-hx-field].on { opacity: 1; }
 /* هالهٔ تهیِ صفحه */
 .hx-a__haze {
   position: absolute;
@@ -249,7 +249,31 @@
 
 /* ─────────────────────── reduced motion ─────────────────────── */
 @media (prefers-reduced-motion: reduce) {
-  .hx-a__field { animation: none; opacity: 0.45; }
+  [data-hx-field] { animation: none; opacity: 0.45; }
   .hx-a__ghost { animation: none !important; }
   .hx-scroll i::after { animation: none; opacity: 0.6; }
 }
+
+/* ═══════════════ «میدانِ زنده» در فوتر ═══════════════ */
+/* هالهٔ فوتر — تهِ صفحه گرمتر (تقریباً همان زبانِ هیرو با شدتِ کمتر) */
+.hx-field__haze {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 64% 42% at 50% 116%, rgba(201, 161, 90, 0.13), transparent 66%),
+    radial-gradient(ellipse 36% 26% at 88% 6%, rgba(46, 99, 255, 0.06), transparent 70%);
+}
+/* پیکسلهای زیرِ کیستِ موجِ بالای فوتر محو شروع میشوند تا لبهٔ خشک نداشته باشیم */
+.hx-field__top {
+  position: absolute;
+  z-index: 2;
+  inset-inline: 0;
+  top: 0;
+  height: clamp(96px, 14vh, 170px);
+  pointer-events: none;
+  background: linear-gradient(to bottom, #121214 0%, rgba(18, 18, 20, 0) 100%);
+}
+/* در فوتر بوم زیرِ کیستِ موج میماند (crest همیشه سطحِ بالاتر است) */
+footer [data-hx-field] { z-index: 0; }

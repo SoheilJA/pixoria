@@ -13,12 +13,10 @@
       fill="#121214"
     />
   </svg>
-  {% include "partials/_space_layer.html" with stars_only="1" %}
-  <div
-    class="pixel-bg pointer-events-none absolute inset-0 opacity-20"
-    aria-hidden="true"
-  ></div>
-
+  <div class="hx-field__top" aria-hidden="true"></div>
+  {# پس‌زمینهٔ «میدانِ زنده» — همان موتورِ هیرو (hero-field.js) #}
+  <canvas class="hx-field" data-hx-field aria-hidden="true"></canvas>
+  <div class="hx-field__haze" aria-hidden="true"></div>
   <div class="relative z-10 mx-auto max-w-7xl px-6 pb-10 pt-36 md:pt-44">
     <div class="grid gap-14 lg:grid-cols-12">
       {# برند و اطلاعات تماس #}

@@ -19,8 +19,8 @@
   const CREAM = "245, 243, 238";
   const GOLD = "232, 196, 122";
 
-  /* یک نمونهٔ فعال حداکثر (بومِ صفحهٔ فعلی) */
-  let active = null;
+  /* نمونه‌های فعال (بومِ هیرو + بومِ فوتر میتوانند همزمان زنده باشند) */
+  const active = new Set();
 
   function initField(canvas) {
     const ctx = canvas.getContext("2d");
@@ -171,6 +171,12 @@
     };
 
     /* ---------- رویدادها ---------- */
+    /* نشانگر را روی «میزبانِ» بوم میشنویم، نه خودِ بوم؛ چون محتوا روی بوم
+       قرار دارد و رویدادِ موش به بوم نمیرسد */
+    const host =
+      canvas.closest("section") ||
+      canvas.closest("footer") ||
+      canvas.parentElement;
     const onMove = (e) => {
       const r = canvas.getBoundingClientRect();
       P.tx = e.clientX - r.left;
@@ -181,6 +187,7 @@
       }
       P.lastMove = elapsed();
     };
+    if (host && host.addEventListener) host.addEventListener("pointermove", onMove);
 
     let resizeTimer = 0;
     const onResize = () => {
@@ -202,7 +209,7 @@
 
     document.addEventListener("visibilitychange", onVisibility);
     window.addEventListener("resize", onResize);
-    canvas.addEventListener("pointermove", onMove);
+    if (host && host.addEventListener) host.addEventListener("pointermove", onMove);
 
     /* ---------- راه‌اندازی ---------- */
     build();
@@ -228,23 +235,26 @@
         clearTimeout(resizeTimer);
         document.removeEventListener("visibilitychange", onVisibility);
         window.removeEventListener("resize", onResize);
-        canvas.removeEventListener("pointermove", onMove);
+        if (host && host.removeEventListener) host.removeEventListener("pointermove", onMove);
       },
     };
   }
 
   function ensure() {
-    const cv = document.querySelector("[data-hx-field]");
-    if (!cv) {
-      if (active) {
-        active.dispose();
-        active = null;
+    const canvases = [...document.querySelectorAll("[data-hx-field]")];
+    const live = new Set(canvases);
+    /* نمونههایی که بومشان از دام افتاده (hx-boost) جمع میشوند */
+    for (const inst of [...active]) {
+      if (!live.has(inst.canvas)) {
+        inst.dispose();
+        active.delete(inst);
       }
-      return;
     }
-    if (active && active.canvas === cv) return;
-    if (active) active.dispose();
-    active = initField(cv);
+    for (const cv of canvases) {
+      if (cv.dataset.hxBound) continue;
+      const inst = initField(cv);
+      if (inst) active.add(inst);
+    }
   }
 
   ensure();
