@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.shortcuts import render
 from django.urls import reverse
 from django.utils.safestring import mark_safe
@@ -27,6 +28,7 @@ from .models import (
     WhyFeature,
     WhySection,
 )
+from apps.blog.models import Article
 from apps.portfolio.models import Category, Portfolio
 from apps.services.models import Service
 
@@ -80,7 +82,39 @@ def home(request):
         "faq_items": FaqItem.objects.filter(is_active=True) if "faq" in keys else [],
     }
 
-    # ── نمونه‌کارهای صفحه اصلی: پروژه‌های منتخب، همراه با دسته‌بندی برای فیلتر ──
+    # ─ـ تابلوی «درباره»: قابِ شیشه‌ای با چندِ نمونهٔ واقعی پر میشود ──
+    # کاشیها = کارهای واقعی (با فایلِ روی دیسک) + اگر به چهار نرسیدند،
+    # جلدهای مقالههای منتشرشده جای خالیها را میگیرند تا قاب خالی نماند.
+    if "about" in keys:
+        about_works = []
+        for obj in Portfolio.objects.exclude(Q(image="") | Q(image__isnull=True)).order_by("order", "id"):
+            try:
+                if obj.image and obj.image.storage.exists(obj.image.name):
+                    about_works.append({
+                        "url": reverse("portfolio:detail", kwargs={"slug": obj.slug}),
+                        "image": obj.image.url,
+                        "label": obj.title,
+                        "kind": "pro",
+                    })
+            except Exception:
+                pass
+        if len(about_works) < 4:
+            for a in Article.objects.filter(status="published").order_by("-published_at"):
+                try:
+                    if a.cover_image and a.cover_image.storage.exists(a.cover_image.name):
+                        about_works.append({
+                            "url": reverse("blog:detail", kwargs={"slug": a.slug}),
+                            "image": a.cover_image.url,
+                            "label": a.title,
+                            "kind": "blog",
+                        })
+                except Exception:
+                    pass
+                if len(about_works) >= 4:
+                    break
+        context["about_works"] = about_works[:4]
+
+    # ─ـ نمونه‌کارهای صفحه اصلی: پروژه‌های منتخب، همراه با دسته‌بندی برای فیلتر ──
     if "portfolio" in keys:
         pf_items = list(
             Portfolio.objects.filter(featured=True)

@@ -1,0 +1,247 @@
+/* ═════════════════════════════════════════════════════════════════
+   sections.css — استایلهای دستنویسِ بازطراحیِ سکشنها
+   (چون node_modules نیست و tailwind قابلِ بیلدمجدد نیست، هر قاعدهٔ
+   جدیدِ سکشنها اینجا نوشته میشود؛ ترتیبِ لود: بعد از tailwind.css)
+   ═════════════════════════════════════════════════════════════════ */
+
+/* ── درباره ما: قابِ شیشه‌ای با کاشیهای نمونهکار ───────────────── */
+
+/* هر کاشی یک کارِ واقعی است؛ چرخشِ پایه با --r تا هنگامِ hover
+   بتوانیم همان چرخش را حفظ و فقط کمی صاف/بزرگ کنیم. */
+.ab-tile {
+  position: absolute;
+  z-index: 3;
+  display: block;
+  width: clamp(92px, 24%, 148px);
+  aspect-ratio: 4 / 3;
+  border-radius: 14px;
+  overflow: hidden;
+  background-position: center;
+  background-size: cover;
+  background-color: #ece8de; /* جاگذاریِ پسزمینه تا لودِ تصویر خالی نماند */
+  border: 1px solid rgba(143, 107, 44, 0.45);
+  box-shadow:
+    0 18px 36px -18px rgba(10, 10, 12, 0.6),
+    0 0 0 4px rgba(245, 243, 238, 0.35);
+  transform: rotate(var(--r, 0deg));
+  outline: none;
+  transition:
+    transform 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.4s ease,
+    border-color 0.3s ease;
+}
+.ab-tile:hover,
+.ab-tile:focus-visible {
+  transform: rotate(calc(var(--r, 0deg) * 0.35)) scale(1.07);
+  border-color: rgba(201, 161, 90, 0.85);
+  box-shadow:
+    0 26px 46px -20px rgba(10, 10, 12, 0.65),
+    0 0 24px -4px rgba(201, 161, 90, 0.55),
+    0 0 0 4px rgba(245, 243, 238, 0.45);
+  z-index: 5;
+}
+
+/* برچسبِ کوچکِ کاشی — تا hover پنهان است */
+.ab-tile__tag {
+  position: absolute;
+  inset-inline: 6px;
+  bottom: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 7px 10px;
+  border-radius: 9px;
+  font-size: 11.5px;
+  line-height: 1.4;
+  color: #f4ecdd;
+  background: rgba(10, 10, 12, 0.55);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(201, 161, 90, 0.35);
+  opacity: 0;
+  transform: translateY(6px);
+  transition:
+    opacity 0.35s ease,
+    transform 0.35s ease;
+  font-style: normal;
+}
+.ab-tile__tag span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ab-tile__tag b {
+  flex: none;
+  color: #e8c47a;
+}
+.ab-tile:hover .ab-tile__tag,
+.ab-tile:focus-visible .ab-tile__tag {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* جای هر کاشی — دورِ نشانِ مرکزی، با دستِ متناوب */
+.ab-tile--1 { top: 10%; inset-inline-end: 8%; --r: 6deg; }
+.ab-tile--2 { bottom: 11%; inset-inline-end: 21%; --r: -7deg; }
+.ab-tile--3 { top: 17%; inset-inline-start: 7%; --r: -5deg; }
+.ab-tile--4 { bottom: 13%; inset-inline-start: 15%; --r: 5deg; }
+
+/* کاشیِ «یادداشت» — حاشیهٔ خطچین تا از کارِ واقعی سرِ رویه جدا شود */
+.ab-tile--note {
+  border-style: dashed;
+  border-color: rgba(143, 107, 44, 0.35);
+}
+.ab-tile--note:hover,
+.ab-tile--note:focus-visible {
+  border-color: rgba(201, 161, 90, 0.85);
+}
+
+/* دکمهٔ «نمونهکارها» — تراشهٔ شیشه‌ای پایینِ قاب */
+.ab-link {
+  position: absolute;
+  z-index: 10;
+  bottom: 6%;
+  inset-inline-start: 6%;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #0a0a0c;
+  text-decoration: none;
+  transition:
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.3s ease,
+    color 0.3s ease;
+}
+.ab-link:hover {
+  color: #0a0a0c;
+  transform: translateY(-3px);
+  box-shadow: 0 14px 30px -14px rgba(10, 10, 12, 0.45);
+}
+
+/* موبایل: کاشیها کوچکشان میمانیم تا قاب شلوغ نشود */
+@media (max-width: 640px) {
+  .ab-tile {
+    width: clamp(74px, 26%, 104px);
+  }
+  .ab-tile__tag {
+    padding: 5px 8px;
+    font-size: 10.5px;
+  }
+}
+
+/* ── درباره ما: ریلِ مایلستونِ آمار (بهجای باکسهای ردیفِ دوم) ───── */
+
+.ab-rail {
+  position: relative;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* دسکتاپ: چهار ایستگاه روی یک خطِ نقطهچینِ افقی */
+@media (min-width: 900px) {
+  .ab-rail {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: clamp(24px, 4vw, 56px);
+  }
+  .ab-rail::before {
+    content: "";
+    position: absolute;
+    top: 6px;
+    inset-inline: 3%;
+    border-top: 1px dashed rgba(143, 107, 44, 0.5);
+  }
+  .ab-rail__node {
+    position: relative;
+    padding-top: 40px; /* فاصلهٔ محتوا از ریل */
+    text-align: center;
+  }
+  .ab-rail__dot {
+    position: absolute;
+    top: 1px;
+    left: 50%;
+    width: 11px;
+    height: 11px;
+    margin-left: -5.5px;
+    border-radius: 50%;
+    background: linear-gradient(140deg, #e8c47a, #8f6b2c);
+    box-shadow:
+      0 0 0 4px rgba(201, 161, 90, 0.16),
+      0 0 14px -2px rgba(201, 161, 90, 0.5);
+    transition:
+      transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 0.35s ease;
+  }
+  .ab-rail__node:hover .ab-rail__dot {
+    transform: scale(1.35);
+    box-shadow:
+      0 0 0 6px rgba(201, 161, 90, 0.2),
+      0 0 24px 0 rgba(201, 161, 90, 0.65);
+  }
+}
+
+/* موبایل: ریل عمودی — نقطهها کنارِ سطرها */
+@media (max-width: 899px) {
+  .ab-rail {
+    display: grid;
+    gap: 26px;
+    padding-inline-start: 30px;
+  }
+  .ab-rail::before {
+    content: "";
+    position: absolute;
+    top: 10px;
+    bottom: 10px;
+    inset-inline-start: 5px;
+    border-inline-start: 1px dashed rgba(143, 107, 44, 0.5);
+  }
+  .ab-rail__node {
+    position: relative;
+  }
+  .ab-rail__dot {
+    position: absolute;
+    top: 10px;
+    inset-inline-start: -30px; /* روی خطِ عمودی */
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background: linear-gradient(140deg, #e8c47a, #8f6b2c);
+    box-shadow: 0 0 0 4px rgba(201, 161, 90, 0.16);
+  }
+}
+
+/* مشترکِ هر دو حالت — آیکن، عدد درشت، برچسب */
+.ab-rail__node .icon-ring {
+  margin-bottom: 14px;
+}
+.ab-rail__num {
+  display: block;
+  font-size: clamp(2.2rem, 3.2vw, 3.1rem);
+  font-weight: 800;
+  line-height: 1.15;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.ab-rail__node:hover .ab-rail__num {
+  transform: translateY(-4px);
+}
+.ab-rail__label {
+  margin-top: 6px;
+  font-size: 14px;
+  color: rgba(10, 10, 12, 0.62);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ab-tile,
+  .ab-tile__tag,
+  .ab-link,
+  .ab-rail__dot,
+  .ab-rail__num {
+    transition: none;
+  }
+}
