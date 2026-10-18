@@ -40,7 +40,7 @@
     <div class="relative z-10 mx-auto max-w-7xl px-6 pb-28 pt-36 md:pt-48">
       {% include "components/_breadcrumb.html" %}
 
-      <div class="mt-10 max-w-3xl" data-reveal="right">
+      <div class="mt-10 max-w-3xl" data-reveal="mask">
         {% if page_section and page_section.eyebrow %}
           <p class="eyebrow">{{ page_section.eyebrow }}</p>
         {% endif %}
@@ -53,14 +53,14 @@
         </h1>
         {% if page_section and page_section.description %}
           <p class="mt-6 max-w-2xl text-lg font-light leading-8 text-cream/70"
-             data-reveal="up" data-delay="0.06">
+             data-reveal="mask" data-delay="0.06">
             {{ page_section.description }}
           </p>
         {% endif %}
       </div>
 
       {% if services %}
-        <div class="mt-10 flex flex-wrap items-center gap-3" data-reveal="up" data-delay="0.16">
+        <div class="mt-10 flex flex-wrap items-center gap-3" data-reveal="pop" data-delay="0.16">
           <span class="inline-flex items-center gap-2 rounded-full border border-cream/10 bg-white/[0.02] px-4 py-2 text-sm text-cream/60">
             {% icon "sparkles" class="h-4 w-4 text-gold" %}
             <b class="font-bold text-cream fa-num">{{ services|length|fa_digits }}</b> خدمت
@@ -87,7 +87,7 @@
           {% for service in services %}
             <a href="{% url 'services:detail' service.slug %}"
                class="{{ service.accent_class }} svc-list-card tilt group h-full"
-               data-reveal="up" data-delay="{% cycle '0' '0.06' '0.12' '0.18' %}"
+               data-reveal="rise" data-delay="{% cycle '0' '0.06' '0.12' '0.18' %}"
                aria-label="{{ service.title|plain }}">
               <span class="glare" aria-hidden="true"></span>
 
@@ -128,7 +128,7 @@
           {% endfor %}
         </div>
       {% else %}
-        <div class="flex flex-col items-center gap-5 py-24 text-center" data-reveal="up">
+        <div class="flex flex-col items-center gap-5 py-24 text-center" data-reveal="scale">
           <span class="mega-orb mega-orb-gold" aria-hidden="true">
             <span class="mega-orbit"><span class="mega-orbit-moon"></span></span>
             {% icon "rocket" class="h-6 w-6" %}
@@ -150,14 +150,14 @@
       <div class="relative z-10 mx-auto max-w-7xl px-6 pb-28 pt-32 md:pt-40">
         <div class="max-w-2xl">
           {% if how_section.eyebrow %}
-            <p class="eyebrow eyebrow-dark" data-reveal="up">{{ how_section.eyebrow }}</p>
+            <p class="eyebrow eyebrow-dark" data-reveal="rise">{{ how_section.eyebrow }}</p>
           {% endif %}
           <h2 class="mt-5 text-4xl font-extrabold leading-[1.3] text-paper md:text-[2.7rem]"
-              data-reveal="up" data-delay="0.08">
+              data-reveal="mask" data-delay="0.08">
             {{ how_section.title|highlight:"dark" }}
           </h2>
           {% if how_section.subtitle %}
-            <p class="mt-5 font-light leading-8 text-coy" data-reveal="up" data-delay="0.14">
+            <p class="mt-5 font-light leading-8 text-coy" data-reveal="blur" data-delay="0.14">
               {{ how_section.subtitle }}
             </p>
           {% endif %}
@@ -167,7 +167,7 @@
           {% for step in steps %}
             <article class="why-card glass-light group relative overflow-hidden p-7"
                      style="border-radius: {% cycle '1.75rem 0.75rem 1.75rem 0.75rem' '0.75rem 1.75rem 0.75rem 1.75rem' %}"
-                     data-reveal="up" data-delay="{% cycle '0' '0.08' '0.16' '0.24' %}">
+                     data-reveal="rise" data-delay="{% cycle '0' '0.08' '0.16' '0.24' %}">
               <span class="glare" aria-hidden="true"></span>
               <span class="why-idx" aria-hidden="true">{{ forloop.counter|stringformat:"02d"|fa_digits }}</span>
               <span class="why-corner" aria-hidden="true"></span>
@@ -200,14 +200,14 @@
 
       <div class="relative z-10 mx-auto max-w-4xl px-6 pb-28 pt-32 md:pt-40">
         <div class="text-center">
-          <p class="eyebrow eyebrow-c justify-center" data-reveal="up">سوالات متداول</p>
+          <p class="eyebrow eyebrow-c justify-center" data-reveal="rise">سوالات متداول</p>
           <h2 class="mt-5 text-4xl font-extrabold leading-[1.3] text-cream md:text-[2.7rem]"
-              data-reveal="up" data-delay="0.08">
+              data-reveal="mask" data-delay="0.08">
             {{ faq_section.title|default:"سوالاتِ رایج"|highlight }}
           </h2>
           {% if faq_section.subtitle %}
             <p class="mx-auto mt-4 max-w-xl font-light leading-8 text-cream/55"
-               data-reveal="up" data-delay="0.14">
+               data-reveal="blur" data-delay="0.14">
               {{ faq_section.subtitle }}
             </p>
           {% endif %}
@@ -215,7 +215,7 @@
 
         <div class="mt-12 space-y-3.5">
           {% for item in faq_items %}
-            <div class="faq-item" data-reveal="up" data-delay="{% cycle '0' '0.06' '0.12' '0.18' '0.24' '0.3' '0.36' '0.42' %}">
+            <div class="faq-item" data-reveal="rise" data-delay="{% cycle '0' '0.06' '0.12' '0.18' '0.24' '0.3' '0.36' '0.42' %}">
               <h3 class="m-0">
                 <button type="button" class="faq-q"
                         aria-expanded="false" aria-controls="svc-list-faq-panel-{{ forloop.counter }}">
