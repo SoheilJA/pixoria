@@ -23,12 +23,12 @@
               <p class="eyebrow" data-reveal="up">{{ portfolio_section.eyebrow }}</p>
             {% endif %}
             {% if portfolio_section.title %}
-              <h2 class="mt-5 text-4xl font-extrabold leading-[1.3] md:text-[2.7rem]" data-reveal="right">
+              <h2 class="mt-5 text-4xl font-extrabold leading-[1.3] md:text-[2.7rem]" data-reveal="mask">
                 {{ portfolio_section.title|highlight }}
               </h2>
             {% endif %}
             {% if portfolio_section.description %}
-              <p class="mt-4 max-w-xl font-light leading-8 text-cream/55" data-reveal="right" data-delay="0.1">
+              <p class="mt-4 max-w-xl font-light leading-8 text-cream/55" data-reveal="blur" data-delay="0.1">
                 {{ portfolio_section.description }}
               </p>
             {% endif %}
@@ -38,7 +38,7 @@
 
       {# فیلتر دسته‌بندی — کلید فیلتر = اسلاگ دسته‌بندی #}
       {% if portfolio_categories %}
-        <div class="mt-10 flex flex-wrap gap-2.5" data-reveal="up" data-delay="0.12" data-pf-filters>
+        <div class="mt-10 flex flex-wrap gap-2.5" data-reveal="pop" data-delay="0.12" data-pf-filters>
           <button class="flt-btn active" data-filter="all">همه</button>
           {% for category in portfolio_categories %}
             <button class="flt-btn" data-filter="{{ category.slug }}">{{ category.name }}</button>
@@ -48,7 +48,7 @@
 
       {# شمارشگر — مقدار اولیه از سمت سرور؛ pixoria.js هنگام فیلتر به‌روز می‌شود #}
       <p class="mt-5 font-latin text-[10px] tracking-[.3em] text-gold/60" data-pf-count
-         data-reveal="up" data-delay="0.14">
+         data-reveal="clip" data-delay="0.14">
         {{ portfolio_items|length|fa_digits }} PROJECTS
       </p>
 
@@ -67,7 +67,7 @@
       </div>
 
       {# کنترل‌های کاروسل — فقط زیر lg نمایش داده می‌شوند (دکمه‌های راست/چپ RTL) #}
-      <div class="mt-8 flex items-center justify-center gap-5 lg:hidden" data-carousel-controls data-reveal="up">
+      <div class="mt-8 flex items-center justify-center gap-5 lg:hidden" data-carousel-controls data-reveal="pop">
         <button type="button" class="ctrl-btn" data-carousel-prev aria-label="نمونه‌کار قبلی">{% icon "chevron-right" class="h-5 w-5" %}</button>
         <div class="flex items-center gap-2" data-carousel-dots></div>
         <button type="button" class="ctrl-btn" data-carousel-next aria-label="نمونه‌کار بعدی">{% icon "chevron-left" class="h-5 w-5" %}</button>

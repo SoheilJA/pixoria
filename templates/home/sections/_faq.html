@@ -16,7 +16,7 @@
         {% endif %}
         {% if faq_section.title %}
           <h2 class="mt-5 text-4xl font-extrabold leading-[1.3] text-paper md:text-[2.7rem]"
-              data-reveal="up" data-delay="0.08">
+              data-reveal="mask" data-delay="0.08">
             {{ faq_section.title|highlight:"dark" }}
           </h2>
         {% endif %}
@@ -27,9 +27,9 @@
         {% endif %}
       </div>
 
-      <div class="mt-12 space-y-3.5" id="faq-list">
+      <div class="rv-cascade mt-12 space-y-3.5" id="faq-list">
         {% for item in faq_items %}
-          <div class="faq-item" data-reveal="up" data-delay="{% cycle '0' '0.06' '0.12' '0.18' '0.24' '0.3' %}">
+          <div class="faq-item" data-reveal="rise" data-delay="{% cycle '0' '0.06' '0.12' '0.18' '0.24' '0.3' %}">
             <h3 class="m-0">
               <button type="button" class="faq-q"
                       aria-expanded="false" aria-controls="faq-panel-{{ forloop.counter }}">

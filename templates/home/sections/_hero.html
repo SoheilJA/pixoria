@@ -60,15 +60,15 @@
     {# ستون متن #}
     <div class="lg:col-span-6">
       {% if hero.eyebrow %}
-        <p class="eyebrow" data-reveal="up">{{ hero.eyebrow }}</p>
+        <p class="eyebrow" data-reveal="rise">{{ hero.eyebrow }}</p>
       {% endif %}
-      <h1 class="mt-6 text-[2.7rem] font-extrabold leading-[1.2] sm:text-6xl lg:text-7xl" data-reveal="right">
+      <h1 class="mt-6 text-[2.7rem] font-extrabold leading-[1.2] sm:text-6xl lg:text-7xl rv-underline" data-reveal="mask">
         {{ hero.title|highlight }}
       </h1>
-      <p class="mt-6 max-w-xl text-lg font-light leading-8 text-cream/70" data-reveal="right" data-delay="0.12">
+      <p class="mt-6 max-w-xl text-lg font-light leading-8 text-cream/70" data-reveal="blur" data-delay="0.12">
         {{ hero.description|linebreaksbr }}
       </p>
-      <div class="mt-10 flex flex-wrap items-center gap-4" data-reveal="right" data-delay="0.2">
+      <div class="mt-10 flex flex-wrap items-center gap-4" data-reveal="pop" data-delay="0.2">
         {% if hero.cta_primary_text %}
           <a href="{% nav_url hero.cta_primary_url %}" class="btn btn-gold px-8 py-4" data-magnetic>
             {{ hero.cta_primary_text }} {% icon "arrow-left" class="h-4 w-4" %}
@@ -81,7 +81,7 @@
         {% endif %}
       </div>
       {% if hero_stats %}
-        <div class="mt-12 flex flex-wrap items-center gap-x-7 gap-y-3 text-sm text-cream/50" data-reveal="up" data-delay="0.3">
+        <div class="mt-12 flex flex-wrap items-center gap-x-7 gap-y-3 text-sm text-cream/50" data-reveal="rise" data-delay="0.3">
           {% for stat in hero_stats %}
             {% if not forloop.first %}
               <span class="h-1 w-1 rounded-full bg-gold/60" aria-hidden="true"></span>
@@ -98,7 +98,7 @@
   </div>
 
   {# نشانگر اسکرول #}
-  <div class="absolute bottom-7 left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-2" data-reveal="up" data-delay="0.4">
+  <div class="absolute bottom-7 left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-2" data-reveal="down" data-delay="0.4">
     <span class="text-[10px] tracking-[.3em] text-cream/40">اسکرول</span>
     <span class="scroll-cue" aria-hidden="true"></span>
   </div>

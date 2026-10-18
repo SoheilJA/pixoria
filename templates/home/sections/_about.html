@@ -11,36 +11,36 @@
       <div class="grid items-center gap-16 lg:grid-cols-12">
         <div class="lg:col-span-5">
           {% if about_section.eyebrow %}
-            <p class="eyebrow eyebrow-dark" data-reveal="up">{{ about_section.eyebrow }}</p>
+            <p class="eyebrow eyebrow-dark" data-reveal="rise">{{ about_section.eyebrow }}</p>
           {% endif %}
-          <h2 class="mt-5 text-4xl font-extrabold leading-[1.3] text-paper md:text-5xl" data-reveal="right">
+          <h2 class="mt-5 text-4xl font-extrabold leading-[1.3] text-paper md:text-5xl" data-reveal="mask">
             {{ about_section.title|highlight:"dark" }}
           </h2>
           {% if about_section.paragraph_one %}
-            <p class="mt-6 font-light leading-8 text-coy" data-reveal="right" data-delay="0.1">
+            <p class="mt-6 font-light leading-8 text-coy" data-reveal="blur" data-delay="0.1">
               {{ about_section.paragraph_one }}
             </p>
           {% endif %}
           {% if about_section.paragraph_two %}
-            <p class="mt-4 font-light leading-8 text-coy" data-reveal="right" data-delay="0.16">
+            <p class="mt-4 font-light leading-8 text-coy" data-reveal="blur" data-delay="0.16">
               {{ about_section.paragraph_two }}
             </p>
           {% endif %}
           {% if about_section.chips %}
-            <ul class="mt-8 flex flex-wrap gap-3" data-reveal="right" data-delay="0.22">
+            <ul class="mt-8 flex flex-wrap gap-3" data-reveal="pop" data-delay="0.22">
               {% for chip in about_section.get_chips_list %}
                 <li class="s-chip-light">{{ chip }}</li>
               {% endfor %}
             </ul>
           {% endif %}
           {% if about_section.footer_label %}
-            <span class="mt-10 block font-latin text-[10px] tracking-[.45em] text-gold-dark/60" data-reveal="up" data-delay="0.28">
+            <span class="mt-10 block font-latin text-[10px] tracking-[.45em] text-gold-dark/60" data-reveal="rise" data-delay="0.28">
               {{ about_section.footer_label }}
             </span>
           {% endif %}
         </div>
 
-        <div class="relative lg:col-span-7" data-reveal="left">
+        <div class="relative lg:col-span-7" data-reveal="clip">
           <span class="stroke-title-light pointer-events-none absolute -top-14 left-0 select-none text-[8.5rem] font-extrabold leading-none" aria-hidden="true">
             {{ settings.established_year|default:"۱۳۸۹"|fa_digits }}
           </span>

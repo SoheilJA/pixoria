@@ -18,7 +18,7 @@
           <p class="eyebrow" data-reveal="up">{{ process_section.eyebrow }}</p>
         {% endif %}
         {% if process_section.title %}
-          <h2 class="mt-5 text-4xl font-extrabold leading-[1.3] md:text-[2.7rem]" data-reveal="up" data-delay="0.08">
+          <h2 class="mt-5 text-4xl font-extrabold leading-[1.3] md:text-[2.7rem]" data-reveal="mask" data-delay="0.08">
             {{ process_section.title|highlight }}
           </h2>
         {% endif %}
@@ -55,7 +55,7 @@
           {% endfor %}
         </div>
 
-        <div class="grid gap-6 {% if process_steps|length > 1 %}lg:grid-cols-{{ process_steps|length }}{% endif %}">
+        <div class="rv-alt grid gap-6 {% if process_steps|length > 1 %}lg:grid-cols-{{ process_steps|length }}{% endif %}">
           {% for step in process_steps %}
             <article class="process-step glass tilt group relative overflow-hidden p-7"
                      style="border-radius: 1.5rem 1.5rem 1.5rem 0.6rem"

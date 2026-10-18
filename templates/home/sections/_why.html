@@ -16,7 +16,7 @@
         {% endif %}
         {% if why_section.title %}
           <h2 class="mt-5 text-4xl font-extrabold leading-[1.3] text-paper md:text-[2.7rem]"
-              data-reveal="up" data-delay="0.08">
+              data-reveal="mask" data-delay="0.08">
             {{ why_section.title|highlight:"dark" }}
           </h2>
         {% endif %}
@@ -27,7 +27,7 @@
         {% endif %}
       </div>
 
-      <div class="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <div class="rv-fan mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {% for feature in why_features %}
           <article class="why-card glass-light tilt group relative overflow-hidden p-7"
                    style="border-radius: {% cycle '1.75rem 0.75rem 1.75rem 0.75rem' '0.75rem 1.75rem 0.75rem 1.75rem' %}"

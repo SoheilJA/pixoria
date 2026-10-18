@@ -19,13 +19,13 @@
             <p class="eyebrow" data-reveal="up">{{ blog_section.eyebrow }}</p>
           {% endif %}
           {% if blog_section.title %}
-            <h2 class="mt-5 text-4xl font-extrabold leading-[1.3] md:text-[2.7rem]" data-reveal="right">
+            <h2 class="mt-5 text-4xl font-extrabold leading-[1.3] md:text-[2.7rem]" data-reveal="mask">
               {{ blog_section.title|highlight }}
             </h2>
           {% endif %}
         </div>
         {% if blog_url %}
-          <a href="{{ blog_url }}" class="more-link text-base" data-reveal="left">
+          <a href="{{ blog_url }}" class="more-link text-base" data-reveal="pop">
             همهٔ مقالات
             {% icon "arrow-left" class="h-4 w-4" %}
           </a>
@@ -33,7 +33,7 @@
       </div>
 
       {# نهایتاً هشت مقالهٔ منتشرشده در کاروسل #}
-      <div class="mt-14" data-reveal="up">
+      <div class="mt-14" data-reveal="clip">
         {% articles_carousel %}
       </div>
     </div>
