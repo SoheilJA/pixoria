@@ -5,11 +5,11 @@ from .icon_utils import validate_icon_name
 from .image_utils import WebPImageMixin
 
 # راهنمای مشترک فیلد آیکون — در چندین مدل تکرار می‌شود تا متن کمکی یکسانی داشته
-# باشد. آیکون‌ها از فونتِ محلی Tabler Icons بارگذاری می‌شوند (بدون CDN).
+# باشد. آیکون‌ها از اسپرایتِ محلی Lucide بارگذاری می‌شوند (بدون CDN).
 ICON_HELP = (
-    "نام انگلیسی یک آیکون Tabler، بدون فاصله. "
+    "نام انگلیسی یک آیکون Lucide، بدون فاصله. "
     "مثال: bolt، palette، shield-check. "
-    "لیست کامل آیکون‌ها: tabler.io/icons"
+    "لیست کامل آیکون‌ها: lucide.dev/icons"
 )
 # راهنمای مشترک فیلد متن بالای عنوان (eyebrow) که در سکشن‌های v2 بالای عنوان
 # می‌آید.
@@ -219,8 +219,8 @@ class SocialLink(models.Model):
         default="globe",
         validators=[validate_icon_name],
         help_text=(
-            "نام انگلیسی یک آیکون Tabler. مثال: brand-instagram، brand-linkedin، "
-            "telegram، globe. لیست کامل: tabler.io/icons"
+            "نام انگلیسی یک آیکون Lucide. مثال: instagram، linkedin، "
+            "github، globe. لیست کامل: lucide.dev/icons"
         ),
     )
 
