@@ -1,7 +1,7 @@
 {% load icon_tags fa_digits %}
-{# فرم تماس v2 — حالت فرم (بار اول و بعد از خطای اعتبارسنجی) #}
-{# داده‌ها: form (ContactSubmissionForm)، form_section، rate_limited #}
-{# htmx: خود فرم را با outerHTML جایگزین می‌کند؛ موفقیت در _contact_success.html #}
+{% comment %} فرم تماس v2 — حالت فرم (بار اول و بعد از خطای اعتبارسنجی) {% endcomment %}
+{% comment %} داده‌ها: form (ContactSubmissionForm)، form_section، rate_limited {% endcomment %}
+{% comment %} htmx: خود فرم را با outerHTML جایگزین می‌کند؛ موفقیت در _contact_success.html {% endcomment %}
 <form id="contact-form"
       hx-post="{% url 'contact:contact' %}"
       hx-target="this"
@@ -11,7 +11,7 @@
       style="border-radius: 2.5rem 1rem 2.5rem 1rem"
       novalidate>
   {% csrf_token %}
-  {# هانی‌پات — برای کاربران مخفی است؛ ربات‌ها آن را پر می‌کنند #}
+  {% comment %} هانی‌پات — برای کاربران مخفی است؛ ربات‌ها آن را پر می‌کنند {% endcomment %}
   {{ form.company_website }}
 
   {% if rate_limited %}

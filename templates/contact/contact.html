@@ -9,7 +9,7 @@
 {% endblock %}
 
 {% block extra_head %}
-  {# داده‌های ساختاریافته — سازمان، صفحهٔ تماس و مسیر نمایش #}
+  {% comment %} داده‌های ساختاریافته — سازمان، صفحهٔ تماس و مسیر نمایش {% endcomment %}
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -268,13 +268,13 @@
             </radialGradient>
           </defs>
 
-          {# حلقه‌های هم‌مرکز پوشش خدمات #}
+          {% comment %} حلقه‌های هم‌مرکز پوشش خدمات {% endcomment %}
           <g fill="none" stroke="rgba(201,161,90,.28)">
             <circle cx="400" cy="160" r="96" stroke-dasharray="3 10" />
             <circle cx="400" cy="160" r="140" stroke-dasharray="3 12" opacity=".7" />
             <circle cx="400" cy="160" r="188" stroke-dasharray="2 14" opacity=".45" />
           </g>
-          {# حلقه‌های چرخان #}
+          {% comment %} حلقه‌های چرخان {% endcomment %}
           <g fill="none" stroke="url(#cl)" stroke-width="1.6"
              style="transform-origin: 400px 160px" class="cities-spin">
             <ellipse cx="400" cy="160" rx="118" ry="44" stroke-dasharray="8 14" opacity=".75" />
@@ -284,10 +284,10 @@
             <ellipse cx="400" cy="160" rx="168" ry="60" stroke-dasharray="5 16" opacity=".6" />
           </g>
 
-          {# هالهٔ مرکزی #}
+          {% comment %} هالهٔ مرکزی {% endcomment %}
           <circle r="78" fill="url(#cg)" cx="400" cy="160" />
 
-          {# گرهٔ مرکزی: دفتر #}
+          {% comment %} گرهٔ مرکزی: دفتر {% endcomment %}
           <g>
             <circle cx="400" cy="160" r="16" fill="#0a0a0c" stroke="#e8c47a" stroke-width="2.5" />
             <circle cx="400" cy="160" r="5" fill="#e8c47a" />
@@ -297,7 +297,7 @@
             </circle>
           </g>
 
-          {# ماهواره‌های شناور روی حلقه‌ها #}
+          {% comment %} ماهواره‌های شناور روی حلقه‌ها {% endcomment %}
           <circle r="5.5" fill="#e8c47a">
             <animateMotion dur="4s" repeatCount="indefinite" path="M 400 44 A 118 44 0 1 1 399.9 44 Z" />
           </circle>

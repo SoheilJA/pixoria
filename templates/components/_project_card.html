@@ -1,12 +1,12 @@
 {% load fa_digits highlight_tags %}
-{# کارت پروژه — کارتِ نمونه‌کار برای گرید قابل‌فیلتر و کاروسل‌ها. #}
-{# project:    obj  required — نمونه‌ی Portfolio #}
-{# filter_key: str  optional — اسلاگ دسته‌بندی برای فیلترِ گرید (data-cat)؛ #}
-{#             فقط وقتی مقدار دارد کلاس pf-item و data-cat چاپ می‌شود #}
-{# radius:     str  optional — شعاع گوشه‌ها (پیش‌فرض ۱.۷۵رم)؛ چون cycle درون #}
-{#             یک include ریست می‌شود، فراخواننده باید مقدار متغیر را پاس دهد #}
-{# class:      str  optional — کلاس اضافی روی ریشه #}
-{# style:      str  optional — style اضافی روی ریشه #}
+{% comment %} کارت پروژه — کارتِ نمونه‌کار برای گرید قابل‌فیلتر و کاروسل‌ها. {% endcomment %}
+{% comment %} project:    obj  required — نمونه‌ی Portfolio {% endcomment %}
+{% comment %} filter_key: str  optional — اسلاگ دسته‌بندی برای فیلترِ گرید (data-cat)؛ {% endcomment %}
+{% comment %}             فقط وقتی مقدار دارد کلاس pf-item و data-cat چاپ می‌شود {% endcomment %}
+{% comment %} radius:     str  optional — شعاع گوشه‌ها (پیش‌فرض ۱.۷۵رم)؛ چون cycle درون {% endcomment %}
+{% comment %}             یک include ریست می‌شود، فراخواننده باید مقدار متغیر را پاس دهد {% endcomment %}
+{% comment %} class:      str  optional — کلاس اضافی روی ریشه {% endcomment %}
+{% comment %} style:      str  optional — style اضافی روی ریشه {% endcomment %}
 {% with category=project.categories.first %}
 <a href="{% url 'portfolio:detail' project.slug %}"
    class="tile group relative block overflow-hidden{% if filter_key %} pf-item{% endif %}{% if class %} {{ class }}{% endif %}"
@@ -15,16 +15,16 @@
    style="border-radius: {{ radius|default:"1.75rem" }};{% if style %} {{ style }}{% endif %}"
    aria-label="{{ project.title|plain }}">
   {% if project.image %}
-    {# نسبت طبیعیِ تصویر حفظ می‌شود: مستطیلِ افقی برای اسکرین‌شات سایت‌ها،#}
-    {# مربعی برای گرافیک و لوگو. h-auto باعث می‌شود کارت به جای ارتفاع      #}
-    {# تصویرِ بلندتر در همان ردیف، بلندای تصویرِ خودش را بگیرد.            #}
-    {# width/height از فرادادهٔ فایل خوانده می‌شوند تا مرورگر جای تصویرِ #}
-    {# lazy را از قبل رزرو کند و صفحه هنگام بارگذاری نپرد (CLS). #}
+    {% comment %} نسبت طبیعیِ تصویر حفظ می‌شود: مستطیلِ افقی برای اسکرین‌شات سایت‌ها،{% endcomment %}
+    {% comment %} مربعی برای گرافیک و لوگو. h-auto باعث می‌شود کارت به جای ارتفاع      {% endcomment %}
+    {% comment %} تصویرِ بلندتر در همان ردیف، بلندای تصویرِ خودش را بگیرد.            {% endcomment %}
+    {% comment %} width/height از فرادادهٔ فایل خوانده می‌شوند تا مرورگر جای تصویرِ {% endcomment %}
+    {% comment %} lazy را از قبل رزرو کند و صفحه هنگام بارگذاری نپرد (CLS). {% endcomment %}
     <img src="{{ project.image.url }}" alt="{{ project.title|plain }}" loading="lazy" decoding="async"
          width="{{ project.image.width }}" height="{{ project.image.height }}"
          class="block h-auto w-full object-cover transition-transform duration-700 group-hover:scale-[1.06]">
   {% else %}
-    {# جایگاه تصویر وقتی پروژه عکس ندارد #}
+    {% comment %} جایگاه تصویر وقتی پروژه عکس ندارد {% endcomment %}
     <div class="aspect-[4/3] w-full bg-gradient-to-br from-ink2 via-ink3 to-ink2"></div>
   {% endif %}
   <div class="tile-caption">

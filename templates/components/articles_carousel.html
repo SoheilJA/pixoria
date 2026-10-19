@@ -1,7 +1,7 @@
 {% load component_tags %}
-{# کامپوننتِ کاروسل مقالات — خودش کوئری می‌زند (articles_tags). #}
-{# شامل یک کارت برای هر مقالهٔ منتشرشده؛ خالی چیزی چاپ نمی‌کند. #}
-{# پلکانِ زمانِ ظهور کارت‌ها با cycle در همین حلقه تولید می‌شود (در include ریست می‌شود). #}
+{% comment %} کامپوننتِ کاروسل مقالات — خودش کوئری می‌زند (articles_tags). {% endcomment %}
+{% comment %} شامل یک کارت برای هر مقالهٔ منتشرشده؛ خالی چیزی چاپ نمی‌کند. {% endcomment %}
+{% comment %} پلکانِ زمانِ ظهور کارت‌ها با cycle در همین حلقه تولید می‌شود (در include ریست می‌شود). {% endcomment %}
 {% if articles %}
   {% carousel track_class="edge-fade" %}
     {% for article in articles %}

@@ -8,17 +8,17 @@ Service (مگامنو) و SiteSettings (لوگو و بنر مگامنو).{% endc
     class="glass mx-auto flex max-w-6xl items-center justify-between rounded-full px-5 py-3 md:px-7"
     aria-label="ناوبری اصلی"
   >
-    {# لوگو #}
+    {% comment %} لوگو {% endcomment %}
     <a href="{% url 'home:home' %}" class="flex items-center gap-3" aria-label="{{ settings.site_name }}">
       {% include "partials/_brand_lockup.html" %}
     </a>
 
-    {# ناوبری دسکتاپ — آیتم‌ها ثابت (apps/core/nav.py) #}
+    {% comment %} ناوبری دسکتاپ — آیتم‌ها ثابت (apps/core/nav.py) {% endcomment %}
     <ul class="hidden items-center gap-8 text-sm lg:flex">
       {% for item in nav_items %}
         {% nav_url item.url as item_url %}
         {% if item_url == services_url and services_footer %}
-          {# خدمات: لینک + دکمهٔ چورون بازکنندهٔ مگامنو (مسیر صفجه حفظ می‌شود) #}
+          {% comment %} خدمات: لینک + دکمهٔ چورون بازکنندهٔ مگامنو (مسیر صفجه حفظ می‌شود) {% endcomment %}
           <li class="nav-item-services" data-mega-root>
             <a class="nav-link" href="{{ item_url }}">{{ item.title }}</a>
             <button
@@ -72,7 +72,7 @@ Service (مگامنو) و SiteSettings (لوگو و بنر مگامنو).{% endc
       {% endfor %}
     </ul>
 
-    {# سمت چپ: دکمهٔ CTA + همبرگر #}
+    {% comment %} سمت چپ: دکمهٔ CTA + همبرگر {% endcomment %}
     <div class="flex items-center gap-3">
       {% if header_settings and header_settings.show_cta %}
         <a
@@ -95,9 +95,9 @@ Service (مگامنو) و SiteSettings (لوگو و بنر مگامنو).{% endc
   </nav>
 </header>
 
-{# منوی موبایل v2 — تکیه‌گاهِ تمام‌صفحه به‌جای پنلِ شیشه‌ایِ کوچک.
+{% comment %} منوی موبایل v2 — تکیه‌گاهِ تمام‌صفحه به‌جای پنلِ شیشه‌ایِ کوچک.
    قراردادِ JS ثابت است: کلاسِ open رویِ #mobile-menu، data-menu-close،
-   data-m-accordion و کلاسِ m-sub-open رویِ li. استایل‌ها در css/sections.css. #}
+   data-m-accordion و کلاسِ m-sub-open رویِ li. استایل‌ها در css/sections.css. {% endcomment %}
 <div
   id="mobile-menu"
   class="fixed inset-0 z-[55] lg:hidden"
@@ -124,7 +124,7 @@ Service (مگامنو) و SiteSettings (لوگو و بنر مگامنو).{% endc
         {% for item in nav_items %}
           {% nav_url item.url as item_url %}
           {% if item_url == services_url and services_footer %}
-            {# خدمات: لینکِ خود صفحه + آکاردئونِ زیرمنو #}
+            {% comment %} خدمات: لینکِ خود صفحه + آکاردئونِ زیرمنو {% endcomment %}
             <li class="m-has-sub">
               <div class="mm-row mm-anim" style="--m-i:{{ forloop.counter0 }}">
                 <a href="{{ item_url }}" class="mm-link">

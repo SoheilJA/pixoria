@@ -1,10 +1,10 @@
 {% load icon_tags fa_digits highlight_tags jalali_tags %}
-{# کارت مقاله — کارتِ مجله برای گرید و کاروسل‌ها. #}
-{# article: obj  required — نمونه‌ی Article #}
-{# delay:   str  optional — تاخیر انیمیشن ظهور (پیش‌فرض ۰)؛ چون cycle درون #}
-{#          یک include ریست می‌شود، فراخواننده باید پلکان را پاس دهد #}
-{# class:   str  optional — کلاس اضافی روی ریشه #}
-{# style:   str  optional — style اضافی روی ریشه #}
+{% comment %} کارت مقاله — کارتِ مجله برای گرید و کاروسل‌ها. {% endcomment %}
+{% comment %} article: obj  required — نمونه‌ی Article {% endcomment %}
+{% comment %} delay:   str  optional — تاخیر انیمیشن ظهور (پیش‌فرض ۰)؛ چون cycle درون {% endcomment %}
+{% comment %}          یک include ریست می‌شود، فراخواننده باید پلکان را پاس دهد {% endcomment %}
+{% comment %} class:   str  optional — کلاس اضافی روی ریشه {% endcomment %}
+{% comment %} style:   str  optional — style اضافی روی ریشه {% endcomment %}
 <a href="{% url 'blog:detail' article.slug %}"
    class="blog-card glass tilt group relative block overflow-hidden{% if class %} {{ class }}{% endif %}"
    style="border-radius: 1.75rem;{% if style %} {{ style }}{% endif %}"

@@ -14,12 +14,12 @@
     />
   </svg>
   <div class="hx-field__top" aria-hidden="true"></div>
-  {# پس‌زمینهٔ «میدانِ زنده» — همان موتورِ هیرو (hero-field.js) #}
+  {% comment %} پس‌زمینهٔ «میدانِ زنده» — همان موتورِ هیرو (hero-field.js) {% endcomment %}
   <canvas class="hx-field" data-hx-field aria-hidden="true"></canvas>
   <div class="hx-field__haze" aria-hidden="true"></div>
   <div class="relative z-10 mx-auto max-w-7xl px-6 pb-10 pt-36 md:pt-44">
     <div class="grid gap-14 lg:grid-cols-12">
-      {# برند و اطلاعات تماس #}
+      {% comment %} برند و اطلاعات تماس {% endcomment %}
       <div class="lg:col-span-4" data-reveal="clip">
         <div class="flex items-center gap-3">
           {% include "partials/_brand_lockup.html" with word_class="text-2xl" %}
@@ -88,7 +88,7 @@
         {% endif %}
       </div>
 
-      {# ستون‌های لینک دلخواه (از پنل ادمین) #}
+      {% comment %} ستون‌های لینک دلخواه (از پنل ادمین) {% endcomment %}
       {% for group in footer_groups %}
         <nav class="lg:col-span-2" aria-label="{{ group.title }}" data-reveal="rise" data-delay="0.1">
           <h3 class="footer-h">{{ group.title }}</h3>
@@ -100,7 +100,7 @@
         </nav>
       {% endfor %}
 
-      {# خدمات #}
+      {% comment %} خدمات {% endcomment %}
       {% if services_footer %}
         <nav class="lg:col-span-3" aria-label="خدمات" data-reveal="rise" data-delay="0.16">
           <h3 class="footer-h">خدمات</h3>
@@ -112,7 +112,7 @@
         </nav>
       {% endif %}
 
-      {# اعتماد و امنیت (جایگاه اینماد و ساماندهی) #}
+      {% comment %} اعتماد و امنیت (جایگاه اینماد و ساماندهی) {% endcomment %}
       {% if settings.trust_first_title or settings.trust_second_title %}
         <div class="lg:col-span-3" data-reveal="blur" data-delay="0.2">
           <h3 class="footer-h">اعتماد و امنیت</h3>
@@ -147,7 +147,7 @@
       {% endif %}
     </div>
 
-    {# کپی‌رایت #}
+    {% comment %} کپی‌رایت {% endcomment %}
     <div
       class="mt-16 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-8 text-xs text-cream/40 md:flex-row"
     >

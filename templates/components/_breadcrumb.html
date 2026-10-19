@@ -14,7 +14,7 @@
       {% for item in crumbs %}
         <li class="flex items-center gap-1.5">
           {% if not forloop.first %}
-            {# جداکنندهٔ چپ‌نما (RTL) #}
+            {% comment %} جداکنندهٔ چپ‌نما (RTL) {% endcomment %}
             <span
               aria-hidden="true"
               class="{% if theme == "light" %}text-gold-dark{% else %}text-gold/80{% endif %}"

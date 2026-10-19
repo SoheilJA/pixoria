@@ -1,16 +1,16 @@
 {% load icon_tags highlight_tags nav_tags %}
-{# هیرو v3 — «میدانِ زنده»: بومِ نقطه‌های پیکسلیِ محیطی + تایپِ مرکزیِ مینیمال #}
-{# موتورِ بوم: static/js/hero-field.js (دوبعدیِ سبک، بدونِ three.js و بدونِ GSAP) #}
-{# داده‌ها: hero (HeroSection)، hero_stats (HeroStat) #}
+{% comment %} هیرو v3 — «میدانِ زنده»: بومِ نقطه‌های پیکسلیِ محیطی + تایپِ مرکزیِ مینیمال {% endcomment %}
+{% comment %} موتورِ بوم: static/js/hero-field.js (دوبعدیِ سبک، بدونِ three.js و بدونِ GSAP) {% endcomment %}
+{% comment %} داده‌ها: hero (HeroSection)، hero_stats (HeroStat) {% endcomment %}
 <section id="home" class="hx hx-a" aria-label="معرفی">
-  {# بومِ نقطه‌ها #}
+  {% comment %} بومِ نقطه‌ها {% endcomment %}
   <canvas class="hx-a__field" data-hx-field aria-hidden="true"></canvas>
 
-  {# هاله و کلمهٔ غولِ لاتین #}
+  {% comment %} هاله و کلمهٔ غولِ لاتین {% endcomment %}
   <div class="hx-a__haze" aria-hidden="true"></div>
   <span class="hx-a__ghost font-latin" aria-hidden="true">pixoria</span>
 
-  {# HUD گوشه‌ها — برچسب‌های تزئینیِ ظریف #}
+  {% comment %} HUD گوشه‌ها — برچسب‌های تزئینیِ ظریف {% endcomment %}
   <div class="hx-corners" aria-hidden="true">
     <span dir="ltr">pixoria® studio</span>
     <span dir="ltr">est. 2018 — tehran</span>
@@ -52,7 +52,7 @@
     {% endif %}
   </div>
 
-  {# سرنخِ اسکرول #}
+  {% comment %} سرنخِ اسکرول {% endcomment %}
   <div class="hx-scroll" aria-hidden="true">
     <span>اسکرول</span>
     <i></i>

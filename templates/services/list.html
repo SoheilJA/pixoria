@@ -28,7 +28,7 @@
     یک سیارهٔ mega-orb با حلقهٔ مداریِ هاوری و لهجهٔ رنگیِ خودِ خدمت.
   {% endcomment %}
 
-  {# ── هیرو — مسیر صفحه، عنوان و مقدمهٔ آرشیو خدمات ── #}
+  {% comment %} ── هیرو — مسیر صفحه، عنوان و مقدمهٔ آرشیو خدمات ── {% endcomment %}
   <section class="relative overflow-hidden bg-ink" data-mouse-parallax data-pause>
     {% include "partials/_space_layer.html" with ring_spin="1" ring_class="-left-48 -bottom-24 h-[34rem] w-[46rem]" orb_variant="planet-orb-gold" orb_class="left-[8%] top-[16%] h-7 w-7" %}
     <div class="pointer-events-none absolute -right-40 top-1/4 h-[32rem] w-[32rem] rounded-full opacity-20"
@@ -74,7 +74,7 @@
     </div>
   </section>
 
-  {# ─ـ آرشیو خدمات — کارت‌های سیاره‌ای ── #}
+  {% comment %} ─ـ آرشیو خدمات — کارت‌های سیاره‌ای ── {% endcomment %}
   <section class="relative overflow-hidden bg-ink2">
     <svg class="divider divider-flip" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true">
       <path d="M0,26 C260,84 520,82 760,44 C1000,6 1240,80 1440,30 L1440,0 L0,0 Z" fill="#0a0a0c"></path>
@@ -139,7 +139,7 @@
     </div>
   </section>
 
-  {# ─ـ «چطور خدمتِ درست را انتخاب کنیم؟» ── #}
+  {% comment %} ─ـ «چطور خدمتِ درست را انتخاب کنیم؟» ── {% endcomment %}
   {% if how_section and steps %}
     <section class="relative overflow-hidden bg-cream2" data-pause>
       <svg class="divider divider-flip" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true">
@@ -188,7 +188,7 @@
     </section>
   {% endif %}
 
-  {# ── سوالات متداول (FAQ عمومی سایت) ── #}
+  {% comment %} ── سوالات متداول (FAQ عمومی سایت) ── {% endcomment %}
   {% if faq_section and faq_items %}
     <section class="relative overflow-hidden bg-ink2">
       <svg class="divider divider-flip" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true">

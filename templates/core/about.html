@@ -9,7 +9,7 @@
 {% endblock %}
 
 {% block extra_head %}
-  {# داده‌های ساختاریافته — سازمان، صفحهٔ درباره ما و مسیر نمایش #}
+  {% comment %} داده‌های ساختاریافته — سازمان، صفحهٔ درباره ما و مسیر نمایش {% endcomment %}
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -268,7 +268,7 @@
                 style="border-radius: 5rem 1.25rem 5rem 1.25rem; border: 1px solid rgba(201,161,90,0.5);"
               />
             {% else %}
-              {# تصویری بارگذاری نشده — یک مصورکِ مدار/سیاره به‌جای جای خالی #}
+              {% comment %} تصویری بارگذاری نشده — یک مصورکِ مدار/سیاره به‌جای جای خالی {% endcomment %}
               <div
                 class="grid aspect-[4/3] w-full place-items-center overflow-hidden bg-cream2"
                 style="border-radius: 5rem 1.25rem 5rem 1.25rem; border: 1px solid rgba(201,161,90,0.35);"

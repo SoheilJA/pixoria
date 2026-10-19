@@ -1,11 +1,11 @@
 {% load icon_tags highlight_tags articles_tags %}
-{# مجلهٔ پیکسوریا v2 — کاروسل مقالات روی پس‌زمینهٔ تیره #}
-{# داده‌ها: blog_section (LatestArticlesSection)، blog_url #}
-{# خود کاروسل (articles_tags) کوئری می‌زند و وقتی مقاله‌ای نیست چیزی چاپ #}
-{# نمی‌کند. pixoria.js هر [data-carousel] را مستقل راه‌اندازی می‌کند. #}
+{% comment %} مجلهٔ پیکسوریا v2 — کاروسل مقالات روی پس‌زمینهٔ تیره {% endcomment %}
+{% comment %} داده‌ها: blog_section (LatestArticlesSection)، blog_url {% endcomment %}
+{% comment %} خود کاروسل (articles_tags) کوئری می‌زند و وقتی مقاله‌ای نیست چیزی چاپ {% endcomment %}
+{% comment %} نمی‌کند. pixoria.js هر [data-carousel] را مستقل راه‌اندازی می‌کند. {% endcomment %}
 {% if blog_section %}
   <section id="blog" class="relative overflow-hidden bg-ink2">
-    {# موج روشنِ بالای بخش — گذار از بخش دستاوردهای تیره #}
+    {% comment %} موج روشنِ بالای بخش — گذار از بخش دستاوردهای تیره {% endcomment %}
     <svg class="divider" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true">
       <path d="M0,58 C320,12 640,78 960,42 C1200,14 1360,62 1440,32 L1440,0 L0,0 Z" fill="#f5f3ee"></path>
     </svg>
@@ -32,7 +32,7 @@
         {% endif %}
       </div>
 
-      {# نهایتاً هشت مقالهٔ منتشرشده در کاروسل #}
+      {% comment %} نهایتاً هشت مقالهٔ منتشرشده در کاروسل {% endcomment %}
       <div class="mt-14" data-reveal="clip">
         {% articles_carousel limit=10 %}
       </div>

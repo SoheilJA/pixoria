@@ -1,6 +1,6 @@
 {% load icon_tags highlight_tags fa_digits %}
-{# درباره ما v3 — متنِ معرفی + قابِ شیشه‌ایِ «نمونه‌کارهای واقعی» + ریلِ مایلستونِ آمار #}
-{# داده‌ها: about_section (HomeAboutSection)، about_stats (HomeAboutStat)، about_works (Portfolio) #}
+{% comment %} درباره ما v3 — متنِ معرفی + قابِ شیشه‌ایِ «نمونه‌کارهای واقعی» + ریلِ مایلستونِ آمار {% endcomment %}
+{% comment %} داده‌ها: about_section (HomeAboutSection)، about_stats (HomeAboutStat)، about_works (Portfolio) {% endcomment %}
 {% if about_section %}
   <section id="about" class="relative overflow-hidden bg-cream">
     <svg class="divider" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true">
@@ -40,7 +40,7 @@
           {% endif %}
         </div>
 
-        {# قابِ شیشه‌ای — مرکز: نشانِ طلایی، پیرامون: نمونههای واقعیِ کارها #}
+        {% comment %} قابِ شیشه‌ای — مرکز: نشانِ طلایی، پیرامون: نمونههای واقعیِ کارها {% endcomment %}
         <div class="relative lg:col-span-7" data-reveal="clip">
           <span class="stroke-title-light pointer-events-none absolute -top-14 left-0 select-none text-[8.5rem] font-extrabold leading-none opacity-60" aria-hidden="true">
             {{ settings.established_year|default:"۱۳۸۹"|fa_digits }}
@@ -54,13 +54,13 @@
             <span class="about-ring about-ring-2 absolute rounded-full border border-gold/25" aria-hidden="true"></span>
             <span class="about-ring about-ring-3 absolute rounded-full border border-royal/20" aria-hidden="true"></span>
 
-            {# نشانِ مرکزی — قلبِ قاب #}
+            {% comment %} نشانِ مرکزی — قلبِ قاب {% endcomment %}
             <div class="about-orb relative grid place-items-center">
               <span class="absolute inset-0 rounded-full" style="background: radial-gradient(circle at 34% 30%, rgba(244,236,217,0.9), rgba(232,196,122,0.5) 42%, rgba(143,107,44,0.25) 72%, rgba(143,107,44,0.08) 90%); box-shadow: 0 0 80px -16px rgba(201,161,90,0.65), inset -22px -16px 50px -26px rgba(10,10,12,0.85);"></span>
               <span class="absolute -inset-4 rounded-full border border-gold/30" style="transform: rotate(-24deg) scaleY(0.34)"></span>
             </div>
 
-            {# نمونههای واقعی — کارهای انجامشده + یادداشتهای استودیو #}
+            {% comment %} نمونههای واقعی — کارهای انجامشده + یادداشتهای استودیو {% endcomment %}
             {% if about_works %}
               {% for w in about_works %}
                 <a
@@ -98,7 +98,7 @@
         </div>
       </div>
 
-      {# ریلِ مایلستون — آمارها به‌جای جعبه: نقطههای زنده روی خطِ نقطهچین #}
+      {% comment %} ریلِ مایلستون — آمارها به‌جای جعبه: نقطههای زنده روی خطِ نقطهچین {% endcomment %}
       {% if about_stats %}
         <div class="relative mt-24" data-reveal="up">
           <ul class="ab-rail">

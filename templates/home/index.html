@@ -15,7 +15,7 @@
 {% endblock %}
 
 {% block extra_head %}
-  {# داده‌های ساختاریافتهٔ سازمان + وب‌سایت (schema.org) — از SiteSettings. #}
+  {% comment %} داده‌های ساختاریافتهٔ سازمان + وب‌سایت (schema.org) — از SiteSettings. {% endcomment %}
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -57,13 +57,13 @@
     }
   </script>
   {% if faq_json %}
-    {# FAQPage — از سوالات متداول دیتابیس (apps.home.views.faq_structured_data). #}
+    {% comment %} FAQPage — از سوالات متداول دیتابیس (apps.home.views.faq_structured_data). {% endcomment %}
     <script type="application/ld+json">{{ faq_json }}</script>
   {% endif %}
 {% endblock %}
 
 {% block content %}
-  {# بخش‌ها به ترتیب و وضعیت تعریف‌شده در پنل ادمین رندر می‌شوند (HomeSection). #}
+  {% comment %} بخش‌ها به ترتیب و وضعیت تعریف‌شده در پنل ادمین رندر می‌شوند (HomeSection). {% endcomment %}
   {% for section in sections %}
     {% include "home/sections/_"|add:section.key|add:".html" %}
   {% endfor %}

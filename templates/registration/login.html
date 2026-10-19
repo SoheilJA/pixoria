@@ -27,7 +27,7 @@
   </head>
   <body class="min-h-screen bg-ink font-sans text-cream antialiased">
     <div class="grid min-h-screen grid-cols-1 md:grid-cols-2">
-      {# ─── پنل برند (تیره) ─── #}
+      {% comment %} ─── پنل برند (تیره) ─── {% endcomment %}
       <section class="relative flex flex-col justify-between overflow-hidden bg-ink px-[clamp(32px,6vw,72px)] py-[clamp(32px,6vw,72px)]">
         <div class="pointer-events-none absolute inset-0" aria-hidden="true">
           <div data-depth="0.05" class="absolute right-[12%] top-[14%]">
@@ -70,7 +70,7 @@
         {% endif %}
       </section>
 
-      {# ─── پنل فرم (روشن) ─── #}
+      {% comment %} ─── پنل فرم (روشن) ─── {% endcomment %}
       <section class="flex flex-col justify-center bg-cream px-[clamp(28px,6vw,72px)] py-12" data-reveal="rise">
         <div class="w-full max-w-[420px]">
           <div class="mb-10">
@@ -126,8 +126,8 @@
       </section>
     </div>
 
-    {# کتابخانه‌ها — همه محلی و بدون CDN؛ هیچ GSAP ای در پروژه نیست #}
-    {# لایهٔ تعاملات + حرکتِ CSS (static/css/motion.css) #}
+    {% comment %} کتابخانه‌ها — همه محلی و بدون CDN؛ هیچ GSAP ای در پروژه نیست {% endcomment %}
+    {% comment %} لایهٔ تعاملات + حرکتِ CSS (static/css/motion.css) {% endcomment %}
     <script type="module" src="{% static 'js/pixoria.js' %}"></script>
   </body>
 </html>

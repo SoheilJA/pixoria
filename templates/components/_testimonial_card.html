@@ -1,10 +1,10 @@
 {% load icon_tags fa_digits %}
-{# کارت نظر مشتری — سه جنس متنی، ویدیویی و صوتی. #}
-{# t:     obj  required — نمونه‌ی ServiceTestimonial #}
-{# class: str  optional — کلاس اضافی روی ریشه (سایز/چینش اسلایدر را فراخواننده می‌دهد) #}
-{# t-card کلاسِ قلابِ اسلایدر است (استایلی ندارد) و نباید حذف شود. #}
+{% comment %} کارت نظر مشتری — سه جنس متنی، ویدیویی و صوتی. {% endcomment %}
+{% comment %} t:     obj  required — نمونه‌ی ServiceTestimonial {% endcomment %}
+{% comment %} class: str  optional — کلاس اضافی روی ریشه (سایز/چینش اسلایدر را فراخواننده می‌دهد) {% endcomment %}
+{% comment %} t-card کلاسِ قلابِ اسلایدر است (استایلی ندارد) و نباید حذف شود. {% endcomment %}
 {% if t.kind == "video" %}
-  {# کارت ویدیویی — پخش واقعی روی <video> (پوستر تا پیش از پخش) #}
+  {% comment %} کارت ویدیویی — پخش واقعی روی <video> (پوستر تا پیش از پخش) {% endcomment %}
   <article class="glass tilt t-card relative flex flex-col p-5{% if class %} {{ class }}{% endif %}"
            style="border-radius: 0.75rem 2rem 0.75rem 2rem" data-tilt data-video-card>
     <span class="glare" aria-hidden="true"></span>
@@ -37,7 +37,7 @@
     </div>
   </article>
 {% elif t.kind == "audio" %}
-  {# کارت صوتی — پخش واقعی روی <audio> با موجِ صدا #}
+  {% comment %} کارت صوتی — پخش واقعی روی <audio> با موجِ صدا {% endcomment %}
   <article class="glass tilt t-card relative flex flex-col p-7{% if class %} {{ class }}{% endif %}"
            style="border-radius: 2rem 0.75rem 2rem 0.75rem" data-tilt data-audio-card>
     <span class="glare" aria-hidden="true"></span>
@@ -77,7 +77,7 @@
     </div>
   </article>
 {% else %}
-  {# کارت متنی #}
+  {% comment %} کارت متنی {% endcomment %}
   <article class="glass tilt t-card relative flex flex-col p-8{% if class %} {{ class }}{% endif %}"
            style="border-radius: 2rem 2rem 2rem 0.75rem" data-tilt>
     <span class="glare" aria-hidden="true"></span>

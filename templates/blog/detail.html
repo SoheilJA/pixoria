@@ -7,7 +7,7 @@
 {% block og_description %}{{ article.get_meta_description|striptags }}{% endblock %}
 
 {% block extra_head %}
-  {# داده‌های ساختاریافته — مقاله + مسیر نمایش #}
+  {% comment %} داده‌های ساختاریافته — مقاله + مسیر نمایش {% endcomment %}
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -76,10 +76,10 @@
           aria-hidden="true">article</span>
 
     <div class="relative z-10 mx-auto max-w-7xl px-6 pb-28 pt-36 md:pt-48">
-      {# مسیر نمایش — خانه ← بلاگ ← مقالهٔ فعلی #}
+      {% comment %} مسیر نمایش — خانه ← بلاگ ← مقالهٔ فعلی {% endcomment %}
       {% include "components/_breadcrumb.html" %}
 
-      {# دسته‌بندی و برچسب‌ها #}
+      {% comment %} دسته‌بندی و برچسب‌ها {% endcomment %}
       <div class="mt-7 flex flex-wrap gap-2.5" data-reveal="pop" data-delay="0.06">
         {% if article.category %}
           <a href="{% url 'blog:list' %}" class="s-chip transition-colors hover:border-gold/60 hover:text-gold-light">
@@ -107,7 +107,7 @@
         </p>
       {% endif %}
 
-      {# اطلاعات مقاله — کپسول‌های شیشه‌ای #}
+      {% comment %} اطلاعات مقاله — کپسول‌های شیشه‌ای {% endcomment %}
       <div class="mt-12 grid max-w-4xl grid-cols-2 gap-4 md:grid-cols-4" data-reveal="scale" data-delay="0.18">
         {% if article.author %}
           <div class="glass flex flex-col gap-2 p-5" style="border-radius: 1.5rem">
@@ -160,9 +160,9 @@
   <section class="relative bg-cream" style="border-radius: 3rem 9rem 0 0">
     <div class="relative z-10 mx-auto max-w-7xl px-6 pb-24 pt-28 md:pt-36">
       <div class="grid items-start gap-14 lg:grid-cols-12">
-        {# متن مقاله — تایپوگرافیِ محتوای غنی (T38) #}
+        {% comment %} متن مقاله — تایپوگرافیِ محتوای غنی (T38) {% endcomment %}
         <div class="lg:col-span-8" data-reveal="blur">
-          {# نوار پیشرفتِ خواندن — pixoria.js با اسکرول پرش می‌کند #}
+          {% comment %} نوار پیشرفتِ خواندن — pixoria.js با اسکرول پرش می‌کند {% endcomment %}
           <div class="mb-12 h-[3px] overflow-hidden rounded-full bg-paper/15" aria-hidden="true">
             <div class="h-full origin-right scale-x-0"
                  style="background: linear-gradient(to left, #8f6b2c, #c9a15a 55%, #e8c47a);"
@@ -170,17 +170,17 @@
           </div>
 
           <article class="post-body prose-ink" data-reading-progress>
-            {# مقدمهٔ مقاله #}
+            {% comment %} مقدمهٔ مقاله {% endcomment %}
             {% if article.excerpt %}
               <p class="mb-10 border-b border-gold-dark/25 pb-8 text-[clamp(1.05rem,1.4vw,1.3rem)] leading-8 font-medium text-paper">
                 {{ article.excerpt }}
               </p>
             {% endif %}
 
-            {# محتوای اصلی — هدینگ‌ها توسط process_content_toc آی‌دی دارند #}
+            {% comment %} محتوای اصلی — هدینگ‌ها توسط process_content_toc آی‌دی دارند {% endcomment %}
             {{ content_html|safe }}
 
-            {# اشتراک‌گذاری — لینک‌های ساده، بدون اسکریپت شخص ثالث #}
+            {% comment %} اشتراک‌گذاری — لینک‌های ساده، بدون اسکریپت شخص ثالث {% endcomment %}
             <div class="mt-14 flex flex-wrap items-center gap-3 border-t border-gold-dark/25 pt-7">
               <span class="text-[10px] font-medium tracking-wider text-coy/70">اشتراک‌گذاری</span>
               <a href="https://x.com/intent/post?url={{ request.build_absolute_uri|urlencode }}"
@@ -211,9 +211,9 @@
           </article>
         </div>
 
-        {# ستون کناری — چسبان می‌ماند تا همراه متن اسکرول شود #}
+        {% comment %} ستون کناری — چسبان می‌ماند تا همراه متن اسکرول شود {% endcomment %}
         <aside class="flex flex-col gap-6 lg:col-span-4 lg:sticky lg:top-28" data-reveal="rise" data-delay="0.1">
-          {# فهرست مطالب — فقط وقتی هدینگی وجود داشته باشد (process_content_toc) #}
+          {% comment %} فهرست مطالب — فقط وقتی هدینگی وجود داشته باشد (process_content_toc) {% endcomment %}
           {% if toc %}
             <div class="glass-light p-7" style="border-radius: 1.5rem">
               <p class="eyebrow eyebrow-dark eyebrow-c mb-5">فهرست مطالب</p>
@@ -231,7 +231,7 @@
             </div>
           {% endif %}
 
-          {# نویسنده #}
+          {% comment %} نویسنده {% endcomment %}
           {% if article.author %}
             <div class="glass-light flex flex-col gap-4 p-7" style="border-radius: 1.5rem">
               <p class="eyebrow eyebrow-dark eyebrow-c">نویسنده</p>
@@ -256,7 +256,7 @@
             </div>
           {% endif %}
 
-          {# مشاورهٔ رایگان #}
+          {% comment %} مشاورهٔ رایگان {% endcomment %}
           <a href="{% url 'contact:contact' %}"
              class="group relative overflow-hidden bg-ink p-7 transition-colors"
              style="border-radius: 1.5rem"
@@ -297,12 +297,12 @@
           </a>
         </div>
 
-        {# کاروسل مقالاتِ مرتبط — مقالهٔ فعلی حذف می‌شود #}
+        {% comment %} کاروسل مقالاتِ مرتبط — مقالهٔ فعلی حذف می‌شود {% endcomment %}
         <div class="mt-14" data-reveal="clip">
           {% articles_carousel exclude=article category=article.category limit=6 %}
         </div>
 
-        {# ناوبری مقالهٔ قبلی و بعدی در همین دسته #}
+        {% comment %} ناوبری مقالهٔ قبلی و بعدی در همین دسته {% endcomment %}
         {% if prev_article or next_article %}
           <nav class="mt-16 grid grid-cols-1 gap-5 border-t border-white/8 pt-10 md:grid-cols-2"
                aria-label="مقالات قبلی و بعدی" data-reveal="up">

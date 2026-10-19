@@ -1,7 +1,7 @@
 {% load icon_tags highlight_tags nav_tags fa_digits %}
-{# خدمات v2 — چهار کارت اختصاصی با تصویرسازی مختص هر خدمت #}
-{# داده‌ها: services_section (ServicesSection)، services (Service[]) #}
-{# هر خدمت: visual (browser/terminal/palette/diamond/none)، card_span، chips، badge #}
+{% comment %} خدمات v2 — چهار کارت اختصاصی با تصویرسازی مختص هر خدمت {% endcomment %}
+{% comment %} داده‌ها: services_section (ServicesSection)، services (Service[]) {% endcomment %}
+{% comment %} هر خدمت: visual (browser/terminal/palette/diamond/none)، card_span، chips، badge {% endcomment %}
 {% if services %}
   <section id="services" class="relative overflow-hidden bg-ink2">
     <svg class="divider divider-flip" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true">
@@ -57,7 +57,7 @@
                     بیشتر بدانید {% icon "arrow-left" class="h-4 w-4" %}
                   </a>
                 </div>
-                {# ماکت مرورگر #}
+                {% comment %} ماکت مرورگر {% endcomment %}
                 <div class="relative flex items-center p-6 md:p-10">
                   <div class="svc-browser relative w-full overflow-hidden border border-white/[.08] bg-ink/60 shadow-2xl" style="border-radius: 1rem 1rem 0.6rem 0.6rem">
                     <div class="flex items-center gap-2 border-b border-white/[.06] px-4 py-3">
@@ -92,7 +92,7 @@
                 <h3 class="text-2xl font-bold">{{ service.title|highlight }}</h3>
               </div>
               <p class="relative z-10 mt-4 font-light leading-8 text-cream/65">{{ service.excerpt }}</p>
-              {# ترمینال #}
+              {% comment %} ترمینال {% endcomment %}
               <div class="relative z-10 mt-7 flex flex-1 flex-col">
                 <div class="svc-terminal relative flex flex-1 flex-col overflow-hidden border border-white/[.08] bg-ink3/80" style="border-radius: 0.85rem; min-height: 13rem">
                   <div class="flex flex-none items-center justify-between border-b border-white/[.06] px-4 py-2.5">
@@ -130,7 +130,7 @@
                 <h3 class="text-2xl font-bold">{{ service.title|highlight }}</h3>
               </div>
               <p class="mt-4 font-light leading-8 text-cream/65">{{ service.excerpt }}</p>
-              {# پالت رنگی متحرک + پوستر #}
+              {% comment %} پالت رنگی متحرک + پوستر {% endcomment %}
               <div class="relative mt-7 flex flex-1 items-center gap-5">
                 <div class="svc-palette relative h-32 w-32 shrink-0">
                   <span class="svc-palette-ring absolute inset-0 rounded-full">
@@ -141,7 +141,7 @@
                   </span>
                   <span class="absolute inset-[34%] rounded-full bg-ink2 ring-1 ring-gold/25"></span>
                 </div>
-                {# پوستری زنده با CSS خالص #}
+                {% comment %} پوستری زنده با CSS خالص {% endcomment %}
                 <div class="svc-poster relative aspect-[16/11] flex-1 overflow-hidden border border-white/[.08] bg-ink/50 transition-transform duration-700 group-hover:scale-[1.03]" style="border-radius: 1rem" aria-hidden="true">
                   <span class="grid-bg absolute inset-0 opacity-60"></span>
                   <span class="svc-poster-sun absolute -right-10 -top-12 h-44 w-44 rounded-full" style="background: radial-gradient(circle, rgba(232,196,122,0.55), rgba(201,161,90,0.12) 55%, transparent 72%);"></span>
@@ -228,7 +228,7 @@
               </div>
 
             {% else %}
-              {# بدون تصویرسازی — کارت ساده #}
+              {% comment %} بدون تصویرسازی — کارت ساده {% endcomment %}
               <div class="relative z-10 flex items-center gap-3">
                 <span class="svc-icon">{% icon service.icon class="h-5 w-5" %}</span>
                 <h3 class="text-2xl font-bold">{{ service.title|highlight }}</h3>

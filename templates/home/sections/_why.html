@@ -1,6 +1,6 @@
 {% load icon_tags highlight_tags fa_digits %}
-{# چرا پیکسوریا v3 — «بردِ مدارِ زنده»: باسِ تغذیه در وسط، شش ماژولِ دو طرفِ آن #}
-{# و ردِ جریان روی سیمها؛ داده‌ها: why_section (WhySection)، why_features (WhyFeature[]) #}
+{% comment %} چرا پیکسوریا v3 — «بردِ مدارِ زنده»: باسِ تغذیه در وسط، شش ماژولِ دو طرفِ آن {% endcomment %}
+{% comment %} و ردِ جریان روی سیمها؛ داده‌ها: why_section (WhySection)، why_features (WhyFeature[]) {% endcomment %}
 {% if why_section and why_features %}
   <section id="why" class="relative overflow-hidden bg-cream" style="clip-path: polygon(0 0, 100% 5.5%, 100% 100%, 0 100%)">
     <div class="grid-bg pointer-events-none absolute inset-0 opacity-60" aria-hidden="true"></div>
@@ -27,11 +27,11 @@
         {% endif %}
       </div>
 
-      {# ═══ بردِ مدار — باسِ تغذیه در ستونِ میانی، ماژولها با سیمِ زنده به آن وصلند ═══ #}
+      {% comment %} ═══ بردِ مدار — باسِ تغذیه در ستونِ میانی، ماژولها با سیمِ زنده به آن وصلند ═══ {% endcomment %}
       <div class="why-board relative mt-20" style="--bus-w: clamp(72px, 9vw, 110px)">
-        {# باسِ مرکزی + جرقهٔ جریان که مرتب از بالا به پایین میرسد #}
+        {% comment %} باسِ مرکزی + جرقهٔ جریان که مرتب از بالا به پایین میرسد {% endcomment %}
         <span class="why-bus" aria-hidden="true"><i class="why-bus__spark"></i></span>
-        {# هستهٔ تغذیه — لوزیِ نورانیِ وسطِ باس #}
+        {% comment %} هستهٔ تغذیه — لوزیِ نورانیِ وسطِ باس {% endcomment %}
         <span class="why-bus__core" aria-hidden="true"><i></i></span>
 
         <ul class="why-grid">

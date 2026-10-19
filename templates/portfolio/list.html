@@ -5,7 +5,7 @@
 {% block description %}{{ page_section.description|default:"گزیده‌ای از پروژه‌های طراحی و توسعه‌شده در پیکسوریا" }}{% endblock %}
 
 {% block extra_head %}
-  {# مسیر نمایش — خانه → آرشیو نمونه‌کارها #}
+  {% comment %} مسیر نمایش — خانه → آرشیو نمونه‌کارها {% endcomment %}
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -72,7 +72,7 @@
           </p>
         {% endif %}
 
-        {# خلاصهٔ آرشیو — تعداد پروژه‌ها و دسته‌بندی‌ها #}
+        {% comment %} خلاصهٔ آرشیو — تعداد پروژه‌ها و دسته‌بندی‌ها {% endcomment %}
         <div class="mt-10 flex flex-wrap items-center gap-3" data-reveal="pop" data-delay="0.2">
           <span class="inline-flex items-center gap-2 rounded-full border border-cream/10 bg-white/[0.02] px-4 py-2 text-sm text-cream/60">
             {% icon "briefcase" class="h-4 w-4 text-gold" %}
@@ -98,7 +98,7 @@
     <div class="grid-bg pointer-events-none absolute inset-0 opacity-20" aria-hidden="true"></div>
 
     <div class="relative z-10 mx-auto max-w-7xl px-6 pb-28 pt-32">
-      {# فیلتر دسته‌بندی — کلید فیلتر = اسلاگ دسته‌بندی #}
+      {% comment %} فیلتر دسته‌بندی — کلید فیلتر = اسلاگ دسته‌بندی {% endcomment %}
       {% if categories %}
         <div class="flex flex-wrap gap-2.5" data-reveal="pop" data-pf-filters>
           <button class="flt-btn{% if not selected_category %} active{% endif %}" data-filter="all">همه</button>
@@ -109,33 +109,33 @@
         </div>
       {% endif %}
 
-      {# شمارشگر — مقدار اولیه از سمت سرور؛ pixoria.js هنگام فیلتر به‌روز می‌شود #}
+      {% comment %} شمارشگر — مقدار اولیه از سمت سرور؛ pixoria.js هنگام فیلتر به‌روز می‌شود {% endcomment %}
       <p class="mt-5 font-latin text-[10px] tracking-[.3em] text-gold/60" data-pf-count data-reveal="rise" data-delay="0.1">
         {{ portfolios|length|fa_digits }} PROJECTS
       </p>
 
-      {# کارت‌ها: بالای lg گرید ۳ ستونی، زیر lg یک ترکِ اسکرول-اسنپ (یک DOM). #}
-      {# items-start: هر کارت ارتفاعِ تصویرِ خودش را حفظ می‌کند — چون تصاویر #}
-      {# نسبتِ طبیعیِ متفاوتی دارند، stretch کردن فضای مرده زیر تصویرِ #}
-      {# کوتاه‌تر و کپشنِ را به پایینِ کارت می‌اندازد. #}
+      {% comment %} کارت‌ها: بالای lg گرید ۳ ستونی، زیر lg یک ترکِ اسکرول-اسنپ (یک DOM). {% endcomment %}
+      {% comment %} items-start: هر کارت ارتفاعِ تصویرِ خودش را حفظ می‌کند — چون تصاویر {% endcomment %}
+      {% comment %} نسبتِ طبیعیِ متفاوتی دارند، stretch کردن فضای مرده زیر تصویرِ {% endcomment %}
+      {% comment %} کوتاه‌تر و کپشنِ را به پایینِ کارت می‌اندازد. {% endcomment %}
       <div class="mt-8 flex items-start gap-6 overflow-x-auto snap-x snap-mandatory pb-3 no-scrollbar
                   lg:grid lg:grid-cols-3 lg:items-start lg:overflow-visible lg:snap-none lg:pb-0"
            data-pf-grid data-carousel-track>
         {% for project in portfolios %}
-          {# شعاع گوشه‌ها بین کارت‌ها متغیر است تا گرید یکنواخت نباشد #}
+          {% comment %} شعاع گوشه‌ها بین کارت‌ها متغیر است تا گرید یکنواخت نباشد {% endcomment %}
           {% cycle '2.5rem' '2.75rem 0.75rem' '0.9rem' '0.75rem 2.75rem' '1.75rem' '1rem 4rem' as card_radius silent %}
           {% include "components/_project_card.html" with project=project filter_key=project.categories.first.slug radius=card_radius class="w-[min(86vw,420px)] shrink-0 snap-start md:w-[calc(50%-0.75rem)] lg:w-auto" %}
         {% endfor %}
       </div>
 
-      {# کنترل‌های کاروسل — فقط زیر lg نمایش داده می‌شوند (دکمه‌های راست/چپ RTL) #}
+      {% comment %} کنترل‌های کاروسل — فقط زیر lg نمایش داده می‌شوند (دکمه‌های راست/چپ RTL) {% endcomment %}
       <div class="mt-8 flex items-center justify-center gap-5 lg:hidden" data-carousel-controls data-reveal="pop">
         <button type="button" class="ctrl-btn" data-carousel-prev aria-label="نمونه‌کار قبلی">{% icon "chevron-right" class="h-5 w-5" %}</button>
         <div class="flex items-center gap-2" data-carousel-dots></div>
         <button type="button" class="ctrl-btn" data-carousel-next aria-label="نمونه‌کار بعدی">{% icon "chevron-left" class="h-5 w-5" %}</button>
       </div>
 
-      {# پیام خالی — وقتی هیچ پروژه‌ای در آرشیو (یا دستهٔ انتخاب‌شده) نیست #}
+      {% comment %} پیام خالی — وقتی هیچ پروژه‌ای در آرشیو (یا دستهٔ انتخاب‌شده) نیست {% endcomment %}
       <p class="mt-10 text-center text-sm text-cream/40{% if portfolios %} hidden{% endif %}" data-pf-empty>
         پروژه‌ای ثبت نشده است.
       </p>
