@@ -357,3 +357,11 @@
 - نشتیِ `{# #}` دوباره (این بار در هدر) → ریشهکنیِ سراسری: ۲۴۹ کامنتِ خام در ۳۸ فایلِ قالب به `{% comment %}…{% endcomment %}` تبدیل شد (فقط بیرونِ اسپنهای کامندی موجود)؛ پروِبِ ۱۰ صفحه/خطا: صفر نشت. کامیتِ `defe0a3`.
 - کاروسلِ نظرات مشتریان روی دسکتاپ سهستون شد: `.t-cols-3` رویِ `data-slider` در `testimonials_slider.html` + بلاکِ `sections.css` (عرضِ هر کارت = (۱۰۰٪ − ۳rem گپ) ÷ ۳ با `snap-item = start`) — زیرِ lg رفتارِ قبلی (اسکرولِ تک/دو کارت) دستنخورده؛ dots/step/autoplay خودِ اسلایدر با عرضِ تازه سازگارند (هر گام = عرضِ کارت + گپ). کامیتِ `7f936f5`.
 - GSAP: فاقدِ فایل/وابستگی در کل پروژه است — `package.json` (deps: lenis، tailwind، sharp، … فلتر شد)، `static/js/vendor` فقط lenis، هیچ import ای در JS فارسی و قالبها نیست (فقط جملههای «بدونِ GSAP» در کامنتها درست و موکدند). دو mention قدیمیِ AGENTS.md (stack فاز ۵ و ۱) اصلاح شد. کامیتِ `0086355`.
+
+
+### دنبالهٔ ۲۴ — سوییچ کامل به آیکون‌های Lucide (اسپرایتِ SVGِ لوکال)
+- وبفونتِ Tabler (و هر اثرش) کامل حذف شد: `static/tabler/`، `tabler_icons.js`، `build_tabler_icons.py` و لینکِ CSS در `base.html`. به‌جای آن اسپرایتِ رسمیِ `lucide-static v0.544` سروِ لوکال شد: `static/lucide/sprite.svg` (۴۰۴KB، ۱۶۳۶ آیکون).
+- موتورِ رندر جدید: تگ `{% icon %}` خروجیش `<svg class="lucide">` با `<use href="…#name">` است؛ اندازه با کلاس‌های h-/w- و رنگ با stroke:currentColor. امضای تگ و کلِ فراخوانی‌ها دست‌خورده نشد. قانونِ `svg.lucide` (ترازِ درون‌خطی) به `sections.css` اضافه شد.
+- تمامِ نام‌های DB/قالب با معادلِ امروزیِ Lucide نگاشت شدند: `LEGACY_ALIASES` جدید (alert-circle→circle-alert، rosette-discount-check→badge-check، layout-sidebar→panel-left، mood-smile→smile، devices-2→monitor-smartphone، brand-figma→figma و…). پروبِ ۶ صفحه: ۱۳۰+ آیکون زنده، صفر آیکون خالی، صفر `ti`، صفر ارجاعِ tabler؛ اسپرایت با هشِ collectstatic به‌درستی سرو می‌شود (۱۶۳۶ symbol، هیچ نامِ گمشده).
+- ادمین: پیکرِ آیکون بازنویسی شد (پیش‌نمایش با `<svg><use>` و URL اسپرایتِ هشدار از `data-ip-sprite`)؛ `icon_picker.css` به سلکتورهای `svg` به‌روز شد. اسکریپتِ `scripts/build_lucide_icons.py` فایلِ `lucide_icons.js` (فهرستِ نام‌ها + ALIASES با اعتبارسنجیِ نگاشت‌ها) را می‌سازد.
+- متن‌های راهنمای فیلدهای آیکون در ۵ اپ (core/home/services/contact/portfolio) به Lucide به‌روز شد + ۵ مایگریشن alter اعمال شد و دیتابیسِ tracked کامیت شد.
