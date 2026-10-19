@@ -47,9 +47,9 @@
   outline-offset: 2px;
 }
 
-.ip-preview i {
-  font-size: 1.25rem;
-  line-height: 1;
+.ip-preview svg {
+  width: 1.4rem;
+  height: 1.4rem;
 }
 
 .ip-preview.ip-empty {
@@ -128,9 +128,9 @@
   outline-offset: 1px;
 }
 
-.ip-item i {
-  font-size: 1.15rem;
-  line-height: 1;
+.ip-item svg {
+  width: 1.25rem;
+  height: 1.25rem;
 }
 
 .ip-count {

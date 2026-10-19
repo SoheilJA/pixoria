@@ -1067,3 +1067,13 @@ li.m-sub-open .mm-sub {
     scroll-snap-align: start;
   }
 }
+
+
+/* ── آیکون‌های Lucide (تگ {% icon %}) — ترازِ درون‌خطی مثل گلیفِ متنی ──
+   رندر <svg class="lucide"><use href="اسپرایت#نام"></use></svg> است؛
+   اندازه با کلاس‌های h-/w- و رنگ با stroke:currentColor کنترل می‌شود. */
+svg.lucide {
+  display: inline-block;
+  vertical-align: -0.125em;
+  flex: none;
+}

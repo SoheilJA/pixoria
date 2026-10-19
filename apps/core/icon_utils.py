@@ -1,15 +1,15 @@
-"""پشتیبانی آیکونِ Tabler Icons (وبفونتِ outline) برای ادمین و قالب‌ها.
+"""پشتیبانی آیکونِ Lucide (اسپرایتِ SVGِ محلی) برای ادمین و قالب‌ها.
 
-کاملاً لوکال: وبفونت در ``static/tabler/`` به صورت شناور است
-(``tabler-icons.min.css`` + ``fonts/tabler-icons.woff2``؛ Tabler ۳.۴۹).
-فهرستِ نام‌ها هنگامِ اجرا از خودِ CSS خوانده می‌شود — پس هر چیزی که ادمین
-انتخاب کند فوراً روی سایت نمایش داده می‌شود و برای سینک چیزی لازم نیست.
-اسکریپتِ ``scripts/build_tabler_icons.py`` فقط لیستِ جاوااسکریپتِ ادمین
-(``static/admin/js/tabler_icons.js``) را از همان CSS تولید می‌کند.
+کاملاً لوکال: اسپرایتِ ``static/lucide/sprite.svg`` (lucide-static v0.544)
+به صورت شناور است و تگ‌ها با ``<svg><use href="…#name">`` از آن برداشت
+می‌کنند — بدون وبفونت و بدون CDN. فهرستِ نام‌ها هنگامِ اجرا از خودِ
+اسپرایت خوانده می‌شود، پس هر آیکونی که ادمین انتخاب کند فوراً روی سایت
+نمایش داده می‌شود و برای سینک چیزی لازم نیست. اسکریپتِ
+``scripts/build_lucide_icons.py`` فقط لیستِ جاوااسکریپتِ ادمین
+(``static/admin/js/lucide_icons.js``) را از همان اسپرایت تولید می‌کند.
 
-تمامِ آیکون‌ها سبکِ outline فونتِ ``tabler-icons`` هستند و آیکون‌های برند
-(مثل brand-instagram) هم داخلِ همین فونت‌اند — پس نکتهٔ سبک/فامیلی دیگر
-وجود ندارد. کلاسِ رندر: ``ti ti-<name>``.
+رندرِ `<svg class="lucide">` با ``stroke="currentColor"`` است؛ رنگ/اندازه
+با همان کلاس‌های Tailwind (text-gold و h-6 w-6) کنترل می‌شود.
 """
 
 import re
@@ -21,102 +21,96 @@ from django.conf import settings
 from django.contrib.admin import display
 from django.core.exceptions import ValidationError
 from django.forms.widgets import flatatt
+from django.templatetags.static import static
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
 
-TABLER_CSS_REL_PATH = "tabler/tabler-icons.min.css"
-ADMIN_LIST_JS = "admin/js/tabler_icons.js"
+SPRITE_REL_PATH = "lucide/sprite.svg"
+ADMIN_LIST_JS = "admin/js/lucide_icons.js"
 DEFAULT_ICON = "sparkles"
-_CLASS_RE = re.compile(r"\.ti-([a-z0-9-]+):before")
+_SYMBOL_RE = re.compile(r'<symbol id="([a-z0-9][a-z0-9-]*)"')
 
-# نام‌های قدیمیِ DB (سبکِ Lucide/Font Awesome) به معادلِ Tabler. نام‌هایی
-# که عیناً در Tabler موجودند (مثل arrow-left، palette، zap→bolt استثنا
-# نیست چون map قبل از اعتبارسنجی اجرا می‌شود) نیازی به ورود نداشته و
-# خودکار عبور می‌کنند؛ این جدول فقط پرش‌ها را پوشش می‌دهد و
-# scripts/build_tabler_icons.py وجودِ مقصدها را در برابر فونت اعتبارسنجی می‌کند.
+# نام‌های قدیمیِ DB/قالب (سبکِ قدیمیِ Lucide و نوشتارِ فا) به معادلِ
+# امروزیِ Lucide و штوارِ خودکار. نام‌هایی که عیناً در اسپرایت موجودند
+# (مثل arrow-left، palette، bolt) نیازی به ورود ندارند و خودکار عبور
+# می‌کنند؛ این جدول فقط پرش‌ها را پوشش میدهد و
+# scripts/build_lucide_icons.py وجودِ مقصدها را در برابر اسپرایت
+# اعتبارسنجی می‌کند.
 LEGACY_ALIASES = {
     # قالب‌ها
-    "at-sign": "at",
-    "badge-check": "rosette-discount-check",
-    "book-open": "book",
-    "boxes": "box-multiple",
-    "building-2": "buildings",
-    "calendar-days": "calendar",
+    "alert-circle": "circle-alert",
+    "alert-triangle": "triangle-alert",
     "comment": "message-circle",
-    "code-2": "code",
-    "code-xml": "code",
-    "component": "components",
-    "figma": "brand-figma",
-    "film": "movie",
-    "gem": "diamond",
-    "layers": "stack-2",
-    "layout-panel-top": "layout-sidebar",
-    "layout-template": "template",
-    "linkedin": "brand-linkedin",
-    "instagram": "brand-instagram",
-    "github": "brand-github",
-    "telegram": "brand-telegram",
-    "twitter": "brand-twitter",
-    "x-twitter": "brand-x",
-    "whatsapp": "brand-whatsapp",
-    "youtube": "brand-youtube",
-    "facebook": "brand-facebook",
-    "dribbble": "brand-dribbble",
-    "behance": "brand-behance",
-    "megaphone": "speakerphone",
-    "mic": "microphone",
-    "monitor-smartphone": "devices-2",
-    "move-horizontal": "arrows-horizontal",
-    "newspaper": "news",
-    "party-popper": "confetti",
-    "pause": "player-pause",
-    "pen-tool": "pencil",
-    "refresh-cw": "refresh",
-    "smile": "mood-smile",
-    "square-code": "source-code",
-    "square-terminal": "terminal-2",
-    "shapes": "shape-3",
-    "smartphone": "device-mobile",
-    "store": "building-store",
-    "table-cells-large": "table",
-    "type": "typography",
-    "user-round": "user",
-    "wand-magic-sparkles": "sparkles",
-    "workflow": "sitemap",
-    "zap": "bolt",
+    "table-cells-large": "layout-grid",
+    "up-right-from-square": "square-arrow-up-right",
+    # رکوردهای DB با نام‌های سبک‌شودهٔ قدیمی
+    "at": "at-sign",
+    "box-multiple": "boxes",
+    "brand-figma": "figma",
+    "building-store": "store",
+    "buildings": "building-2",
+    "components": "component",
+    "confetti": "party-popper",
+    "device-mobile": "smartphone",
+    "devices-2": "monitor-smartphone",
+    "layout-sidebar": "panel-left",
+    "movie": "clapperboard",
+    "mood-smile": "smile",
+    "news": "newspaper",
+    "refresh": "refresh-cw",
+    "rosette-discount-check": "badge-check",
+    "shape-3": "shapes",
+    "sitemap": "network",
+    "source-code": "code-xml",
+    "speakerphone": "megaphone",
+    "template": "layout-template",
+    "typography": "type",
 }
+
+DEFAULT_ICON = "sparkles"
+
+_SVG_OPEN = (
+    '<svg class="lucide{cls}" aria-hidden="true" focusable="false"'
+    ' viewBox="0 0 24 24" fill="none" stroke="currentColor"'
+    ' stroke-width="2" stroke-linecap="round" stroke-linejoin="round"{dims}>'
+)
+
+
+@lru_cache(maxsize=1)
+def sprite_url():
+    """URL اصلیِ اسپرایت (با هشِ collectstatic در حالتِ `production`)."""
+    return static(SPRITE_REL_PATH)
 
 
 @lru_cache(maxsize=1)
 def available_icons(full=False):
-    """frozenset از نام‌های آیکون‌های فونتِ محلیِ Tabler.
+    """frozenset از نام‌های آیکون‌های اسپرایتِ محلیِ Lucide.
 
     فرمت ``full`` برای سازگاری با کدِ قدیمیِ نگه داشته شده و اثری ندارد.
 
-    وقتی CSS هنوز در دسترس نباشد (فایل جدید اصطلاحاً «فرسوده» — ولی
-    ``git checkout`` استاندارد شاملِ فونت است)، خروجی خالی است و پس ولیدینگ
-    و رندر هیچ چیز مسدود نمی‌شوند (fail-soft)."""
+    وقتی اسپرایت هنوز در دسترس نباشد (fresh checkout ناقص)، خروجی خالی است
+    و پس ولیدینگ و رندر هیچ چیز مسدود نمی‌شوند (fail-soft)."""
 
     for base in settings.STATICFILES_DIRS:
-        candidate = Path(base) / TABLER_CSS_REL_PATH
+        candidate = Path(base) / SPRITE_REL_PATH
         if candidate.is_file():
             try:
-                css = candidate.read_text(encoding="utf-8")
-                return frozenset(_CLASS_RE.findall(css))
+                svg = candidate.read_text(encoding="utf-8")
+                return frozenset(_SYMBOL_RE.findall(svg))
             except (OSError, UnicodeDecodeError):
                 pass
     return frozenset()
 
 
 def map_icon_name(name):
-    """تبدیل یک نامِ قدیمی (سبکِ Lucide) به معادلِ Tabler آن."""
+    """تبدیل یک نامِ قدیمی به معادلِ امروزیِ Lucide آن."""
     return LEGACY_ALIASES.get(str(name), str(name))
 
 
 def validate_icon_name(value):
-    """ولیدیتورِ فیلدِ آیکون — بعد از نگاشت باید در فونتِ محلی موجود باشد.
+    """ولیدیتورِ فیلدِ آیکون — بعد از نگاشت باید در اسپرایت موجود باشد.
 
-    وقتی CSS خوانده نشده باشد (fresh checkout ناقص)، چیزی مسدود نمی‌شود."""
+    وقتی اسپرایت خوانده نشده باشد (fresh checkout ناقص)، چیزی مسدود نمی‌شود."""
 
     if not value:
         return
@@ -125,26 +119,32 @@ def validate_icon_name(value):
         return
     if map_icon_name(value) not in names:
         raise ValidationError(
-            "این نام آیکون در Tabler Icons وجود ندارد. "
-            "نام انگلیسی آیکون را از https://tabler.io/icons انتخاب کنید."
+            "این نام آیکون در Lucide وجود ندارد. "
+            "نام انگلیسی آیکون را از https://lucide.dev/icons انتخاب کنید."
         )
 
 
 def icon_preview_html(name, *, size=22, color="#c9a15a", full=False):
-    """اسنیپت یک آیکون Tabler — برای پیش‌نمایش در ادمین.
+    """اسنیپت یک آیکون Lucide — برای پیش‌نمایش در ادمین.
 
     رنگ پیش‌فرض طلاییِ پالت v2 است. ``full=True`` برای سازگاری با کد قدیمی
     نگه داشته شده و اثری ندارد."""
 
     if not name:
         return "—"
-    name = map_icon_name(name)
+    name = map_icon_name(str(name))
+    if not re.fullmatch(r"[a-z0-9-]+", name):
+        return "—"
     return format_html(
-        '<i class="ti ti-{}" aria-hidden="true" '
-        'style="font-size:{}px;line-height:1;color:{}"></i>',
-        name,
-        size,
-        color,
+        '<svg class="lucide" aria-hidden="true" focusable="false"'
+        ' viewBox="0 0 24 24" fill="none" stroke="currentColor"'
+        ' stroke-width="2" stroke-linecap="round" stroke-linejoin="round"'
+        ' width="{size}" height="{size}" style="color:{color}"'
+        '><use href="{href}#{name}" /></svg>',
+        size=size,
+        color=color,
+        href=sprite_url(),
+        name=name,
     )
 
 
@@ -158,18 +158,19 @@ class IconPreviewMixin:
 
 class IconPickerWidget(forms.TextInput):
     """پیکر آیکون: فیلد متنی + پیش‌نمایش زنده + یک جدولِ جستجوپذیر از همهٔ
-    آیکون‌های فونتِ Tabler (ادمین، بدون CDN). کلیدها کار می‌کنند: Escape
+    آیکون‌های اسپرایتِ Lucide (ادمین، بدون CDN). کلیدها کار می‌کنند: Escape
     می‌بندد، فلش‌ها جابه‌جا می‌شوند و Enter انتخاب می‌کند."""
 
     class Media:
         css = {
-            "all": [TABLER_CSS_REL_PATH, "admin/css/icon_picker.css"],
+            "all": ["admin/css/icon_picker.css"],
         }
         js = [ADMIN_LIST_JS, "admin/js/icon_picker.js"]
 
     def build_attrs(self, base_attrs, extra_attrs=None):
         attrs = super().build_attrs(base_attrs, extra_attrs)
         attrs.setdefault("data-ip-input", "")
+        attrs.setdefault("data-ip-sprite", sprite_url())
         return attrs
 
     def render(self, name, value, attrs=None, renderer=None):
@@ -188,8 +189,8 @@ class IconPickerWidget(forms.TextInput):
             '<button type="button" class="ip-preview" data-ip-preview '
             'aria-label="انتخاب از میان آیکون‌ها" title="انتخاب آیکون">{}</button>'
             "</div>"
-            '<p class="ip-error" data-ip-error hidden>چنین آیکونی در Tabler '
-            "وجود ندارد. نام انگلیسی درست را از tabler.io/icons پیدا کنید.</p>"
+            '<p class="ip-error" data-ip-error hidden>چنین آیکونی در Lucide '
+            "وجود ندارد. نام انگلیسی درست را از lucide.dev/icons پیدا کنید.</p>"
             '<div class="ip-popup" data-ip-popup hidden role="dialog" '
             'aria-label="انتخاب آیکون">'
             '<input type="search" class="ip-search" data-ip-search '
