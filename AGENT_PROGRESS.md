@@ -28,3 +28,15 @@
 - **کامیت:** `03cec43` (sections.css -223/+237 تقریباً خطِ به خط بازنویسیِ بلوکِ oldبرد، و `_why.html`).
 - **هنوز کامیت‌نشده:** لابِ دمو (`static/demo/` با ۶ طرحِ zdog/isometric/troika) هنوز untracked است تا نظرِ کاربر بگیرد.
 
+
+## دنبالهٔ ۳۵ — خیابان بدونِ سایه (چهارشنبه ۳۰ مهر ۱۴۰۵)
+
+- **درخواست کاربر:** هیچ سایهای در کلِ سایت نماند؛ تنها سایههای سکشنِ هیرو سرجایشان بمانند.
+- **پیاده‌سازی** (`5eeb6c3`): بلوکِ «سایهکشِ سراسری» در انتهای `sections.css` (چون آخرین stylesheet لود میشود):
+  - `*:not(#home):not(#home *)` + شبهعنهصرهای before/after: `box-shadow:none !important` و `text-shadow:none !important` — این، کارتهای دستساز (why/tech/cta/ab-link/pr-step/mm-cta)، utilities بیلد‌شدهٔ tailwind (shadow-2xl/lg، حلقههای form-field، مولفههای .btn و ...) و سایههای inline در قالبها (ابوتِ sphere/diamondها، خدماتِ palette-dotها) را یکجا میگرداند؛ ایدِ `:not(#home *)` وابستگیِ پیچیده به گرامرِ :not دارد (Chromium/FF/سافاری امروزین ✓).
+  - **fehm filter:** سه استفادهٔ drop-shadow فیلتری (svc-palette، gps-dot، pr-rail__bead) هم صراحتاً `filter:none` شدند — کلیِ `filter:none` زده نشد چون blur()/brightness() در افکتها واقعاً استفاده میشوند.
+  - **a11y:** سایههای فوکوسِ `.field input:focus` هم سایه بودند → فالبکِ `outline: 2px solid` طلایی برای `:focus-visible` بیرونِ هیرو.
+  - admin/login سایت نیست و styleblock مستقل خودش را دارد؛ لنجس نشد.
+- **پروب:** همهٔ صفحات (خانه/آبوت/خدمات/تماس) — صفر باکس‌سایهٔ باقیمانده بیرونِ هیرو، صفر drop-shadow؛ گلوِ `.btn-gold` داخلِ هیرو سالم (`0 14px 40px -12px rgba(201,161,90,.55)`)؛ فیلد فوکوسِ تماس: سایه none → outline 3px. (`/portfolio/` 500 همان issue شناختهشدهٔ media cable pk=9 است — دست نخورد.)
+- کامیتِ فایل: `sections.css` +29 خط؛ progress ثبت شد.
+
