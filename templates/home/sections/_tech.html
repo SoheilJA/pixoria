@@ -29,7 +29,9 @@
       {% comment %}نوارهای متحرک نامحدود — مهارت‌ها در دو ردیف تقسیم می‌شوند.
          dir="ltr" مثلِ بقیهٔ مارکویی‌هاست؛ بدون آن، در صفحهٔ RTL ترتیب
          چیدمان چیپ‌ها برعکس می‌شود و انیمیشن از لبهٔ اشتباه شروع می‌کند.{% endcomment %}
-      <div class="relative mt-14 space-y-5" data-reveal="clip" data-delay="0.14">
+      {% comment %} گریدِ دوستونه — کلاسِ دستسازِ tech-grid در sections.css (tailwind بیلدشدنی نیست) {% endcomment %}
+      <div class="relative mt-14 tech-grid" data-reveal="clip" data-delay="0.14">
+        <div class="min-w-0 space-y-5">
         {% comment %} ردیف اول — راست‌به‌چپ {% endcomment %}
         <div class="marquee relative overflow-hidden" dir="ltr">
           <div class="marquee-track">
@@ -58,6 +60,14 @@
             </div>
           </div>
         {% endif %}
+        </div>
+        {% comment %} نمودارِ مهارت‌ها — پنلِ plot از فیگورهای زندهٔ hairline {% endcomment %}
+        <span
+          class="tech-fig"
+          aria-hidden="true"
+          data-hl="plot"
+          data-hl-intensity="0.7"
+        ></span>
       </div>
     </div>
   </section>

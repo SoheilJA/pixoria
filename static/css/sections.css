@@ -349,35 +349,32 @@
     background 0.45s ease;
 }
 
-/* پینهای تراشه — سمتِ رو به باس */
-.why-chip__pins {
-  position: absolute;
-  top: 20px;
-  bottom: 20px;
-  width: 5px;
-  border-radius: 2px;
-  opacity: 0.85;
-  background: repeating-linear-gradient(
-    to bottom,
-    var(--gold-d) 0 6px,
-    transparent 6px 13px
-  );
-  transition: opacity 0.3s ease;
+/* پنلِ فیگورِ زندهٔ ماژول — @hairline روی «تِختهٔ تیرهٔ» کوچک مثل کرنالِ IC */
+.why-fig {
+  --hairline-plate: #131318;
+  --hairline-hi: #e8c47a;
+  --hairline-edge: #5d512f;
+  --hairline-mid: #2e2e36;
+  --hairline-lo: #1d1d24;
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 5 / 4;
+  margin-block-end: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(143, 107, 44, 0.35);
+  border-radius: 12px;
+  background: #131318;
+  box-shadow: inset 0 0 26px -14px rgba(0, 0, 0, 0.7);
+  transition: border-color 0.35s ease, box-shadow 0.35s ease;
 }
-.why-cell--r .why-chip__pins { inset-inline-end: -5px; }
-.why-cell:not(.why-cell--r) .why-chip__pins { inset-inline-start: -5px; }
-
-/* علامتِ IC (مثل مدار واقعی) */
-.why-chip__mark {
-  position: absolute;
-  top: 14px;
-  inset-inline-end: 18px;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  color: rgba(143, 107, 44, 0.55);
-  pointer-events: none;
-  user-select: none;
+.why-cell:hover .why-fig,
+.why-cell:focus-within .why-fig {
+  border-color: rgba(201, 161, 90, 0.7);
+  box-shadow:
+    inset 0 0 30px -12px rgba(0, 0, 0, 0.7),
+    0 0 26px -12px rgba(201, 161, 90, 0.55);
+  will-change: transform;
 }
 
 /* ── سیمِ رد — از ماژول تا باس ── */
@@ -451,10 +448,6 @@
     0 20px 44px -26px rgba(30, 27, 21, 0.5),
     0 0 34px -12px rgba(201, 161, 90, 0.6);
 }
-.why-cell:hover .why-chip__pins,
-.why-cell:focus-within .why-chip__pins {
-  opacity: 1;
-}
 .why-cell:hover .why-trace,
 .why-cell:focus-within .why-trace {
   background-color: rgba(201, 161, 90, 0.1);
@@ -498,7 +491,6 @@
   .why-trace { top: 44px; }
   .why-cell--r .why-trace { inset-inline-end: auto; }
   .why-cell--r .why-trace::after { left: auto; right: auto; inset-inline-end: -3px; }
-  .why-cell--r .why-chip__pins { inset-inline-end: auto; inset-inline-start: -5px; }
 }
 
 /* ── کاهشِ حرکت ── */
@@ -1282,3 +1274,77 @@ svg.lucide {
   vertical-align: -0.125em;
   flex: none;
 }
+
+
+/* ═══ فیگورهای @hairline — rail مشترک: نسبتِ ثابتِ ۵:۴ تا هنگامِ مونتِ SVG جای‌تاخیری (CLS) نداشته باشد ═══ */
+
+/* گریدِ سکشن مهارتها — مارکوی مهارتها + پنلِ plot؛ tailwind بیلدشدنی نیست، دستی */
+.tech-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.5rem;
+}
+@media (min-width: 1024px) {
+  .tech-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 21rem); }
+}
+
+/* پنلِ «plot» در سکشن مهارتها — بسترِ روشن، خطهای مِرکب با لبهٔ طلایی */
+.tech-fig {
+  --hairline-plate: transparent;
+  --hairline-hi: #1d1d22;
+  --hairline-edge: #8f6b2c;
+  --hairline-mid: #b9b5aa;
+  --hairline-lo: #ddd8cc;
+  display: block;
+  align-self: stretch;
+  width: 100%;
+  aspect-ratio: 5 / 4;
+  overflow: hidden;
+  border: 1px solid rgba(143, 107, 44, 0.28);
+  border-radius: 20px;
+  background: linear-gradient(165deg, rgba(251, 249, 244, 0.92), rgba(241, 237, 227, 0.6) 75%);
+  box-shadow: 0 24px 48px -30px rgba(30, 27, 21, 0.45);
+}
+.tech-fig > svg { width: 100% !important; height: 100% !important; }
+
+/* «vault» در فینالِ CTA — تختهٔ تیره با هالهٔ طلایی؛ میزبانِ اشارهگرِ صفحه */
+.cta-fig {
+  --hairline-plate: #131318;
+  --hairline-hi: #e8c47a;
+  --hairline-edge: #5d512f;
+  --hairline-mid: #2e2e36;
+  --hairline-lo: #1d1d24;
+  display: block;
+  width: min(100%, 20.5rem);
+  margin-block-start: 2.75rem;
+  aspect-ratio: 5 / 4;
+  overflow: hidden;
+  border: 1px solid rgba(201, 161, 90, 0.28);
+  border-radius: 22px;
+  background: #131318;
+  box-shadow:
+    0 34px 64px -38px rgba(0, 0, 0, 0.85),
+    0 0 44px -22px rgba(201, 161, 90, 0.4);
+  transition: box-shadow 0.4s ease, border-color 0.4s ease;
+}
+.cta-fig:hover,
+.cta-fig:focus-within {
+  border-color: rgba(232, 196, 122, 0.55);
+  box-shadow:
+    0 34px 64px -34px rgba(0, 0, 0, 0.85),
+    0 0 60px -18px rgba(201, 161, 90, 0.65);
+}
+.cta-fig > svg { width: 100% !important; height: 100% !important; }
+
+/* وضعیتِ خرابی (بارگیری نشد) — فریم خالی نمیماند، بافتِ مداریِ بی‌جان و ریزمتنِ برند */
+.hl-broken::before {
+  content: "";
+  position: absolute;
+  inset: 10px;
+  border-radius: 10px;
+  border: 1px dashed rgba(201, 161, 90, 0.3);
+  background: repeating-linear-gradient(45deg, rgba(201, 161, 90, 0.05) 0 8px, transparent 8px 16px);
+}
+.cta-fig { position: relative; }
+.why-fig { position: relative; }
+.tech-fig { position: relative; }

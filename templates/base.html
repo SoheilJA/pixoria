@@ -155,6 +155,8 @@
     <script type="module" src="{% static 'js/pixoria.js' %}"></script>
     {% comment %} صحنهٔ سه‌بعدی هیرو — فقط در صورت وجود #hero-3d و نزدیک بودن به دید مقداردهی می‌شود — T11 {% endcomment %}
     <script defer src="{% static 'js/hero-field.js' %}"></script>
+    {% comment %} فیگورهای خطیِ hairline — مقدارِ data-hl-lib از {% static %} چکیده میشود {% endcomment %}
+    <script type="module" src="{% static 'js/hairline-figs.js' %}" data-hl-lib="{% static 'js/vendor/hairline.js' %}"></script>
     {% comment %} HTMX — برای فرم‌های ارسال بدون بازبارگذاری صفحه {% endcomment %}
     <script defer src="{% static 'js/htmx.min.js' %}"></script>
     {% block extra_js %}

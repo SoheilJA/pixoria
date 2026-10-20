@@ -40,8 +40,13 @@
                 data-reveal="up" data-delay="{% cycle '0' '0.12' '0.2' '0.32' '0.4' '0.52' %}">
               <span class="why-trace" aria-hidden="true"><i class="why-trace__spark"></i></span>
               <article class="why-chip">
-                <span class="why-chip__pins" aria-hidden="true"></span>
-                <b class="why-chip__mark" dir="ltr" aria-hidden="true">PIX&middot;{{ forloop.counter|stringformat:"02d"|fa_digits }}</b>
+                {% comment %} فیگورِ خطیِ زندهٔ این ماژول (@hairline) — به‌جای پینِ ثابت {% endcomment %}
+                <span
+                  class="why-fig"
+                  aria-hidden="true"
+                  data-hl="{% cycle 'terminal' 'keyboard' 'plot' 'hub' 'turntable' 'vault' %}"
+                  data-hl-intensity="0.55"
+                ></span>
                 <div class="flex items-center gap-3">
                   <span class="icon-ring">{% icon feature.icon class="h-5 w-5" %}</span>
                   <h3 class="text-lg font-bold text-paper">{{ feature.title }}</h3>
