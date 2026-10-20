@@ -607,31 +607,6 @@ class ServicePlanFeature(models.Model):
         return self.title
 
 
-class ServiceCustomItem(models.Model):
-    """آیتم‌های پلن سفارشی"""
-
-    service = models.ForeignKey(
-        Service,
-        on_delete=models.CASCADE,
-        related_name="custom_items",
-        verbose_name="خدمت",
-    )
-    title = models.CharField(max_length=200, verbose_name="عنوان آیتم")
-    description = models.CharField(
-        max_length=200, verbose_name="توضیح کوتاه", blank=True
-    )
-    price = models.PositiveIntegerField(verbose_name="قیمت (میلیون تومان)")
-    order = models.PositiveIntegerField(default=0, verbose_name="ترتیب")
-
-    class Meta:
-        verbose_name = "آیتم سفارشی"
-        verbose_name_plural = "آیتم‌های سفارشی"
-        ordering = ["order"]
-
-    def __str__(self):
-        return self.title
-
-
 class ServiceFAQ(models.Model):
     """سوالات متداول"""
 

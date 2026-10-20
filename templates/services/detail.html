@@ -688,7 +688,7 @@
       </section>
     {% endif %}
 
-    {% comment %} ── T66: قیمت‌گذاری — سه پلن + بلوکِ پلنِ دلخواه ── {% endcomment %}
+    {% comment %} ── T66: قیمت‌گذاری — سه پلنِ ازپیش‌تعریف‌شده در ادمین ── {% endcomment %}
     {% comment %} سکشن وقتی هیچ پلنِ فعالی نباشد کاملًا رندر نمی‌شود. {% endcomment %}
     {% if plans %}
       <section class="relative overflow-hidden bg-cream2" style="border-radius: 3rem 9rem 0 0">
@@ -812,46 +812,6 @@
             {% endfor %}
           </div>
 
-          {% comment %} پلنِ دلخواه — آیتم‌های انتخابی با جمعِ تخمینی (pixoria.js) {% endcomment %}
-          {% if custom_items %}
-            <div class="glass-light mt-16 p-8 md:p-10" style="border-radius: 1.5rem"
-                 data-custom-root data-reveal="rise">
-              <div class="mb-8 grid grid-cols-1 items-start gap-8 lg:grid-cols-[1fr_auto]">
-                <div>
-                  <p class="eyebrow eyebrow-dark">پلن دلخواه</p>
-                  <h3 class="mt-4 text-2xl font-extrabold text-paper md:text-[1.9rem]">فقط چیزی که نیاز دارید.</h3>
-                  <p class="mt-3 max-w-xl text-[0.95rem] leading-7 text-coy">
-                    آیتم‌های موردنظر را انتخاب کنید — جمعِ تخمینی به‌صورتِ خودکار به‌روز می‌شود.
-                  </p>
-                </div>
-                <div class="flex items-baseline gap-2.5 rounded-2xl bg-ink px-6 py-5 text-cream">
-                  <span class="font-latin text-[10px] tracking-[.2em] text-cream/45">مجموع تخمینی</span>
-                  <span class="text-[1.7rem] font-bold leading-none text-gold-light fa-num" data-custom-total>۰</span>
-                  <span class="text-[0.72rem] text-cream/45">میلیون تومان</span>
-                </div>
-              </div>
-              <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                {% for item in custom_items %}
-                  <label class="flex cursor-pointer items-center justify-between gap-4 rounded-2xl border border-gold-dark/20 px-5 py-4 transition-colors has-[:checked]:border-gold has-[:checked]:bg-gold/5">
-                    <span class="flex items-center gap-3.5">
-                      <input type="checkbox" data-custom-price="{{ item.price }}"
-                             class="h-4 w-4 shrink-0 accent-gold" />
-                      <span class="flex flex-col">
-                        <span class="text-[0.95rem] font-medium text-paper">{{ item.title }}</span>
-                        {% if item.description %}
-                          <span class="mt-0.5 text-[0.82rem] text-coy/70">{{ item.description }}</span>
-                        {% endif %}
-                      </span>
-                    </span>
-                    <span class="shrink-0 whitespace-nowrap text-[0.84rem] font-medium text-gold-dark fa-num">+{{ item.price|fa_digits }} میلیون</span>
-                  </label>
-                {% endfor %}
-              </div>
-              <p class="mt-6 text-center text-xs leading-6 text-coy/80">
-                جمعِ بالا تخمینی است و قیمتِ نهایی در جلسهٔ مشاورهٔ رایگان مشخص می‌شود.
-              </p>
-            </div>
-          {% endif %}
         </div>
       </section>
     {% endif %}

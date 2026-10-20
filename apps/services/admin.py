@@ -15,7 +15,6 @@ from .models import (
     ServiceProcess,
     ServicePlan,
     ServicePlanFeature,
-    ServiceCustomItem,
     ServiceFAQ,
     ServiceTestimonial,
 )
@@ -126,11 +125,6 @@ class ServicePlanInline(admin.StackedInline):
         "is_active",
         "order",
     ]
-
-
-class ServiceCustomItemInline(admin.TabularInline):
-    model = ServiceCustomItem
-    extra = 1
 
 
 class ServiceFAQInline(admin.TabularInline):
@@ -285,7 +279,6 @@ class ServiceAdmin(IconPreviewMixin, admin.ModelAdmin):
         ServiceToolInline,
         ServiceUseCaseInline,
         ServicePlanInline,
-        ServiceCustomItemInline,
         ServiceFAQInline,
         ServiceTestimonialInline,
     ]
