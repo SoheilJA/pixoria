@@ -71,42 +71,6 @@ class HeroSection(models.Model):
         super().save(*args, **kwargs)
 
 
-class HeroStat(models.Model):
-    """آمار کوتاهِ زیر دکمه‌های هیرو — مثل «+۵۰۰ کسب‌وکار مشاوره‌شده»"""
-
-    section = models.ForeignKey(
-        HeroSection,
-        on_delete=models.CASCADE,
-        related_name="stats",
-        verbose_name="هیرو",
-        null=True,
-        blank=True,
-    )
-    value = models.CharField(
-        max_length=50,
-        verbose_name="مقدار",
-        help_text="مثلاً +۵۰۰ یا ۱۳۵+ یا مشهد",
-    )
-    label = models.CharField(max_length=100, verbose_name="برچسب", blank=True)
-    icon = models.CharField(
-        max_length=64,
-        blank=True,
-        verbose_name="آیکون",
-        help_text="اختیاری. مثال: map-pin. " + ICON_HELP,
-        validators=[validate_icon_name],
-    )
-    order = models.PositiveIntegerField(default=0, verbose_name="ترتیب")
-    is_active = models.BooleanField(default=True, verbose_name="فعال")
-
-    class Meta:
-        verbose_name = "آمار هیرو"
-        verbose_name_plural = "آمارهای هیرو"
-        ordering = ["order"]
-
-    def __str__(self):
-        return f"{self.value} — {self.label}"
-
-
 class HomeAboutSection(models.Model):
     """بخش «درباره پیکسوریا» در صفحه اصلی — معرفی کوتاه و شمارنده‌ها"""
 

@@ -16,7 +16,6 @@ from apps.core.models import SiteSettings, SocialLink
 from apps.home.models import (
     HeaderSettings,
     HeroSection,
-    HeroStat,
     FeaturedWorkSection,
     ServicesSection,
     ClientMarqueeItem,
@@ -145,18 +144,8 @@ class Command(BaseCommand):
         )
         self.log("هیرو", created)
 
-        stats = [
-            ("+۵۰۰", "کسب‌وکار مشاوره‌شده", "", 0),
-            ("۱۳۵+", "بلاگر تبلیغاتی", "", 10),
-            ("مشهد", "", "map-pin", 20),
-        ]
-        added = 0
-        for value, label, icon, order in stats:
-            if not HeroStat.objects.filter(value=value, label=label).exists():
-                HeroStat.objects.create(value=value, label=label, icon=icon, order=order)
-                added += 1
-        if added:
-            self.stdout.write(f"  + {added} آمار هیرو")
+        # آمارِ هیرو حالا داینامیک است (شمارنده‌های واقعی در apps.home.views
+        # محاسبه می‌شوند) — رکورد ثابتی دیگر seed نمی‌شود.
 
     # ── Section singletons ──
     def seed_sections(self):

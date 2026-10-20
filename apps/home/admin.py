@@ -21,14 +21,6 @@ class HeroSectionAdmin(admin.ModelAdmin):
         return not HeroSection.objects.exists()
 
 
-@admin.register(HeroStat)
-class HeroStatAdmin(IconPreviewMixin, admin.ModelAdmin):
-    form = IconPickerForm
-    list_display = ["icon_preview", "value", "label", "icon", "order", "is_active"]
-    list_editable = ["value", "label", "icon", "order", "is_active"]
-    list_display_links = ["icon_preview"]
-
-
 class HomeAboutStatInline(IconPreviewMixin, admin.TabularInline):
     form = IconPickerForm
     model = HomeAboutStat

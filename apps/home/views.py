@@ -11,7 +11,6 @@ from .models import (
     FeaturedWorkSection,
     HeaderSettings,
     HeroSection,
-    HeroStat,
     HomeAboutSection,
     HomeAboutStat,
     HomeSection,
@@ -47,7 +46,18 @@ def home(request):
         "blog_url": reverse("blog:list"),
         # ── بخش‌های موجود (جریان داده دست‌نخورده) ──
         "hero": HeroSection.objects.first() if "hero" in keys else None,
-        "hero_stats": HeroStat.objects.filter(is_active=True) if "hero" in keys else [],
+        # ════ شمارنده‌های زندهٔ هیرو ════
+        # عددها از خودِ داده‌ها خوانده می‌شوند (نه متنِ ثابتِ ادمین):
+        # تعدادِ واقعیِ نمونه‌کارها، کلِ خدمات و لوکیشنِ استودیو.
+        "hero_stats": (
+            [
+                {"value": str(Portfolio.objects.count()), "label": "نمونه‌کار تحویل‌شده"},
+                {"value": str(Service.objects.count()), "label": "خدمتِ فعال"},
+                {"value": "مشهد", "label": ""},
+            ]
+            if "hero" in keys
+            else []
+        ),
         "services_section": ServicesSection.objects.first() if "services" in keys else None,
         "services": featured_services,
         "testimonials_section": TestimonialSection.objects.first() if "testimonials" in keys else None,

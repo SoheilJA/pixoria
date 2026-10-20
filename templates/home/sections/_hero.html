@@ -1,7 +1,8 @@
-{% load icon_tags highlight_tags nav_tags %}
+{% load icon_tags fa_digits highlight_tags nav_tags %}
 {% comment %} هیرو v3 — «میدانِ زنده»: بومِ نقطه‌های پیکسلیِ محیطی + تایپِ مرکزیِ مینیمال {% endcomment %}
 {% comment %} موتورِ بوم: static/js/hero-field.js (دوبعدیِ سبک، بدونِ three.js و بدونِ GSAP) {% endcomment %}
-{% comment %} داده‌ها: hero (HeroSection)، hero_stats (HeroStat) {% endcomment %}
+{% comment %} داده‌ها: hero (HeroSection) و hero_stats که در ویو از شمارنده‌های {% endcomment %}
+{% comment %} واقعی (تعدادِ نمونه‌کارها و خدمات) ساخته می‌شود — نه متنِ ثابتِ ادمین. {% endcomment %}
 <section id="home" class="hx hx-a" aria-label="معرفی">
   {% comment %} بومِ نقطه‌ها {% endcomment %}
   <canvas class="hx-a__field" data-hx-field aria-hidden="true"></canvas>
@@ -44,7 +45,7 @@
       <div class="hx-metrics" data-reveal="rise" data-delay="0.3">
         {% for stat in hero_stats %}
           <span>
-            <b>{{ stat.value }}</b>
+            <b class="fa-num">{{ stat.value|fa_digits }}</b>
             {{ stat.label }}
           </span>
         {% endfor %}
