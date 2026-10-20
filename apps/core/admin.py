@@ -21,7 +21,7 @@ class SiteSettingsForm(forms.ModelForm):
 @admin.register(SiteSettings)
 class SiteSettingsAdmin(admin.ModelAdmin):
     form = SiteSettingsForm
-    list_display = ["site_name", "email", "phone", "status"]
+    list_display = ["site_name", "phone", "status"]
     fieldsets = [
         (
             "مشخصات سایت",
@@ -48,7 +48,6 @@ class SiteSettingsAdmin(admin.ModelAdmin):
             "اطلاعات تماس",
             {
                 "fields": [
-                    "email",
                     "phone",
                     "phone_label",
                     "phone_secondary",

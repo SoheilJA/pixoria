@@ -313,7 +313,6 @@ class CTASection(models.Model):
         help_text="کلمه‌ای که باید رنگی شود را داخل [[ ]] بنویسید.",
     )
     description = models.TextField(verbose_name="توضیحات")
-    email = models.EmailField(verbose_name="ایمیل")
     phone = models.CharField(max_length=20, verbose_name="شماره تماس")
 
     class Meta:

@@ -29,7 +29,6 @@ class SiteSettings(models.Model):
     site_name = models.CharField(max_length=100, verbose_name="نام سایت")
     site_description = models.TextField(verbose_name="توضیحات سایت")
     footer_description = models.TextField(verbose_name="توضیحات فوتر")
-    email = models.EmailField(verbose_name="ایمیل")
     phone = models.CharField(
         max_length=20,
         verbose_name="شماره تماس",

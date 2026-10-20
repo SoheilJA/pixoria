@@ -61,17 +61,8 @@
         {% endif %}
       </div>
 
-      {% if cta.email or settings.phone_secondary %}
+      {% if settings.phone_secondary %}
         <div class="mt-8 flex flex-wrap items-center justify-center gap-x-7 gap-y-3 text-sm text-cream/50">
-          {% if cta.email %}
-            <a
-              href="mailto:{{ cta.email }}"
-              class="inline-flex items-center gap-2 transition hover:text-gold-light"
-            >
-              {% icon "mail" class="h-4 w-4" %}
-              <span dir="ltr" class="font-latin tracking-wide">{{ cta.email }}</span>
-            </a>
-          {% endif %}
           {% if settings.phone_secondary %}
             <a
               href="tel:{{ settings.phone_secondary }}"

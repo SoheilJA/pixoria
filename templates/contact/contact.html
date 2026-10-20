@@ -19,7 +19,6 @@
           "name": "{{ settings.site_name }}",
           "url": "{{ settings.website|default:request.build_absolute_uri }}",
           {% include "partials/_json_logo.html" %}
-          {% if settings.email %}"email": "{{ settings.email }}",{% endif %}
           {% include "partials/_json_telephone.html" %}
           {% if settings.established_year %}"foundingDate": "{{ settings.established_year }}",{% endif %}
           "address": {
@@ -106,8 +105,8 @@
         {% endif %}
       </div>
 
-      {% comment %}کارت‌های اطلاعات تماس — تلفن، همراه، ایمیل و وب‌سایت{% endcomment %}
-      {% if settings.phone or settings.phone_secondary or settings.email or settings.website %}
+      {% comment %}کارت‌های اطلاعات تماس — تلفن، همراه و وب‌سایت{% endcomment %}
+      {% if settings.phone or settings.phone_secondary or settings.website %}
         <div class="grid gap-5 sm:grid-cols-2 lg:col-span-7">
           {% if settings.phone %}
             <a href="tel:{{ settings.phone }}"
@@ -132,19 +131,6 @@
               <span>
                 <span class="block text-xs text-cream/50">{{ settings.phone_secondary_label|default:"پشتیبانی" }}</span>
                 <span class="fa-num mt-1 block text-2xl font-bold text-gold-light">{{ settings.phone_secondary|fa_digits }}</span>
-              </span>
-            </a>
-          {% endif %}
-          {% if settings.email %}
-            <a href="mailto:{{ settings.email }}"
-               class="tilt glass group relative flex flex-col gap-4 p-7 transition-transform hover:-translate-y-1.5 {% cycle '' 'lg:mt-10' '' 'lg:mt-10' %}"
-               style="{% cycle 'border-radius: 2rem 2rem 2rem 0.75rem' 'border-radius: 2rem 2rem 0.75rem 2rem' 'border-radius: 2rem 0.75rem 2rem 2rem' 'border-radius: 0.75rem 2rem 0.75rem 2rem' %}"
-               data-tilt data-reveal="rise">
-              <span class="glare" aria-hidden="true"></span>
-              <span class="icon-ring">{% icon "mail" class="h-5 w-5" %}</span>
-              <span>
-                <span class="block text-xs text-cream/50">ایمیل</span>
-                <span dir="ltr" class="font-latin mt-1 block text-2xl font-bold text-gold-light">{{ settings.email }}</span>
               </span>
             </a>
           {% endif %}

@@ -1,6 +1,6 @@
 """فرم تماس صفحهٔ «تماس با ما» — مدل‌فرم روی ContactSubmission.
 
-فیلدها مطابق طرح v2 است: نام، ایمیل، شماره تماس (اختیاری)، موضوع و پیام.
+فیلدها مطابق طرح v2 است: نام، شماره تماس (اختیاری)، موضوع و پیام.
 اعتبارسنجی پیام‌های فارسی دارد و یک هانی‌پات (فیلد مخفی «وب‌سایت») را هم
 نگه می‌دارد که در ویو چک می‌شود."""
 
@@ -17,24 +17,15 @@ class ContactSubmissionForm(forms.ModelForm):
 
     class Meta:
         model = ContactSubmission
-        fields = ["name", "email", "phone", "subject", "message"]
+        fields = ["name", "phone", "subject", "message"]
         error_messages = {
             "name": {"required": "نام و نام خانوادگی را وارد کنید."},
-            "email": {"required": "یک ایمیل معتبر وارد کنید."},
             "subject": {"required": "موضوع پیام را انتخاب کنید."},
             "message": {"required": "پیام خود را بنویسید."},
         }
         widgets = {
             "name": forms.TextInput(
                 attrs={"autocomplete": "name", "placeholder": " "}
-            ),
-            "email": forms.EmailInput(
-                attrs={
-                    "autocomplete": "email",
-                    "dir": "ltr",
-                    "style": "text-align: right",
-                    "placeholder": " ",
-                }
             ),
             "phone": forms.TextInput(
                 attrs={

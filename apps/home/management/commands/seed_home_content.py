@@ -231,7 +231,6 @@ class Command(BaseCommand):
             eyebrow="برند شما، امضای ما",
             title="بیایید [[برندِ شما]] را ماندگار کنیم",
             description="از یک گفت‌وگوی ساده شروع می‌شود؛ مشاورهٔ رایگان، بدون تعهد.",
-            email="info@pixoria.ir",
             phone="051-36044989",
         )
         self.log("CTA", c)
@@ -549,7 +548,6 @@ class Command(BaseCommand):
             site_description="استودیو طراحی و توسعهٔ محصولات دیجیتال",
             tagline="هویتی درخشان، اعتباری ماندگار.",
             footer_description="استودیو طراحی و توسعه",
-            email="info@pixoria.ir",
             phone="051-36044989",
             phone_label="دفتر مرکزی",
             phone_secondary="0915-650-00-16",

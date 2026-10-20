@@ -271,7 +271,6 @@ class ContactSubmission(models.Model):
     STATUS_CHOICES = [("new", "جدید"), ("seen", "مشاهده شده")]
 
     name = models.CharField(max_length=200, verbose_name="نام و نام خانوادگی")
-    email = models.EmailField(verbose_name="ایمیل", blank=True)
     phone = models.CharField(max_length=20, verbose_name="شماره تماس")
     company = models.CharField(
         max_length=200, verbose_name="نام شرکت", blank=True, null=True

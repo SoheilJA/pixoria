@@ -91,8 +91,8 @@ class ClientMarqueeItemAdmin(admin.ModelAdmin):
 
 @admin.register(CTASection)
 class CTASectionAdmin(admin.ModelAdmin):
-    list_display = ["title", "eyebrow", "email", "phone"]
-    fields = ["eyebrow", "title", "description", "email", "phone"]
+    list_display = ["title", "eyebrow", "phone"]
+    fields = ["eyebrow", "title", "description", "phone"]
 
     def has_add_permission(self, request):
         return not CTASection.objects.exists()
