@@ -365,3 +365,10 @@
 - تمامِ نام‌های DB/قالب با معادلِ امروزیِ Lucide نگاشت شدند: `LEGACY_ALIASES` جدید (alert-circle→circle-alert، rosette-discount-check→badge-check، layout-sidebar→panel-left، mood-smile→smile، devices-2→monitor-smartphone، brand-figma→figma و…). پروبِ ۶ صفحه: ۱۳۰+ آیکون زنده، صفر آیکون خالی، صفر `ti`، صفر ارجاعِ tabler؛ اسپرایت با هشِ collectstatic به‌درستی سرو می‌شود (۱۶۳۶ symbol، هیچ نامِ گمشده).
 - ادمین: پیکرِ آیکون بازنویسی شد (پیش‌نمایش با `<svg><use>` و URL اسپرایتِ هشدار از `data-ip-sprite`)؛ `icon_picker.css` به سلکتورهای `svg` به‌روز شد. اسکریپتِ `scripts/build_lucide_icons.py` فایلِ `lucide_icons.js` (فهرستِ نام‌ها + ALIASES با اعتبارسنجیِ نگاشت‌ها) را می‌سازد.
 - متن‌های راهنمای فیلدهای آیکون در ۵ اپ (core/home/services/contact/portfolio) به Lucide به‌روز شد + ۵ مایگریشن alter اعمال شد و دیتابیسِ tracked کامیت شد.
+
+
+### دنبالهٔ ۲۵ — آیکونهای خالی، حذفِ پلنِ دستی، هیروی داینامیک، پاکسازیِ FA
+- **آدیتِ آیکونها**: پابرای همهٔ صفحات پروب شد — صفر اسلاتِ خالی (`icon-ring/svc-icon/stat-icon/tech-chip/faq-icon/why-chip` همه پُر)، همهٔ آیکون‌های DB و قالبها معتبر و رندر می‌شوند. صفحهٔ نمونهکارها به‌دلیلِ باگِ قدیمیِ داده (تصویرِ مفقودِ media) ۵۰۰ میدهد که بی‌ربط به آیکون است. در انتظارِ مشخص‌شدنِ جایگها از کاربر.
+- **حذفِ پلنِ دستی** (`4da0b0e`): بلوکِ «پلن دلخواه» در صفحهٔ خدمت (چکباکسها + جمع تخمینی) حذف شد؛ مدلِ `ServiceCustomItem` + مایگریشنِ DeleteModel، ادمین (inline)، ویو، قالبِ detail و کدِ `initCustomCalculator` در `pixoria.js` پاک شدند. سه کارتِ پلنِ اصلی و دکمهٔ CTA با پارامترِ prefill باقی ماندند.
+- **هیروی داینامیک** (`f370dee`): عددهای هیرو حالا از دادهٔ واقعی ساخته می‌شوند — تعدادِ نمونه‌کارها (Portfolio.count)، کلِ خدمات (Service.count) و لوکیشن («مشهد»). مدلِ `HeroStat` حذف شد (مایگریشن `home.0018`) و از ادمین و seed هم پاک شد؛ قالب `_hero.html` مقدارها را `fa_digits` چاپ می‌کند.
+- **پاکسازیِ FA** (`d33d97a`): `package-lock.json` بازتولید شد (صفر `@fortawesome`؛ وابستگی‌های واقعی سر جایشان) و README کامپوننتها به Lucide بهروز شد. فایلهای `static/admin/img/*` آیکون‌های وندورِ خودِ Django یام هستند و سالم نگه داشته شدند.
