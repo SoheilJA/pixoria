@@ -197,12 +197,6 @@ Service (مگامنو) و SiteSettings (لوگو و بنر مگامنو).{% endc
               <span class="fa-num" dir="ltr">{{ settings.phone_secondary|fa_digits }}</span>
             </a>
           {% endif %}
-          {% if settings.email %}
-            <a href="mailto:{{ settings.email }}" class="mm-chip">
-              <span class="mm-chip-ic">{% icon "mail" class="h-4 w-4" %}</span>
-              <span dir="ltr">{{ settings.email }}</span>
-            </a>
-          {% endif %}
         </div>
         {% if socials %}
           <div class="mm-soc">
