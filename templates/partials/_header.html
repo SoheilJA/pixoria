@@ -174,49 +174,53 @@ Service (مگامنو) و SiteSettings (لوگو و بنر مگامنو).{% endc
 
     <div class="mm-foot mm-anim" style="--m-i:{{ nav_items|length }}">
       {% if header_settings and header_settings.show_cta %}
+        {% comment %} دکمهٔ CTA — طلاییِ براق با درخششِ عبوری؛ بدونِ کلاسِ عمومیِ btn {% endcomment %}
         <a
           href="{% nav_url header_settings.cta_url|default:'contact:contact' %}"
-          class="mm-cta btn btn-gold"
+          class="mm-cta"
         >
-          {{ header_settings.cta_text }}
-          {% icon "arrow-left" class="h-4 w-4" %}
+          <span class="mm-cta__txt">{{ header_settings.cta_text }}</span>
+          <span class="mm-cta__arr" aria-hidden="true">{% icon "arrow-left" class="h-4.5 w-4.5" %}</span>
         </a>
       {% endif %}
-      <div class="mm-hit">
-        {% if settings.phone %}
-          <a href="tel:{{ settings.phone }}" class="mm-chip">
-            {% icon "phone" class="h-4 w-4 text-gold" %}
-            <span class="fa-num" dir="ltr">{{ settings.phone|fa_digits }}</span>
-          </a>
-        {% endif %}
-        {% if settings.phone_secondary %}
-          <a href="tel:{{ settings.phone_secondary }}" class="mm-chip">
-            {% icon "smartphone" class="h-4 w-4 text-gold" %}
-            <span class="fa-num" dir="ltr">{{ settings.phone_secondary|fa_digits }}</span>
-          </a>
-        {% endif %}
-        {% if settings.email %}
-          <a href="mailto:{{ settings.email }}" class="mm-chip">
-            {% icon "mail" class="h-4 w-4 text-gold" %}
-            <span dir="ltr">{{ settings.email }}</span>
-          </a>
+      <div class="mm-contact">
+        <div class="mm-hit">
+          {% if settings.phone %}
+            <a href="tel:{{ settings.phone }}" class="mm-chip">
+              <span class="mm-chip-ic">{% icon "phone" class="h-4 w-4" %}</span>
+              <span class="fa-num" dir="ltr">{{ settings.phone|fa_digits }}</span>
+            </a>
+          {% endif %}
+          {% if settings.phone_secondary %}
+            <a href="tel:{{ settings.phone_secondary }}" class="mm-chip">
+              <span class="mm-chip-ic">{% icon "smartphone" class="h-4 w-4" %}</span>
+              <span class="fa-num" dir="ltr">{{ settings.phone_secondary|fa_digits }}</span>
+            </a>
+          {% endif %}
+          {% if settings.email %}
+            <a href="mailto:{{ settings.email }}" class="mm-chip">
+              <span class="mm-chip-ic">{% icon "mail" class="h-4 w-4" %}</span>
+              <span dir="ltr">{{ settings.email }}</span>
+            </a>
+          {% endif %}
+        </div>
+        {% if socials %}
+          <div class="mm-soc">
+            <span class="mm-soc-label">شبکه‌های اجتماعی</span>
+            {% for social in socials %}
+              <a
+                href="{{ social.url }}"
+                class="mm-soc-btn"
+                target="_blank"
+                rel="noopener"
+                aria-label="{{ social.name }}"
+              >
+                {% icon social.icon|default:"globe" class="h-4.5 w-4.5" %}
+              </a>
+            {% endfor %}
+          </div>
         {% endif %}
       </div>
-      {% if socials %}
-        <div class="mm-soc">
-          {% for social in socials %}
-            <a
-              href="{{ social.url }}"
-              class="mm-soc-btn"
-              target="_blank"
-              rel="noopener"
-              aria-label="{{ social.name }}"
-            >
-              {% icon social.icon|default:"globe" class="h-4.5 w-4.5" %}
-            </a>
-          {% endfor %}
-        </div>
-      {% endif %}
     </div>
   </div>
 </div>
