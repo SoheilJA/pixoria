@@ -34,7 +34,8 @@
                    style="{% if service.card_span == 'wide' %}border-radius: 1.1rem 2.5rem 1.1rem 2.5rem{% else %}border-radius: 2.5rem 1.1rem 2.5rem 1.1rem{% endif %}"
                    data-reveal="{% if service.card_span == 'wide' %}tilt{% else %}rise{% endif %}">
             <span class="glare" aria-hidden="true"></span>
-            <span class="ghost-num{% if service.card_span == 'wide' %} ghost-num-r{% endif %}" aria-hidden="true">
+            {% comment %} واترمارک: در RTL عنوانِ کارت سمت راست است؛ پس عددِ شبحه همیشه در گوشهٔ چپِ خالی می‌نشیند — ghost-num-r (سمت راست) رویِ عنوان میافتد {% endcomment %}
+            <span class="ghost-num" aria-hidden="true">
               {{ forloop.counter|stringformat:"02d"|fa_digits }}
             </span>
 
