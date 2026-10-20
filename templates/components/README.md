@@ -106,6 +106,8 @@ template notes in `{% comment %}…{% endcomment %}`.
   instance by `pixoria.js`, so a component may appear more than once per page.
 - `data-reveal` attributes live on the component root, not the call site.
 - Text that can contain rich text uses `|safe`; plain strings do not.
-- Icons come from the self-hosted Font Awesome webfont via `{% icon "name" %}`
-  (name only, no `fa-` prefix). Every free icon is available offline — pick one
-  at fontawesome.com/icons. Size utilities (`h-6 w-6`) become inline font-size.
+- Icons come from the self-hosted Lucide sprite via `{% icon "name" %}`
+  (plain Lucide name; legacy names are mapped automatically). Glyphs pull
+  from the local sprite (`static/lucide/sprite.svg`) — pick one at
+  lucide.dev/icons. Tailwind size utilities (`h-6 w-6`) work directly on the
+  rendered `<svg class="lucide">`.
