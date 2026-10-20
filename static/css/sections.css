@@ -1363,3 +1363,32 @@ svg.lucide {
 .cta-fig { position: relative; }
 .why-fig { position: relative; }
 .tech-fig { position: relative; }
+
+/* ═════════════════════════════════════════════════════════════════
+   سایه‌کشِ سراسری (v4) — تقاضای کاربر: در کلِ سایت هیچ سایهای نباشد؛
+   تنها سکشنِ هیرو (#home) با سایههای خودش سرجایش میماند.
+   چون tailwind.css قابل بازسازی نیست و بخشی از سایهها inline هم
+   هستند، این قاعده در انتهای فایل با !important همهٔ utilities و
+   استایلهای خطی و سایههای دستساز (همین فایل) و motion.css را بیاثر
+   میکند. حلقهٔ فوکوسِ فیلدها هم سایه بود — با outline جایگزین شد تا
+   نشانهٔ فوکوسِ کیبورد از بین نرود.
+   ═════════════════════════════════════════════════════════════════ */
+*:not(#home):not(#home *),
+*:not(#home):not(#home *)::before,
+*:not(#home):not(#home *)::after {
+  box-shadow: none !important;
+  text-shadow: none !important;
+}
+
+/* سایههای فیلتریِ (drop-shadow) خارج از هیرو */
+.svc-palette:not(#home *),
+.gps-dot:not(#home *),
+.pr-rail__bead:not(#home *) {
+  filter: none !important;
+}
+
+/* فوکوسِ بدونِ سایه — outline نازکِ طلایی */
+*:not(#home):not(#home *):focus-visible {
+  outline: 2px solid rgba(201, 161, 90, 0.9);
+  outline-offset: 2px;
+}
