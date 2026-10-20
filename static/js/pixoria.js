@@ -91,34 +91,63 @@ function init() {
     document.documentElement.style.scrollBehavior = "smooth";
   }
 
-  /* ---------------- mobile menu ---------------- */
-  const menu = document.getElementById("mobile-menu");
-  const menuOpenBtn = document.getElementById("menu-open");
-  const bodyLock = (on) => {
-    document.body.style.overflow = on ? "hidden" : "";
-    if (lenis) on ? lenis.stop() : lenis.start();
+  /* ---------------- mobile menu v3 (delegated) ----------------
+     کلِ <body> با hx-boost تعویض میشود؛ به همین دلیل «هیچ» لیسنری روی
+     عناصرِ خودِ منو نمیچسبد. رویدادها یک بار روی document وصل میشوند و
+     در هر کلیک، DOMِ زنده پرسوجو میشود — پس پس از هر ناوبری هم
+     همبرگر، دکمهٔ بستن و آکاردئون سالم میمانند. */
+  const openMobileMenu = () => {
+    const menu = document.getElementById("mobile-menu");
+    if (!menu || menu.classList.contains("open")) return;
+    menu.classList.add("open");
+    document.getElementById("menu-open")?.setAttribute("aria-expanded", "true");
+    // قفلِ اسکرول روی <html> (کلاس) + body و متوقفکردنِ lenis؛ هر سه در
+    // close آزاد میشوند و htmx:afterSwap هم اهرمِ ترمیمِ مستقل دارد.
+    document.documentElement.classList.add("nav-lock");
+    document.body.style.overflow = "hidden";
+    if (lenis) lenis.stop();
+    menu.querySelector(".mm-close")?.focus({ preventScroll: true });
   };
-  const closeMenu = () => {
+  const closeMobileMenu = () => {
+    const menu = document.getElementById("mobile-menu");
     if (!menu || !menu.classList.contains("open")) return;
     menu.classList.remove("open");
-    if (menuOpenBtn) menuOpenBtn.setAttribute("aria-expanded", "false");
-    resetAccordions();
-    bodyLock(false);
-  };
-  if (menu && menuOpenBtn) {
-    const openMenu = () => {
-      menu.classList.add("open");
-      menuOpenBtn.setAttribute("aria-expanded", "true");
-      bodyLock(true);
-    };
-    menuOpenBtn.addEventListener("click", openMenu);
-    menu.querySelectorAll("[data-menu-close]").forEach((b) =>
-      b.addEventListener("click", closeMenu),
-    );
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") closeMenu();
+    document.getElementById("menu-open")?.setAttribute("aria-expanded", "false");
+    menu.querySelectorAll("[data-m-accordion]").forEach((btn) => {
+      btn.setAttribute("aria-expanded", "false");
+      btn.closest("li")?.classList.remove("m-sub-open");
     });
-  }
+    document.documentElement.classList.remove("nav-lock");
+    document.body.style.overflow = "";
+    if (lenis) lenis.start();
+    document.getElementById("menu-open")?.focus({ preventScroll: true });
+  };
+  document.addEventListener("click", (e) => {
+    const t = e.target;
+    if (!(t instanceof Element) || !t.closest) return;
+    if (t.closest("#menu-open")) {
+      openMobileMenu();
+      return;
+    }
+    if (t.closest("[data-menu-close]")) {
+      closeMobileMenu();
+      return;
+    }
+    const acc = t.closest("[data-m-accordion]");
+    if (acc) {
+      const open = acc.getAttribute("aria-expanded") === "true";
+      acc.setAttribute("aria-expanded", String(!open));
+      acc.closest("li")?.classList.toggle("m-sub-open", !open);
+      return;
+    }
+    if (t.closest("#mobile-menu a[href]")) closeMobileMenu();
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeMobileMenu();
+  });
+  // اهرمِ ترمیم: هر تعویضِ htmx منو را میبندد و قفلِ اسکرول را آزاد میکند
+  // (اگر کاربر با منوی باز ناوبری کرده باشد، صفحه هرگز گیرِ قفل نمیماند).
+  document.addEventListener("htmx:afterSwap", closeMobileMenu);
 
   /* ---------------- mega menu (services dropdown) ----------------
      باز شدن با هاور (با تأخیرِ کوچک در بستن) و با کلیک/کیبورد روی چورون.
@@ -157,21 +186,6 @@ function init() {
     );
   });
 
-  /* ---------------- mobile services accordion ---------------- */
-  const resetAccordions = () => {
-    document.querySelectorAll("[data-m-accordion]").forEach((btn) => {
-      btn.setAttribute("aria-expanded", "false");
-      btn.closest("li")?.classList.remove("m-sub-open");
-    });
-  };
-  document.querySelectorAll("[data-m-accordion]").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const open = btn.getAttribute("aria-expanded") === "true";
-      btn.setAttribute("aria-expanded", String(!open));
-      btn.closest("li")?.classList.toggle("m-sub-open", !open);
-    });
-  });
-
   /* ---------------- anchor links ---------------- */
   const scrollToEl = (el) => {
     if (lenis) lenis.scrollTo(el, { offset: -96, duration: 1.2 });
@@ -184,7 +198,7 @@ function init() {
         const el = document.querySelector(id);
         if (el) {
           e.preventDefault();
-          closeMenu();
+          closeMobileMenu();
           scrollToEl(el);
         }
       }
