@@ -713,7 +713,9 @@
               {% cycle '0' '0.08' '0.16' as plan_delay silent %}
               {% if plan.is_featured %}
                 {% comment %} پلنِ پیشنهادی: کارتِ طلاییِ برآمده با برچسبِ «محبوب‌ترین» {% endcomment %}
-                <article class="relative flex flex-col p-8 text-paper md:-mt-6"
+                {% comment %} pt-10 پس از p-8: بالای کارت نفسِ برچسبِ بیرونزده را میدهد؛ {% endcomment %}
+                {% comment %} بدونِ مارجینِ منفی که محتوای ابتدای کارت را به‌هم میریخت {% endcomment %}
+                <article class="relative flex flex-col p-8 pt-10 text-paper"
                          style="border-radius: 0.75rem 1.75rem 0.75rem 1.75rem;
                                 background: linear-gradient(150deg, rgba(232,196,122,0.32), rgba(255,255,255,0.92) 55%);
                                 border: 1.5px solid rgba(143,107,44,0.55);
