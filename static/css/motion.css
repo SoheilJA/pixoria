@@ -335,18 +335,9 @@ html.motion [data-pause].is-paused * {
   animation-play-state: paused !important;
 }
 
-/* ------------------------------------------------ پخشِ مدیا (کن‌برنز) */
-html.motion .is-playing [data-v-el] {
-  animation: rvKenBurns 18s ease-in-out infinite alternate;
-}
-@keyframes rvKenBurns {
-  from {
-    scale: 1.02;
-  }
-  to {
-    scale: 1.12;
-  }
-}
+/* ------------------------------------------------------ پخشِ مدیا حذف شد
+   کارتهای رسانهایِ اسلایدرِ نظرات (ویدیو/صوت) به طورِ کامل از پروژه
+   برداشته شدهاند؛ نظرات فقط متنی هستند. */
 
 /* ------------------------------------------------------ فیلترِ نمونه‌کار
    نمایش/پنهان‌شدن با ترنزیشن و کمی پلکان؛ هیچ GSAP ای در میان نیست. */
@@ -532,8 +523,7 @@ html.motion [data-reveal].is-in.rv-flash {
   html.motion .gps-draw,
   html.motion .gps-dot,
   html.motion #hero-3d,
-  html.motion .pf-item.pf-in,
-  html.motion .is-playing [data-v-el] {
+  html.motion .pf-item.pf-in {
     animation: none !important;
   }
   html.motion .gps-draw {

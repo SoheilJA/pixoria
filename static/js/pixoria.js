@@ -3,10 +3,9 @@
  *
  * Ported from the inline script of new/index.html. Handles smooth scroll,
  * scroll-driven reveals/counters, magnetic + tilt effects, the mobile menu,
- * scroll progress, the testimonial slider, the media (video/audio) cards,
- * the portfolio filter, marquee duplication, the process GPS draw, the FAQ
- * accordion, the toast and the blog article chrome (reading-progress bar,
- * table-of-contents highlight, copy-link button).
+ * scroll progress, the testimonial slider, the portfolio filter, marquee
+ * duplication, the process GPS draw, the FAQ accordion, the toast and the blog
+ * article chrome (reading-progress bar, table-of-contents highlight, copy-link button).
  *
  * Loaded as an ES module from base.html. هیچ GSAP ای در پروژه نیست: کل حرکت با
  * CSS (static/css/motion.css) انجام می‌شود و این ماژول فقط ماشه می‌زند —
@@ -23,10 +22,6 @@ const TOUCH = matchMedia("(hover: none)").matches;
 
 const FA_DIGITS = "۰۱۲۳۴۵۶۷۸۹";
 const faDigits = (value) => String(value).replace(/\d/g, (d) => FA_DIGITS[d]);
-const fmtTime = (seconds) =>
-  faDigits(Math.floor(seconds / 60)) +
-  ":" +
-  faDigits(String(Math.floor(seconds % 60)).padStart(2, "0"));
 
 /* ------------------------------------------------------- CSS-var helpers
    هیچ انیمیشنِ جاوااسکریپتی در پروژه نیست؛ این ماژول فقط ماشه می‌زند و
@@ -610,7 +605,6 @@ function init() {
 
   initSliders({ REDUCED, faDigits });
   initCarousels({ REDUCED, faDigits });
-  initMediaCards({ REDUCED, fmtTime });
   initPortfolioFilter({ REDUCED, faDigits });
   initMarquees();
   initStatCounts();
@@ -955,155 +949,6 @@ function initCarousels({ REDUCED, faDigits }) {
     enableTrackDrag(track);
   });
 }
-
-/* ------------------------------------------------------- media cards (real playback) */
-
-// فقط یک رسانه همزمان پخش شود: هر کارتی که شروع به پخش می‌کند، کارتِ در حال
-// پخشِ دیگر را متوقف می‌کند. هر کارت یک تابعِ stop در این مجموعه ثبت می‌کند.
-const activeMedia = new Set();
-const stopOtherMedia = (me) => {
-  activeMedia.forEach((stop) => stop !== me && stop());
-};
-
-function initMediaCards({ REDUCED, fmtTime }) {
-  /* ---------------- video cards — real <video> element ---------------- */
-  document.querySelectorAll("[data-video-card]").forEach((card) => {
-    const video = card.querySelector("[data-v-el]");
-    if (!video) return;
-    const vPlay = card.querySelector("[data-v-play]");
-    const vScrim = card.querySelector("[data-v-scrim]");
-    const vProg = card.querySelector("[data-v-prog]");
-    const vTime = card.querySelector("[data-v-time]");
-
-    const setPlaying = (on) => {
-      if (vPlay) {
-        vPlay.style.opacity = on ? "0" : "";
-        vPlay.style.pointerEvents = on ? "none" : "";
-      }
-      if (vScrim) vScrim.style.opacity = on ? "0" : "";
-      // کوچک‌نماییِ آرام (کن‌برنز) با کلاس و keyframes در CSS اجرا می‌شود.
-      if (on) {
-        stopOtherMedia(stop);
-        card.classList.add("is-playing");
-        const p = video.play();
-        if (p && p.catch) p.catch(() => setPlaying(false));
-      } else {
-        card.classList.remove("is-playing");
-        video.pause();
-      }
-    };
-    const stop = () => {
-      if (!video.paused) setPlaying(false);
-    };
-    activeMedia.add(stop);
-
-    if (vPlay)
-      vPlay.addEventListener("click", () =>
-        setPlaying(video.paused),
-      );
-    // کلیک روی خودِ ویدیو هم پخش را تغییر می‌دهد.
-    video.addEventListener("click", () => setPlaying(video.paused));
-
-    // مدت زمان از فراداده خوانده می‌شود تا اگر در دیتابیس ثبت نشده بود.
-    video.addEventListener("loadedmetadata", () => {
-      if (video.duration && vTime && vTime.dataset.filled !== "1") {
-        vTime.dataset.filled = "1";
-        vTime.textContent = fmtTime(0) + " / " + fmtTime(video.duration);
-      }
-    });
-    const onTime = () => {
-      const dur = video.duration || 0;
-      if (vProg && dur)
-        vProg.style.width = (video.currentTime / dur) * 100 + "%";
-      if (vTime && dur)
-        vTime.textContent =
-          fmtTime(video.currentTime) + " / " + fmtTime(dur);
-    };
-    video.addEventListener("timeupdate", onTime);
-    video.addEventListener("ended", () => {
-      setPlaying(false);
-      video.currentTime = 0;
-      onTime();
-    });
-  });
-
-  /* ---------------- audio cards — real <audio> element ---------------- */
-  document.querySelectorAll("[data-audio-card]").forEach((card) => {
-    const audio = card.querySelector("[data-a-el]");
-    if (!audio) return;
-    const aPlay = card.querySelector("[data-a-play]");
-    const barsWrap = card.querySelector("[data-a-bars]");
-    const aCur = card.querySelector("[data-a-cur]");
-    const aTotal = card.querySelector("[data-a-total]");
-    if (!aPlay || !barsWrap) return;
-
-    // موجِ صدا: نوارهای ثابتِ تزئینی که تا پیش از این با فرکانسِ تصادفی
-    // ساخته می‌شدند؛ حالا ارتفاع آن‌ها از شدتِ صدا به‌صورت تقریبی در نمی‌آید،
-    // پس همان شکلِ تصادفیِ زیبا را نگه می‌داریم و فقط پیشرفت را رنگ می‌کنیم.
-    const N = 44;
-    const bars = [];
-    for (let i = 0; i < N; i++) {
-      const b = document.createElement("span");
-      b.className = "w-bar";
-      b.style.height = 18 + Math.random() * 82 + "%";
-      // تأخیرِ تصادفیِ هر نوار، تا موجِ در حالِ پالس هم‌زمان نباشد.
-      b.style.animationDelay = (Math.random() * 1.2).toFixed(2) + "s";
-      barsWrap.appendChild(b);
-      bars.push(b);
-    }
-
-    const stop = () => {
-      if (!audio.paused) audio.pause();
-    };
-    activeMedia.add(stop);
-
-    aPlay.addEventListener("click", () => {
-      const on = audio.paused;
-      if (on) {
-        stopOtherMedia(stop);
-        const p = audio.play();
-        if (p && p.catch) p.catch(() => aPlay.classList.remove("is-playing"));
-      } else {
-        audio.pause();
-      }
-    });
-
-    const render = () => {
-      const dur = audio.duration || 0;
-      const t = audio.currentTime || 0;
-      if (aCur) aCur.textContent = fmtTime(t);
-      if (dur) {
-        const p = t / dur;
-        bars.forEach((b, i) =>
-          b.classList.toggle("played", (i + 1) / N <= p),
-        );
-      }
-    };
-    audio.addEventListener("timeupdate", render);
-    audio.addEventListener("play", () => {
-      aPlay.classList.add("is-playing");
-      barsWrap.classList.add("playing");
-    });
-    audio.addEventListener("pause", () => {
-      aPlay.classList.remove("is-playing");
-      barsWrap.classList.remove("playing");
-    });
-    audio.addEventListener("ended", () => {
-      aPlay.classList.remove("is-playing");
-      barsWrap.classList.remove("playing");
-      audio.currentTime = 0;
-      render();
-    });
-    // مدت زمان کلی از فراداده خوانده می‌شود اگر در دیتابیس ثبت نشده باشد.
-    audio.addEventListener("loadedmetadata", () => {
-      if (audio.duration && aTotal && aTotal.dataset.filled !== "1") {
-        aTotal.dataset.filled = "1";
-        aTotal.textContent = fmtTime(audio.duration);
-      }
-    });
-  });
-}
-
 
 /* ------------------------------------------------------- portfolio filter */
 

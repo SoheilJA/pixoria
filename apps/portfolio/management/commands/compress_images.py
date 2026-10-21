@@ -25,7 +25,6 @@ FIELDS = [
     ("services", "Service", "og_image"),
     ("services", "ServiceSection", "image"),
     ("services", "ServiceTestimonial", "author_image"),
-    ("services", "ServiceTestimonial", "video_poster"),
     ("core", "AboutStory", "image"),
 ]
 
