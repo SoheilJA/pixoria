@@ -1,4 +1,4 @@
-{% load fa_digits highlight_tags %}
+{% load fa_digits highlight_tags component_tags %}
 {% comment %} کارت پروژه — کارتِ نمونه‌کار برای گرید قابل‌فیلتر و کاروسل‌ها. {% endcomment %}
 {% comment %} project:    obj  required — نمونه‌ی Portfolio {% endcomment %}
 {% comment %} filter_key: str  optional — اسلاگ دسته‌بندی برای فیلترِ گرید (data-cat)؛ {% endcomment %}
@@ -14,7 +14,7 @@
    {% if filter_key %}data-cat="{{ filter_key }}"{% endif %}
    style="border-radius: {{ radius|default:"1.75rem" }};{% if style %} {{ style }}{% endif %}"
    aria-label="{{ project.title|plain }}">
-  {% if project.image %}
+  {% if project.image and project.image|file_exists %}
     {% comment %} نسبت طبیعیِ تصویر حفظ می‌شود: مستطیلِ افقی برای اسکرین‌شات سایت‌ها،{% endcomment %}
     {% comment %} مربعی برای گرافیک و لوگو. h-auto باعث می‌شود کارت به جای ارتفاع      {% endcomment %}
     {% comment %} تصویرِ بلندتر در همان ردیف، بلندای تصویرِ خودش را بگیرد.            {% endcomment %}

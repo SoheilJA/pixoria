@@ -62,3 +62,19 @@ def do_carousel(parser, token):
     nodelist = parser.parse(("endcarousel",))
     parser.delete_first_token()
     return CarouselNode(nodelist, kwargs)
+
+
+@register.filter
+def file_exists(field_file):
+    """آیا فایلی که مسیرش در DB ثبت شده واقعاً روی دیسک هست؟
+
+    مسیرِ ثبتشده (name) کافی نیست؛ اگر فایل غایب باشد خواندنِ
+    width/height → FileNotFoundError → 500 تمامِ صفحه.
+    storage.exists یک stat ارزان است و فایل را باز نمیکند.
+    """
+    if not field_file or not getattr(field_file, "name", ""):
+        return False
+    try:
+        return bool(field_file.storage.exists(field_file.name))
+    except Exception:
+        return False
