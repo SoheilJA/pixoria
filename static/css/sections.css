@@ -134,115 +134,108 @@
   }
 }
 
-/* ── درباره ما: ریلِ مایلستونِ آمار (بهجای باکسهای ردیفِ دوم) ───── */
+/* ── درباره ما: نوارِ اعتبار — پنلِ تیره با پیکهای آماری ───── */
 
-.ab-rail {
+.stat-band {
   position: relative;
-  margin: 0;
-  padding: 0;
-  list-style: none;
+  margin-block-start: clamp(3.5rem, 6vw, 5rem);
+  overflow: hidden;
+  border: 1px solid rgba(143, 107, 44, 0.24);
+  border-radius: 26px;
+  background:
+    radial-gradient(60% 130% at 88% -20%, rgba(201, 161, 90, 0.16), transparent 70%),
+    linear-gradient(168deg, #17171c, #0d0d10 78%);
 }
-
-/* دسکتاپ: چهار ایستگاه روی یک خطِ نقطهچینِ افقی */
-@media (min-width: 900px) {
-  .ab-rail {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: clamp(24px, 4vw, 56px);
-  }
-  .ab-rail::before {
-    content: "";
-    position: absolute;
-    top: 6px;
-    inset-inline: 3%;
-    border-top: 1px dashed rgba(143, 107, 44, 0.5);
-  }
-  .ab-rail__node {
-    position: relative;
-    padding-top: 40px; /* فاصلهٔ محتوا از ریل */
-    text-align: center;
-  }
-  .ab-rail__dot {
-    position: absolute;
-    top: 1px;
-    left: 50%;
-    width: 11px;
-    height: 11px;
-    margin-left: -5.5px;
-    border-radius: 50%;
-    background: linear-gradient(140deg, #e8c47a, #8f6b2c);
-    box-shadow:
-      0 0 0 4px rgba(201, 161, 90, 0.16),
-      0 0 14px -2px rgba(201, 161, 90, 0.5);
-    transition:
-      transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-      box-shadow 0.35s ease;
-  }
-  .ab-rail__node:hover .ab-rail__dot {
-    transform: scale(1.35);
-    box-shadow:
-      0 0 0 6px rgba(201, 161, 90, 0.2),
-      0 0 24px 0 rgba(201, 161, 90, 0.65);
-  }
+/* شبکهٔ نقطهایِ محو داخلِ نوار */
+.stat-band::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(245, 243, 238, 0.06) 1px, transparent 1.6px);
+  background-size: 22px 22px;
+  mask-image: linear-gradient(to bottom, #000, transparent 82%);
+  -webkit-mask-image: linear-gradient(to bottom, #000, transparent 82%);
+  pointer-events: none;
 }
-
-/* موبایل: ریل عمودی — نقطهها کنارِ سطرها */
-@media (max-width: 899px) {
-  .ab-rail {
-    display: grid;
-    gap: 26px;
-    padding-inline-start: 30px;
-  }
-  .ab-rail::before {
-    content: "";
-    position: absolute;
-    top: 10px;
-    bottom: 10px;
-    inset-inline-start: 5px;
-    border-inline-start: 1px dashed rgba(143, 107, 44, 0.5);
-  }
-  .ab-rail__node {
-    position: relative;
-  }
-  .ab-rail__dot {
-    position: absolute;
-    top: 10px;
-    inset-inline-start: -30px; /* روی خطِ عمودی */
-    width: 11px;
-    height: 11px;
-    border-radius: 50%;
-    background: linear-gradient(140deg, #e8c47a, #8f6b2c);
-    box-shadow: 0 0 0 4px rgba(201, 161, 90, 0.16);
-  }
+.stat-band__list {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  padding: 12px;
 }
-
-/* مشترکِ هر دو حالت — آیکن، عدد درشت، برچسب */
-.ab-rail__node .icon-ring {
-  margin-bottom: 14px;
+.stat-band__item {
+  position: relative;
+  display: grid;
+  align-content: start;
+  justify-items: start;
+  gap: 2px;
+  padding: 18px 18px 16px;
+  border: 1px solid rgba(245, 243, 238, 0.07);
+  border-radius: 18px;
+  background: rgba(251, 249, 244, 0.035);
+  transition:
+    border-color 0.35s ease,
+    background 0.35s ease,
+    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
 }
-.ab-rail__num {
-  display: block;
-  font-size: clamp(2.2rem, 3.2vw, 3.1rem);
+.stat-band__item:hover {
+  border-color: rgba(201, 161, 90, 0.55);
+  background: rgba(232, 196, 122, 0.07);
+  transform: translateY(-3px);
+}
+.stat-band__icon {
+  display: grid;
+  place-items: center;
+  inline-size: 38px;
+  block-size: 38px;
+  margin-block-end: 10px;
+  border: 1px solid rgba(232, 196, 122, 0.28);
+  border-radius: 12px;
+  color: var(--gold-l, #e8c47a);
+  background: linear-gradient(150deg, rgba(232, 196, 122, 0.14), rgba(232, 196, 122, 0.04));
+  transition: border-color 0.35s ease, color 0.35s ease;
+}
+.stat-band__item:hover .stat-band__icon {
+  border-color: rgba(232, 196, 122, 0.7);
+}
+.stat-band__icon svg {
+  inline-size: 18px;
+  block-size: 18px;
+}
+.stat-band__num {
+  font-size: clamp(1.9rem, 3.4vw, 2.55rem);
   font-weight: 800;
-  line-height: 1.15;
-  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  line-height: 1.12;
+  letter-spacing: 0.01em;
 }
-.ab-rail__node:hover .ab-rail__num {
-  transform: translateY(-4px);
+.stat-band__label {
+  font-size: 0.82rem;
+  line-height: 1.7;
+  color: rgba(245, 243, 238, 0.6);
 }
-.ab-rail__label {
-  margin-top: 6px;
-  font-size: 14px;
-  color: rgba(10, 10, 12, 0.62);
+
+/* ≥900: چهار پیک در یک ردیف */
+@media (min-width: 900px) {
+  .stat-band__list {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+    padding: 14px;
+  }
+  .stat-band__item {
+    padding: 20px 20px 18px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .ab-tile,
   .ab-tile__tag,
   .ab-link,
-  .ab-rail__dot,
-  .ab-rail__num {
+  .stat-band__item {
     transition: none;
+  }
+  .stat-band__item:hover {
+    transform: none;
   }
 }
 

@@ -98,19 +98,17 @@
         </div>
       </div>
 
-      {% comment %} ریلِ مایلستون — آمارها به‌جای جعبه: نقطههای زنده روی خطِ نقطهچین {% endcomment %}
+      {% comment %} نوارِ اعتبار — پنلِ تیره با پیکهای آماری (ری‌دیزاینِ کاملِ ردیفِ دوم) {% endcomment %}
       {% if about_stats %}
-        <div class="relative mt-24" data-reveal="up">
-          <ul class="ab-rail">
+        <div class="stat-band" data-reveal="up">
+          <ul class="stat-band__list" role="list">
             {% for stat in about_stats %}
-              {% cycle '0' '0.1' '0.2' '0.3' as dly silent %}
-              <li class="ab-rail__node" data-reveal="up" data-delay="{{ dly }}">
-                <span class="ab-rail__dot" aria-hidden="true"></span>
-                <span class="icon-ring">{% icon stat.icon class="h-4 w-4" %}</span>
-                <p class="ab-rail__num text-goldgrad-dark">
+              <li class="stat-band__item" data-reveal="up" data-delay="{% cycle '0' '0.08' '0.16' '0.24' %}">
+                <span class="stat-band__icon" aria-hidden="true">{% icon stat.icon %}</span>
+                <p class="stat-band__num text-goldgrad-dark">
                   <span class="fa-num" data-counter="{{ stat.value|floatformat:'0' }}"{% if stat.prefix %} data-prefix="{{ stat.prefix }}"{% endif %}{% if stat.suffix %} data-suffix="{{ stat.suffix }}"{% endif %}>۰</span>
                 </p>
-                <p class="ab-rail__label">{{ stat.label }}</p>
+                <p class="stat-band__label">{{ stat.label }}</p>
               </li>
             {% endfor %}
           </ul>
