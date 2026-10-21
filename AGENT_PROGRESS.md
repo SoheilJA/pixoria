@@ -60,3 +60,14 @@
   - کل بلوکِ `.ab-rail` (desktop+mobile+reduced-motion) حذف شد؛ reduced-motion جدید فقط tileها + stat-band.
 - **پروب:** خانه 200؛ band با ۴ ستون/۴ پیک/۴ آیکن/۴ شمارنده، padx قدیمِ .ab-rail صفراً، بدون سایه.
 
+
+## دنبالهٔ ۳۸ — فیکسِ ۵۰۰ در /portfolio/ (چهارشنبه ۳۰ مهر ۱۴۰۵)
+
+- **گزارش کاربر:** ورود به صفحهٔ نمونهکارها خطا میدهد.
+- **ریشه**: کارتِ اشتراکیِ `components/_project_card.html` برای رزروِ CLS میخواند `{{ project.image.width }}`؛ رکوردِ pk=9 در DB مسیر `portfolio/images_XOwXvqo.jpg` داشت اما فایل روی دیسک غایب بود (تنها images.jpg موجود) → `ImageFile.open` → FileNotFoundError → 500 کلِ صفحه. تست‌کلاینت با ALLOWED_HOSTS+testserver تریس را کامل گرفت.
+- **فیکسِ دو لایه** (`07b36f8`):
+  1. فیلترِ `file_exists` در `apps/core/templatetags/component_tags.py` — با `storage.exists` (stat ارزان، فایل را باز نمیکند) و شاخهٔ true/false؛ استثنای MissingFile به False انداخت نمیشود.
+  2. گاردِ تمپلیتی: `{% if project.image and project.image|file_exists %}` در `_project_card.html` — فایلِ غایب → پلیس‌هولدرِ گرادیانیِ `aspect-[4/3]` (شاخهٔ از پیش طراحی‌شده). همهٔ خانه/کاروسلها که کارت را include میکنند ایمن شدند.
+- **پاکسازیِ داده**: رکوردِ pk=9 (پورتفولیو) فیلدِ image غایبش در DB خالی شد (با اسکریپت؛ فایل غایب روی دیسک قابلِ بازیابی نبود). دو رکورد دیگری در اسکنِ Portfolio+ProjectImage فایلِ غایب نداشتند.
+- **پروب**: /portfolio/ 200 (۲ کارت: ۱ تصویر + ۱ پلیس‌هولدر) و خانه 200.
+
