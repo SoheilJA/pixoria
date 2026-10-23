@@ -48,15 +48,6 @@ class HomeAboutStatAdmin(IconPreviewMixin, admin.ModelAdmin):
     list_display_links = ["icon_preview", "label"]
 
 
-@admin.register(TrustedSection)
-class TrustedSectionAdmin(admin.ModelAdmin):
-    list_display = ["title", "eyebrow"]
-    fields = ["eyebrow", "title", "description", "footer_label"]
-
-    def has_add_permission(self, request):
-        return not TrustedSection.objects.exists()
-
-
 @admin.register(TestimonialSection)
 class TestimonialSectionAdmin(admin.ModelAdmin):
     list_display = ["title", "eyebrow"]
@@ -80,13 +71,6 @@ class ServicesSectionAdmin(admin.ModelAdmin):
 
     def has_add_permission(self, request):
         return not ServicesSection.objects.exists()
-
-
-@admin.register(ClientMarqueeItem)
-class ClientMarqueeItemAdmin(admin.ModelAdmin):
-    list_display = ["name", "mark", "accent", "order"]
-    list_editable = ["mark", "accent", "order"]
-    list_display_links = ["name"]
 
 
 @admin.register(CTASection)

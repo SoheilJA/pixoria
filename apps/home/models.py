@@ -154,43 +154,6 @@ class HomeAboutStat(models.Model):
         return self.label
 
 
-class TrustedSection(models.Model):
-    """بخش «برندهایی که به ما اعتماد کردند» — مارکویی برندها"""
-
-    eyebrow = models.CharField(
-        max_length=100,
-        verbose_name="متن بالای عنوان",
-        blank=True,
-        default="رزومه و اعتماد",
-        help_text=EYEBROW_HELP,
-    )
-    title = models.CharField(
-        max_length=200,
-        verbose_name="عنوان",
-        help_text=TITLE_HELP,
-    )
-    description = models.TextField(verbose_name="توضیحات", blank=True)
-    footer_label = models.CharField(
-        max_length=100,
-        verbose_name="متن پایین بخش",
-        blank=True,
-        default="TRUSTED PARTNERS · SINCE 2010",
-        help_text="متن لاتینِ کوچکِ پایین بخش. خالی بگذارید تا نمایش داده نشود",
-    )
-
-    class Meta:
-        verbose_name = "بخش برندهای همکار"
-        verbose_name_plural = "بخش برندهای همکار"
-
-    def __str__(self):
-        return self.title
-
-    def save(self, *args, **kwargs):
-        if not self.pk and TrustedSection.objects.exists():
-            raise ValueError("فقط یک بخش برندهای همکار مجاز است")
-        super().save(*args, **kwargs)
-
-
 class TestimonialSection(models.Model):
     """بخش «نظرات مشتریان» — اسلایدر کارت‌های متنی/ویدیویی/صوتی"""
 
@@ -269,33 +232,6 @@ class ServicesSection(models.Model):
         if not self.pk and ServicesSection.objects.exists():
             raise ValueError("فقط یک سکشن خدمات مجاز است")
         super().save(*args, **kwargs)
-
-
-class ClientMarqueeItem(models.Model):
-    """آیتم های مارکویی برند های همکار — هر برند یک نشان کوتاه و یک نام کامل"""
-
-    name = models.CharField(max_length=200, verbose_name="نام برند")
-    mark = models.CharField(
-        max_length=20,
-        verbose_name="نشان کوتاه",
-        blank=True,
-        help_text="کوتاه‌نام برند داخل نشان. مثلاً: رفاه. خالی بگذارید تا از نام برند استفاده شود",
-    )
-    accent = models.CharField(
-        max_length=10,
-        choices=[("gold", "طلایی"), ("royal", "آبی")],
-        default="gold",
-        verbose_name="رنگ نشان",
-    )
-    order = models.PositiveIntegerField(default=0, verbose_name="ترتیب")
-
-    class Meta:
-        verbose_name = "برند همکار"
-        verbose_name_plural = "برند های همکار"
-        ordering = ["order"]
-
-    def __str__(self):
-        return self.name
 
 
 class CTASection(models.Model):
@@ -387,7 +323,6 @@ class HomeSection(models.Model):
         ("hero", "هیرو"),
         ("about", "درباره ما"),
         ("services", "خدمات"),
-        ("trusted", "برندهای همکار"),
         ("portfolio", "نمونه‌کارها"),
         ("why", "چرا پیکسوریا"),
         ("process", "فرآیند کار"),

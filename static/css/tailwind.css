@@ -3569,17 +3569,6 @@ html.lenis, html.lenis body {
   border-color: rgba(201, 161, 90, 0.55);
   box-shadow: 0 12px 26px -14px rgba(201, 161, 90, 0.55);
 }
-.brand-name {
-  flex: none;
-  font-size: 1.35rem;
-  font-weight: 600;
-  color: #4c4638;
-  white-space: nowrap;
-  transition: color 0.3s;
-}
-.marquee-group > .brand-name:hover {
-  color: #8f6b2c;
-}
 .marquee-slow .marquee-track {
   animation-duration: 62s;
 }

@@ -9,10 +9,8 @@ from .models import (
     AboutStory,
     AboutJourneySection,
     AboutJourneyStep,
-    AboutClientsSection,
     AboutStat,
 )
-from apps.home.models import ClientMarqueeItem
 from apps.services.models import Service
 
 # موقعیتِ پنج ایستگاهِ مسیر در طرح v2 (مختصات viewBox 1000×340). وقتی تعداد
@@ -82,9 +80,6 @@ def about(request):
         "journey": AboutJourneySection.objects.first(),
         "journey_steps": steps,
         "journey_path": journey_path(points),
-        "clients_section": AboutClientsSection.objects.first(),
-        # دیوار برندها همان برندهای بخش «اعتماد» صفحه اصلی است — یک منبع داده.
-        "clients": ClientMarqueeItem.objects.all(),
         # سیاره‌های سامانهٔ خورشیدیِ هیرو از خدمات دیتابیس می‌آیند (تا ۶ مورد).
         "services": Service.objects.all()[:6],
         "stats": AboutStat.objects.all(),

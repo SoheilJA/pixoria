@@ -181,14 +181,6 @@ class AboutJourneyStepAdmin(admin.ModelAdmin):
     list_editable = ["order"]
 
 
-@admin.register(AboutClientsSection)
-class AboutClientsSectionAdmin(admin.ModelAdmin):
-    list_display = ["__str__"]
-
-    def has_add_permission(self, request):
-        return not AboutClientsSection.objects.exists()
-
-
 @admin.register(AboutStat)
 class AboutStatAdmin(IconPreviewMixin, admin.ModelAdmin):
     form = IconPickerForm

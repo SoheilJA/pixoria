@@ -514,35 +514,3 @@ class AboutStat(models.Model):
     def __str__(self):
         return self.label
 
-
-class AboutClientsSection(models.Model):
-    """بخش «اعتماد مشتریان» — دیوار نام برندهای همکار"""
-
-    eyebrow = models.CharField(
-        max_length=100,
-        verbose_name="متن بالای عنوان",
-        blank=True,
-        default="رزومه و اعتماد",
-        help_text=EYEBROW_HELP,
-    )
-    title = models.CharField(
-        max_length=200,
-        verbose_name="عنوان",
-        default="اعتمادِ آن‌ها، [[افتخارِ ما]]",
-        help_text=TITLE_HELP,
-    )
-    subtitle = models.CharField(
-        max_length=300, verbose_name="توضیح کوتاه", blank=True
-    )
-
-    class Meta:
-        verbose_name = "بخش مشتریان صفحه درباره ما"
-        verbose_name_plural = "بخش مشتریان صفحه درباره ما"
-
-    def __str__(self):
-        return "بخش مشتریان"
-
-    def save(self, *args, **kwargs):
-        if not self.pk and AboutClientsSection.objects.exists():
-            raise ValueError("فقط یک سکشن مجاز است")
-        super().save(*args, **kwargs)

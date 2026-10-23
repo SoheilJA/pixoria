@@ -23,7 +23,6 @@ from .models import (
     TechSection,
     TechSkill,
     TestimonialSection,
-    TrustedSection,
     WhyFeature,
     WhySection,
 )
@@ -64,17 +63,6 @@ def home(request):
         # ── بخش‌های جدید ──
         "about_section": HomeAboutSection.objects.first() if "about" in keys else None,
         "about_stats": HomeAboutStat.objects.filter(is_active=True) if "about" in keys else [],
-        "trusted_section": TrustedSection.objects.first() if "trusted" in keys else None,
-        # برندهای مارکوییِ «اعتماد» از نام مشتریِ نمونه‌کارها خوانده می‌شوند —
-        # هر نمونه‌کاری که در ادمین بارگذاری می‌شود، برندش اینجا ظاهر می‌شود.
-        "clients": (
-            Portfolio.objects.exclude(client_name="")
-            .order_by("order", "id")
-            .values_list("client_name", flat=True)
-            .distinct()
-            if "trusted" in keys
-            else []
-        ),
         "portfolio_section": FeaturedWorkSection.objects.first() if "portfolio" in keys else None,
         "portfolio_items": [],
         "blog_section": LatestArticlesSection.objects.first() if "blog" in keys else None,
