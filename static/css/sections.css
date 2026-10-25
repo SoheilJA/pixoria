@@ -304,10 +304,6 @@
   border-radius: 22px;
   background: linear-gradient(168deg, #fdfbf7 0%, #f3efe4 100%);
   box-shadow: 0 18px 38px -30px rgba(30, 27, 21, 0.5);
-  transition:
-    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
-    border-color 0.35s ease,
-    box-shadow 0.45s ease;
 }
 /* هالهٔ نرمِ بالای کارت */
 .why-card__body::before {
@@ -319,7 +315,9 @@
   background: radial-gradient(50% 100% at 50% 100%, rgba(201, 161, 90, 0.16), transparent 70%);
   pointer-events: none;
 }
-/* خطِ درزِ طلاییِ زیرِ سرِ کارت — در هاور بلند میشود */
+/* خطِ درزِ طلاییِ زیرِ سرِ کارت — تارِ محیطی: خودش نفس میکشد، بی‌آنکه
+   به موس واکنشی نشان بدهد. کشیده‌شدن و جمع‌شدنش پیوسته تکرار میشود و
+   کارتهای زوج با تأخیرِ منفی مخالف، ضدِ فازِ کارتهای فرد میشوند. */
 .why-card__body::after {
   content: "";
   position: absolute;
@@ -327,14 +325,16 @@
   inset-inline-end: 24px;
   top: 62px;
   height: 1px;
-  transform: scaleX(0.25);
   transform-origin: 100% 50%;
   background: linear-gradient(to left, rgba(143, 107, 44, 0.55), rgba(232, 196, 122, 0.75));
-  transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+  animation: whyStitch 7s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+  will-change: transform;
 }
-.why-card:hover .why-card__body::after,
-.why-card:focus-within .why-card__body::after {
-  transform: scaleX(1);
+.why-card:nth-child(2n) .why-card__body::after { animation-delay: -3.5s; }
+@keyframes whyStitch {
+  0%, 14%   { transform: scaleX(0.25); }
+  52%, 68%  { transform: scaleX(1); }
+  100%      { transform: scaleX(0.25); }
 }
 
 /* سرِ کارت: آیکن + شمارهٔ شبحواره */
@@ -351,7 +351,8 @@
   line-height: 1;
   letter-spacing: 0.05em;
   color: rgba(201, 161, 90, 0.3);
-  transition: color 0.35s ease;
+  animation: whyNumFloat 7s ease-in-out infinite alternate;
+  will-change: transform;
 }
 @supports ((-webkit-text-stroke: 1px #000)) {
   .why-card__num {
@@ -359,9 +360,10 @@
     -webkit-text-stroke: 1.2px rgba(201, 161, 90, 0.55);
   }
 }
-.why-card:hover .why-card__num,
-.why-card:focus-within .why-card__num {
-  -webkit-text-stroke-color: rgba(143, 107, 44, 0.9);
+.why-card:nth-child(2n) .why-card__num { animation-delay: -3.5s; }
+@keyframes whyNumFloat {
+  from { transform: translateY(2px); }
+  to   { transform: translateY(-3px); }
 }
 
 /* تِختهٔ فیگورِ زنده — @hairline */
@@ -380,15 +382,23 @@
   border-radius: 14px;
   background: #131318;
   box-shadow: inset 0 0 26px -14px rgba(0, 0, 0, 0.7);
-  transition: border-color 0.35s ease, box-shadow 0.35s ease, transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  animation: whyFigBreath 6s ease-in-out infinite;
+  will-change: box-shadow, border-color;
 }
-.why-card:hover .why-card__fig,
-.why-card:focus-within .why-card__fig {
-  border-color: rgba(201, 161, 90, 0.75);
-  box-shadow:
-    inset 0 0 30px -12px rgba(0, 0, 0, 0.7),
-    0 0 28px -12px rgba(201, 161, 90, 0.6);
-  will-change: transform;
+.why-card:nth-child(2n) .why-card__fig { animation-delay: -3s; }
+@keyframes whyFigBreath {
+  0%, 100% {
+    border-color: rgba(143, 107, 44, 0.32);
+    box-shadow:
+      inset 0 0 26px -14px rgba(0, 0, 0, 0.7),
+      0 0 0 -8px rgba(201, 161, 90, 0.0);
+  }
+  50% {
+    border-color: rgba(201, 161, 90, 0.7);
+    box-shadow:
+      inset 0 0 30px -12px rgba(0, 0, 0, 0.7),
+      0 0 30px -12px rgba(201, 161, 90, 0.55);
+  }
 }
 
 /* متنِ کارت */
@@ -408,20 +418,6 @@
 .why-card--wide .why-card__num { font-size: 3.2rem; }
 .why-card--wide .why-card__body {
   border-color: rgba(143, 107, 44, 0.4);
-}
-
-/* هاورِ کل کارت */
-.why-card:hover .why-card__body,
-.why-card:focus-within .why-card__body {
-  transform: translateY(-5px);
-  border-color: rgba(201, 161, 90, 0.8);
-  box-shadow:
-    0 24px 46px -28px rgba(30, 27, 21, 0.55),
-    0 0 34px -14px rgba(201, 161, 90, 0.55);
-}
-.why-card:hover .icon-ring,
-.why-card:focus-within .icon-ring {
-  box-shadow: 0 0 26px -7px rgba(201, 161, 90, 0.9);
 }
 
 /* ── نشانگرِ کشیدن (فقط موبایل) ── */
@@ -502,12 +498,9 @@
 
 /* ── کاهشِ حرکت ── */
 @media (prefers-reduced-motion: reduce) {
-  .why-card__body,
-  .why-card__fig,
+  .why-card__body::after { animation: none; transform: scaleX(0.25); }
   .why-card__num,
-  .why-card__body::after { transition: none; }
-  .why-card:hover .why-card__body,
-  .why-card:focus-within .why-card__body { transform: none; }
+  .why-card__fig { animation: none; }
   .why-swipe__hand { animation: none; }
 }
 
