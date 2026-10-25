@@ -43,15 +43,32 @@
         </p>
       {% endif %}
 
-      {% comment %} فینالِ صفحه — گاوصندوقِ خطیِ زندهٔ hairline؛ ترکیبش با پین‌شدن نشان دستِ کاربر می‌چرخد {% endcomment %}
-      <span
-        class="cta-fig mx-auto"
-        aria-hidden="true"
-        data-hl="vault"
-        data-hl-intensity="0.65"
+      {% comment %} فینالِ صفحه — گاوصندوقِ تماماً CSS؛ انیمیشنهایش همگی محیطی
+         و پیوستهاند (چرخش قفل، درخشش در، موج طلایی) و به موس واکنشی نشان نمیدهند {% endcomment %}
+      <div
+        class="vault-fig mx-auto"
         data-reveal="blur"
         data-delay="0.2"
-      ></span>
+        aria-hidden="true"
+      >
+        <span class="vault-fig__hinge vault-fig__hinge--t"></span>
+        <span class="vault-fig__hinge vault-fig__hinge--b"></span>
+        <span class="vault-fig__bolt vault-fig__bolt--1"></span>
+        <span class="vault-fig__bolt vault-fig__bolt--2"></span>
+        <span class="vault-fig__bolt vault-fig__bolt--3"></span>
+        <span class="vault-fig__bolt vault-fig__bolt--4"></span>
+        <div class="vault-fig__door">
+          <div class="vault-fig__rings" aria-hidden="true">
+            <span class="vault-fig__ring"></span>
+            <span class="vault-fig__ring vault-fig__ring--2"></span>
+          </div>
+          <div class="vault-fig__hub">
+            <span class="vault-fig__dial"></span>
+            <span class="vault-fig__core"></span>
+          </div>
+          <span class="vault-fig__sheen"></span>
+        </div>
+      </div>
 
       <div
         class="mx-auto mt-14 grid max-w-3xl gap-6 sm:grid-cols-2"

@@ -1313,34 +1313,178 @@ svg.lucide {
 }
 .tech-fig > svg { width: 100% !important; height: 100% !important; }
 
-/* «vault» در فینالِ CTA — تختهٔ تیره با هالهٔ طلایی؛ میزبانِ اشارهگرِ صفحه */
-.cta-fig {
-  --hairline-plate: #131318;
-  --hairline-hi: #e8c47a;
-  --hairline-edge: #5d512f;
-  --hairline-mid: #2e2e36;
-  --hairline-lo: #1d1d24;
+/* «vault» در فینالِ CTA — گاوصندوقِ تماماً CSS: درِ فلزیِ تیره با حلقههای
+   هممرکزِ دورِ قفل، قفلِ چرخانِ پرهگμπ، هلمهٔ میانی و نورِ موجی.
+   همهٔ حرکاتش محیطی و پیوستهاند و به هاورِ موس واکنشی ندارند. */
+.vault-fig {
+  position: relative;
   display: block;
   width: min(100%, 20.5rem);
   margin-block-start: 2.75rem;
   aspect-ratio: 5 / 4;
-  overflow: hidden;
-  border: 1px solid rgba(201, 161, 90, 0.28);
   border-radius: 22px;
   background: #131318;
+  border: 1px solid rgba(201, 161, 90, 0.28);
   box-shadow:
     0 34px 64px -38px rgba(0, 0, 0, 0.85),
-    0 0 44px -22px rgba(201, 161, 90, 0.4);
-  transition: box-shadow 0.4s ease, border-color 0.4s ease;
+    0 0 40px -24px rgba(201, 161, 90, 0.3);
+  animation: vaultBreath 7s ease-in-out infinite;
 }
-.cta-fig:hover,
-.cta-fig:focus-within {
-  border-color: rgba(232, 196, 122, 0.55);
+@keyframes vaultBreath {
+  0%, 100% {
+    border-color: rgba(201, 161, 90, 0.28);
+    box-shadow:
+      0 34px 64px -38px rgba(0, 0, 0, 0.85),
+      0 0 40px -24px rgba(201, 161, 90, 0.3);
+  }
+  50% {
+    border-color: rgba(232, 196, 122, 0.55);
+    box-shadow:
+      0 34px 64px -34px rgba(0, 0, 0, 0.85),
+      0 0 56px -18px rgba(201, 161, 90, 0.65);
+  }
+}
+/* درِ فلزیِ داخلِ قاب */
+.vault-fig__door {
+  position: absolute;
+  inset: 14px;
+  border-radius: 14px;
+  overflow: hidden;
+  background:
+    radial-gradient(120% 90% at 50% 0%, rgba(255, 255, 255, 0.05), transparent 55%),
+    linear-gradient(160deg, #23232b 0%, #191920 55%, #14141b 100%);
+  border: 1px solid rgba(201, 161, 90, 0.16);
   box-shadow:
-    0 34px 64px -34px rgba(0, 0, 0, 0.85),
-    0 0 60px -18px rgba(201, 161, 90, 0.65);
+    inset 0 0 40px -18px rgba(0, 0, 0, 0.9),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
-.cta-fig > svg { width: 100% !important; height: 100% !important; }
+/* دو حلقهٔ هممرکزِ دورِ قفل — یکی وارونه میچرخد */
+.vault-fig__rings {
+  position: absolute;
+  inset: 0;
+}
+.vault-fig__ring {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 62%;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  border: 1px dashed rgba(201, 161, 90, 0.35);
+  animation: vaultRingSpin 46s linear infinite reverse;
+}
+.vault-fig__ring--2 {
+  width: 82%;
+  border-style: solid;
+  border-color: rgba(201, 161, 90, 0.16);
+  animation: vaultRingSpin 68s linear infinite;
+}
+@keyframes vaultRingSpin {
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+/* قفلِ مرکزی — هلمهٔ تیره با حلقهٔ پرهگمبِ چرخان */
+.vault-fig__hub {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 36%;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(circle at 32% 30%, #2b2b34, #1a1a21 60%, #101015);
+  border: 1px solid rgba(201, 161, 90, 0.5);
+  box-shadow:
+    0 0 32px -10px rgba(201, 161, 90, 0.45),
+    inset 0 2px 6px rgba(255, 255, 255, 0.06);
+}
+.vault-fig__dial {
+  position: absolute;
+  inset: 12%;
+  border-radius: 50%;
+  background: conic-gradient(
+    transparent 0deg 13deg,
+    rgba(232, 196, 122, 0.9) 13deg 19deg,
+    transparent 19deg 87deg,
+    rgba(232, 196, 122, 0.55) 87deg 92deg,
+    transparent 92deg 177deg,
+    rgba(232, 196, 122, 0.9) 177deg 183deg,
+    transparent 183deg 267deg,
+    rgba(232, 196, 122, 0.55) 267deg 272deg,
+    transparent 272deg 360deg
+  );
+  -webkit-mask: radial-gradient(circle, transparent 32%, #000 34%);
+  mask: radial-gradient(circle, transparent 32%, #000 34%);
+  animation: vaultSpin 26s linear infinite;
+}
+@keyframes vaultSpin {
+  to { transform: rotate(360deg); }
+}
+/* هلمهٔ میانیِ طلایی — نبضِ نورِ آرام */
+.vault-fig__core {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 24%;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 32%, #e8c47a, #8f6b2c 72%);
+  box-shadow: 0 0 16px -6px rgba(232, 196, 122, 0.5);
+  animation: vaultCorePulse 7s ease-in-out infinite;
+}
+@keyframes vaultCorePulse {
+  0%, 100% { box-shadow: 0 0 12px -6px rgba(232, 196, 122, 0.4); }
+  50%      { box-shadow: 0 0 26px -6px rgba(232, 196, 122, 0.85); }
+}
+/* موجِ نورِ رونده رویِ در */
+.vault-fig__sheen {
+  position: absolute;
+  top: -30%;
+  bottom: -30%;
+  width: 34%;
+  inset-inline-start: -40%;
+  transform: skewX(-16deg);
+  background: linear-gradient(100deg, transparent, rgba(232, 196, 122, 0.12), transparent);
+  animation: vaultSheen 9s ease-in-out infinite;
+}
+@keyframes vaultSheen {
+  0%, 55%  { inset-inline-start: -40%; }
+  95%, 100% { inset-inline-start: 130%; }
+}
+/* مفصلها و پیچهای گوشه — جزئیاتِ ثابتِ گاوصندوق */
+.vault-fig__hinge {
+  position: absolute;
+  inset-inline-start: 22px;
+  width: 10px;
+  height: 26px;
+  border-radius: 4px;
+  background: linear-gradient(180deg, #6b6555, #3a362c);
+  border: 1px solid rgba(201, 161, 90, 0.35);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.55);
+}
+.vault-fig__hinge--t { top: 44px; }
+.vault-fig__hinge--b { bottom: 44px; }
+.vault-fig__bolt {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #e8c47a, #574622 78%);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
+}
+.vault-fig__bolt--1 { top: 14px; inset-inline-start: 14px; }
+.vault-fig__bolt--2 { top: 14px; inset-inline-end: 14px; }
+.vault-fig__bolt--3 { bottom: 14px; inset-inline-start: 14px; }
+.vault-fig__bolt--4 { bottom: 14px; inset-inline-end: 14px; }
+/* کاهشِ حرکت — قفل میایستد، ولی ظاهرش همان */
+@media (prefers-reduced-motion: reduce) {
+  .vault-fig,
+  .vault-fig__ring,
+  .vault-fig__dial,
+  .vault-fig__core,
+  .vault-fig__sheen { animation: none; }
+}
 
 /* وضعیتِ خرابی (بارگیری نشد) — فریم خالی نمیماند، بافتِ مداریِ بی‌جان و ریزمتنِ برند */
 .hl-broken::before {
@@ -1351,7 +1495,6 @@ svg.lucide {
   border: 1px dashed rgba(201, 161, 90, 0.3);
   background: repeating-linear-gradient(45deg, rgba(201, 161, 90, 0.05) 0 8px, transparent 8px 16px);
 }
-.cta-fig { position: relative; }
 .why-fig { position: relative; }
 .tech-fig { position: relative; }
 
