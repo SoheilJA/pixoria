@@ -3564,11 +3564,6 @@ html.lenis, html.lenis body {
   box-shadow: 0 8px 22px -16px rgba(120, 95, 40, 0.5);
   transition: color 0.3s, border-color 0.3s, box-shadow 0.3s;
 }
-.tech-chip:hover {
-  color: #8f6b2c;
-  border-color: rgba(201, 161, 90, 0.55);
-  box-shadow: 0 12px 26px -14px rgba(201, 161, 90, 0.55);
-}
 .marquee-slow .marquee-track {
   animation-duration: 62s;
 }

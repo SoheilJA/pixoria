@@ -1288,6 +1288,12 @@ svg.lucide {
   .tech-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 21rem); }
 }
 
+/* نوارِ مارکوی مهارتها در صفحهٔ اصلی هنگام هاورِ موس نمیایستد —
+   (قاعدهٔ توقفِ هاور فقط برای صفحهٔ جزئیات خدمات میماند) */
+#tech .marquee:hover .marquee-track {
+  animation-play-state: running;
+}
+
 /* پنلِ «plot» در سکشن مهارتها — بسترِ روشن، خطهای مِرکب با لبهٔ طلایی */
 .tech-fig {
   --hairline-plate: transparent;
