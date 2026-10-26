@@ -74,8 +74,6 @@ def home(request):
         "why_features": WhyFeature.objects.filter(is_active=True) if "why" in keys else [],
         "tech_section": TechSection.objects.first() if "tech" in keys else None,
         "tech_skills": TechSkill.objects.filter(is_active=True) if "tech" in keys else [],
-        "tech_row1": [],
-        "tech_row2": [],
         "faq_section": FaqSection.objects.first() if "faq" in keys else None,
         "faq_items": FaqItem.objects.filter(is_active=True) if "faq" in keys else [],
     }
@@ -129,13 +127,6 @@ def home(request):
         context["portfolio_categories"] = list(
             Category.objects.filter(portfolio__featured=True).distinct().order_by("order", "id")
         )
-
-    # ─ـ مهارت‌ها در دو ردیفِ مارکویی تقسیم می‌شوند ──
-    if "tech" in keys:
-        skills = list(context["tech_skills"])
-        midpoint = (len(skills) + 1) // 2
-        context["tech_row1"] = skills[:midpoint]
-        context["tech_row2"] = skills[midpoint:]
 
     # ── دادهٔ ساختاریافتهٔ FAQ برای موتورهای جستجو (schema.org/FAQPage) ──
     if "faq" in keys:

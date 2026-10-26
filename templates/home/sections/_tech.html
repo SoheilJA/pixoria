@@ -1,7 +1,6 @@
 {% load icon_tags highlight_tags fa_digits %}
-{% comment %} ابزارها و فناوری‌ها v2 — دو نوار متحرک از چیپ‌ها {% endcomment %}
+{% comment %} ابزارها و فناوری‌ها — فهرست ثابت مهارت‌ها و تصویرسازی CSS {% endcomment %}
 {% comment %} داده‌ها: tech_section (TechSection)، tech_skills (TechSkill[]) {% endcomment %}
-{% comment %} pixoria.js محتوای هر marquee-group را دو برابر می‌کند تا حلقهٔ پیوسته بسازد {% endcomment %}
 {% if tech_section and tech_skills %}
   <section id="tech" class="relative overflow-hidden bg-cream2">
     <div class="grid-bg pointer-events-none absolute inset-0 opacity-50" aria-hidden="true"></div>
@@ -26,48 +25,26 @@
         {% endif %}
       </div>
 
-      {% comment %}نوارهای متحرک نامحدود — مهارت‌ها در دو ردیف تقسیم می‌شوند.
-         dir="ltr" مثلِ بقیهٔ مارکویی‌هاست؛ بدون آن، در صفحهٔ RTL ترتیب
-         چیدمان چیپ‌ها برعکس می‌شود و انیمیشن از لبهٔ اشتباه شروع می‌کند.{% endcomment %}
-      {% comment %} گریدِ دوستونه — کلاسِ دستسازِ tech-grid در sections.css (tailwind بیلدشدنی نیست) {% endcomment %}
+      {% comment %} گریدِ دوستونه — کلاسِ دست‌سازِ tech-grid در sections.css {% endcomment %}
       <div class="relative mt-14 tech-grid" data-reveal="clip" data-delay="0.14">
-        <div class="min-w-0 space-y-5">
-        {% comment %} ردیف اول — راست‌به‌چپ {% endcomment %}
-        <div class="marquee relative overflow-hidden" dir="ltr">
-          <div class="marquee-track">
-            <div class="marquee-group">
-              {% for skill in tech_row1 %}
-                <span class="tech-chip">
-                  {% if skill.icon %}{% icon skill.icon class="h-4 w-4" %}{% endif %}
-                  {{ skill.name }}
-                </span>
-              {% endfor %}
-            </div>
-          </div>
+        <ul class="tech-skills" role="list">
+          {% for skill in tech_skills %}
+            <li class="tech-chip">
+              {% if skill.icon %}{% icon skill.icon class="h-4 w-4" %}{% endif %}
+              <span>{{ skill.name }}</span>
+            </li>
+          {% endfor %}
+        </ul>
+        <div class="tech-art" aria-hidden="true">
+          <span class="tech-art__orbit"></span>
+          <span class="tech-art__core"></span>
+          <span class="tech-art__node tech-art__node--one"></span>
+          <span class="tech-art__node tech-art__node--two"></span>
+          <span class="tech-art__node tech-art__node--three"></span>
+          <span class="tech-art__bar tech-art__bar--one"></span>
+          <span class="tech-art__bar tech-art__bar--two"></span>
+          <span class="tech-art__bar tech-art__bar--three"></span>
         </div>
-        {% comment %} ردیف دوم — معکوس {% endcomment %}
-        {% if tech_row2 %}
-          <div class="marquee relative overflow-hidden" dir="ltr">
-            <div class="marquee-track marquee-rev">
-              <div class="marquee-group">
-                {% for skill in tech_row2 %}
-                  <span class="tech-chip">
-                    {% if skill.icon %}{% icon skill.icon class="h-4 w-4" %}{% endif %}
-                    {{ skill.name }}
-                  </span>
-                {% endfor %}
-              </div>
-            </div>
-          </div>
-        {% endif %}
-        </div>
-        {% comment %} نمودارِ مهارت‌ها — پنلِ plot از فیگورهای زندهٔ hairline {% endcomment %}
-        <span
-          class="tech-fig"
-          aria-hidden="true"
-          data-hl="plot"
-          data-hl-intensity="0.7"
-        ></span>
       </div>
     </div>
   </section>

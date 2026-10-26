@@ -168,7 +168,3 @@ class Command(BaseCommand):
         self.stdout.write(
             "بخش مشتریان: " + ("ساخته شد" if created else "از قبل موجود — دست‌نخورده")
         )
-        self.stdout.write(
-            "نکته: نام برندها از همین جدول «برندهای همکار» صفحه اصلی خوانده می‌شوند "
-            "(home.ClientMarqueeItem)؛ ویرایش آن‌ها در بخش صفحه اصلی."
-        )

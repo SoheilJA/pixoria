@@ -18,13 +18,11 @@ from apps.home.models import (
     HeroSection,
     FeaturedWorkSection,
     ServicesSection,
-    ClientMarqueeItem,
     CTASection,
     LatestArticlesSection,
     HomeSection,
     HomeAboutSection,
     HomeAboutStat,
-    TrustedSection,
     TestimonialSection,
     StatsSection,
     StatItem,
@@ -45,7 +43,6 @@ RENDERED_SECTIONS = {
     "hero",
     "about",
     "services",
-    "trusted",
     "portfolio",
     "why",
     "process",
@@ -61,7 +58,6 @@ SECTION_ORDER = {
     "hero": 0,
     "about": 10,
     "services": 20,
-    "trusted": 30,
     "portfolio": 40,
     "why": 50,
     "process": 60,
@@ -76,7 +72,6 @@ SECTION_TITLES = {
     "hero": "هیرو",
     "about": "درباره ما",
     "services": "خدمات",
-    "trusted": "برندهای همکار",
     "portfolio": "نمونه‌کارها",
     "why": "چرا پیکسوریا",
     "process": "فرآیند کار",
@@ -186,18 +181,6 @@ class Command(BaseCommand):
             self.stdout.write(f"  + {added} شمارندهٔ درباره ما")
 
         _, c = first_or_create(
-            TrustedSection,
-            eyebrow="رزومه و اعتماد",
-            title="برندهایی که به ما اعتماد کردند",
-            description=(
-                "همکاری با بانک‌ها، شرکت‌های صنعتی و کنگره‌های ملی؛ اعتبارِ ما، "
-                "امضای آن‌هاست."
-            ),
-            footer_label="TRUSTED PARTNERS · SINCE 2010",
-        )
-        self.log("برندهای همکار", c)
-
-        _, c = first_or_create(
             TestimonialSection,
             eyebrow="نظرات مشتریان",
             title="آنچه مشتریان [[می‌گویند]]",
@@ -242,31 +225,6 @@ class Command(BaseCommand):
             description="",
         )
         self.log("آخرین مقالات", c)
-
-        clients = [
-            ("رفاه", "بانک رفاه", "gold"),
-            ("پپسی", "پپسی خراسان", "royal"),
-            ("تجارت", "بانک تجارت", "gold"),
-            ("هواآوی", "شرکت هواآوی", "royal"),
-            ("شهر", "بانک شهر", "gold"),
-            ("توس", "شرکت توس / مبنا", "royal"),
-            ("کنگره", "کنگرهٔ ملی ساخت بیمارستان", "gold"),
-        ]
-        added = 0
-        for i, (mark, name, accent) in enumerate(clients):
-            if not ClientMarqueeItem.objects.filter(name=name).exists():
-                ClientMarqueeItem.objects.create(
-                    mark=mark, name=name, accent=accent, order=i * 10
-                )
-                added += 1
-        # برندهای v1 که در طرح جدید نیستند از مارکویی حذف می‌شوند.
-        names = {name for _, name, _ in clients}
-        stale = ClientMarqueeItem.objects.exclude(name__in=names)
-        removed = stale.delete()[0]
-        if added:
-            self.stdout.write(f"  + {added} برند همکار")
-        if removed:
-            self.stdout.write(f"  - {removed} برند قدیمی حذف شد")
 
     # ── Stats / counters ──
     def seed_stats(self):

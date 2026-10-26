@@ -1,7 +1,7 @@
 {% load icon_tags highlight_tags fa_digits %}
 {% comment %} چرا پیکسوریا v4 — «آلبومِ استودیو» (موبایلفرست) {% endcomment %}
 {% comment %} موبایل: ریلِ اسنپِ افقی با لبهٔ محو و نشانگرِ کشیدن؛ ≥sm گریدِ ۲ستونه؛ ≥lg بنتوی ۴ستونه با دو کارتِ پهن {% endcomment %}
-{% comment %} دادهها: why_section (WhySection) + why_features (WhyFeature[])؛ فیگورهای خطیِ زندهٔ @hairline سرجایشان هستند {% endcomment %}
+{% comment %} داده‌ها: why_section (WhySection) + why_features (WhyFeature[]) {% endcomment %}
 {% if why_section and why_features %}
   <section id="why" class="relative overflow-hidden bg-cream" style="clip-path: polygon(0 0, 100% 5.5%, 100% 100%, 0 100%)">
     <div class="grid-bg pointer-events-none absolute inset-0 opacity-60" aria-hidden="true"></div>
@@ -40,12 +40,10 @@
                   <span class="icon-ring">{% icon feature.icon class="h-5 w-5" %}</span>
                   <span class="why-card__num" aria-hidden="true">{{ forloop.counter|stringformat:"02d"|fa_digits }}</span>
                 </div>
-                {% comment %} فیگورِ خطیِ زندهٔ این ماژول (@hairline) روی تِختهٔ تیره {% endcomment %}
                 <span
                   class="why-card__fig"
+                  data-figure="{% cycle 'terminal' 'keyboard' 'plot' 'hub' 'turntable' 'vault' %}"
                   aria-hidden="true"
-                  data-hl="{% cycle 'terminal' 'keyboard' 'plot' 'hub' 'turntable' 'vault' %}"
-                  data-hl-intensity="0.55"
                 ></span>
                 <h3 class="why-card__title">{{ feature.title }}</h3>
                 <p class="why-card__text">{{ feature.description }}</p>

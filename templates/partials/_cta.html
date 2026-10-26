@@ -1,5 +1,5 @@
 {% load icon_tags highlight_tags fa_digits %}
-{% comment %}سکشن کال‌تو‌اکشنِ پیش از فوتر — محتوا از CTASection (تک‌سکشن) می‌آید.
+{% comment %}سکشن کال‌تو‌اکشنِ پیش از فوتر — محتوا از CTASection می‌آید.
 دکمهٔ اصلی به صفحهٔ تماس و دکمهٔ دوم به تماس تلفنی لینک می‌شود.{% endcomment %}
 {% if cta %}
   <section id="cta" class="relative overflow-hidden bg-ink2">
@@ -43,14 +43,8 @@
         </p>
       {% endif %}
 
-      {% comment %} فینالِ صفحه — گاوصندوقِ تماماً CSS؛ انیمیشنهایش همگی محیطی
-         و پیوستهاند (چرخش قفل، درخشش در، موج طلایی) و به موس واکنشی نشان نمیدهند {% endcomment %}
-      <div
-        class="vault-fig mx-auto"
-        data-reveal="blur"
-        data-delay="0.2"
-        aria-hidden="true"
-      >
+      {% comment %} تصویرسازی ثابت گاوصندوق با CSS؛ بدون کتابخانه یا انیمیشن {% endcomment %}
+      <div class="vault-fig mx-auto" aria-hidden="true">
         <span class="vault-fig__hinge vault-fig__hinge--t"></span>
         <span class="vault-fig__hinge vault-fig__hinge--b"></span>
         <span class="vault-fig__bolt vault-fig__bolt--1"></span>
