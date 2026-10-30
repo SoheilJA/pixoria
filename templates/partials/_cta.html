@@ -43,43 +43,52 @@
         </p>
       {% endif %}
 
-      {% comment %} تصویرسازی ثابت گاوصندوق با CSS؛ بدون کتابخانه یا انیمیشن {% endcomment %}
-      <div class="vault-fig mx-auto" aria-hidden="true">
-        <span class="vault-fig__hinge vault-fig__hinge--t"></span>
-        <span class="vault-fig__hinge vault-fig__hinge--b"></span>
-        <span class="vault-fig__bolt vault-fig__bolt--1"></span>
-        <span class="vault-fig__bolt vault-fig__bolt--2"></span>
-        <span class="vault-fig__bolt vault-fig__bolt--3"></span>
-        <span class="vault-fig__bolt vault-fig__bolt--4"></span>
-        <div class="vault-fig__door">
-          <div class="vault-fig__rings" aria-hidden="true">
-            <span class="vault-fig__ring"></span>
-            <span class="vault-fig__ring vault-fig__ring--2"></span>
-          </div>
-          <div class="vault-fig__hub">
-            <span class="vault-fig__dial"></span>
-            <span class="vault-fig__core"></span>
-          </div>
-          <span class="vault-fig__sheen"></span>
-        </div>
-      </div>
-
+      {% comment %} ترمینال ASCII-art — آینده‌ی تو یک کد دارد {% endcomment %}
       <div
-        class="mx-auto mt-14 grid max-w-3xl gap-6 sm:grid-cols-2"
+        class="terminal-terminal"
         data-reveal="pop"
-        data-delay="0.22"
+        data-delay="0.2"
       >
-        <a href="{% url 'contact:contact' %}" class="pill-primary group" data-magnetic>
-          {% icon "message-circle" class="h-6 w-6" %}
-          <span class="text-xl font-bold">مشاوره رایگان</span>
-          {% icon "arrow-left" class="h-5 w-5 transition-transform group-hover:-translate-x-1.5" %}
-        </a>
-        {% if cta.phone %}
-          <a href="tel:{{ cta.phone }}" class="pill-outline" data-magnetic>
-            {% icon "phone" class="h-6 w-6 text-gold-light" %}
-            <span class="fa-num text-xl font-bold">{{ cta.phone|fa_digits }}</span>
+        <p class="terminal-terminal__title" data-reveal="rise" data-delay="0.24">
+          آینده‌ی تو یک کد دارد
+        </p>
+
+        <pre class="terminal-terminal__ascii"
+             data-reveal="rise"
+             data-delay="0.32"><span class="prompt">user@pixoria:~$</span> <span class="typed-line done">./launch --brand</span>
+<span class="prompt">user@pixoria:~$</span> <span class="typed-line done">./launch --strategy</span>
+<span class="glow typed-line done">design system ready</span>
+<span class="glow typed-line done">marketing flow ready</span>
+<span class="done typed-line">✓ محصول شما آمادهٔ رشد است</span>
+<span class="done typed-line">✓ فقط یک پیام برای شروع کافی است</span></pre>
+
+        <p class="terminal-terminal__desc" data-reveal="rise" data-delay="0.4">
+          از یک گفت‌وگوی ساده شروع می‌شود؛ <span class="dot done"></span> مشاورهٔ رایگان،
+          <span class="dot done"></span> بدون تعهد، <span class="dot"></span> پاسخ زیر ۴۸ ساعت.
+        </p>
+
+        <div class="terminal-terminal__footer">
+          <span class="dot done"></span>
+          <span>پیکسوریا — آمادهٔ همکاری</span>
+        </div>
+
+        <div
+          class="terminal-terminal__buttons"
+          data-reveal="pop"
+          data-delay="0.34"
+        >
+          <a href="{% url 'contact:contact' %}" class="terminal-terminal__btn terminal-terminal__btn--primary" data-magnetic>
+            {% icon "message-circle" class="h-5 w-5" %}
+            <span>مشاوره رایگان</span>
+            {% icon "arrow-left" class="h-4 w-4 transition-transform group-hover:-translate-x-1.5" %}
           </a>
-        {% endif %}
+          {% if cta.phone %}
+            <a href="tel:{{ cta.phone }}" class="terminal-terminal__btn terminal-terminal__btn--outline" data-magnetic>
+              {% icon "phone" class="h-5 w-5 text-gold-light" %}
+              <span class="fa-num">{{ cta.phone|fa_digits }}</span>
+            </a>
+          {% endif %}
+        </div>
       </div>
 
       {% if settings.phone_secondary %}

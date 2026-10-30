@@ -3,7 +3,7 @@
 {% comment %} موبایل: ریلِ اسنپِ افقی با لبهٔ محو و نشانگرِ کشیدن؛ ≥sm گریدِ ۲ستونه؛ ≥lg بنتوی ۴ستونه با دو کارتِ پهن {% endcomment %}
 {% comment %} داده‌ها: why_section (WhySection) + why_features (WhyFeature[]) {% endcomment %}
 {% if why_section and why_features %}
-  <section id="why" class="relative overflow-hidden bg-cream" style="clip-path: polygon(0 0, 100% 5.5%, 100% 100%, 0 100%)">
+  <section id="why" class="why-pixoria-section relative overflow-hidden bg-cream">
     <div class="grid-bg pointer-events-none absolute inset-0 opacity-60" aria-hidden="true"></div>
     <div class="aurora-blob pointer-events-none absolute -top-20 right-[10%] h-96 w-96 rounded-full opacity-50"
          style="background: radial-gradient(circle, rgba(201, 161, 90, 0.22), transparent 65%)" aria-hidden="true"></div>
@@ -28,31 +28,74 @@
         {% endif %}
       </header>
 
-      {% comment %} ═══ آلبومِ استودیو — ریل/گریدِ کارتها ═══ {% endcomment %}
-      <div class="why-zone mt-12 md:mt-16" data-reveal="up" data-delay="0.1">
-        <ol class="why-rail" role="list">
-          {% for feature in why_features %}
-            <li class="why-card{% if forloop.first or forloop.last %} why-card--wide{% endif %}"
-                data-reveal="up"
-                data-delay="{% cycle '0' '0.08' '0.16' '0.24' '0.32' '0.4' %}">
-              <article class="why-card__body">
-                <div class="why-card__top">
-                  <span class="icon-ring">{% icon feature.icon class="h-5 w-5" %}</span>
-                  <span class="why-card__num" aria-hidden="true">{{ forloop.counter|stringformat:"02d"|fa_digits }}</span>
-                </div>
-                <span
-                  class="why-card__fig"
-                  data-figure="{% cycle 'terminal' 'keyboard' 'plot' 'hub' 'turntable' 'vault' %}"
-                  aria-hidden="true"
-                ></span>
-                <h3 class="why-card__title">{{ feature.title }}</h3>
-                <p class="why-card__text">{{ feature.description }}</p>
-              </article>
-            </li>
-          {% endfor %}
-        </ol>
-        {% comment %} نشانگرِ کشیدن — فقط موبایل {% endcomment %}
-        <p class="why-swipe" aria-hidden="true"><i class="why-swipe__hand"></i>برای دیدنِ بقیه بکشید</p>
+      <div class="why-grid mt-12 md:mt-16" data-reveal="up" data-delay="0.1">
+        {% for feature in why_features %}
+          <div class="why-item" data-reason="{{ forloop.counter }}"
+               data-reveal="up"
+               data-delay="{% cycle '0' '0.08' '0.16' '0.24' '0.32' '0.4' %}">
+            <div class="why-ascii-art" aria-hidden="true">
+              <pre class="ascii-text">
+{% if forloop.counter == 1 %}╔════════════════════════════════════════╗
+║                                        ║
+║   ██████╗ ███████╗ ██████╗ ███████╗    ║
+║   ██╔══██╗██╔════╝██╔═══██╗██╔════╝    ║
+║   ██████╔╝█████╗  ██║   ██║█████╗      ║
+║   ██╔══██╗██╔══╝  ██║   ██║██╔══╝      ║
+║   ██║  ██║███████╗╚██████╔╝███████╗    ║
+║   ╚═╝  ╚═╝╚══════╝ ╚═════╝ ╚══════╝    ║
+║                                        ║
+╚════════════════════════════════════════╝{% elif forloop.counter == 2 %}╔════════════════════════════════════════╗
+║                                        ║
+║   ███████╗ ██████╗ ██████╗ ███████╗    ║
+║   ██╔════╝██╔═══██╗██╔══██╗██╔════╝    ║
+║   ███████╗██║   ██║██████╔╝█████╗      ║
+║   ╚════██║██║   ██║██╔══██╗██╔══╝      ║
+║   ███████║╚██████╔╝██║  ██║███████╗    ║
+║   ╚══════╝ ╚═════╝ ╚═╝  ╚═╝╚══════╝    ║
+║                                        ║
+╚════════════════════════════════════════╝{% elif forloop.counter == 3 %}╔════════════════════════════════════════╗
+║                                        ║
+║   ██╗     ██╗ ██████╗ ██████╗ ██████╗  ║
+║   ██║     ██║██╔═══██╗██╔══██╗██╔══██╗  ║
+║   ██║     ██║██║   ██║██████╔╝██████╔╝  ║
+║   ██║     ██║██║   ██║██╔══██╗██╔══██╗  ║
+║   ███████╗██║╚██████╔╝██║  ██║██║  ██║  ║
+║   ╚══════╝╚═╝ ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝  ║
+║                                        ║
+╚════════════════════════════════════════╝{% elif forloop.counter == 4 %}╔════════════════════════════════════════╗
+║                                        ║
+║   ███████╗██╗   ██╗██╗██████╗        ║
+║   ██╔════╝╚██╗ ██╔╝██║██╔══██╗        ║
+║   ███████╗ ╚████╔╝ ██║██║  ██║        ║
+║   ╚════██║  ╚██╔╝  ██║██║  ██║        ║
+║   ███████║   ██║   ██║██████╔╝        ║
+║   ╚══════╝   ╚═╝   ╚═╝╚═════╝         ║
+║                                        ║
+╚════════════════════════════════════════╝{% elif forloop.counter == 5 %}╔════════════════════════════════════════╗
+║                                        ║
+║   ██╗   ██╗██╗███╗   ███╗███████╗    ║
+║   ██║   ██║██║████╗ ████║██╔════╝    ║
+║   ███████║██║██╔████╔██║█████╗      ║
+║   ██╔══██║██║██║╚██╔╝██║██╔══╝      ║
+║   ██║  ██║██║██║ ╚═╝ ██║███████╗    ║
+║   ╚═╝  ╚═╝╚═╝╚═╝     ╚═╝╚══════╝    ║
+║                                        ║
+╚════════════════════════════════════════╝{% else %}╔════════════════════════════════════════╗
+║                                        ║
+║   ██████╗ ██████╗ ███████╗████████╗   ║
+║   ██╔══██╗██╔══██╗██╔════╝╚══██╔══╝   ║
+║   ██║  ██║██████╔╝█████╗     ██║     ║
+║   ██║  ██║██╔══██╗██╔══╝     ██║     ║
+║   ██████╔╝██║  ██║███████╗   ██║     ║
+║   ╚═════╝ ╚═╝  ╚═╝╚══════╝   ╚═╝     ║
+║                                        ║
+╚════════════════════════════════════════╝{% endif %}
+              </pre>
+            </div>
+            <h3>{{ feature.title }}</h3>
+            <p>{{ feature.description }}</p>
+          </div>
+        {% endfor %}
       </div>
     </div>
   </section>
