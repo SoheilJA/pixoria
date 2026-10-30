@@ -1,100 +1,83 @@
 {% load icon_tags highlight_tags fa_digits %}
-{% comment %} چرا پیکسوریا v4 — «آلبومِ استودیو» (موبایلفرست) {% endcomment %}
-{% comment %} موبایل: ریلِ اسنپِ افقی با لبهٔ محو و نشانگرِ کشیدن؛ ≥sm گریدِ ۲ستونه؛ ≥lg بنتوی ۴ستونه با دو کارتِ پهن {% endcomment %}
-{% comment %} داده‌ها: why_section (WhySection) + why_features (WhyFeature[]) {% endcomment %}
+{% comment %} دلایل انتخاب پیکسوریا با تصویرسازی‌های برداری و رنگ‌های پرکنتراست {% endcomment %}
 {% if why_section and why_features %}
-  <section id="why" class="why-pixoria-section relative overflow-hidden bg-cream">
-    <div class="grid-bg pointer-events-none absolute inset-0 opacity-60" aria-hidden="true"></div>
-    <div class="aurora-blob pointer-events-none absolute -top-20 right-[10%] h-96 w-96 rounded-full opacity-50"
-         style="background: radial-gradient(circle, rgba(201, 161, 90, 0.22), transparent 65%)" aria-hidden="true"></div>
-    <div class="aurora-blob pointer-events-none absolute bottom-0 left-[6%] h-80 w-80 rounded-full opacity-40"
-         style="background: radial-gradient(circle, rgba(46, 99, 255, 0.18), transparent 70%)" aria-hidden="true"></div>
-
-    <div class="relative z-10 mx-auto max-w-7xl px-5 pb-24 pt-28 md:px-6 md:pb-32 md:pt-36">
-      <header class="text-center">
+  <section id="why" class="why-pixoria-section">
+    <div class="why-pixoria-section__inner">
+      <header class="why-reasons__header">
         {% if why_section.eyebrow %}
-          <p class="eyebrow eyebrow-dark eyebrow-c justify-center" data-reveal="up">{{ why_section.eyebrow }}</p>
+          <p class="why-reasons__eyebrow" data-reveal="up">{{ why_section.eyebrow }}</p>
         {% endif %}
         {% if why_section.title %}
-          <h2 class="mt-5 text-4xl font-extrabold leading-[1.3] text-paper md:text-[2.7rem]"
-              data-reveal="mask" data-delay="0.08">
+          <h2 class="why-reasons__title" data-reveal="mask" data-delay="0.08">
             {{ why_section.title|highlight:"dark" }}
           </h2>
         {% endif %}
         {% if why_section.description %}
-          <p class="mx-auto mt-4 max-w-xl font-light leading-8 text-coy" data-reveal="up" data-delay="0.14">
+          <p class="why-reasons__description" data-reveal="up" data-delay="0.14">
             {{ why_section.description }}
           </p>
         {% endif %}
       </header>
 
-      <div class="why-grid mt-12 md:mt-16" data-reveal="up" data-delay="0.1">
+      <div class="why-reasons">
         {% for feature in why_features %}
-          <div class="why-item" data-reason="{{ forloop.counter }}"
-               data-reveal="up"
-               data-delay="{% cycle '0' '0.08' '0.16' '0.24' '0.32' '0.4' %}">
-            <div class="why-ascii-art" aria-hidden="true">
-              <pre class="ascii-text">
-{% if forloop.counter == 1 %}╔════════════════════════════════════════╗
-║                                        ║
-║   ██████╗ ███████╗ ██████╗ ███████╗    ║
-║   ██╔══██╗██╔════╝██╔═══██╗██╔════╝    ║
-║   ██████╔╝█████╗  ██║   ██║█████╗      ║
-║   ██╔══██╗██╔══╝  ██║   ██║██╔══╝      ║
-║   ██║  ██║███████╗╚██████╔╝███████╗    ║
-║   ╚═╝  ╚═╝╚══════╝ ╚═════╝ ╚══════╝    ║
-║                                        ║
-╚════════════════════════════════════════╝{% elif forloop.counter == 2 %}╔════════════════════════════════════════╗
-║                                        ║
-║   ███████╗ ██████╗ ██████╗ ███████╗    ║
-║   ██╔════╝██╔═══██╗██╔══██╗██╔════╝    ║
-║   ███████╗██║   ██║██████╔╝█████╗      ║
-║   ╚════██║██║   ██║██╔══██╗██╔══╝      ║
-║   ███████║╚██████╔╝██║  ██║███████╗    ║
-║   ╚══════╝ ╚═════╝ ╚═╝  ╚═╝╚══════╝    ║
-║                                        ║
-╚════════════════════════════════════════╝{% elif forloop.counter == 3 %}╔════════════════════════════════════════╗
-║                                        ║
-║   ██╗     ██╗ ██████╗ ██████╗ ██████╗  ║
-║   ██║     ██║██╔═══██╗██╔══██╗██╔══██╗  ║
-║   ██║     ██║██║   ██║██████╔╝██████╔╝  ║
-║   ██║     ██║██║   ██║██╔══██╗██╔══██╗  ║
-║   ███████╗██║╚██████╔╝██║  ██║██║  ██║  ║
-║   ╚══════╝╚═╝ ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝  ║
-║                                        ║
-╚════════════════════════════════════════╝{% elif forloop.counter == 4 %}╔════════════════════════════════════════╗
-║                                        ║
-║   ███████╗██╗   ██╗██╗██████╗        ║
-║   ██╔════╝╚██╗ ██╔╝██║██╔══██╗        ║
-║   ███████╗ ╚████╔╝ ██║██║  ██║        ║
-║   ╚════██║  ╚██╔╝  ██║██║  ██║        ║
-║   ███████║   ██║   ██║██████╔╝        ║
-║   ╚══════╝   ╚═╝   ╚═╝╚═════╝         ║
-║                                        ║
-╚════════════════════════════════════════╝{% elif forloop.counter == 5 %}╔════════════════════════════════════════╗
-║                                        ║
-║   ██╗   ██╗██╗███╗   ███╗███████╗    ║
-║   ██║   ██║██║████╗ ████║██╔════╝    ║
-║   ███████║██║██╔████╔██║█████╗      ║
-║   ██╔══██║██║██║╚██╔╝██║██╔══╝      ║
-║   ██║  ██║██║██║ ╚═╝ ██║███████╗    ║
-║   ╚═╝  ╚═╝╚═╝╚═╝     ╚═╝╚══════╝    ║
-║                                        ║
-╚════════════════════════════════════════╝{% else %}╔════════════════════════════════════════╗
-║                                        ║
-║   ██████╗ ██████╗ ███████╗████████╗   ║
-║   ██╔══██╗██╔══██╗██╔════╝╚══██╔══╝   ║
-║   ██║  ██║██████╔╝█████╗     ██║     ║
-║   ██║  ██║██╔══██╗██╔══╝     ██║     ║
-║   ██████╔╝██║  ██║███████╗   ██║     ║
-║   ╚═════╝ ╚═╝  ╚═╝╚══════╝   ╚═╝     ║
-║                                        ║
-╚════════════════════════════════════════╝{% endif %}
-              </pre>
+          <article class="why-reason" data-reveal="up"
+                   data-delay="{% cycle '0' '0.08' '0.16' '0.24' '0.32' '0.4' %}">
+            <div class="why-reason__top">
+              <span class="why-reason__index" aria-hidden="true">{{ forloop.counter|stringformat:"02d"|fa_digits }}</span>
+              <span class="why-reason__icon">{% icon feature.icon class="h-5 w-5" %}</span>
             </div>
-            <h3>{{ feature.title }}</h3>
-            <p>{{ feature.description }}</p>
-          </div>
+            <figure class="why-illustration" aria-hidden="true">
+              <svg viewBox="0 0 320 190" class="why-illustration__svg">
+                {% if forloop.counter == 1 %}
+                  <circle class="why-art__orbit" cx="160" cy="94" r="63" />
+                  <circle class="why-art__orbit why-art__orbit--inner" cx="160" cy="94" r="47" />
+                  <path class="why-art__medal" d="M139 60h42l10 34-31 31-31-31z" />
+                  <path class="why-art__line" d="m148 94 9 9 18-21" />
+                  <path class="why-art__line why-art__line--soft" d="m115 48 5 10 11 2-8 8 2 11-10-5-10 5 2-11-8-8 11-2zM205 112l4 8 9 1-7 6 2 9-8-4-8 4 2-9-7-6 9-1z" />
+                {% elif forloop.counter == 2 %}
+                  <path class="why-art__line why-art__line--soft" d="M94 132 151 76l50 39 28-54" />
+                  <path class="why-art__line" d="m216 61 13 0-1 13" />
+                  <path class="why-art__node" d="M94 119a13 13 0 1 0 0 26 13 13 0 0 0 0-26M151 63a13 13 0 1 0 0 26 13 13 0 0 0 0-26M201 102a13 13 0 1 0 0 26 13 13 0 0 0 0-26M229 48a13 13 0 1 0 0 26 13 13 0 0 0 0-26" />
+                  <path class="why-art__diamond" d="m160 41 16 17-16 17-16-17z" />
+                {% elif forloop.counter == 3 %}
+                  <rect class="why-art__panel" x="83" y="43" width="154" height="106" rx="14" />
+                  <path class="why-art__line why-art__line--soft" d="M83 71h154M107 35v17M213 35v17" />
+                  <path class="why-art__line" d="m111 105 13 13 27-29" />
+                  <path class="why-art__line why-art__line--soft" d="M166 99h44M166 119h30" />
+                  <circle class="why-art__node" cx="112" cy="132" r="4" />
+                  <circle class="why-art__node" cx="137" cy="132" r="4" />
+                  <circle class="why-art__node why-art__node--muted" cx="162" cy="132" r="4" />
+                {% elif forloop.counter == 4 %}
+                  <path class="why-art__axis" d="M79 145V48M79 145h170" />
+                  <rect class="why-art__bar" x="103" y="112" width="24" height="33" rx="5" />
+                  <rect class="why-art__bar why-art__bar--mid" x="145" y="91" width="24" height="54" rx="5" />
+                  <rect class="why-art__bar why-art__bar--high" x="187" y="68" width="24" height="77" rx="5" />
+                  <path class="why-art__line" d="m101 99 40-24 34 8 48-38" />
+                  <path class="why-art__line" d="m210 45 13-1-2 13" />
+                  <circle class="why-art__node" cx="141" cy="75" r="5" />
+                  <circle class="why-art__node" cx="175" cy="83" r="5" />
+                {% elif forloop.counter == 5 %}
+                  <path class="why-art__shield" d="M160 40 213 59v37c0 31-21 49-53 65-32-16-53-34-53-65V59z" />
+                  <path class="why-art__line" d="m138 96 15 15 31-34" />
+                  <path class="why-art__bubble" d="M214 111h31a12 12 0 0 1 12 12v8a12 12 0 0 1-12 12h-9l-12 9v-9h-10a12 12 0 0 1-12-12v-8a12 12 0 0 1 12-12z" />
+                  <circle class="why-art__node" cx="226" cy="127" r="2" />
+                  <circle class="why-art__node" cx="237" cy="127" r="2" />
+                  <circle class="why-art__node" cx="248" cy="127" r="2" />
+                {% else %}
+                  <path class="why-art__line why-art__line--soft" d="M81 96h158" />
+                  <circle class="why-art__node" cx="96" cy="96" r="19" />
+                  <circle class="why-art__node" cx="160" cy="96" r="19" />
+                  <circle class="why-art__node" cx="224" cy="96" r="19" />
+                  <path class="why-art__line" d="m89 96 5 5 9-11m50 6 5 5 9-11m50 6 5 5 9-11" />
+                  <path class="why-art__orbit" d="M112 54a68 68 0 0 1 93 0M208 137a68 68 0 0 1-96 0" />
+                  <path class="why-art__line why-art__line--soft" d="m198 49 9 5-1-11m-85 99-9-5 1 11" />
+                {% endif %}
+              </svg>
+            </figure>
+            <h3 class="why-reason__title">{{ feature.title }}</h3>
+            <p class="why-reason__text">{{ feature.description }}</p>
+          </article>
         {% endfor %}
       </div>
     </div>
