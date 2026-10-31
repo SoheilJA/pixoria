@@ -127,6 +127,7 @@ This is a direct user instruction for the WHOLE redesign; every future section m
 | 10 | آخرین مقالات (blog) | `templates/home/sections/_blog.html` + `#blog`-scoped CSS | ✅ | «بازطراحی سکشن دهم (آخرین مقالات)» |
 | 11 | سوالات متداول (faq) | `templates/home/sections/_faq.html` + `.ry-faq-sec`-scoped CSS | ✅ | «بازطراحی سکشن یازدهم (سوالات متداول)» |
 | 12 | CTA (همهٔ صفحات) | `templates/partials/_cta.html` | ✅ | «بازطراحی سکشن CTA (همهٔ صفحات)» |
+| — | Preloader | `templates/base.html` + `static/css/ry.css` + `static/js/ry.js` | ✅ | «بازطراحی پیش‌لودر: تجربه ASCII Art تمام‌صفحه» |
 | 13 | Footer + ghost text | `templates/partials/_footer.html` | ✅ | «بازطراحی فوتر» |
 | — | Global review + inner pages (about/contact/blog/portfolio/services detail, 404, login) | — | ⬜ | — |
 
@@ -194,33 +195,29 @@ This is a direct user instruction for the WHOLE redesign; every future section m
   DUPLICATED on the contact page — so `#faq` scoping LEAKED there at first attempt; the
   scope is the unique home-only class `.ry-faq-sec` on the section instead. Hooks
   (`.faq-item`/`.faq-q`/`.faq-a` + `.open` + maxHeight) untouched.
-- LESSON (tooling): NEVER edit files via PowerShell `Get-Content`/`Set-Content` — PS 5.1
-  reads UTF-8-no-BOM as ANSI and re-encoding mangles ALL Persian comments in the file
-  (happened once; recovered via `git checkout HEAD -- styles/input.css` + re-adding the
-  block through the edit tool). Use the dedicated edit/write tools for ANY text change.
 - Section 12 (CTA) DONE, verified (inverted sand block + dark serif title + void terminal
   panel + dark buttons, desktop + 360px, zero console errors) and committed. This partial
   is included ONCE in base.html (all pages) — fully rewritten with the Ryoku "inverted
   block" rule (sand bg, dark text — the site's most important CTA). The terminal ASCII
   texts kept verbatim, restyled as `.ry-term` (void panel, mono Space Grotesk, square
-  status dots).   New dark button variants `.ry-btn--ink`/`.ry-btn--ink-line`; `.ry-inv`
+  status dots). New dark button variants `.ry-btn--ink`/`.ry-btn--ink-line`; `.ry-inv`
   highlight override added. Old space motifs (shards, orbit layer, aurora) removed.
   Old `terminal-terminal__*` classes now unused (cleanup at global review).
 - Footer DONE (user redirected: footer before hero), verified (void bg, no canvas,
-  hairline contact rows, spec-sheet trust boxes, 302px outline ghost «پیکسوریا» cropped
+  hairline contact rows, spec-sheet trust boxes, 302px outline ghost «PIXORIA» cropped
   exactly at the page end, desktop + 360px, zero console errors) and committed. The live
   field canvas (hx-field/hero-field.js) was removed from the footer; hero-field.js stays
   for the hero until its redesign. Shared `_brand_lockup.html` (official logo) untouched.
-  New `.ry-soc` square social buttons. User-requested addition (commit
-  «افزودن ستون صفحات اصلی به فوتر»): a static main-pages nav column («صفحات اصلی»: خانه /
-  درباره ما / تماس با ما / مجله via `{% url %}`) between the brand and services columns;
-  column spans rebalanced 4+2+3+3. Note: the about URL name is `core:about` (NOT `about`).
-  User-requested footer refinement (commit «بازچینی فوتر: چهار ستون با مجوز تکی و شبح
-  لاتین»): layout is now brand 6 + three EQUAL columns of 2 (main pages / services /
-  licenses); the licenses column holds exactly ONE badge slot (trust_first preferred,
-  trust_second as fallback if the first is unset); the bottom ghost text is the LATIN
-  «PIXORIA» in Space Grotesk (19vw, tracking 0.06em) — `.ry-ghost` became font-agnostic
-  (caller sets the font; about's year ghost got `font-display` utility).
+  New `.ry-soc` square social buttons. User-requested footer refinement (commit
+  «بازچینی فوتر: چهار ستون با مجوز تکی و شبح لاتین»): layout is now brand 6 + three EQUAL
+  columns of 2 (main pages / services / licenses); the licenses column holds exactly ONE
+  badge slot (trust_first preferred, trust_second as fallback if the first is unset); the
+  bottom ghost text is the LATIN «PIXORIA» in Space Grotesk (19vw, tracking 0.06em) —
+  `.ry-ghost` became font-agnostic (caller sets the font; about's year ghost got
+  `font-display` utility). User-requested addition (commit «افزودن ستون صفحات اصلی به
+  فوتر»): a static main-pages nav column («صفحات اصلی»: خانه / درباره ما / تماس با ما /
+  مجله via `{% url %}`) between the brand and services columns; column spans rebalanced
+  4+2+3+3. Note: the about URL name is `core:about` (NOT `about`).
 - Section 1 (hero) DONE, verified (canvas RUNNING with sand-colored dots — pixel-sampled
   4280 sand / 0 gold — serif 73.6px title, 2 square buttons, stats row, cue, ghost,
   desktop + 360px, zero console errors) and committed. Pure-typography hero: tiny label +
@@ -231,13 +228,20 @@ This is a direct user instruction for the WHOLE redesign; every future section m
   `GOLD="244,238,228"`). NOTE: that file's Persian comments were ALREADY mojibake on disk
   (pre-existing, not caused by this work — a comment-fixing pass could decode it later).
   The whole homepage now speaks the Ryoku language end to end.
-- Environment notes: this local DB had no readable work images, so `about_works` rendered
-  the fallback panel; a placeholder `public/media/portfolio/images.jpg` (gitignored) was
-  created to test the filmstrip path — `public/media` is not committed. The filmstrip
-  branch with 4 works was also verified by direct template rendering.
-- Gotcha learned: the dev server was started with `--noreload`, and Django 4.1+ caches
-  templates per process even in DEBUG — after editing a template, RESTART the server or
-  drop the `--noreload` flag, otherwise stale markup is served (cost some debugging time).
+- Preloader DONE, verified (canvas RUNNING with sand-colored dots — pixel-sampled
+  4280 sand / 0 gold — serif 73.6px title, 2 square buttons, stats row, cue, ghost,
+  desktop + 360px, zero console errors) and committed. Pure-typography hero: tiny label +
+  big serif H1 + short paragraph + two square buttons + hairline stats band + scroll cue
+  (`.ry-cue` pulse, reduced-motion safe) + faint latin ghost wordmark. The hero-field
+  canvas engine (`static/js/hero-field.js`) was KEPT (same `data-hx-field` hook) and only
+  its two hard-coded colors were re-toned to sand (`CREAM="216,207,192"`,
+  `GOLD="244,238,228"`). NOTE: that file's Persian comments were ALREADY mojibake on disk
+  (pre-existing, not caused by this work — a comment-fixing pass could decode it later).
+  The whole homepage now speaks the Ryoku language end to end.
+- LESSON (tooling): NEVER edit files via PowerShell `Get-Content`/`Set-Content` — PS 5.1
+  reads UTF-8-no-BOM as ANSI and re-encoding mangles ALL Persian comments in the file
+  (happened once; recovered via `git checkout HEAD -- styles/input.css` + re-adding the
+  block through the edit tool). Use the dedicated edit/write tools for ANY text change.
 
 ## 6. Decisions and important notes
 
