@@ -96,7 +96,7 @@ change: `venv\Scripts\python manage.py collectstatic --noinput`. Verify pages wi
 | — | Header/navigation | `templates/partials/_header.html` | ⬜ (last) | — |
 | 1 | Hero | `templates/home/sections/_hero.html` | ⬜ (last) | — |
 | 2 | درباره ما (about) | `templates/home/sections/_about.html` | ⏸ waiting for user approval | «بازطراحی سکشن دوم (درباره ما) با زبان طراحی جدید» |
-| 3 | خدمات (services) | `templates/home/sections/_services.html` | ⬜ | — |
+| 3 | خدمات (services) | `templates/home/sections/_services.html` | ✅ | «بازطراحی سکشن سوم (خدمات)» |
 | 4 | نمونه‌کارها (portfolio) | `templates/home/sections/_portfolio.html` | ⬜ | — |
 | 5 | چرا پیکسوریا (why) | `templates/home/sections/_why.html` | ⬜ | — |
 | 6 | فرآیند کار (process) | `templates/home/sections/_process.html` | ⬜ | — |
@@ -111,15 +111,17 @@ change: `venv\Scripts\python manage.py collectstatic --noinput`. Verify pages wi
 
 ## 5. Exact current state
 
-- Stage A (foundation) DONE and committed (`b2e4a93`). Note: `node_modules` was missing
-  and `npm install` was run as part of setup.
-- Stage B (section 2 — about) DONE, verified in the browser (desktop + 360px, zero console
-  errors, counters/filmstrip/reveal all working) and committed — WAITING for user approval
-  before Stage C. No half-finished files.
+- Stage A (foundation) DONE and committed (`b2e4a93`).
+- Stage B (section 2 — about) DONE, committed (`8f18548`) and approved by the user.
+- Section 3 (services) DONE, verified in the browser (desktop + 360px, zero console
+  errors) and committed. No half-finished files.
 - Environment notes: this local DB had no readable work images, so `about_works` rendered
   the fallback panel; a placeholder `public/media/portfolio/images.jpg` (gitignored) was
   created to test the filmstrip path — `public/media` is not committed. The filmstrip
   branch with 4 works was also verified by direct template rendering.
+- Gotcha learned: the dev server was started with `--noreload`, and Django 4.1+ caches
+  templates per process even in DEBUG — after editing a template, RESTART the server or
+  drop the `--noreload` flag, otherwise stale markup is served (cost some debugging time).
 
 ## 6. Decisions and important notes
 
@@ -149,10 +151,9 @@ change: `venv\Scripts\python manage.py collectstatic --noinput`. Verify pages wi
 
 ## 7. Next step
 
-Wait for the user's approval of section 2 (about). After approval, continue Stage C with
-section 3 (services, `templates/home/sections/_services.html`) — one commit per section,
-update this file before each commit. After the homepage sections: CTA, then hero, then
-header, then footer (ghost text), then global review + inner pages.
+Continue Stage C with section 4 (portfolio, `templates/home/sections/_portfolio.html`) —
+one commit per section, update this file before each commit. After the homepage sections:
+CTA, then hero, then header, then footer (ghost text), then global review + inner pages.
 
 ## 8. Resume instruction
 

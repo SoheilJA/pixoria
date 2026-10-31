@@ -3789,6 +3789,38 @@ html.has-preloader .preloader.pl-done {
   color: var(--color-void);
 }
 
+/* ---------- Ryoku: لینک متنی (زیرخطِ کم‌رنگ که با هاور پررنگ می‌شود) ---------- */
+.ry-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: fit-content;
+  padding-bottom: 3px;
+  border-bottom: 1px solid rgba(216, 207, 192, 0.2);
+  font-family: var(--font-sans);
+  font-size: 12.5px;
+  line-height: 1.8;
+  color: rgba(216, 207, 192, 0.75);
+  text-decoration: none;
+  transition:
+    color 180ms ease,
+    border-color 180ms ease;
+}
+.ry-link:hover {
+  color: var(--color-sand);
+  border-color: rgba(216, 207, 192, 0.7);
+}
+.ry-link:focus-visible {
+  outline: 1px solid var(--color-sand);
+  outline-offset: 3px;
+}
+.ry-link svg {
+  transition: transform 180ms ease;
+}
+.ry-link:hover svg {
+  transform: translateX(-3px);
+}
+
 /* ---------- Ryoku: قاب تصویر + نشان‌های گوشه ---------- */
 .ry-frame {
   position: relative;
