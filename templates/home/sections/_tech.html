@@ -1,51 +1,47 @@
-{% load icon_tags highlight_tags fa_digits %}
-{% comment %} ابزارها و فناوری‌ها — فهرست ثابت مهارت‌ها و تصویرسازی CSS {% endcomment %}
-{% comment %} داده‌ها: tech_section (TechSection)، tech_skills (TechSkill[]) {% endcomment %}
+{% load icon_tags highlight_tags %}
+{% comment %} ابزارها و فناوری‌ها — بازطراحی با زبان طراحی Ryoku.
+   ساختار: سربرگِ سکشن (07 · ابزارها + گلیف) → عنوانِ سریف →
+   گریدِ «شیتِ مشخصات»: سلول‌های ۱px-هیرلاینی، هر سلول = نشانِ کوچک +
+   نامِ لاتین با گروتسکِ فاصله‌دار. تصویرسازیِ مداریِ قدیمی (tech-art) حذف شد —
+   این سکشن در زبان جدید تصویر ندارد (سیاست تصاویر §2b → ASCII لازم نیست).
+   داده‌ها (بدون تغییر): tech_section، tech_skills. {% endcomment %}
 {% if tech_section and tech_skills %}
-  <section id="tech" class="relative overflow-hidden bg-cream2">
-    <div class="grid-bg pointer-events-none absolute inset-0 opacity-50" aria-hidden="true"></div>
-    <div class="pointer-events-none absolute right-[8%] top-16 h-72 w-72 rounded-full opacity-40 aurora-blob"
-         style="background: radial-gradient(circle, rgba(46, 99, 255, 0.16), transparent 70%)" aria-hidden="true"></div>
+  <section id="tech" class="ry-scope relative overflow-hidden border-b border-line/10">
+    <div class="relative z-10 mx-auto max-w-6xl px-6 py-24 md:py-36">
 
-    <div class="relative mx-auto max-w-7xl px-6 pb-24 pt-28 md:pt-32">
-      <div class="text-center">
-        {% if tech_section.eyebrow %}
-          <p class="eyebrow eyebrow-dark eyebrow-c justify-center" data-reveal="up">{{ tech_section.eyebrow }}</p>
-        {% endif %}
-        {% if tech_section.title %}
-          <h2 class="mt-5 text-3xl font-extrabold leading-[1.3] text-paper md:text-[2.4rem]"
-              data-reveal="mask" data-delay="0.08">
-            {{ tech_section.title|highlight:"dark" }}
-          </h2>
-        {% endif %}
+      {% include 'components/_ry_section_header.html' with ry_num="07" ry_label_fa="ابزارها و فناوری" ry_glyph="تـ" %}
+
+      <div class="mt-14 grid gap-10 lg:grid-cols-12">
+        <div class="lg:col-span-7">
+          {% if tech_section.eyebrow %}
+            <p class="ry-label-fa ry-reveal">{{ tech_section.eyebrow }}</p>
+          {% endif %}
+          {% if tech_section.title %}
+            <h2 class="ry-serif ry-reveal mt-3 text-4xl text-sand md:text-[2.85rem] md:leading-[1.4]" data-delay="0.06">
+              {{ tech_section.title|highlight }}
+            </h2>
+          {% endif %}
+        </div>
         {% if tech_section.description %}
-          <p class="mx-auto mt-4 max-w-xl font-light leading-8 text-coy" data-reveal="up" data-delay="0.12">
+          <p class="ry-reveal self-end text-[15px] leading-8 text-sand/65 lg:col-span-5" data-delay="0.12">
             {{ tech_section.description }}
           </p>
         {% endif %}
       </div>
 
-      {% comment %} گریدِ دوستونه — کلاسِ دست‌سازِ tech-grid در sections.css {% endcomment %}
-      <div class="relative mt-14 tech-grid" data-reveal="clip" data-delay="0.14">
-        <ul class="tech-skills" role="list">
-          {% for skill in tech_skills %}
-            <li class="tech-chip">
-              {% if skill.icon %}{% icon skill.icon class="h-4 w-4" %}{% endif %}
-              <span>{{ skill.name }}</span>
-            </li>
-          {% endfor %}
-        </ul>
-        <div class="tech-art" aria-hidden="true">
-          <span class="tech-art__orbit"></span>
-          <span class="tech-art__core"></span>
-          <span class="tech-art__node tech-art__node--one"></span>
-          <span class="tech-art__node tech-art__node--two"></span>
-          <span class="tech-art__node tech-art__node--three"></span>
-          <span class="tech-art__bar tech-art__bar--one"></span>
-          <span class="tech-art__bar tech-art__bar--two"></span>
-          <span class="tech-art__bar tech-art__bar--three"></span>
-        </div>
-      </div>
+      {% comment %} گریدِ هیرلاینیِ مهارت‌ها — موبایل ۲ ستون، تبلت ۳، دسکتاپ ۴ {% endcomment %}
+      <ul role="list" class="ry-reveal mt-16 grid grid-cols-2 gap-px border border-line/10 bg-line/10 md:grid-cols-3 lg:grid-cols-4" data-delay="0.16">
+        {% for skill in tech_skills %}
+          <li class="group flex items-center gap-3 bg-void px-5 py-5 transition-colors duration-200 hover:bg-surface">
+            {% if skill.icon %}
+              <span class="text-sand/45 transition-colors duration-200 group-hover:text-sand/85" aria-hidden="true">
+                {% icon skill.icon class="h-4 w-4" %}
+              </span>
+            {% endif %}
+            <bdi class="font-label text-[13px] tracking-[0.12em] text-sand/85" dir="ltr">{{ skill.name }}</bdi>
+          </li>
+        {% endfor %}
+      </ul>
     </div>
   </section>
 {% endif %}

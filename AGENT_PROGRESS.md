@@ -121,7 +121,7 @@ This is a direct user instruction for the WHOLE redesign; every future section m
 | 4 | نمونه‌کارها (portfolio) | `templates/home/sections/_portfolio.html` | ✅ | «بازطراحی سکشن چهارم (نمونه‌کارها)» |
 | 5 | چرا پیکسوریا (why) | `templates/home/sections/_why.html` | ✅ | «بازطراحی سکشن پنجم (چرا پیکسوریا)» |
 | 6 | فرآیند کار (process) | `templates/home/sections/_process.html` | ✅ | «بازطراحی سکشن ششم (فرآیند کار)» |
-| 7 | تکنولوژی‌ها (tech) | `templates/home/sections/_tech.html` | ⬜ | — |
+| 7 | تکنولوژی‌ها (tech) | `templates/home/sections/_tech.html` | ✅ | «بازطراحی سکشن هفتم (تکنولوژی‌ها)» |
 | 8 | نظرات مشتریان (testimonials) | `templates/home/sections/_testimonials.html` | ⬜ | — |
 | 9 | آمار و ارقام (stats) | `templates/home/sections/_stats.html` | ⬜ | — |
 | 10 | آخرین مقالات (blog) | `templates/home/sections/_blog.html` | ⬜ | — |
@@ -154,6 +154,10 @@ This is a direct user instruction for the WHOLE redesign; every future section m
   Vertical step list connected by a 1px hairline (`.ry-process`), square node with the
   step icon on the rail, mono numbers, serif titles. The old glowing-bead rail animation
   was removed (new language = static hairline + simple reveal).
+- Section 7 (tech) DONE, verified (desktop + 360px, zero console errors) and committed.
+  "Spec sheet" hairline grid (2/3/4 cols responsive) — each cell: small icon + Latin name
+  in Space Grotesk with tracking. The old orbit/CSS-art illustration removed (no imagery
+  in the new language → no ASCII placeholder needed per §2b).
 - Environment notes: this local DB had no readable work images, so `about_works` rendered
   the fallback panel; a placeholder `public/media/portfolio/images.jpg` (gitignored) was
   created to test the filmstrip path — `public/media` is not committed. The filmstrip
@@ -190,10 +194,11 @@ This is a direct user instruction for the WHOLE redesign; every future section m
 
 ## 7. Next step
 
-Continue Stage C with section 7 (tech, `templates/home/sections/_tech.html`) — one commit
-per section, update this file before each commit. After the homepage sections: CTA, then
-hero, then header, then footer (ghost text), then global review + inner pages.
-ASCII-art pass (all `ASCII-ART-PLACEHOLDER` spots) happens AFTER the full redesign.
+Continue Stage C with section 8 (testimonials, `templates/home/sections/_testimonials.html`)
+— one commit per section, update this file before each commit. After the homepage
+sections: CTA, then hero, then header, then footer (ghost text), then global review +
+inner pages. ASCII-art pass (all `ASCII-ART-PLACEHOLDER` spots) happens AFTER the full
+redesign.
 
 ## 8. Resume instruction
 
