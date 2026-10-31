@@ -211,7 +211,10 @@ This is a direct user instruction for the WHOLE redesign; every future section m
   exactly at the page end, desktop + 360px, zero console errors) and committed. The live
   field canvas (hx-field/hero-field.js) was removed from the footer; hero-field.js stays
   for the hero until its redesign. Shared `_brand_lockup.html` (official logo) untouched.
-  New `.ry-soc` square social buttons.
+  New `.ry-soc` square social buttons. User-requested addition (commit
+  «افزودن ستون صفحات اصلی به فوتر»): a static main-pages nav column («صفحات اصلی»: خانه /
+  درباره ما / تماس با ما / مجله via `{% url %}`) between the brand and services columns;
+  column spans rebalanced 4+2+3+3. Note: the about URL name is `core:about` (NOT `about`).
 - Environment notes: this local DB had no readable work images, so `about_works` rendered
   the fallback panel; a placeholder `public/media/portfolio/images.jpg` (gitignored) was
   created to test the filmstrip path — `public/media` is not committed. The filmstrip
