@@ -79,9 +79,28 @@
         </nav>
       {% endfor %}
 
+      {% comment %} صفحات اصلی — ناوبری ثابت سایت {% endcomment %}
+      <nav class="ry-reveal lg:col-span-2" aria-label="صفحات اصلی" data-delay="0.08">
+        <h3 class="ry-label-fa">صفحات اصلی</h3>
+        <ul class="mt-5">
+          <li class="border-b border-line/10">
+            <a class="block py-2.5 text-sm text-sand/65 transition-colors duration-200 hover:text-sand" href="{% url 'home:home' %}">خانه</a>
+          </li>
+          <li class="border-b border-line/10">
+            <a class="block py-2.5 text-sm text-sand/65 transition-colors duration-200 hover:text-sand" href="{% url 'core:about' %}">درباره ما</a>
+          </li>
+          <li class="border-b border-line/10">
+            <a class="block py-2.5 text-sm text-sand/65 transition-colors duration-200 hover:text-sand" href="{% url 'contact:contact' %}">تماس با ما</a>
+          </li>
+          <li class="border-b border-line/10">
+            <a class="block py-2.5 text-sm text-sand/65 transition-colors duration-200 hover:text-sand" href="{% url 'blog:list' %}">مجله</a>
+          </li>
+        </ul>
+      </nav>
+
       {% comment %} خدمات {% endcomment %}
       {% if services_footer %}
-        <nav class="ry-reveal lg:col-span-4" aria-label="خدمات" data-delay="0.14">
+        <nav class="ry-reveal lg:col-span-3" aria-label="خدمات" data-delay="0.14">
           <h3 class="ry-label-fa">خدمات</h3>
           <ul class="mt-5">
             {% for service in services_footer %}
