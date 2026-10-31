@@ -1,90 +1,61 @@
 {% load icon_tags highlight_tags fa_digits %}
-{% comment %}سکشن کال‌تو‌اکشنِ پیش از فوتر — محتوا از CTASection می‌آید.
-دکمهٔ اصلی به صفحهٔ تماس و دکمهٔ دوم به تماس تلفنی لینک می‌شود.{% endcomment %}
+{% comment %} CTA پیش از فوتر — بازطراحی با زبان طراحی Ryoku.
+   مهم‌ترین CTA کلِ سایت → «بلوکِ معکوس» (زمینهٔ شنی، متنِ تیره — قاعدهٔ مرجع).
+   ساختار: عنوانِ سریفِ بزرگِ وسط‌چین + توضیح → پنلِ ترمینالِ void (متن‌های
+   ASCII/مونو عیناً حفظ شده) → دکمهٔ تیرهٔ پر + دکمهٔ خطیِ تماس → شمارهٔ دوم.
+   موتیف‌های فضایی قدیمی (شارد/اوربیت/گرادیان) حذف شدند؛ متن‌ها بدون تغییر.
+   داده‌ها (بدون تغییر): cta (CTASection)، settings. در base.html برای همهٔ
+   صفحات include می‌شود. {% endcomment %}
 {% if cta %}
-  <section id="cta" class="relative overflow-hidden bg-ink2">
-    <div
-      class="pointer-events-none absolute left-1/2 top-16 h-96 w-96 -translate-x-1/2 rounded-full"
-      style="background: radial-gradient(circle, rgba(201, 161, 90, 0.28), transparent 65%);"
-      aria-hidden="true"
-    ></div>
-    {% include "partials/_space_layer.html" with ring_class="left-1/2 top-1/2 h-[30rem] w-[44rem] -translate-x-1/2 -translate-y-1/2 opacity-40" orb_class="right-[14%] top-[26%] h-6 w-6" %}
-    <div class="pointer-events-none absolute inset-0" aria-hidden="true">
-      <span
-        data-float="12"
-        class="shard -rotate-6"
-        style="top: 22%; right: 9%; width: 4.5rem; height: 5rem; opacity: 0.6;"
-      ></span>
-      <span
-        data-float="9"
-        class="shard rotate-12"
-        style="bottom: 18%; left: 7%; width: 3.5rem; height: 4rem; opacity: 0.6;"
-      ></span>
-    </div>
+  <section id="cta" class="ry-inv relative overflow-hidden">
+    <div class="relative z-10 mx-auto max-w-6xl px-6 py-24 md:py-32">
 
-    <div class="relative z-10 mx-auto max-w-5xl px-6 pb-28 pt-36 text-center md:pt-44">
-      {% if cta.eyebrow %}
-        <p class="eyebrow eyebrow-c justify-center" data-reveal="rise">{{ cta.eyebrow }}</p>
-      {% endif %}
-      <h2
-        class="mt-6 text-4xl font-extrabold leading-[1.3] text-cream md:text-6xl"
-        data-reveal="mask"
-        data-delay="0.1"
-      >
-        {{ cta.title|highlight }}
-      </h2>
-      {% if cta.description %}
-        <p
-          class="mx-auto mt-5 max-w-xl font-light leading-8 text-cream/60"
-          data-reveal="blur"
-          data-delay="0.16"
-        >
-          {{ cta.description }}
-        </p>
-      {% endif %}
+      <div class="mx-auto max-w-2xl text-center">
+        {% if cta.eyebrow %}
+          <p class="ry-label-fa ry-reveal">{{ cta.eyebrow }}</p>
+        {% endif %}
+        <h2 class="ry-serif ry-reveal mt-5 text-4xl leading-[1.35] text-void md:text-[3.4rem]" data-delay="0.06">
+          {{ cta.title|highlight }}
+        </h2>
+        {% if cta.description %}
+          <p class="ry-reveal mx-auto mt-5 max-w-xl text-[15px] leading-8 text-void/70" data-delay="0.12">
+            {{ cta.description }}
+          </p>
+        {% endif %}
+      </div>
 
-      {% comment %} ترمینال ASCII-art — آینده‌ی تو یک کد دارد {% endcomment %}
-      <div
-        class="terminal-terminal"
-        data-reveal="pop"
-        data-delay="0.2"
-      >
-        <p class="terminal-terminal__title" data-reveal="rise" data-delay="0.24">
-          آینده‌ی تو یک کد دارد
-        </p>
-
-        <pre class="terminal-terminal__ascii"
-             data-reveal="rise"
-             data-delay="0.32"><span class="prompt">user@pixoria:~$</span> <span class="typed-line done">./launch --brand</span>
-<span class="prompt">user@pixoria:~$</span> <span class="typed-line done">./launch --strategy</span>
-<span class="glow typed-line done">design system ready</span>
-<span class="glow typed-line done">marketing flow ready</span>
-<span class="done typed-line">✓ محصول شما آمادهٔ رشد است</span>
-<span class="done typed-line">✓ فقط یک پیام برای شروع کافی است</span></pre>
-
-        <p class="terminal-terminal__desc" data-reveal="rise" data-delay="0.4">
-          از یک گفت‌وگوی ساده شروع می‌شود؛ <span class="dot done"></span> مشاورهٔ رایگان،
-          <span class="dot done"></span> بدون تعهد، <span class="dot"></span> پاسخ زیر ۴۸ ساعت.
-        </p>
-
-        <div class="terminal-terminal__footer">
-          <span class="dot done"></span>
-          <span>پیکسوریا — آمادهٔ همکاری</span>
+      {% comment %} ترمینال ASCII — متن‌ها عیناً حفظ شده‌اند {% endcomment %}
+      <div class="ry-term ry-reveal" data-delay="0.18">
+        <div class="ry-term__head">
+          <p>آینده‌ی تو یک کد دارد</p>
+          <span class="ry-term__dots" aria-hidden="true">
+            <span class="ry-term__dot is-done"></span>
+            <span class="ry-term__dot is-done"></span>
+            <span class="ry-term__dot"></span>
+          </span>
         </div>
 
-        <div
-          class="terminal-terminal__buttons"
-          data-reveal="pop"
-          data-delay="0.34"
-        >
-          <a href="{% url 'contact:contact' %}" class="terminal-terminal__btn terminal-terminal__btn--primary" data-magnetic>
-            {% icon "message-circle" class="h-5 w-5" %}
+        <pre class="ry-term__body" dir="ltr"><span class="ry-term__prompt">user@pixoria:~$</span> <span class="ry-term__ok">./launch --brand</span>
+<span class="ry-term__prompt">user@pixoria:~$</span> <span class="ry-term__ok">./launch --strategy</span>
+<span class="ry-term__hl">design system ready</span>
+<span class="ry-term__hl">marketing flow ready</span>
+<span class="ry-term__ok">✓ محصول شما آمادهٔ رشد است</span>
+<span class="ry-term__ok">✓ فقط یک پیام برای شروع کافی است</span></pre>
+
+        <p class="ry-term__meta">
+          از یک گفت‌وگوی ساده شروع می‌شود؛ <span class="ry-term__dot is-done"></span> مشاورهٔ رایگان،
+          <span class="ry-term__dot is-done"></span> بدون تعهد، <span class="ry-term__dot"></span> پاسخ زیر ۴۸ ساعت.
+        </p>
+
+        <div class="ry-term__actions">
+          <a href="{% url 'contact:contact' %}" class="ry-btn ry-btn--ink">
+            {% icon "message-circle" class="h-4 w-4" %}
             <span>مشاوره رایگان</span>
-            {% icon "arrow-left" class="h-4 w-4 transition-transform group-hover:-translate-x-1.5" %}
+            {% icon "arrow-left" class="h-4 w-4" %}
           </a>
           {% if cta.phone %}
-            <a href="tel:{{ cta.phone }}" class="terminal-terminal__btn terminal-terminal__btn--outline" data-magnetic>
-              {% icon "phone" class="h-5 w-5 text-gold-light" %}
+            <a href="tel:{{ cta.phone }}" class="ry-btn ry-btn--ink-line">
+              {% icon "phone" class="h-4 w-4" %}
               <span class="fa-num">{{ cta.phone|fa_digits }}</span>
             </a>
           {% endif %}
@@ -92,19 +63,17 @@
       </div>
 
       {% if settings.phone_secondary %}
-        <div class="mt-8 flex flex-wrap items-center justify-center gap-x-7 gap-y-3 text-sm text-cream/50">
-          {% if settings.phone_secondary %}
-            <a
-              href="tel:{{ settings.phone_secondary }}"
-              class="inline-flex items-center gap-2 transition hover:text-gold-light"
-            >
-              {% icon "smartphone" class="h-4 w-4" %}
-              <span class="fa-num">{{ settings.phone_secondary|fa_digits }}</span>
-              {% if settings.phone_secondary_label %}
-                <span class="text-cream/35">({{ settings.phone_secondary_label }})</span>
-              {% endif %}
-            </a>
-          {% endif %}
+        <div class="ry-reveal mt-9 flex flex-wrap items-center justify-center gap-x-7 gap-y-3 text-sm text-void/60" data-delay="0.24">
+          <a
+            href="tel:{{ settings.phone_secondary }}"
+            class="inline-flex items-center gap-2 transition-colors duration-200 hover:text-void"
+          >
+            {% icon "smartphone" class="h-4 w-4" %}
+            <span class="fa-num">{{ settings.phone_secondary|fa_digits }}</span>
+            {% if settings.phone_secondary_label %}
+              <span class="text-void/40">({{ settings.phone_secondary_label }})</span>
+            {% endif %}
+          </a>
         </div>
       {% endif %}
     </div>

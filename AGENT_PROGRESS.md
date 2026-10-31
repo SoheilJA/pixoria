@@ -126,7 +126,7 @@ This is a direct user instruction for the WHOLE redesign; every future section m
 | 9 | آمار و ارقام (stats) | `templates/home/sections/_stats.html` | ✅ | «بازطراحی سکشن نهم (آمار و ارقام)» |
 | 10 | آخرین مقالات (blog) | `templates/home/sections/_blog.html` + `#blog`-scoped CSS | ✅ | «بازطراحی سکشن دهم (آخرین مقالات)» |
 | 11 | سوالات متداول (faq) | `templates/home/sections/_faq.html` + `.ry-faq-sec`-scoped CSS | ✅ | «بازطراحی سکشن یازدهم (سوالات متداول)» |
-| 12 | CTA (همهٔ صفحات) | `templates/partials/_cta.html` | ⬜ | — |
+| 12 | CTA (همهٔ صفحات) | `templates/partials/_cta.html` | ✅ | «بازطراحی سکشن CTA (همهٔ صفحات)» |
 | 13 | Footer + ghost text | `templates/partials/_footer.html` | ⬜ (last) | — |
 | — | Global review + inner pages (about/contact/blog/portfolio/services detail, 404, login) | — | ⬜ | — |
 
@@ -198,6 +198,14 @@ This is a direct user instruction for the WHOLE redesign; every future section m
   reads UTF-8-no-BOM as ANSI and re-encoding mangles ALL Persian comments in the file
   (happened once; recovered via `git checkout HEAD -- styles/input.css` + re-adding the
   block through the edit tool). Use the dedicated edit/write tools for ANY text change.
+- Section 12 (CTA) DONE, verified (inverted sand block + dark serif title + void terminal
+  panel + dark buttons, desktop + 360px, zero console errors) and committed. This partial
+  is included ONCE in base.html (all pages) — fully rewritten with the Ryoku "inverted
+  block" rule (sand bg, dark text — the site's most important CTA). The terminal ASCII
+  texts kept verbatim, restyled as `.ry-term` (void panel, mono Space Grotesk, square
+  status dots). New dark button variants `.ry-btn--ink`/`.ry-btn--ink-line`; `.ry-inv`
+  highlight override added. Old space motifs (shards, orbit layer, aurora) removed.
+  Old `terminal-terminal__*` classes now unused (cleanup at global review).
 - Environment notes: this local DB had no readable work images, so `about_works` rendered
   the fallback panel; a placeholder `public/media/portfolio/images.jpg` (gitignored) was
   created to test the filmstrip path — `public/media` is not committed. The filmstrip
@@ -234,11 +242,12 @@ This is a direct user instruction for the WHOLE redesign; every future section m
 
 ## 7. Next step
 
-All 11 homepage sections are DONE. Continue Stage C with section 12 (CTA partial,
-`templates/partials/_cta.html` — appears on all pages, so old-design pages will change:
-coordinate the scope carefully) — one commit per section, update this file before each
-commit. Then: hero (1), header, footer (ghost text), global review + inner pages.
-ASCII-art pass (all `ASCII-ART-PLACEHOLDER` spots) happens AFTER the full redesign.
+Homepage body sections + CTA are DONE (2–11 + 12). Continue with section 1 (hero,
+`templates/home/sections/_hero.html` — the last old-design section on the homepage; it has
+the hero-field canvas which must be replaced with a Ryoku-appropriate visual or an
+ASCII-ART-PLACEHOLDER per §2b). One commit per section, update this file before each
+commit. Then: header, footer (ghost text), global review + inner pages. ASCII-art pass
+(all `ASCII-ART-PLACEHOLDER` spots) happens AFTER the full redesign.
 
 ## 8. Resume instruction
 
