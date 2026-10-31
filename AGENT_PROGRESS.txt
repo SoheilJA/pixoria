@@ -30,4 +30,7 @@
 - راهکار: تاریخچه‌ها با یک merge commit واقعی به هم متصل شوند؛ بازنویسی/rebase/squash انجام نشود. درخت نهایی دقیقاً snapshot شاخهٔ `master` باشد.
 - اقدام: یک worktree موقت و جدا از ورک‌تری کثیف اصلی روی `feature/rocket-redesign` ساخته شد؛ ادغام unrelated history با والد دوم `master` در حال آماده‌سازی است.
 - اعتبارسنجی اولیه: درخت staged با `origin/master^{tree}` یکسان است؛ والد merge برابر `1320435` است.
-- بعدی: پیام merge فارسی، بررسی دو والد/درخت، push عادی به `origin/main` (بدون force)، و سپس حذف worktree موقت.
+- تکمیل: merge commit `a7a051c` با والدهای `f295014` و `1320435` ساخته شد؛ درخت نهایی برابر snapshot کد `master` است.
+- تکمیل: `a7a051c` با push عادی و بدون force روی `origin/main` منتشر شد؛ `main` اکنون هر دو تاریخچهٔ `feature/rocket-redesign` و `master` را در خود دارد.
+- اعتبارسنجی نهایی: پس از fetch، ریموت `main` برابر `a7a051c` بود و `master` و `feature/rocket-redesign` هر دو ancestor آن بودند.
+- نکته: شاخه‌های `master` و `feature/rocket-redesign` حذف یا بازنویسی نشده‌اند؛ ورک‌تری اصلیِ دارای تغییرات محلی نیز دست‌نخورده باقی ماند.
