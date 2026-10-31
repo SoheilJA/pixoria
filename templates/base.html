@@ -84,15 +84,40 @@
     {% block extra_head %}
     {% endblock %}
   </head>
-  <body class="overflow-x-hidden bg-ink font-sans text-cream antialiased">
-    {% comment %}پیش‌لودرِ اولین بازدید — فضایی، کاملاً CSS؛ خودش تا ۱.۲ ثانیه دیگر
-    محو می‌شود (pixoria.js زودتر، وقتی صفحه آماده شد، آن را برمی‌دارد){% endcomment %}
-    <div id="preloader" class="preloader" role="presentation">
-      <div class="pl-scene">
-        <span class="pl-orbit" aria-hidden="true"><span class="pl-planet"></span></span>
-        <span class="pl-mark" aria-hidden="true">{% include "partials/_brand_mark.html" with class="h-10 w-10" %}</span>
+<body class="overflow-x-hidden bg-ink font-sans text-cream antialiased">
+    <!-- RYOKU PRELOADER MARKER -->
+    <div id="preloader" class="preloader" role="presentation" aria-hidden="true">
+      <div class="pl-bg">
+        <div class="pl-scanlines"></div>
+        <div class="pl-noise"></div>
+        <div class="pl-matrix" id="pl-matrix"></div>
       </div>
-      <span class="pl-line" aria-hidden="true"><span class="pl-fill"></span></span>
+      <div class="pl-content">
+        <div class="pl-header">
+          <div class="pl-brand">
+            <span class="pl-brand-mark" aria-hidden="true">{% include "partials/_brand_mark.html" with class="h-8 w-8" %}</span>
+            <span class="pl-brand-word">PIXORIA</span>
+          </div>
+          <div class="pl-tagline">DESIGN & DEVELOPMENT STUDIO</div>
+        </div>
+        <div class="pl-boot" id="pl-boot">
+          <div class="pl-boot-line"><span class="pl-prompt">></span> <span class="pl-boot-text" data-text="INITIALIZING SYSTEM..."></span></div>
+          <div class="pl-boot-line"><span class="pl-prompt">></span> <span class="pl-boot-text" data-text="LOADING DESIGN TOKENS..."></span></div>
+          <div class="pl-boot-line"><span class="pl-prompt">></span> <span class="pl-boot-text" data-text="LOADING FONTS..."></span></div>
+          <div class="pl-boot-line"><span class="pl-prompt">></span> <span class="pl-boot-text" data-text="LOADING ASSETS..."></span></div>
+          <div class="pl-boot-line"><span class="pl-prompt">></span> <span class="pl-boot-text" data-text="INITIALIZING RENDER ENGINE..."></span></div>
+          <div class="pl-boot-line"><span class="pl-prompt">></span> <span class="pl-boot-text" data-text="SYSTEM READY."></span></div>
+        </div>
+        <div class="pl-progress-wrap">
+          <div class="pl-progress-bar" id="pl-progress"></div>
+          <div class="pl-progress-pct" id="pl-pct">0%</div>
+        </div>
+        <div class="pl-footer">
+          <div class="pl-scanline"></div>
+          <div class="pl-copyright">PIXORIA STUDIO — EST. 1405</div>
+        </div>
+      </div>
+      <div class="pl-glitch" aria-hidden="true"></div>
     </div>
 
     {% comment %} پرش به محتوای اصلی — دسترس‌پذیری {% endcomment %}
@@ -105,8 +130,8 @@
     {% comment %} نوار پیشرفت اسکرول {% endcomment %}
     <div
       id="scroll-progress"
-      class="fixed top-0 right-0 left-0 z-[85] h-[3px] origin-right scale-x-0"
-      style="background: linear-gradient(to left, #8f6b2c, #c9a15a 30%, #e8c47a 55%, #2e63ff);"
+      class="fixed top-0 right-0 left-0 z-[85] h-px origin-right scale-x-0"
+      style="background: var(--color-sand);"
       aria-hidden="true"
     ></div>
 
