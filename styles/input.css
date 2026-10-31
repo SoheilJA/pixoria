@@ -4113,6 +4113,20 @@ html.has-preloader .preloader.pl-done {
   height: 0.8rem;
 }
 
+/* ---------- Ryoku: کارتِ نظر مشتری ---------- */
+.ry-tcard {
+  display: flex;
+  flex-direction: column;
+}
+.ry-tcard__foot {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  margin-top: auto;
+  padding-top: 1.4rem;
+  border-top: 1px solid rgba(216, 207, 192, 0.12);
+}
+
 /* ---------- Ryoku: متنِ شبحِ بزرگ (فوتر) ---------- */
 .ry-ghost {
   font-family: var(--font-display);

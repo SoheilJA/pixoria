@@ -2,41 +2,85 @@
 {% comment %} کارت نظر مشتری — متنی. {% endcomment %}
 {% comment %} t:     obj  required — نمونه‌ی ServiceTestimonial {% endcomment %}
 {% comment %} class: str  optional — کلاس اضافی روی ریشه (سایز/چینش اسلایدر را فراخواننده می‌دهد) {% endcomment %}
+{% comment %} ry:    1    optional — ظاهرِ زبان طراحی Ryoku (صفحهٔ اصلی) {% endcomment %}
+{% comment %} delay: عدد  optional — تأخیرِ ریویلِ Ryoku (ثانیه) {% endcomment %}
 {% comment %} t-card کلاسِ قلابِ اسلایدر است (استایلی ندارد) و نباید حذف شود. {% endcomment %}
-{% comment %} کارت متنی {% endcomment %}
-<article class="glass tilt t-card relative flex flex-col p-8{% if class %} {{ class }}{% endif %}"
-         style="border-radius: 2rem 2rem 2rem 0.75rem" data-tilt>
-    <span class="glare" aria-hidden="true"></span>
+
+{% if ry %}
+  {# ── ظاهر Ryoku: متنِ سخاوتمند، گیومهٔ شنی، ستاره‌های ریز، هیرلاین بالای نویسنده ── #}
+  <article class="ry-tcard t-card{% if class %} {{ class }}{% endif %}">
     <div class="flex items-center justify-between">
       {% if t.rating %}
-        <div class="flex gap-1 text-gold-light" aria-label="امتیاز {{ t.rating|fa_digits }} از ۵">
+        <div class="flex gap-1 text-sand/70" aria-label="امتیاز {{ t.rating|fa_digits }} از ۵">
           {% for i in "12345" %}
             {% if forloop.counter <= t.rating %}
-              {% icon "star" class="h-4 w-4 fill-gold-light" %}
+              {% icon "star" class="h-3.5 w-3.5 fill-sand/70" %}
             {% else %}
-              {% icon "star" class="h-4 w-4 text-cream/20" %}
+              {% icon "star" class="h-3.5 w-3.5 text-sand/20" %}
             {% endif %}
           {% endfor %}
         </div>
       {% endif %}
-      <span class="type-chip">متن</span>
+      <span class="ry-label" dir="ltr">{{ forloop.parentloop.counter|stringformat:"02d"|default:"01" }}</span>
     </div>
-    {% icon "quote" class="mt-7 h-8 w-8 text-gold/50" %}
+    {% icon "quote" class="mt-7 h-6 w-6 text-sand/35" %}
     {% if t.text %}
-      <p class="mt-4 flex-1 font-light leading-8 text-cream/85">«{{ t.text }}»</p>
+      <p class="mt-4 flex-1 text-[14.5px] leading-8 text-sand/80">«{{ t.text }}»</p>
     {% endif %}
-    <div class="mt-7 flex items-center gap-3 border-t border-white/10 pt-5">
+    <div class="ry-tcard__foot">
       {% if t.author_image %}
         <img src="{{ t.author_image.url }}" alt="{{ t.author_name }}" loading="lazy"
-             class="avatar h-11 w-11 object-cover">
+             class="h-10 w-10 border border-line/20 object-cover">
       {% else %}
-        <span class="avatar" aria-hidden="true">{% icon "user-round" class="h-5 w-5" %}</span>
+        <span class="grid h-10 w-10 place-items-center border border-line/20 text-sand/50" aria-hidden="true">
+          {% icon "user-round" class="h-4 w-4" %}
+        </span>
       {% endif %}
       <div>
-        <p class="font-bold">{{ t.author_name }}</p>
+        <p class="text-sm font-medium text-sand">{{ t.author_name }}</p>
         {% if t.author_role %}
-          <p class="text-sm text-cream/50">{{ t.author_role }}</p>
+          <p class="ry-label-fa">{{ t.author_role }}</p>
         {% endif %}
       </div>
     </div>
   </article>
+
+{% else %}
+  {# ── ظاهر قبلی (صفحات دیگر) ── #}
+  <article class="glass tilt t-card relative flex flex-col p-8{% if class %} {{ class }}{% endif %}"
+           style="border-radius: 2rem 2rem 2rem 0.75rem" data-tilt>
+      <span class="glare" aria-hidden="true"></span>
+      <div class="flex items-center justify-between">
+        {% if t.rating %}
+          <div class="flex gap-1 text-gold-light" aria-label="امتیاز {{ t.rating|fa_digits }} از ۵">
+            {% for i in "12345" %}
+              {% if forloop.counter <= t.rating %}
+                {% icon "star" class="h-4 w-4 fill-gold-light" %}
+              {% else %}
+                {% icon "star" class="h-4 w-4 text-cream/20" %}
+              {% endif %}
+            {% endfor %}
+          </div>
+        {% endif %}
+        <span class="type-chip">متن</span>
+      </div>
+      {% icon "quote" class="mt-7 h-8 w-8 text-gold/50" %}
+      {% if t.text %}
+        <p class="mt-4 flex-1 font-light leading-8 text-cream/85">«{{ t.text }}»</p>
+      {% endif %}
+      <div class="mt-7 flex items-center gap-3 border-t border-white/10 pt-5">
+        {% if t.author_image %}
+          <img src="{{ t.author_image.url }}" alt="{{ t.author_name }}" loading="lazy"
+               class="avatar h-11 w-11 object-cover">
+        {% else %}
+          <span class="avatar" aria-hidden="true">{% icon "user-round" class="h-5 w-5" %}</span>
+        {% endif %}
+        <div>
+          <p class="font-bold">{{ t.author_name }}</p>
+          {% if t.author_role %}
+            <p class="text-sm text-cream/50">{{ t.author_role }}</p>
+          {% endif %}
+        </div>
+      </div>
+    </article>
+{% endif %}
