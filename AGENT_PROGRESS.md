@@ -124,7 +124,7 @@ This is a direct user instruction for the WHOLE redesign; every future section m
 | 7 | تکنولوژی‌ها (tech) | `templates/home/sections/_tech.html` | ✅ | «بازطراحی سکشن هفتم (تکنولوژی‌ها)» |
 | 8 | نظرات مشتریان (testimonials) | `templates/components/testimonials_slider.html` + `_testimonial_card.html` | ✅ | «بازطراحی سکشن هشتم (نظرات مشتریان)» |
 | 9 | آمار و ارقام (stats) | `templates/home/sections/_stats.html` | ✅ | «بازطراحی سکشن نهم (آمار و ارقام)» |
-| 10 | آخرین مقالات (blog) | `templates/home/sections/_blog.html` | ⬜ | — |
+| 10 | آخرین مقالات (blog) | `templates/home/sections/_blog.html` + `#blog`-scoped CSS | ✅ | «بازطراحی سکشن دهم (آخرین مقالات)» |
 | 11 | سوالات متداول (faq) | `templates/home/sections/_faq.html` | ⬜ | — |
 | 12 | CTA (همهٔ صفحات) | `templates/partials/_cta.html` | ⬜ | — |
 | 13 | Footer + ghost text | `templates/partials/_footer.html` | ⬜ (last) | — |
@@ -174,6 +174,20 @@ This is a direct user instruction for the WHOLE redesign; every future section m
   `.ry-stat` from the about section; the counter hook here is `data-count` (+ prefix/
   suffix) — DIFFERENT from about's `data-counter` — both pixoria.js systems kept intact.
   Old light cream background, glass cards and the stroke "PIXORIA" text removed.
+- POLICY FIX (per §2b clarification): REAL content images must display EXACTLY as uploaded
+  → the halftone/grayscale treatment was REMOVED from `_ry_project_card.html` (section 4
+  cards), the about filmstrip main image + thumbnails (natural color now, hover = subtle
+  scale), and `.ry-thumb img`/`.ry-pcard` CSS filter rules deleted. `.ry-halftone` class
+  stays in CSS (unused, reserved for decorative ASCII-era imagery only).
+- Section 10 (blog) DONE, verified (10 cards, square hairline cards, Amiri titles, old
+  gold gradient overlay hidden, carousel next/dots working, mobile 360 no overflow, zero
+  console errors) and committed. The articles carousel is SHARED (home + service detail +
+  blog detail) and its inclusion tag passes no distinguishing context, so it could NOT get
+  a template branch; instead the home section wraps `{% articles_carousel %}` inside
+  `#blog` (ry-scope) and the whole look is transformed via `#blog`-scoped CSS overrides
+  (higher specificity; inline `border-radius:1.75rem` neutralized with scoped
+  `!important`). Covers render as uploaded (no filter). `data-carousel*` + `ctrl-btn` +
+  `slider-dot` hooks untouched.
 - Environment notes: this local DB had no readable work images, so `about_works` rendered
   the fallback panel; a placeholder `public/media/portfolio/images.jpg` (gitignored) was
   created to test the filmstrip path — `public/media` is not committed. The filmstrip
@@ -210,7 +224,7 @@ This is a direct user instruction for the WHOLE redesign; every future section m
 
 ## 7. Next step
 
-Continue Stage C with section 10 (blog, `templates/home/sections/_blog.html`) — one commit
+Continue Stage C with section 11 (faq, `templates/home/sections/_faq.html`) — one commit
 per section, update this file before each commit. After the homepage sections: CTA, then
 hero, then header, then footer (ghost text), then global review + inner pages. ASCII-art
 pass (all `ASCII-ART-PLACEHOLDER` spots) happens AFTER the full redesign.

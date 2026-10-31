@@ -3886,7 +3886,6 @@ html.has-preloader .preloader.pl-done {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  filter: grayscale(1) contrast(1.1) brightness(0.9);
 }
 .ry-thumb.is-active {
   opacity: 1;
@@ -3920,7 +3919,10 @@ html.has-preloader .preloader.pl-done {
   outline-offset: 3px;
 }
 
-/* ---------- Ryoku: تصویرِ هافتونِ تک‌رنگ ---------- */
+/* ---------- Ryoku: تصویرِ هافتونِ تک‌رنگ ----------
+   فقط برای تصاویرِ تزئینی؛ تصاویرِ واقعیِ محتوا (نمونه‌کار/کاورِ بلاگ/آواتار)
+   طبق سیاستِ §2b همیشه عیناً و بدونِ پردازشِ رنگی نمایش داده می‌شوند.
+   فعلاً استفاده‌ای ندارد. */
 .ry-halftone {
   position: relative;
   overflow: hidden;
@@ -3995,16 +3997,69 @@ html.has-preloader .preloader.pl-done {
 }
 
 /* ---------- Ryoku: کارتِ نمونه‌کار ---------- */
-.ry-pcard .ry-halftone img {
-  transition: filter 200ms ease;
-}
-.ry-pcard:hover .ry-halftone img,
-.ry-pcard:focus-visible .ry-halftone img {
-  filter: grayscale(1) contrast(1.12) brightness(1.03);
-}
 .ry-pcard:focus-visible {
   outline: 1px solid var(--color-sand);
   outline-offset: 3px;
+}
+
+/* ---------- Ryoku: کارتِ مقاله — فقط داخلِ سکشنِ #blog ----------
+   کاروسلِ مقالات اشتراکی است (صفحهٔ خدمت/بلاگ هم دارند)؛ پس به‌جای دست‌زدن
+   به کلاس‌های قدیمی، ظاهرشان فقط با specificity بالاتر (#blog) به زبان جدید
+   تبدیل می‌شود. کاور = تصویرِ واقعیِ آپلودشده بدونِ پردازشِ رنگی. */
+#blog .carousel .blog-card {
+  /* شعاعِ inlineِ کارتِ قدیمی از هر سلکتور قوی‌تر است؛ فقط با important
+     داخلِ همین اسکوپ خنثی می‌شود. */
+  border-radius: 0 !important;
+  border: 1px solid rgba(216, 207, 192, 0.15);
+  background: var(--color-void);
+  box-shadow: none;
+  transform: none;
+  transition:
+    background-color 200ms ease,
+    border-color 200ms ease;
+}
+#blog .carousel .blog-card:hover {
+  background: var(--color-surface);
+  border-color: rgba(216, 207, 192, 0.3);
+  box-shadow: none;
+  transform: none;
+}
+#blog .carousel .blog-card .glare {
+  display: none;
+}
+#blog .carousel .blog-card figure {
+  border-radius: 0 !important;
+}
+#blog .carousel .blog-card figure > .absolute.inset-0 {
+  display: none;
+}
+#blog .carousel .blog-card figure > div[aria-hidden="true"] {
+  background: var(--color-surface);
+}
+#blog .carousel .blog-chip {
+  right: auto;
+  inset-inline-end: 1rem;
+  border-radius: 0;
+  border: 1px solid rgba(216, 207, 192, 0.3);
+  background: var(--color-void);
+  padding: 0.3rem 0.8rem;
+  font-family: var(--font-sans);
+  font-size: 10.5px;
+  color: rgba(216, 207, 192, 0.75);
+}
+#blog .carousel .blog-card .font-latin {
+  color: rgba(216, 207, 192, 0.5);
+}
+#blog .carousel .blog-card h3 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  color: var(--color-sand);
+}
+#blog .carousel .blog-card .text-cream\/55 {
+  color: rgba(216, 207, 192, 0.55);
+}
+#blog .carousel .blog-card .text-gold-light {
+  color: var(--color-sand);
 }
 
 /* ---------- Ryoku: سربرگ سکشن (شماره · عنوان + هیرلاین + گلیف) ---------- */
