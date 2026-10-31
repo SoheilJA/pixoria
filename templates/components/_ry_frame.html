@@ -1,0 +1,12 @@
+{% comment %} Ryoku — قابِ تصویر: هیرلاین + نشان‌های + در چهار گوشه + هافتونِ تک‌رنگ.
+   props (با with): ry_src · ry_alt · ry_caption (اختیاری، مثل «01 / 04 · عنوان»)
+   · ry_class (اختیاری، کلاس روی figure) · ry_circle (اختیاری، دایرهٔ تزئینی پشت قاب). {% endcomment %}
+<figure class="ry-frame {{ ry_class|default:'' }}">
+  {% if ry_circle %}<span class="ry-frame__circle" aria-hidden="true"></span>{% endif %}
+  <div class="ry-halftone">
+    <img src="{{ ry_src }}" alt="{{ ry_alt|default:'' }}" loading="lazy" />
+  </div>
+  {% if ry_caption %}
+    <figcaption class="ry-label mt-3">{{ ry_caption }}</figcaption>
+  {% endif %}
+</figure>

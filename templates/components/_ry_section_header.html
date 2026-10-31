@@ -1,0 +1,13 @@
+{% comment %} Ryoku — سربرگِ سکشن: «شماره · عنوان» مونو + هیرلاین + گلیف.
+   props (با with): ry_num («02») · ry_label (برچسب کوتاه) · ry_glyph (یک نویسه).
+   برچسب لاتین با .ry-label (بزرگ/فاصلهٔ حروف) و فارسی با .ry-label-fa می‌آید —
+   اگر ry_label فارسی بود خودتان کلاس را عوض کنید: با ry_label_fa پاس دهید. {% endcomment %}
+<div class="ry-sec-head">
+  {% if ry_label_fa %}
+    <span class="ry-label-fa"><span dir="ltr">{{ ry_num|default:"00" }}</span> · {{ ry_label_fa }}</span>
+  {% else %}
+    <span class="ry-label"><bdi dir="ltr">{{ ry_num|default:"00" }}</bdi> · {{ ry_label }}</span>
+  {% endif %}
+  <span class="ry-sec-head__line" aria-hidden="true"></span>
+  <span class="ry-sec-head__glyph" aria-hidden="true">{{ ry_glyph }}</span>
+</div>
