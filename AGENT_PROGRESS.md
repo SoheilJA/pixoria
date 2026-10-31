@@ -125,7 +125,7 @@ This is a direct user instruction for the WHOLE redesign; every future section m
 | 8 | نظرات مشتریان (testimonials) | `templates/components/testimonials_slider.html` + `_testimonial_card.html` | ✅ | «بازطراحی سکشن هشتم (نظرات مشتریان)» |
 | 9 | آمار و ارقام (stats) | `templates/home/sections/_stats.html` | ✅ | «بازطراحی سکشن نهم (آمار و ارقام)» |
 | 10 | آخرین مقالات (blog) | `templates/home/sections/_blog.html` + `#blog`-scoped CSS | ✅ | «بازطراحی سکشن دهم (آخرین مقالات)» |
-| 11 | سوالات متداول (faq) | `templates/home/sections/_faq.html` | ⬜ | — |
+| 11 | سوالات متداول (faq) | `templates/home/sections/_faq.html` + `.ry-faq-sec`-scoped CSS | ✅ | «بازطراحی سکشن یازدهم (سوالات متداول)» |
 | 12 | CTA (همهٔ صفحات) | `templates/partials/_cta.html` | ⬜ | — |
 | 13 | Footer + ghost text | `templates/partials/_footer.html` | ⬜ (last) | — |
 | — | Global review + inner pages (about/contact/blog/portfolio/services detail, 404, login) | — | ⬜ | — |
@@ -188,6 +188,16 @@ This is a direct user instruction for the WHOLE redesign; every future section m
   (higher specificity; inline `border-radius:1.75rem` neutralized with scoped
   `!important`). Covers render as uploaded (no filter). `data-carousel*` + `ctrl-btn` +
   `slider-dot` hooks untouched.
+- Section 11 (faq) DONE, verified (accordion opens/exclusive-close/aria, desktop + 360px,
+  zero console errors, contact-page regression clean) and committed. FAQ accordion classes
+  are SHARED (home + services list + service detail + contact), and `id="faq"` is
+  DUPLICATED on the contact page — so `#faq` scoping LEAKED there at first attempt; the
+  scope is the unique home-only class `.ry-faq-sec` on the section instead. Hooks
+  (`.faq-item`/`.faq-q`/`.faq-a` + `.open` + maxHeight) untouched.
+- LESSON (tooling): NEVER edit files via PowerShell `Get-Content`/`Set-Content` — PS 5.1
+  reads UTF-8-no-BOM as ANSI and re-encoding mangles ALL Persian comments in the file
+  (happened once; recovered via `git checkout HEAD -- styles/input.css` + re-adding the
+  block through the edit tool). Use the dedicated edit/write tools for ANY text change.
 - Environment notes: this local DB had no readable work images, so `about_works` rendered
   the fallback panel; a placeholder `public/media/portfolio/images.jpg` (gitignored) was
   created to test the filmstrip path — `public/media` is not committed. The filmstrip
@@ -224,10 +234,11 @@ This is a direct user instruction for the WHOLE redesign; every future section m
 
 ## 7. Next step
 
-Continue Stage C with section 11 (faq, `templates/home/sections/_faq.html`) — one commit
-per section, update this file before each commit. After the homepage sections: CTA, then
-hero, then header, then footer (ghost text), then global review + inner pages. ASCII-art
-pass (all `ASCII-ART-PLACEHOLDER` spots) happens AFTER the full redesign.
+All 11 homepage sections are DONE. Continue Stage C with section 12 (CTA partial,
+`templates/partials/_cta.html` — appears on all pages, so old-design pages will change:
+coordinate the scope carefully) — one commit per section, update this file before each
+commit. Then: hero (1), header, footer (ghost text), global review + inner pages.
+ASCII-art pass (all `ASCII-ART-PLACEHOLDER` spots) happens AFTER the full redesign.
 
 ## 8. Resume instruction
 
