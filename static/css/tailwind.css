@@ -285,9 +285,6 @@
   .start-4 {
     inset-inline-start: calc(var(--spacing) * 4);
   }
-  .-top-2 {
-    top: calc(var(--spacing) * -2);
-  }
   .-top-3 {
     top: calc(var(--spacing) * -3);
   }
@@ -423,9 +420,6 @@
   .right-1\/4 {
     right: calc(1 / 4 * 100%);
   }
-  .right-2 {
-    right: calc(var(--spacing) * 2);
-  }
   .right-4 {
     right: calc(var(--spacing) * 4);
   }
@@ -443,9 +437,6 @@
   }
   .right-24 {
     right: calc(var(--spacing) * 24);
-  }
-  .right-\[-4rem\] {
-    right: -4rem;
   }
   .right-\[-5rem\] {
     right: -5rem;
@@ -476,9 +467,6 @@
   }
   .right-\[30\%\] {
     right: 30%;
-  }
-  .-bottom-3 {
-    bottom: calc(var(--spacing) * -3);
   }
   .-bottom-5 {
     bottom: calc(var(--spacing) * -5);
@@ -587,9 +575,6 @@
   }
   .left-\[-5rem\] {
     left: -5rem;
-  }
-  .left-\[-6rem\] {
-    left: -6rem;
   }
   .left-\[7\%\] {
     left: 7%;
@@ -725,9 +710,6 @@
   }
   .mt-auto {
     margin-top: auto;
-  }
-  .mr-3 {
-    margin-right: calc(var(--spacing) * 3);
   }
   .mr-3\.5 {
     margin-right: calc(var(--spacing) * 3.5);
@@ -1010,9 +992,6 @@
   }
   .w-24 {
     width: calc(var(--spacing) * 24);
-  }
-  .w-32 {
-    width: calc(var(--spacing) * 32);
   }
   .w-36 {
     width: calc(var(--spacing) * 36);
@@ -1301,11 +1280,6 @@
   .gap-px {
     gap: 1px;
   }
-  :where(.space-y-2 > :not(:last-child)) {
-    --tw-space-y-reverse: 0;
-    margin-block-start: calc(calc(var(--spacing) * 2) * var(--tw-space-y-reverse));
-    margin-block-end: calc(calc(var(--spacing) * 2) * calc(1 - var(--tw-space-y-reverse)));
-  }
   :where(.space-y-2\.5 > :not(:last-child)) {
     --tw-space-y-reverse: 0;
     margin-block-start: calc(calc(var(--spacing) * 2.5) * var(--tw-space-y-reverse));
@@ -1375,9 +1349,6 @@
   }
   .rounded-lg {
     border-radius: var(--radius-lg);
-  }
-  .rounded-md {
-    border-radius: var(--radius-md);
   }
   .rounded-xl {
     border-radius: var(--radius-xl);
@@ -1859,9 +1830,6 @@
   .p-8 {
     padding: calc(var(--spacing) * 8);
   }
-  .p-9 {
-    padding: calc(var(--spacing) * 9);
-  }
   .p-\[clamp\(24px\,4vw\,40px\)\] {
     padding: clamp(24px, 4vw, 40px);
   }
@@ -1933,9 +1901,6 @@
   }
   .py-\[clamp\(32px\,6vw\,72px\)\] {
     padding-block: clamp(32px, 6vw, 72px);
-  }
-  .pt-3\.5 {
-    padding-top: calc(var(--spacing) * 3.5);
   }
   .pt-4 {
     padding-top: calc(var(--spacing) * 4);
@@ -2081,6 +2046,9 @@
   .text-\[0\.98rem\] {
     font-size: 0.98rem;
   }
+  .text-\[1\.3rem\] {
+    font-size: 1.3rem;
+  }
   .text-\[1\.4rem\] {
     font-size: 1.4rem;
   }
@@ -2105,14 +2073,14 @@
   .text-\[9px\] {
     font-size: 9px;
   }
-  .text-\[10\.5px\] {
-    font-size: 10.5px;
-  }
   .text-\[10px\] {
     font-size: 10px;
   }
   .text-\[11px\] {
     font-size: 11px;
+  }
+  .text-\[13\.5px\] {
+    font-size: 13.5px;
   }
   .text-\[14\.5px\] {
     font-size: 14.5px;
@@ -2205,6 +2173,10 @@
   .leading-\[1\.25\] {
     --tw-leading: 1.25;
     line-height: 1.25;
+  }
+  .leading-\[1\.55\] {
+    --tw-leading: 1.55;
+    line-height: 1.55;
   }
   .leading-none {
     --tw-leading: 1;
@@ -2457,6 +2429,18 @@
   .text-sand {
     color: var(--color-sand);
   }
+  .text-sand\/45 {
+    color: color-mix(in srgb, #d8cfc0 45%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      color: color-mix(in oklab, var(--color-sand) 45%, transparent);
+    }
+  }
+  .text-sand\/55 {
+    color: color-mix(in srgb, #d8cfc0 55%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      color: color-mix(in oklab, var(--color-sand) 55%, transparent);
+    }
+  }
   .text-sand\/60 {
     color: color-mix(in srgb, #d8cfc0 60%, transparent);
     @supports (color: color-mix(in lab, red, red)) {
@@ -2674,9 +2658,6 @@
       --tw-scale-z: 110%;
       scale: var(--tw-scale-x) var(--tw-scale-y);
     }
-    .group-hover\:scale-\[1\.03\]:is(:where(.group):hover *) {
-      scale: 1.03;
-    }
     .group-hover\:scale-\[1\.04\]:is(:where(.group):hover *) {
       scale: 1.04;
     }
@@ -2688,14 +2669,6 @@
     }
     .group-hover\:gap-3:is(:where(.group):hover *) {
       gap: calc(var(--spacing) * 3);
-    }
-    .group-hover\:bg-gold\/15:is(:where(.group):hover *) {
-      background-color: color-mix(in srgb, #c9a15a 15%, transparent);
-    }
-    @supports (color: color-mix(in lab, red, red)) {
-      .group-hover\:bg-gold\/15:is(:where(.group):hover *) {
-        background-color: color-mix(in oklab, var(--color-gold) 15%, transparent);
-      }
     }
     .group-hover\:text-gold-light:is(:where(.group):hover *) {
       color: var(--color-gold-light);
@@ -2786,6 +2759,23 @@
   .focus\:text-ink:focus {
     color: var(--color-ink);
   }
+  @media (width < 64rem) {
+    .max-lg\:border {
+      border-style: var(--tw-border-style);
+      border-width: 1px;
+    }
+    .max-lg\:border-line\/15 {
+      border-color: color-mix(in srgb, #d8cfc0 15%, transparent);
+    }
+    @supports (color: color-mix(in lab, red, red)) {
+      .max-lg\:border-line\/15 {
+        border-color: color-mix(in oklab, var(--color-line) 15%, transparent);
+      }
+    }
+    .max-lg\:p-3 {
+      padding: calc(var(--spacing) * 3);
+    }
+  }
   @media (width >= 40rem) {
     .sm\:inline {
       display: inline;
@@ -2805,9 +2795,6 @@
     }
   }
   @media (width >= 48rem) {
-    .md\:right-8 {
-      right: calc(var(--spacing) * 8);
-    }
     .md\:flex {
       display: flex;
     }
@@ -3011,16 +2998,42 @@
     .lg\:gap-16 {
       gap: calc(var(--spacing) * 16);
     }
+    .lg\:gap-px {
+      gap: 1px;
+    }
     .lg\:overflow-visible {
       overflow: visible;
+    }
+    .lg\:border {
+      border-style: var(--tw-border-style);
+      border-width: 1px;
     }
     .lg\:border-l {
       border-left-style: var(--tw-border-style);
       border-left-width: 1px;
     }
+    .lg\:border-line\/10 {
+      border-color: color-mix(in srgb, #d8cfc0 10%, transparent);
+    }
+    @supports (color: color-mix(in lab, red, red)) {
+      .lg\:border-line\/10 {
+        border-color: color-mix(in oklab, var(--color-line) 10%, transparent);
+      }
+    }
+    .lg\:bg-line\/10 {
+      background-color: color-mix(in srgb, #d8cfc0 10%, transparent);
+    }
+    @supports (color: color-mix(in lab, red, red)) {
+      .lg\:bg-line\/10 {
+        background-color: color-mix(in oklab, var(--color-line) 10%, transparent);
+      }
+    }
     .lg\:bg-gradient-to-l {
       --tw-gradient-position: to left in oklab;
       background-image: linear-gradient(var(--tw-gradient-stops));
+    }
+    .lg\:p-8 {
+      padding: calc(var(--spacing) * 8);
     }
     .lg\:px-8 {
       padding-inline: calc(var(--spacing) * 8);
@@ -6290,6 +6303,63 @@ html.has-preloader .preloader.pl-done {
   background-image: radial-gradient(rgba(216, 207, 192, 0.5) 1px, transparent 1.15px);
   background-size: 4px 4px;
   mix-blend-mode: overlay;
+}
+.ry-scope .flt-btn {
+  border: 1px solid rgba(216, 207, 192, 0.25);
+  border-radius: 0;
+  padding: 0.55rem 1.15rem;
+  font-family: var(--font-sans);
+  font-size: 12.5px;
+  font-weight: 400;
+  color: rgba(216, 207, 192, 0.65);
+  background: transparent;
+  box-shadow: none;
+}
+.ry-scope .flt-btn:hover {
+  color: var(--color-sand);
+  border-color: rgba(216, 207, 192, 0.6);
+  background: rgba(216, 207, 192, 0.04);
+  transform: none;
+}
+.ry-scope .flt-btn.active {
+  color: var(--color-void);
+  background: var(--color-sand);
+  border-color: var(--color-sand);
+  font-weight: 500;
+  box-shadow: none;
+}
+.ry-scope .ctrl-btn {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0;
+  background: transparent;
+  border: 1px solid rgba(216, 207, 192, 0.3);
+  color: var(--color-sand);
+}
+.ry-scope .ctrl-btn:hover {
+  background: var(--color-sand);
+  border-color: var(--color-sand);
+  color: var(--color-void);
+}
+.ry-scope .slider-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 0;
+  background: rgba(216, 207, 192, 0.25);
+}
+.ry-scope .slider-dot.active {
+  background: var(--color-sand);
+  width: 20px;
+}
+.ry-pcard .ry-halftone img {
+  transition: filter 200ms ease;
+}
+.ry-pcard:hover .ry-halftone img, .ry-pcard:focus-visible .ry-halftone img {
+  filter: grayscale(1) contrast(1.12) brightness(1.03);
+}
+.ry-pcard:focus-visible {
+  outline: 1px solid var(--color-sand);
+  outline-offset: 3px;
 }
 .ry-sec-head {
   display: flex;

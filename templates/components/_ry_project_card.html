@@ -1,0 +1,43 @@
+{% load fa_digits highlight_tags component_tags %}
+{% comment %} Ryoku — کارتِ نمونه‌کار برای گریدِ قابل‌فیلترِ زبان طراحی جدید.
+   image داخلِ .ry-halftone (تک‌رنگ + نقطه‌ها)، عنوانِ سریف، متای ریزِ مونو،
+   شماره در انتهای ردیف. هوک‌های فیلتر/کاروسلِ pixoria.js حفظ شده‌اند:
+   pf-item + data-cat + is-hidden/pf-in/is-in (فیلتر) و فرزندِ track بودن (کاروسل).
+   props: project (required) · filter_key (اسلاگ دسته برای data-cat) ·
+   index (شمارهٔ ردیف، مثل «01») · class · style. {% endcomment %}
+{% with category=project.categories.first %}
+<a
+  href="{% url 'portfolio:detail' project.slug %}"
+  class="ry-pcard ry-reveal group block bg-void{% if filter_key %} pf-item{% endif %}{% if class %} {{ class }}{% endif %}"
+  {% if filter_key %}data-cat="{{ filter_key }}"{% endif %}
+  {% if style %}style="{{ style }}"{% endif %}
+  aria-label="{{ project.title|plain }}"
+>
+  <div class="ry-halftone aspect-[4/3]">
+    {% if project.image and project.image|file_exists %}
+      <img
+        src="{{ project.image.url }}"
+        alt="{{ project.title|plain }}"
+        loading="lazy"
+        decoding="async"
+      />
+    {% else %}
+      <div class="grid h-full w-full place-items-center bg-surface">
+        <span class="ry-label" dir="ltr">{{ index|default:"00" }}</span>
+      </div>
+    {% endif %}
+  </div>
+  <div class="mt-4">
+    <div class="flex items-baseline justify-between gap-3">
+      <h3 class="ry-serif text-[1.3rem] leading-[1.55] text-sand">{{ project.title|highlight }}</h3>
+      <span class="ry-label" dir="ltr">{{ index|default:"00" }}</span>
+    </div>
+    <p class="ry-label-fa mt-1">
+      {% if category %}{{ category.name }}{% endif %}{% if category and project.year %} · {% endif %}{% if project.year %}<bdi dir="ltr">{{ project.year|fa_digits }}</bdi>{% endif %}
+    </p>
+    {% if project.excerpt %}
+      <p class="mt-2 text-[13.5px] leading-7 text-sand/55">{{ project.excerpt }}</p>
+    {% endif %}
+  </div>
+</a>
+{% endwith %}

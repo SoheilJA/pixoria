@@ -3942,6 +3942,71 @@ html.has-preloader .preloader.pl-done {
   mix-blend-mode: overlay;
 }
 
+/* ---------- Ryoku: هوک‌های تعاملی قدیمی داخل سکشن‌های جدید ----------
+   فیلترِ نمونه‌کار (flt-btn) و کاروسل (ctrl-btn/slider-dot) در pixoria.js
+   با همین کلاس‌ها کار می‌کنند؛ فقط ظاهرشان داخل .ry-scope به زبان جدید
+   تبدیل می‌شود (مربع، هیرلاین، بدون گرادیان). */
+.ry-scope .flt-btn {
+  border: 1px solid rgba(216, 207, 192, 0.25);
+  border-radius: 0;
+  padding: 0.55rem 1.15rem;
+  font-family: var(--font-sans);
+  font-size: 12.5px;
+  font-weight: 400;
+  color: rgba(216, 207, 192, 0.65);
+  background: transparent;
+  box-shadow: none;
+}
+.ry-scope .flt-btn:hover {
+  color: var(--color-sand);
+  border-color: rgba(216, 207, 192, 0.6);
+  background: rgba(216, 207, 192, 0.04);
+  transform: none;
+}
+.ry-scope .flt-btn.active {
+  color: var(--color-void);
+  background: var(--color-sand);
+  border-color: var(--color-sand);
+  font-weight: 500;
+  box-shadow: none;
+}
+.ry-scope .ctrl-btn {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0;
+  background: transparent;
+  border: 1px solid rgba(216, 207, 192, 0.3);
+  color: var(--color-sand);
+}
+.ry-scope .ctrl-btn:hover {
+  background: var(--color-sand);
+  border-color: var(--color-sand);
+  color: var(--color-void);
+}
+.ry-scope .slider-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 0;
+  background: rgba(216, 207, 192, 0.25);
+}
+.ry-scope .slider-dot.active {
+  background: var(--color-sand);
+  width: 20px;
+}
+
+/* ---------- Ryoku: کارتِ نمونه‌کار ---------- */
+.ry-pcard .ry-halftone img {
+  transition: filter 200ms ease;
+}
+.ry-pcard:hover .ry-halftone img,
+.ry-pcard:focus-visible .ry-halftone img {
+  filter: grayscale(1) contrast(1.12) brightness(1.03);
+}
+.ry-pcard:focus-visible {
+  outline: 1px solid var(--color-sand);
+  outline-offset: 3px;
+}
+
 /* ---------- Ryoku: سربرگ سکشن (شماره · عنوان + هیرلاین + گلیف) ---------- */
 .ry-sec-head {
   display: flex;

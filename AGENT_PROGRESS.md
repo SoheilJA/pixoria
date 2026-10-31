@@ -97,7 +97,7 @@ change: `venv\Scripts\python manage.py collectstatic --noinput`. Verify pages wi
 | 1 | Hero | `templates/home/sections/_hero.html` | ⬜ (last) | — |
 | 2 | درباره ما (about) | `templates/home/sections/_about.html` | ⏸ waiting for user approval | «بازطراحی سکشن دوم (درباره ما) با زبان طراحی جدید» |
 | 3 | خدمات (services) | `templates/home/sections/_services.html` | ✅ | «بازطراحی سکشن سوم (خدمات)» |
-| 4 | نمونه‌کارها (portfolio) | `templates/home/sections/_portfolio.html` | ⬜ | — |
+| 4 | نمونه‌کارها (portfolio) | `templates/home/sections/_portfolio.html` | ✅ | «بازطراحی سکشن چهارم (نمونه‌کارها)» |
 | 5 | چرا پیکسوریا (why) | `templates/home/sections/_why.html` | ⬜ | — |
 | 6 | فرآیند کار (process) | `templates/home/sections/_process.html` | ⬜ | — |
 | 7 | تکنولوژی‌ها (tech) | `templates/home/sections/_tech.html` | ⬜ | — |
@@ -114,7 +114,15 @@ change: `venv\Scripts\python manage.py collectstatic --noinput`. Verify pages wi
 - Stage A (foundation) DONE and committed (`b2e4a93`).
 - Stage B (section 2 — about) DONE, committed (`8f18548`) and approved by the user.
 - Section 3 (services) DONE, verified in the browser (desktop + 360px, zero console
-  errors) and committed. No half-finished files.
+  errors) and committed.
+- Section 4 (portfolio) DONE, verified in the browser (filter hide/show + count + empty
+  message + mobile snap track + dots + zero console errors) and committed. New shared
+  partial `components/_ry_project_card.html` (Ryoku project card) keeps ALL interaction
+  hooks of pixoria.js: `pf-item` + `data-cat` + `is-hidden`/`pf-in`/`is-in` for the filter
+  and child-of-`data-carousel-track` for the mobile carousel; old classes (`flt-btn`,
+  `ctrl-btn`, `slider-dot`) are restyled via `.ry-scope`-scoped CSS overrides so the
+  archive page (old design) is unaffected. Mobile track keeps `gap-6` = GAP(24px) of the
+  carousel JS; desktop uses the 1px hairline grid.
 - Environment notes: this local DB had no readable work images, so `about_works` rendered
   the fallback panel; a placeholder `public/media/portfolio/images.jpg` (gitignored) was
   created to test the filmstrip path — `public/media` is not committed. The filmstrip
@@ -151,9 +159,9 @@ change: `venv\Scripts\python manage.py collectstatic --noinput`. Verify pages wi
 
 ## 7. Next step
 
-Continue Stage C with section 4 (portfolio, `templates/home/sections/_portfolio.html`) —
-one commit per section, update this file before each commit. After the homepage sections:
-CTA, then hero, then header, then footer (ghost text), then global review + inner pages.
+Continue Stage C with section 5 (why, `templates/home/sections/_why.html`) — one commit per
+section, update this file before each commit. After the homepage sections: CTA, then hero,
+then header, then footer (ghost text), then global review + inner pages.
 
 ## 8. Resume instruction
 
