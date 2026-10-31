@@ -95,7 +95,7 @@ change: `venv\Scripts\python manage.py collectstatic --noinput`. Verify pages wi
 | — | Foundation (tokens, fonts, base components) | `styles/input.css` + `static/fonts/` + partials + `ry-reveal.js` | ✅ | «راه‌اندازی توکن‌ها و کامپوننت‌های پایه‌ی طراحی جدید» |
 | — | Header/navigation | `templates/partials/_header.html` | ⬜ (last) | — |
 | 1 | Hero | `templates/home/sections/_hero.html` | ⬜ (last) | — |
-| 2 | درباره ما (about) | `templates/home/sections/_about.html` | ⬜ | — |
+| 2 | درباره ما (about) | `templates/home/sections/_about.html` | ⏸ waiting for user approval | «بازطراحی سکشن دوم (درباره ما) با زبان طراحی جدید» |
 | 3 | خدمات (services) | `templates/home/sections/_services.html` | ⬜ | — |
 | 4 | نمونه‌کارها (portfolio) | `templates/home/sections/_portfolio.html` | ⬜ | — |
 | 5 | چرا پیکسوریا (why) | `templates/home/sections/_why.html` | ⬜ | — |
@@ -111,10 +111,15 @@ change: `venv\Scripts\python manage.py collectstatic --noinput`. Verify pages wi
 
 ## 5. Exact current state
 
-- Stage A (foundation) is DONE and committed (see checklist). Verified: `npm run build` OK,
-  `collectstatic` OK, `render_check.py` all pages 200 / clean. Note: `node_modules` was
-  missing and `npm install` was run as part of setup.
-- Stage B (section 2 — about) has NOT started. Git tree clean after the Stage A commit.
+- Stage A (foundation) DONE and committed (`b2e4a93`). Note: `node_modules` was missing
+  and `npm install` was run as part of setup.
+- Stage B (section 2 — about) DONE, verified in the browser (desktop + 360px, zero console
+  errors, counters/filmstrip/reveal all working) and committed — WAITING for user approval
+  before Stage C. No half-finished files.
+- Environment notes: this local DB had no readable work images, so `about_works` rendered
+  the fallback panel; a placeholder `public/media/portfolio/images.jpg` (gitignored) was
+  created to test the filmstrip path — `public/media` is not committed. The filmstrip
+  branch with 4 works was also verified by direct template rendering.
 
 ## 6. Decisions and important notes
 
@@ -144,13 +149,10 @@ change: `venv\Scripts\python manage.py collectstatic --noinput`. Verify pages wi
 
 ## 7. Next step
 
-Stage B: redesign ONLY section 2 of the homepage — the "about" section
-(`templates/home/sections/_about.html`, second section after the hero) — with the Ryoku
-system (section header «02 · درباره» + glyph «هـ», serif display heading, narrow text
-column, filmstrip slider for `about_works`, square stat boxes for `about_stats`). Do not
-touch the hero/header/other sections. Then: build + collectstatic + verify, update this
-file, commit «بازطراحی سکشن دوم (درباره ما) با زبان طراحی جدید», and STOP for user
-approval.
+Wait for the user's approval of section 2 (about). After approval, continue Stage C with
+section 3 (services, `templates/home/sections/_services.html`) — one commit per section,
+update this file before each commit. After the homepage sections: CTA, then hero, then
+header, then footer (ghost text), then global review + inner pages.
 
 ## 8. Resume instruction
 

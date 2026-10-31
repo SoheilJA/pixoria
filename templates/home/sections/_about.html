@@ -1,119 +1,161 @@
 {% load icon_tags highlight_tags fa_digits %}
-{% comment %} درباره ما v3 — متنِ معرفی + قابِ شیشه‌ایِ «نمونه‌کارهای واقعی» + ریلِ مایلستونِ آمار {% endcomment %}
-{% comment %} داده‌ها: about_section (HomeAboutSection)، about_stats (HomeAboutStat)، about_works (Portfolio) {% endcomment %}
+{% comment %} درباره ما — بازطراحی با زبان طراحی Ryoku (پس‌زمینهٔ void، شنی، هیرلاین، سریف).
+   ساختار: سربرگِ سکشن (02 · درباره + گلیف) → عنوانِ سریف + پاراگرافِ باریک +
+   چیپ‌های مربع + ردیف‌های مشخصات → فیلم‌استریپِ نمونه‌کارها (هافتون) →
+   جعبه‌های آمارِ مربع. شبحِ سالِ تأسیس در پس‌زمینه.
+   داده‌ها (بدون تغییر): about_section، about_stats، about_works. {% endcomment %}
 {% if about_section %}
-  <section id="about" class="relative overflow-hidden bg-cream">
-    <svg class="divider" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true">
-      <path d="M0,54 C220,90 420,10 640,40 C860,70 1040,6 1240,36 C1340,51 1400,44 1440,48 L1440,0 L0,0 Z" fill="#0a0a0c" />
-    </svg>
+  <section id="about" class="ry-scope relative overflow-hidden border-y border-line/10">
+    <div class="relative z-10 mx-auto max-w-6xl px-6 py-24 md:py-36">
 
-    <div class="relative z-10 mx-auto max-w-7xl px-6 pb-24 pt-36 md:pt-44">
-      <div class="grid items-center gap-16 lg:grid-cols-12">
+      {% include 'components/_ry_section_header.html' with ry_num="02" ry_label_fa="درباره" ry_glyph="هـ" %}
+
+      <div class="mt-14 grid gap-16 lg:grid-cols-12 lg:gap-12">
+        {% comment %} ستونِ متن — باریک و متمرکز {% endcomment %}
         <div class="lg:col-span-5">
           {% if about_section.eyebrow %}
-            <p class="eyebrow eyebrow-dark" data-reveal="rise">{{ about_section.eyebrow }}</p>
+            <p class="ry-label-fa ry-reveal">{{ about_section.eyebrow }}</p>
           {% endif %}
-          <h2 class="mt-5 text-4xl font-extrabold leading-[1.3] text-paper md:text-5xl" data-reveal="mask">
+          <h2 class="ry-serif ry-reveal mt-4 text-4xl text-sand md:text-[2.85rem] md:leading-[1.4]" data-delay="0.06">
             {{ about_section.title|highlight:"dark" }}
           </h2>
           {% if about_section.paragraph_one %}
-            <p class="mt-6 font-light leading-8 text-coy" data-reveal="blur" data-delay="0.1">
+            <p class="ry-reveal mt-7 text-[15px] leading-8 text-sand/65" data-delay="0.12">
               {{ about_section.paragraph_one }}
             </p>
           {% endif %}
           {% if about_section.paragraph_two %}
-            <p class="mt-4 font-light leading-8 text-coy" data-reveal="blur" data-delay="0.16">
+            <p class="ry-reveal mt-4 text-[15px] leading-8 text-sand/65" data-delay="0.18">
               {{ about_section.paragraph_two }}
             </p>
           {% endif %}
+
           {% if about_section.chips %}
-            <ul class="mt-8 flex flex-wrap gap-3" data-reveal="pop" data-delay="0.22">
+            <ul class="ry-reveal mt-8 flex flex-wrap gap-2" data-delay="0.24">
               {% for chip in about_section.get_chips_list %}
-                <li class="s-chip-light">{{ chip }}</li>
+                <li class="border border-line/15 px-3 py-1.5 text-xs text-sand/70">{{ chip }}</li>
               {% endfor %}
             </ul>
           {% endif %}
+
+          {% comment %} جدولِ مشخصات — ردیف‌های «کلید ← مقدار» با هیرلاین {% endcomment %}
+          {% if settings.established_year or settings.address %}
+            <div class="ry-reveal mt-12" data-delay="0.3">
+              {% if settings.established_year %}
+                <div class="ry-row grid grid-cols-[auto_1fr]">
+                  <span class="ry-label-fa">تأسیس</span>
+                  <span class="text-sm text-sand/80">{{ settings.established_year|fa_digits }}</span>
+                </div>
+              {% endif %}
+              {% if settings.address %}
+                <div class="ry-row grid grid-cols-[auto_1fr]">
+                  <span class="ry-label-fa">استودیو</span>
+                  <span class="text-sm text-sand/80">{{ settings.address }}</span>
+                </div>
+              {% endif %}
+            </div>
+          {% endif %}
+
           {% if about_section.footer_label %}
-            <span class="mt-10 block font-latin text-[10px] tracking-[.45em] text-gold-dark/60" data-reveal="rise" data-delay="0.28">
-              {{ about_section.footer_label }}
-            </span>
+            <span class="ry-label ry-reveal mt-8 block" data-delay="0.36">{{ about_section.footer_label }}</span>
           {% endif %}
         </div>
 
-        {% comment %} قابِ شیشه‌ای — مرکز: نشانِ طلایی، پیرامون: نمونههای واقعیِ کارها {% endcomment %}
-        <div class="relative lg:col-span-7" data-reveal="clip">
-          <span class="stroke-title-light pointer-events-none absolute -top-14 left-0 select-none text-[8.5rem] font-extrabold leading-none opacity-60" aria-hidden="true">
-            {{ settings.established_year|default:"۱۳۸۹"|fa_digits }}
-          </span>
-          <span class="pointer-events-none absolute -bottom-10 -right-10 h-48 w-48 rounded-full aurora-blob" style="background: radial-gradient(circle, rgba(201,161,90,0.35), transparent 65%);" aria-hidden="true"></span>
-
-          <div class="about-panel relative grid aspect-[4/3] place-items-center overflow-hidden border border-gold/25 bg-ink2" style="border-radius: 6rem 1.25rem 6rem 1.25rem">
-            <span class="grid-bg absolute inset-0 opacity-60" aria-hidden="true"></span>
-            <span class="about-scan absolute inset-x-0 top-0 h-40" aria-hidden="true"></span>
-            <span class="about-ring about-ring-1 absolute rounded-full border border-dashed border-gold-dark/30" aria-hidden="true"></span>
-            <span class="about-ring about-ring-2 absolute rounded-full border border-gold/25" aria-hidden="true"></span>
-            <span class="about-ring about-ring-3 absolute rounded-full border border-royal/20" aria-hidden="true"></span>
-
-            {% comment %} نشانِ مرکزی — قلبِ قاب {% endcomment %}
-            <div class="about-orb relative grid place-items-center">
-              <span class="absolute inset-0 rounded-full" style="background: radial-gradient(circle at 34% 30%, rgba(244,236,217,0.9), rgba(232,196,122,0.5) 42%, rgba(143,107,44,0.25) 72%, rgba(143,107,44,0.08) 90%); box-shadow: 0 0 80px -16px rgba(201,161,90,0.65), inset -22px -16px 50px -26px rgba(10,10,12,0.85);"></span>
-              <span class="absolute -inset-4 rounded-full border border-gold/30" style="transform: rotate(-24deg) scaleY(0.34)"></span>
-            </div>
-
-            {% comment %} نمونههای واقعی — کارهای انجامشده + یادداشتهای استودیو {% endcomment %}
-            {% if about_works %}
-              {% for w in about_works %}
+        {% comment %} ستونِ تصویر — فیلم‌استریپ: یک قابِ بزرگ + بندانگشتی‌ها {% endcomment %}
+        <div class="lg:col-span-7">
+          {% if about_works %}
+            <div class="ry-reveal" data-delay="0.1" data-ry-filmstrip>
+              <figure class="ry-frame">
+                <span class="ry-frame__circle" aria-hidden="true"></span>
                 <a
-                  href="{{ w.url }}"
-                  class="ab-tile ab-tile--{{ forloop.counter }}{% if w.kind == 'blog' %} ab-tile--note{% endif %}"
-                  style="background-image:url('{{ w.image }}')"
-                  aria-label="{{ w.label|plain|truncatechars:60 }}"
+                  data-ry-link
+                  href="{{ about_works.0.url }}"
+                  class="block"
+                  aria-label="{{ about_works.0.label|plain|truncatechars:60 }}"
                 >
-                  <i class="ab-tile__tag">
-                    <span>{{ w.label|plain|truncatechars:22 }}</span>
-                    <b dir="ltr">{% icon "up-right-from-square" class="h-3 w-3" %}</b>
-                  </i>
+                  <div class="ry-halftone aspect-[16/10]">
+                    <img
+                      data-ry-main
+                      src="{{ about_works.0.image }}"
+                      alt="{{ about_works.0.label|plain|truncatechars:60 }}"
+                    />
+                  </div>
                 </a>
-              {% endfor %}
-              <a href="{% url 'portfolio:list' %}" class="glass ab-link" data-magnetic>
-                {% icon "table-cells-large" class="h-4 w-4 text-gold-light" %}
-                نمونه‌کارها
-                {% icon "arrow-left" class="h-3.5 w-3.5" %}
-              </a>
-              <span class="absolute -top-5 right-10 h-4 w-4 rotate-45 bg-gradient-to-br from-gold-dark to-gold-light" style="box-shadow: 0 0 20px 2px rgba(201,161,90,0.5)" aria-hidden="true"></span>
-            {% endif %}
+                <div class="mt-3 flex items-center justify-between gap-4">
+                  <span class="ry-label" dir="ltr">
+                    <span data-ry-counter>01 / {{ about_works|length|stringformat:"02d" }}</span>
+                    · <span data-ry-caption>{{ about_works.0.label|plain|truncatechars:28 }}</span>
+                  </span>
+                  <div class="flex gap-2">
+                    <button data-ry-prev class="ry-arrow" aria-label="نمونهٔ قبلی" type="button">
+                      {% icon "chevron-right" class="h-4 w-4" %}
+                    </button>
+                    <button data-ry-next class="ry-arrow" aria-label="نمونهٔ بعدی" type="button">
+                      {% icon "chevron-left" class="h-4 w-4" %}
+                    </button>
+                  </div>
+                </div>
+              </figure>
 
-            {% if settings.address %}
-              <figcaption class="glass absolute bottom-6 right-6 z-10 flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium text-cream">
-                {% icon "map-pin" class="h-4 w-4 text-gold" %}
-                {{ settings.address }}
-              </figcaption>
-            {% endif %}
-            {% if settings.established_year %}
-              <span class="glass absolute left-6 top-6 z-10 rounded-full px-4 py-2 text-xs font-latin tracking-[.2em] text-gold-light">
-                EST. {{ settings.established_year }}
-              </span>
-            {% endif %}
-          </div>
+              <div class="mt-4 grid grid-cols-4 gap-2">
+                {% for w in about_works %}
+                  <button
+                    data-ry-thumb
+                    data-full="{{ w.image }}"
+                    data-label="{{ w.label|plain }}"
+                    data-href="{{ w.url }}"
+                    aria-pressed="{% if forloop.first %}true{% else %}false{% endif %}"
+                    class="ry-thumb{% if forloop.first %} is-active{% endif %}"
+                    type="button"
+                    aria-label="{{ w.label|plain|truncatechars:40 }}"
+                  >
+                    <img src="{{ w.image }}" alt="" loading="lazy" />
+                  </button>
+                {% endfor %}
+              </div>
+            </div>
+          {% else %}
+            {% comment %} بدون نمونه‌کار: قابِ ساده با سالِ تأسیس و نشانی {% endcomment %}
+            <figure class="ry-frame ry-reveal" data-delay="0.1">
+              <div class="grid aspect-[16/10] place-items-center bg-surface">
+                <div class="text-center">
+                  {% if settings.established_year %}
+                    <p class="ry-serif text-7xl text-sand/90">{{ settings.established_year|fa_digits }}</p>
+                  {% endif %}
+                  {% if settings.address %}
+                    <p class="ry-label-fa mt-3">{{ settings.address }}</p>
+                  {% endif %}
+                </div>
+              </div>
+            </figure>
+          {% endif %}
         </div>
       </div>
 
-      {% comment %} نوارِ اعتبار — پنلِ تیره با پیکهای آماری (ری‌دیزاینِ کاملِ ردیفِ دوم) {% endcomment %}
+      {% comment %} جعبه‌های آمار — مربع، هیرلاین، عددِ بزرگ + برچسبِ ریز {% endcomment %}
       {% if about_stats %}
-        <div class="stat-band" data-reveal="up">
-          <ul class="stat-band__list" role="list">
-            {% for stat in about_stats %}
-              <li class="stat-band__item" data-reveal="up" data-delay="{% cycle '0' '0.08' '0.16' '0.24' %}">
-                <span class="stat-band__icon" aria-hidden="true">{% icon stat.icon %}</span>
-                <p class="stat-band__num text-goldgrad-dark">
-                  <span class="fa-num" data-counter="{{ stat.value|floatformat:'0' }}"{% if stat.prefix %} data-prefix="{{ stat.prefix }}"{% endif %}{% if stat.suffix %} data-suffix="{{ stat.suffix }}"{% endif %}>۰</span>
-                </p>
-                <p class="stat-band__label">{{ stat.label }}</p>
-              </li>
-            {% endfor %}
-          </ul>
+        <div class="ry-stat-grid ry-reveal mt-20">
+          {% for stat in about_stats %}
+            <div class="ry-stat">
+              <p class="ry-stat__num">
+                <span
+                  class="fa-num"
+                  data-counter="{{ stat.value|floatformat:'0' }}"{% if stat.prefix %} data-prefix="{{ stat.prefix }}"{% endif %}{% if stat.suffix %} data-suffix="{{ stat.suffix }}"{% endif %}
+                >۰</span>
+              </p>
+              <p class="ry-stat__label">{{ stat.label }}</p>
+            </div>
+          {% endfor %}
         </div>
       {% endif %}
     </div>
+
+    {% if settings.established_year %}
+      <span
+        class="ry-ghost pointer-events-none absolute -bottom-6 start-4 select-none text-[7rem] md:text-[11rem]"
+        aria-hidden="true"
+        >{{ settings.established_year|default:"۱۳۸۹"|fa_digits }}</span
+      >
+    {% endif %}
   </section>
 {% endif %}
