@@ -72,6 +72,27 @@ section, consistent site-wide, rendered in font-display): about «هـ» (هوی
 change: `venv\Scripts\python manage.py collectstatic --noinput`. Verify pages with
 `venv\Scripts\python scripts\render_check.py`.
 
+## 2b. Image policy (USER INSTRUCTION — DO NOT FORGET)
+
+This is a direct user instruction for the WHOLE redesign; every future section must obey it:
+
+1. **Real uploaded images stay real (never replace, never restyle into ASCII):**
+   - **Portfolio images** — uploaded in the admin panel; shown EXACTLY as uploaded in the
+     portfolio carousel (home + archive) and the single portfolio detail page.
+   - **Blog cover images** — uploaded in the admin panel; shown EXACTLY as uploaded in the
+     blog carousel, the all-articles page and the single article page.
+   These two image sets keep their uploaded appearance (the Ryoku halftone treatment used
+   in home sections is a CSS overlay — the files themselves are untouched).
+2. **Everywhere else** (all decorative/illustrative imagery on the site): replace with
+   **ASCII art** — real ASCII DRAWINGS rendered as imagery (monospace, block-art), NOT
+   simply large text. Prefer an animated/video-like variant (ASCII animation) if feasible.
+3. **For now: do NOT create the ASCII art yet.** Whenever the redesign reaches a spot that
+   needs imagery, put a clearly marked PLACEHOLDER (Ryoku hairline frame + tiny label,
+   e.g. `ASCII-ART-PLACEHOLDER`) so it is easy to find later. After the ENTIRE site is
+   redesigned, we will come back and produce all the ASCII art in one pass.
+4. Tracker: when a placeholder is introduced, list its location in section 4's notes so the
+   final ASCII pass finds them all (grep hint: `ASCII-ART-PLACEHOLDER`).
+
 ## 3. Fixed rules
 
 - Tailwind utilities only; a small custom-CSS block in `styles/input.css` for noise,
@@ -98,7 +119,7 @@ change: `venv\Scripts\python manage.py collectstatic --noinput`. Verify pages wi
 | 2 | درباره ما (about) | `templates/home/sections/_about.html` | ⏸ waiting for user approval | «بازطراحی سکشن دوم (درباره ما) با زبان طراحی جدید» |
 | 3 | خدمات (services) | `templates/home/sections/_services.html` | ✅ | «بازطراحی سکشن سوم (خدمات)» |
 | 4 | نمونه‌کارها (portfolio) | `templates/home/sections/_portfolio.html` | ✅ | «بازطراحی سکشن چهارم (نمونه‌کارها)» |
-| 5 | چرا پیکسوریا (why) | `templates/home/sections/_why.html` | ⬜ | — |
+| 5 | چرا پیکسوریا (why) | `templates/home/sections/_why.html` | ✅ | «بازطراحی سکشن پنجم (چرا پیکسوریا)» |
 | 6 | فرآیند کار (process) | `templates/home/sections/_process.html` | ⬜ | — |
 | 7 | تکنولوژی‌ها (tech) | `templates/home/sections/_tech.html` | ⬜ | — |
 | 8 | نظرات مشتریان (testimonials) | `templates/home/sections/_testimonials.html` | ⬜ | — |
@@ -123,6 +144,12 @@ change: `venv\Scripts\python manage.py collectstatic --noinput`. Verify pages wi
   `ctrl-btn`, `slider-dot`) are restyled via `.ry-scope`-scoped CSS overrides so the
   archive page (old design) is unaffected. Mobile track keeps `gap-6` = GAP(24px) of the
   carousel JS; desktop uses the 1px hairline grid.
+- Section 5 (why) DONE, verified (desktop + 360px, zero console errors) and committed.
+  Compact list-row layout (number + icon + serif title + description, hairline rows).
+  The old per-feature SVG illustrations were REMOVED — this section has no imagery in the
+  new language, so per the image policy (§2b) no ASCII placeholder is needed here.
+  NOTE: `.ry-row` no longer force-centers its items (`align-items` removed from the class
+  on purpose — rows set their own alignment); `column-gap: 1rem` kept.
 - Environment notes: this local DB had no readable work images, so `about_works` rendered
   the fallback panel; a placeholder `public/media/portfolio/images.jpg` (gitignored) was
   created to test the filmstrip path — `public/media` is not committed. The filmstrip
@@ -159,9 +186,10 @@ change: `venv\Scripts\python manage.py collectstatic --noinput`. Verify pages wi
 
 ## 7. Next step
 
-Continue Stage C with section 5 (why, `templates/home/sections/_why.html`) — one commit per
-section, update this file before each commit. After the homepage sections: CTA, then hero,
-then header, then footer (ghost text), then global review + inner pages.
+Continue Stage C with section 6 (process, `templates/home/sections/_process.html`) — one
+commit per section, update this file before each commit. After the homepage sections: CTA,
+then hero, then header, then footer (ghost text), then global review + inner pages.
+ASCII-art pass (all `ASCII-ART-PLACEHOLDER` spots) happens AFTER the full redesign.
 
 ## 8. Resume instruction
 

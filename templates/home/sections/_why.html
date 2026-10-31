@@ -1,82 +1,48 @@
-{% load icon_tags highlight_tags fa_digits %}
-{% comment %} دلایل انتخاب پیکسوریا با تصویرسازی‌های برداری و رنگ‌های پرکنتراست {% endcomment %}
+{% load icon_tags highlight_tags %}
+{% comment %} چرا پیکسوریا — بازطراحی با زبان طراحی Ryoku.
+   ساختار: سربرگِ سکشن (05 · چرا پیکسوریا + گلیف) → عنوانِ سریف + توضیح →
+   فهرستِ ردیفیِ فشرده با هیرلاین: شمارهٔ مونو + نشانِ کوچک + عنوانِ سریف +
+   توضیحِ کم‌رنگ (الگوی «compact list» مرجع). تصویرسازی‌های SVGِ قدیمی حذف
+   شدند — این سکشن در زبان جدید تصویر ندارد؛ طبق سیاستِ تصاویر (AGENT_PROGRESS
+   §2b) جای ASCII-art placeholder لازم نیست.
+   داده‌ها (بدون تغییر): why_section، why_features. {% endcomment %}
 {% if why_section and why_features %}
-  <section id="why" class="why-pixoria-section">
-    <div class="why-pixoria-section__inner">
-      <header class="why-reasons__header">
-        {% if why_section.eyebrow %}
-          <p class="why-reasons__eyebrow" data-reveal="up">{{ why_section.eyebrow }}</p>
-        {% endif %}
-        {% if why_section.title %}
-          <h2 class="why-reasons__title" data-reveal="mask" data-delay="0.08">
-            {{ why_section.title|highlight:"dark" }}
-          </h2>
-        {% endif %}
+  <section id="why" class="ry-scope relative overflow-hidden border-b border-line/10">
+    <div class="relative z-10 mx-auto max-w-6xl px-6 py-24 md:py-36">
+
+      {% include 'components/_ry_section_header.html' with ry_num="05" ry_label_fa="چرا پیکسوریا" ry_glyph="چـ" %}
+
+      <div class="mt-14 grid gap-10 lg:grid-cols-12">
+        <div class="lg:col-span-7">
+          {% if why_section.eyebrow %}
+            <p class="ry-label-fa ry-reveal">{{ why_section.eyebrow }}</p>
+          {% endif %}
+          {% if why_section.title %}
+            <h2 class="ry-serif ry-reveal mt-3 text-4xl text-sand md:text-[2.85rem] md:leading-[1.4]" data-delay="0.06">
+              {{ why_section.title|highlight }}
+            </h2>
+          {% endif %}
+        </div>
         {% if why_section.description %}
-          <p class="why-reasons__description" data-reveal="up" data-delay="0.14">
+          <p class="ry-reveal self-end text-[15px] leading-8 text-sand/65 lg:col-span-5" data-delay="0.12">
             {{ why_section.description }}
           </p>
         {% endif %}
-      </header>
+      </div>
 
-      <div class="why-reasons">
+      {% comment %} فهرستِ ردیفی: موبایل دو ستونه (عنوان کنار شماره، توضیح تمام‌عرض)،
+         دسکتاپ سه ستونه (شماره+نشان | عنوان | توضیح) — ردیف‌ها با هیرلاین جدا می‌شوند. {% endcomment %}
+      <div class="ry-reveal mt-16" data-delay="0.16">
         {% for feature in why_features %}
-          <article class="why-reason" data-reveal="up"
-                   data-delay="{% cycle '0' '0.08' '0.16' '0.24' '0.32' '0.4' %}">
-            <div class="why-reason__top">
-              <span class="why-reason__index" aria-hidden="true">{{ forloop.counter|stringformat:"02d"|fa_digits }}</span>
-              <span class="why-reason__icon">{% icon feature.icon class="h-5 w-5" %}</span>
+          <article class="ry-row grid grid-cols-[auto_1fr] gap-y-2.5 py-5 items-start md:grid-cols-[5.5rem_13rem_1fr]">
+            <div class="flex items-center gap-4 md:flex-col md:items-start md:gap-2.5">
+              <span class="ry-label" dir="ltr">0{{ forloop.counter }}</span>
+              <span class="text-sand/50" aria-hidden="true">{% icon feature.icon class="h-4 w-4" %}</span>
             </div>
-            <figure class="why-illustration" aria-hidden="true">
-              <svg viewBox="0 0 320 190" class="why-illustration__svg">
-                {% if forloop.counter == 1 %}
-                  <circle class="why-art__orbit" cx="160" cy="94" r="63" />
-                  <circle class="why-art__orbit why-art__orbit--inner" cx="160" cy="94" r="47" />
-                  <path class="why-art__medal" d="M139 60h42l10 34-31 31-31-31z" />
-                  <path class="why-art__line" d="m148 94 9 9 18-21" />
-                  <path class="why-art__line why-art__line--soft" d="m115 48 5 10 11 2-8 8 2 11-10-5-10 5 2-11-8-8 11-2zM205 112l4 8 9 1-7 6 2 9-8-4-8 4 2-9-7-6 9-1z" />
-                {% elif forloop.counter == 2 %}
-                  <path class="why-art__line why-art__line--soft" d="M94 132 151 76l50 39 28-54" />
-                  <path class="why-art__line" d="m216 61 13 0-1 13" />
-                  <path class="why-art__node" d="M94 119a13 13 0 1 0 0 26 13 13 0 0 0 0-26M151 63a13 13 0 1 0 0 26 13 13 0 0 0 0-26M201 102a13 13 0 1 0 0 26 13 13 0 0 0 0-26M229 48a13 13 0 1 0 0 26 13 13 0 0 0 0-26" />
-                  <path class="why-art__diamond" d="m160 41 16 17-16 17-16-17z" />
-                {% elif forloop.counter == 3 %}
-                  <rect class="why-art__panel" x="83" y="43" width="154" height="106" rx="14" />
-                  <path class="why-art__line why-art__line--soft" d="M83 71h154M107 35v17M213 35v17" />
-                  <path class="why-art__line" d="m111 105 13 13 27-29" />
-                  <path class="why-art__line why-art__line--soft" d="M166 99h44M166 119h30" />
-                  <circle class="why-art__node" cx="112" cy="132" r="4" />
-                  <circle class="why-art__node" cx="137" cy="132" r="4" />
-                  <circle class="why-art__node why-art__node--muted" cx="162" cy="132" r="4" />
-                {% elif forloop.counter == 4 %}
-                  <path class="why-art__axis" d="M79 145V48M79 145h170" />
-                  <rect class="why-art__bar" x="103" y="112" width="24" height="33" rx="5" />
-                  <rect class="why-art__bar why-art__bar--mid" x="145" y="91" width="24" height="54" rx="5" />
-                  <rect class="why-art__bar why-art__bar--high" x="187" y="68" width="24" height="77" rx="5" />
-                  <path class="why-art__line" d="m101 99 40-24 34 8 48-38" />
-                  <path class="why-art__line" d="m210 45 13-1-2 13" />
-                  <circle class="why-art__node" cx="141" cy="75" r="5" />
-                  <circle class="why-art__node" cx="175" cy="83" r="5" />
-                {% elif forloop.counter == 5 %}
-                  <path class="why-art__shield" d="M160 40 213 59v37c0 31-21 49-53 65-32-16-53-34-53-65V59z" />
-                  <path class="why-art__line" d="m138 96 15 15 31-34" />
-                  <path class="why-art__bubble" d="M214 111h31a12 12 0 0 1 12 12v8a12 12 0 0 1-12 12h-9l-12 9v-9h-10a12 12 0 0 1-12-12v-8a12 12 0 0 1 12-12z" />
-                  <circle class="why-art__node" cx="226" cy="127" r="2" />
-                  <circle class="why-art__node" cx="237" cy="127" r="2" />
-                  <circle class="why-art__node" cx="248" cy="127" r="2" />
-                {% else %}
-                  <path class="why-art__line why-art__line--soft" d="M81 96h158" />
-                  <circle class="why-art__node" cx="96" cy="96" r="19" />
-                  <circle class="why-art__node" cx="160" cy="96" r="19" />
-                  <circle class="why-art__node" cx="224" cy="96" r="19" />
-                  <path class="why-art__line" d="m89 96 5 5 9-11m50 6 5 5 9-11m50 6 5 5 9-11" />
-                  <path class="why-art__orbit" d="M112 54a68 68 0 0 1 93 0M208 137a68 68 0 0 1-96 0" />
-                  <path class="why-art__line why-art__line--soft" d="m198 49 9 5-1-11m-85 99-9-5 1 11" />
-                {% endif %}
-              </svg>
-            </figure>
-            <h3 class="why-reason__title">{{ feature.title }}</h3>
-            <p class="why-reason__text">{{ feature.description }}</p>
+            <h3 class="ry-serif text-[1.3rem] leading-[1.6] text-sand">{{ feature.title }}</h3>
+            <p class="col-span-2 text-[13.5px] leading-7 text-sand/55 md:col-span-1">
+              {{ feature.description }}
+            </p>
           </article>
         {% endfor %}
       </div>

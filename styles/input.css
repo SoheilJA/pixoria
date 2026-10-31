@@ -4053,7 +4053,6 @@ html.has-preloader .preloader.pl-done {
 /* ---------- Ryoku: ردیفِ فهرستِ فشرده ---------- */
 .ry-row {
   display: grid;
-  align-items: center;
   column-gap: 1rem;
   padding-block: 1rem;
   border-block-end: 1px solid rgba(216, 207, 192, 0.1);
