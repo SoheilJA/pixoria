@@ -1,56 +1,47 @@
-{% load icon_tags highlight_tags fa_digits %}
-{% comment %} فرآیند کار v3 — «خط‌تولید» بدون جعبه: ریلِ عمودی با مهرهٔ نورانی + اعدادِ بزرگِ خطکشی‌شده {% endcomment %}
-{% comment %} داده‌ها: process_section (ProcessSection)، process_steps (ProcessStep[]) {% endcomment %}
+{% load icon_tags highlight_tags %}
+{% comment %} فرآیند کار — بازطراحی با زبان طراحی Ryoku.
+   ساختار: سربرگِ سکشن (06 · فرآیند کار + گلیف) → عنوانِ سریف + توضیح →
+   فهرستِ عمودیِ مراحل متصل به یک هیرلاینِ نازک (الگوی مرجع): گرهٔ مربعِ
+   کوچک با نشانِ مرحله روی خط + شمارهٔ مونو + عنوانِ سریف + توضیحِ کم‌رنگ.
+   ریلِ متحرکِ قدیمی (مهرهٔ نورانی) حذف شد — زبان جدید حرکت را به ریل هایراین
+   ثابت و ریویلِ ساده واگذار می‌کند.
+   داده‌ها (بدون تغییر): process_section، process_steps. {% endcomment %}
 {% if process_section and process_steps %}
-  <section id="process" class="relative overflow-hidden bg-ink">
-    {% comment %} خط تقسیم‌کنندهٔ روشن روی بخش روشنِ قبلی {% endcomment %}
-    <svg class="divider" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true">
-      <path d="M0,58 C320,12 640,78 960,42 C1200,14 1360,62 1440,32 L1440,0 L0,0 Z" fill="#f5f3ee"></path>
-    </svg>
-    <div class="grid-bg pointer-events-none absolute inset-0 opacity-25" aria-hidden="true"></div>
-    <div class="pointer-events-none absolute left-[-5rem] top-24 h-80 w-80 rounded-full opacity-20 aurora-blob"
-         style="background: radial-gradient(circle, rgba(201, 161, 90, 0.3), transparent 65%)" aria-hidden="true"></div>
+  <section id="process" class="ry-scope relative overflow-hidden border-b border-line/10">
+    <div class="relative z-10 mx-auto max-w-6xl px-6 py-24 md:py-36">
 
-    <div class="relative z-10 mx-auto max-w-7xl px-6 pb-32 pt-36 md:pt-44">
-      <div class="text-center">
-        {% if process_section.eyebrow %}
-          <p class="eyebrow" data-reveal="up">{{ process_section.eyebrow }}</p>
-        {% endif %}
-        {% if process_section.title %}
-          <h2 class="mt-5 text-4xl font-extrabold leading-[1.3] md:text-[2.7rem]" data-reveal="mask" data-delay="0.08">
-            {{ process_section.title|highlight }}
-          </h2>
-        {% endif %}
+      {% include 'components/_ry_section_header.html' with ry_num="06" ry_label_fa="فرآیند کار" ry_glyph="فـ" %}
+
+      <div class="mt-14 grid gap-10 lg:grid-cols-12">
+        <div class="lg:col-span-7">
+          {% if process_section.eyebrow %}
+            <p class="ry-label-fa ry-reveal">{{ process_section.eyebrow }}</p>
+          {% endif %}
+          {% if process_section.title %}
+            <h2 class="ry-serif ry-reveal mt-3 text-4xl text-sand md:text-[2.85rem] md:leading-[1.4]" data-delay="0.06">
+              {{ process_section.title|highlight }}
+            </h2>
+          {% endif %}
+        </div>
         {% if process_section.description %}
-          <p class="mx-auto mt-4 max-w-xl font-light leading-8 text-cream/55" data-reveal="up" data-delay="0.14">
+          <p class="ry-reveal self-end text-[15px] leading-8 text-sand/65 lg:col-span-5" data-delay="0.12">
             {{ process_section.description }}
           </p>
         {% endif %}
       </div>
 
-      {% comment %} ═══ خط‌تولید — مهرهٔ نورانی پیوسته روی ریل از مرحله‌ای به مرحلهٔ بعد میرسد ═══ {% endcomment %}
-      <div class="pr-wrap relative mt-16 lg:mt-20">
-        <svg class="pr-rail" viewBox="0 0 44 1000" preserveAspectRatio="none" aria-hidden="true">
-          <path class="pr-rail__line"
-                d="M22,6 C32,60 12,120 22,176 C32,232 12,292 22,348 C32,404 12,464 22,520 C32,576 12,636 22,692 C32,748 12,808 22,864 C32,920 12,980 22,996"></path>
-          <circle class="pr-rail__bead" r="3.4" cx="0" cy="0"></circle>
-        </svg>
-        <ol class="pr-steps">
-          {% for step in process_steps %}
-            <li class="pr-step" data-reveal="up" data-delay="{% cycle '0' '0.08' '0.16' '0.24' '0.32' %}">
-              <span class="pr-step__node">{% icon step.icon class="h-5 w-5" %}</span>
-              <div class="pr-step__body">
-                <p class="pr-step__idx">
-                  <b>{{ forloop.counter|stringformat:"02d"|fa_digits }}</b>
-                  <i aria-hidden="true"></i>
-                </p>
-                <h3 class="mt-2.5 text-2xl font-extrabold">{{ step.title }}</h3>
-                <p class="mt-2.5 max-w-2xl text-sm leading-7 text-cream/55">{{ step.description }}</p>
-              </div>
-            </li>
-          {% endfor %}
-        </ol>
-      </div>
+      <ol class="ry-process ry-reveal mt-16 lg:mt-20" data-delay="0.16">
+        {% for step in process_steps %}
+          <li class="ry-process__item">
+            <span class="ry-process__node" aria-hidden="true">{% icon step.icon %}</span>
+            <span class="ry-label" dir="ltr">0{{ forloop.counter }}</span>
+            <h3 class="ry-serif mt-2 text-[1.6rem] leading-[1.5] text-sand">{{ step.title }}</h3>
+            {% if step.description %}
+              <p class="mt-2 max-w-2xl text-[14px] leading-7 text-sand/55">{{ step.description }}</p>
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ol>
     </div>
   </section>
 {% endif %}

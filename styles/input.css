@@ -4075,6 +4075,44 @@ html.has-preloader .preloader.pl-done {
   color: rgba(13, 14, 12, 0.55);
 }
 
+/* ---------- Ryoku: فرآیند — فهرستِ عمودیِ متصل به هیرلاین ---------- */
+.ry-process {
+  position: relative;
+  max-width: 42rem;
+}
+.ry-process::before {
+  content: "";
+  position: absolute;
+  inset-block: 0.4rem;
+  inset-inline-start: 0.7rem;
+  width: 1px;
+  background: rgba(216, 207, 192, 0.15);
+}
+.ry-process__item {
+  position: relative;
+  padding-inline-start: 2.75rem;
+  padding-block-end: 3rem;
+}
+.ry-process__item:last-child {
+  padding-block-end: 0;
+}
+.ry-process__node {
+  position: absolute;
+  inset-inline-start: 0;
+  inset-block-start: 0;
+  display: grid;
+  place-items: center;
+  width: 1.45rem;
+  height: 1.45rem;
+  border: 1px solid rgba(216, 207, 192, 0.4);
+  background: var(--color-void);
+  color: rgba(216, 207, 192, 0.75);
+}
+.ry-process__node svg {
+  width: 0.8rem;
+  height: 0.8rem;
+}
+
 /* ---------- Ryoku: متنِ شبحِ بزرگ (فوتر) ---------- */
 .ry-ghost {
   font-family: var(--font-display);
