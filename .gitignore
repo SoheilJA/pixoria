@@ -47,3 +47,5 @@ config/settings_preview.py
 .kilo/
 
 Pixoria-tailwind-version/
+
+prompt
