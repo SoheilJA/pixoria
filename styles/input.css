@@ -4157,6 +4157,29 @@ html.has-preloader .preloader.pl-done {
   margin-top: 1.6rem;
 }
 
+/* ---------- Ryoku: شبکه‌های اجتماعی (مربعِ هیرلاینی) ---------- */
+.ry-soc {
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 1px solid rgba(216, 207, 192, 0.25);
+  color: rgba(216, 207, 192, 0.7);
+  transition:
+    background-color 180ms ease,
+    color 180ms ease,
+    border-color 180ms ease;
+}
+.ry-soc:hover {
+  background: var(--color-sand);
+  border-color: var(--color-sand);
+  color: var(--color-void);
+}
+.ry-soc:focus-visible {
+  outline: 1px solid var(--color-sand);
+  outline-offset: 3px;
+}
+
 /* ---------- Ryoku: سربرگ سکشن (شماره · عنوان + هیرلاین + گلیف) ---------- */
 .ry-sec-head {
   display: flex;

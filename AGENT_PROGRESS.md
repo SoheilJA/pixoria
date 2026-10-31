@@ -127,7 +127,7 @@ This is a direct user instruction for the WHOLE redesign; every future section m
 | 10 | آخرین مقالات (blog) | `templates/home/sections/_blog.html` + `#blog`-scoped CSS | ✅ | «بازطراحی سکشن دهم (آخرین مقالات)» |
 | 11 | سوالات متداول (faq) | `templates/home/sections/_faq.html` + `.ry-faq-sec`-scoped CSS | ✅ | «بازطراحی سکشن یازدهم (سوالات متداول)» |
 | 12 | CTA (همهٔ صفحات) | `templates/partials/_cta.html` | ✅ | «بازطراحی سکشن CTA (همهٔ صفحات)» |
-| 13 | Footer + ghost text | `templates/partials/_footer.html` | ⬜ (last) | — |
+| 13 | Footer + ghost text | `templates/partials/_footer.html` | ✅ | «بازطراحی فوتر» |
 | — | Global review + inner pages (about/contact/blog/portfolio/services detail, 404, login) | — | ⬜ | — |
 
 ## 5. Exact current state
@@ -203,9 +203,15 @@ This is a direct user instruction for the WHOLE redesign; every future section m
   is included ONCE in base.html (all pages) — fully rewritten with the Ryoku "inverted
   block" rule (sand bg, dark text — the site's most important CTA). The terminal ASCII
   texts kept verbatim, restyled as `.ry-term` (void panel, mono Space Grotesk, square
-  status dots). New dark button variants `.ry-btn--ink`/`.ry-btn--ink-line`; `.ry-inv`
+  status dots).   New dark button variants `.ry-btn--ink`/`.ry-btn--ink-line`; `.ry-inv`
   highlight override added. Old space motifs (shards, orbit layer, aurora) removed.
   Old `terminal-terminal__*` classes now unused (cleanup at global review).
+- Footer DONE (user redirected: footer before hero), verified (void bg, no canvas,
+  hairline contact rows, spec-sheet trust boxes, 302px outline ghost «پیکسوریا» cropped
+  exactly at the page end, desktop + 360px, zero console errors) and committed. The live
+  field canvas (hx-field/hero-field.js) was removed from the footer; hero-field.js stays
+  for the hero until its redesign. Shared `_brand_lockup.html` (official logo) untouched.
+  New `.ry-soc` square social buttons.
 - Environment notes: this local DB had no readable work images, so `about_works` rendered
   the fallback panel; a placeholder `public/media/portfolio/images.jpg` (gitignored) was
   created to test the filmstrip path — `public/media` is not committed. The filmstrip
@@ -242,11 +248,11 @@ This is a direct user instruction for the WHOLE redesign; every future section m
 
 ## 7. Next step
 
-Homepage body sections + CTA are DONE (2–11 + 12). Continue with section 1 (hero,
-`templates/home/sections/_hero.html` — the last old-design section on the homepage; it has
-the hero-field canvas which must be replaced with a Ryoku-appropriate visual or an
-ASCII-ART-PLACEHOLDER per §2b). One commit per section, update this file before each
-commit. Then: header, footer (ghost text), global review + inner pages. ASCII-art pass
+Remaining: section 1 (hero, `templates/home/sections/_hero.html` — the last old-design
+part of the homepage; its hero-field canvas must become a Ryoku-appropriate visual or an
+ASCII-ART-PLACEHOLDER per §2b), then the header (`templates/partials/_header.html`), then
+the global review + inner pages (about/contact/blog/portfolio/services lists + details,
+404, login). One commit per step, update this file before each commit. ASCII-art pass
 (all `ASCII-ART-PLACEHOLDER` spots) happens AFTER the full redesign.
 
 ## 8. Resume instruction
