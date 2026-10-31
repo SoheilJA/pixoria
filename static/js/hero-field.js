@@ -16,8 +16,8 @@
   "use strict";
 
   const REDUCED = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const CREAM = "245, 243, 238";
-  const GOLD = "232, 196, 122";
+  const CREAM = "216, 207, 192";
+  const GOLD = "244, 238, 228";
 
   /* نمونه‌های فعال (بومِ هیرو + بومِ فوتر میتوانند همزمان زنده باشند) */
   const active = new Set();

@@ -115,7 +115,7 @@ This is a direct user instruction for the WHOLE redesign; every future section m
 | --- | --- | --- | --- | --- |
 | — | Foundation (tokens, fonts, base components) | `styles/input.css` + `static/fonts/` + partials + `ry-reveal.js` | ✅ | «راه‌اندازی توکن‌ها و کامپوننت‌های پایه‌ی طراحی جدید» |
 | — | Header/navigation | `templates/partials/_header.html` | ⬜ (last) | — |
-| 1 | Hero | `templates/home/sections/_hero.html` | ⬜ (last) | — |
+| 1 | Hero | `templates/home/sections/_hero.html` | ✅ | «بازطراحی سکشن هیرو» |
 | 2 | درباره ما (about) | `templates/home/sections/_about.html` | ⏸ waiting for user approval | «بازطراحی سکشن دوم (درباره ما) با زبان طراحی جدید» |
 | 3 | خدمات (services) | `templates/home/sections/_services.html` | ✅ | «بازطراحی سکشن سوم (خدمات)» |
 | 4 | نمونه‌کارها (portfolio) | `templates/home/sections/_portfolio.html` | ✅ | «بازطراحی سکشن چهارم (نمونه‌کارها)» |
@@ -221,6 +221,16 @@ This is a direct user instruction for the WHOLE redesign; every future section m
   trust_second as fallback if the first is unset); the bottom ghost text is the LATIN
   «PIXORIA» in Space Grotesk (19vw, tracking 0.06em) — `.ry-ghost` became font-agnostic
   (caller sets the font; about's year ghost got `font-display` utility).
+- Section 1 (hero) DONE, verified (canvas RUNNING with sand-colored dots — pixel-sampled
+  4280 sand / 0 gold — serif 73.6px title, 2 square buttons, stats row, cue, ghost,
+  desktop + 360px, zero console errors) and committed. Pure-typography hero: tiny label +
+  big serif H1 + short paragraph + two square buttons + hairline stats band + scroll cue
+  (`.ry-cue` pulse, reduced-motion safe) + faint latin ghost wordmark. The hero-field
+  canvas engine (`static/js/hero-field.js`) was KEPT (same `data-hx-field` hook) and only
+  its two hard-coded colors were re-toned to sand (`CREAM="216,207,192"`,
+  `GOLD="244,238,228"`). NOTE: that file's Persian comments were ALREADY mojibake on disk
+  (pre-existing, not caused by this work — a comment-fixing pass could decode it later).
+  The whole homepage now speaks the Ryoku language end to end.
 - Environment notes: this local DB had no readable work images, so `about_works` rendered
   the fallback panel; a placeholder `public/media/portfolio/images.jpg` (gitignored) was
   created to test the filmstrip path — `public/media` is not committed. The filmstrip
@@ -257,12 +267,12 @@ This is a direct user instruction for the WHOLE redesign; every future section m
 
 ## 7. Next step
 
-Remaining: section 1 (hero, `templates/home/sections/_hero.html` — the last old-design
-part of the homepage; its hero-field canvas must become a Ryoku-appropriate visual or an
-ASCII-ART-PLACEHOLDER per §2b), then the header (`templates/partials/_header.html`), then
-the global review + inner pages (about/contact/blog/portfolio/services lists + details,
-404, login). One commit per step, update this file before each commit. ASCII-art pass
-(all `ASCII-ART-PLACEHOLDER` spots) happens AFTER the full redesign.
+Homepage is FULLY redone (hero + sections 2–11 + CTA + footer). Remaining: the header
+(`templates/partials/_header.html` — glassy gold, must become Ryoku; nav items, mobile
+menu, and its JS contracts in pixoria.js must keep working), then the global review +
+inner pages (about/contact/blog/portfolio/services lists + details, 404, login). One
+commit per step, update this file before each commit. ASCII-art pass (all
+`ASCII-ART-PLACEHOLDER` spots) happens AFTER the full redesign.
 
 ## 8. Resume instruction
 

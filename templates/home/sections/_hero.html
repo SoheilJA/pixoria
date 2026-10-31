@@ -1,61 +1,70 @@
 {% load icon_tags fa_digits highlight_tags nav_tags %}
-{% comment %} هیرو v3 — «میدانِ زنده»: بومِ نقطه‌های پیکسلیِ محیطی + تایپِ مرکزیِ مینیمال {% endcomment %}
-{% comment %} موتورِ بوم: static/js/hero-field.js (دوبعدیِ سبک، بدونِ three.js و بدونِ GSAP) {% endcomment %}
-{% comment %} داده‌ها: hero (HeroSection) و hero_stats که در ویو از شمارنده‌های {% endcomment %}
-{% comment %} واقعی (تعدادِ نمونه‌کارها و خدمات) ساخته می‌شود — نه متنِ ثابتِ ادمین. {% endcomment %}
-<section id="home" class="hx hx-a" aria-label="معرفی">
-  {% comment %} بومِ نقطه‌ها {% endcomment %}
-  <canvas class="hx-a__field" data-hx-field aria-hidden="true"></canvas>
+{% comment %} هیرو — بازطراحی با زبان طراحی Ryoku.
+   تایپوگرافیِ خالص: برچسبِ ریز + عنوانِ بزرگِ سریف + پاراگرافِ کوتاه + دو
+   دکمهٔ مربع + نوارِ آمارِ هیرلاینی. بومِ «میدانِ زنده» (hero-field.js) با
+   همان موتور و هوکِ data-hx-field حفظ شده و فقط رنگ‌هایش به خانوادهٔ شنی
+   تغییر کرده. سرنخِ اسکرول با خطِ ساده.
+   داده‌ها (بدون تغییر): hero (HeroSection) و hero_stats (شمارنده‌های واقعی
+   از ویو). HUD گوشه‌ها تزئینی است. {% endcomment %}
+<section id="home" class="relative overflow-hidden bg-void" aria-label="معرفی">
+  {% comment %} بومِ نقطه‌ها — موتورِ همان hero-field.js با رنگِ شنی {% endcomment %}
+  <canvas class="absolute inset-0 h-full w-full" data-hx-field aria-hidden="true"></canvas>
 
-  {% comment %} هاله و کلمهٔ غولِ لاتین {% endcomment %}
-  <div class="hx-a__haze" aria-hidden="true"></div>
-  <span class="hx-a__ghost font-latin" aria-hidden="true">pixoria</span>
-
-  {% comment %} HUD گوشه‌ها — برچسب‌های تزئینیِ ظریف {% endcomment %}
-  <div class="hx-corners" aria-hidden="true">
-    <span dir="ltr">pixoria® studio</span>
-    <span dir="ltr">est. 2018 — tehran</span>
-    <span dir="ltr">field: active</span>
-    <span dir="ltr">35.6892 N / 51.3890 E</span>
+  {% comment %} HUD گوشه‌ها — برچسب‌های مونوی تزئینی {% endcomment %}
+  <div class="pointer-events-none absolute inset-x-6 top-24 z-10 hidden justify-between md:flex" aria-hidden="true">
+    <span class="ry-label" dir="ltr">pixoria® studio</span>
+    <span class="ry-label" dir="ltr">est. 2018 — tehran</span>
+  </div>
+  <div class="pointer-events-none absolute inset-x-6 bottom-10 z-10 hidden justify-between md:flex" aria-hidden="true">
+    <span class="ry-label" dir="ltr">field: active</span>
+    <span class="ry-label" dir="ltr">35.6892 N / 51.3890 E</span>
   </div>
 
-  <div class="hx-head hx-a__body">
-    {% if hero.eyebrow %}
-      <p class="eyebrow" data-reveal="rise">{{ hero.eyebrow }}</p>
-    {% endif %}
-    <h1 class="hx-title" data-reveal="mask">
-      {{ hero.title|highlight }}
-    </h1>
-    <p class="hx-sub" data-reveal="blur" data-delay="0.12">
-      {{ hero.description|linebreaksbr }}
-    </p>
-    <div class="hx-cta" data-reveal="pop" data-delay="0.2">
-      {% if hero.cta_primary_text %}
-        <a href="{% nav_url hero.cta_primary_url %}" class="btn btn-gold px-8 py-4" data-magnetic>
-          {{ hero.cta_primary_text }} {% icon "arrow-left" class="h-4 w-4" %}
-        </a>
+  {% comment %} واژهٔ شبحِ لاتین — کم‌رنگ، گوشهٔ پایین {% endcomment %}
+  <span class="ry-ghost font-label pointer-events-none absolute -bottom-4 start-6 z-10 hidden select-none text-[13vw] leading-none tracking-[0.04em] lg:block" aria-hidden="true">PIXORIA</span>
+
+  <div class="relative z-20 mx-auto flex min-h-[92svh] max-w-6xl flex-col justify-center px-6 pb-24 pt-32">
+    <div class="max-w-3xl">
+      {% if hero.eyebrow %}
+        <p class="ry-label-fa ry-reveal">{{ hero.eyebrow }}</p>
       {% endif %}
-      {% if hero.cta_secondary_text and hero.cta_secondary_url %}
-        <a href="{% nav_url hero.cta_secondary_url %}" class="btn btn-ghost px-8 py-4" data-magnetic>
-          {{ hero.cta_secondary_text }}
-        </a>
+      <h1 class="ry-serif ry-reveal mt-6 text-[2.9rem] leading-[1.3] text-sand md:text-[4.6rem] md:leading-[1.25]" data-delay="0.06">
+        {{ hero.title|highlight }}
+      </h1>
+      <p class="ry-reveal mt-7 max-w-xl text-[15px] leading-8 text-sand/65 md:text-base" data-delay="0.14">
+        {{ hero.description|linebreaksbr }}
+      </p>
+
+      <div class="ry-reveal mt-10 flex flex-wrap gap-3" data-delay="0.22">
+        {% if hero.cta_primary_text %}
+          <a href="{% nav_url hero.cta_primary_url %}" class="ry-btn ry-btn--fill px-7 py-4">
+            {{ hero.cta_primary_text }} {% icon "arrow-left" class="h-4 w-4" %}
+          </a>
+        {% endif %}
+        {% if hero.cta_secondary_text and hero.cta_secondary_url %}
+          <a href="{% nav_url hero.cta_secondary_url %}" class="ry-btn ry-btn--line px-7 py-4">
+            {{ hero.cta_secondary_text }}
+          </a>
+        {% endif %}
+      </div>
+
+      {% comment %} نوارِ آمار — شمارنده‌های واقعی از ویو {% endcomment %}
+      {% if hero_stats %}
+        <div class="ry-reveal mt-16 flex flex-wrap gap-x-12 gap-y-5 border-t border-line/10 pt-7" data-delay="0.3">
+          {% for stat in hero_stats %}
+            <span class="flex items-baseline gap-2.5">
+              <b class="ry-serif fa-num text-2xl font-normal text-sand">{{ stat.value|fa_digits }}</b>
+              {% if stat.label %}<span class="ry-label-fa">{{ stat.label }}</span>{% endif %}
+            </span>
+          {% endfor %}
+        </div>
       {% endif %}
     </div>
-    {% if hero_stats %}
-      <div class="hx-metrics" data-reveal="rise" data-delay="0.3">
-        {% for stat in hero_stats %}
-          <span>
-            <b class="fa-num">{{ stat.value|fa_digits }}</b>
-            {{ stat.label }}
-          </span>
-        {% endfor %}
-      </div>
-    {% endif %}
   </div>
 
-  {% comment %} سرنخِ اسکرول {% endcomment %}
-  <div class="hx-scroll" aria-hidden="true">
-    <span>اسکرول</span>
-    <i></i>
+  {% comment %} سرنخِ اسکرول — خطِ ساده با نبضِ آرام {% endcomment %}
+  <div class="absolute bottom-0 start-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-3" aria-hidden="true">
+    <span class="ry-label-fa">اسکرول</span>
+    <span class="ry-cue block h-16 w-px"></span>
   </div>
 </section>

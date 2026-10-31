@@ -4180,6 +4180,29 @@ html.has-preloader .preloader.pl-done {
   outline-offset: 3px;
 }
 
+/* ---------- Ryoku: سرنخِ اسکرولِ هیرو ---------- */
+.ry-cue {
+  background: rgba(216, 207, 192, 0.3);
+  animation: ry-cue 2.4s ease-in-out infinite;
+  transform-origin: top;
+}
+@keyframes ry-cue {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scaleY(0.55);
+  }
+  50% {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ry-cue {
+    animation: none;
+  }
+}
+
 /* ---------- Ryoku: سربرگ سکشن (شماره · عنوان + هیرلاین + گلیف) ---------- */
 .ry-sec-head {
   display: flex;
