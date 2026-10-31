@@ -114,7 +114,7 @@ This is a direct user instruction for the WHOLE redesign; every future section m
 | # | Section | Template | Status | Commit |
 | --- | --- | --- | --- | --- |
 | — | Foundation (tokens, fonts, base components) | `styles/input.css` + `static/fonts/` + partials + `ry-reveal.js` | ✅ | «راه‌اندازی توکن‌ها و کامپوننت‌های پایه‌ی طراحی جدید» |
-| — | Header/navigation | `templates/partials/_header.html` | ⬜ (last) | — |
+| — | Header/navigation | `templates/partials/_header.html` + `static/css/ry.css` | ✅ | «بازطراحی هدر» |
 | 1 | Hero | `templates/home/sections/_hero.html` | ✅ | «بازطراحی سکشن هیرو» |
 | 2 | درباره ما (about) | `templates/home/sections/_about.html` | ⏸ waiting for user approval | «بازطراحی سکشن دوم (درباره ما) با زبان طراحی جدید» |
 | 3 | خدمات (services) | `templates/home/sections/_services.html` | ✅ | «بازطراحی سکشن سوم (خدمات)» |
@@ -267,10 +267,8 @@ This is a direct user instruction for the WHOLE redesign; every future section m
 
 ## 7. Next step
 
-Homepage is FULLY redone (hero + sections 2–11 + CTA + footer). Remaining: the header
-(`templates/partials/_header.html` — glassy gold, must become Ryoku; nav items, mobile
-menu, and its JS contracts in pixoria.js must keep working), then the global review +
-inner pages (about/contact/blog/portfolio/services lists + details, 404, login). One
+All homepage body sections + CTA + footer + header are DONE. Remaining: the global review
++ inner pages (about/contact/blog/portfolio/services lists + details, 404, login). One
 commit per step, update this file before each commit. ASCII-art pass (all
 `ASCII-ART-PLACEHOLDER` spots) happens AFTER the full redesign.
 
