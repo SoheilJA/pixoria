@@ -1,7 +1,8 @@
 {% load icon_tags nav_tags fa_digits highlight_tags %}
 {% comment %}فوتر — بازطراحی با زبان طراحی Ryoku.
-   عمدتاً تایپوگرافیک: هیرلاین‌های زیاد، برچسب‌های ریز، جعبه‌های اعتمادِ
-   هیرلاینی و متنِ شبحِ برند (outline بسیار بزرگ) در پایین — امضای مرجع.
+   عمدتاً تایپوگرافیک: هیرلاین‌های زیاد، برچسب‌های ریز، جعبهٔ مجوزِ هیرلاینی
+   و متنِ شبحِ برندِ لاتین (PIXORIA، outline بسیار بزرگ) در پایین — امضای مرجع.
+   چیدمان: ستونِ برندِ بزرگ‌تر + سه ستونِ برابر (صفحات اصلی/خدمات/مجوز — ۶+۲+۲+۲).
    میدانِ زندهٔ قدیمی (canvas hx-field) و موجِ جداکننده حذف شدند.
    محتوا عیناً از دیتابیس: settings، socials، footer_groups، services_footer.
    قفل برند (لوگوی رسمی) از پارشالِ مشترک می‌آید و دست نخورده. {% endcomment %}
@@ -9,8 +10,8 @@
   <div class="relative z-10 mx-auto max-w-6xl px-6 pt-24 pb-8 md:pt-32">
     <div class="grid gap-14 lg:grid-cols-12">
 
-      {% comment %} برند و اطلاعات تماس {% endcomment %}
-      <div class="ry-reveal lg:col-span-4">
+      {% comment %} برند و اطلاعات تماس — ستونِ بزرگ‌تر {% endcomment %}
+      <div class="ry-reveal lg:col-span-6">
         {% include "partials/_brand_lockup.html" %}
         {% if settings.footer_description or settings.established_year %}
           <p class="mt-6 max-w-xs text-sm leading-8 text-sand/60">
@@ -98,9 +99,9 @@
         </ul>
       </nav>
 
-      {% comment %} خدمات {% endcomment %}
+      {% comment %} خدمات — ستونِ برابر {% endcomment %}
       {% if services_footer %}
-        <nav class="ry-reveal lg:col-span-3" aria-label="خدمات" data-delay="0.14">
+        <nav class="ry-reveal lg:col-span-2" aria-label="خدمات" data-delay="0.14">
           <h3 class="ry-label-fa">خدمات</h3>
           <ul class="mt-5">
             {% for service in services_footer %}
@@ -112,28 +113,27 @@
         </nav>
       {% endif %}
 
-      {% comment %} اعتماد و امنیت — جعبه‌های هیرلاینی {% endcomment %}
+      {% comment %} اعتماد و مجوزها — فقط یک جایگاه برای مجوز {% endcomment %}
       {% if settings.trust_first_title or settings.trust_second_title %}
-        <div class="ry-reveal lg:col-span-4" data-delay="0.2">
-          <h3 class="ry-label-fa">اعتماد و امنیت</h3>
-          <div class="mt-5 grid grid-cols-2 gap-px border border-line/10 bg-line/10">
+        <div class="ry-reveal lg:col-span-2" data-delay="0.2">
+          <h3 class="ry-label-fa">اعتماد و مجوزها</h3>
+          <div class="mt-5 border border-line/10 bg-surface/40 px-4 py-8 text-center">
             {% if settings.trust_first_title %}
-              <div class="flex flex-col items-center justify-center gap-2 bg-void px-4 py-7 text-center">
-                {% icon "shield-check" class="h-6 w-6 text-sand/60" %}
-                <span class="text-sm font-medium text-sand/85">{{ settings.trust_first_title }}</span>
-                {% if settings.trust_first_subtitle %}
-                  <span class="ry-label-fa">{{ settings.trust_first_subtitle }}</span>
-                {% endif %}
-              </div>
-            {% endif %}
-            {% if settings.trust_second_title %}
-              <div class="flex flex-col items-center justify-center gap-2 bg-void px-4 py-7 text-center">
-                {% icon "badge-check" class="h-6 w-6 text-sand/60" %}
-                <span class="text-sm font-medium text-sand/85">{{ settings.trust_second_title }}</span>
-                {% if settings.trust_second_subtitle %}
-                  <span class="ry-label-fa">{{ settings.trust_second_subtitle }}</span>
-                {% endif %}
-              </div>
+              <span class="mx-auto mb-3 grid h-11 w-11 place-items-center border border-line/15 text-sand/70">
+                {% icon "shield-check" class="h-5 w-5" %}
+              </span>
+              <span class="block text-sm font-medium text-sand/85">{{ settings.trust_first_title }}</span>
+              {% if settings.trust_first_subtitle %}
+                <span class="ry-label-fa mt-1 block">{{ settings.trust_first_subtitle }}</span>
+              {% endif %}
+            {% else %}
+              <span class="mx-auto mb-3 grid h-11 w-11 place-items-center border border-line/15 text-sand/70">
+                {% icon "badge-check" class="h-5 w-5" %}
+              </span>
+              <span class="block text-sm font-medium text-sand/85">{{ settings.trust_second_title }}</span>
+              {% if settings.trust_second_subtitle %}
+                <span class="ry-label-fa mt-1 block">{{ settings.trust_second_subtitle }}</span>
+              {% endif %}
             {% endif %}
           </div>
           {% if settings.trust_note %}
@@ -150,8 +150,8 @@
     </div>
   </div>
 
-  {% comment %} امضای فوتر: متنِ شبحِ برند (outline بسیار بزرگ، کمی بریده) {% endcomment %}
+  {% comment %} امضای فوتر: متنِ شبحِ برندِ لاتین (outline بسیار بزرگ، کمی بریده) {% endcomment %}
   <div class="pointer-events-none select-none" aria-hidden="true">
-    <p class="ry-ghost -mb-[0.22em] text-center text-[21vw] leading-[1.1]">پیکسوریا</p>
+    <p class="ry-ghost -mb-[0.16em] text-center font-label text-[19vw] leading-[1.1] tracking-[0.06em]">PIXORIA</p>
   </div>
 </footer>

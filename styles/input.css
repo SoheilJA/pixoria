@@ -4300,10 +4300,9 @@ html.has-preloader .preloader.pl-done {
   border-top: 1px solid rgba(216, 207, 192, 0.12);
 }
 
-/* ---------- Ryoku: متنِ شبحِ بزرگ (فوتر) ---------- */
+/* ---------- Ryoku: متنِ شبحِ بزرگ (فوتر) ----------
+   بدونِ فونتِ ثابت — فراخوان تعیین می‌کند (فارسی: font-display، لاتین: font-label) */
 .ry-ghost {
-  font-family: var(--font-display);
-  font-weight: 400;
   line-height: 0.95;
   color: transparent;
   -webkit-text-stroke: 1px rgba(216, 207, 192, 0.13);

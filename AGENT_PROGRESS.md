@@ -215,6 +215,12 @@ This is a direct user instruction for the WHOLE redesign; every future section m
   «افزودن ستون صفحات اصلی به فوتر»): a static main-pages nav column («صفحات اصلی»: خانه /
   درباره ما / تماس با ما / مجله via `{% url %}`) between the brand and services columns;
   column spans rebalanced 4+2+3+3. Note: the about URL name is `core:about` (NOT `about`).
+  User-requested footer refinement (commit «بازچینی فوتر: چهار ستون با مجوز تکی و شبح
+  لاتین»): layout is now brand 6 + three EQUAL columns of 2 (main pages / services /
+  licenses); the licenses column holds exactly ONE badge slot (trust_first preferred,
+  trust_second as fallback if the first is unset); the bottom ghost text is the LATIN
+  «PIXORIA» in Space Grotesk (19vw, tracking 0.06em) — `.ry-ghost` became font-agnostic
+  (caller sets the font; about's year ghost got `font-display` utility).
 - Environment notes: this local DB had no readable work images, so `about_works` rendered
   the fallback panel; a placeholder `public/media/portfolio/images.jpg` (gitignored) was
   created to test the filmstrip path — `public/media` is not committed. The filmstrip

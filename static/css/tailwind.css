@@ -700,8 +700,11 @@
   .mr-3\.5 {
     margin-right: calc(var(--spacing) * 3.5);
   }
-  .-mb-\[0\.22em\] {
-    margin-bottom: calc(0.22em * -1);
+  .-mb-\[0\.16em\] {
+    margin-bottom: calc(0.16em * -1);
+  }
+  .mb-3 {
+    margin-bottom: calc(var(--spacing) * 3);
   }
   .mb-5 {
     margin-bottom: calc(var(--spacing) * 5);
@@ -1655,6 +1658,12 @@
   .bg-surface {
     background-color: var(--color-surface);
   }
+  .bg-surface\/40 {
+    background-color: color-mix(in srgb, #121311 40%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      background-color: color-mix(in oklab, var(--color-surface) 40%, transparent);
+    }
+  }
   .bg-void {
     background-color: var(--color-void);
   }
@@ -1886,8 +1895,8 @@
   .py-5 {
     padding-block: calc(var(--spacing) * 5);
   }
-  .py-7 {
-    padding-block: calc(var(--spacing) * 7);
+  .py-8 {
+    padding-block: calc(var(--spacing) * 8);
   }
   .py-10 {
     padding-block: calc(var(--spacing) * 10);
@@ -1972,6 +1981,9 @@
   }
   .align-middle {
     vertical-align: middle;
+  }
+  .font-display {
+    font-family: var(--font-display);
   }
   .font-label {
     font-family: var(--font-label);
@@ -2111,11 +2123,11 @@
   .text-\[18vw\] {
     font-size: 18vw;
   }
+  .text-\[19vw\] {
+    font-size: 19vw;
+  }
   .text-\[20vw\] {
     font-size: 20vw;
-  }
-  .text-\[21vw\] {
-    font-size: 21vw;
   }
   .text-\[22vw\] {
     font-size: 22vw;
@@ -2247,6 +2259,10 @@
   .tracking-\[\.25em\] {
     --tw-tracking: .25em;
     letter-spacing: .25em;
+  }
+  .tracking-\[0\.06em\] {
+    --tw-tracking: 0.06em;
+    letter-spacing: 0.06em;
   }
   .tracking-\[0\.12em\] {
     --tw-tracking: 0.12em;
@@ -3025,14 +3041,14 @@
     .lg\:col-span-2 {
       grid-column: span 2 / span 2;
     }
-    .lg\:col-span-3 {
-      grid-column: span 3 / span 3;
-    }
     .lg\:col-span-4 {
       grid-column: span 4 / span 4;
     }
     .lg\:col-span-5 {
       grid-column: span 5 / span 5;
+    }
+    .lg\:col-span-6 {
+      grid-column: span 6 / span 6;
     }
     .lg\:col-span-7 {
       grid-column: span 7 / span 7;
@@ -6728,8 +6744,6 @@ html.has-preloader .preloader.pl-done {
   border-top: 1px solid rgba(216, 207, 192, 0.12);
 }
 .ry-ghost {
-  font-family: var(--font-display);
-  font-weight: 400;
   line-height: 0.95;
   color: transparent;
   -webkit-text-stroke: 1px rgba(216, 207, 192, 0.13);
