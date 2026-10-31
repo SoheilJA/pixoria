@@ -1,45 +1,40 @@
-{% load icon_tags highlight_tags fa_digits %}
-{% comment %} دستاوردها v3 — روی پسزمینهٔ روشن (فلیپشده برای ریتمِ تناوبیِ سکشنها) {% endcomment %}
-{% comment %} data: stats_section (StatsSection)، stats (StatItem[]) {% endcomment %}
-{% comment %}pixoria.js هر data-count را هنگام رسیدن به دید شمارش می‌کند
-   (data-prefix / data-suffix دور عدد می‌آیند){% endcomment %}
+{% load icon_tags highlight_tags %}
+{% comment %} دستاوردها — بازطراحی با زبان طراحی Ryoku.
+   ساختار: سربرگِ سکشن (09 · دستاوردها + گلیف) → عنوانِ سریف →
+   جعبه‌های آمارِ مربع با جداکنندهٔ هیرلاین (gap-px): نشانِ کوچک + عددِ بزرگِ
+   سریف (ارقام فارسی با شمارش در رسیدن به دید) + برچسبِ ریز + توضیحِ اختیاری.
+   هوکِ شمارشگرِ pixoria.js دست‌نخورده: data-count + data-prefix/data-suffix.
+   پس‌زمینهٔ کرمِ قدیمی، موتیف‌های شیشه‌ای و متنِ stroke حذف شدند.
+   داده‌ها (بدون تغییر): stats_section، stats. {% endcomment %}
 {% if stats_section and stats %}
-  <section id="stats" class="stats-light relative overflow-hidden bg-cream">
-    <svg class="divider" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true">
-      <path d="M0,54 C220,90 420,10 640,40 C860,70 1040,6 1240,36 C1340,51 1400,44 1440,48 L1440,0 L0,0 Z" fill="#efece5" />
-    </svg>
-    <div class="grid-bg pointer-events-none absolute inset-0 opacity-50" aria-hidden="true"></div>
-    <div class="pointer-events-none absolute left-1/2 top-0 h-96 w-96 -translate-x-1/2 rounded-full opacity-40 aurora-blob"
-         style="background: radial-gradient(circle, rgba(201, 161, 90, 0.28), transparent 65%)" aria-hidden="true"></div>
-    <span class="font-latin stroke-title-light pointer-events-none absolute -bottom-8 left-4 select-none text-[16rem] font-light leading-none opacity-40"
-          aria-hidden="true">PIXORIA</span>
+  <section id="stats" class="ry-scope relative overflow-hidden border-b border-line/10">
+    <div class="relative z-10 mx-auto max-w-6xl px-6 py-24 md:py-36">
 
-    <div class="relative z-10 mx-auto max-w-7xl px-6 pt-28 pb-24 md:pt-36">
-      <div class="text-center">
-        {% if stats_section.eyebrow %}
-          <p class="eyebrow eyebrow-dark" data-reveal="rise">{{ stats_section.eyebrow }}</p>
-        {% endif %}
-        {% if stats_section.title %}
-          <h2 class="mt-5 text-3xl font-extrabold leading-[1.3] text-paper md:text-[2.4rem]" data-reveal="mask" data-delay="0.08">
-            {{ stats_section.title|highlight:"dark" }}
-          </h2>
-        {% endif %}
-      </div>
+      {% include 'components/_ry_section_header.html' with ry_num="09" ry_label_fa=stats_section.eyebrow|default:"دستاوردها" ry_glyph="آ" %}
 
-      <div class="rv-alt mt-14 grid grid-cols-2 gap-5 lg:grid-cols-4">
+      {% if stats_section.title %}
+        <h2 class="ry-serif ry-reveal mt-14 text-4xl text-sand md:text-[2.85rem] md:leading-[1.4]">
+          {{ stats_section.title|highlight }}
+        </h2>
+      {% endif %}
+
+      <div class="ry-stat-grid ry-reveal mt-14" data-delay="0.12">
         {% for stat in stats %}
-          <div class="stat-card glass-light tilt relative overflow-hidden p-8 text-center"
-               style="border-radius: {% cycle '1.75rem' '1.25rem' %}"
-               data-reveal="rise" data-delay="{% cycle '0' '0.1' '0.2' '0.3' %}">
-            <span class="glare" aria-hidden="true"></span>
+          <div class="ry-stat">
             {% if stat.icon %}
-              <span class="stat-icon">{% icon stat.icon class="h-5 w-5" %}</span>
+              <span class="text-sand/40" aria-hidden="true">{% icon stat.icon class="h-4 w-4" %}</span>
             {% endif %}
-            <p class="stat-num fa-num" data-count="{{ stat.value|floatformat:'0' }}"
-               data-prefix="{{ stat.prefix }}" data-suffix="{{ stat.suffix }}">۰</p>
-            <p class="mt-2 text-sm text-coy">{{ stat.label }}</p>
+            <p class="ry-stat__num mt-4">
+              <span
+                class="fa-num"
+                data-count="{{ stat.value|floatformat:'0' }}"
+                data-prefix="{{ stat.prefix }}"
+                data-suffix="{{ stat.suffix }}"
+              >۰</span>
+            </p>
+            <p class="ry-stat__label">{{ stat.label }}</p>
             {% if stat.description %}
-              <p class="mt-1 text-xs text-coy/45">{{ stat.description }}</p>
+              <p class="mt-1.5 text-[11px] leading-6 text-sand/35">{{ stat.description }}</p>
             {% endif %}
           </div>
         {% endfor %}
