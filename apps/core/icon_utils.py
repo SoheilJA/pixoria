@@ -1,18 +1,17 @@
-"""پشتیبانی آیکونِ Font Awesome (رایگان) برای ادمین و قالب‌ها.
+"""پشتیبانی آیکونِ Lucide (اسپرایتِ SVGِ محلی) برای ادمین و قالب‌ها.
 
-کاملاً لوکال: اسکریپتِ ``scripts/build_fontawesome.js`` فونت وبِ پکیجِ
-pinned شدهٔ ``@fortawesome/fontawesome-free`` را به ``static/fontawesome/``
-کپی می‌کند و ``static/fontawesome/icons.json`` را می‌سازد — فهرستِ نامِ
-آیکون‌های رایگان، دسته‌بندی‌شده بر اساس سبک (solid / regular / brands).
-بدون CDN، و برخلافِ اسپرایتِ قدیمیِ Lucide هیچ چیز برای sync وجود ندارد:
-فونت شاملِ همهٔ آیکون‌های رایگان است، پس هر چیزی که ادمین انتخاب کند
-فوراً روی سایت نمایش داده می‌شود.
+کاملاً لوکال: اسپرایتِ ``static/lucide/sprite.svg`` (lucide-static v0.544)
+به صورت شناور است و تگ‌ها با ``<svg><use href="…#name">`` از آن برداشت
+می‌کنند — بدون وبفونت و بدون CDN. فهرستِ نام‌ها هنگامِ اجرا از خودِ
+اسپرایت خوانده می‌شود، پس هر آیکونی که ادمین انتخاب کند فوراً روی سایت
+نمایش داده می‌شود و برای سینک چیزی لازم نیست. اسکریپتِ
+``scripts/build_lucide_icons.py`` فقط لیستِ جاوااسکریپتِ ادمین
+(``static/admin/js/lucide_icons.js``) را از همان اسپرایت تولید می‌کند.
 
-سبکِ پیش‌فرض solid است (تصمیمِ کاربر)؛ آیکون‌های برند (مثل linkedin)
-خودکار با fa-brands رندر می‌شوند.
+رندرِ `<svg class="lucide">` با ``stroke="currentColor"`` است؛ رنگ/اندازه
+با همان کلاس‌های Tailwind (text-gold و h-6 w-6) کنترل می‌شود.
 """
 
-import json
 import re
 from functools import lru_cache
 from pathlib import Path
@@ -26,179 +25,126 @@ from django.templatetags.static import static
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
 
-ICONS_REL_PATH = Path("fontawesome") / "icons.json"
-FA_CSS_REL_PATH = "fontawesome/css/all.min.css"
-DEFAULT_ICON = "wand-magic-sparkles"
-DEFAULT_STYLE = "solid"
+SPRITE_REL_PATH = "lucide/sprite.svg"
+ADMIN_LIST_JS = "admin/js/lucide_icons.js"
+DEFAULT_ICON = "sparkles"
+_SYMBOL_RE = re.compile(r'<symbol id="([a-z0-9][a-z0-9-]*)"')
 
-# نگاشتِ نام‌های قدیمیِ Lucide به نامِ معادل در Font Awesome. تمام نام‌های
-# استفاده‌شده در قالب‌ها و دیتابیسِ فعلی را پوشش می‌دهد؛ اسکریپتِ بیلد این
-# جدول را در برابر فهرستِ رسمی آیکون‌های رایگان اعتبارسنجی می‌کند.
-LUCIDE_TO_FA = {
+# نام‌های قدیمیِ DB/قالب (سبکِ قدیمیِ Lucide و نوشتارِ فا) به معادلِ
+# امروزیِ Lucide و штوارِ خودکار. نام‌هایی که عیناً در اسپرایت موجودند
+# (مثل arrow-left، palette، bolt) نیازی به ورود ندارند و خودکار عبور
+# می‌کنند؛ این جدول فقط پرش‌ها را پوشش میدهد و
+# scripts/build_lucide_icons.py وجودِ مقصدها را در برابر اسپرایت
+# اعتبارسنجی می‌کند.
+LEGACY_ALIASES = {
     # قالب‌ها
-    "alert-circle": "circle-exclamation",
-    "alert-triangle": "triangle-exclamation",
-    "arrow-down": "arrow-down",
-    "arrow-left": "arrow-left",
-    "arrow-right": "arrow-right",
-    "badge-check": "certificate",
-    "book-open": "book-open",
-    "briefcase": "briefcase",
-    "calendar-days": "calendar-days",
-    "check": "check",
-    "chevron-down": "chevron-down",
-    "chevron-left": "chevron-left",
-    "chevron-right": "chevron-right",
-    "clock": "clock",
-    "external-link": "arrow-up-right-from-square",
-    "globe": "globe",
-    "layers": "layer-group",
-    "link": "link",
-    "linkedin": "linkedin-in",
-    "mail": "envelope",
-    "map-pin": "location-dot",
-    "menu": "bars",
-    "message-circle": "comment",
-    "mic": "microphone",
-    "move-horizontal": "left-right",
-    "pause": "pause",
-    "pen-tool": "pen-nib",
-    "phone": "phone",
-    "play": "play",
-    "plus": "plus",
-    "quote": "quote-right",
-    "rocket": "rocket",
-    "ruler": "ruler",
-    "send": "paper-plane",
-    "shield-check": "shield-halved",
-    "shopping-cart": "cart-shopping",
-    "smartphone": "mobile-screen-button",
-    "sparkles": "wand-magic-sparkles",
-    "star": "star",
-    "user-round": "user",
-    "users": "users",
-    "x": "xmark",
-    # دیتابیس
-    "at-sign": "at",
-    "award": "award",
-    "box": "box",
-    "boxes": "boxes-stacked",
-    "braces": "code",
-    "building-2": "building",
-    "code-2": "code",
-    "code-xml": "code",
-    "component": "cube",
-    "container": "box",
-    "credit-card": "credit-card",
-    "database": "database",
-    "diamond": "gem",
-    "figma": "figma",
-    "file-text": "file-lines",
-    "film": "film",
-    "gauge": "gauge",
-    "gem": "gem",
-    "heart-handshake": "handshake-angle",
-    "image": "image",
-    "layout-dashboard": "table-columns",
-    "layout-panel-top": "table-columns",
-    "layout-template": "table",
-    "megaphone": "bullhorn",
-    "monitor-smartphone": "mobile-screen",
-    "newspaper": "newspaper",
-    "orbit": "circle-nodes",
-    "palette": "palette",
-    "party-popper": "cake-candles",
-    "printer": "newspaper",
-    "refresh-cw": "arrows-rotate",
-    "search": "magnifying-glass",
-    "shapes": "shapes",
-    "smile": "face-smile",
-    "square-code": "code",
-    "square-terminal": "terminal",
-    "store": "store",
-    "terminal": "terminal",
-    "trending-up": "arrow-trend-up",
-    "type": "font",
-    "webhook": "plug",
-    "workflow": "diagram-project",
-    "zap": "bolt",
+    "alert-circle": "circle-alert",
+    "alert-triangle": "triangle-alert",
+    "comment": "message-circle",
+    "table-cells-large": "layout-grid",
+    "up-right-from-square": "square-arrow-up-right",
+    # رکوردهای DB با نام‌های سبک‌شودهٔ قدیمی
+    "at": "at-sign",
+    "box-multiple": "boxes",
+    "brand-figma": "figma",
+    "building-store": "store",
+    "buildings": "building-2",
+    "components": "component",
+    "confetti": "party-popper",
+    "device-mobile": "smartphone",
+    "devices-2": "monitor-smartphone",
+    "layout-sidebar": "panel-left",
+    "movie": "clapperboard",
+    "mood-smile": "smile",
+    "news": "newspaper",
+    "refresh": "refresh-cw",
+    "rosette-discount-check": "badge-check",
+    "shape-3": "shapes",
+    "sitemap": "network",
+    "source-code": "code-xml",
+    "speakerphone": "megaphone",
+    "template": "layout-template",
+    "typography": "type",
 }
+
+DEFAULT_ICON = "sparkles"
+
+_SVG_OPEN = (
+    '<svg class="lucide{cls}" aria-hidden="true" focusable="false"'
+    ' viewBox="0 0 24 24" fill="none" stroke="currentColor"'
+    ' stroke-width="2" stroke-linecap="round" stroke-linejoin="round"{dims}>'
+)
 
 
 @lru_cache(maxsize=1)
-def _load_icons():
-    """دیکشنریِ {style: [names]} از icons.json، یا {} اگر هنوز بیلد نشده."""
+def sprite_url():
+    """URL اصلیِ اسپرایت (با هشِ collectstatic در حالتِ `production`)."""
+    return static(SPRITE_REL_PATH)
+
+
+@lru_cache(maxsize=1)
+def available_icons(full=False):
+    """frozenset از نام‌های آیکون‌های اسپرایتِ محلیِ Lucide.
+
+    فرمت ``full`` برای سازگاری با کدِ قدیمیِ نگه داشته شده و اثری ندارد.
+
+    وقتی اسپرایت هنوز در دسترس نباشد (fresh checkout ناقص)، خروجی خالی است
+    و پس ولیدینگ و رندر هیچ چیز مسدود نمی‌شوند (fail-soft)."""
+
     for base in settings.STATICFILES_DIRS:
-        candidate = Path(base) / ICONS_REL_PATH
+        candidate = Path(base) / SPRITE_REL_PATH
         if candidate.is_file():
             try:
-                return json.loads(candidate.read_text(encoding="utf-8")).get("styles", {})
-            except (OSError, ValueError):
+                svg = candidate.read_text(encoding="utf-8")
+                return frozenset(_SYMBOL_RE.findall(svg))
+            except (OSError, UnicodeDecodeError):
                 pass
-    return {}
-
-
-@lru_cache(maxsize=2)
-def available_icons(full=False):
-    """frozenset از همهٔ نام‌های آیکون‌های رایگان Font Awesome (همهٔ سبک‌ها).
-
-    آرگومان ``full`` برای سازگاری با کد قدیمی نگه داشته شده و دیگر معنایی
-    ندارد — فونت شاملِ همهٔ آیکون‌هاست و نیازی به sync نیست."""
-
-    styles = _load_icons()
-    out = set()
-    for names in styles.values():
-        out.update(names)
-    return frozenset(out)
-
-
-def icon_style(name):
-    """سبکِ رندر: 'brands' برای آیکون‌های برند، در غیر این صورت 'solid'."""
-    if name in _load_icons().get("brands", ()):
-        return "brands"
-    return DEFAULT_STYLE
+    return frozenset()
 
 
 def map_icon_name(name):
-    """تبدیل یک نام قدیمیِ Lucide به معادلِ Font Awesome آن."""
-    return LUCIDE_TO_FA.get(name, name)
+    """تبدیل یک نامِ قدیمی به معادلِ امروزیِ Lucide آن."""
+    return LEGACY_ALIASES.get(str(name), str(name))
 
 
 def validate_icon_name(value):
-    """ولیدیتورِ فیلدِ آیکون — مقدار باید یک نام واقعی در Font Awesome رایگان باشد.
+    """ولیدیتورِ فیلدِ آیکون — بعد از نگاشت باید در اسپرایت موجود باشد.
 
-    وقتی icons.json هنوز ساخته نشده (fresh checkout بدون بیلد)، چیزی مسدود
-    نمی‌شود."""
+    وقتی اسپرایت خوانده نشده باشد (fresh checkout ناقص)، چیزی مسدود نمی‌شود."""
 
     if not value:
         return
     names = available_icons()
     if not names:
         return
-    if value not in names:
+    if map_icon_name(value) not in names:
         raise ValidationError(
-            "این نام آیکون در Font Awesome (نسخهٔ رایگان) وجود ندارد. "
-            "نام انگلیسی آیکون را از https://fontawesome.com/icons انتخاب کنید."
+            "این نام آیکون در Lucide وجود ندارد. "
+            "نام انگلیسی آیکون را از https://lucide.dev/icons انتخاب کنید."
         )
 
 
 def icon_preview_html(name, *, size=22, color="#c9a15a", full=False):
-    """اسنیپت یک آیکون Font Awesome — برای پیش‌نمایش در ادمین.
+    """اسنیپت یک آیکون Lucide — برای پیش‌نمایش در ادمین.
 
     رنگ پیش‌فرض طلاییِ پالت v2 است. ``full=True`` برای سازگاری با کد قدیمی
-    نگه داشته شده و اثری ندارد (فونت همهٔ آیکون‌ها را دارد)."""
+    نگه داشته شده و اثری ندارد."""
 
     if not name:
         return "—"
-    name = map_icon_name(name)
-    style = icon_style(name)
+    name = map_icon_name(str(name))
+    if not re.fullmatch(r"[a-z0-9-]+", name):
+        return "—"
     return format_html(
-        '<i class="fa-{} fa-{}" aria-hidden="true" '
-        'style="font-size:{}px;line-height:1;color:{}"></i>',
-        style,
-        name,
-        size,
-        color,
+        '<svg class="lucide" aria-hidden="true" focusable="false"'
+        ' viewBox="0 0 24 24" fill="none" stroke="currentColor"'
+        ' stroke-width="2" stroke-linecap="round" stroke-linejoin="round"'
+        ' width="{size}" height="{size}" style="color:{color}"'
+        '><use href="{href}#{name}" /></svg>',
+        size=size,
+        color=color,
+        href=sprite_url(),
+        name=name,
     )
 
 
@@ -212,18 +158,19 @@ class IconPreviewMixin:
 
 class IconPickerWidget(forms.TextInput):
     """پیکر آیکون: فیلد متنی + پیش‌نمایش زنده + یک جدولِ جستجوپذیر از همهٔ
-    آیکون‌های رایگان Font Awesome (فقط ادمین، بدون CDN). کلیدها کار می‌کنند:
-    Escape می‌بندد، فلش‌ها جابه‌جا می‌شوند و Enter انتخاب می‌کند."""
+    آیکون‌های اسپرایتِ Lucide (ادمین، بدون CDN). کلیدها کار می‌کنند: Escape
+    می‌بندد، فلش‌ها جابه‌جا می‌شوند و Enter انتخاب می‌کند."""
 
     class Media:
         css = {
-            "all": [FA_CSS_REL_PATH, "admin/css/icon_picker.css"],
+            "all": ["admin/css/icon_picker.css"],
         }
-        js = ["admin/js/fa_icons.js", "admin/js/icon_picker.js"]
+        js = [ADMIN_LIST_JS, "admin/js/icon_picker.js"]
 
     def build_attrs(self, base_attrs, extra_attrs=None):
         attrs = super().build_attrs(base_attrs, extra_attrs)
         attrs.setdefault("data-ip-input", "")
+        attrs.setdefault("data-ip-sprite", sprite_url())
         return attrs
 
     def render(self, name, value, attrs=None, renderer=None):
@@ -242,8 +189,8 @@ class IconPickerWidget(forms.TextInput):
             '<button type="button" class="ip-preview" data-ip-preview '
             'aria-label="انتخاب از میان آیکون‌ها" title="انتخاب آیکون">{}</button>'
             "</div>"
-            '<p class="ip-error" data-ip-error hidden>چنین آیکونی در Font Awesome '
-            "وجود ندارد. نام انگلیسی درست را از fontawesome.com/icons پیدا کنید.</p>"
+            '<p class="ip-error" data-ip-error hidden>چنین آیکونی در Lucide '
+            "وجود ندارد. نام انگلیسی درست را از lucide.dev/icons پیدا کنید.</p>"
             '<div class="ip-popup" data-ip-popup hidden role="dialog" '
             'aria-label="انتخاب آیکون">'
             '<input type="search" class="ip-search" data-ip-search '

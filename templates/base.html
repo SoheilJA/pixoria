@@ -17,6 +17,21 @@
         } catch (e) {}
       })();
     </script>
+    {% comment %}
+    پرچمِ حرکت: کلاسِ motion حالتِ پنهانِ اولیهٔ انیمیشن‌ها را فعال می‌کند.
+    اگر ماژولِ pixoria.js تا ۳ ثانیه بالا نیاید (خطای JS، شبکه، مرورگر
+    قدیمی) کلاس برداشته می‌شود تا محتوا هرگز پنهان نماند.
+    {% endcomment %}
+    <script>
+      (function () {
+        document.documentElement.classList.add("motion");
+        setTimeout(function () {
+          if (!window.__pixoriaBooted) {
+            document.documentElement.classList.remove("motion");
+          }
+        }, 3000);
+      })();
+    </script>
     <title>
       {% block title %}
         {{ settings.site_name }}
@@ -27,7 +42,7 @@
       {% endblock %}" />
     <link rel="canonical" href="{{ request.build_absolute_uri }}" />
 
-    {# Open Graph — برای سئو و اشتراک‌گذاری در شبکه‌های اجتماعی #}
+    {% comment %} Open Graph — برای سئو و اشتراک‌گذاری در شبکه‌های اجتماعی {% endcomment %}
     <meta property="og:site_name" content="{{ settings.site_name }}" />
     <meta property="og:locale" content="fa_IR" />
     <meta property="og:type" content="website" />
@@ -55,8 +70,13 @@
     {% endif %}
     <link rel="manifest" href="{% url 'manifest' %}" />
     <link rel="stylesheet" href="{% static 'fonts/font_urls.css' %}" />
-    <link rel="stylesheet" href="{% static 'fontawesome/css/all.min.css' %}" />
     <link rel="stylesheet" href="{% static 'css/tailwind.css' %}" />
+    {% comment %} لایهٔ حرکت — همهٔ انیمیشن‌ها به‌صورت CSS (بدون GSAP) {% endcomment %}
+    <link rel="stylesheet" href="{% static 'css/motion.css' %}" />
+    {% comment %} هیرو — بومِ «میدانِ زنده» (برای همهٔ صفحات لود میشود چون hx-boost سربرگ را جابه‌جا نمیکند) {% endcomment %}
+    <link rel="stylesheet" href="{% static 'css/hero.css' %}" />
+    {% comment %} بازطراحیِ دستنویسِ سکشنها (کاشیهای «درباره»، ریلِ مایلستون و ...) {% endcomment %}
+    <link rel="stylesheet" href="{% static 'css/sections.css' %}" />
     {% block extra_css %}
     {% endblock %}
     {% block extra_head %}
@@ -73,14 +93,14 @@
       <span class="pl-line" aria-hidden="true"><span class="pl-fill"></span></span>
     </div>
 
-    {# پرش به محتوای اصلی — دسترس‌پذیری #}
+    {% comment %} پرش به محتوای اصلی — دسترس‌پذیری {% endcomment %}
     <a
       href="#main"
       class="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:right-2 focus:z-[200] focus:rounded-full focus:bg-gold focus:px-5 focus:py-2 focus:text-ink"
       >پرش به محتوای اصلی</a
     >
 
-    {# نوار پیشرفت اسکرول #}
+    {% comment %} نوار پیشرفت اسکرول {% endcomment %}
     <div
       id="scroll-progress"
       class="fixed top-0 right-0 left-0 z-[85] h-[3px] origin-right scale-x-0"
@@ -98,7 +118,7 @@
       <span class="nav-orbit-ring"></span><span class="nav-orbit-planet"></span>
     </div>
 
-    {# بافت نویز ظریف #}
+    {% comment %} بافت نویز ظریف {% endcomment %}
     <div class="grain" aria-hidden="true"></div>
 
     {% include "partials/_header.html" %}
@@ -113,7 +133,7 @@
 
     {% include "partials/_footer.html" %}
 
-    {# اعلان (Toast) — توسط pixoria.js نمایش داده می‌شود #}
+    {% comment %} اعلان (Toast) — توسط pixoria.js نمایش داده می‌شود {% endcomment %}
     <div
       id="toast"
       class="fixed inset-x-0 bottom-6 z-[100] flex justify-center px-4"
@@ -129,14 +149,13 @@
       </div>
     </div>
 
-    {# کتابخانه‌ها — همه محلی، بدون CDN #}
-    <script defer src="{% static 'js/vendor/gsap.min.js' %}"></script>
-    <script defer src="{% static 'js/vendor/ScrollTrigger.min.js' %}"></script>
-    {# لایهٔ تعاملات (Lenis، reveal، counters، منو، …) — T10 #}
+    {% comment %} کتابخانه‌ها — همه محلی، بدون CDN. هیچ GSAP/ScrollTrigger ای در پروژه
+       نیست: تمام انیمیشن‌ها در static/css/motion.css و با CSS اجرا می‌شوند. {% endcomment %}
+    {% comment %} لایهٔ تعاملات (ماشه‌ها، شمارنده‌ها، منو، …) — T10 {% endcomment %}
     <script type="module" src="{% static 'js/pixoria.js' %}"></script>
-    {# صحنهٔ سه‌بعدی هیرو — فقط در صورت وجود #hero-3d و نزدیک بودن به دید مقداردهی می‌شود — T11 #}
-    <script type="module" src="{% static 'js/hero-scene.js' %}"></script>
-    {# HTMX — برای فرم‌های ارسال بدون بازبارگذاری صفحه #}
+    {% comment %} صحنهٔ سه‌بعدی هیرو — فقط در صورت وجود #hero-3d و نزدیک بودن به دید مقداردهی می‌شود — T11 {% endcomment %}
+    <script defer src="{% static 'js/hero-field.js' %}"></script>
+    {% comment %} HTMX — برای فرم‌های ارسال بدون بازبارگذاری صفحه {% endcomment %}
     <script defer src="{% static 'js/htmx.min.js' %}"></script>
     {% block extra_js %}
     {% endblock %}

@@ -1,209 +1,107 @@
-# Agent Progress — Pixoria
 
-به‌روزرسانیِ این فایل بعد از هر تسک، تا جلسهٔ بعدی از همان نقطه ادامه دهیم.
+### دنبالهٔ ۳۲ — وندورِ لوکالِ @lucasmarkes/hairline (v0.5.1، MIT)
+- درخواستِ کاربر با فایلِ `hairline.txt` در روت: کتابخانهٔ `@lucasmarkes/hairline` کشف شد (۳۳ فیگورِ خطیِ ایزومتریکِ pointer-reactive: riffle/terrain/vault/terminal/turntable/…، خروجی SVG با نسبت ۵:۴، API فانکشنی `fig(el,{play:true})` + `update`/`destroy` — شبیه Svelte action.
+- از رجیستری npm تاربال رسمی (v0.5.1) دانلود و `dist/index.js` (مینیفای، Pure ESM، **هیچ** import و وابستگی — react فقط peerِ اختیاریِ wrapper جدا) برداشته شد به `static/js/vendor/hairline.js` با بنرِ نسخه/لایسنس؛ خطِ `sourceMappingURL` حذف شد (map وندور نشد، ری‌اکت wrapper به دلیل vanilla بودنِ پروژه نیامد).
+- `collectstatic` → هشِ `js/vendor/hairline.d2a5f17f7102.js`. پروبِ مرورگر روی `/about/`: import ماژولِ ۳۳ خروجی، رندرِ `riffle` در ۳ دایو (SVG 280×224)، `update({intensity})` و `destroy()` تمیز — سبز. یک گیر: cache ۴۰۴ِ مرورگر بعد از ری‌استارتِ سرور — با `?v=2` دور زده شد (نه مشکلِ پکیج، نه مشکلِ سرور).
+- استفادهٔ عملی در قالب بعداً: `<script type="module" src="{% static %}">` یا `import()` داینامیک از `pixoria.js`. فایل `hairline.txt` روت مستقل ماند (کامیت نشد).
 
-شاخهٔ فعلی: `feature/rocket-redesign` (برای PR به `main`)
+### دنبالهٔ ۳۳ — فیگورهای @hairline در سه ناحیهٔ سایت
+- **لودر:** `static/js/hairline-figs.js` (module، `data-hl-lib` از `{% static %}` در base.html) — مونتِ اعلامی روی `[data-hl]` با `data-hl-intensity`، import یکبارِ وندورِ `vendor/hairline.js`، سکنِ دوباره در `htmx:afterSettle` (hx-boost کلِ body سواپ میکند)، خنثی در `prefers-reduced-motion`، کلاسِ `hl-broken` (بافتِ dashed) برای شکستِ شبکه، و re-mount با debounce در resize چون کتابخانه ResizeObserver ندارد (svg فقط در لحظهٔ مونت اندازه میگیرد).
+- **چرا پیکسوریا (why):** پینهای ثابتِ `why-chip__pins` و علامتِ `PIX·NN` حذف؛ هر ماژول حالا پنلِ تیرهٔ کوچک با فیگورِ خودش دارد: `{% cycle 'terminal' 'keyboard' 'plot' 'hub' 'turntable' 'vault' %}` (intensity 0.55) + هاورِ طلایی. CSSهای مرده پاک شد.
+- **مهارتها (tech):** کنار نوارهای مارکوی، پنلِ `tech-fig` با فیگورِ `plot` (نمودارِ میلهها — intensity 0.7). گریدِ دوستونه به‌صورت دستسازِ `.tech-grid` در sections.css — نکته: کلاسِ arbitrary جدید (`grid-cols-[minmax(0,1fr)]`) بدونِ بیلدِ tailwind وجود ندارد و پنل تا ۲۰۲۷px باز میشد؛ با rail دستی حل شد.
+- **CTA (فینال):** پنلِ `cta-fig` تیره با فیگورِ `vault` (intensity 0.65) بعد از توضیحات و قبل از دکمهها؛ mx-auto، تا 20.5rem، هالهٔ طلایی.
+- **CSS مشترک:** `aspect-ratio: 5/4` روی همهٔ میزبانها تا مونتِ SVG بدونِ CLS.
+- **پروب زنده:** ۸ فیگور مونت (۶×why در ۳۷۲×۲۹۷، plot در ۹۷۷×۷۸۱، vault در ۳۲۶×۲۶۰) — همه دقیقاً ۵:۴، بدونِ overflow. `manage.py check` سبز؛ collectstatic + restart.
+- فایلِ `hairline.txt` روت دست‌نخورده ماند (یادداشتِ شخصی کاربر؛ کامیت نشد).
 
-## تسک‌های انجام‌شده در این جلسه
+## دنبالهٔ ۳۴ — ری‌دی‌زاینِ کاملِ سکشن «چرا پیکسوریا» (سه‌شنبه ۲۹ مهر ۱۴۰۵)
 
-### ۱. حذف کامل بخش پروپوزال ✅
-کاربر: «بخشی که مربوط به ارسال پروپوزال هست رو کلا پاک کن نیازی بهش ندارم»
+- **هدف:** کاربر خواست سکشن «۶ دلیل» کلاً ری‌دی‌زاین شود؛ موبایل‌فرست و با UI جذاب.
+- **طرحِ جدید v4 «آلبومِ استودیو»** (`03cec43`):
+  - **موبایل (base):** ریلِ اسنپِ افقی (workaround اسکرولِ بدونِ اسکرول‌بار) با کارتِ ~79vw، لبه‌های محوِ کرمی، نشانگرِ «برای دیدنِ بقیه بکشید» (فقط موبایل، `display:none` از sm به بعد)؛ snap مرکزی + `overscroll-behavior-inline: contain`.
+  - **≥640px:** گریدِ ۲ستونه؛ اسنپ خاموش؛ لبه‌های محو و نشانگر حذف.
+  - **≥1024px:** بنتوی ۴ستونه؛ **کارتِ ۱ و ۶ پهنِ دونیمه** با لایه‌بندیِ دونیمه (تیتر/متن سمتِ راست، فیگورِ sمتِ چپِ کارت)، `width: min(100%, 300px)` برای فیگور تا ارتفاعِ کارتِ ردیف کنترل بماند.
+  - **کارت:** شمارهٔ شبحوارهٔ طلایی (۰۱..۰۶ با `fa_digits` + `-webkit-text-stroke`، فالبکِ رنگِ شفاف بدونِ stroke)، آیکن‌رینگ، فیگورِ خطیِ زندهٔ hairline روی تِختهٔ تیره (data-hl cycle همان ۶ فیگور، intensity 0.55)، خطِ «درزِ طلایی» دست‌ساز که در هاور از ۲۵٪ به ۱۰۰٪ کشیده میشود (`transform-origin: 100% 50%` برای RTL)، هاور: بالا ۵px + گلوی طلایی.
+  - **سازگاری RTL:** همه با inset-inline / grid؛ `justify-content: space-between` در head کارت.
+  - از قالبِ خطاهای قبلی پرهیز شد: تیتر/متنِ کارتِ پهن هرکدام `grid-area` خودشان (تداخلِ ردیفِ مشترک باگِ اولیه بود و اصلاح شد)؛ `transform-origin: inline-start` نامعتبر بود و با درصد جایگزین شد.
+- **پروب:** صفحهٔ خانه 200؛ ۶ کارت (اول/آخر = wide)، عرضِ کارتِ پهن ۶۱۱px و عادی ~۲۹۷px در ۱۲۹۶px، ۶/۶ فیگورِ hairline مونتِ 5:4 (نسبت 1.250)، بدونِ سرریزِ افقی، هیچ اثری از `why-bus/why-trace/why-board` نمانده؛ اسکرین‌شاتِ دسکتاپ هم تأیید بصریِ بنتو را داد.
+- **کامیت:** `03cec43` (sections.css -223/+237 تقریباً خطِ به خط بازنویسیِ بلوکِ oldبرد، و `_why.html`).
+- **هنوز کامیت‌نشده:** لابِ دمو (`static/demo/` با ۶ طرحِ zdog/isometric/troika) هنوز untracked است تا نظرِ کاربر بگیرد.
 
-کامیت: `1fef995 feat: remove proposal section entirely`
 
-پاک شد:
-- مدل‌های `Proposal`, `ProposalStat`, `ProposalProblem`, `ProposalService` از `apps/core/models.py`
-- ویوی `proposal` از `apps/core/views.py` (و ایمپورت `Proposal` و `get_object_or_404`)
-- ادمینِ `ProposalAdmin` و سه اینلاین از `apps/core/admin.py`
-- مسیر `proposal/<slug:slug>/` از `config/urls.py`
-- قالب `templates/core/proposal.html` (کلاً حذف فایل)
-- بلوکِ پروپوزال در `scripts/render_check.py`
-- مایگریشنِ `apps/core/migrations/0013_delete_proposal_models.py` برای حذف جداول
+## دنبالهٔ ۳۵ — خیابان بدونِ سایه (چهارشنبه ۳۰ مهر ۱۴۰۵)
 
-**نکته:** مایگریشن ساخته شد ولی `manage.py migrate` هنوز اجرا نشده. در جلسهٔ بعد باید اجرا شود تا جداول از دیتابیس حذف شوند.
+- **درخواست کاربر:** هیچ سایهای در کلِ سایت نماند؛ تنها سایههای سکشنِ هیرو سرجایشان بمانند.
+- **پیاده‌سازی** (`5eeb6c3`): بلوکِ «سایهکشِ سراسری» در انتهای `sections.css` (چون آخرین stylesheet لود میشود):
+  - `*:not(#home):not(#home *)` + شبهعنهصرهای before/after: `box-shadow:none !important` و `text-shadow:none !important` — این، کارتهای دستساز (why/tech/cta/ab-link/pr-step/mm-cta)، utilities بیلد‌شدهٔ tailwind (shadow-2xl/lg، حلقههای form-field، مولفههای .btn و ...) و سایههای inline در قالبها (ابوتِ sphere/diamondها، خدماتِ palette-dotها) را یکجا میگرداند؛ ایدِ `:not(#home *)` وابستگیِ پیچیده به گرامرِ :not دارد (Chromium/FF/سافاری امروزین ✓).
+  - **fehm filter:** سه استفادهٔ drop-shadow فیلتری (svc-palette، gps-dot، pr-rail__bead) هم صراحتاً `filter:none` شدند — کلیِ `filter:none` زده نشد چون blur()/brightness() در افکتها واقعاً استفاده میشوند.
+  - **a11y:** سایههای فوکوسِ `.field input:focus` هم سایه بودند → فالبکِ `outline: 2px solid` طلایی برای `:focus-visible` بیرونِ هیرو.
+  - admin/login سایت نیست و styleblock مستقل خودش را دارد؛ لنجس نشد.
+- **پروب:** همهٔ صفحات (خانه/آبوت/خدمات/تماس) — صفر باکس‌سایهٔ باقیمانده بیرونِ هیرو، صفر drop-shadow؛ گلوِ `.btn-gold` داخلِ هیرو سالم (`0 14px 40px -12px rgba(201,161,90,.55)`)؛ فیلد فوکوسِ تماس: سایه none → outline 3px. (`/portfolio/` 500 همان issue شناختهشدهٔ media cable pk=9 است — دست نخورد.)
+- کامیتِ فایل: `sections.css` +29 خط؛ progress ثبت شد.
 
-### ۲. فشرده‌سازی تصاویر نمونه‌کار به WebP ✅ (نسخهٔ اول)
-کاربر: «میخوام تصاویر نمونه کار ها که بارگذاری میشن با حفظ کیفیت به کمترین حجم تبدیل بشن و با فرمت webP. تصاویر نمونه کار های برنامه نویسی و طراحی سایت به صورت افقی و مستطیل هستن چون اسکرین شات از هیروسکشن سایت هست ولی برای همه انواع خدمات گرافیکی و لوگو و ... به صورت مربعی هست»
 
-**تصمیمِ گرفته‌شده (با پرسش از کاربر):** کارت‌ها **نسبت طبیعیِ تصویرِ خودشان** را حفظ می‌کنند (افقی مستطیل برای سایت‌سازی، مربعی برای لوگو/گرافیک) — نه کانواسِ ۴/۳ یکسان، نه برش.
+## دنبالهٔ ۳۶ — درستسازیِ گوشهٔ قابِ «درباره ما» (چهارشنبه ۳۰ مهر ۱۴۰۵)
 
-کامیت: `18a0fa9 feat: compress portfolio images to WebP on upload`
+- **گزارش کاربر:** در سکشنِ دوم (درباره ما، با ۴ کاشیِ تصویر) گوشهٔ پایینی-راستِ پنل خراب به نظر میرسید؛ انگار زیرش لایهای دیگر است.
+- **ریشهٔ باگ:** `data-reveal="clip"` در موتورِ reveal (`motion.css`) پس از اتمامِ انیمیشن، کلیپِ مربعیِ دائمیِ `inset(0 0 0 0 round 0)` از قاعدهٔ عمومیِ `.is-in` به ورا میگذاشت؛ قابِ کلاژ contains: برچسبِ سالِ خطیِ عمداً بالای کادر (3.5rem- بالا) و هالهٔ طلاییِ ۴۰px بیرونزده از پایین-راست (`-bottom-10 -right-10`) — هر دو با لبهٔ تیزِ مربعی بریده میشدند؛ برشِ هاله درست کنارِ گوشهٔ بزرگِ 6rem پایین-راستِ پنل دیده میشد → حسِ «لایهٔ اضافی/گوشهٔ شکسته».
+- **فیکس** (`4ae2bed`): فقط برای همین واریانت، end-state جدید: `html.motion [data-reveal="clip"].is-in { clip-path: inset(-60% -60% -60% -60% round 0) }` — انیمیشنِ ورود عیناً قبلی (بدِ بهم پیوسته: inset→inset با شعاعِ صفر قابلِ interpolation است) ولی بعد از پایان، هیچ پیشهایی بریده نمیشود. ۱۸ کاربردِ دیگرِ `clip` هم مدونا شد.
+- **پروب:** computed clipPath روی ورا = `inset(-60%)`؛ هاله ۴۰px از راست/پایینِ پنل بیرون میزند و ازاد است؛ صفحهٔ خانه 200.
+- کاربر باید صفحه را ریفرش کند (کشِ مرورگر) تا فیکس را ببیند.
 
-فایل‌های ادیت‌شده:
-- **`apps/core/image_utils.py`** (جدید) — تابع `compress_to_webp()`:
-  - کیفیت ۸۵، متد ۴، حداکثر پهنای ۱۶۰۰px (با حفظ نسبت)
-  - تصاویر شفاف (RGBA/LA/P) روی پس‌زمینهٔ تیرهٔ سایت `(10,10,12)` ترکیب می‌شوند تا حاشیهٔ روشن دور لوگوها نماند
-  - نام فایل را به `.webp` تبدیل می‌کند (پسوندِ تصادفیِ Django مثل `_XOwXvqo` حفظ می‌شود)
-- **`apps/portfolio/models.py`** — `Portfolio.save()` و `ProjectImage.save()` تصویر را موقع آپلود به WebP تبدیل می‌کنند (اگه از قبل WebP نباشد)
-- **`templates/components/_project_card.html`** — `aspect-[4/3] ... object-cover` → `h-auto w-full object-cover` (برش حذف)
-- **`templates/portfolio/detail.html`** — تصویر اصلی `aspect-[16/9]` و گالری `aspect-[4/3]` → `h-auto w-full object-cover`
 
-### ۳. رفعِ خطای `runserver` ✅
-کاربر: «مشکل چیه؟»
+## دنبالهٔ ۳۷ — نوارِ اعتبار: ری‌دی‌زاینِ ردیفِ دومِ «درباره ما» (چهارشنبه ۳۰ مهر ۱۴۰۵)
 
-خطا: `ModuleNotFoundError: No module named 'whitenoise'`
+- **گزارش کاربر:** ردیفِ دومِ سکشنِ دوم (ریلِ مایلستونِ آمار: خطِ نقطهچین + نقطه + آیکن‌رینگ + عدد) خیلی زشت است — کلاً بازنویسی شود.
+- **طرحِ جدید «نوارِ اعتبار»** (`c0c1b9e`):
+  - پنلِ تیرهٔ کشیده (border-radius ۲۶px، بوردرِ طلاییِ ۲۴٪، گلوی رادیالِ طلایی در بالا-چپ Ive RTL) همخانوادهٔ قابِ کلاژِ بالا؛ داخلش شبکهٔ نقطهای محو با ماسکِ فید.
+  - ۴ پیکِ شیشهای آماری: چیپِ آیکنِ ۳۸px طلایی، عددِ درشتِ `clamp(1.9rem, 3.4vw, 2.55rem)` با `text-goldgrad-dark` (رنگ در CSS ست نشد تا گرادیانِ متن نکُشد)، برچسبِ ۰.۸۲rem محو؛ هاور: بالا ۳px + بوردرِ طلایی (بدون سایه — قانونِ سایهکش).
+  - موبایل ۲×۲، ٪900 چهار در یک ردیف؛ شمارندههای count-up (`data-counter` + prefix/suffix: ۱۵/۵۰۰/۱۳۵/۳۵۰) دست‌نخورده کار میکنند.
+  - کل بلوکِ `.ab-rail` (desktop+mobile+reduced-motion) حذف شد؛ reduced-motion جدید فقط tileها + stat-band.
+- **پروب:** خانه 200؛ band با ۴ ستون/۴ پیک/۴ آیکن/۴ شمارنده، padx قدیمِ .ab-rail صفراً، بدون سایه.
 
-انجام شد:
-- نصبِ `whitenoise==6.12.0` در venv (در `requirements.txt` بود ولی نصب نبود)
-- اجرای `manage.py migrate` → مایگریشنِ `core.0013_delete_proposal_models` اعمال شد و جداولِ پروپوزال از دیتابیس حذف شدند
-- `manage.py check` پاس شد؛ تستِ `runserver`: `/` و `/portfolio/` هر دو `200`
 
-### ۴. مارکویی برندها + مارکویی ابزارها ✅
-کاربر: «در صفحه اصلی سکشنی که برندهایی که به ما اعتماد کردن به صورت مارکویی رد میشن میخوام فقط اسم برند نوشته شده باشه و اسم برند هم به صورت داینامیک از اسم برندی که زمان بارگذاری نمونه کارها از ادمین خونده بشه. همچنین دایره حذف بشه. و بعدش مارکویی بهترین ابزارها، همون که دوتا مارکویی داره که خلاف جهت همدیگه حرکت میکنن مشکل داره»
+## دنبالهٔ ۳۸ — فیکسِ ۵۰۰ در /portfolio/ (چهارشنبه ۳۰ مهر ۱۴۰۵)
 
-کامیت: `0cc5e88 feat: trusted marquee reads brand names from portfolio, fix tech marquee`
+- **گزارش کاربر:** ورود به صفحهٔ نمونهکارها خطا میدهد.
+- **ریشه**: کارتِ اشتراکیِ `components/_project_card.html` برای رزروِ CLS میخواند `{{ project.image.width }}`؛ رکوردِ pk=9 در DB مسیر `portfolio/images_XOwXvqo.jpg` داشت اما فایل روی دیسک غایب بود (تنها images.jpg موجود) → `ImageFile.open` → FileNotFoundError → 500 کلِ صفحه. تست‌کلاینت با ALLOWED_HOSTS+testserver تریس را کامل گرفت.
+- **فیکسِ دو لایه** (`07b36f8`):
+  1. فیلترِ `file_exists` در `apps/core/templatetags/component_tags.py` — با `storage.exists` (stat ارزان، فایل را باز نمیکند) و شاخهٔ true/false؛ استثنای MissingFile به False انداخت نمیشود.
+  2. گاردِ تمپلیتی: `{% if project.image and project.image|file_exists %}` در `_project_card.html` — فایلِ غایب → پلیس‌هولدرِ گرادیانیِ `aspect-[4/3]` (شاخهٔ از پیش طراحی‌شده). همهٔ خانه/کاروسلها که کارت را include میکنند ایمن شدند.
+- **پاکسازیِ داده**: رکوردِ pk=9 (پورتفولیو) فیلدِ image غایبش در DB خالی شد (با اسکریپت؛ فایل غایب روی دیسک قابلِ بازیابی نبود). دو رکورد دیگری در اسکنِ Portfolio+ProjectImage فایلِ غایب نداشتند.
+- **پروب**: /portfolio/ 200 (۲ کارت: ۱ تصویر + ۱ پلیس‌هولدر) و خانه 200.
 
-**الف) سکشن برندها (`#trusted`):**
-- نشانِ دایره‌ای (`brand-mark` + `brand-mark-gold/royal`) و پلاک (`brand-plate`) کلاً حذف شد
-- حالا فقط `.brand-name` (متنِ سادهٔ نام برند) در مارکویی حرکت می‌کنه
-- منبعِ داده از `ClientMarqueeItem` به `Portfolio.client_name` تغییر کرد — هر نمونه‌کاری که در ادمین بارگذاری بشه، برندش خودکار اینجا ظاهر می‌شه:
-  - `apps/home/views.py`: کوئری `Portfolio.objects.exclude(client_name="").values_list("client_name", flat=True).distinct()`
-  - ایمپورتِ `ClientMarqueeItem` از `apps/home/views.py` حذف شد
-- `templates/home/sections/_trusted.html` بازنویسی شد
-- CSS های `brand-plate`/`brand-mark*` از `static/src/input.css` پاک شدند؛ `.brand-name` حالا `flex: none` داره تا در مارکویی فشرده نشه
 
-**ب) مارکویی ابزارها (`#tech`):**
-- `dir="ltr"` به هر دو ردیفِ مارکویی در `templates/home/sections/_tech.html` اضافه شد (قبلاً فقط `#trusted` و `services/detail.html` داشتند؛ بدون اون در صفحهٔ RTL چیپ‌ها برعکس چیده می‌شدن)
-- به‌جای `animation-direction: reverse`، keyframe صریح `@keyframes marquee-rev` (از `-50%` به `0`) ساختم تا پرشِ شروع از بین بره
-- `flex: none` به `.marquee-group` اضافه شد
+## دنبالهٔ ۳۹ — فیکسِ کارتِ «پلنِ پیشنهادی» در قیمتگذاری (چهارشنبه ۳۰ مهر ۱۴۰۵)
 
-**نکته:** `npm run build` بعد از تغییر `input.css` زده شد (خروجی در `static/css/tailwind.css`). این فایل سرو می‌شه، نه `public/static/`.
+- **گزارش کاربر:** لیست قیمت وسطی (تگ «محبوب‌ترین») از بالا انگار مارجین منفی دارد و محتوای ابتدای کارت درست دیده نمیشود.
+- **ریشه/فیکس** (`1889fc3`): کارتِ طلایی `md:-mt-6` داشت (کشیدنِ ۲۴pxِ به بالا روی سطر) و `p-8` فقط ۳۲px پنیینگِ بالایی برای برچسبِ `-top-4` میگذاشت؛ `md:-mt-6` حذف و بهجای آن `p-8 pt-10` (۴۰px بالای کارت) — `pt-10` در tailwind.css پس از `p-8` (خط ۱۹۵۹→۲۰۶۱) میآید و efek مطلوب را دارد.
+- **پروبِ هندسی** (::481/web-design desktop): marginTop=0px؛ کارت همسطر با همجوارها (Δ1px)؛ برچسب ۱۴px بالای کارت بیرون میزند و نامِ پلن ۲۶px زیرِ پایینِ برچسب؛ ۸۱px فاصله از متنِ معرفی. صفحه 200.
+- سایرِ کارتهای پلن (glass-light با cycle شعاعِ ۱.۷۵/۰.۷۵) دست نخوردند.
 
-### ۵. رفعِ منوی موبایل + ثابت‌کردنِ آیتم‌های منو ✅
-کاربر: «منو موبایلی مشکل داره و انگار از سمت راست فاصله داره چون به سمت چپ فشرده شده و از کادر خارج شده، همینطور ترتیب المان های توی منو موبایلی رو به صورت ثابت قرار بده و نیازی نیست از طریق ادمین پنل نام و ترتیب و لینکش رو وارد کنم و کلا این منطق رو از مدل و ادمین حذف کن، همینطور الان همه المان های توی منو در پاپ اپ منو موبایلی جلوشون یک فلش به سمت چپ دارن که درست نیست فقط خدمات باید فلش به سمت پایین داشته باشه و وقتی روش کلیک میشه اکستند بشه و خدمات توش نمایش داده بشه»
 
-**الف) دلیلِ واقعیِ کج بودنِ پنل (با CDP پیدا شد):**
-کلاس `.glass` در `styles/input.css` موقعیت `position: relative` می‌داد. چون این بلوک **بدونِ `@layer`** بود و utilityهای Tailwind (`.absolute`) داخلِ `@layer utilities` قرار دارند، طبقِ قوانینِ cascade لایه‌ها، CSSِ بدونِ لایه همیشه می‌برد. نتیجه: `.menu-panel.glass.absolute inset-x-4` در عمل `relative` محاسبه می‌شد → کلِ عرضِ viewport را می‌گرفت و در RTL فقط `right` اعمال می‌شد، یعنی پنل ۱۶px به سمتِ چپ می‌رخت (در ۳۶۰px: `left=-16, right=340`).
-- **توجه:** این باگ **فقط منوی موبایل نبود** — هر ترکیبِ `glass` + `absolute` همین مشکل را داشت (بج‌های شیشه‌ای سکشن خدمات، کپشن‌های about، بج `services/detail`).
-- **رفع:** بلوکِ `.glass` / `.glass-light` / `::before`‌هایشان داخلِ `@layer components` قرار داده شد. ترتیبِ لایه‌ها از خطِ `@import "tailwindcss"` (`theme, base, components, utilities`) ثابت می‌ماند، پس حالا `.absolute` می‌برد.
-- بعد از `npm run build` حتماً باید `manage.py collectstatic --noinput` زده شود — فایلِ سرو‌شده `public/static/css/tailwind.<hash>.css` است (با `CompressedManifestStaticFilesStorage`).
+## دنبالهٔ ۴۰ — برچسبِ «محبوب‌ترین» قطع میشد: کلیپِ سراسریِ ریوئیل (چهارشنبه ۳۰ مهر ۱۴۰۵)
 
-**ب) آیتم‌های منو ثابت شدند (حذفِ منطقِ دیتابیس):**
-- فایلِ جدید **`apps/core/nav.py`** → ثابتِ `NAV_ITEMS`: لیستِ دیکشنری‌های `{"title", "url"}` با ترتیبِ ثابت (خانه، نمونه‌کارها، خدمات، بلاگ، درباره ما، تماس). **منبعِ واحدِ همِ منوی دسکتاپ و همِ منوی موبایل** تا عنوان/لینک دو جا تکرار نشود.
-- `apps/core/context_processors.py`: `"nav_items": NAV_ITEMS` (به‌جای کوئری دیتابیس).
-- **حذف شد:** مدل `NavItem` از `apps/home/models.py`، `NavItemAdmin` از `apps/home/admin.py`، بخشِ seed کردنِ منو در `seed_home_content.py` (به‌جز CTA).
-- مایگریشنِ `apps/home/migrations/0014_delete_navitem.py` ساخته و **اعمال شد** (`manage.py migrate home`).
-- قالبِ `_header.html` تغییری نکرد — هنوز `{% for item in nav_items %}` می‌چرخد و `{% nav_url item.url %}` را resolve می‌کند (دیکشنری در قالب با `item.title` / `item.url` درست کار می‌کند).
+- **گزارش کاربر:** پلنِ وسطی هنوز انگار پدینگِ منفی از بالا دارد و «محبوب‌ترین» درست نمایش داده نمیشود.
+- **کشف با اسکرین‌شاتِ زنده:** نیمهٔ بالای برچسبِ طلایی کاملاً بریده بود. عاملِ برش `clip-path` بود نه فاصلهگذاری: قائدهٔ عمومیِ `.is-in` در motion.css مقدار `inset(0 0 0 0 round 0)` را پس از پایانِ انیمیشن نگه میداشت؛ کارتِ پلن `data-reveal="scale"` دارد و فرزندِ absolute آن (برچسبِ `-top-4`) با لبهٔ تیز بریده میشد. همان الگویِ باگِ گوشهٔ about (دنبالهٔ ۳۶) که قبلاً فقط برای واریانتِ clip فیکس شده بود — اینبار سراسری.
+- **فیکس** (`5c27176`): end-state سراسریِ `.is-in` → `clip-path: inset(-60% -60% -60% -60% round 0)`؛ بلوکِ اختصاصیِ واریانتِ clip حذف شد (مقدارش با نسخهٔ سراسری یکی بود). سودِ همگانی: هر عنصرِ data-reveal با تزئینِ بیرونزده از این پس آزاد میماند.
+- **پروب:** اسکرین‌شاتِ کارتِ «حرفه‌ای» — برچسب کامل و سالم روی لبهٔ کارت؛ نامِ پلن ۲۶px زیرِ برچسب؛ computed clipPath کارت = `inset(-58%)`؛ صفحهٔ خدمت 200.
 
-**ج) فلش‌های منوی موبایل:**
-- فلشِ چپ (`chevron-left`) از همهٔ آیتم‌های سطحِ اول و از لینک‌های زیرمنوی خدمات حذف شد؛ `justify-between` هم از آن‌ها رفت.
-- فقط «خدمات» دکمهٔ `m-chevron` با `chevron-down` دارد (آکاردئونِ `data-m-accordion`، منطقِ JS در `static/js/pixoria.js` دست‌نخورده باقی ماند).
 
-**گزینه‌های ایجاد‌شده/تغییر یافته:**
-- `scripts/_menu_check.py` دو چکِ جدید گرفت: «پنل افقی در viewport قرینه است» (این رگرسیون را می‌گیرد) و «فقط یک دکمهٔ آکاردئون وجود دارد و آیتم‌های ساده فلش ندارند». نتیجه: **ALL PASS** در ۳۹۰px و ۳۲۰px.
-- `_menu_probe.py` و `_menu_shots.py` اسکریپت‌های موقتی بودند و حذف شدند.
+## دنبالهٔ ۴۱ — نظراتِ متنی: حذفِ کاملِ صوت/ویدیو + کشفِ نهاییِ علتِ برچسبِ پلن (چهارشنبه ۳۰ مهر ۱۴۰۵)
 
-**نکته:** این محیط ورودی multimodal نمی‌پذیرد — اسکرین‌شات‌ها خوانده نمی‌شوند؛ تأیید با اعدادِ CDP و رندرِ قالب انجام شد.
+### الف) برچسبِ «محبوب‌ترین» — علتِ واقعی و فیکسِ سراسری (`5c27176`)
+- با اسکرین‌شاتِ زندهٔ کارت معلوم شد نیمهٔ بالای برچسبِ طلایی کاملاً بریده میشد؛ عاملِ برش نه پدینگ بود و نه مارجین: قائدهٔ عمومیِ `.is-in` در motion.css پس از پایانِ ریوئیل، `clip-path: inset(0 0 0 0 round 0)` دائمی روی عنصر نگه میداشت. پلنِ پیشنهادی `data-reveal="scale"` دارد و برچسبِ `-top-4` بیرونزدهاش با لبهٔ تیز بریده میشد — همان الگویِ باگِ گوشهٔ about (دنبالهٔ ۳۶) که قبلاً فقط برای واریانتِ clip فیکس شده بود.
+- **حلِ ریشهای:** end-state سراسری `.is-in` → `inset(-60% -60% -60% -60% round 0)` (بدونِ بهمخوردنِ انیمیشنِ ورود؛ همهٔ واریانتها همگون و قابلِ interpolation) و بلوکِ اختصاصیِ واریانتِ clip حذف شد.
+- **پروب:** اسکرین‌شات — برچسب کامل و مرکزنشسته روی لبهٔ کارت؛ نامِ پلن ۲۶px پایینِ برچسب؛ تصویرِ نهایی رضایتبخش.
 
-### ۶. جایگزینیِ Lucide با Font Awesome (لوکال + انتخاب از ادمین) ✅
-کاربر: «آیکون های کتابخانه lucide محدود هستن و میخوام بجاش از فونت آوسام استفاده کنم اونم به همینصورت به حالت لوکال و با قابلیت انتخاب آیکون از طریق ادمین پنل [...] فایل های مربوط به lucide رو پاک کن و فونت آوسام رو دانلود و استفاده کن»
+### ب) حذفِ صوت/ویدیو از نظراتِ مشتریان (`46c9539`) — به درخواستِ «فقط متن»
+- **مدل:** از `ServiceTestimonial` ده ستون حذف شد: `kind` + `video_file/video_url/video_poster/video_duration` + `audio_file/audio_url/audio_title/audio_project/audio_duration`؛ `get_video_src/get_audio_src` حذف؛ `clean()` فعلاً فقط متنِ لازم را میخواهد؛ `WEBP_FIELDS` → فقط `author_image`.
+- **migration 0016** (بادستکاریِ دستی برای حفاظتِ داده): `RunPython` قبل از RemoveFieldها رکوردهای رسانهای (pk=2 video، pk=3 audio — بدونِ متن) را حذف کرد؛ ۴ نظرِ متنی دستنخورده ماند. migrate اجرا شد.
+- **ادمین:** inline و ModelAdmin بدونِ فیلدهای رسانهای؛ فایلِ `static/admin/js/testimonial_kind.js` (شخصیسازِ فیلد بر اساس نوع کارت) حذف شد.
+- **تمپلیت:** `_testimonial_card.html` فقط شاخهٔ متنی (ویدیویی/صوتی حذف)؛ کامنتِ اسلایدر اصلاح.
+- **JS:** `initMediaCards` (پلیرِ video/audio + موجِ صدا + قطعِ پخشِ متقابل) و `fmtTime` از pixoria.js حذف؛ کامنتِ سربرگ اصلاح؛ node --check سبز.
+- **CSS:** قاعدهٔ `is-playing [data-v-el]` و keyframes rvKenBurns از motion.css؛ `section .play-badge` از فهرستِ backdrop-kill در sections.css.
+- **سایر:** فیلترِ `fa_duration` (فقطِ مصرفش کارتهای رسانهای بود) از fa_digits حذف؛ ردیفِ `video_poster` از compress_images حذف.
+- **پروب:** خانه و صفحهٔ خدمت 200؛ ۴ کارتِ متنی با چپِ «متن»، صفر `<video>/<audio>`؛ manage.py check پاک.
 
-**تصمیمات (با پرسش از کاربر):** Font Awesome **6 Free** (`@fortawesome/fontawesome-free@^6.7.2` از npm، خودمیزبانی)، سبکِ پیش‌فرض **solid**، آیکون‌های برند خودکار `fa-brands`.
-
-**چرا webfont به‌جای SVG sprite:** فونت شاملِ همهٔ آیکون‌های رایگان است، پس هر چیزی که ادمین در پیکر انتخاب کند **فوراً** روی سایت می‌افتد — مرحلهٔ `manage.py sync_icons` حذف شد. گلیف‌ها از `currentColor` استفاده می‌کنند، پس تمام کلاس‌های رنگ (`text-gold` و غیره) بدون تغییر کار می‌کنند.
-
-فایل‌های جدید:
-- **`scripts/build_fontawesome.js`** — از `node_modules` کپی می‌کند به `static/fontawesome/`: `css/all.min.css` (فقط سورس‌های woff2 نگه داشته می‌شوند)، چهار `webfonts/*.woff2`، و `icons.json` (فهرستِ ۲۰۶۰ آیکونِ رایگان، دسته‌بندی‌شده بر اساس سبک — مرجعِ ولیدیشنِ پایتون). `static/admin/js/fa_icons.js` (`window.__FA_ICONS`) را هم برای پیکر می‌سازد.
-  - **ولیدیشنِ زمانِ بیلد:** نگاشتِ `LUCIDE_TO_FA` و تمامِ `{% icon "x" %}`های قالب‌ها را در برابر فهرستِ رسمی چک می‌کند؛ اگر یک نام معادلِ رایگان نداشته باشد، بیلد **fail** می‌شود (`npm run build:icons`).
-- **`scripts/_fa_render_check.py`** و **`scripts/_admin_icon_check.py`** — تأیید با CDP (مرورگر واقعی). صفحه‌های اصلی + ادمین: لاگین، باز شدنِ پاپ‌آپِ پیکر، ۲۴۰ آیکون در گرید، فیلترِ جستجو، انتخاب، پیش‌نمایشِ گلیف با اندازهٔ غیرصفر، هشدارِ نامِ نامعتبر. **ALL PASS**.
-
-فایل‌های ادیت‌شده:
-- **`apps/core/icon_utils.py`** — بازنویسی کامل: دیکشنریِ `LUCIDE_TO_FA` (۹۰ نام)، `map_icon_name()`، `icon_style()` (brands خودکار)، `validate_icon_name()` (چک در برابر `icons.json`)، `icon_preview_html()` → `<i class="fa-solid fa-x">`. `IconPickerWidget` حالا CSS فونت آوسام را در `Media` دارد.
-- **`apps/core/templatetags/icon_tags.py`** — خروجی `<svg><use>` → `<i class="fa-solid fa-x" style="font-size:...">`. **سینتکسِ قالب‌ها دست‌نخورده است**؛ کلاس‌های `h-N/w-N` به inline font-size تبدیل می‌شوند (آیکون inline است و height/width اثر ندارد — `h-1/2` و `h-full` عمداً دست‌نخورده می‌مانند). ~۱۳۰ نقطهٔ استفاده در قالب‌ها نیاز به ویرایش نداشتند.
-- **`apps/home/models.py`**، `apps/core/models.py`، `apps/portfolio/models.py`، `apps/services/models.py`، `apps/contact/models.py` — `ICON_HELP`ها و مثال‌ها (lucide.dev → fontawesome.com)، `default`ها (`sparkles` → `wand-magic-sparkles`، `message-circle` → `comment`).
-- **`static/admin/js/icon_picker.js`** — رندرِ سلول‌ها `<i class="fa-...">`، خواندن `__FA_ICONS`، حذفِ منطقِ «هنوز sync نشده».
-- **`templates/base.html`** — `<link>` فونت آوسام بعد از `tailwind.css`.
-- **`templates/core/about.html`** + `styles/input.css` — آیکونِ سیاره‌های صحنهٔ فضایی: `h-1/2 w-1/2` → اندازه از `--size` (`font-size: calc(var(--size) * 0.5)`) چون هر مدار اندازهٔ متفاوتی دارد.
-- **`templates/components/README.md`** و `package.json` (`build:icons`).
-
-مایگریشن‌های داده (۵ تا، **همگی اعمال شدند**): `core.0014`، `home.0015`، `portfolio.0008`، `services.0012`، `contact.0005` — هر کدام `RunPython` برای نگاشتِ مقادیرِ ذخیره‌شده + `AlterField` برای defaults/help_text. نام‌های ناشناخته دست‌نخورده می‌مانند (fail-safe). تمام مقادیرِ دیتابیس بعد از مهاجرت نام‌های معتبر فونت آوسام هستند.
-
-حذف شد:
-- `static/icons/lucide.sprite.svg`، `static/icons/lucide.full.sprite.svg` (و دایرکتوری `static/icons/`)
-- `static/admin/js/lucide_full_icons.js`
-- `scripts/build_icon_sprite.js`
-- `apps/core/management/commands/sync_icons.py`
-- `lucide-static` از npm
-
-**سه تا باگ در حینِ تأیید پیدا و رفع شد:**
-1. خروجیِ `{% icon %}` HTML-escape می‌شد (`mark_safe` در تگِ جدید جا افتاده بود) — آیکون‌ها به‌شکلِ `&lt;i class=...` در صفحه می‌آمدند. رفع با `mark_safe`.
-2. `h-1/2` با regex به `4px` تبدیل می‌شد (فقط `1` خوانده می‌شد). ریش: regex فقط اعدادِ تمام‌شده را می‌پذیرد؛ اندازهٔ این نقطه به CSS منتقل شد.
-3. **پیکرِ ادمین کاملاً مُرده بود:** ادمینِ جنگو `{{ media }}` را داخلِ `<head>` رندر می‌کند، پس `icon_picker.js` قبل ازِ وجودِ DOM اجرا می‌شد و `querySelectorAll("[data-icon-picker]")` خالی بود. رفع: `DOMContentLoaded` + `MutationObserver` (برای اینلاین‌های داینامیک) + گاردِ `data-ip-ready`.
-
-**نکتهٔ مهم:** ادمین فایل‌های استاتیک را از `public/static/` (STATIC_ROOT) سرو می‌کند، نه `static/`. بعد از هر تغییر در `static/admin/js/` یا `static/admin/css/` باید `manage.py collectstatic --noinput` زده شود. همچنین پروفایلِ Chromeِ اسکریپت‌های بررسی (`_fa_render_check.py` و `_admin_icon_check.py`) بین اجراها دوباره استفاده می‌شود — اگر فایلِ استاتیک را عوض کردید، پروفایل‌ها را پاک کنید تا کشِ مرورگر invalidate شود.
-
-### ۷. محویِ لبه‌های کاروسل + رابطِ شکستهٔ اسلایدرِ یک‌کارته ✅
-این کار در حال انجام بود ولی هنوز کامیت نشده بود (فقط روی working tree).
-
-کامیت: `0ae5d08 feat: edge fade on carousels, hide slider controls for a single card`
-
-- کلاسِ جدید **`.edge-fade`** در `styles/input.css` — همان mask-imageِ مارکویی ولی با نوارِ باریک‌تر (۶٪)، چون کارت‌های کاروسل در حالتِ استراحت روی لبه می‌ایستند و نباید مثلِ چیپِ متحرک محو شوند.
-- `templates/components/carousel.html` یک پارامترِ `track_class` گرفت؛ `articles_carousel.html` و `testimonials_slider.html` آن را پاس می‌دهند. **کاروسلِ نمونه‌کارها دست‌نخورده ماند** (همان shell را استفاده می‌کند ولی `track_class` نمی‌گیرد).
-- **باگِ رابطِ کاربری:** اسلایدرِ نظرات در دیتابیسِ فعلی فقط **یک کارتِ قابلِ نمایش** دارد — دو نظرِ ویدیویی/صوتی فایلِ رسانه‌ای ندارند و فیلترِ `playable` در `testimonial_tags.py` حذفشون می‌کنه. نتیجه: دکمه‌های قبلی/بعدی و راهنمای «بکشید…» بدونِ اینکه کاری بکنند نمایش داده می‌شدند. حالا دکمه‌ها و راهنما با `{% if testimonials|length > 1 %}` محاصره شدند. JS از قبل با نبودِ `[data-slider-dots]` early-return می‌کند (`static/js/pixoria.js:604`)، پس autoplay و drag هم متوقف می‌شوند.
-- تأیید: `scripts/_carousel_fade_check.py` (CDP) — ALL PASS. این اسکریپت حالا data-aware است: وقتی فقط یک کارت هست، به‌جای «اسکرول نمی‌شه»، «کنترل‌ها چاپ نشدند» را چک می‌کند.
-
-### ۸. بررسیِ بصریِ کارهای قبلی با CDP ✅
-این محیط **multimodal قبول نمی‌کند** (اسکرین‌شات خوانده نمی‌شود)؛ بررسی‌ها با اندازه‌گیریِ هندسی در مرورگرِ واقعی انجام شد. اسکریپت‌ها در `scripts/_*.py` (gitignore شده‌اند، محلی).
-
-کامیت: `e6c25a9 feat: portfolio cards keep natural aspect, convert existing images to WebP`
-
-**الف) بج‌های شیشه‌ای (تسک ۵ — تأیید نهایی):** ۶ بجِ `glass absolute` در صفحهٔ اصلی با CDP بررسی شدند. همه واقعاً `position: absolute` هستند (یعنی رفعِ تداخلِ `.glass`/`@layer` کار کرده) و **هیچ بیرون‌زدگیِ افقی** ندارند. بیرون‌زدگیِ عمودیِ ۸–۱۲px کاملاً عمدی است (کلاس‌های `-top-2`/`-top-3`/`-bottom-3` در `_services.html`).
-- نکتهٔ دیباگ: نامِ مشخصه در `CSSStyleDeclaration` به‌جای `fillMode` باید `animationFillMode` باشد؛ `fillMode` مقدار `undefined` برمی‌گرداند و `JSON.stringify` کلید را کلاً حذف می‌کند.
-
-**ب) مارکویی‌ها (تسک ۴ — تأیید نهایی):** ۳ ردیف: `marquee` ۶۲s (برندها)، `marquee` ۴۰s، `marquee-rev` ۴۰s. همه `dir="ltr"`، `overflow: hidden`، `.marquee-group` با `flex: 0 0 auto` (یعنی `flex: none`) و transform‌ها غیرِ همانی یعنی انیمیشن در حالِ اجراست. fill-mode نیازی نیست چون انیمیشن بی‌نهایت و فوری است.
-
-**ج) گریدِ کارت‌ها (تسک ۵ — باگِ واقعی پیدا و رفع شد):** کارتِ اول `images.jpg` (نسبتِ ۱.۵) در کنار کارتِ دوم مربعی (نسبتِ ۱) در یک ردیفِ `stretch` می‌ایستاد: کارتِ اول به ۳۹۵px کشیده می‌شد در حالی که تصویرش ۲۶۲px بود → **۱۳۳px فضای مرده** زیر تصویر، و کپشن (`absolute inset-0` با `justify-content: flex-end`) ۱۳۳px پایین‌تر از پایینِ تصویر می‌نشست.
-- **رفع:** `items-start lg:items-start` روی گرید در `templates/portfolio/list.html` و `templates/home/sections/_portfolio.html`. حالا هر کارت ارتفاعِ تصویرِ خودش را دارد (اندازه‌گیری: gap=2px برای هر دو کارت).
-
-**د) CLS (یک باگِ جدید):** روی صفحهٔ اصلی، قبل از بارگذاریِ تصویرِ lazy، کارت فقط **۲px** بود (`natural=0x0`) و بعد از بارگذاری به ۲۶۴px می‌پرید — یعنی layout shift، در سایتی که خودش بجِ «۹۹/۱۰۰ · Core Web Vitals» دارد!
-- **رفع:** `width="{{ project.image.width }}" height="{{ project.image.height }}"` به `<img>` در `_project_card.html` اضافه شد (از فرادادهٔ فایل via `ImageFieldFile`، بدون تغییرِ مدل). حالا حتی قبل از بارگذاریِ تصویر، جا رزرو می‌شود (۲۶۴px).
-
-### ۹. تبدیلِ تصاویرِ موجود به WebP ✅
-کامیت: `e6c25a9` (همان کامیت)
-
-- **`compress_to_webp_if_smaller()`** جدید در `apps/core/image_utils.py` — اگر نسخهٔ WebP حداقل ۲٪ کوچک‌تر نشود، `None` برمی‌گرداند. دلیل: `images.jpg` (۶۷۸×۴۵۲، ۳۸KB) که قبلاً فشرده شده، با quality ۸۵ به **۴۸KB** می‌رسید (۲۹٪ بزرگ‌تر!). حالا `Portfolio.save()` و `ProjectImage.save()` از این تابع استفاده می‌کنند، نه از `compress_to_webp` مستقیم.
-- **کامندِ جدید `manage.py compress_images`** (`apps/portfolio/management/commands/compress_images.py`) — تصاویرِ روی دیسک را تبدیل می‌کند. dry-run پیش‌فرض، `--write` برای اعمال. فایلِ قدیمی را حذف می‌کند و تفاوتِ حجم را گزارش می‌دهد.
-  - **سه تا باگِ پیچیده در حینِ نوشتن پیدا شد:**
-    1. **`FieldFile.save(save=False)` فقط ذخیرهٔ *مدل* را رد می‌کند، ولی فایل را روی دیسک می‌نویسد!** پس dry-runِ اول واقعاً فایل می‌ساخت (چند فایلِ یتیمِ `.webp` در `public/media/portfolio/` ساخته شد و پاک شدند). حالا در حالتِ خشک، فقط `compressed.size` و `storage.get_available_name()` خوانده می‌شود و هیچ I/O‌ای انجام نمی‌شود.
-    2. **PIL فایلِ مبدا را باز نگه می‌دارد** و ویندوز اجازهٔ حذفِ فایلِ باز را نمی‌دهد. رفع: `source.close()` قبل از `storage.delete()`.
-    3. نامِ فایل باید از `ContentFile`ِ بازگشتی خوانده شود، نه از نامِ قدیمی — وگرنه محتوای WebP با پسوندِ `.jpg` ذخیره می‌شد.
-  - **اجرای واقعی:** `images_XOwXvqo.jpg` (۱۹KB) → `images_XOwXvqo.webp` (**۹KB، ۵۴٪ کوچک‌تر**)، فایلِ قدیمی حذف شد. `images.jpg` رد شد (WebP بزرگ‌تر می‌شد).
-- **نکتهٔ فنی برای ویندوز:** کنسولِ ویندوز cp1252 است و فارسی را پشتیبانی نمی‌کند؛ کامندهای مدیریت را با `PYTHONUTF8=1 venv/Scripts/python manage.py ...` اجرا کنید.
-
-### ۱۰. گسترشِ فشرده‌سازیِ WebP به همهٔ تصاویر سایت ✅
-کاربر: «همهٔ تصاویر سایت»
-
-کامیت: `e14ae66 feat: compress all uploaded images to WebP via a shared mixin`
-
-- **`WebPImageMixin`** جدید در `apps/core/image_utils.py` — به‌جای بازنویسیِ `save()` در هر مدل، مدل فیلدهایش را در `WEBP_FIELDS` فهرست می‌کند و میکسین از `compress_to_webp_if_smaller` برای هر کدام استفاده می‌کند. **ترتیبِ ارث‌بری مهم است:** `class Article(WebPImageMixin, models.Model)` تا saveِ میکسین اول اجرا شود.
-- مدل‌های پوشش‌یافته: `Author.avatar`، `Article.cover_image`، `Service.og_image`، `ServiceSection.image`، `ServiceTestimonial.author_image`/`video_poster`، `AboutStory.image`، `Portfolio.image`، `ProjectImage.image` (دو موردِ آخری که قبلاً `save()`.inline داشتند حالا از میکسین استفاده می‌کنند).
-- `FIELDS` در `compress_images.py` همگام شد با `WEBP_FIELDS` همهٔ مدل‌ها.
-- **تستِ واقعیِ مسیرِ آپلود:** آپلود یک فایلِ `.jpg` به `Author.avatar` باعث شد `test-avatar.webp` ذخیره شود. در مسیرِ ادمین فایلِ اصلی هرگز روی دیسک نوشته نمی‌شود (در حافظه است و میکسین قبل از `super().save()` آن را جایگزین می‌کند) — نکتهٔ ظریف: صدا زدنِ دستیِ `field.save(name, file, save=True)` ابتدا فایلِ اصلی را می‌نویسد و سپس نسخهٔ WebP، یعنی یک فایلِ یتیمِ `.jpg` باقی می‌ماند.
-- **تبدیلِ تصاویرِ موجود (اجرا شد):** ۴ کاورِ blog: `CS50x.png` ۴۳۵KB→۹۲KB (۷۹٪)، `check1.png` ۲۶KB→۱۹KB، `images.jpg` ۱۹KB→۹KB، `django-cover.png` ۶KB→۳KB.
-- **تصمیمِ کاربر دربارهٔ git:** تصاویرِ فعلی تستی هستند و سرورِ آنلاین هنوز تصویری ندارد؛ پس فایل‌های webpِ جدید به git اضافه **نشدند**. حذفِ ۴ فایلِ tracked شده (` D public/media/blog/covers/*.png|.jpg`) هنوز **unstaged روی working tree** است — کامیت نشده. اگر بعداً خواستید، یا با `git add -f` فایل‌های جدید را به مخزن ببرید یا `git checkout` قدیمی‌ها را برگردانید.
-
-## کارهای باقی‌مانده (اولویت به ترتیب)
-1. ~~اجرای مایگریشنِ حذف پروپوزال~~ ✅ انجام شد
-   ~~مايگریشن ۰۰۱۴ (حذف NavItem) هم ساخته و اعمال شد~~ ✅
-2. ~~بررسیِ بصریِ بج‌های شیشه‌ای~~ ✅ تسک ۸-الف (CDP: همگی absolute، بدون سرریزِ افقی)
-3. ~~تستِ واقعیِ فشرده‌سازی~~ ✅ تسک ۹ — کامند نوشته شد، اجرا شد، ۱۹KB→۹KB
-5. ~~بررسیِ بصریِ کارت‌ها~~ ✅ تسک ۸-ج — باگِ ۱۳۳px پیدا و رفع شد (`items-start`)
-7. ~~بررسیِ بصریِ مارکویی‌ها~~ ✅ تسک ۸-ب (CDP: ۳ ردیف، marquee-rev فعال، در حالِ اجرا)
-
-6. ~~سایر تصاویر سایت~~ ✅ تسک ۱۰ — WebPImageMixin روی همهٔ مدل‌ها، ۴ کاورِ blog تبدیل شد
-   - **باز:** حذفِ ۴ فایلِ tracked شدهٔ `public/media/blog/covers/` هنوز unstaged است (تصمیم با کاربر).
-
-### تصمیماتِ باز
-- ~~مدل `ClientMarqueeItem`~~ — کاربر: «مارکویی خوبه و نیازی نیست که تغییرش بدم». دست‌نخورده باقی می‌ماند.
-- نام برندهای فعلی در دیتابیس هنوز نمونه‌های تستی هستن («احمدی»، «مشتری ۲») — با بارگذاریِ نمونه‌کارهای واقعی در ادمین، مارکویی خودکار پر می‌شه.
-- **تصاویرِ یتیم در `public/media/`:** `public/media/team/*.jpg` (۳ فایل) و `public/media/proposals/*` (۳ فایل) در git tracked هستند ولی به هیچ مدلی متصل نیستند (proposals در تسک ۱ حذف شدند). احتمالاً باید `git rm` شوند.
-
-### نکاتِ فنی
-- `requirements.txt` شامل `pillow==12.3.0` است (نصب شده در `venv`)
-- `venv/Scripts/python manage.py check` پاس شد (هیچ خطیری نیست)
-- کلاسیفایرِ Bash گاهی قطع می‌شود — اگر دوباره قطع شد، با Edit ادامه دهید
-- تنظیمات: `config/settings.py`، media در `public/media/`، آدرس `/public/media/`
-- **این محیط multimodal نیست** — اسکرین‌شات خوانده نمی‌شود. بررسی‌های بصری با CDP و اندازه‌گیریِ هندسی انجام شوند (الگو در `scripts/_geometry_check.py` و `scripts/_cardheight_check.py`).
-- بعد از هر تغییر در `styles/input.css`: `npm run build` و سپس `manage.py collectstatic --noinput`.
-- پروفایل‌های Chromeِ اسکریپت‌های بررسی (`.*-chrome-profile/`) اگر فایلِ استاتیک عوض شد باید پاک شوند تا کش invalidate شود.
-- **`FieldFile.save(name, content, save=False)` فایل را روی دیسک می‌نویسد** — فقط ذخیرهٔ مدل را رد می‌کند. برای dry-run واقعی، اصلاً صدا نزنید.

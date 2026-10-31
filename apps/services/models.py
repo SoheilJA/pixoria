@@ -6,6 +6,7 @@ from tinymce.models import HTMLField
 from apps.core.icon_utils import validate_icon_name
 from apps.core.image_utils import WebPImageMixin
 from apps.core.models import EYEBROW_HELP, ICON_HELP, TITLE_HELP, URL_HELP
+from apps.core.text_utils import strip_highlight
 
 
 class ServicesPageSection(models.Model):
@@ -255,12 +256,12 @@ class Service(WebPImageMixin, models.Model):
         return "gold"
 
     def get_meta_title(self):
-        """عنوان متا یا fallback به عنوانِ خدمت."""
-        return self.meta_title or self.title
+        """عنوان متا یا fallback به عنوانِ خدمت — متنِ ساده (بدونِ مارکرِ [[ ]])."""
+        return strip_highlight(self.meta_title or self.title)
 
     def get_meta_description(self):
-        """توضیحات متا یا fallback به توضیحات کوتاه."""
-        return self.meta_description or self.excerpt
+        """توضیحات متا یا fallback به توضیحات کوتاه — متنِ ساده."""
+        return strip_highlight(self.meta_description or self.excerpt)
 
     def get_tags_list(self):
         return [tag.strip() for tag in self.tags.split(",") if tag.strip()]
@@ -417,7 +418,7 @@ class ServiceWhyUs(models.Model):
         verbose_name="آیکون",
         help_text=(
             "نام انگلیسی یک آیکون Lucide، بدون فاصله. "
-            "مثال: zap، palette، shield-check. "
+            "مثال: bolt، palette، shield-check. "
             "لیست کامل آیکون‌ها: lucide.dev/icons"
         ),
         validators=[validate_icon_name],
@@ -606,31 +607,6 @@ class ServicePlanFeature(models.Model):
         return self.title
 
 
-class ServiceCustomItem(models.Model):
-    """آیتم‌های پلن سفارشی"""
-
-    service = models.ForeignKey(
-        Service,
-        on_delete=models.CASCADE,
-        related_name="custom_items",
-        verbose_name="خدمت",
-    )
-    title = models.CharField(max_length=200, verbose_name="عنوان آیتم")
-    description = models.CharField(
-        max_length=200, verbose_name="توضیح کوتاه", blank=True
-    )
-    price = models.PositiveIntegerField(verbose_name="قیمت (میلیون تومان)")
-    order = models.PositiveIntegerField(default=0, verbose_name="ترتیب")
-
-    class Meta:
-        verbose_name = "آیتم سفارشی"
-        verbose_name_plural = "آیتم‌های سفارشی"
-        ordering = ["order"]
-
-    def __str__(self):
-        return self.title
-
-
 class ServiceFAQ(models.Model):
     """سوالات متداول"""
 
@@ -651,31 +627,17 @@ class ServiceFAQ(models.Model):
 
 
 class ServiceTestimonial(WebPImageMixin, models.Model):
-    """نظرات مشتریان — سه نوع کارت در اسلایدر: متنی، ویدیویی و صوتی.
+    """نظرات مشتریان — کارتِ متنیِ اسلایدر.
 
-    ویدیو و صوت واقعی هستند: فایل آپلودشده یا یک آدرس مستقیم، و پخش واقعی
-    مرورگر روی کارت. مدت زمان اختیاری است و وقتی خالی گذاشته شود از روی
-    فرادادهٔ فایل خوانده می‌شود."""
+    فقط متن: نام/نقش/تصویرِ گوینده + امتیاز و متنِ نظر."""
 
-    WEBP_FIELDS = ["author_image", "video_poster"]
-
-    KIND_CHOICES = [
-        ("text", "متن"),
-        ("video", "ویدیو"),
-        ("audio", "صوت"),
-    ]
+    WEBP_FIELDS = ["author_image"]
 
     service = models.ForeignKey(
         Service,
         on_delete=models.CASCADE,
         related_name="testimonials",
         verbose_name="خدمت",
-    )
-    kind = models.CharField(
-        max_length=10,
-        choices=KIND_CHOICES,
-        default="text",
-        verbose_name="نوع کارت",
     )
     author_name = models.CharField(max_length=100, verbose_name="نام")
     author_role = models.CharField(max_length=200, verbose_name="نقش و شرکت")
@@ -688,58 +650,6 @@ class ServiceTestimonial(WebPImageMixin, models.Model):
         verbose_name="امتیاز (۱ تا ۵)",
         validators=[MinValueValidator(1), MaxValueValidator(5)],
     )
-    video_file = models.FileField(
-        upload_to="testimonials/video/",
-        verbose_name="فایل ویدیو",
-        blank=True,
-        help_text="فایل ویدیو (mp4/webm). آپلود فایل یا آدرس کافی است",
-    )
-    video_url = models.URLField(
-        verbose_name="آدرس ویدیو",
-        blank=True,
-        help_text="آدرس مستقیم فایل ویدیو (مثلاً https://…/clip.mp4)",
-    )
-    video_poster = models.ImageField(
-        upload_to="testimonials/video/",
-        verbose_name="پوستر ویدیو",
-        blank=True,
-        help_text="برای کارت‌های ویدیویی. تصویر پوسترِ پیش از پخش",
-    )
-    video_duration = models.PositiveIntegerField(
-        verbose_name="مدت زمان ویدیو (ثانیه)",
-        blank=True,
-        null=True,
-        help_text="اختیاری — خالی بگذارید تا از روی فرادادهٔ فایل خوانده شود",
-    )
-    audio_file = models.FileField(
-        upload_to="testimonials/audio/",
-        verbose_name="فایل صوت",
-        blank=True,
-        help_text="فایل صوتی (mp3/m4a). آپلود فایل یا آدرس کافی است",
-    )
-    audio_url = models.URLField(
-        verbose_name="آدرس صوت",
-        blank=True,
-        help_text="آدرس مستقیم فایل صوتی (مثلاً https://…/voice.mp3)",
-    )
-    audio_title = models.CharField(
-        max_length=200,
-        verbose_name="عنوان پیام صوتی",
-        blank=True,
-        help_text="مثلاً: گفت‌وگو با کارفرما",
-    )
-    audio_project = models.CharField(
-        max_length=200,
-        verbose_name="پروژهٔ پیام صوتی",
-        blank=True,
-        help_text="مثلاً: پروژهٔ همایش ملی",
-    )
-    audio_duration = models.PositiveIntegerField(
-        verbose_name="مدت زمان صوت (ثانیه)",
-        blank=True,
-        null=True,
-        help_text="اختیاری — خالی بگذارید تا از روی فرادادهٔ فایل خوانده شود",
-    )
     show_on_home = models.BooleanField(default=False, verbose_name="نمایش در صفحه اصلی")
     order = models.PositiveIntegerField(default=0, verbose_name="ترتیب")
 
@@ -751,40 +661,9 @@ class ServiceTestimonial(WebPImageMixin, models.Model):
     def __str__(self):
         return f"{self.author_name} — {self.service.title}"
 
-    def get_video_src(self):
-        """آدرس پخش ویدیو: فایل آپلودشده، وگرنه آدرس مستقیم."""
-        if self.video_file:
-            return self.video_file.url
-        return self.video_url or ""
-
-    def get_audio_src(self):
-        """آدرس پخش صوت: فایل آپلودشده، وگرنه آدرس مستقیم."""
-        if self.audio_file:
-            return self.audio_file.url
-        return self.audio_url or ""
-
     def clean(self):
         from django.core.exceptions import ValidationError
 
         super().clean()
-        if self.kind == "text":
-            if not self.text:
-                raise ValidationError({"text": "کارت متنی به متنِ نظر نیاز دارد."})
-        elif self.kind == "video":
-            errors = {}
-            if not (self.video_file or self.video_url):
-                errors["video_file"] = "ویدیو به فایل یا آدرسِ ویدیو نیاز دارد."
-                errors["video_url"] = "ویدیو به فایل یا آدرسِ ویدیو نیاز دارد."
-            if not self.video_poster:
-                errors["video_poster"] = "ویدیو به پوستر نیاز دارد."
-            if errors:
-                raise ValidationError(errors)
-        elif self.kind == "audio":
-            errors = {}
-            if not (self.audio_file or self.audio_url):
-                errors["audio_file"] = "صوت به فایل یا آدرسِ صوت نیاز دارد."
-                errors["audio_url"] = "صوت به فایل یا آدرسِ صوت نیاز دارد."
-            if not self.audio_title:
-                errors["audio_title"] = "کارت صوتی به عنوان نیاز دارد."
-            if errors:
-                raise ValidationError(errors)
+        if not self.text:
+            raise ValidationError({"text": "کارتِ نظر به متنِ نظر نیاز دارد."})

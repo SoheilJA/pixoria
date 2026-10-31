@@ -1,0 +1,279 @@
+/* =====================================================================
+   HERO — هیروی صفحهٔ اصلی «میدانِ زنده»
+   بومِ دوبعدیِ نقطه‌های پیکسلی + تایپِ مرکزیِ مینیمال؛ بدونِ three.js،
+   بدونِ GSAP. موتورِ بوم در static/js/hero-field.js است.
+   نام‌گذاری: hx-  ==  hero
+   ===================================================================== */
+
+/* ─────────────────────── variables ─────────────────────── */
+.hx {
+  --hx-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --hx-line: rgba(245, 243, 238, 0.08);
+  --hx-line-strong: rgba(245, 243, 238, 0.16);
+  --hx-mute: rgba(245, 243, 238, 0.5);
+  --hx-mut2: rgba(245, 243, 238, 0.32);
+  --hx-mut3: rgba(245, 243, 238, 0.18);
+  --hx-gold: #c9a15a;
+  --hx-gold-l: #e8c47a;
+  --hx-pad: clamp(20px, 4vw, 56px);
+  --hx-max: 1200px;
+}
+
+/* ─────────────────────── base section ─────────────────────── */
+.hx {
+  position: relative;
+  display: grid;
+  align-content: center;
+  overflow: clip;
+  min-height: 100svh;
+  background: var(--ink);
+  color: var(--cream);
+  isolation: isolate;
+  padding-block: clamp(56px, 9svh, 120px);
+}
+
+/* ─────────────────────── HUD گوشه‌ها ─────────────────────── */
+.hx-corners {
+  position: absolute;
+  z-index: 20;
+  inset: 0;
+  pointer-events: none;
+  font-family: "Space Grotesk", monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--hx-mut3);
+}
+.hx-corners span {
+  position: absolute;
+  white-space: nowrap;
+}
+.hx-corners span:nth-child(1) { inset-inline-start: var(--hx-pad); top: clamp(98px, 14svh, 146px); }
+.hx-corners span:nth-child(2) { inset-inline-end: var(--hx-pad); top: clamp(98px, 14svh, 146px); }
+.hx-corners span:nth-child(3) { inset-inline-start: var(--hx-pad); bottom: clamp(24px, 4svh, 44px); }
+.hx-corners span:nth-child(4) { inset-inline-end: var(--hx-pad); bottom: clamp(24px, 4svh, 44px); }
+@media (max-width: 640px) {
+  .hx-corners span:nth-child(2),
+  .hx-corners span:nth-child(4) { display: none; }
+}
+
+/* ─────────────────────── هستهٔ محتوا ─────────────────────── */
+.hx-head {
+  position: relative;
+  z-index: 10;
+  width: min(var(--hx-max), 100%);
+  padding-inline: var(--hx-pad);
+  margin-inline: auto;
+}
+.hx-title {
+  margin: 0;
+  font-size: clamp(2.35rem, 6.4vw, 5.1rem);
+  font-weight: 800;
+  line-height: 1.22;
+  letter-spacing: -0.015em;
+}
+.hx-title strong,
+.hx-title .text-goldgrad {
+  font-weight: 800;
+}
+.hx-sub {
+  margin: 0;
+  max-width: 46ch;
+  color: var(--hx-mute);
+  font-weight: 300;
+  font-size: clamp(1rem, 1.3vw, 1.075rem);
+  line-height: 2.1;
+}
+.hx-cta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+}
+
+/* ردیفِ آمار — با خطِ ظریفِ بالا */
+.hx-metrics {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: clamp(14px, 2.4vw, 30px);
+  padding-top: 14px;
+  border-top: 1px solid var(--hx-line);
+  font-size: 0.82rem;
+  color: var(--hx-mut2);
+}
+.hx-metrics > * {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.4rem;
+}
+.hx-metrics b {
+  font-family: "Space Grotesk", monospace;
+  font-size: 1.02rem;
+  font-weight: 600;
+  color: var(--hx-gold-l);
+}
+.hx-metrics > *::after {
+  content: "";
+  display: block;
+  width: 1px;
+  height: 12px;
+  background: var(--hx-line-strong);
+  margin-inline-start: clamp(14px, 2.4vw, 30px);
+  transform: none;
+}
+.hx-metrics > *:last-child::after { display: none; }
+
+/* سرنخِ اسکرول */
+.hx-scroll {
+  position: absolute;
+  z-index: 20;
+  inset-inline-start: 50%;
+  bottom: clamp(26px, 4.5svh, 52px);
+  translate: -50% 0;
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  font-size: 0.6rem;
+  letter-spacing: 0.3em;
+  color: var(--hx-mut3);
+  font-family: "Space Grotesk", monospace;
+  text-transform: uppercase;
+}
+.hx-scroll i {
+  position: relative;
+  display: block;
+  width: 1px;
+  height: clamp(28px, 5svh, 46px);
+  overflow: hidden;
+  background: var(--hx-line-strong);
+}
+.hx-scroll i::after {
+  content: "";
+  position: absolute;
+  inset-inline-start: 0;
+  top: -30%;
+  width: 100%;
+  height: 30%;
+  background: var(--hx-gold-l);
+  animation: hx-scrollline 2.6s cubic-bezier(0.65, 0.05, 0.35, 1) infinite;
+}
+@keyframes hx-scrollline {
+  0% { top: -30%; opacity: 0; }
+  25% { opacity: 1; }
+  100% { top: 100%; opacity: 0; }
+}
+
+/* ═══════════════ «میدانِ زنده» ═══════════════ */
+.hx-a {
+  padding-top: clamp(44px, 8svh, 92px);
+}
+/* بومِ میدان — مشترک بین هیرو و فوتر (موتور: hero-field.js) */
+[data-hx-field] {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 1400ms var(--hx-ease);
+}
+[data-hx-field].on { opacity: 1; }
+/* هالهٔ تهیِ صفحه */
+.hx-a__haze {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 62% 52% at 50% 108%, rgba(201, 161, 90, 0.15), transparent 68%),
+    radial-gradient(ellipse 40% 34% at 12% 6%, rgba(46, 99, 255, 0.09), transparent 72%);
+}
+/* کلمهٔ غولِ لاتین در پس‌زمینه */
+.hx-a__ghost {
+  position: absolute;
+  z-index: 3;
+  inset-inline: -2vw;
+  bottom: -0.06em;
+  font-size: clamp(4.4rem, 15.6vw, 15rem);
+  font-weight: 300;
+  line-height: 0.78;
+  letter-spacing: -0.03em;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(245, 243, 238, 0.055);
+  animation: hx-drift 46s linear infinite alternate;
+  pointer-events: none;
+}
+@keyframes hx-drift {
+  from { transform: translateX(-2.5%); }
+  to { transform: translateX(2.5%); }
+}
+/* محتوا */
+.hx-a__body { text-align: center; }
+.hx-a__body .eyebrow {
+  justify-content: center;
+}
+.hx-a__body .eyebrow::after {
+  content: "";
+  width: 2.75rem;
+  height: 1px;
+  background: linear-gradient(to right, var(--hx-gold-l), transparent);
+}
+.hx-a .hx-title { margin-top: clamp(14px, 2.4svh, 26px); }
+.hx-a .hx-sub { margin-inline: auto; margin-top: clamp(14px, 2.2svh, 22px); }
+.hx-a .hx-cta { justify-content: center; margin-top: clamp(24px, 3.6svh, 38px); }
+.hx-a .hx-metrics {
+  justify-content: center;
+  margin-top: clamp(26px, 4svh, 44px);
+  width: fit-content;
+  margin-inline: auto;
+}
+/* محویِ نرمِ لبهٔ پایین — نقطه‌ها و کلمهٔ غول پیش از مرزِ بخشِ بعد داخلِ مرکبِ خودشان
+   محو میشوند تا برشِ خطِ صاف در محلِ اتصالِ فرمِ موجیِ بخشِ دوم دیده نشود */
+.hx-a::after {
+  content: "";
+  position: absolute;
+  z-index: 4;
+  inset-inline: 0;
+  bottom: 0;
+  height: clamp(90px, 16vh, 180px);
+  pointer-events: none;
+  background: linear-gradient(to bottom, rgba(10, 10, 12, 0) 0%, var(--ink) 82%);
+}
+
+/* ─────────────────────── mobile ─────────────────────── */
+@media (max-width: 768px) {
+  .hx-head { padding-inline: clamp(18px, 5vw, 30px); }
+  .hx-title { font-size: clamp(2rem, 8.4vw, 3rem); }
+}
+
+/* ─────────────────────── reduced motion ─────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  [data-hx-field] { animation: none; opacity: 0.45; }
+  .hx-a__ghost { animation: none !important; }
+  .hx-scroll i::after { animation: none; opacity: 0.6; }
+}
+
+/* ═══════════════ «میدانِ زنده» در فوتر ═══════════════ */
+/* هالهٔ فوتر — تهِ صفحه گرمتر (تقریباً همان زبانِ هیرو با شدتِ کمتر) */
+.hx-field__haze {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 64% 42% at 50% 116%, rgba(201, 161, 90, 0.13), transparent 66%),
+    radial-gradient(ellipse 36% 26% at 88% 6%, rgba(46, 99, 255, 0.06), transparent 70%);
+}
+/* پیکسلهای زیرِ کیستِ موجِ بالای فوتر محو شروع میشوند تا لبهٔ خشک نداشته باشیم */
+.hx-field__top {
+  position: absolute;
+  z-index: 2;
+  inset-inline: 0;
+  top: 0;
+  height: clamp(96px, 14vh, 170px);
+  pointer-events: none;
+  background: linear-gradient(to bottom, #121214 0%, rgba(18, 18, 20, 0) 100%);
+}
+/* در فوتر بوم زیرِ کیستِ موج میماند (crest همیشه سطحِ بالاتر است) */
+footer [data-hx-field] { z-index: 0; }

@@ -1,105 +1,61 @@
-{% load icon_tags highlight_tags nav_tags fa_digits %}
-{# هیرو v2 — صحنهٔ سه‌بعدی + جایگزین CSS + المان‌های شناور + CTA و آمار از دیتابیس #}
-{# داده‌ها: hero (HeroSection)، hero_stats (HeroStat) #}
-<section id="home" data-mouse-parallax class="relative flex min-h-[100svh] items-center overflow-hidden bg-ink">
-  {# صحنهٔ سه‌بعدی — hero-scene.js فقط در صورت نزدیک شدن به دید مقداردهی می‌شود #}
-  <div id="hero-3d" class="absolute inset-0" aria-hidden="true">
-    <canvas id="hero-canvas" class="h-full w-full"></canvas>
+{% load icon_tags fa_digits highlight_tags nav_tags %}
+{% comment %} هیرو v3 — «میدانِ زنده»: بومِ نقطه‌های پیکسلیِ محیطی + تایپِ مرکزیِ مینیمال {% endcomment %}
+{% comment %} موتورِ بوم: static/js/hero-field.js (دوبعدیِ سبک، بدونِ three.js و بدونِ GSAP) {% endcomment %}
+{% comment %} داده‌ها: hero (HeroSection) و hero_stats که در ویو از شمارنده‌های {% endcomment %}
+{% comment %} واقعی (تعدادِ نمونه‌کارها و خدمات) ساخته می‌شود — نه متنِ ثابتِ ادمین. {% endcomment %}
+<section id="home" class="hx hx-a" aria-label="معرفی">
+  {% comment %} بومِ نقطه‌ها {% endcomment %}
+  <canvas class="hx-a__field" data-hx-field aria-hidden="true"></canvas>
+
+  {% comment %} هاله و کلمهٔ غولِ لاتین {% endcomment %}
+  <div class="hx-a__haze" aria-hidden="true"></div>
+  <span class="hx-a__ghost font-latin" aria-hidden="true">pixoria</span>
+
+  {% comment %} HUD گوشه‌ها — برچسب‌های تزئینیِ ظریف {% endcomment %}
+  <div class="hx-corners" aria-hidden="true">
+    <span dir="ltr">pixoria® studio</span>
+    <span dir="ltr">est. 2018 — tehran</span>
+    <span dir="ltr">field: active</span>
+    <span dir="ltr">35.6892 N / 51.3890 E</span>
   </div>
 
-  {# جایگزین CSS در صورت نبود WebGL #}
-  <div id="hero-fallback" class="pointer-events-none absolute inset-0" aria-hidden="true">
-    <div class="absolute left-1/2 top-[32%] -translate-x-1/2 lg:left-[27%] lg:top-1/2 lg:-translate-y-1/2">
-      <div class="fb-rings">
-        <span class="fb-ring fb-r1"></span><span class="fb-ring fb-r2"></span
-        ><span class="fb-ring fb-r3"></span> <span class="fb-core"></span><span
-          class="fb-dot fb-dotgold"></span><span class="fb-dot fb-dotblue"></span>
-      </div>
-    </div>
-  </div>
-
-  {# المان‌های شناور #}
-  <div class="pointer-events-none absolute inset-0" aria-hidden="true">
-    <div data-depth="0.05" class="absolute left-[9%] top-[9%]">
-      <span class="orb h-float-1 block h-20 w-20" style="--fa: 22px; background: radial-gradient(circle at 32% 30%, rgba(232,196,122,0.42), rgba(201,161,90,0.07) 60%, transparent 72%);"></span>
-    </div>
-    <div data-depth="0.09" class="absolute left-[5%] top-[33%]">
-      <span class="shard h-float-2 block h-28 w-24 rotate-12" style="--fa: 20px"></span>
-    </div>
-    <div data-depth="0.07" class="absolute bottom-[15%] left-[27%]">
-      <span class="shard h-float-3 block h-16 w-14 -rotate-6" style="--fa: 16px; opacity: 0.7"></span>
-    </div>
-    <div data-depth="0.04" class="absolute left-[36%] top-[13%]">
-      <span class="orb h-float-4 block h-10 w-10" style="--fa: 14px; background: radial-gradient(circle, rgba(46,99,255,0.5), transparent 70%);"></span>
-    </div>
-    <div data-depth="0.06" class="absolute bottom-[22%] left-[13%]">
-      <span class="float-ring h-float-5 block" style="--fa: 20px; width: 7rem; height: 7rem"></span>
-    </div>
-    {# سیارهٔ طلاییِ کوچک با حلقه #}
-    <div data-depth="0.08" class="absolute right-[7%] top-[12%]">
-      <span class="h-planet relative block h-14 w-14 rounded-full" style="--fa: 20px; background: radial-gradient(circle at 34% 28%, rgba(244,236,217,0.85), rgba(232,196,122,0.55) 48%, rgba(143,107,44,0.25) 76%, transparent 90%); box-shadow: 0 0 46px -12px rgba(232,196,122,0.7), inset -12px -9px 28px -20px rgba(6,6,7,0.9);">
-        <span class="absolute -inset-3 rounded-full border border-gold/35" style="transform: rotate(-18deg) scaleY(0.32)"></span>
-      </span>
-    </div>
-    {# سیارهٔ آبیِ کوچک در حال گردش مداری #}
-    <div data-depth="0.05" class="absolute bottom-[18%] right-[11%] hidden sm:block">
-      <span class="h-float-4 relative block h-11 w-11 rounded-full" style="--fa: 26px; background: radial-gradient(circle at 36% 28%, rgba(143,168,255,0.8), rgba(46,99,255,0.4) 50%, rgba(46,99,255,0.08) 78%, transparent 88%); box-shadow: 0 0 44px -12px rgba(46,99,255,0.65), inset -10px -8px 24px -18px rgba(6,6,7,0.9);">
-        <span class="absolute -inset-2.5 rounded-full border border-royal/30" style="transform: rotate(24deg) scaleY(0.3)"></span>
-      </span>
-    </div>
-  </div>
-
-  {# هاله‌های نور #}
-  <div class="pointer-events-none absolute -left-40 top-1/4 h-[34rem] w-[34rem] rounded-full opacity-30" style="background: radial-gradient(circle, rgba(201,161,90,0.22), transparent 65%);" aria-hidden="true"></div>
-  <div class="pointer-events-none absolute bottom-24 right-10 h-72 w-72 rounded-full opacity-25" style="background: radial-gradient(circle, rgba(46,99,255,0.25), transparent 70%);" aria-hidden="true"></div>
-
-  {# واترمارک لاتین #}
-  <span class="font-latin stroke-title pointer-events-none absolute -bottom-10 left-0 select-none text-[22vw] font-light leading-none" aria-hidden="true">pixoria</span>
-
-  <div class="relative z-10 mx-auto grid w-full max-w-7xl grid-cols-1 items-center gap-10 px-6 pb-28 pt-[44vh] lg:grid-cols-12 lg:gap-8 lg:pb-24 lg:pt-40">
-    {# ستون متن #}
-    <div class="lg:col-span-6">
-      {% if hero.eyebrow %}
-        <p class="eyebrow" data-reveal="up">{{ hero.eyebrow }}</p>
+  <div class="hx-head hx-a__body">
+    {% if hero.eyebrow %}
+      <p class="eyebrow" data-reveal="rise">{{ hero.eyebrow }}</p>
+    {% endif %}
+    <h1 class="hx-title" data-reveal="mask">
+      {{ hero.title|highlight }}
+    </h1>
+    <p class="hx-sub" data-reveal="blur" data-delay="0.12">
+      {{ hero.description|linebreaksbr }}
+    </p>
+    <div class="hx-cta" data-reveal="pop" data-delay="0.2">
+      {% if hero.cta_primary_text %}
+        <a href="{% nav_url hero.cta_primary_url %}" class="btn btn-gold px-8 py-4" data-magnetic>
+          {{ hero.cta_primary_text }} {% icon "arrow-left" class="h-4 w-4" %}
+        </a>
       {% endif %}
-      <h1 class="mt-6 text-[2.7rem] font-extrabold leading-[1.2] sm:text-6xl lg:text-7xl" data-reveal="right">
-        {{ hero.title|highlight }}
-      </h1>
-      <p class="mt-6 max-w-xl text-lg font-light leading-8 text-cream/70" data-reveal="right" data-delay="0.12">
-        {{ hero.description|linebreaksbr }}
-      </p>
-      <div class="mt-10 flex flex-wrap items-center gap-4" data-reveal="right" data-delay="0.2">
-        {% if hero.cta_primary_text %}
-          <a href="{% nav_url hero.cta_primary_url %}" class="btn btn-gold px-8 py-4" data-magnetic>
-            {{ hero.cta_primary_text }} {% icon "arrow-left" class="h-4 w-4" %}
-          </a>
-        {% endif %}
-        {% if hero.cta_secondary_text and hero.cta_secondary_url %}
-          <a href="{% nav_url hero.cta_secondary_url %}" class="btn btn-ghost px-8 py-4" data-magnetic>
-            {{ hero.cta_secondary_text }}
-          </a>
-        {% endif %}
-      </div>
-      {% if hero_stats %}
-        <div class="mt-12 flex flex-wrap items-center gap-x-7 gap-y-3 text-sm text-cream/50" data-reveal="up" data-delay="0.3">
-          {% for stat in hero_stats %}
-            {% if not forloop.first %}
-              <span class="h-1 w-1 rounded-full bg-gold/60" aria-hidden="true"></span>
-            {% endif %}
-            <span class="inline-flex items-center gap-1.5">
-              {% if stat.icon %}{% icon stat.icon class="h-3.5 w-3.5 text-gold/70" %}{% endif %}
-              <b class="font-semibold text-gold-light">{{ stat.value }}</b>
-              {{ stat.label }}
-            </span>
-          {% endfor %}
-        </div>
+      {% if hero.cta_secondary_text and hero.cta_secondary_url %}
+        <a href="{% nav_url hero.cta_secondary_url %}" class="btn btn-ghost px-8 py-4" data-magnetic>
+          {{ hero.cta_secondary_text }}
+        </a>
       {% endif %}
     </div>
+    {% if hero_stats %}
+      <div class="hx-metrics" data-reveal="rise" data-delay="0.3">
+        {% for stat in hero_stats %}
+          <span>
+            <b class="fa-num">{{ stat.value|fa_digits }}</b>
+            {{ stat.label }}
+          </span>
+        {% endfor %}
+      </div>
+    {% endif %}
   </div>
 
-  {# نشانگر اسکرول #}
-  <div class="absolute bottom-7 left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-2" data-reveal="up" data-delay="0.4">
-    <span class="text-[10px] tracking-[.3em] text-cream/40">اسکرول</span>
-    <span class="scroll-cue" aria-hidden="true"></span>
+  {% comment %} سرنخِ اسکرول {% endcomment %}
+  <div class="hx-scroll" aria-hidden="true">
+    <span>اسکرول</span>
+    <i></i>
   </div>
 </section>

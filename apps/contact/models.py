@@ -2,11 +2,11 @@ from django.db import models
 
 from apps.core.icon_utils import validate_icon_name
 
-# راهنمای مشترک فیلد آیکون — آیکون‌ها از فونتِ محلی Font Awesome بارگذاری می‌شوند.
+# راهنمای مشترک فیلد آیکون — آیکون‌ها از اسپرایتِ محلی Lucide بارگذاری می‌شوند.
 ICON_HELP = (
-    "نام انگلیسی یک آیکون Font Awesome (نسخهٔ رایگان)، بدون فاصله. "
-    "مثال: bolt، palette، shield-halved. "
-    "لیست کامل آیکون‌ها: fontawesome.com/icons"
+    "نام انگلیسی یک آیکون Lucide، بدون فاصله. "
+    "مثال: bolt، palette، shield-check. "
+    "لیست کامل آیکون‌ها: lucide.dev/icons"
 )
 # راهنمای مشترک فیلد متن بالای عنوان (eyebrow).
 EYEBROW_HELP = "متن کوچک و طلاییِ بالای عنوان. مثلاً: تماس با ما"
@@ -271,7 +271,6 @@ class ContactSubmission(models.Model):
     STATUS_CHOICES = [("new", "جدید"), ("seen", "مشاهده شده")]
 
     name = models.CharField(max_length=200, verbose_name="نام و نام خانوادگی")
-    email = models.EmailField(verbose_name="ایمیل", blank=True)
     phone = models.CharField(max_length=20, verbose_name="شماره تماس")
     company = models.CharField(
         max_length=200, verbose_name="نام شرکت", blank=True, null=True

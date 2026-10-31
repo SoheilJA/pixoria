@@ -21,7 +21,7 @@ class SiteSettingsForm(forms.ModelForm):
 @admin.register(SiteSettings)
 class SiteSettingsAdmin(admin.ModelAdmin):
     form = SiteSettingsForm
-    list_display = ["site_name", "email", "phone", "status"]
+    list_display = ["site_name", "phone", "status"]
     fieldsets = [
         (
             "مشخصات سایت",
@@ -48,7 +48,6 @@ class SiteSettingsAdmin(admin.ModelAdmin):
             "اطلاعات تماس",
             {
                 "fields": [
-                    "email",
                     "phone",
                     "phone_label",
                     "phone_secondary",
@@ -180,14 +179,6 @@ class AboutJourneySectionAdmin(admin.ModelAdmin):
 class AboutJourneyStepAdmin(admin.ModelAdmin):
     list_display = ["year", "title", "subtitle", "order"]
     list_editable = ["order"]
-
-
-@admin.register(AboutClientsSection)
-class AboutClientsSectionAdmin(admin.ModelAdmin):
-    list_display = ["__str__"]
-
-    def has_add_permission(self, request):
-        return not AboutClientsSection.objects.exists()
 
 
 @admin.register(AboutStat)

@@ -68,7 +68,7 @@ CSRF_TRUSTED_ORIGINS = _env_list(
 # Application definition
 
 INSTALLED_APPS = [
-    "unfold",
+    # "unfold",
     "django.contrib.admin",
     # sitemaps
     "django.contrib.sitemaps",

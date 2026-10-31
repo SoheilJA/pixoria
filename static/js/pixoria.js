@@ -3,28 +3,45 @@
  *
  * Ported from the inline script of new/index.html. Handles smooth scroll,
  * scroll-driven reveals/counters, magnetic + tilt effects, the mobile menu,
- * scroll progress, the testimonial slider, the media (video/audio) cards,
- * the portfolio filter, marquee duplication, the process GPS draw, the FAQ
- * accordion, the toast and the blog article chrome (reading-progress bar,
- * table-of-contents highlight, copy-link button).
+ * scroll progress, the testimonial slider, the portfolio filter, marquee
+ * duplication, the process GPS draw, the FAQ accordion, the toast and the blog
+ * article chrome (reading-progress bar, table-of-contents highlight, copy-link button).
  *
- * Loaded as an ES module from base.html. GSAP + ScrollTrigger are expected as
- * globals (defer classic scripts); every feature degrades gracefully when they
- * are missing, when the user prefers reduced motion, or on touch input.
- * Lenis is imported as a module so no global is required.
+ * Loaded as an ES module from base.html. هیچ GSAP ای در پروژه نیست: کل حرکت با
+ * CSS (static/css/motion.css) انجام می‌شود و این ماژول فقط ماشه می‌زند —
+ * کلاسِ is-in با IntersectionObserver، متغیرهای CSS برای مکانِ اشاره‌گر و
+ * مسیرِ GPS، و شمارشِ اعداد. هر ویژگی روی دستگاهِ ضعیف، حالتِ
+ * prefers-reduced-motion و ورودیِ لمسی نرم عقب می‌نشیند.
+ * Lenis به‌صورت ماژول وارد می‌شود، پس هیچ گلوبالی لازم نیست.
  */
 
-import Lenis from "./vendor/lenis.mjs";
+import Lenis from "./vendor/lenis.js";
 
 const REDUCED = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const TOUCH = matchMedia("(hover: none)").matches;
 
 const FA_DIGITS = "۰۱۲۳۴۵۶۷۸۹";
 const faDigits = (value) => String(value).replace(/\d/g, (d) => FA_DIGITS[d]);
-const fmtTime = (seconds) =>
-  faDigits(Math.floor(seconds / 60)) +
-  ":" +
-  faDigits(String(Math.floor(seconds % 60)).padStart(2, "0"));
+
+/* ------------------------------------------------------- CSS-var helpers
+   هیچ انیمیشنِ جاوااسکریپتی در پروژه نیست؛ این ماژول فقط ماشه می‌زند و
+   متغیرهای CSS را ست می‌کند و خودِ حرکت در static/css/motion.css اجرا
+   می‌شود. تنها استثنا، دو تابعِ عددیِ زیر است که مقدارِ نهایی را به‌صورت
+   متن (با ارقامِ فارسی) می‌شمارند — چون CSS نمی‌تواند عدد را فرمت کند. */
+
+const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
+const easeOutExpo = (t) => (t >= 1 ? 1 : 1 - Math.pow(2, -10 * t));
+
+// شمارندهٔ سبک بر پایهٔ requestAnimationFrame (جایگزینِ gsap.to روی اعداد).
+function tweenNumbers(duration, onUpdate, { from = 0, to = 1, ease = easeOutCubic } = {}) {
+  const t0 = performance.now();
+  const step = (now) => {
+    const p = Math.min(1, (now - t0) / duration);
+    onUpdate(from + (to - from) * ease(p));
+    if (p < 1) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
 
 /* ------------------------------------------------------------------ toast */
 
@@ -45,50 +62,87 @@ window.pixoriaToast = showToast;
 /* ------------------------------------------------------------------ init */
 
 function init() {
-  const gsap = window.gsap;
-  const ScrollTrigger = window.ScrollTrigger;
-  const hasGsap = typeof gsap !== "undefined";
-  if (hasGsap && ScrollTrigger) gsap.registerPlugin(ScrollTrigger);
+  // پرچمِ «ماژول بالا آمد» — تورِ اطمینانِ <head> با همین بررسی می‌کند که
+  // اگر ماژول هرگز اجرا نشد، حالتِ پنهانِ انیمیشن‌ها کنار گذاشته شود.
+  window.__pixoriaBooted = true;
 
-  /* ---------------- smooth scroll (Lenis) ---------------- */
+  /* ---------------- smooth scroll (Lenis) ----------------
+     روی دستگاه‌های کم‌توان اسکرولِ نرم را کامل رد می‌کنیم: Lenis هر فریم به
+     main thread وابسته است و همان چیزی است که روی سخت‌افزار ضعیف «گیر» حس
+     می‌شود. بدون آن، اسکرول بومی مرورگر است و انیمیشن‌ها سر جایشان می‌مانند.
+     حلقهٔ رفرش را خودمان با rAF می‌چرخانیم (قبلاً روی ticker گسپ سوار بود). */
+  const LOW_POWER =
+    (navigator.hardwareConcurrency || 8) <= 4 ||
+    (navigator.deviceMemory || 8) <= 4;
   let lenis = null;
-  if (!REDUCED && hasGsap) {
-    lenis = new Lenis({ duration: 1.1, smoothWheel: true });
-    lenis.on("scroll", ScrollTrigger.update);
-    gsap.ticker.add((t) => lenis.raf(t * 1000));
-    gsap.ticker.lagSmoothing(0);
+  if (!REDUCED && !LOW_POWER) {
+    lenis = new Lenis({ duration: 0.9, smoothWheel: true });
+    const raf = (time) => {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    };
+    requestAnimationFrame(raf);
   } else {
     document.documentElement.style.scrollBehavior = "smooth";
   }
 
-  /* ---------------- mobile menu ---------------- */
-  const menu = document.getElementById("mobile-menu");
-  const menuOpenBtn = document.getElementById("menu-open");
-  const bodyLock = (on) => {
-    document.body.style.overflow = on ? "hidden" : "";
-    if (lenis) on ? lenis.stop() : lenis.start();
+  /* ---------------- mobile menu v3 (delegated) ----------------
+     کلِ <body> با hx-boost تعویض میشود؛ به همین دلیل «هیچ» لیسنری روی
+     عناصرِ خودِ منو نمیچسبد. رویدادها یک بار روی document وصل میشوند و
+     در هر کلیک، DOMِ زنده پرسوجو میشود — پس پس از هر ناوبری هم
+     همبرگر، دکمهٔ بستن و آکاردئون سالم میمانند. */
+  const openMobileMenu = () => {
+    const menu = document.getElementById("mobile-menu");
+    if (!menu || menu.classList.contains("open")) return;
+    menu.classList.add("open");
+    document.getElementById("menu-open")?.setAttribute("aria-expanded", "true");
+    // قفلِ اسکرول روی <html> (کلاس) + body و متوقفکردنِ lenis؛ هر سه در
+    // close آزاد میشوند و htmx:afterSwap هم اهرمِ ترمیمِ مستقل دارد.
+    document.documentElement.classList.add("nav-lock");
+    document.body.style.overflow = "hidden";
+    if (lenis) lenis.stop();
+    menu.querySelector(".mm-close")?.focus({ preventScroll: true });
   };
-  const closeMenu = () => {
+  const closeMobileMenu = () => {
+    const menu = document.getElementById("mobile-menu");
     if (!menu || !menu.classList.contains("open")) return;
     menu.classList.remove("open");
-    if (menuOpenBtn) menuOpenBtn.setAttribute("aria-expanded", "false");
-    resetAccordions();
-    bodyLock(false);
-  };
-  if (menu && menuOpenBtn) {
-    const openMenu = () => {
-      menu.classList.add("open");
-      menuOpenBtn.setAttribute("aria-expanded", "true");
-      bodyLock(true);
-    };
-    menuOpenBtn.addEventListener("click", openMenu);
-    menu.querySelectorAll("[data-menu-close]").forEach((b) =>
-      b.addEventListener("click", closeMenu),
-    );
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") closeMenu();
+    document.getElementById("menu-open")?.setAttribute("aria-expanded", "false");
+    menu.querySelectorAll("[data-m-accordion]").forEach((btn) => {
+      btn.setAttribute("aria-expanded", "false");
+      btn.closest("li")?.classList.remove("m-sub-open");
     });
-  }
+    document.documentElement.classList.remove("nav-lock");
+    document.body.style.overflow = "";
+    if (lenis) lenis.start();
+    document.getElementById("menu-open")?.focus({ preventScroll: true });
+  };
+  document.addEventListener("click", (e) => {
+    const t = e.target;
+    if (!(t instanceof Element) || !t.closest) return;
+    if (t.closest("#menu-open")) {
+      openMobileMenu();
+      return;
+    }
+    if (t.closest("[data-menu-close]")) {
+      closeMobileMenu();
+      return;
+    }
+    const acc = t.closest("[data-m-accordion]");
+    if (acc) {
+      const open = acc.getAttribute("aria-expanded") === "true";
+      acc.setAttribute("aria-expanded", String(!open));
+      acc.closest("li")?.classList.toggle("m-sub-open", !open);
+      return;
+    }
+    if (t.closest("#mobile-menu a[href]")) closeMobileMenu();
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeMobileMenu();
+  });
+  // اهرمِ ترمیم: هر تعویضِ htmx منو را میبندد و قفلِ اسکرول را آزاد میکند
+  // (اگر کاربر با منوی باز ناوبری کرده باشد، صفحه هرگز گیرِ قفل نمیماند).
+  document.addEventListener("htmx:afterSwap", closeMobileMenu);
 
   /* ---------------- mega menu (services dropdown) ----------------
      باز شدن با هاور (با تأخیرِ کوچک در بستن) و با کلیک/کیبورد روی چورون.
@@ -127,21 +181,6 @@ function init() {
     );
   });
 
-  /* ---------------- mobile services accordion ---------------- */
-  const resetAccordions = () => {
-    document.querySelectorAll("[data-m-accordion]").forEach((btn) => {
-      btn.setAttribute("aria-expanded", "false");
-      btn.closest("li")?.classList.remove("m-sub-open");
-    });
-  };
-  document.querySelectorAll("[data-m-accordion]").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const open = btn.getAttribute("aria-expanded") === "true";
-      btn.setAttribute("aria-expanded", String(!open));
-      btn.closest("li")?.classList.toggle("m-sub-open", !open);
-    });
-  });
-
   /* ---------------- anchor links ---------------- */
   const scrollToEl = (el) => {
     if (lenis) lenis.scrollTo(el, { offset: -96, duration: 1.2 });
@@ -154,7 +193,7 @@ function init() {
         const el = document.querySelector(id);
         if (el) {
           e.preventDefault();
-          closeMenu();
+          closeMobileMenu();
           scrollToEl(el);
         }
       }
@@ -311,32 +350,58 @@ function init() {
     });
   }
 
-  /* ---------------- reveal animations ---------------- */
-  // کارت‌هایی که بعد از یک تعویضِ HTMX (مثلاً «مقالات بیشتر») وارد صفحه
-  // می‌شوند را با data-blog-reveal علامت‌گذاری می‌کنیم؛ آن‌ها در زمانِ boot
-  // هنوز وجود ندارند و باید پس از settle دوباره راه‌اندازی شوند.
+  /* ---------------- reveal animations ----------------
+     ماشه فقط یک کلاس است؛ خودِ حرکت در motion.css تعریف شده. JS سه کار
+     می‌کند: ۱) شمارهٔ پلکانِ هر عنصر را در --rv-i می‌گذارد تا ردیف‌ها
+     پشتِ‌سرِ‌هم برسند، ۲) data-delay (ثانیه — مثل قبل) را به متغیرِ CSS
+     ترجمه می‌کند، ۳) تورِ اطمینان که در بدترین حالت کلاسِ نهایی را مستقیم
+     می‌گذارد تا هیچ محتوایی پنهان نماند. */
+  const indexReveals = () => {
+    document.querySelectorAll("[data-reveal]").forEach((el) => {
+      if (el.dataset.rvIndexed === "1") return;
+      el.dataset.rvIndexed = "1";
+      if (el.dataset.delay) {
+        el.style.setProperty(
+          "--rv-delay",
+          `${Math.round(parseFloat(el.dataset.delay) * 1000)}ms`,
+        );
+      }
+      const parent = el.parentElement;
+      if (!parent) return;
+      const kin = [...parent.children].filter((c) =>
+        c.hasAttribute("data-reveal"),
+      );
+      const i = kin.indexOf(el);
+      if (kin.length > 1 && i > 0) el.style.setProperty("--rv-i", Math.min(i, 9));
+    });
+  };
+
   const revealEl = (el) => {
-    const type = el.dataset.reveal || "up";
-    const vars = {
-      opacity: 0,
-      duration: 1,
-      ease: "power3.out",
-      delay: parseFloat(el.dataset.delay || 0),
-    };
-    if (type === "up") vars.y = 50;
-    else if (type === "right") vars.x = 60;
-    else if (type === "left") vars.x = -60;
-    else if (type === "scale") vars.scale = 0.92;
-    gsap.from(el, {
-      ...vars,
-      scrollTrigger: { trigger: el, start: "top 88%", once: true },
+    if (el.dataset.revealDone === "1") return;
+    el.dataset.revealDone = "1";
+    if (REDUCED) {
+      el.classList.add("is-in");
+      return;
+    }
+    const settle = () => el.classList.add("is-in");
+    const safety = onContentTimeout(settle, el);
+    onceIntersecting(el, () => {
+      // یک بازخوانیِ layout تا مرورگر حالتِ اولیه را «دیده» باشد؛ وگرنه
+      // مرورگر ممکن است هر دو حالت را در یک فریم ببیند و پرش کند.
+      void el.offsetWidth;
+      requestAnimationFrame(() => {
+        el.classList.add("is-in");
+        const done = () => clearSafety(safety);
+        el.addEventListener("transitionend", done, { once: true });
+        setTimeout(done, 2800);
+      });
     });
   };
   let revealsStarted = false;
   const initReveals = () => {
-    if (revealsStarted || !hasGsap || REDUCED) return;
     revealsStarted = true;
-    gsap.utils.toArray("[data-reveal]").forEach(revealEl);
+    indexReveals();
+    document.querySelectorAll("[data-reveal]").forEach(revealEl);
   };
 
   /* ---------------- first-visit preloader ----------------
@@ -390,13 +455,22 @@ function init() {
   // تعویضِ HTMX → فقط عناصرِ تازه‌اضافه‌شده آنیمیشن می‌گیرند (با رعایت
   // prefers-reduced-motion).
   document.addEventListener("htmx:afterSettle", () => {
-    if (!hasGsap || REDUCED) return;
+    if (REDUCED) return;
     document.querySelectorAll("[data-blog-reveal]").forEach((el) => {
       if (el.dataset.revealDone) return;
-      el.dataset.revealDone = "1";
+      indexReveals();
       revealEl(el);
       if (!TOUCH) tiltCard(el);
     });
+  });
+  // hx-boost کلِ <body> را عوض می‌کند؛ پس هر عنصرِ تازه هم باید دوباره ماشه
+  // بگیرد، وگرنه پشتِ حالتِ پنهانِ CSS (html.motion) جا می‌ماند و صفحه
+  // «خالی» به نظر می‌رسد.
+  document.addEventListener("htmx:afterSwap", () => {
+    initReveals();
+    if (!TOUCH && !REDUCED) {
+      document.querySelectorAll("[data-tilt]").forEach(tiltCard);
+    }
   });
 
   /* ---------------- counters (data-counter) ---------------- */
@@ -406,91 +480,93 @@ function init() {
       (el.dataset.prefix || "") +
       v.toLocaleString("fa-IR") +
       (el.dataset.suffix || "");
-    if (!hasGsap || REDUCED) {
+    if (REDUCED) {
       el.textContent = fmt(target);
       return;
     }
-    const o = { v: 0 };
     el.textContent = fmt(0);
-    gsap.to(o, {
-      v: target,
-      duration: 1.8,
-      ease: "power2.out",
-      onUpdate: () => {
-        el.textContent = fmt(Math.round(o.v));
-      },
-      scrollTrigger: { trigger: el, start: "top 92%", once: true },
-    });
+    onContentTimeout(() => {
+      el.textContent = fmt(target);
+    }, el);
+    onceIntersecting(el, () =>
+      tweenNumbers(
+        1800,
+        (v) => {
+          el.textContent = fmt(Math.round(v));
+        },
+        { to: target, ease: easeOutExpo },
+      ),
+    );
   });
 
-  /* ---------------- magnetic buttons ---------------- */
-  if (hasGsap && !TOUCH && !REDUCED) {
+  /* ---------------- مغناطیسی (دکمه‌ها و چیپ‌های CTA) ----------------
+     JS فقط مکانِ اشاره‌گر را در متغیرهای CSS می‌گذارد؛ خودِ کشش و بازگشت
+     را ترنزیشنِ CSS در motion.css انجام می‌دهد. */
+  if (!TOUCH && !REDUCED) {
     document.querySelectorAll("[data-magnetic]").forEach((btn) => {
-      const xTo = gsap.quickTo(btn, "x", { duration: 0.4, ease: "power3" });
-      const yTo = gsap.quickTo(btn, "y", { duration: 0.4, ease: "power3" });
-      btn.addEventListener("mousemove", (e) => {
-        const r = btn.getBoundingClientRect();
-        xTo((e.clientX - r.left - r.width / 2) * 0.3);
-        yTo((e.clientY - r.top - r.height / 2) * 0.35);
-      });
-      btn.addEventListener("mouseleave", () => {
-        xTo(0);
-        yTo(0);
+      btn.addEventListener(
+        "pointermove",
+        (e) => {
+          const r = btn.getBoundingClientRect();
+          btn.style.setProperty(
+            "--mg-x",
+            `${((e.clientX - r.left - r.width / 2) * 0.3).toFixed(1)}px`,
+          );
+          btn.style.setProperty(
+            "--mg-y",
+            `${((e.clientY - r.top - r.height / 2) * 0.35).toFixed(1)}px`,
+          );
+        },
+        { passive: true },
+      );
+      btn.addEventListener("pointerleave", () => {
+        btn.style.setProperty("--mg-x", "0px");
+        btn.style.setProperty("--mg-y", "0px");
       });
     });
   }
 
-  /* ---------------- 3D tilt cards + glare ---------------- */
-  // کارت‌های تعویض‌شده با HTMX (data-blog-reveal) هم tilt می‌گیرند.
+  /* ---------------- 3D tilt cards + glare ----------------
+     چرخشِ سه‌بعدی با متغیرهای --tx/--ty در CSS اجرا می‌شود و برقِ گوشهٔ
+     کارت هم با --gx/--gy؛ JS هیچ ترنزیشنی نمی‌سازد. */
   const tiltCard = (card) => {
-    gsap.set(card, { transformPerspective: 900 });
-    const rx = gsap.quickTo(card, "rotationX", { duration: 0.5, ease: "power2" });
-    const ry = gsap.quickTo(card, "rotationY", { duration: 0.5, ease: "power2" });
-    card.addEventListener("mousemove", (e) => {
-      const r = card.getBoundingClientRect();
-      const px = (e.clientX - r.left) / r.width;
-      const py = (e.clientY - r.top) / r.height;
-      rx((py - 0.5) * -6);
-      ry((px - 0.5) * 6);
-      card.style.setProperty("--gx", px * 100 + "%");
-      card.style.setProperty("--gy", py * 100 + "%");
-    });
-    card.addEventListener("mouseleave", () => {
-      rx(0);
-      ry(0);
+    if (card.dataset.tiltReady === "1") return;
+    card.dataset.tiltReady = "1";
+    card.addEventListener(
+      "pointermove",
+      (e) => {
+        const r = card.getBoundingClientRect();
+        const px = (e.clientX - r.left) / r.width;
+        const py = (e.clientY - r.top) / r.height;
+        card.style.setProperty("--tx", `${((py - 0.5) * -6).toFixed(2)}deg`);
+        card.style.setProperty("--ty", `${((px - 0.5) * 6).toFixed(2)}deg`);
+        card.style.setProperty("--gx", px * 100 + "%");
+        card.style.setProperty("--gy", py * 100 + "%");
+      },
+      { passive: true },
+    );
+    card.addEventListener("pointerleave", () => {
+      card.style.setProperty("--tx", "0deg");
+      card.style.setProperty("--ty", "0deg");
     });
   };
-  if (hasGsap && !TOUCH && !REDUCED) {
+  if (!TOUCH && !REDUCED) {
     document.querySelectorAll("[data-tilt]").forEach(tiltCard);
   }
 
-  /* ---------------- floating elements ---------------- */
-  if (hasGsap && !REDUCED) {
-    document.querySelectorAll("[data-float]").forEach((el) => {
-      const amp = parseFloat(el.dataset.float || "10");
-      gsap.to(el, {
-        y: gsap.utils.random(-amp, amp),
-        duration: gsap.utils.random(2.6, 4.6),
-        yoyo: true,
-        repeat: -1,
-        ease: "sine.inOut",
-        delay: gsap.utils.random(0, 1.4),
+  /* ---------------- floating elements ----------------
+     شناوریِ تزئینی کاملاً در CSS است (keyframes rvFloat)؛ JS فقط دامنه و
+     تأخیرِ نامنظم را می‌گذارد تا هیچ دو عنصری هم‌زمان شناور نشوند. */
+  if (!REDUCED) {
+    document
+      .querySelectorAll("[data-float], [data-float-spin]")
+      .forEach((el) => {
+        const amp = parseFloat(el.dataset.float || el.dataset.floatSpin || "10");
+        el.style.setProperty("--float-amp", `${amp}px`);
+        el.style.setProperty("--float-dur", `${(2.8 + Math.random() * 2.2).toFixed(2)}s`);
+        el.style.setProperty("--float-delay", `${(-Math.random() * 2.4).toFixed(2)}s`);
+        el.style.setProperty("--float-spin", `${(18 + Math.random() * 18).toFixed(1)}s`);
       });
-    });
-    // Rotating floaters (planets and debris)
-    document.querySelectorAll("[data-float-spin]").forEach((el) => {
-      const amp = parseFloat(el.dataset.floatSpin || "14");
-      const dir = gsap.utils.random(-1, 1) < 0 ? -1 : 1;
-      gsap.to(el, {
-        y: gsap.utils.random(-amp, amp),
-        rotation: dir * gsap.utils.random(4, 12),
-        duration: gsap.utils.random(3, 5),
-        yoyo: true,
-        repeat: -1,
-        ease: "sine.inOut",
-        delay: gsap.utils.random(0, 1.2),
-      });
-    });
   }
 
   /* ---------------- pause decorative animations off-screen ----------
@@ -527,23 +603,94 @@ function init() {
     });
   }
 
-  initSliders({ hasGsap, REDUCED, faDigits });
+  initSliders({ REDUCED, faDigits });
   initCarousels({ REDUCED, faDigits });
-  initMediaCards({ hasGsap, REDUCED, fmtTime });
-  initPortfolioFilter({ hasGsap, REDUCED, faDigits });
-  initMarquees();
-  initStatCounts({ hasGsap, ScrollTrigger });
-  initStatCountText({ hasGsap, ScrollTrigger });
-  initBuildBars({ hasGsap, ScrollTrigger });
-  initGpsDraw({ hasGsap, ScrollTrigger, REDUCED });
+  initPortfolioFilter({ REDUCED, faDigits });
+  initStatCounts();
+  initStatCountText();
+  initBuildBars();
+  initGpsDraw({ REDUCED });
   initFaq();
-  initCustomCalculator();
   initArticleChrome();
-
-  window.addEventListener("load", () => {
-    if (hasGsap && ScrollTrigger) ScrollTrigger.refresh();
-  });
 }
+
+/* ------------------------------------------- fire-once viewport watcher
+   یک IntersectionObserverِ مشترک برای کل صفحه: هر عنصر یک بار — به‌محض
+   رسیدن به دید — صدا زده و از observer جدا می‌شود. همهٔ ورودها/شمارنده‌ها از
+   همین عبور می‌کنند (به‌جای تریگرِ اسکرولی): هم ارزان‌تر است، هم — برخلاف
+   انیمیشنِ وابسته به اسکرول — اگر اسکرول یا درایورِ انیمیشن از کار بیفتد باز
+   هم «هرچه در دید است» را گزارش می‌کند، پس هیچ محتوایی روی صفحهٔ خالی جا
+   نمی‌ماند. */
+const viewCallbacks = new WeakMap();
+let viewObserver = null;
+function onceIntersecting(el, cb) {
+  if (!("IntersectionObserver" in window)) {
+    cb();
+    return;
+  }
+  // عناصری که از قبل داخلِ دید یا از آن رد شده‌اند (مثلاً صفحه پيش از
+  // راه‌افتادنِ ورودها اسکرول شده) بلافاصله اجرا می‌شوند؛ فقط عناصرِ هنوز
+  // پایین‌تر از دید مشاهده می‌شوند. هم «گذشته» را از پنهان‌ماندن نجات
+  // می‌دهد، هم اولین صفحه را به frameِ بعدی وابسته نمی‌کند.
+  const rect = el.getBoundingClientRect();
+  if (rect.top < (window.innerHeight || 800) * 0.88) {
+    cb();
+    return;
+  }
+  if (!viewObserver) {
+    viewObserver = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          const fn = viewCallbacks.get(entry.target);
+          viewObserver.unobserve(entry.target);
+          viewCallbacks.delete(entry.target);
+          if (fn) fn();
+        }
+      },
+      { rootMargin: "0px 0px -12% 0px" },
+    );
+  }
+  viewCallbacks.set(el, cb);
+  viewObserver.observe(el);
+}
+
+/* ------------------------------------------------- content safety net
+   هر چیزی که با انیمیشن «دیده می‌شود» (ورودِ کارت‌ها، شمارنده‌ها، نوارهای
+   پیشرفت) یک تابعِ «مقدارِ نهایی» در این صف ثبت می‌کند و فقط وقتی انیمیشنش
+   کامل شد از صف بیرون می‌رود. اگر بنا به هر دلیلی انیمیشن‌ها جلو نروند —
+   خطای زمان‌اجرا، تبِ پس‌زمینه، پرینت/اسکرین‌شات، توقفِ رندر یا توقفِ ticker
+   — این توابع در زمانِ مشخصی مقدارِ نهایی را مستقیم می‌نویسند تا صفحه هرگز
+   بدونِ متن و عدد جا نماند. */
+const safetyQueue = new Set();
+function onContentTimeout(apply, el = null) {
+  const entry = { apply, el };
+  safetyQueue.add(entry);
+  return entry;
+}
+function clearSafety(entry) {
+  if (entry) safetyQueue.delete(entry);
+}
+function runContentSafety(scope = "viewport") {
+  const vh = window.innerHeight || 800;
+  for (const entry of [...safetyQueue]) {
+    if (scope !== "all" && entry.el) {
+      const r = entry.el.getBoundingClientRect();
+      if (r.top > vh) continue; // هنوز پایین‌تر از دید است
+    }
+    safetyQueue.delete(entry);
+    try {
+      entry.apply();
+    } catch {
+      /* تورِ اطمینان هرگز نباید صفحه را خراب کند */
+    }
+  }
+}
+window.addEventListener("error", () => runContentSafety("all"));
+// پیش از چاپ (که اسکرولی ندارد) هرچه در دید است باید کامل باشد.
+window.addEventListener("beforeprint", () => runContentSafety("all"));
+setTimeout(() => runContentSafety("viewport"), 2500);
+setTimeout(() => runContentSafety("viewport"), 8000);
 
 /* ------------------------------------------------------- shared track drag */
 
@@ -594,7 +741,31 @@ function enableTrackDrag(track) {
 
 /* ------------------------------------------------------- testimonial slider */
 
-function initSliders({ hasGsap, REDUCED, faDigits }) {
+/* نقطههای کاروسل — دینامیک: پرشدن هر نقطه نشانِ «چسبندگی» کارتِ متناظر
+   به مرکزِ قاب است؛ هنگامِ کشیدن، موجِ طلاییِ پرشدن پیوسته از نقطهای
+   به نقطهٔ دیگر میرود و نقطهٔ کارتِ مرکزی بزرگتر میشود.
+   (چون تبدیلاتِ RTL در شمارشها دامدار است، مرکزها با getBoundingClientRect
+   نسبی حساب میشوند و کارتِ مخفی (پهنای صفر) هم بیضرر است.) */
+function fillDots(scroller, cards, dots) {
+  if (!dots || !dots.length || !cards) return;
+  const box = scroller.getBoundingClientRect();
+  const w = box.width;
+  let best = -1;
+  let bestDist = Infinity;
+  for (let i = 0; i < cards.length && i < dots.length; i++) {
+    const r = cards[i].getBoundingClientRect();
+    const dist = Math.abs(r.left - box.left + r.width / 2 - w / 2);
+    const fd = Math.max(0, Math.min(1, 1 - dist / Math.max(r.width, 1)));
+    dots[i].style.setProperty("--fd", fd.toFixed(3));
+    if (dist < bestDist) {
+      bestDist = dist;
+      best = i;
+    }
+  }
+  dots.forEach((d, i) => d.classList.toggle("active", i === best));
+}
+
+function initSliders({ REDUCED, faDigits }) {
   // هر [data-slider] یک نمونهٔ مستقل است؛ دکمه‌ها و نقاط داخل همان
   // data-slider-root جستجو می‌شوند تا چند اسلایدر در یک صفحه کار کنند.
   document.querySelectorAll("[data-slider]").forEach((slider) => {
@@ -626,13 +797,13 @@ function initSliders({ hasGsap, REDUCED, faDigits }) {
         if (ticking) return;
         ticking = true;
         requestAnimationFrame(() => {
-          const idx = Math.round(progress() * (cards.length - 1));
-          dots.forEach((d, i) => d.classList.toggle("active", i === idx));
+          fillDots(slider, cards, dots);
           ticking = false;
         });
       },
       { passive: true },
     );
+    fillDots(slider, cards, dots);
 
     const step = () => cards[0].offsetWidth + 24;
     const next = () => {
@@ -714,11 +885,13 @@ function initCarousels({ REDUCED, faDigits }) {
       const slides = visible();
       track.scrollTo({ left: 0, behavior: "auto" });
       buildDots(slides);
+      if (dots && dots.length) fillDots(track, slides, dots);
       if (controlsWrap)
         controlsWrap.classList.toggle("hidden", slides.length === 0);
     };
 
     buildDots(visible());
+    if (dots && dots.length) fillDots(track, visible(), dots);
     root.addEventListener("pf:changed", refresh);
 
     const maxScroll = () => track.scrollWidth - track.clientWidth;
@@ -733,12 +906,7 @@ function initCarousels({ REDUCED, faDigits }) {
         if (ticking) return;
         ticking = true;
         requestAnimationFrame(() => {
-          const n = visible().length;
-          if (n) {
-            const idx = Math.round(progress() * (n - 1));
-            if (dots)
-              dots.forEach((d, i) => d.classList.toggle("active", i === idx));
-          }
+          if (dots && dots.length) fillDots(track, visible(), dots);
           ticking = false;
         });
       },
@@ -781,172 +949,9 @@ function initCarousels({ REDUCED, faDigits }) {
   });
 }
 
-/* ------------------------------------------------------- media cards (real playback) */
-
-// فقط یک رسانه همزمان پخش شود: هر کارتی که شروع به پخش می‌کند، کارتِ در حال
-// پخشِ دیگر را متوقف می‌کند. هر کارت یک تابعِ stop در این مجموعه ثبت می‌کند.
-const activeMedia = new Set();
-const stopOtherMedia = (me) => {
-  activeMedia.forEach((stop) => stop !== me && stop());
-};
-
-function initMediaCards({ hasGsap, REDUCED, fmtTime }) {
-  const gsap = window.gsap;
-
-  /* ---------------- video cards — real <video> element ---------------- */
-  document.querySelectorAll("[data-video-card]").forEach((card) => {
-    const video = card.querySelector("[data-v-el]");
-    if (!video) return;
-    const vPlay = card.querySelector("[data-v-play]");
-    const vScrim = card.querySelector("[data-v-scrim]");
-    const vProg = card.querySelector("[data-v-prog]");
-    const vTime = card.querySelector("[data-v-time]");
-
-    let kb = null;
-    const setPlaying = (on) => {
-      if (vPlay) {
-        vPlay.style.opacity = on ? "0" : "";
-        vPlay.style.pointerEvents = on ? "none" : "";
-      }
-      if (vScrim) vScrim.style.opacity = on ? "0" : "";
-      if (on) {
-        stopOtherMedia(stop);
-        const p = video.play();
-        if (p && p.catch) p.catch(() => setPlaying(false));
-        if (hasGsap && !REDUCED)
-          kb = gsap.to(video, {
-            scale: 1.06,
-            duration: 8,
-            yoyo: true,
-            repeat: -1,
-            ease: "sine.inOut",
-          });
-      } else {
-        video.pause();
-        if (kb && hasGsap) {
-          kb.kill();
-          gsap.set(video, { scale: 1 });
-          kb = null;
-        }
-      }
-    };
-    const stop = () => {
-      if (!video.paused) setPlaying(false);
-    };
-    activeMedia.add(stop);
-
-    if (vPlay)
-      vPlay.addEventListener("click", () =>
-        setPlaying(video.paused),
-      );
-    // کلیک روی خودِ ویدیو هم پخش را تغییر می‌دهد.
-    video.addEventListener("click", () => setPlaying(video.paused));
-
-    // مدت زمان از فراداده خوانده می‌شود تا اگر در دیتابیس ثبت نشده بود.
-    video.addEventListener("loadedmetadata", () => {
-      if (video.duration && vTime && vTime.dataset.filled !== "1") {
-        vTime.dataset.filled = "1";
-        vTime.textContent = fmtTime(0) + " / " + fmtTime(video.duration);
-      }
-    });
-    const onTime = () => {
-      const dur = video.duration || 0;
-      if (vProg && dur)
-        vProg.style.width = (video.currentTime / dur) * 100 + "%";
-      if (vTime && dur)
-        vTime.textContent =
-          fmtTime(video.currentTime) + " / " + fmtTime(dur);
-    };
-    video.addEventListener("timeupdate", onTime);
-    video.addEventListener("ended", () => {
-      setPlaying(false);
-      video.currentTime = 0;
-      onTime();
-    });
-  });
-
-  /* ---------------- audio cards — real <audio> element ---------------- */
-  document.querySelectorAll("[data-audio-card]").forEach((card) => {
-    const audio = card.querySelector("[data-a-el]");
-    if (!audio) return;
-    const aPlay = card.querySelector("[data-a-play]");
-    const barsWrap = card.querySelector("[data-a-bars]");
-    const aCur = card.querySelector("[data-a-cur]");
-    const aTotal = card.querySelector("[data-a-total]");
-    if (!aPlay || !barsWrap) return;
-
-    // موجِ صدا: نوارهای ثابتِ تزئینی که تا پیش از این با فرکانسِ تصادفی
-    // ساخته می‌شدند؛ حالا ارتفاع آن‌ها از شدتِ صدا به‌صورت تقریبی در نمی‌آید،
-    // پس همان شکلِ تصادفیِ زیبا را نگه می‌داریم و فقط پیشرفت را رنگ می‌کنیم.
-    const N = 44;
-    const bars = [];
-    for (let i = 0; i < N; i++) {
-      const b = document.createElement("span");
-      b.className = "w-bar";
-      b.style.height = 18 + Math.random() * 82 + "%";
-      // تأخیرِ تصادفیِ هر نوار، تا موجِ در حالِ پالس هم‌زمان نباشد.
-      b.style.animationDelay = (Math.random() * 1.2).toFixed(2) + "s";
-      barsWrap.appendChild(b);
-      bars.push(b);
-    }
-
-    const stop = () => {
-      if (!audio.paused) audio.pause();
-    };
-    activeMedia.add(stop);
-
-    aPlay.addEventListener("click", () => {
-      const on = audio.paused;
-      if (on) {
-        stopOtherMedia(stop);
-        const p = audio.play();
-        if (p && p.catch) p.catch(() => aPlay.classList.remove("is-playing"));
-      } else {
-        audio.pause();
-      }
-    });
-
-    const render = () => {
-      const dur = audio.duration || 0;
-      const t = audio.currentTime || 0;
-      if (aCur) aCur.textContent = fmtTime(t);
-      if (dur) {
-        const p = t / dur;
-        bars.forEach((b, i) =>
-          b.classList.toggle("played", (i + 1) / N <= p),
-        );
-      }
-    };
-    audio.addEventListener("timeupdate", render);
-    audio.addEventListener("play", () => {
-      aPlay.classList.add("is-playing");
-      barsWrap.classList.add("playing");
-    });
-    audio.addEventListener("pause", () => {
-      aPlay.classList.remove("is-playing");
-      barsWrap.classList.remove("playing");
-    });
-    audio.addEventListener("ended", () => {
-      aPlay.classList.remove("is-playing");
-      barsWrap.classList.remove("playing");
-      audio.currentTime = 0;
-      render();
-    });
-    // مدت زمان کلی از فراداده خوانده می‌شود اگر در دیتابیس ثبت نشده باشد.
-    audio.addEventListener("loadedmetadata", () => {
-      if (audio.duration && aTotal && aTotal.dataset.filled !== "1") {
-        aTotal.dataset.filled = "1";
-        aTotal.textContent = fmtTime(audio.duration);
-      }
-    });
-  });
-}
-
-
 /* ------------------------------------------------------- portfolio filter */
 
-function initPortfolioFilter({ hasGsap, REDUCED, faDigits }) {
-  const gsap = window.gsap;
+function initPortfolioFilter({ REDUCED, faDigits }) {
   // هر نمونه از فیلتر در یک wrapper با data-pf-root قرار دارد تا چند فیلتر
   // روی یک صفحه (مثلاً خانه + آرشیو) بدون تداخل کار کنند.
   document.querySelectorAll("[data-pf-root]").forEach((root) => {
@@ -970,35 +975,21 @@ function initPortfolioFilter({ hasGsap, REDUCED, faDigits }) {
     items.forEach((el) => {
       const match = cat === "all" || el.dataset.cat === cat;
       if (match) shown++;
-      if (hasGsap && !REDUCED) {
-        if (match) {
-          el.classList.remove("is-hidden");
-          gsap.fromTo(
-            el,
-            { opacity: 0, scale: 0.92, y: 14 },
-            {
-              opacity: 1,
-              scale: 1,
-              y: 0,
-              duration: 0.55,
-              ease: "power3.out",
-              delay: shown * 0.05,
-            },
-          );
-        } else {
-          gsap.to(el, {
-            opacity: 0,
-            scale: 0.92,
-            duration: 0.3,
-            ease: "power2.in",
-            onComplete: () => {
-              el.classList.add("is-hidden");
-              announce();
-            },
-          });
-        }
+      // ورودِ کارت با keyframesِ CSS (rvTileIn) و پلکانِ --pf-i انجام
+      // می‌شود؛ پنهان‌کردن هم فقط یک کلاس است. پس هیچ انیمیشنِ JS ای
+      // در فیلتر نیست.
+      if (match) {
+        el.classList.remove("is-hidden");
+        // کارتی که با فیلتر برمی‌گردد باید بلافاصله «رسیده» باشد، وگرنه
+        // پشتِ حالتِ پنهانِ ورودِ اولیه می‌ماند؛ حرکتِ ورود را همان
+        // keyframesِ pf-in می‌سازد.
+        el.classList.add("is-in");
+        el.style.setProperty("--pf-i", String(Math.min(shown, 10)));
+        el.classList.remove("pf-in");
+        void el.offsetWidth;
+        el.classList.add("pf-in");
       } else {
-        el.classList.toggle("is-hidden", !match);
+        el.classList.add("is-hidden");
       }
     });
     announce();
@@ -1036,127 +1027,103 @@ function initPortfolioFilter({ hasGsap, REDUCED, faDigits }) {
   });
 }
 
-/* ------------------------------------------------------- marquee duplication */
-
-function initMarquees() {
-  // Each group must be at least as wide as its container, otherwise the loop
-  // point shows a gap; duplicate the content once to guarantee the width.
-  // The copies are decorative — hide them from the accessibility tree.
-  document
-    .querySelectorAll("#tech .marquee-group, #trusted .marquee-group")
-    .forEach((g) => {
-      g.append(
-        ...[...g.children].map((c) => {
-          const clone = c.cloneNode(true);
-          clone.setAttribute("aria-hidden", "true");
-          return clone;
-        }),
-      );
-    });
-}
-
 /* ------------------------------------------------------- stat counts (data-count) */
 
-function initStatCounts({ hasGsap, ScrollTrigger }) {
-  const gsap = window.gsap;
+function initStatCounts() {
   document.querySelectorAll("[data-count]").forEach((el) => {
     const target = parseFloat(el.dataset.count);
     const prefix = el.dataset.prefix || "";
     const suffix = el.dataset.suffix || "";
-    if (hasGsap && ScrollTrigger) {
-      const obj = { v: 0 };
-      ScrollTrigger.create({
-        trigger: el,
-        start: "top 85%",
-        once: true,
-        onEnter: () =>
-          gsap.to(obj, {
-            v: target,
-            duration: 2,
-            ease: "power2.out",
-            onUpdate: () => {
-              el.textContent = prefix + faDigits(Math.round(obj.v)) + suffix;
-            },
-          }),
-      });
-    } else {
+    const settle = () => {
       el.textContent = prefix + faDigits(target) + suffix;
+    };
+    if (REDUCED) {
+      settle();
+      return;
     }
+    onContentTimeout(settle, el);
+    onceIntersecting(el, () =>
+      tweenNumbers(
+        2000,
+        (v) => {
+          el.textContent = prefix + faDigits(Math.round(v)) + suffix;
+        },
+        { to: target, ease: easeOutExpo },
+      ),
+    );
   });
 }
 
 /* ------------------------------------------------------- service build bars */
 
-function initBuildBars({ hasGsap, ScrollTrigger }) {
-  const gsap = window.gsap;
+function initBuildBars() {
   document.querySelectorAll(".svc-build-bar").forEach((bar) => {
     const pct = bar.closest(".svc-card")?.querySelector("[data-build-pct]");
-    if (hasGsap && ScrollTrigger) {
-      ScrollTrigger.create({
-        trigger: bar,
-        start: "top 80%",
-        once: true,
-        onEnter: () => {
-          bar.style.width = "100%";
-          if (pct) {
-            const obj = { v: 0 };
-            gsap.to(obj, {
-              v: 100,
-              duration: 1.8,
-              ease: "power2.out",
-              onUpdate: () => (pct.textContent = faDigits(Math.round(obj.v)) + "٪"),
-            });
-          }
-        },
-      });
-    } else {
+    const settle = () => {
       bar.style.width = "100%";
       if (pct) pct.textContent = "۱۰۰٪";
+    };
+    if (REDUCED) {
+      settle();
+      return;
     }
+    onContentTimeout(settle, bar);
+    onceIntersecting(bar, () => {
+      // خودِ پهنای نوار با ترنزیشنِ CSS کشیده می‌شود؛ JS فقط عدد را
+      // می‌شمارد (CSS نمی‌تواند ارقامِ فارسی را فرمت کند).
+      bar.style.width = "100%";
+      if (!pct) return;
+      tweenNumbers(
+        1800,
+        (v) => {
+          pct.textContent = faDigits(Math.round(v)) + "٪";
+        },
+        { to: 100, ease: easeOutExpo },
+      );
+    });
   });
 }
 
 /* ------------------------------------------------------- process GPS draw */
 
-function initGpsDraw({ hasGsap, ScrollTrigger, REDUCED }) {
-  const gsap = window.gsap;
+function initGpsDraw({ REDUCED }) {
   const gpsDraws = [...document.querySelectorAll(".gps-draw")];
-  if (!gpsDraws.length) return;
+  if (!gpsDraws.length || REDUCED) return;
 
-  // هر مسیر مال خودِ نزدیک‌ترین [data-gps-root] است (صفحهٔ خانه و صفحهٔ
-  // خدمت هر کدام یک نمونه دارند) تا trigger مستقل باشد.
+  // کشیده‌شدنِ مسیر با اسکرول و حرکتِ نقطه روی همان مسیر، هر دو انیمیشنِ
+  // CSS هستند (motion.css + animation-timeline: view()). این تابع فقط
+  // هندسهٔ هر مسیر را به نقطهٔ متناظرش می‌دهد تا مرورگر خودش نقطه را روی
+  // مسیر بلغزاند؛ هیچ فریم‌به‌فریمی از JS هزینه نمی‌شود.
+  const supported = (() => {
+    try {
+      return (
+        CSS.supports("offset-path", 'path("M0 0 L1 1")') &&
+        CSS.supports("animation-timeline", "view()")
+      );
+    } catch {
+      return false;
+    }
+  })();
+  if (!supported) return;
+
+  // هر مسیر مالِ نزدیک‌ترین [data-gps-root] است (صفحهٔ خانه و صفحهٔ خدمت هر
+  // کدام یک نمونه دارند).
   const roots = [
     ...new Set(gpsDraws.map((p) => p.closest("[data-gps-root]")).filter(Boolean)),
   ];
   roots.forEach((root) => {
-    const paths = [...root.querySelectorAll(".gps-draw")].map((p) => {
-      p.style.strokeDasharray = "1";
-      p.style.strokeDashoffset = REDUCED ? "0" : "1";
-      return { p, len: p.getTotalLength() };
-    });
+    const paths = [...root.querySelectorAll(".gps-draw")];
     const dots = [...root.querySelectorAll(".gps-dot")];
-    if (!hasGsap || !ScrollTrigger || REDUCED) return;
-    const o = { v: 0 };
-    gsap.to(o, {
-      v: 1,
-      ease: "none",
-      scrollTrigger: {
-        trigger: root,
-        start: "top 65%",
-        end: "bottom 75%",
-        scrub: 0.6,
-      },
-      onUpdate: () => {
-        paths.forEach(({ p, len }, i) => {
-          p.style.strokeDashoffset = String(1 - o.v);
-          const pt = p.getPointAtLength(len * o.v);
-          const dot = dots[i];
-          if (dot) {
-            dot.setAttribute("cx", pt.x.toFixed(1));
-            dot.setAttribute("cy", pt.y.toFixed(1));
-          }
-        });
-      },
+    paths.forEach((path, i) => {
+      const dot = dots[i];
+      const d = path.getAttribute("d");
+      if (!dot || !d) return;
+      dot.style.offsetPath = `path("${d}")`;
+      dot.style.offsetRotate = "0deg";
+      // مختصاتِ اصلی خنثی می‌شود تا نقطه دو بار جابه‌جا نشود (offset-path
+      // خودش مکان را تعیین می‌کند).
+      dot.setAttribute("cx", "0");
+      dot.setAttribute("cy", "0");
     });
   });
 }
@@ -1166,8 +1133,7 @@ function initGpsDraw({ hasGsap, ScrollTrigger, REDUCED }) {
    «زیر ۲ ثانیه»). اولین رشتهٔ رقم (فارسی یا لاتین) شمارش می‌شود و بقیهٔ
    متن دورش ثابت می‌ماند. عنصر بدونِ JS هم مقدارِ واقعی را از سرور می‌گیرد. */
 
-function initStatCountText({ hasGsap, ScrollTrigger }) {
-  const gsap = window.gsap;
+function initStatCountText() {
   const toLatin = (str) =>
     str.replace(/[۰-۹]/g, (d) => String("۰۱۲۳۴۵۶۷۸۹".indexOf(d)));
   document.querySelectorAll("[data-count-text]").forEach((el) => {
@@ -1179,23 +1145,14 @@ function initStatCountText({ hasGsap, ScrollTrigger }) {
     const render = (v) => {
       el.textContent = head + faDigits(Math.round(v)) + tail;
     };
-    if (hasGsap && ScrollTrigger) {
-      const obj = { v: 0 };
-      ScrollTrigger.create({
-        trigger: el,
-        start: "top 85%",
-        once: true,
-        onEnter: () =>
-          gsap.to(obj, {
-            v: target,
-            duration: 2,
-            ease: "power2.out",
-            onUpdate: () => render(obj.v),
-          }),
-      });
-    } else {
+    if (REDUCED) {
       render(target);
+      return;
     }
+    onContentTimeout(() => render(target), el);
+    onceIntersecting(el, () =>
+      tweenNumbers(2000, (v) => render(v), { to: target, ease: easeOutExpo }),
+    );
   });
 }
 
@@ -1219,29 +1176,6 @@ function initFaq() {
       q.setAttribute("aria-expanded", String(!isOpen));
       a.style.maxHeight = isOpen ? "0" : a.scrollHeight + "px";
     });
-  });
-}
-
-/* ------------------------------------------------- custom plan calculator
-   ``[data-custom-root]``: بلوکِ «پلن دلخواه» در صفحهٔ خدمت. هر چک‌باکس
-   ``data-custom-price`` (قیمت به میلیون تومان) دارد و ``[data-custom-total]``
-   جمعِ انتخابی‌ها را به فارسی نشان می‌دهد. بدونِ JS هم قیمتِ هر آیتم روی
-   کارت دیده می‌شود. */
-
-function initCustomCalculator() {
-  document.querySelectorAll("[data-custom-root]").forEach((root) => {
-    const total = root.querySelector("[data-custom-total]");
-    const boxes = root.querySelectorAll("[data-custom-price]");
-    if (!total || !boxes.length) return;
-    const update = () => {
-      let sum = 0;
-      boxes.forEach((cb) => {
-        if (cb.checked) sum += Number(cb.dataset.customPrice) || 0;
-      });
-      total.textContent = faDigits(String(sum));
-    };
-    boxes.forEach((cb) => cb.addEventListener("change", update));
-    update();
   });
 }
 
@@ -1335,8 +1269,19 @@ document.addEventListener("htmx:afterSettle", announceToast);
 
 /* ------------------------------------------------------- boot */
 
+// راه‌اندازی با محافظ: اگر هر بخشی خطا داد، کلاسِ motion از <html> برداشته
+// می‌شود تا محتوا هرگز پشتِ حالتِ پنهانِ انیمیشن‌ها جا نماند (درسِ صفحهٔ خالی).
+const boot = () => {
+  try {
+    init();
+  } catch (e) {
+    document.documentElement.classList.remove("motion");
+    console.error("[pixoria]", e);
+  }
+};
+
 if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", init);
+  document.addEventListener("DOMContentLoaded", boot);
 } else {
-  init();
+  boot();
 }

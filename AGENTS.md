@@ -1,6 +1,7 @@
 # AGENTS.md — Pixoria homepage redesign
 
-Stack: Django 6 + Tailwind v4 + Three.js r160 + GSAP/ScrollTrigger + HTMX + vanilla JS.
+Stack: Django 6 + Tailwind v4 + HTMX + vanilla JS (pure-CSS animations; no GSAP/three.js —
+verified absent from package.json, static and templates).
 Persian/RTL. All libraries served locally. Homepage only; service pages reuse
 the shared modules later.
 
@@ -71,7 +72,7 @@ raqm. Both are now installed and must be added to `requirements.txt`.
 ### Phase 5 — Header + mobile menu
 - [x] 5.1 Redesign header: floating liquid-glass bar, wordmark, nav, lime CTA, active indicator
 - [x] 5.2 Hide on scroll-down / show on scroll-up, glass strengthens after scroll
-- [x] 5.3 Full-screen mobile menu overlay (GSAP): staggered links, contact block, socials, CTA, scroll-lock, ESC, focus handling
+- [x] 5.3 Full-screen mobile menu overlay (pure-CSS staggered links): contact block, socials, CTA, scroll-lock, ESC, focus handling
 
 ### Phase 6 — Custom cursor
 - [x] 6.1 `static/js/cursor.js`: dot + trailing ring (quickTo), states, `data-cursor` labels

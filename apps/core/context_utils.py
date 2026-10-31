@@ -5,6 +5,11 @@
 ancestor pages oldest-first; the last item is rendered as the current page.
 Labels are Persian.
 
+Labels run through :func:`apps.core.text_utils.strip_highlight`, so passing a
+model title (``article.title``) is safe even when the admin wrapped a word in
+``[[…]]`` highlight markers — a breadcrumb is plain text and must never show
+the raw brackets.
+
 Usage in a view::
 
     from apps.core.context_utils import crumbs
@@ -19,6 +24,8 @@ Usage in a view::
 """
 
 from django.urls import reverse
+
+from apps.core.text_utils import strip_highlight
 
 LABEL_ONLY = 0
 NAMED_URL = 1
@@ -35,10 +42,10 @@ def crumbs(*items):
     trail = []
     for item in items:
         if isinstance(item, str):
-            trail.append({"label": item})
+            trail.append({"label": strip_highlight(item)})
         else:
             label, url_name = item
-            entry = {"label": label}
+            entry = {"label": strip_highlight(label)}
             if url_name is not None:
                 entry["url"] = reverse(url_name)
             trail.append(entry)

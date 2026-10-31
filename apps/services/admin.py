@@ -15,7 +15,6 @@ from .models import (
     ServiceProcess,
     ServicePlan,
     ServicePlanFeature,
-    ServiceCustomItem,
     ServiceFAQ,
     ServiceTestimonial,
 )
@@ -128,11 +127,6 @@ class ServicePlanInline(admin.StackedInline):
     ]
 
 
-class ServiceCustomItemInline(admin.TabularInline):
-    model = ServiceCustomItem
-    extra = 1
-
-
 class ServiceFAQInline(admin.TabularInline):
     model = ServiceFAQ
     extra = 1
@@ -141,44 +135,28 @@ class ServiceFAQInline(admin.TabularInline):
 class ServiceTestimonialInline(admin.TabularInline):
     model = ServiceTestimonial
     extra = 1
-    # همهٔ فیلدها اینجا هستند تا کارت‌های ویدیویی/صوتی هم از داخلِ صفحهٔ خدمت
-    # قابل ساخت باشند؛ testimonial_kind.js ردیفِ هر فیلد را بر اساس نوع مخفی می‌کند.
     fields = [
-        "kind",
         "author_name",
         "author_role",
         "author_image",
         "text",
-        "video_file",
-        "video_url",
-        "video_poster",
-        "video_duration",
-        "audio_file",
-        "audio_url",
-        "audio_title",
-        "audio_project",
-        "audio_duration",
         "rating",
         "order",
         "show_on_home",
     ]
 
-    class Media:
-        js = ["admin/js/testimonial_kind.js"]
-
 
 @admin.register(ServiceTestimonial)
 class ServiceTestimonialAdmin(admin.ModelAdmin):
-    list_display = ["author_name", "author_role", "kind", "service", "show_on_home", "order"]
+    list_display = ["author_name", "author_role", "service", "show_on_home", "order"]
     list_editable = ["show_on_home", "order"]
-    list_filter = ["service", "show_on_home", "kind"]
+    list_filter = ["service", "show_on_home"]
     search_fields = ["author_name", "author_role", "text"]
     fieldsets = [
         (
             "مشترک",
             {
                 "fields": [
-                    "kind",
                     "service",
                     "author_name",
                     "author_role",
@@ -189,31 +167,8 @@ class ServiceTestimonialAdmin(admin.ModelAdmin):
                 ]
             },
         ),
-        ("متن نظر", {"fields": ["text"], "classes": ["kind-text"]}),
-        (
-            "ویدیو",
-            {
-                "fields": ["video_file", "video_url", "video_poster", "video_duration"],
-                "classes": ["kind-video"],
-            },
-        ),
-        (
-            "صوت",
-            {
-                "fields": [
-                    "audio_file",
-                    "audio_url",
-                    "audio_title",
-                    "audio_project",
-                    "audio_duration",
-                ],
-                "classes": ["kind-audio"],
-            },
-        ),
+        ("متن نظر", {"fields": ["text"]}),
     ]
-
-    class Media:
-        js = ["admin/js/testimonial_kind.js"]
 
 
 @admin.register(Service)
@@ -285,7 +240,6 @@ class ServiceAdmin(IconPreviewMixin, admin.ModelAdmin):
         ServiceToolInline,
         ServiceUseCaseInline,
         ServicePlanInline,
-        ServiceCustomItemInline,
         ServiceFAQInline,
         ServiceTestimonialInline,
     ]

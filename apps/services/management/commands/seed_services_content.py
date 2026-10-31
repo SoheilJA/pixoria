@@ -14,7 +14,7 @@ Idempotent and never destructive to admin edits, per the project rules:
   - child rows are `get_or_create`d per (service, key); rows whose key is not
     in the v2 list are removed (the v1 placeholder content this seed created,
     same collection-cleanup pattern as `seed_home_content` — D21/D25);
-  - `ServiceTestimonial`, `ServiceCustomItem` and existing plans are NEVER
+  - `ServiceTestimonial` and existing plans are NEVER
     touched — they hold the studio's real data;
   - plans are seeded only for services that have none;
   - `related_services` is filled only when the selection is still empty.

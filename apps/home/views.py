@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.shortcuts import render
 from django.urls import reverse
 from django.utils.safestring import mark_safe
@@ -10,7 +11,6 @@ from .models import (
     FeaturedWorkSection,
     HeaderSettings,
     HeroSection,
-    HeroStat,
     HomeAboutSection,
     HomeAboutStat,
     HomeSection,
@@ -23,10 +23,10 @@ from .models import (
     TechSection,
     TechSkill,
     TestimonialSection,
-    TrustedSection,
     WhyFeature,
     WhySection,
 )
+from apps.blog.models import Article
 from apps.portfolio.models import Category, Portfolio
 from apps.services.models import Service
 
@@ -45,24 +45,24 @@ def home(request):
         "blog_url": reverse("blog:list"),
         # ── بخش‌های موجود (جریان داده دست‌نخورده) ──
         "hero": HeroSection.objects.first() if "hero" in keys else None,
-        "hero_stats": HeroStat.objects.filter(is_active=True) if "hero" in keys else [],
+        # ════ شمارنده‌های زندهٔ هیرو ════
+        # عددها از خودِ داده‌ها خوانده می‌شوند (نه متنِ ثابتِ ادمین):
+        # تعدادِ واقعیِ نمونه‌کارها، کلِ خدمات و لوکیشنِ استودیو.
+        "hero_stats": (
+            [
+                {"value": str(Portfolio.objects.count()), "label": "نمونه‌کار تحویل‌شده"},
+                {"value": str(Service.objects.count()), "label": "خدمتِ فعال"},
+                {"value": "مشهد", "label": ""},
+            ]
+            if "hero" in keys
+            else []
+        ),
         "services_section": ServicesSection.objects.first() if "services" in keys else None,
         "services": featured_services,
         "testimonials_section": TestimonialSection.objects.first() if "testimonials" in keys else None,
         # ── بخش‌های جدید ──
         "about_section": HomeAboutSection.objects.first() if "about" in keys else None,
         "about_stats": HomeAboutStat.objects.filter(is_active=True) if "about" in keys else [],
-        "trusted_section": TrustedSection.objects.first() if "trusted" in keys else None,
-        # برندهای مارکوییِ «اعتماد» از نام مشتریِ نمونه‌کارها خوانده می‌شوند —
-        # هر نمونه‌کاری که در ادمین بارگذاری می‌شود، برندش اینجا ظاهر می‌شود.
-        "clients": (
-            Portfolio.objects.exclude(client_name="")
-            .order_by("order", "id")
-            .values_list("client_name", flat=True)
-            .distinct()
-            if "trusted" in keys
-            else []
-        ),
         "portfolio_section": FeaturedWorkSection.objects.first() if "portfolio" in keys else None,
         "portfolio_items": [],
         "blog_section": LatestArticlesSection.objects.first() if "blog" in keys else None,
@@ -74,13 +74,43 @@ def home(request):
         "why_features": WhyFeature.objects.filter(is_active=True) if "why" in keys else [],
         "tech_section": TechSection.objects.first() if "tech" in keys else None,
         "tech_skills": TechSkill.objects.filter(is_active=True) if "tech" in keys else [],
-        "tech_row1": [],
-        "tech_row2": [],
         "faq_section": FaqSection.objects.first() if "faq" in keys else None,
         "faq_items": FaqItem.objects.filter(is_active=True) if "faq" in keys else [],
     }
 
-    # ── نمونه‌کارهای صفحه اصلی: پروژه‌های منتخب، همراه با دسته‌بندی برای فیلتر ──
+    # ─ـ تابلوی «درباره»: قابِ شیشه‌ای با چندِ نمونهٔ واقعی پر میشود ──
+    # کاشیها = کارهای واقعی (با فایلِ روی دیسک) + اگر به چهار نرسیدند،
+    # جلدهای مقالههای منتشرشده جای خالیها را میگیرند تا قاب خالی نماند.
+    if "about" in keys:
+        about_works = []
+        for obj in Portfolio.objects.exclude(Q(image="") | Q(image__isnull=True)).order_by("order", "id"):
+            try:
+                if obj.image and obj.image.storage.exists(obj.image.name):
+                    about_works.append({
+                        "url": reverse("portfolio:detail", kwargs={"slug": obj.slug}),
+                        "image": obj.image.url,
+                        "label": obj.title,
+                        "kind": "pro",
+                    })
+            except Exception:
+                pass
+        if len(about_works) < 4:
+            for a in Article.objects.filter(status="published").order_by("-published_at"):
+                try:
+                    if a.cover_image and a.cover_image.storage.exists(a.cover_image.name):
+                        about_works.append({
+                            "url": reverse("blog:detail", kwargs={"slug": a.slug}),
+                            "image": a.cover_image.url,
+                            "label": a.title,
+                            "kind": "blog",
+                        })
+                except Exception:
+                    pass
+                if len(about_works) >= 4:
+                    break
+        context["about_works"] = about_works[:4]
+
+    # ─ـ نمونه‌کارهای صفحه اصلی: پروژه‌های منتخب، همراه با دسته‌بندی برای فیلتر ──
     if "portfolio" in keys:
         pf_items = list(
             Portfolio.objects.filter(featured=True)
@@ -97,13 +127,6 @@ def home(request):
         context["portfolio_categories"] = list(
             Category.objects.filter(portfolio__featured=True).distinct().order_by("order", "id")
         )
-
-    # ─ـ مهارت‌ها در دو ردیفِ مارکویی تقسیم می‌شوند ──
-    if "tech" in keys:
-        skills = list(context["tech_skills"])
-        midpoint = (len(skills) + 1) // 2
-        context["tech_row1"] = skills[:midpoint]
-        context["tech_row2"] = skills[midpoint:]
 
     # ── دادهٔ ساختاریافتهٔ FAQ برای موتورهای جستجو (schema.org/FAQPage) ──
     if "faq" in keys:

@@ -111,12 +111,11 @@ class SubjectChoiceAdmin(admin.ModelAdmin):
 
 @admin.register(ContactSubmission)
 class ContactSubmissionAdmin(admin.ModelAdmin):
-    list_display = ["name", "email", "phone", "subject", "status", "submitted_at"]
+    list_display = ["name", "phone", "subject", "status", "submitted_at"]
     list_filter = ["status"]
     list_editable = ["status"]
     readonly_fields = [
         "name",
-        "email",
         "phone",
         "company",
         "subject",

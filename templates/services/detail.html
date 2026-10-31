@@ -19,7 +19,7 @@
       "@graph": [
         {
           "@type": "Service",
-          "name": {{ service.title|striptags|json }},
+          "name": {{ service.title|plain|striptags|json }},
           "description": {{ service.get_meta_description|striptags|json }},
           "url": "{{ request.build_absolute_uri }}",
           "inLanguage": "fa-IR",
@@ -72,7 +72,7 @@
             {
               "@type": "ListItem",
               "position": 3,
-              "name": {{ service.title|striptags|json }},
+              "name": {{ service.title|plain|striptags|json }},
               "item": "{{ request.build_absolute_uri }}"
             }
           ]
@@ -94,7 +94,7 @@
   {% endcomment %}
   <div class="{{ service.accent_class }}">
 
-    {# ── هیرو — مسیر صفحه، عنوان، مقدمه، دکمه‌ها و آرتورکِ اختصاصیِ خدمت ── #}
+    {% comment %} ── هیرو — مسیر صفحه، عنوان، مقدمه، دکمه‌ها و آرتورکِ اختصاصیِ خدمت ── {% endcomment %}
     <section class="relative overflow-hidden bg-ink" data-mouse-parallax data-pause>
       {% include "partials/_space_layer.html" with ring_spin="1" ring_class="-left-48 -bottom-24 h-[34rem] w-[46rem]" orb_variant="planet-orb-"|add:service.accent orb_class="left-[7%] top-[14%] h-7 w-7" %}
       <div class="pointer-events-none absolute -right-40 top-1/4 h-[32rem] w-[32rem] rounded-full opacity-25"
@@ -107,8 +107,8 @@
         {% include "components/_breadcrumb.html" %}
 
         <div class="mt-10 grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-16">
-          {# ستونِ متن #}
-          <div data-reveal="right">
+          {% comment %} ستونِ متن {% endcomment %}
+          <div data-reveal="mask">
             {% if service.hero_eyebrow %}
               <p class="eyebrow">{{ service.hero_eyebrow }}</p>
             {% endif %}
@@ -117,18 +117,18 @@
             </h1>
             {% if service.hero_lead or service.excerpt %}
               <p class="mt-6 max-w-xl text-lg font-light leading-8 text-cream/70"
-                 data-reveal="up" data-delay="0.06">
+                 data-reveal="mask" data-delay="0.06">
                 {{ service.hero_lead|default:service.excerpt }}
               </p>
             {% endif %}
             {% if service.get_chips_list %}
-              <div class="mt-7 flex flex-wrap gap-2.5" data-reveal="up" data-delay="0.1">
+              <div class="mt-7 flex flex-wrap gap-2.5" data-reveal="pop" data-delay="0.1">
                 {% for chip in service.get_chips_list %}
                   <span class="s-chip">{{ chip }}</span>
                 {% endfor %}
               </div>
             {% endif %}
-            <div class="mt-10 flex flex-wrap gap-4" data-reveal="up" data-delay="0.16">
+            <div class="mt-10 flex flex-wrap gap-4" data-reveal="pop" data-delay="0.16">
               {% if service.hero_cta_primary_text %}
                 <a href="{% nav_url service.hero_cta_primary_url %}" class="btn btn-gold px-8 py-4" data-magnetic>
                   {{ service.hero_cta_primary_text }}
@@ -148,14 +148,14 @@
             </div>
           </div>
 
-          {# ستونِ آرتورک — تصویرسازیِ مختصِ نوعِ `visual` خدمت (T68 آن را گسترش می‌دهد) #}
-          <div class="service-theme-{{ service.visual }} relative mx-auto w-full max-w-xl" data-reveal="left" data-delay="0.12">
+          {% comment %} ستونِ آرتورک — تصویرسازیِ مختصِ نوعِ `visual` خدمت (T68 آن را گسترش می‌دهد) {% endcomment %}
+          <div class="service-theme-{{ service.visual }} relative mx-auto w-full max-w-xl" data-reveal="clip" data-delay="0.12">
             <span class="orbit-ring orbit-ring--spin absolute -right-14 -top-16 h-80 w-80 opacity-60"
                   aria-hidden="true"></span>
             <span class="orbit-dot absolute -right-3 top-2 h-3.5 w-3.5" aria-hidden="true"></span>
 
             {% if service.visual == 'browser' %}
-              {# ماکت مرورگر + شبکهٔ طرح‌بندی + ماکتِ موبایل (T68) #}
+              {% comment %} ماکت مرورگر + شبکهٔ طرح‌بندی + ماکتِ موبایل (T68) {% endcomment %}
               <div class="svc-device" data-float-spin="12" aria-hidden="true">
                 <span class="svc-device-bar"></span>
                 <span class="svc-device-bar w-2/3"></span>
@@ -192,7 +192,7 @@
               </span>
 
             {% elif service.visual == 'terminal' %}
-              {# ترمینال + گلیف‌های کد و خطِ تایپ‌کننده (T68) #}
+              {% comment %} ترمینال + گلیف‌های کد و خطِ تایپ‌کننده (T68) {% endcomment %}
               <span class="svc-glyph -top-5 left-10" data-float="10">&lt;/&gt;</span>
               <span class="svc-glyph -right-4 bottom-12" data-float="12">{ }</span>
               <span class="svc-glyph -left-4 top-1/3" data-float="8">git</span>
@@ -222,7 +222,7 @@
               </div>
 
             {% elif service.visual == 'palette' %}
-              {# پالت رنگی + پوستر + نمونه‌های رنگ شناور (T68) #}
+              {% comment %} پالت رنگی + پوستر + نمونه‌های رنگ شناور (T68) {% endcomment %}
               <div class="svc-swatch -top-5 left-1/2" data-float-spin="10" aria-hidden="true">
                 <span style="background: var(--pa)"></span>
                 <span class="bg-gold-light/90"></span>
@@ -278,7 +278,7 @@
               </div>
 
             {% elif service.visual == 'diamond' %}
-              {# شبکهٔ راهنمای لوگو + خطِ کشیده‌شدنِ الماس (T68) #}
+              {% comment %} شبکهٔ راهنمای لوگو + خطِ کشیده‌شدنِ الماس (T68) {% endcomment %}
               <div class="svc-diamond relative grid aspect-square w-full max-w-sm place-items-center overflow-hidden border border-white/[.07] bg-ink/40 shadow-2xl"
                    style="border-radius: 1.75rem">
                 <span class="grid-bg absolute inset-0 opacity-70"></span>
@@ -298,7 +298,7 @@
                     <circle cx="110" cy="110" r="96" />
                     <circle cx="110" cy="110" r="32" />
                   </g>
-                  {# درجه‌های شبکهٔ راهنما — مثل خط‌کشِ طراحِ لوگو #}
+                  {% comment %} درجه‌های شبکهٔ راهنما — مثل خط‌کشِ طراحِ لوگو {% endcomment %}
                   <g class="svc-ticks" stroke-width="1.5" stroke-linecap="round">
                     <line class="svc-tick" x1="40" y1="104" x2="40" y2="116" />
                     <line class="svc-tick" x1="68" y1="104" x2="68" y2="116" />
@@ -324,7 +324,7 @@
               </span>
 
             {% else %}
-              {# بدون تصویرسازی — مدالِ آیکونِ خدمت #}
+              {% comment %} بدون تصویرسازی — مدالِ آیکونِ خدمت {% endcomment %}
               <div class="glass relative grid aspect-square w-full max-w-sm place-items-center" style="border-radius: 2rem">
                 <span class="icon-ring icon-ring-pulse h-24 w-24">{% icon service.icon class="h-10 w-10" %}</span>
               </div>
@@ -340,28 +340,28 @@
       </div>
     </section>
 
-    {# ── مرور کلی — اولین بخشِ محتوای فعال (یا توضیحاتِ کاملِ خدمت) ── #}
+    {% comment %} ── مرور کلی — اولین بخشِ محتوای فعال (یا توضیحاتِ کاملِ خدمت) ── {% endcomment %}
     {% if overview or service.description %}
       <section class="relative bg-cream" style="border-radius: 3rem 9rem 0 0">
         <div class="relative z-10 mx-auto max-w-3xl px-6 pb-28 pt-28 md:pt-36">
           {% if overview %}
             {% if overview.eyebrow %}
-              <p class="eyebrow eyebrow-dark" data-reveal="up">{{ overview.eyebrow }}</p>
+              <p class="eyebrow eyebrow-dark" data-reveal="rise">{{ overview.eyebrow }}</p>
             {% endif %}
             <h2 class="mt-5 text-3xl font-extrabold leading-[1.3] text-paper md:text-[2.4rem]"
-                data-reveal="up" data-delay="0.06">
+                data-reveal="mask" data-delay="0.06">
               {{ overview.title|highlight }}
             </h2>
-            <div class="prose-ink mt-8" data-reveal="up" data-delay="0.12">
+            <div class="prose-ink mt-8" data-reveal="blur" data-delay="0.12">
               {{ overview.body|safe }}
             </div>
           {% else %}
-            <p class="eyebrow eyebrow-dark" data-reveal="up">مرور کلی</p>
+            <p class="eyebrow eyebrow-dark" data-reveal="rise">مرور کلی</p>
             <h2 class="mt-5 text-3xl font-extrabold leading-[1.3] text-paper md:text-[2.4rem]"
-                data-reveal="up" data-delay="0.06">
+                data-reveal="mask" data-delay="0.06">
               {{ service.title|highlight }} چیست؟
             </h2>
-            <div class="prose-ink mt-8" data-reveal="up" data-delay="0.12">
+            <div class="prose-ink mt-8" data-reveal="blur" data-delay="0.12">
               {{ service.description|linebreaksbr|safe }}
             </div>
           {% endif %}
@@ -369,14 +369,14 @@
       </section>
     {% endif %}
 
-    {# ── T64: خروجی‌ها — چه چیزی تحویل می‌گیرید ── #}
+    {% comment %} ── T64: خروجی‌ها — چه چیزی تحویل می‌گیرید ── {% endcomment %}
     {% if deliverables %}
       <section class="relative bg-cream2">
         <div class="relative z-10 mx-auto max-w-7xl px-6 pb-28 pt-24 md:pt-28">
           <div class="max-w-2xl">
-            <p class="eyebrow eyebrow-dark" data-reveal="up">خروجی‌های پروژه</p>
+            <p class="eyebrow eyebrow-dark" data-reveal="rise">خروجی‌های پروژه</p>
             <h2 class="mt-5 text-4xl font-extrabold leading-[1.3] text-paper md:text-[2.7rem]"
-                data-reveal="up" data-delay="0.06">
+                data-reveal="mask" data-delay="0.06">
               چه چیزی تحویل می‌گیرید؟
             </h2>
           </div>
@@ -384,7 +384,7 @@
             {% for item in deliverables %}
               <div class="glass-light flex items-center gap-4 p-6"
                    style="border-radius: {% cycle '1.5rem' '1rem' '1.75rem 0.75rem' %}"
-                   data-reveal="up" data-delay="{% cycle '0' '0.06' '0.12' %}">
+                   data-reveal="rise" data-delay="{% cycle '0' '0.06' '0.12' %}">
                 <span class="icon-ring h-11 w-11 shrink-0">{% icon "check" class="h-5 w-5" %}</span>
                 <span class="text-[0.95rem] font-medium leading-7 text-paper">{{ item.title }}</span>
               </div>
@@ -394,7 +394,7 @@
       </section>
     {% endif %}
 
-    {# ── T64: بخش‌های بلندِ محتوای سئو — چیدمانِ متناوبِ روشن/تیره ── #}
+    {% comment %} ── T64: بخش‌های بلندِ محتوای سئو — چیدمانِ متناوبِ روشن/تیره ── {% endcomment %}
     {% for section in sections %}
       {% with dark=forloop.counter0|divisibleby:2 %}
         <section class="relative overflow-hidden {% if dark %}bg-ink2{% else %}bg-cream2{% endif %}">
@@ -406,21 +406,21 @@
           {% if section.layout == 'full' %}
             <div class="relative z-10 mx-auto max-w-3xl px-6 pb-28 pt-28 md:pt-36">
               {% if section.eyebrow %}
-                <p class="{% if dark %}eyebrow{% else %}eyebrow-dark{% endif %}" data-reveal="up">
+                <p class="{% if dark %}eyebrow{% else %}eyebrow-dark{% endif %}" data-reveal="rise">
                   {{ section.eyebrow }}
                 </p>
               {% endif %}
               <h2 class="mt-5 text-3xl font-extrabold leading-[1.3] {% if dark %}text-cream{% else %}text-paper{% endif %} md:text-[2.4rem]"
-                  data-reveal="up" data-delay="0.06">
+                  data-reveal="mask" data-delay="0.06">
                 {{ section.title|highlight }}
               </h2>
               <div class="{% if dark %}prose-cream{% else %}prose-ink{% endif %} mt-8"
-                   data-reveal="up" data-delay="0.12">
+                   data-reveal="blur" data-delay="0.12">
                 {{ section.body|safe }}
               </div>
             </div>
           {% else %}
-            {# چیدمانِ left/right: پنلِ تصویر با order در RTL جابه‌جا می‌شود #}
+            {% comment %} چیدمانِ left/right: پنلِ تصویر با order در RTL جابه‌جا می‌شود {% endcomment %}
             <div class="relative z-10 mx-auto max-w-7xl px-6 pb-28 pt-28 md:pt-32">
               <div class="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-16">
                 <div class="{% if section.layout == 'left' %}lg:order-2{% endif %}"
@@ -429,12 +429,12 @@
                     <figure class="relative overflow-hidden border border-gold/20 shadow-2xl"
                             style="border-radius: 1.75rem">
                       <img src="{{ section.image.url }}"
-                           alt="{{ section.image_alt|default:section.title }}"
+                           alt="{{ section.image_alt|default:section.title|plain }}"
                            loading="lazy" decoding="async"
                            class="aspect-[4/3] h-full w-full object-cover">
                     </figure>
                   {% else %}
-                    {# پنلِ سیاره‌ای — پنجره‌ای تیره با حلقهٔ مداریِ همرنگِ خدمت #}
+                    {% comment %} پنلِ سیاره‌ای — پنجره‌ای تیره با حلقهٔ مداریِ همرنگِ خدمت {% endcomment %}
                     <div class="glass relative grid aspect-square w-full max-w-xs place-items-center overflow-hidden mx-auto"
                          style="border-radius: 2rem">
                       <span class="grid-bg absolute inset-0 opacity-40" aria-hidden="true"></span>
@@ -447,16 +447,16 @@
                 </div>
                 <div class="{% if section.layout == 'left' %}lg:order-1{% endif %}">
                   {% if section.eyebrow %}
-                    <p class="{% if dark %}eyebrow{% else %}eyebrow-dark{% endif %}" data-reveal="up">
+                    <p class="{% if dark %}eyebrow{% else %}eyebrow-dark{% endif %}" data-reveal="rise">
                       {{ section.eyebrow }}
                     </p>
                   {% endif %}
                   <h2 class="mt-5 text-3xl font-extrabold leading-[1.3] {% if dark %}text-cream{% else %}text-paper{% endif %} md:text-[2.3rem]"
-                      data-reveal="up" data-delay="0.06">
+                      data-reveal="mask" data-delay="0.06">
                     {{ section.title|highlight }}
                   </h2>
                   <div class="{% if dark %}prose-cream{% else %}prose-ink{% endif %} mt-7"
-                       data-reveal="up" data-delay="0.12">
+                       data-reveal="blur" data-delay="0.12">
                     {{ section.body|safe }}
                   </div>
                 </div>
@@ -467,7 +467,7 @@
       {% endwith %}
     {% endfor %}
 
-    {# ── T64: کاربردها و صنایع ── #}
+    {% comment %} ── T64: کاربردها و صنایع ── {% endcomment %}
     {% if use_cases %}
       <section class="relative overflow-hidden bg-ink2">
         <svg class="divider divider-flip" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true">
@@ -476,16 +476,16 @@
         <div class="grid-bg pointer-events-none absolute inset-0 opacity-20" aria-hidden="true"></div>
         <div class="relative z-10 mx-auto max-w-7xl px-6 pb-28 pt-28 md:pt-32">
           <div class="max-w-2xl">
-            <p class="eyebrow" data-reveal="up">کاربردها و صنایع</p>
+            <p class="eyebrow" data-reveal="rise">کاربردها و صنایع</p>
             <h2 class="mt-5 text-4xl font-extrabold leading-[1.3] md:text-[2.7rem]"
-                data-reveal="up" data-delay="0.06">
+                data-reveal="mask" data-delay="0.06">
               این خدمت کجا کار می‌کند؟
             </h2>
           </div>
           <div class="mt-14 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {% for use_case in use_cases %}
               <div class="glass p-7" style="border-radius: {% cycle '1.5rem' '1rem' '1.75rem 0.75rem' %}"
-                   data-reveal="up" data-delay="{% cycle '0' '0.06' '0.12' '0.18' %}">
+                   data-reveal="rise" data-delay="{% cycle '0' '0.06' '0.12' '0.18' %}">
                 <span class="icon-ring h-11 w-11">{% icon use_case.icon class="h-5 w-5" %}</span>
                 <h3 class="mt-5 text-lg font-bold text-cream">{{ use_case.title }}</h3>
                 {% if use_case.description %}
@@ -498,7 +498,7 @@
       </section>
     {% endif %}
 
-    {# ── T64: ابزارها و فناوری‌ها — مارکوی پیوسته (دو نسخه از لیست = حلقهٔ بی‌درنگ) ── #}
+    {% comment %} ── T64: ابزارها و فناوری‌ها — مارکوی پیوسته (دو نسخه از لیست = حلقهٔ بی‌درنگ) ── {% endcomment %}
     {% if tools %}
       <section class="relative bg-cream2">
         <svg class="divider divider-flip" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true">
@@ -506,13 +506,13 @@
         </svg>
         <div class="relative z-10 mx-auto max-w-7xl px-6 pb-28 pt-28 md:pt-32">
           <div class="max-w-2xl">
-            <p class="eyebrow eyebrow-dark" data-reveal="up">ابزارها و فناوری‌ها</p>
+            <p class="eyebrow eyebrow-dark" data-reveal="rise">ابزارها و فناوری‌ها</p>
             <h2 class="mt-5 text-4xl font-extrabold leading-[1.3] text-paper md:text-[2.7rem]"
-                data-reveal="up" data-delay="0.06">
+                data-reveal="mask" data-delay="0.06">
               با چه ابزارهایی کار می‌کنیم؟
             </h2>
           </div>
-          <div class="mt-14" data-reveal="up">
+          <div class="mt-14" data-reveal="clip">
             <div class="marquee marquee-slow" dir="ltr">
               <div class="marquee-group">
                 {% for tool in tools %}
@@ -521,7 +521,7 @@
                     {{ tool.name }}
                   </span>
                 {% endfor %}
-                {# نسخهٔ دومِ همان آیتم‌ها — translateX(-50%) را بی‌درنگ می‌کند #}
+                {% comment %} نسخهٔ دومِ همان آیتم‌ها — translateX(-50%) را بی‌درنگ می‌کند {% endcomment %}
                 {% for tool in tools %}
                   <span class="s-chip-light gap-2 text-[0.9rem] font-medium" aria-hidden="true">
                     {% if tool.icon %}{% icon tool.icon class="h-4 w-4 text-gold-dark" %}{% endif %}
@@ -535,10 +535,10 @@
       </section>
     {% endif %}
 
-    {# ── T65: خطِ زمانِ فرآیند — مسیرِ GPS با گره‌های شماره‌گذاری‌شده ── #}
+    {% comment %} ── T65: خطِ زمانِ فرآیند — مسیرِ GPS با گره‌های شماره‌گذاری‌شده ── {% endcomment %}
     {% if processes %}
       <section class="relative overflow-hidden bg-ink2">
-        {# fill همرنگِ خودِ بخش است: رنگِ تیره را به هر بخشِ بالایی ریشه می‌کند #}
+        {% comment %} fill همرنگِ خودِ بخش است: رنگِ تیره را به هر بخشِ بالایی ریشه می‌کند {% endcomment %}
         <svg class="divider divider-flip" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true">
           <path d="M0,26 C260,84 520,82 760,44 C1000,6 1240,80 1440,30 L1440,0 L0,0 Z" fill="#121214"></path>
         </svg>
@@ -546,14 +546,14 @@
 
         <div class="relative z-10 mx-auto max-w-7xl px-6 pb-28 pt-28 md:pt-32">
           <div class="text-center">
-            <p class="eyebrow" data-reveal="up">مراحل پروژه</p>
+            <p class="eyebrow" data-reveal="rise">مراحل پروژه</p>
             <h2 class="mt-5 text-4xl font-extrabold leading-[1.3] md:text-[2.7rem]"
-                data-reveal="up" data-delay="0.06">
+                data-reveal="mask" data-delay="0.06">
               {{ "از ایده تا [[انتشار]]"|highlight }}
             </h2>
           </div>
 
-          {# مسیر: خطِ چراغ‌دار از راست (اولین مرحله) به چپ — یک گره برای هر مرحله #}
+          {% comment %} مسیر: خطِ چراغ‌دار از راست (اولین مرحله) به چپ — یک گره برای هر مرحله {% endcomment %}
           <div class="relative mt-16 lg:mt-20" data-gps-root>
             {% if processes|length > 1 %}
               {% with steps=processes|length|add:"-1" %}
@@ -566,8 +566,8 @@
                         <stop offset="1" stop-color="#8f6b2c"></stop>
                       </linearGradient>
                     </defs>
-                    {# preserveAspectRatio="none" viewBox را کش می‌دهد #}
-                    {# stroke با vector-effect نازک می‌ماند (input.css) #}
+                    {% comment %} preserveAspectRatio="none" viewBox را کش می‌دهد {% endcomment %}
+                    {% comment %} stroke با vector-effect نازک می‌ماند (input.css) {% endcomment %}
                     <path class="gps-base" d="M960,60 L40,60"></path>
                     <path class="gps-move" d="M960,60 L40,60"></path>
                     <path class="gps-draw" pathLength="1" d="M960,60 L40,60"></path>
@@ -592,7 +592,7 @@
               {% for step in processes %}
                 <article class="process-step glass tilt group relative overflow-hidden p-7"
                          style="border-radius: 1.5rem 1.5rem 1.5rem 0.6rem"
-                         data-reveal="up" data-delay="{% cycle '0' '0.08' '0.16' '0.24' '0.32' %}">
+                         data-reveal="rise" data-delay="{% cycle '0' '0.08' '0.16' '0.24' '0.32' %}">
                   <span class="glare" aria-hidden="true"></span>
                   <span class="process-node">{{ forloop.counter|stringformat:"02d"|fa_digits }}</span>
                   <h3 class="mt-4 text-lg font-bold text-cream">{{ step.title }}</h3>
@@ -604,8 +604,8 @@
             </div>
           </div>
 
-          {# یادداشتِ تحویل و زمان‌بندی #}
-          <div class="mt-14 flex justify-center" data-reveal="up">
+          {% comment %} یادداشتِ تحویل و زمان‌بندی {% endcomment %}
+          <div class="mt-14 flex justify-center" data-reveal="pop">
             <p class="glass inline-flex items-center gap-3 rounded-full px-6 py-3.5 text-[0.85rem] leading-7 text-cream/70">
               {% icon "clock" class="h-4 w-4 shrink-0 text-gold-light" %}
               زمانِ تحویل به دامنه و حجمِ پروژه بستگی دارد؛ در جلسهٔ مشاورهٔ رایگان
@@ -616,7 +616,7 @@
       </section>
     {% endif %}
 
-    {# ── T65: چرا ما — مزایای همکاری با لهجهٔ رنگیِ خدمت ── #}
+    {% comment %} ── T65: چرا ما — مزایای همکاری با لهجهٔ رنگیِ خدمت ── {% endcomment %}
     {% if why_us %}
       <section class="relative overflow-hidden bg-cream" style="clip-path: polygon(0 0, 100% 5.5%, 100% 100%, 0 100%)">
         <div class="grid-bg pointer-events-none absolute inset-0 opacity-60" aria-hidden="true"></div>
@@ -625,9 +625,9 @@
 
         <div class="relative mx-auto max-w-7xl px-6 pb-28 pt-40 md:pt-48">
           <div class="text-center">
-            <p class="eyebrow eyebrow-dark eyebrow-c justify-center" data-reveal="up">چرا پیکسوریا؟</p>
+            <p class="eyebrow eyebrow-dark eyebrow-c justify-center" data-reveal="rise">چرا پیکسوریا؟</p>
             <h2 class="mt-5 text-4xl font-extrabold leading-[1.3] text-paper md:text-[2.7rem]"
-                data-reveal="up" data-delay="0.08">
+                data-reveal="mask" data-delay="0.08">
               {{ "چرا این پروژه را به [[ما]] بسپارید؟"|highlight:"dark" }}
             </h2>
           </div>
@@ -636,7 +636,7 @@
             {% for item in why_us %}
               <article class="why-card glass-light tilt group relative overflow-hidden p-7"
                        style="border-radius: {% cycle '1.75rem 0.75rem 1.75rem 0.75rem' '0.75rem 1.75rem 0.75rem 1.75rem' %}"
-                       data-reveal="up" data-delay="{% cycle '0' '0.08' '0.16' '0.24' '0.32' %}">
+                       data-reveal="rise" data-delay="{% cycle '0' '0.08' '0.16' '0.24' '0.32' %}">
                 <span class="glare" aria-hidden="true"></span>
                 <span class="why-idx" aria-hidden="true">{{ forloop.counter|stringformat:"02d"|fa_digits }}</span>
                 <span class="why-corner" aria-hidden="true"></span>
@@ -653,9 +653,9 @@
       </section>
     {% endif %}
 
-    {# ── T65: آمار — شمارشگرهای متنِ آزاد (data-count-text در pixoria.js) ── #}
+    {% comment %} ── T65: آمار — شمارشگرهای متنِ آزاد (data-count-text در pixoria.js) ── {% endcomment %}
     {% if stats %}
-      {# گوشه‌های گرد به جای موج: چه بخشِ قبلی روشن باشد چه تیره، درست می‌نشیند #}
+      {% comment %} گوشه‌های گرد به جای موج: چه بخشِ قبلی روشن باشد چه تیره، درست می‌نشیند {% endcomment %}
       <section class="relative overflow-hidden bg-ink3" style="border-radius: 3rem 9rem 0 0">
         <div class="grid-bg pointer-events-none absolute inset-0 opacity-30" aria-hidden="true"></div>
         <div class="pointer-events-none absolute left-1/2 top-0 h-96 w-96 -translate-x-1/2 rounded-full opacity-25 aurora-blob"
@@ -663,9 +663,9 @@
 
         <div class="relative z-10 mx-auto max-w-7xl px-6 pb-24 pt-28 md:pt-32">
           <div class="text-center">
-            <p class="eyebrow" data-reveal="up">در یک نگاه</p>
+            <p class="eyebrow" data-reveal="rise">در یک نگاه</p>
             <h2 class="mt-5 text-3xl font-extrabold leading-[1.3] md:text-[2.4rem]"
-                data-reveal="up" data-delay="0.08">
+                data-reveal="mask" data-delay="0.08">
               {{ "پیکسوریا به [[عدد]]"|highlight }}
             </h2>
           </div>
@@ -674,7 +674,7 @@
             {% for stat in stats %}
               <div class="stat-card glass tilt relative overflow-hidden p-8 text-center"
                    style="border-radius: {% cycle '1.75rem' '1.25rem' %}"
-                   data-reveal="up" data-delay="{% cycle '0' '0.1' '0.2' '0.3' %}">
+                   data-reveal="rise" data-delay="{% cycle '0' '0.1' '0.2' '0.3' %}">
                 <span class="glare" aria-hidden="true"></span>
                 <p class="stat-num fa-num stat-num-fa" data-count-text="{{ stat.number }}">{{ stat.number|fa_digits }}</p>
                 <p class="mt-2 text-sm text-cream/55">{{ stat.label }}</p>
@@ -688,8 +688,8 @@
       </section>
     {% endif %}
 
-    {# ── T66: قیمت‌گذاری — سه پلن + بلوکِ پلنِ دلخواه ── #}
-    {# سکشن وقتی هیچ پلنِ فعالی نباشد کاملًا رندر نمی‌شود. #}
+    {% comment %} ── T66: قیمت‌گذاری — سه پلنِ ازپیش‌تعریف‌شده در ادمین ── {% endcomment %}
+    {% comment %} سکشن وقتی هیچ پلنِ فعالی نباشد کاملًا رندر نمی‌شود. {% endcomment %}
     {% if plans %}
       <section class="relative overflow-hidden bg-cream2" style="border-radius: 3rem 9rem 0 0">
         <div class="aurora-blob pointer-events-none absolute -right-32 top-10 h-96 w-96 rounded-full opacity-40"
@@ -697,13 +697,13 @@
 
         <div class="relative z-10 mx-auto max-w-7xl px-6 pb-28 pt-28 md:pt-36">
           <div class="text-center">
-            <p class="eyebrow eyebrow-dark eyebrow-c justify-center" data-reveal="up">قیمت‌گذاری</p>
+            <p class="eyebrow eyebrow-dark eyebrow-c justify-center" data-reveal="rise">قیمت‌گذاری</p>
             <h2 class="mt-5 text-4xl font-extrabold leading-[1.3] text-paper md:text-[2.5rem]"
-                data-reveal="up" data-delay="0.08">
+                data-reveal="mask" data-delay="0.08">
               تعرفهٔ {{ service.title|highlight:"dark" }}
             </h2>
             <p class="mx-auto mt-4 max-w-xl font-light leading-8 text-coy"
-               data-reveal="up" data-delay="0.14">
+               data-reveal="blur" data-delay="0.14">
               قیمت‌ها «شروع از» است؛ در جلسهٔ مشاورهٔ رایگان بر اساسِ حجم و ماژول‌های پروژه دقیق می‌شود.
             </p>
           </div>
@@ -712,19 +712,21 @@
             {% for plan in plans %}
               {% cycle '0' '0.08' '0.16' as plan_delay silent %}
               {% if plan.is_featured %}
-                {# پلنِ پیشنهادی: کارتِ طلاییِ برآمده با برچسبِ «محبوب‌ترین» #}
-                <article class="relative flex flex-col p-8 text-paper md:-mt-6"
+                {% comment %} پلنِ پیشنهادی: کارتِ طلاییِ برآمده با برچسبِ «محبوب‌ترین» {% endcomment %}
+                {% comment %} pt-10 پس از p-8: بالای کارت نفسِ برچسبِ بیرونزده را میدهد؛ {% endcomment %}
+                {% comment %} بدونِ مارجینِ منفی که محتوای ابتدای کارت را به‌هم میریخت {% endcomment %}
+                <article class="relative flex flex-col p-8 pt-10 text-paper"
                          style="border-radius: 0.75rem 1.75rem 0.75rem 1.75rem;
                                 background: linear-gradient(150deg, rgba(232,196,122,0.32), rgba(255,255,255,0.92) 55%);
                                 border: 1.5px solid rgba(143,107,44,0.55);
                                 box-shadow: 0 30px 70px -25px rgba(143,107,44,0.55)"
-                         data-reveal="up" data-delay="{{ plan_delay }}">
+                         data-reveal="scale" data-delay="{{ plan_delay }}">
                   <span class="absolute -top-4 right-1/2 translate-x-1/2 whitespace-nowrap rounded-full px-5 py-1.5 text-xs font-bold text-[#171207] shadow-lg"
                         style="background: linear-gradient(135deg, #8f6b2c, #e8c47a)">محبوب‌ترین</span>
               {% else %}
                 <article class="glass-light relative flex flex-col p-8"
                          style="border-radius: {% cycle '1.75rem 1.75rem 1.75rem 0.75rem' '1.75rem 0.75rem 1.75rem 0.75rem' %}"
-                         data-reveal="up" data-delay="{{ plan_delay }}">
+                         data-reveal="scale" data-delay="{{ plan_delay }}">
               {% endif %}
 
                 <div class="flex flex-wrap items-center gap-3">
@@ -737,7 +739,7 @@
                   <p class="mt-2 text-sm font-light leading-7 text-coy">{{ plan.tagline }}</p>
                 {% endif %}
 
-                {# قیمت: عدد به تومان (با Optional قیمتِ خط‌خورده)، یا متنِ جایگزین #}
+                {% comment %} قیمت: عدد به تومان (با Optional قیمتِ خط‌خورده)، یا متنِ جایگزین {% endcomment %}
                 {% if plan.price %}
                   <div class="mt-6">
                     {% if plan.old_price %}
@@ -762,7 +764,7 @@
                   </div>
                 {% endif %}
 
-                {# ویژگی‌ها: تیک برای شامل‌شده، ضربدر برای شامل‌نشده #}
+                {% comment %} ویژگی‌ها: تیک برای شامل‌شده، ضربدر برای شامل‌نشده {% endcomment %}
                 {% if plan.features.all %}
                   <ul class="mt-7 flex-1 space-y-3.5 border-t border-gold-dark/15 pt-7 text-sm text-coy">
                     {% for feature in plan.features.all %}
@@ -778,11 +780,11 @@
                     {% endfor %}
                   </ul>
                 {% else %}
-                  {# بدونِ ویژگی هم دکمه باید پایینِ کارت بماند #}
+                  {% comment %} بدونِ ویژگی هم دکمه باید پایینِ کارت بماند {% endcomment %}
                   <div class="flex-1"></div>
                 {% endif %}
 
-                {# دکمهٔ پلن: cta_url دلخواه، وگرنه فرم تماس با پارامترهای پیش‌پر #}
+                {% comment %} دکمهٔ پلن: cta_url دلخواه، وگرنه فرم تماس با پارامترهای پیش‌پر {% endcomment %}
                 {% if plan.cta_url %}
                   <a href="{% nav_url plan.cta_url %}"
                      class="btn mt-8 w-full px-6 py-3.5 text-paper"
@@ -812,46 +814,6 @@
             {% endfor %}
           </div>
 
-          {# پلنِ دلخواه — آیتم‌های انتخابی با جمعِ تخمینی (pixoria.js) #}
-          {% if custom_items %}
-            <div class="glass-light mt-16 p-8 md:p-10" style="border-radius: 1.5rem"
-                 data-custom-root data-reveal="up">
-              <div class="mb-8 grid grid-cols-1 items-start gap-8 lg:grid-cols-[1fr_auto]">
-                <div>
-                  <p class="eyebrow eyebrow-dark">پلن دلخواه</p>
-                  <h3 class="mt-4 text-2xl font-extrabold text-paper md:text-[1.9rem]">فقط چیزی که نیاز دارید.</h3>
-                  <p class="mt-3 max-w-xl text-[0.95rem] leading-7 text-coy">
-                    آیتم‌های موردنظر را انتخاب کنید — جمعِ تخمینی به‌صورتِ خودکار به‌روز می‌شود.
-                  </p>
-                </div>
-                <div class="flex items-baseline gap-2.5 rounded-2xl bg-ink px-6 py-5 text-cream">
-                  <span class="font-latin text-[10px] tracking-[.2em] text-cream/45">مجموع تخمینی</span>
-                  <span class="text-[1.7rem] font-bold leading-none text-gold-light fa-num" data-custom-total>۰</span>
-                  <span class="text-[0.72rem] text-cream/45">میلیون تومان</span>
-                </div>
-              </div>
-              <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                {% for item in custom_items %}
-                  <label class="flex cursor-pointer items-center justify-between gap-4 rounded-2xl border border-gold-dark/20 px-5 py-4 transition-colors has-[:checked]:border-gold has-[:checked]:bg-gold/5">
-                    <span class="flex items-center gap-3.5">
-                      <input type="checkbox" data-custom-price="{{ item.price }}"
-                             class="h-4 w-4 shrink-0 accent-gold" />
-                      <span class="flex flex-col">
-                        <span class="text-[0.95rem] font-medium text-paper">{{ item.title }}</span>
-                        {% if item.description %}
-                          <span class="mt-0.5 text-[0.82rem] text-coy/70">{{ item.description }}</span>
-                        {% endif %}
-                      </span>
-                    </span>
-                    <span class="shrink-0 whitespace-nowrap text-[0.84rem] font-medium text-gold-dark fa-num">+{{ item.price|fa_digits }} میلیون</span>
-                  </label>
-                {% endfor %}
-              </div>
-              <p class="mt-6 text-center text-xs leading-6 text-coy/80">
-                جمعِ بالا تخمینی است و قیمتِ نهایی در جلسهٔ مشاورهٔ رایگان مشخص می‌شود.
-              </p>
-            </div>
-          {% endif %}
         </div>
       </section>
     {% endif %}
@@ -859,12 +821,12 @@
     {% comment %}T67: نظرات مشتریان، نمونه‌کارهای مرتبط، سوالات متداول،
          خدمات و مقالاتِ مرتبط + JSON-LD های Service/FAQPage{% endcomment %}
 
-    {# ── T67: نظرات مشتریانِ این خدمت (اسلایدرِ مشترک) ── #}
+    {% comment %} ── T67: نظرات مشتریانِ این خدمت (اسلایدرِ مشترک) ── {% endcomment %}
     {% testimonials_slider service=service title="مشتریانِ این خدمت چه می‌گویند؟" eyebrow="نظرات مشتریان" id="service-testimonials" %}
 
-    {# ── T67: نمونه‌کارهای مرتبط با این خدمت (کاروسلِ مشترک) ── #}
-    {# هدر فقط وقتی چاپ می‌شود که کارتی وجود داشته باشد (has_projects در ویو، #}
-    {# هم‌زمان با کوئریِ کامپوننت) — وگرنه بخش کامل غیب می‌شود. #}
+    {% comment %} ── T67: نمونه‌کارهای مرتبط با این خدمت (کاروسلِ مشترک) ── {% endcomment %}
+    {% comment %} هدر فقط وقتی چاپ می‌شود که کارتی وجود داشته باشد (has_projects در ویو، {% endcomment %}
+    {% comment %} هم‌زمان با کوئریِ کامپوننت) — وگرنه بخش کامل غیب می‌شود. {% endcomment %}
     {% if has_projects %}
       <section class="relative overflow-hidden bg-cream2" style="border-radius: 3rem 9rem 0 0">
         <div class="aurora-blob pointer-events-none absolute -left-32 top-10 h-96 w-96 rounded-full opacity-40"
@@ -873,27 +835,27 @@
         <div class="relative z-10 mx-auto max-w-7xl px-6 pb-28 pt-28 md:pt-36">
           <div class="flex flex-wrap items-end justify-between gap-6">
             <div>
-              <p class="eyebrow eyebrow-dark" data-reveal="up">نمونه‌کارها</p>
+              <p class="eyebrow eyebrow-dark" data-reveal="rise">نمونه‌کارها</p>
               <h2 class="mt-5 text-4xl font-extrabold leading-[1.3] text-paper md:text-[2.7rem]"
-                  data-reveal="right" data-delay="0.08">
+                  data-reveal="mask" data-delay="0.08">
                 {{ "کارهایی که با [[این خدمت]] کردیم"|highlight:"dark" }}
               </h2>
             </div>
-            <a href="{% url 'portfolio:list' %}" class="more-link more-link-light text-base" data-reveal="left">
+            <a href="{% url 'portfolio:list' %}" class="more-link more-link-light text-base" data-reveal="pop">
               همهٔ نمونه‌کارها
               {% icon "arrow-left" class="h-4 w-4" %}
             </a>
           </div>
 
-          {# کاروسل نمونه‌کارهای همین خدمت — خودش کوئری می‌زند #}
-          <div class="mt-14" data-reveal="up">
+          {% comment %} کاروسل نمونه‌کارهای همین خدمت — خودش کوئری می‌زند {% endcomment %}
+          <div class="mt-14" data-reveal="clip">
             {% projects_carousel service=service limit=6 %}
           </div>
         </div>
       </section>
     {% endif %}
 
-    {# ── T67: سوالات متداولِ این خدمت (همان آکاردئونِ صفحهٔ اصلی) ── #}
+    {% comment %} ── T67: سوالات متداولِ این خدمت (همان آکاردئونِ صفحهٔ اصلی) ── {% endcomment %}
     {% if faqs %}
       <section id="service-faq" class="relative overflow-hidden bg-cream">
         <div class="grid-bg pointer-events-none absolute inset-0 opacity-50" aria-hidden="true"></div>
@@ -902,19 +864,19 @@
 
         <div class="relative mx-auto max-w-4xl px-6 pb-28 pt-32 md:pt-40">
           <div class="text-center">
-            <p class="eyebrow eyebrow-dark eyebrow-c justify-center" data-reveal="up">سوالات متداول</p>
+            <p class="eyebrow eyebrow-dark eyebrow-c justify-center" data-reveal="rise">سوالات متداول</p>
             <h2 class="mt-5 text-4xl font-extrabold leading-[1.3] text-paper md:text-[2.7rem]"
-                data-reveal="up" data-delay="0.08">
+                data-reveal="mask" data-delay="0.08">
               {{ "سوالاتِ رایج دربارهٔ [[این خدمت]]"|highlight:"dark" }}
             </h2>
-            <p class="mx-auto mt-4 max-w-xl font-light leading-8 text-coy" data-reveal="up" data-delay="0.14">
+            <p class="mx-auto mt-4 max-w-xl font-light leading-8 text-coy" data-reveal="blur" data-delay="0.14">
               اگر سوالِ شما اینجا نیست، در جلسهٔ مشاورهٔ رایگان پاسخ می‌دهیم.
             </p>
           </div>
 
           <div class="mt-12 space-y-3.5">
             {% for item in faqs %}
-              <div class="faq-item" data-reveal="up" data-delay="{% cycle '0' '0.06' '0.12' '0.18' '0.24' '0.3' '0.36' '0.42' %}">
+              <div class="faq-item" data-reveal="rise" data-delay="{% cycle '0' '0.06' '0.12' '0.18' '0.24' '0.3' '0.36' '0.42' %}">
                 <h3 class="m-0">
                   <button type="button" class="faq-q"
                           aria-expanded="false" aria-controls="svc-faq-panel-{{ forloop.counter }}">
@@ -932,45 +894,8 @@
       </section>
     {% endif %}
 
-    {# ── T67: خدماتِ مرتبط ── #}
-    {% if related_services %}
-      <section class="relative overflow-hidden bg-ink2">
-        <div class="grid-bg pointer-events-none absolute inset-0 opacity-30" aria-hidden="true"></div>
-        <div class="pointer-events-none absolute -left-32 top-1/4 h-96 w-96 rounded-full opacity-25 aurora-blob"
-             style="background: radial-gradient(circle, color-mix(in srgb, var(--pa, #c9a15a) 20%, transparent 65%))" aria-hidden="true"></div>
 
-        <div class="relative z-10 mx-auto max-w-7xl px-6 pb-28 pt-32 md:pt-40">
-          <div class="text-center">
-            <p class="eyebrow" data-reveal="up">خدماتِ مرتبط</p>
-            <h2 class="mt-5 text-4xl font-extrabold leading-[1.3] md:text-[2.7rem]"
-                data-reveal="up" data-delay="0.08">
-              {{ "با این خدمت [[یکجا]] ببرید"|highlight }}
-            </h2>
-          </div>
-
-          <div class="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {% for rel in related_services %}
-              <a href="{% url 'services:detail' slug=rel.slug %}"
-                 class="glass tilt group relative flex items-center gap-5 overflow-hidden p-6 transition-transform hover:-translate-y-1"
-                 style="border-radius: {% cycle '1.5rem' '1rem 1.75rem' '1.75rem 0.75rem' %}"
-                 data-reveal="up" data-delay="{% cycle '0' '0.08' '0.16' %}">
-                <span class="glare" aria-hidden="true"></span>
-                <span class="icon-ring icon-ring-pulse shrink-0 transition-transform group-hover:scale-110">{% icon rel.icon|default:"sparkles" class="h-5 w-5" %}</span>
-                <span class="relative z-10 flex flex-1 flex-col">
-                  <span class="font-bold text-cream">{{ rel.title }}</span>
-                  {% if rel.excerpt %}
-                    <span class="mt-1 line-clamp-2 text-xs leading-6 text-cream/50">{{ rel.excerpt }}</span>
-                  {% endif %}
-                </span>
-                {% icon "arrow-left" class="relative z-10 h-5 w-5 shrink-0 text-gold transition-transform group-hover:-translate-x-1" %}
-              </a>
-            {% endfor %}
-          </div>
-        </div>
-      </section>
-    {% endif %}
-
-    {# ── T67: مقالاتِ مرتبط با این خدمت (کاروسلِ مشترک) ── #}
+    {% comment %} ── T67: مقالاتِ مرتبط با این خدمت (کاروسلِ مشترک) ── {% endcomment %}
     {% if has_articles %}
       <section class="relative overflow-hidden bg-cream2" style="border-radius: 3rem 9rem 0 0">
         <div class="aurora-blob pointer-events-none absolute -right-32 top-10 h-96 w-96 rounded-full opacity-40"
@@ -979,20 +904,20 @@
         <div class="relative z-10 mx-auto max-w-7xl px-6 pb-28 pt-28 md:pt-36">
           <div class="flex flex-wrap items-end justify-between gap-6">
             <div>
-              <p class="eyebrow eyebrow-dark" data-reveal="up">مجلهٔ پیکسوریا</p>
+              <p class="eyebrow eyebrow-dark" data-reveal="rise">مجلهٔ پیکسوریا</p>
               <h2 class="mt-5 text-4xl font-extrabold leading-[1.3] text-paper md:text-[2.7rem]"
-                  data-reveal="right" data-delay="0.08">
+                  data-reveal="mask" data-delay="0.08">
                 {{ "بیشتر دربارهٔ [[این خدمت]] بخوانید"|highlight:"dark" }}
               </h2>
             </div>
-            <a href="{% url 'blog:list' %}" class="more-link more-link-light text-base" data-reveal="left">
+            <a href="{% url 'blog:list' %}" class="more-link more-link-light text-base" data-reveal="pop">
               همهٔ مقالات
               {% icon "arrow-left" class="h-4 w-4" %}
             </a>
           </div>
 
-          {# کاروسل مقالاتِ مرتبط — خودش کوئری می‌زند #}
-          <div class="mt-14" data-reveal="up">
+          {% comment %} کاروسل مقالاتِ مرتبط — خودش کوئری می‌زند {% endcomment %}
+          <div class="mt-14" data-reveal="clip">
             {% articles_carousel service=service limit=6 %}
           </div>
         </div>

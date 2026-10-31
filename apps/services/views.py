@@ -66,9 +66,7 @@ def services_detail(request, slug):
         "why_us": service.why_us.all(),
         "processes": service.processes.all(),
         "plans": service.plans.filter(is_active=True).prefetch_related("features"),
-        "custom_items": service.custom_items.all(),
         "faqs": service.faqs.all(),
-        "related_services": list(service.related_services.all()),
         # هدرِ کاروسلِ نمونه‌کارها فقط وقتی کارتی هست چاپ می‌شود؛ همین کوئریِ
         # کامپوننتِ projects_carousel (FK + فیلدِ متنیِ fallback) از T61.
         "has_projects": Portfolio.objects.filter(

@@ -21,7 +21,7 @@
     <div class="pointer-events-none absolute -right-24 bottom-10 h-72 w-72 rounded-full opacity-25 aurora-blob"
          style="background: radial-gradient(circle, rgba(46, 99, 255, 0.28), transparent 70%)" aria-hidden="true"></div>
 
-    {# ستاره‌های چشمک‌زن #}
+    {% comment %} ستاره‌های چشمک‌زن {% endcomment %}
     <span class="nf-star" style="left: 12%; top: 18%; animation-delay: 0s" aria-hidden="true"></span>
     <span class="nf-star" style="left: 84%; top: 14%; animation-delay: 0.7s" aria-hidden="true"></span>
     <span class="nf-star" style="left: 22%; top: 62%; animation-delay: 1.3s" aria-hidden="true"></span>
@@ -30,13 +30,13 @@
     <span class="nf-star" style="left: 8%; top: 40%; animation-delay: 1.9s" aria-hidden="true"></span>
     <span class="nf-star" style="left: 92%; top: 36%; animation-delay: 0.4s" aria-hidden="true"></span>
 
-    {# شهاب‌سنگ #}
+    {% comment %} شهاب‌سنگ {% endcomment %}
     <span class="nf-shoot" aria-hidden="true"></span>
 
-    {# واترمارک ۴۰۴ #}
+    {% comment %} واترمارک ۴۰۴ {% endcomment %}
     <span class="nf-404 stroke-title" aria-hidden="true">۴۰۴</span>
 
-    {# سیارهٔ طلایی + حلقه‌ها + ماه‌ها #}
+    {% comment %} سیارهٔ طلایی + حلقه‌ها + ماه‌ها {% endcomment %}
     <div class="nf-system" aria-hidden="true">
       <div class="nf-orbit-2 nf-orbit"><span class="nf-moon-2 nf-moon"></span></div>
       <div class="nf-orbit"><span class="nf-moon"></span></div>
@@ -45,7 +45,7 @@
       <div class="nf-planet"></div>
     </div>
 
-    {# خرده‌سنگ‌های شناورِ اطراف صحنه #}
+    {% comment %} خرده‌سنگ‌های شناورِ اطراف صحنه {% endcomment %}
     <div class="pointer-events-none absolute inset-0" aria-hidden="true">
       <span data-float-spin="12" class="shard absolute left-[10%] top-[26%] h-20 w-16 rotate-12" style="--fa: 16px"></span>
       <span data-float="9" class="orb absolute right-[12%] top-[24%] h-12 w-12"
@@ -58,16 +58,16 @@
     <div class="relative z-10 flex w-full max-w-2xl flex-col items-center"
          style="padding-top: clamp(150px, 22vh, 260px)">
       <div class="mb-6 flex justify-center">{% include "components/_breadcrumb.html" %}</div>
-      <p class="eyebrow eyebrow-c justify-center" data-reveal="up">خطا · ۴۰۴</p>
+      <p class="eyebrow eyebrow-c justify-center" data-reveal="rise">خطا · ۴۰۴</p>
       <h1 class="mt-6 text-[clamp(2.1rem,5.4vw,4rem)] font-extrabold leading-[1.25]"
-          data-reveal="up" data-delay="0.08">
+          data-reveal="mask" data-delay="0.08">
         {{ "این صفحه در [[کهکشان]] ما نیست"|highlight }}
       </h1>
-      <p class="mt-5 max-w-xl font-light leading-8 text-cream/65" data-reveal="up" data-delay="0.14">
+      <p class="mt-5 max-w-xl font-light leading-8 text-cream/65" data-reveal="blur" data-delay="0.14">
         صفحه‌ای که دنبالش هستی یا حذف شده، یا آدرسش عوض شده، یا اصلاً وجود نداشته.
         بیا بریمت بگردیم.
       </p>
-      <div class="mt-10 flex flex-wrap items-center justify-center gap-4" data-reveal="up" data-delay="0.2">
+      <div class="mt-10 flex flex-wrap items-center justify-center gap-4" data-reveal="pop" data-delay="0.2">
         <a href="{% url 'home:home' %}" class="btn btn-gold px-8 py-4" data-magnetic>
           برگشت به خانه
           {% icon "arrow-left" class="h-4 w-4" %}
@@ -78,7 +78,7 @@
       </div>
     </div>
 
-    <div class="relative z-10 flex flex-col items-center gap-4" data-reveal="up" data-delay="0.28">
+    <div class="relative z-10 flex flex-col items-center gap-4" data-reveal="scale" data-delay="0.28">
       <span class="font-latin text-[10px] tracking-[.3em] text-gold/60">شاید دنبال این بودی</span>
       <div class="flex flex-wrap items-center justify-center gap-2.5">
         <a href="{% url 'portfolio:list' %}" class="s-chip">نمونه‌کارها</a>

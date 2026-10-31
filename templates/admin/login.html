@@ -8,7 +8,7 @@
     <title>ورود مدیریت — {{ settings.site_name|default:"پیکسوریا" }}</title>
     <meta name="robots" content="noindex" />
 
-    {# استایل‌های مشترک (بدون هدر و فوتر سایت) #}
+    {% comment %} استایل‌های مشترک (بدون هدر و فوتر سایت) {% endcomment %}
     {% if settings.favicon %}
       <link rel="icon" href="{{ settings.favicon.url }}" sizes="any" />
     {% else %}
@@ -17,6 +17,15 @@
     {% endif %}
     <link rel="stylesheet" href="{% static 'fonts/font_urls.css' %}" />
     <link rel="stylesheet" href="{% static 'css/tailwind.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/motion.css' %}" />
+    <script>
+      (function () {
+        document.documentElement.classList.add("motion");
+        setTimeout(function () {
+          if (!window.__pixoriaBooted) document.documentElement.classList.remove("motion");
+        }, 3000);
+      })();
+    </script>
     <style>
       body { background: var(--ink); }
       form input[type="text"], form input[type="password"], form input[type="email"] {
@@ -38,7 +47,7 @@
   </head>
   <body class="min-h-screen font-sans text-cream/70 antialiased">
     <div class="mx-auto flex min-h-screen max-w-[1100px] flex-col gap-10 px-6 py-10 lg:flex-row lg:items-stretch lg:gap-16">
-      {# ─── برند سمت راست ─── #}
+      {% comment %} ─── برند سمت راست ─── {% endcomment %}
       <section class="flex flex-col justify-between gap-10 lg:w-[42%]">
         <a href="{% url 'home:home' %}" class="inline-flex items-center" aria-label="{{ settings.site_name|default:'پیکسوریا' }}">
           {% if settings.logo %}
@@ -70,7 +79,7 @@
         {% endif %}
       </section>
 
-      {# ─── فرم ورود ─── #}
+      {% comment %} ─── فرم ورود ─── {% endcomment %}
       <section class="flex flex-1 items-center">
         <div class="glass w-full max-w-[440px] p-[clamp(24px,4vw,40px)]" style="border-radius: 2rem">
           <div class="mb-7">
@@ -119,9 +128,8 @@
       </section>
     </div>
 
-    {# کتابخانه‌ها — همه محلی، بدون CDN #}
-    <script defer src="{% static 'js/vendor/gsap.min.js' %}"></script>
-    <script defer src="{% static 'js/vendor/ScrollTrigger.min.js' %}"></script>
+    {% comment %} کتابخانه‌ها — همه محلی و بدون CDN؛ هیچ GSAP ای در پروژه نیست {% endcomment %}
+    {% comment %} لایهٔ تعاملات + حرکتِ CSS (static/css/motion.css) {% endcomment %}
     <script type="module" src="{% static 'js/pixoria.js' %}"></script>
   </body>
 </html>

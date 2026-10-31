@@ -6,6 +6,7 @@ from django.utils.html import strip_tags
 from tinymce.models import HTMLField
 
 from apps.core.image_utils import WebPImageMixin
+from apps.core.text_utils import strip_highlight
 
 
 class Category(models.Model):
@@ -140,14 +141,16 @@ class Article(WebPImageMixin, models.Model):
         super().save(*args, **kwargs)
 
     def get_meta_title(self):
-        return self.meta_title or self.title
+        """عنوان متا یا fallback به عنوانِ مقاله — متنِ ساده (بدونِ مارکرِ [[ ]])."""
+        return strip_highlight(self.meta_title or self.title)
 
     def get_meta_description(self):
-        return self.meta_description or self.excerpt
+        """توضیحات متا یا fallback به توضیحاتِ کوتاه — متنِ ساده."""
+        return strip_highlight(self.meta_description or self.excerpt)
 
     def get_cover_alt(self):
-        """متن جایگزین کاور یا fallback به عنوان مقاله (دسترس‌پذیری)."""
-        return self.cover_image_alt or self.title
+        """متن جایگزین کاور یا fallback به عنوان مقاله (دسترس‌پذیری) — متنِ ساده."""
+        return strip_highlight(self.cover_image_alt or self.title)
 
     def is_updated(self):
         return (self.updated_at - self.published_at).days >= 1

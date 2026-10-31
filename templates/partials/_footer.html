@@ -1,4 +1,4 @@
-{% load icon_tags nav_tags fa_digits %}
+{% load icon_tags nav_tags fa_digits highlight_tags %}
 {% comment %}فوتر — برند و تماس، ستون‌های لینک (FooterLinkGroup)، خدمات و کارت‌های
 اعتماد (اینماد/ساماندهی)؛ همهٔ محتوا از دیتابیس می‌آید.{% endcomment %}
 <footer id="contact" class="relative overflow-hidden bg-ink3">
@@ -13,16 +13,14 @@
       fill="#121214"
     />
   </svg>
-  {% include "partials/_space_layer.html" with stars_only="1" %}
-  <div
-    class="pixel-bg pointer-events-none absolute inset-0 opacity-20"
-    aria-hidden="true"
-  ></div>
-
+  <div class="hx-field__top" aria-hidden="true"></div>
+  {% comment %} پس‌زمینهٔ «میدانِ زنده» — همان موتورِ هیرو (hero-field.js) {% endcomment %}
+  <canvas class="hx-field" data-hx-field aria-hidden="true"></canvas>
+  <div class="hx-field__haze" aria-hidden="true"></div>
   <div class="relative z-10 mx-auto max-w-7xl px-6 pb-10 pt-36 md:pt-44">
     <div class="grid gap-14 lg:grid-cols-12">
-      {# برند و اطلاعات تماس #}
-      <div class="lg:col-span-4" data-reveal="up">
+      {% comment %} برند و اطلاعات تماس {% endcomment %}
+      <div class="lg:col-span-4" data-reveal="clip">
         <div class="flex items-center gap-3">
           {% include "partials/_brand_lockup.html" with word_class="text-2xl" %}
         </div>
@@ -33,7 +31,7 @@
             {% if settings.established_year %}<br />از سال {{ settings.established_year }}{% endif %}
           </p>
         {% endif %}
-        {% if settings.phone or settings.phone_secondary or settings.email or settings.website %}
+        {% if settings.phone or settings.phone_secondary or settings.website %}
           <ul class="mt-8 space-y-4 text-sm text-cream/70">
             {% if settings.phone %}
               <li>
@@ -61,14 +59,6 @@
                 </a>
               </li>
             {% endif %}
-            {% if settings.email %}
-              <li>
-                <a href="mailto:{{ settings.email }}" class="flex items-center gap-3 transition hover:text-gold-light">
-                  {% icon "mail" class="h-4 w-4 text-gold" %}
-                  <span dir="ltr" class="font-latin tracking-wide">{{ settings.email }}</span>
-                </a>
-              </li>
-            {% endif %}
             {% if settings.website %}
               <li>
                 <a href="{{ settings.website }}" class="flex items-center gap-3 transition hover:text-gold-light">
@@ -90,9 +80,9 @@
         {% endif %}
       </div>
 
-      {# ستون‌های لینک دلخواه (از پنل ادمین) #}
+      {% comment %} ستون‌های لینک دلخواه (از پنل ادمین) {% endcomment %}
       {% for group in footer_groups %}
-        <nav class="lg:col-span-2" aria-label="{{ group.title }}" data-reveal="up" data-delay="0.1">
+        <nav class="lg:col-span-2" aria-label="{{ group.title }}" data-reveal="rise" data-delay="0.1">
           <h3 class="footer-h">{{ group.title }}</h3>
           <ul class="space-y-3.5 text-sm">
             {% for link in group.links.all %}
@@ -102,21 +92,21 @@
         </nav>
       {% endfor %}
 
-      {# خدمات #}
+      {% comment %} خدمات {% endcomment %}
       {% if services_footer %}
-        <nav class="lg:col-span-3" aria-label="خدمات" data-reveal="up" data-delay="0.16">
+        <nav class="lg:col-span-3" aria-label="خدمات" data-reveal="rise" data-delay="0.16">
           <h3 class="footer-h">خدمات</h3>
           <ul class="space-y-3.5 text-sm">
             {% for service in services_footer %}
-              <li><a class="f-link" href="{% url 'services:detail' service.slug %}">{{ service.title }}</a></li>
+              <li><a class="f-link" href="{% url 'services:detail' service.slug %}">{{ service.title|plain }}</a></li>
             {% endfor %}
           </ul>
         </nav>
       {% endif %}
 
-      {# اعتماد و امنیت (جایگاه اینماد و ساماندهی) #}
+      {% comment %} اعتماد و امنیت (جایگاه اینماد و ساماندهی) {% endcomment %}
       {% if settings.trust_first_title or settings.trust_second_title %}
-        <div class="lg:col-span-3" data-reveal="left" data-delay="0.2">
+        <div class="lg:col-span-3" data-reveal="blur" data-delay="0.2">
           <h3 class="footer-h">اعتماد و امنیت</h3>
           <div class="mt-4 grid grid-cols-2 gap-4">
             {% if settings.trust_first_title %}
@@ -149,7 +139,7 @@
       {% endif %}
     </div>
 
-    {# کپی‌رایت #}
+    {% comment %} کپی‌رایت {% endcomment %}
     <div
       class="mt-16 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-8 text-xs text-cream/40 md:flex-row"
     >

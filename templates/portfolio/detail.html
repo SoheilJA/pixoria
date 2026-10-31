@@ -1,20 +1,20 @@
 {% extends 'base.html' %}
 {% load icon_tags highlight_tags fa_digits projects_tags json_tags %}
 
-{% block title %}{{ portfolio.title|striptags }} — {{ settings.site_name }}{% endblock %}
+{% block title %}{{ portfolio.title|plain|striptags }} — {{ settings.site_name }}{% endblock %}
 {% block description %}{{ portfolio.get_meta_description|striptags }}{% endblock %}
-{% block og_title %}{{ portfolio.title|striptags }} — {{ settings.site_name }}{% endblock %}
+{% block og_title %}{{ portfolio.title|plain|striptags }} — {{ settings.site_name }}{% endblock %}
 {% block og_description %}{{ portfolio.get_meta_description|striptags }}{% endblock %}
 
 {% block extra_head %}
-  {# داده‌های ساختاریافته — اثر خلاقانه + مسیر نمایش #}
+  {% comment %} داده‌های ساختاریافته — اثر خلاقانه + مسیر نمایش {% endcomment %}
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@graph": [
         {
           "@type": "CreativeWork",
-          "name": {{ portfolio.title|striptags|json }},
+          "name": {{ portfolio.title|plain|striptags|json }},
           "description": {{ portfolio.get_meta_description|striptags|json }},
           "url": "{{ request.build_absolute_uri }}",
           {% if portfolio.image %}"image": "{{ request.build_absolute_uri }}{{ portfolio.image.url }}",{% endif %}
@@ -42,7 +42,7 @@
             {
               "@type": "ListItem",
               "position": 3,
-              "name": {{ portfolio.title|striptags|json }},
+              "name": {{ portfolio.title|plain|striptags|json }},
               "item": "{{ request.build_absolute_uri }}"
             }
           ]
@@ -76,12 +76,12 @@
           aria-hidden="true">project</span>
 
     <div class="relative z-10 mx-auto max-w-7xl px-6 pb-28 pt-36 md:pt-48">
-      {# مسیر نمایش — خانه ← نمونه‌کارها ← پروژهٔ فعلی #}
+      {% comment %} مسیر نمایش — خانه ← نمونه‌کارها ← پروژهٔ فعلی {% endcomment %}
       {% include "components/_breadcrumb.html" %}
 
-      {# دسته‌بندی‌های پروژه — هر چیپ به آرشیو فیلترشده لینک می‌شود #}
+      {% comment %} دسته‌بندی‌های پروژه — هر چیپ به آرشیو فیلترشده لینک می‌شود {% endcomment %}
       {% if portfolio.categories.all %}
-        <div class="mt-7 flex flex-wrap gap-2.5" data-reveal="up" data-delay="0.06">
+        <div class="mt-7 flex flex-wrap gap-2.5" data-reveal="pop" data-delay="0.06">
           {% for category in portfolio.categories.all %}
             <a href="{{ category.filter_url }}" class="s-chip transition-colors hover:border-gold/60 hover:text-gold-light">
               {% icon "layers" class="h-3.5 w-3.5 text-gold" %}
@@ -92,19 +92,19 @@
       {% endif %}
 
       <h1 class="mt-7 max-w-3xl text-[2.4rem] font-extrabold leading-[1.2] sm:text-5xl lg:text-6xl"
-          data-reveal="right">
+          data-reveal="mask">
         {{ portfolio.title|highlight }}
       </h1>
 
       {% if portfolio.excerpt %}
         <p class="mt-6 max-w-2xl text-lg font-light leading-8 text-cream/70"
-           data-reveal="right" data-delay="0.12">
+           data-reveal="blur" data-delay="0.12">
           {{ portfolio.excerpt }}
         </p>
       {% endif %}
 
-      {# اطلاعات مشتری — کپسول‌های شیشه‌ای #}
-      <div class="mt-12 grid max-w-4xl grid-cols-2 gap-4 md:grid-cols-4" data-reveal="up" data-delay="0.18">
+      {% comment %} اطلاعات مشتری — کپسول‌های شیشه‌ای {% endcomment %}
+      <div class="mt-12 grid max-w-4xl grid-cols-2 gap-4 md:grid-cols-4" data-reveal="scale" data-delay="0.18">
         <div class="glass flex flex-col gap-2 p-5" style="border-radius: 1.5rem 0.6rem 1.5rem 0.6rem">
           <span class="icon-ring h-9 w-9">{% icon "users" class="h-4 w-4" %}</span>
           <span class="text-[10px] font-medium tracking-wider text-cream/40">مشتری</span>
@@ -131,8 +131,8 @@
         {% endif %}
       </div>
 
-      {# دکمه‌ها — بازگشت به آرشیو و سایت پروژه #}
-      <div class="mt-10 flex flex-wrap gap-4" data-reveal="up" data-delay="0.24">
+      {% comment %} دکمه‌ها — بازگشت به آرشیو و سایت پروژه {% endcomment %}
+      <div class="mt-10 flex flex-wrap gap-4" data-reveal="pop" data-delay="0.24">
         <a href="{% url 'portfolio:list' %}" class="btn btn-ghost px-7 py-3.5" data-magnetic>
           {% icon "arrow-right" class="h-4 w-4" %}
           همهٔ نمونه‌کارها
@@ -157,9 +157,9 @@
       <div class="relative z-10 mx-auto max-w-7xl px-6 pb-24 pt-20 md:pt-28">
         <figure class="relative overflow-hidden border border-gold/25"
                 style="border-radius: 2.5rem 1rem 2.5rem 1rem"
-                data-reveal="up">
+                data-reveal="clip">
           <img src="{{ portfolio.image.url }}"
-                 alt="{{ portfolio.image_alt|default:portfolio.title }}"
+                 alt="{{ portfolio.image_alt|default:portfolio.title|plain }}"
                  loading="eager" fetchpriority="high" decoding="async"
                  class="block h-auto w-full object-cover">
         </figure>
@@ -171,8 +171,8 @@
   <section class="relative bg-cream" style="border-radius: 3rem 9rem 0 0">
     <div class="relative z-10 mx-auto max-w-7xl px-6 pb-24 pt-28 md:pt-36">
       <div class="grid items-start gap-14 lg:grid-cols-12">
-        {# ستون کناری — چسبان می‌ماند تا همراه متن اسکرول شود #}
-        <div class="lg:col-span-4 lg:sticky lg:top-28" data-reveal="right">
+        {% comment %} ستون کناری — چسبان می‌ماند تا همراه متن اسکرول شود {% endcomment %}
+        <div class="lg:col-span-4 lg:sticky lg:top-28" data-reveal="rise">
           <p class="eyebrow eyebrow-dark">دربارهٔ پروژه</p>
           <h2 class="mt-5 text-3xl font-extrabold leading-[1.3] text-paper md:text-4xl">
             ماجرا چه بود؟
@@ -189,8 +189,8 @@
           {% endif %}
         </div>
 
-        {# متن کامل — تایپوگرافیِ محتوای غنی (T38) #}
-        <div class="prose-ink lg:col-span-8" data-reveal="right" data-delay="0.1">
+        {% comment %} متن کامل — تایپوگرافیِ محتوای غنی (T38) {% endcomment %}
+        <div class="prose-ink lg:col-span-8" data-reveal="blur" data-delay="0.1">
           {{ portfolio.description|linebreaks }}
         </div>
       </div>
@@ -205,7 +205,7 @@
           {% if portfolio.challenge %}
             <article class="glass-light relative overflow-hidden p-8 md:p-10"
                      style="border-radius: 2.5rem 1rem 2.5rem 1rem"
-                     data-reveal="up">
+                     data-reveal="rise">
               <span class="icon-ring mb-6">{% icon "alert-circle" class="h-5 w-5" %}</span>
               <p class="eyebrow eyebrow-dark">چالش</p>
               <h3 class="mt-4 text-2xl font-extrabold leading-tight text-paper">مشکل کجا بود؟</h3>
@@ -217,7 +217,7 @@
           {% if portfolio.solution %}
             <article class="glass-light relative overflow-hidden p-8 md:p-10"
                      style="border-radius: 1rem 2.5rem 1rem 2.5rem"
-                     data-reveal="up" data-delay="0.1">
+                     data-reveal="blur" data-delay="0.1">
               <span class="icon-ring mb-6">{% icon "rocket" class="h-5 w-5" %}</span>
               <p class="eyebrow eyebrow-dark">راهکار</p>
               <h3 class="mt-4 text-2xl font-extrabold leading-tight text-paper">چطور حلش کردیم؟</h3>
@@ -242,9 +242,9 @@
       <div class="relative z-10 mx-auto max-w-7xl px-6 pb-28 pt-32 md:pt-40">
         {% if portfolio.stats.all %}
           <div class="text-center">
-            <p class="eyebrow eyebrow-c justify-center" data-reveal="up">نتایج</p>
+            <p class="eyebrow eyebrow-c justify-center" data-reveal="rise">نتایج</p>
             <h2 class="mt-5 text-4xl font-extrabold leading-[1.3] md:text-[2.7rem]"
-                data-reveal="up" data-delay="0.08">
+                data-reveal="mask" data-delay="0.08">
               چه دستاوردی داشتیم؟
             </h2>
           </div>
@@ -253,7 +253,7 @@
             {% for stat in portfolio.stats.all %}
               <div class="stat-card glass tilt relative overflow-hidden p-7 text-center"
                    style="border-radius: {% cycle '1.75rem' '1.25rem' %}"
-                   data-reveal="up" data-delay="{% cycle '0' '0.1' '0.2' '0.3' %}">
+                   data-reveal="rise" data-delay="{% cycle '0' '0.1' '0.2' '0.3' %}">
                 <span class="glare" aria-hidden="true"></span>
                 {% if stat.icon %}
                   <span class="stat-icon">{% icon stat.icon class="h-5 w-5" %}</span>
@@ -270,9 +270,9 @@
           </div>
         {% endif %}
 
-        {# نظر مشتری — کارت متنی کنار نتایج #}
+        {% comment %} نظر مشتری — کارت متنی کنار نتایج {% endcomment %}
         {% if portfolio.testimonial %}
-          <div class="mt-16" data-reveal="up">
+          <div class="mt-16" data-reveal="clip">
             <div class="mx-auto max-w-2xl">
               {% include "components/_testimonial_card.html" with t=portfolio.testimonial %}
             </div>
@@ -291,9 +291,9 @@
 
       <div class="relative z-10 mx-auto max-w-7xl px-6 pb-28 pt-32 md:pt-40">
         <div class="text-center">
-          <p class="eyebrow eyebrow-c justify-center" data-reveal="up">گالری</p>
+          <p class="eyebrow eyebrow-c justify-center" data-reveal="rise">گالری</p>
           <h2 class="mt-5 text-4xl font-extrabold leading-[1.3] md:text-[2.7rem]"
-              data-reveal="up" data-delay="0.08">
+              data-reveal="mask" data-delay="0.08">
             نگاهی دقیق‌تر
           </h2>
         </div>
@@ -302,9 +302,9 @@
           {% for image in portfolio.gallery.all %}
             <figure class="group relative overflow-hidden border border-white/8"
                     style="border-radius: {% cycle '1.75rem' '1rem' '1.5rem 0.75rem' %}"
-                    data-reveal="up" data-delay="{% cycle '0' '0.08' '0.16' %}">
+                    data-reveal="rise" data-delay="{% cycle '0' '0.08' '0.16' %}">
               <img src="{{ image.image.url }}"
-                   alt="{{ image.alt|default:portfolio.title }}"
+                   alt="{{ image.alt|default:portfolio.title|plain }}"
                    loading="lazy" decoding="async"
                    class="block h-auto w-full object-cover transition-transform duration-700 group-hover:scale-[1.05]">
               {% if image.caption %}
@@ -330,24 +330,24 @@
     <div class="relative z-10 mx-auto max-w-7xl px-6 pb-28 pt-32 md:pt-40">
       <div class="flex flex-wrap items-end justify-between gap-6">
         <div>
-          <p class="eyebrow" data-reveal="up">پروژه‌های دیگر</p>
+          <p class="eyebrow" data-reveal="rise">پروژه‌های دیگر</p>
           <h2 class="mt-5 text-4xl font-extrabold leading-[1.3] md:text-[2.7rem]"
-              data-reveal="right" data-delay="0.08">
+              data-reveal="mask" data-delay="0.08">
             کارهای دیگرِ ما
           </h2>
         </div>
-        <a href="{% url 'portfolio:list' %}" class="more-link text-base" data-reveal="left">
+        <a href="{% url 'portfolio:list' %}" class="more-link text-base" data-reveal="pop">
           همهٔ نمونه‌کارها
           {% icon "arrow-left" class="h-4 w-4" %}
         </a>
       </div>
 
-      {# کاروسل پروژه‌های مرتبط — پروژهٔ فعلی حذف می‌شود #}
-      <div class="mt-14" data-reveal="up">
+      {% comment %} کاروسل پروژه‌های مرتبط — پروژهٔ فعلی حذف می‌شود {% endcomment %}
+      <div class="mt-14" data-reveal="clip">
         {% projects_carousel exclude=portfolio limit=6 %}
       </div>
 
-      {# ناوبری پروژهٔ قبلی و بعدی #}
+      {% comment %} ناوبری پروژهٔ قبلی و بعدی {% endcomment %}
       <nav class="mt-16 grid grid-cols-1 gap-5 border-t border-white/8 pt-10 md:grid-cols-2"
            aria-label="پروژه‌های دیگر" data-reveal="up">
         {% if prev_portfolio %}
@@ -359,7 +359,7 @@
               پروژهٔ قبلی
             </span>
             <span class="text-lg font-bold text-cream transition-colors group-hover:text-gold-light">
-              {{ prev_portfolio.title }}
+              {{ prev_portfolio.title|highlight }}
             </span>
             {% if prev_portfolio.service_type %}
               <span class="text-xs text-cream/45">{{ prev_portfolio.service_type }}</span>
@@ -375,7 +375,7 @@
               {% icon "arrow-left" class="h-3.5 w-3.5" %}
             </span>
             <span class="text-lg font-bold text-cream transition-colors group-hover:text-gold-light">
-              {{ next_portfolio.title }}
+              {{ next_portfolio.title|highlight }}
             </span>
             {% if next_portfolio.service_type %}
               <span class="text-xs text-cream/45">{{ next_portfolio.service_type }}</span>

@@ -4,15 +4,13 @@ GET صفحه را رندر می‌کند و POST (فقط از طریق HTMX) ف�
 در `ContactSubmission` ذخیره می‌کند. در پاسخ، همان فرم به‌همراه خطاها یا حالت
 موفقیت برمی‌گردد — هر دو با ۲۰۰ تا htmx بدون تنظیمات اضافه swap کند."""
 
-from django.conf import settings
 from django.core.cache import cache
-from django.core.mail import send_mail
 from django.shortcuts import render
 from django.views.decorators.cache import never_cache
 from django.views.decorators.http import require_http_methods
 
 from apps.core.context_utils import crumbs
-from apps.core.models import SiteSettings, SocialLink
+from apps.core.models import SocialLink
 from apps.services.models import Service
 
 from .forms import ContactSubmissionForm
@@ -156,33 +154,4 @@ def _handle_submit(request):
     submission = form.save()
     cache.set(key, cache.get(key, 0) + 1, RATE_WINDOW)
 
-    # اعلان ایمیلی فقط اگر تنظیمات ایمیل از قبل موجود باشد — و هرگز نباید
-    # شکستِ سرور ایمیل، ثبت پیام کاربر را خراب کند.
-    _maybe_notify(submission)
-
     return render(request, "contact/_contact_success.html", _page_context())
-
-
-def _maybe_notify(submission):
-    """اگر EMAIL_HOST تنظیم شده باشد، رونوشت پیام را به ایمیل سایت می‌فرستد."""
-    if not getattr(settings, "EMAIL_HOST", None):
-        return
-    site = SiteSettings.objects.first()
-    if not site or not site.email:
-        return
-    try:
-        send_mail(
-            subject=f"پیام جدید از صفحهٔ تماس: {submission.subject or 'بدون موضوع'}",
-            message=(
-                f"نام: {submission.name}\n"
-                f"ایمیل: {submission.email}\n"
-                f"تلفن: {submission.phone or '—'}\n"
-                f"موضوع: {submission.subject or '—'}\n\n"
-                f"{submission.message}"
-            ),
-            from_email=settings.DEFAULT_FROM_EMAIL or site.email,
-            recipient_list=[site.email],
-            fail_silently=True,
-        )
-    except Exception:  # noqa: BLE001 — ایمیل هرگز نباید فرم را بشکند
-        pass

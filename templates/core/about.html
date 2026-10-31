@@ -9,7 +9,7 @@
 {% endblock %}
 
 {% block extra_head %}
-  {# داده‌های ساختاریافته — سازمان، صفحهٔ درباره ما و مسیر نمایش #}
+  {% comment %} داده‌های ساختاریافته — سازمان، صفحهٔ درباره ما و مسیر نمایش {% endcomment %}
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -19,7 +19,6 @@
           "name": "{{ settings.site_name }}",
           "url": "{{ settings.website|default:request.build_absolute_uri }}",
           {% include "partials/_json_logo.html" %}
-          {% if settings.email %}"email": "{{ settings.email }}",{% endif %}
           {% include "partials/_json_telephone.html" %}
           {% if settings.established_year %}"foundingDate": "{{ settings.established_year }}",{% endif %}
           "address": {
@@ -100,24 +99,24 @@
         <div>
           <div class="mb-5">{% include "components/_breadcrumb.html" %}</div>
           {% if hero.eyebrow %}
-            <p class="eyebrow" data-reveal="up">{{ hero.eyebrow }}</p>
+            <p class="eyebrow" data-reveal="rise">{{ hero.eyebrow }}</p>
           {% endif %}
           <h1
             class="mt-6 text-[2.6rem] font-extrabold leading-[1.25] sm:text-5xl lg:text-6xl"
-            data-reveal="right"
+            data-reveal="mask"
           >
             {{ hero.title|highlight }}
           </h1>
           <p
             class="mt-6 max-w-xl text-lg font-light leading-8 text-cream/70"
-            data-reveal="right"
+            data-reveal="blur"
             data-delay="0.12"
           >
             {{ hero.description }}
           </p>
           <div
             class="mt-10 flex flex-wrap gap-4"
-            data-reveal="right"
+            data-reveal="pop"
             data-delay="0.2"
           >
             <a
@@ -142,7 +141,7 @@
         {% if services %}
           <nav
             class="relative mx-auto w-full max-w-[27rem]"
-            data-reveal="left"
+            data-reveal="clip"
             data-delay="0.15"
             aria-label="خدمات پیکسوریا"
           >
@@ -165,7 +164,7 @@
                     >
                       <span class="ss-up">
                         {% icon service.icon %}
-                        <span class="ss-label">{{ service.title }}</span>
+                        <span class="ss-label">{{ service.title|plain }}</span>
                       </span>
                     </a>
                   </div>
@@ -209,21 +208,21 @@
         <div class="grid items-center gap-14 lg:grid-cols-12">
           <div class="lg:col-span-7">
             {% if story.eyebrow %}
-              <p class="eyebrow eyebrow-dark" data-reveal="up">
+              <p class="eyebrow eyebrow-dark" data-reveal="rise">
                 {{ story.eyebrow }}
               </p>
             {% endif %}
             {% if story.title %}
               <h2
                 class="mt-5 text-4xl font-extrabold leading-[1.3] text-paper md:text-5xl"
-                data-reveal="right"
+                data-reveal="mask"
               >
                 {{ story.title|highlight:"dark" }}
               </h2>
             {% endif %}
             <p
               class="mt-7 text-xl font-light leading-9 text-coy"
-              data-reveal="right"
+              data-reveal="blur"
               data-delay="0.1"
             >
               {{ story.description }}
@@ -231,7 +230,7 @@
             {% if story.body %}
               <div
                 class="mt-5 space-y-4 font-light leading-8 text-coy"
-                data-reveal="right"
+                data-reveal="blur"
                 data-delay="0.16"
               >
                 {{ story.body|linebreaks }}
@@ -240,7 +239,7 @@
             {% if story.get_chips_list %}
               <ul
                 class="mt-8 flex flex-wrap gap-3"
-                data-reveal="right"
+                data-reveal="pop"
                 data-delay="0.28"
               >
                 {% for chip in story.get_chips_list %}
@@ -250,7 +249,7 @@
             {% endif %}
           </div>
 
-          <figure class="relative lg:col-span-5" data-reveal="left">
+          <figure class="relative lg:col-span-5" data-reveal="clip">
             {% if settings.established_year %}
               <span
                 class="stroke-title-light pointer-events-none absolute -top-14 left-0 select-none text-[7rem] font-extrabold leading-none"
@@ -268,7 +267,7 @@
                 style="border-radius: 5rem 1.25rem 5rem 1.25rem; border: 1px solid rgba(201,161,90,0.5);"
               />
             {% else %}
-              {# تصویری بارگذاری نشده — یک مصورکِ مدار/سیاره به‌جای جای خالی #}
+              {% comment %} تصویری بارگذاری نشده — یک مصورکِ مدار/سیاره به‌جای جای خالی {% endcomment %}
               <div
                 class="grid aspect-[4/3] w-full place-items-center overflow-hidden bg-cream2"
                 style="border-radius: 5rem 1.25rem 5rem 1.25rem; border: 1px solid rgba(201,161,90,0.35);"
@@ -296,7 +295,7 @@
         {% if story.quote %}
           <blockquote
             class="relative mx-auto mt-24 max-w-3xl text-center"
-            data-reveal="up"
+            data-reveal="scale"
           >
             {% icon "quote" class="mx-auto h-10 w-10 text-gold-dark/60" %}
             <p
@@ -338,13 +337,13 @@
       >
         <div class="text-center">
           {% if journey.eyebrow %}
-            <p class="eyebrow eyebrow-c justify-center" data-reveal="up">
+            <p class="eyebrow eyebrow-c justify-center" data-reveal="rise">
               {{ journey.eyebrow }}
             </p>
           {% endif %}
           <h2
             class="mt-5 text-4xl font-extrabold leading-[1.3] md:text-[2.7rem]"
-            data-reveal="up"
+            data-reveal="mask"
             data-delay="0.08"
           >
             {{ journey.title|highlight }}
@@ -352,7 +351,7 @@
           {% if journey.subtitle %}
             <p
               class="mx-auto mt-4 max-w-xl font-light leading-8 text-cream/60"
-              data-reveal="up"
+              data-reveal="blur"
               data-delay="0.14"
             >
               {{ journey.subtitle }}
@@ -363,7 +362,7 @@
         {% comment %}نقشهٔ مسیر (دسکتاپ) — گره‌ها و مسیر از دیتابیس ساخته می‌شوند{% endcomment %}
         <div
           class="relative mt-10 hidden lg:block"
-          data-reveal="up"
+          data-reveal="clip"
           data-delay="0.2"
           style="aspect-ratio: 1000/340"
         >
@@ -432,7 +431,7 @@
         </div>
 
         {% comment %}نسخهٔ موبایل — خط زمانی ساده{% endcomment %}
-        <div class="relative mt-14 lg:hidden" data-reveal="up">
+        <div class="relative mt-14 lg:hidden" data-reveal="rise">
           <span
             class="absolute bottom-2 right-[5px] top-2 w-[2px] bg-gradient-to-b from-transparent via-gold/50 to-transparent"
             aria-hidden="true"
@@ -471,7 +470,7 @@
         <div
           class="glass-light relative overflow-hidden p-8 md:p-12"
           style="border-radius: 3rem 1rem 3rem 1rem"
-          data-reveal="up"
+          data-reveal="scale"
         >
           <span
             class="pointer-events-none absolute -left-8 -top-10 h-36 w-36 rounded-full"
@@ -506,72 +505,5 @@
     </section>
   {% endif %}
 
-  {% comment %}دیوار برندها (تیره){% endcomment %}
-  {% if clients_section and clients %}
-    <section id="clients" class="relative overflow-hidden bg-ink">
-      <svg
-        class="divider"
-        viewBox="0 0 1440 90"
-        preserveAspectRatio="none"
-        aria-hidden="true"
-      >
-        <path
-          d="M0,58 C320,12 640,78 960,42 C1200,14 1360,62 1440,32 L1440,0 L0,0 Z"
-          fill="#efece5"
-        />
-      </svg>
-      <span
-        class="font-latin stroke-title pointer-events-none absolute -left-6 bottom-8 select-none text-[13rem] font-light leading-none"
-        aria-hidden="true"
-        >trust</span
-      >
-
-      <div
-        class="relative z-10 mx-auto max-w-5xl px-6 pb-28 pt-32 text-center md:pt-40"
-      >
-        {% if clients_section.eyebrow %}
-          <p class="eyebrow eyebrow-c justify-center" data-reveal="up">
-            {{ clients_section.eyebrow }}
-          </p>
-        {% endif %}
-        <h2
-          class="mt-5 text-4xl font-extrabold leading-[1.3] md:text-[2.7rem]"
-          data-reveal="up"
-          data-delay="0.08"
-        >
-          {{ clients_section.title|highlight }}
-        </h2>
-        {% if clients_section.subtitle %}
-          <p
-            class="mx-auto mt-4 max-w-xl font-light leading-8 text-cream/60"
-            data-reveal="up"
-            data-delay="0.14"
-          >
-            {{ clients_section.subtitle }}
-          </p>
-        {% endif %}
-
-        <ul
-          class="mt-14 flex flex-wrap items-center justify-center gap-x-7 gap-y-6"
-          data-reveal="up"
-          data-delay="0.2"
-        >
-          {% for client in clients %}
-            <li class="flex items-center gap-7">
-              <span
-                class="cursor-default text-xl font-medium text-cream/65 transition-colors duration-300 hover:text-gold-light md:text-2xl"
-                >{{ client.name }}</span
-              >
-              {% if not forloop.last %}
-                <span
-                  class="h-2 w-2 rotate-45 bg-gold/70"
-                  aria-hidden="true"
-                ></span>
-              {% endif %}
-            </li>
-          {% endfor %}
-        </ul>
-      </div>
-    </section>
-  {% endif %}
+  {% comment %}دیوار برندها حذف شد — دیگر دادهٔ برندِ همکاری وجود ندارد.{% endcomment %}
 {% endblock %}

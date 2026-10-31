@@ -8,13 +8,13 @@
   <nav
     aria-label="مسیر صفحه"
     class="text-sm md:text-base {% if theme == "light" %}text-ink/70{% else %}text-cream/70{% endif %}"
-    data-reveal="up"
+    data-reveal="rise"
   >
     <ol class="flex flex-wrap items-center gap-x-1.5 gap-y-1">
       {% for item in crumbs %}
         <li class="flex items-center gap-1.5">
           {% if not forloop.first %}
-            {# جداکنندهٔ چپ‌نما (RTL) #}
+            {% comment %} جداکنندهٔ چپ‌نما (RTL) {% endcomment %}
             <span
               aria-hidden="true"
               class="{% if theme == "light" %}text-gold-dark{% else %}text-gold/80{% endif %}"

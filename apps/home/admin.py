@@ -21,14 +21,6 @@ class HeroSectionAdmin(admin.ModelAdmin):
         return not HeroSection.objects.exists()
 
 
-@admin.register(HeroStat)
-class HeroStatAdmin(IconPreviewMixin, admin.ModelAdmin):
-    form = IconPickerForm
-    list_display = ["icon_preview", "value", "label", "icon", "order", "is_active"]
-    list_editable = ["value", "label", "icon", "order", "is_active"]
-    list_display_links = ["icon_preview"]
-
-
 class HomeAboutStatInline(IconPreviewMixin, admin.TabularInline):
     form = IconPickerForm
     model = HomeAboutStat
@@ -56,15 +48,6 @@ class HomeAboutStatAdmin(IconPreviewMixin, admin.ModelAdmin):
     list_display_links = ["icon_preview", "label"]
 
 
-@admin.register(TrustedSection)
-class TrustedSectionAdmin(admin.ModelAdmin):
-    list_display = ["title", "eyebrow"]
-    fields = ["eyebrow", "title", "description", "footer_label"]
-
-    def has_add_permission(self, request):
-        return not TrustedSection.objects.exists()
-
-
 @admin.register(TestimonialSection)
 class TestimonialSectionAdmin(admin.ModelAdmin):
     list_display = ["title", "eyebrow"]
@@ -90,17 +73,10 @@ class ServicesSectionAdmin(admin.ModelAdmin):
         return not ServicesSection.objects.exists()
 
 
-@admin.register(ClientMarqueeItem)
-class ClientMarqueeItemAdmin(admin.ModelAdmin):
-    list_display = ["name", "mark", "accent", "order"]
-    list_editable = ["mark", "accent", "order"]
-    list_display_links = ["name"]
-
-
 @admin.register(CTASection)
 class CTASectionAdmin(admin.ModelAdmin):
-    list_display = ["title", "eyebrow", "email", "phone"]
-    fields = ["eyebrow", "title", "description", "email", "phone"]
+    list_display = ["title", "eyebrow", "phone"]
+    fields = ["eyebrow", "title", "description", "phone"]
 
     def has_add_permission(self, request):
         return not CTASection.objects.exists()

@@ -5,11 +5,11 @@ from .icon_utils import validate_icon_name
 from .image_utils import WebPImageMixin
 
 # راهنمای مشترک فیلد آیکون — در چندین مدل تکرار می‌شود تا متن کمکی یکسانی داشته
-# باشد. آیکون‌ها از فونتِ محلی Font Awesome بارگذاری می‌شوند (بدون CDN).
+# باشد. آیکون‌ها از اسپرایتِ محلی Lucide بارگذاری می‌شوند (بدون CDN).
 ICON_HELP = (
-    "نام انگلیسی یک آیکون Font Awesome (نسخهٔ رایگان)، بدون فاصله. "
-    "مثال: bolt، palette، shield-halved. "
-    "لیست کامل آیکون‌ها: fontawesome.com/icons"
+    "نام انگلیسی یک آیکون Lucide، بدون فاصله. "
+    "مثال: bolt، palette، shield-check. "
+    "لیست کامل آیکون‌ها: lucide.dev/icons"
 )
 # راهنمای مشترک فیلد متن بالای عنوان (eyebrow) که در سکشن‌های v2 بالای عنوان
 # می‌آید.
@@ -29,7 +29,6 @@ class SiteSettings(models.Model):
     site_name = models.CharField(max_length=100, verbose_name="نام سایت")
     site_description = models.TextField(verbose_name="توضیحات سایت")
     footer_description = models.TextField(verbose_name="توضیحات فوتر")
-    email = models.EmailField(verbose_name="ایمیل")
     phone = models.CharField(
         max_length=20,
         verbose_name="شماره تماس",
@@ -219,8 +218,8 @@ class SocialLink(models.Model):
         default="globe",
         validators=[validate_icon_name],
         help_text=(
-            "نام انگلیسی یک آیکون Font Awesome. مثال: instagram، linkedin، "
-            "telegram، globe. لیست کامل: fontawesome.com/icons"
+            "نام انگلیسی یک آیکون Lucide. مثال: instagram، linkedin، "
+            "github، globe. لیست کامل: lucide.dev/icons"
         ),
     )
 
@@ -515,35 +514,3 @@ class AboutStat(models.Model):
     def __str__(self):
         return self.label
 
-
-class AboutClientsSection(models.Model):
-    """بخش «اعتماد مشتریان» — دیوار نام برندهای همکار"""
-
-    eyebrow = models.CharField(
-        max_length=100,
-        verbose_name="متن بالای عنوان",
-        blank=True,
-        default="رزومه و اعتماد",
-        help_text=EYEBROW_HELP,
-    )
-    title = models.CharField(
-        max_length=200,
-        verbose_name="عنوان",
-        default="اعتمادِ آن‌ها، [[افتخارِ ما]]",
-        help_text=TITLE_HELP,
-    )
-    subtitle = models.CharField(
-        max_length=300, verbose_name="توضیح کوتاه", blank=True
-    )
-
-    class Meta:
-        verbose_name = "بخش مشتریان صفحه درباره ما"
-        verbose_name_plural = "بخش مشتریان صفحه درباره ما"
-
-    def __str__(self):
-        return "بخش مشتریان"
-
-    def save(self, *args, **kwargs):
-        if not self.pk and AboutClientsSection.objects.exists():
-            raise ValueError("فقط یک سکشن مجاز است")
-        super().save(*args, **kwargs)
