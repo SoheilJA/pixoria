@@ -129,6 +129,7 @@ This is a direct user instruction for the WHOLE redesign; every future section m
 | 12 | CTA (همهٔ صفحات) | `templates/partials/_cta.html` | ✅ | «بازطراحی سکشن CTA (همهٔ صفحات)» |
 | — | Preloader | `templates/base.html` + `static/css/ry.css` + `static/js/ry.js` | ✅ | «بازطراحی پیش‌لودر: تجربه ASCII Art تمام‌صفحه» |
 | 13 | Footer + ghost text | `templates/partials/_footer.html` | ✅ | «بازطراحی فوتر» |
+| — | Static cleanup (CSS/JS) | `base.html`, `static/css/`, `static/js/` | ✅ | «حذف فایل‌های قدیمی hero.css، sections.css، cta-animations.js، anime.min.js» |
 | — | Global review + inner pages (about ✅, services ✅, blog list ✅, blog detail ✅, portfolio list ✅, portfolio detail ✅, contact/404/login ⬜) | — | 🔄 | — |
 
 ## 5. Exact current state
@@ -361,14 +362,17 @@ This is a direct user instruction for the WHOLE redesign; every future section m
 - About stats keep the existing `data-counter` mechanism from pixoria.js (Persian digits)
   inside the new square stat boxes.
 - About section image panel replaced by a Ryoku filmstrip: 1 large framed halftone image +
-  4 thumbnails + "1 / 4" counter + square arrows, driven by tiny vanilla JS in
-  `static/js/ry.js` (`data-ry-filmstrip` scope).
+   4 thumbnails + "1 / 4" counter + square arrows, driven by tiny vanilla JS in
+   `static/js/ry.js` (`data-ry-filmstrip` scope).
+
+- **Cleanup (static files)**: Deleted legacy CSS `hero.css` (old "live field" hero) and `sections.css` (hand-written section styles v1–v4, ~1800 lines) — fully replaced by Ryoku components in `ry.css`. Removed legacy JS `cta-animations.js` (Anime.js-dependent "why"/CTA animations) and `vendor/anime.min.js` — not used in Ryoku (all animations are CSS in `motion.css`). Updated `base.html` to load only `motion.css` + `ry.css`. `hero-field.js` kept (powers hero/footer canvas via `data-hx-field`).
 
 ## 7. Next step
 
 All homepage body sections + CTA + footer + header are DONE. Inner pages DONE:
 about (typographic hero + story + journey + stats), SERVICES (list + detail),
 BLOG (list + detail), PORTFOLIO (list + detail). Remaining: contact/404/login.
+Static cleanup DONE: removed `hero.css`, `sections.css`, `cta-animations.js`, `anime.min.js`.
 One commit per step, update this file before each commit. ASCII-art pass
 (all `ASCII-ART-PLACEHOLDER` spots — currently 5: 2 on about, 3 on service detail)
 happens AFTER the full redesign.
