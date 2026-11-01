@@ -1,13 +1,13 @@
 {% load fa_digits %}
-{% comment %} کارت‌های مقاله — هم برای صفحهٔ اول و هم برای پاسخِ HTMXِ blog:load. {% endcomment %}
-{% comment %} data-reveal-only: کارت‌هایی که بعد از تعویض HTMX اضافه می‌شوند از طریق {% endcomment %}
-{% comment %} data-blog-reveal علامت‌گذاری می‌شوند تا pixoria.js آنیمیشنشان را اجرا کند. {% endcomment %}
+{% comment %} کارت‌های مقاله — هم برای صفحهٔ اول و هم برای پاسخِ HTMXِ blog:load.
+   data-reveal-only: کارت‌هایی که بعد از تعویض HTMX اضافه می‌شوند از طریق
+   data-blog-reveal علامت‌گذاری می‌شوند تا pixoria.js آنیمیشنشان را اجرا کند. {% endcomment %}
 {% for article in articles %}
   {% cycle '0' '0.08' '0.16' '0.24' as card_delay silent %}
-  {% include "components/_article_card.html" with article=article delay=card_delay data_blog_reveal="1" %}
+  {% include "components/_article_card.html" with article=article delay=card_delay index=forloop.counter|stringformat:"02d" ry_reveal="1" %}
 {% empty %}
   {% comment %} وقتی هیچ مقاله‌ای در این دسته نیست {% endcomment %}
-  <p class="col-span-full py-16 text-center text-sm text-cream/40">
+  <p class="col-span-full py-16 text-center text-sm text-sand/40 ry-label-fa">
     مقاله‌ای در این دسته منتشر نشده است.
   </p>
 {% endfor %}

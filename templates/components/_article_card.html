@@ -1,40 +1,43 @@
 {% load icon_tags fa_digits highlight_tags jalali_tags %}
-{% comment %} کارت مقاله — کارتِ مجله برای گرید و کاروسل‌ها. {% endcomment %}
-{% comment %} article: obj  required — نمونه‌ی Article {% endcomment %}
-{% comment %} delay:   str  optional — تاخیر انیمیشن ظهور (پیش‌فرض ۰)؛ چون cycle درون {% endcomment %}
-{% comment %}          یک include ریست می‌شود، فراخواننده باید پلکان را پاس دهد {% endcomment %}
-{% comment %} class:   str  optional — کلاس اضافی روی ریشه {% endcomment %}
-{% comment %} style:   str  optional — style اضافی روی ریشه {% endcomment %}
+{% comment %} کارت مقاله — کارتِ مجله برای گرید و کاروسل‌ها (زبان طراحی Ryoku).
+   article: obj  required — نمونه‌ی Article
+   delay:   str  optional — تاخیر انیمیشن ظهور (پیش‌فرض ۰)
+   class:   str  optional — کلاس اضافی روی ریشه
+   style:   str  optional — style اضافی روی ریشه
+   ry_reveal: str optional — اگر "1" باشد، ry-reveal فعال می‌شود {% endcomment %}
 <a href="{% url 'blog:detail' article.slug %}"
-   class="blog-card glass tilt group relative block overflow-hidden{% if class %} {{ class }}{% endif %}"
-   style="border-radius: 1.75rem;{% if style %} {{ style }}{% endif %}"
-   data-tilt data-reveal="lift" data-delay="{{ delay|default:'0' }}"{% if data_blog_reveal %} data-blog-reveal{% endif %}>
-  <span class="glare" aria-hidden="true"></span>
-  <figure class="relative overflow-hidden" style="border-radius: 1.75rem 1.75rem 0 0">
+   class="ry-reveal ry-pcard group block bg-void{% if class %} {{ class }}{% endif %}"
+   {% if delay %}data-delay="{{ delay }}"{% endif %}
+   {% if style %}style="{{ style }}"{% endif %}
+   {% if ry_reveal %}data-ry-reveal="1"{% endif %}
+   aria-label="{{ article.title|plain }}">
+  <div class="overflow-hidden">
     {% if article.cover_image %}
-      <img src="{{ article.cover_image.url }}"
-           alt="{{ article.get_cover_alt }}"
-           loading="lazy" decoding="async"
-           class="aspect-[16/10] w-full object-cover transition-transform duration-700 group-hover:scale-105">
+      <img
+        src="{{ article.cover_image.url }}"
+        alt="{{ article.get_cover_alt }}"
+        loading="lazy"
+        decoding="async"
+        class="aspect-[16/10] w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+      />
     {% else %}
-      <div class="aspect-[16/10] w-full bg-gradient-to-br from-ink3 to-ink2" aria-hidden="true"></div>
+      <div class="grid aspect-[16/10] w-full place-items-center bg-surface">
+        <span class="ry-label" dir="ltr">{{ index|default:"00" }}</span>
+      </div>
     {% endif %}
-    <div class="absolute inset-0 bg-gradient-to-t from-ink2/90 to-transparent" aria-hidden="true"></div>
-    {% if article.category %}
-      <span class="blog-chip">{{ article.category.title }}</span>
-    {% endif %}
-  </figure>
-  <div class="relative z-10 p-6">
-    <p class="font-latin text-[10px] tracking-[.25em] text-gold/60">
-      <span class="fa-num">{{ article.published_at|fa_jdate }}</span> · {{ article.reading_time|fa_digits }} دقیقه
+  </div>
+  <div class="mt-4">
+    <div class="flex items-baseline justify-between gap-3">
+      <h3 class="ry-serif text-[1.25rem] leading-[1.5] text-sand">{{ article.title|highlight }}</h3>
+      <span class="ry-label" dir="ltr">{{ index|default:"00" }}</span>
+    </div>
+    <p class="ry-label-fa mt-1">
+      {% if article.category %}{{ article.category.title }}{% endif %}
+      {% if article.category and article.published_at %} · {% endif %}
+      {% if article.published_at %}<bdi dir="ltr">{{ article.published_at|fa_jdate }}</bdi>{% endif %}
     </p>
-    <h3 class="mt-3 text-lg font-bold leading-7">{{ article.title|highlight }}</h3>
     {% if article.excerpt %}
-      <p class="mt-3 text-sm leading-7 text-cream/55">{{ article.excerpt }}</p>
+      <p class="mt-2 text-[13.5px] leading-7 text-sand/55">{{ article.excerpt }}</p>
     {% endif %}
-    <span class="mt-5 inline-flex items-center gap-1.5 text-sm text-gold-light transition-all duration-300 group-hover:gap-3">
-      ادامهٔ مطلب
-      {% icon "arrow-left" class="h-4 w-4" %}
-    </span>
   </div>
 </a>

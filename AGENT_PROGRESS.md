@@ -129,7 +129,7 @@ This is a direct user instruction for the WHOLE redesign; every future section m
 | 12 | CTA (همهٔ صفحات) | `templates/partials/_cta.html` | ✅ | «بازطراحی سکشن CTA (همهٔ صفحات)» |
 | — | Preloader | `templates/base.html` + `static/css/ry.css` + `static/js/ry.js` | ✅ | «بازطراحی پیش‌لودر: تجربه ASCII Art تمام‌صفحه» |
 | 13 | Footer + ghost text | `templates/partials/_footer.html` | ✅ | «بازطراحی فوتر» |
-| — | Global review + inner pages (about ✅, services ✅, contact/blog/portfolio/404/login ⬜) | — | 🔄 | — |
+| — | Global review + inner pages (about ✅, services ✅, blog list ✅, blog detail ✅, portfolio list ✅, portfolio detail ✅, contact/404/login ⬜) | — | 🔄 | — |
 
 ## 5. Exact current state
 
@@ -277,36 +277,62 @@ This is a direct user instruction for the WHOLE redesign; every future section m
   colors/orbs dropped — single sand accent) → how-to-choose as hairline spec grid
   («02» + «چـ») → FAQ via shared .ry-faq-sec scope («03» + «سـ»).
 - SERVICES DETAIL PAGE (services/detail.html) DONE, verified (render_check 200 clean,
-  desktop + 360px no overflow, zero console errors, counters + marquee + accordion
-  working) — sections numbered 01..13 with meaning-matched glyphs reused from home
-  (خـ خدمت، شـ مرور، د خروجی‌ها، کـ کاربردها، تـ ابزارها، فـ فرآیند، چـ چرا، آ آمار،
-  بـ قیمت، نـ نظرات، پـ نمونه‌کار، سـ سؤال، مـ مقاله). Key moves:
-  * Hero art mockups (browser/terminal/palette/diamond CSS/SVG art) REPLACED by one
-    ry-frame with ASCII-ART-PLACEHOLDER (§2b) — 2 more placeholders in image-less
-    long sections (total 3 on this page; template order numbers stay fixed even when
-    a conditional section is absent → occasional number jump, accepted tradeoff).
-  * Old rhythm (cream/ink2 alternating + svg wave dividers + glass cards) → uniform
-    void sections separated by border-b hairlines; long sections = full (max-w-3xl)
-    or split with REAL images in ry-frame (untouched, §2b) or ASCII placeholder.
-  * .ry-scope overrides added to ry.css for shared pieces inside new pages: breadcrumb
-    (mono-ish 12px, sand, square), prose-cream (serif headings, sand links/lists/
-    quotes/code, square), .ry-tools-sec .s-chip-light (square hairline chips).
-  * Process = .ry-process vertical hairline list (mono numbers in square nodes);
-    why_us = 3-col hairline-divided grid; stats = .ry-stat-grid with data-count-text;
-    deliverables = .ry-row list with mono indices.
-  * Pricing: featured plan = .ry-inv (sand block — the one inverted CTA pattern) with
-    .ry-btn--ink + square discount chip; others = hairline void cards + .ry-btn--line.
-    NOTE: Tailwind v4 important modifier is TRAILING (`text-void/60!`), and `{% if %}`
-    can NEVER live inside a tag argument (parse error) — branch the whole tag instead.
-  * Shared components got template branches (no backend changes):
-    - testimonials_slider.html: Ryoku branch now fires for id="service-testimonials"
-      too (ry_num «10» on service, «08» on home; glyph «نـ»; card ry=1 branch reused).
-    - projects_carousel.html: when called with service= (service detail) renders
-      components/_ry_project_card.html (Ryoku cards); other callers
-      (portfolio/detail related) keep the old _project_card.html look.
-    - articles carousel: NO component change — detail section wrapped in
-      id="blog" + ry-scope so the existing #blog-scoped CSS transforms it
-      (same trick as home).
+   desktop + 360px no overflow, zero console errors, counters + marquee + accordion
+   working) — sections numbered 01..13 with meaning-matched glyphs reused from home
+   (خـ خدمت، شـ مرور، د خروجی‌ها، کـ کاربردها، تـ ابزارها، فـ فرآیند، چـ چرا، آ آمار،
+   بـ قیمت، نـ نظرات، پـ نمونه‌کار، سـ سؤال، مـ مقاله). Key moves:
+   * Hero art mockups (browser/terminal/palette/diamond CSS/SVG art) REPLACED by one
+     ry-frame with ASCII-ART-PLACEHOLDER (§2b) — 2 more placeholders in image-less
+     long sections (total 3 on this page; template order numbers stay fixed even when
+     a conditional section is absent → occasional number jump, accepted tradeoff).
+   * Old rhythm (cream/ink2 alternating + svg wave dividers + glass cards) → uniform
+     void sections separated by border-b hairlines; long sections = full (max-w-3xl)
+     or split with REAL images in ry-frame (untouched, §2b) or ASCII placeholder.
+   * .ry-scope overrides added to ry.css for shared pieces inside new pages: breadcrumb
+     (mono-ish 12px, sand, square), prose-cream (serif headings, sand links/lists/
+     quotes/code, square), .ry-tools-sec .s-chip-light (square hairline chips).
+   * Process = .ry-process vertical hairline list (mono numbers in square nodes);
+     why_us = 3-col hairline-divided grid; stats = .ry-stat-grid with data-count-text;
+     deliverables = .ry-row list with mono indices.
+   * Pricing: featured plan = .ry-inv (sand block — the one inverted CTA pattern) with
+     .ry-btn--ink + square discount chip; others = hairline void cards + .ry-btn--line.
+     NOTE: Tailwind v4 important modifier is TRAILING (`text-void/60!`), and `{% if %}`
+     can NEVER live inside a tag argument (parse error) — branch the whole tag instead.
+   * Shared components got template branches (no backend changes):
+     - testimonials_slider.html: Ryoku branch now fires for id="service-testimonials"
+       too (ry_num «10» on service, «08» on home; glyph «نـ»; card ry=1 branch reused).
+     - projects_carousel.html: when called with service= (service detail) renders
+       components/_ry_project_card.html (Ryoku cards); other callers
+       (portfolio/detail related) keep the old _project_card.html look.
+     - articles carousel: NO component change — detail section wrapped in
+       id="blog" + ry-scope so the existing #blog-scoped CSS transforms it
+       (same trick as home).
+- BLOG LIST PAGE (blog/list.html) DONE — redesigned with Ryoku language:
+  typographic hero (ry-sec-head «01 · مقالات» + glyph «مـ», serif H1) → featured article
+  in ry-frame (cover image shown as-uploaded per §2b) → filter buttons restyled via
+  .ry-scope overrides → grid of square ry-pcard cards (Amiri titles, mono meta, index
+  numbers, covers untouched) → load-more as ry-btn--line. Shared _article_card.html
+  and articles_carousel.html updated to Ryoku look; home/service detail carousels
+  inherit via #blog scope.
+- BLOG DETAIL PAGE (blog/detail.html) DONE — Ryoku sections: hero with sec-head +
+  breadcrumb + meta as ry-row list → cover image in ry-frame (as-uploaded) → inverted
+  ry-inv article body (prose-cream typography, reading bar, TOC, share ry-btn--line)
+  → related articles carousel inside #blog scope → prev/next navigation as surface cards.
+  Real images displayed exactly as uploaded per §2b.
+- PORTFOLIO LIST PAGE (portfolio/list.html) DONE — redesigned with Ryoku language:
+  typographic hero (ry-sec-head «01 · نمونه‌کارها» + glyph «پـ», serif H1) → filter
+  buttons (flt-btn) restyled via .ry-scope → counter as ry-label → grid of square
+  _ry_project_card.html cards (index, serif title, mono meta, images as-uploaded) →
+  carousel controls (ctrl-btn, slider-dot) restyled via .ry-scope. Mobile snap track
+  and filter hooks preserved.
+- PORTFOLIO DETAIL PAGE (portfolio/detail.html) DONE — Ryoku sections: hero with
+  sec-head + breadcrumb + meta as ry-row list → main image in ry-frame (as-uploaded)
+  → inverted ry-inv about section (prose-cream) → challenge/solution as surface cards
+  with hairline borders → stats as ry-stat-grid (square boxes, hairline grid) →
+  testimonial card → gallery images in square hairline frames (as-uploaded) → related
+  projects carousel (projects_carousel with service= branch uses _ry_project_card.html)
+  → prev/next navigation as surface cards. Real images displayed exactly as uploaded
+  per §2b.
 - LESSON (tooling): NEVER edit files via PowerShell `Get-Content`/`Set-Content` — PS 5.1
   reads UTF-8-no-BOM as ANSI and re-encoding mangles ALL Persian comments in the file
   (happened once; recovered via `git checkout HEAD -- styles/input.css` + re-adding the
@@ -341,9 +367,9 @@ This is a direct user instruction for the WHOLE redesign; every future section m
 ## 7. Next step
 
 All homepage body sections + CTA + footer + header are DONE. Inner pages DONE:
-about (typographic hero + story + journey + stats) and SERVICES (list + detail —
-both fully Ryoku). Remaining: contact/blog list+detail/portfolio list+detail/404/
-login. One commit per step, update this file before each commit. ASCII-art pass
+about (typographic hero + story + journey + stats), SERVICES (list + detail),
+BLOG (list + detail), PORTFOLIO (list + detail). Remaining: contact/404/login.
+One commit per step, update this file before each commit. ASCII-art pass
 (all `ASCII-ART-PLACEHOLDER` spots — currently 5: 2 on about, 3 on service detail)
 happens AFTER the full redesign.
 

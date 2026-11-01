@@ -7,7 +7,6 @@
 {% block og_description %}{{ article.get_meta_description|striptags }}{% endblock %}
 
 {% block extra_head %}
-  {% comment %} داده‌های ساختاریافته — مقاله + مسیر نمایش {% endcomment %}
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -53,126 +52,90 @@
 {% endblock %}
 
 {% block content %}
-  {% comment %}هیرو — عنوان مقاله، دسته‌بندی، برچسب‌ها و اطلاعات مقاله با کلمهٔ حک‌شدهٔ article{% endcomment %}
-  <section class="relative overflow-hidden bg-ink" data-mouse-parallax>
-    <div class="pointer-events-none absolute inset-0" aria-hidden="true">
-      <div data-depth="0.05" class="absolute right-[9%] top-[12%]">
-        <span data-float="14" class="orb block h-20 w-20"
-              style="background: radial-gradient(circle at 32% 30%, rgba(232,196,122,0.42), rgba(201,161,90,0.07) 60%, transparent 72%);"></span>
-      </div>
-      <div data-depth="0.08" class="absolute bottom-[16%] left-[8%]">
-        <span data-float="12" class="shard block h-24 w-20 rotate-12"></span>
-      </div>
-      <div data-depth="0.05" class="absolute left-[32%] top-[14%]">
-        <span data-float="10" class="orb block h-10 w-10"
-              style="background: radial-gradient(circle, rgba(46,99,255,0.5), transparent 70%);"></span>
-      </div>
-    </div>
-    <div class="pointer-events-none absolute -left-32 top-1/3 h-[30rem] w-[30rem] rounded-full opacity-30"
-         style="background: radial-gradient(circle, rgba(201,161,90,0.22), transparent 65%);"
-         aria-hidden="true"></div>
-    {% include "partials/_space_layer.html" with ring_spin="1" ring_class="-right-32 top-12 h-80 w-[32rem]" orb_class="right-[9%] top-[18%] h-6 w-6" %}
-    <span class="stroke-title font-latin pointer-events-none absolute -bottom-10 left-0 select-none text-[18vw] font-light leading-none"
-          aria-hidden="true">article</span>
-
-    <div class="relative z-10 mx-auto max-w-7xl px-6 pb-28 pt-36 md:pt-48">
-      {% comment %} مسیر نمایش — خانه ← بلاگ ← مقالهٔ فعلی {% endcomment %}
+  {% comment %} هیرو — عنوان مقاله، دسته‌بندی، برچسب‌ها و اطلاعات مقاله {% endcomment %}
+  <section class="ry-scope ry-reveal">
+    <div class="relative z-10 mx-auto max-w-7xl px-6 py-28 md:py-40">
       {% include "components/_breadcrumb.html" %}
 
       {% comment %} دسته‌بندی و برچسب‌ها {% endcomment %}
-      <div class="mt-7 flex flex-wrap gap-2.5" data-reveal="pop" data-delay="0.06">
+      <div class="mt-6 flex flex-wrap gap-2" data-reveal="pop" data-delay="0.06">
         {% if article.category %}
-          <a href="{% url 'blog:list' %}" class="s-chip transition-colors hover:border-gold/60 hover:text-gold-light">
-            {% icon "book-open" class="h-3.5 w-3.5 text-gold" %}
+          <a href="{% url 'blog:list' %}?category={{ article.category.slug }}"
+             class="ry-btn ry-btn--line text-sm">
+            {% icon "book-open" class="h-3.5 w-3.5" %}
             {{ article.category.title }}
           </a>
         {% endif %}
         {% for tag in article.tags.all %}
-          <span class="s-chip">
-            <span class="text-gold/70">#</span>
+          <span class="ry-label-fa inline-flex items-center gap-1 border border-line/15 px-3 py-1">
+            <span class="text-sand/50">#</span>
             {{ tag.title }}
           </span>
         {% endfor %}
       </div>
 
-      <h1 class="mt-7 max-w-3xl text-[2.4rem] font-extrabold leading-[1.2] sm:text-5xl lg:text-6xl"
+      <h1 class="mt-6 ry-serif ry-narrow text-[2.6rem] md:text-[3.5rem] lg:text-[4.5rem] leading-[1.15] text-sand"
           data-reveal="mask">
         {{ article.title|highlight }}
       </h1>
 
       {% if article.excerpt %}
-        <p class="mt-6 max-w-2xl text-lg font-light leading-8 text-cream/70"
+        <p class="mt-6 max-w-2xl text-[1.1rem] leading-8 text-sand/55"
            data-reveal="blur" data-delay="0.12">
           {{ article.excerpt }}
         </p>
       {% endif %}
 
-      {% comment %} اطلاعات مقاله — کپسول‌های شیشه‌ای {% endcomment %}
-      <div class="mt-12 grid max-w-4xl grid-cols-2 gap-4 md:grid-cols-4" data-reveal="scale" data-delay="0.18">
-        {% if article.author %}
-          <div class="glass flex flex-col gap-2 p-5" style="border-radius: 1.5rem">
-            <span class="icon-ring h-9 w-9 overflow-hidden">{% if article.author.avatar %}<img src="{{ article.author.avatar.url }}" alt="" class="h-full w-full object-cover" />{% else %}{% icon "pen-tool" class="h-4 w-4" %}{% endif %}</span>
-            <span class="text-[10px] font-medium tracking-wider text-cream/40">نویسنده</span>
-            <span class="text-sm font-bold text-cream">{{ article.author.name }}</span>
-          </div>
-        {% endif %}
-        <div class="glass flex flex-col gap-2 p-5" style="border-radius: 0.6rem">
-          <span class="icon-ring h-9 w-9">{% icon "calendar-days" class="h-4 w-4" %}</span>
-          <span class="text-[10px] font-medium tracking-wider text-cream/40">تاریخ انتشار</span>
-          <span class="text-sm font-bold text-cream fa-num">{{ article.published_at|fa_jdate }}</span>
+      {% comment %} اطلاعات مقاله — ردیف‌های فشرده (ry-row) {% endcomment %}
+      <div class="mt-10 ry-reveal" data-delay="0.18">
+        <div class="ry-row">
+          {% if article.author %}
+            <span class="ry-label-fa">نویسنده</span>
+            <span class="font-medium text-sand">{{ article.author.name }}</span>
+          {% endif %}
         </div>
-        <div class="glass flex flex-col gap-2 p-5" style="border-radius: 1.5rem">
-          <span class="icon-ring h-9 w-9">{% icon "clock" class="h-4 w-4" %}</span>
-          <span class="text-[10px] font-medium tracking-wider text-cream/40">زمان مطالعه</span>
-          <span class="text-sm font-bold text-cream fa-num">{{ article.reading_time|fa_digits }} دقیقه</span>
+        <div class="ry-row">
+          <span class="ry-label-fa">تاریخ انتشار</span>
+          <span class="font-mono font-medium text-sand fa-num" dir="ltr">{{ article.published_at|fa_jdate }}</span>
+        </div>
+        <div class="ry-row">
+          <span class="ry-label-fa">زمان مطالعه</span>
+          <span class="font-mono font-medium text-sand fa-num" dir="ltr">{{ article.reading_time|fa_digits }} دقیقه</span>
         </div>
         {% if article.is_updated %}
-          <div class="glass flex flex-col gap-2 p-5" style="border-radius: 0.6rem">
-            <span class="icon-ring h-9 w-9">{% icon "sparkles" class="h-4 w-4" %}</span>
-            <span class="text-[10px] font-medium tracking-wider text-cream/40">به‌روز شده</span>
-            <span class="text-sm font-bold text-cream fa-num">{{ article.updated_at|fa_jdate }}</span>
+          <div class="ry-row">
+            <span class="ry-label-fa">به‌روز شده</span>
+            <span class="font-mono font-medium text-sand fa-num" dir="ltr">{{ article.updated_at|fa_jdate }}</span>
           </div>
         {% endif %}
       </div>
     </div>
   </section>
 
-  {% comment %}تصویر کاور — تایل بزرگ روی پس‌زمینهٔ ملایم‌تر؛ فقط وقتی کاور ثبت شده باشد{% endcomment %}
+  {% comment %} تصویر کاور — نمایش واقعی آپلودشده (سیاست §2b) {% endcomment %}
   {% if article.cover_image %}
-    <section class="relative overflow-hidden bg-ink2">
-      <svg class="divider divider-flip" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true">
-        <path d="M0,26 C260,84 520,82 760,44 C1000,6 1240,80 1440,30 L1440,0 L0,0 Z" fill="#0a0a0c"></path>
-      </svg>
-      <div class="relative z-10 mx-auto max-w-7xl px-6 pb-24 pt-20 md:pt-28">
-        <figure class="relative overflow-hidden border border-gold/25"
-                style="border-radius: 2.5rem 1rem 2.5rem 1rem"
-                data-reveal="clip">
-          <img src="{{ article.cover_image.url }}"
-                 alt="{{ article.get_cover_alt }}"
-                 loading="eager" fetchpriority="high" decoding="async"
-                 class="aspect-[16/9] h-full w-full object-cover md:aspect-[16/8]">
-        </figure>
+    <section class="ry-scope border-t border-line/10 ry-reveal">
+      <div class="relative z-10 mx-auto max-w-7xl px-6 py-16">
+        {% include "components/_ry_frame.html" with ry_src=article.cover_image.url ry_alt=article.get_cover_alt ry_caption="01 / 01 · کاور مقاله" ry_circle="1" %}
       </div>
     </section>
   {% endif %}
 
-  {% comment %}متن مقاله (روشن) — ستون چسبان: فهرست مطالب، نویسنده و مشاوره{% endcomment %}
-  <section class="relative bg-cream" style="border-radius: 3rem 9rem 0 0">
-    <div class="relative z-10 mx-auto max-w-7xl px-6 pb-24 pt-28 md:pt-36">
+  {% comment %} متن مقاله — پس‌زمینهٔ void با تایپوگرافی prose-cream (مخصوص پس‌زمینه تیره) {% endcomment %}
+  <section class="ry-scope border-t border-line/10 ry-reveal">
+    <div class="relative z-10 mx-auto max-w-7xl px-6 pb-24 pt-20 md:pt-28">
       <div class="grid items-start gap-14 lg:grid-cols-12">
-        {% comment %} متن مقاله — تایپوگرافیِ محتوای غنی (T38) {% endcomment %}
-        <div class="lg:col-span-8" data-reveal="blur">
+        {% comment %} متن مقاله — تایپوگرافیِ محتوای غنی {% endcomment %}
+        <div class="lg:col-span-8 ry-reveal" data-delay="0.1">
           {% comment %} نوار پیشرفتِ خواندن — pixoria.js با اسکرول پرش می‌کند {% endcomment %}
-          <div class="mb-12 h-[3px] overflow-hidden rounded-full bg-paper/15" aria-hidden="true">
-            <div class="h-full origin-right scale-x-0"
-                 style="background: linear-gradient(to left, #8f6b2c, #c9a15a 55%, #e8c47a);"
-                 data-reading-bar></div>
+          <div class="mb-10 h-[2px] overflow-hidden bg-line/15" aria-hidden="true">
+            <div class="h-full origin-right scale-x-0 bg-sand" data-reading-bar></div>
           </div>
 
-          <article class="post-body prose-ink" data-reading-progress>
+          <article class="prose-cream" data-reading-progress>
             {% comment %} مقدمهٔ مقاله {% endcomment %}
             {% if article.excerpt %}
-              <p class="mb-10 border-b border-gold-dark/25 pb-8 text-[clamp(1.05rem,1.4vw,1.3rem)] leading-8 font-medium text-paper">
+              <p class="mb-10 border-b border-line/15 pb-8 text-[clamp(1.05rem,1.4vw,1.3rem)] leading-8 font-medium text-sand">
                 {{ article.excerpt }}
               </p>
             {% endif %}
@@ -181,25 +144,25 @@
             {{ content_html|safe }}
 
             {% comment %} اشتراک‌گذاری — لینک‌های ساده، بدون اسکریپت شخص ثالث {% endcomment %}
-            <div class="mt-14 flex flex-wrap items-center gap-3 border-t border-gold-dark/25 pt-7">
-              <span class="text-[10px] font-medium tracking-wider text-coy/70">اشتراک‌گذاری</span>
+            <div class="mt-14 flex flex-wrap items-center gap-3 border-t border-line/15 pt-7">
+              <span class="ry-label-fa">اشتراک‌گذاری</span>
               <a href="https://x.com/intent/post?url={{ request.build_absolute_uri|urlencode }}"
                  target="_blank" rel="noopener noreferrer"
-                 title="اشتراک‌گذاری در ایکس" aria-label="اشتراک‌گذاری در ایکس" class="share-btn">
+                 title="اشتراک‌گذاری در ایکس" aria-label="اشتراک‌گذاری در ایکس" class="ry-btn ry-btn--line text-sm">
                 {% icon "x" %}<span class="hidden sm:inline">ایکس</span>
               </a>
               <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ request.build_absolute_uri|urlencode }}"
                  target="_blank" rel="noopener noreferrer"
-                 title="اشتراک‌گذاری در لینکدین" aria-label="اشتراک‌گذاری در لینکدین" class="share-btn">
+                 title="اشتراک‌گذاری در لینکدین" aria-label="اشتراک‌گذاری در لینکدین" class="ry-btn ry-btn--line text-sm">
                 {% icon "linkedin" %}<span class="hidden sm:inline">لینکدین</span>
               </a>
               <a href="https://t.me/share/url?url={{ request.build_absolute_uri|urlencode }}&text={{ article.title|plain|urlencode }}"
                  target="_blank" rel="noopener noreferrer"
-                 title="اشتراک‌گذاری در تلگرام" aria-label="اشتراک‌گذاری در تلگرام" class="share-btn">
+                 title="اشتراک‌گذاری در تلگرام" aria-label="اشتراک‌گذاری در تلگرام" class="ry-btn ry-btn--line text-sm">
                 {% icon "send" %}<span class="hidden sm:inline">تلگرام</span>
               </a>
               <button type="button" data-copy-link
-                      title="کپی کردن لینک مقاله" aria-label="کپی کردن لینک مقاله" class="share-btn">
+                      title="کپی کردن لینک مقاله" aria-label="کپی کردن لینک مقاله" class="ry-btn ry-btn--line text-sm">
                 <span data-copy-default class="inline-flex items-center gap-2">
                   {% icon "link" %}<span>کپی لینک</span>
                 </span>
@@ -212,17 +175,17 @@
         </div>
 
         {% comment %} ستون کناری — چسبان می‌ماند تا همراه متن اسکرول شود {% endcomment %}
-        <aside class="flex flex-col gap-6 lg:col-span-4 lg:sticky lg:top-28" data-reveal="rise" data-delay="0.1">
+        <aside class="flex flex-col gap-6 lg:col-span-4 lg:sticky lg:top-28 ry-reveal" data-delay="0.1">
           {% comment %} فهرست مطالب — فقط وقتی هدینگی وجود داشته باشد (process_content_toc) {% endcomment %}
           {% if toc %}
-            <div class="glass-light p-7" style="border-radius: 1.5rem">
-              <p class="eyebrow eyebrow-dark eyebrow-c mb-5">فهرست مطالب</p>
+            <div class="bg-surface border border-line/15 p-6">
+              <p class="ry-label-fa mb-4">فهرست مطالب</p>
               <ul class="m-0 flex list-none flex-col gap-1 p-0" data-toc>
                 {% for item in toc %}
                   <li>
                     <a href="#{{ item.id }}" data-toc-link
-                       class="group flex items-start gap-2.5 rounded-lg px-3 py-2 text-[0.8rem] leading-relaxed text-coy transition-colors hover:bg-paper/5 hover:text-paper [&.active]:bg-gold/10 [&.active]:font-semibold [&.active]:text-gold-dark">
-                      <span class="mt-[7px] h-1 w-1 shrink-0 rotate-45 bg-coy/40 transition-colors group-[.active]:bg-gold-dark" aria-hidden="true"></span>
+                       class="group flex items-start gap-2.5 rounded-none px-3 py-2 text-sm leading-relaxed text-sand/70 transition-colors hover:bg-surface hover:text-sand [&.active]:bg-sand/10 [&.active]:font-semibold [&.active]:text-sand">
+                      <span class="mt-[7px] h-1 w-1 shrink-0 rotate-45 bg-sand/40 transition-colors group-[.active]:bg-sand" aria-hidden="true"></span>
                       <span class="flex-1">{{ item.text }}</span>
                     </a>
                   </li>
@@ -233,38 +196,36 @@
 
           {% comment %} نویسنده {% endcomment %}
           {% if article.author %}
-            <div class="glass-light flex flex-col gap-4 p-7" style="border-radius: 1.5rem">
-              <p class="eyebrow eyebrow-dark eyebrow-c">نویسنده</p>
+            <div class="bg-surface border border-line/15 p-6">
+              <p class="ry-label-fa mb-4">نویسنده</p>
               <div class="flex items-center gap-4">
                 <div class="avatar overflow-hidden">
                   {% if article.author.avatar %}
                     <img src="{{ article.author.avatar.url }}" alt="{{ article.author.name }}" loading="lazy" class="h-full w-full object-cover" />
                   {% else %}
-                    <span class="grid place-items-center text-gold-dark" aria-hidden="true">{% icon "user-round" class="h-6 w-6" %}</span>
+                    <span class="grid place-items-center text-sand/50" aria-hidden="true">{% icon "user-round" class="h-6 w-6" %}</span>
                   {% endif %}
                 </div>
                 <div>
-                  <div class="font-bold text-paper">{{ article.author.name }}</div>
+                  <div class="font-bold text-sand">{{ article.author.name }}</div>
                   {% if article.author.role %}
-                    <div class="text-xs text-coy">{{ article.author.role }}</div>
+                    <div class="text-sm text-sand/55">{{ article.author.role }}</div>
                   {% endif %}
                 </div>
               </div>
               {% if article.author.bio %}
-                <p class="text-sm leading-7 text-coy/80">{{ article.author.bio }}</p>
+                <p class="mt-4 text-sm leading-7 text-sand/55">{{ article.author.bio }}</p>
               {% endif %}
             </div>
           {% endif %}
 
-          {% comment %} مشاورهٔ رایگان {% endcomment %}
+          {% comment %} دعوت به اقدام — شروع پروژه {% endcomment %}
           <a href="{% url 'contact:contact' %}"
-             class="group relative overflow-hidden bg-ink p-7 transition-colors"
-             style="border-radius: 1.5rem"
-             title="دریافت آدیت رایگان">
-            <p class="eyebrow">مشاوره رایگان</p>
-            <p class="mt-4 text-sm leading-7 text-cream/65">برای سایت شما هم آدیت فنی رایگان انجام می‌دهیم. فقط کافی است یک فرم ساده پر کنید.</p>
-            <span class="mt-6 inline-flex items-center gap-1.5 text-sm font-medium text-gold-light transition-all duration-300 group-hover:gap-3">
-              دریافت آدیت رایگان
+             class="group relative overflow-hidden bg-surface border border-line/15 p-6 transition-colors hover:border-sand/40 hover:bg-void">
+            <p class="ry-label-fa mb-2 text-sand/60">شروع پروژه</p>
+            <p class="text-sm leading-7 text-sand/55">تیم پیکسوریا برای ساخت محصول دیجیتال شما آماده است. با ما در تماس باشید تا ایده‌تان را بررسی کنیم.</p>
+            <span class="mt-5 ry-link inline-flex items-center gap-1.5 text-sm">
+              شروع مکالمه
               {% icon "arrow-left" class="h-4 w-4" %}
             </span>
           </a>
@@ -273,51 +234,44 @@
     </div>
   </section>
 
-  {% comment %}مطالب مرتبط — کاروسل مقالاتِ همین دسته + ناوبری مقالهٔ قبلی/بعدی.
-     وقتی مقالهٔ دیگری در این دسته نیست کل بخش (هدر، کاروسل و ناوبری) حذف می‌شود.{% endcomment %}
+  {% comment %} مطالب مرتبط — کاروسل مقالاتِ همین دسته + ناوبری مقالهٔ قبلی/بعدی. {% endcomment %}
   {% if has_related %}
-    <section class="relative overflow-hidden bg-ink2">
-      <svg class="divider divider-flip" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true">
-        <path d="M0,26 C260,84 520,82 760,44 C1000,6 1240,80 1440,30 L1440,0 L0,0 Z" fill="#f5f3ee"></path>
-      </svg>
-      <div class="grid-bg pointer-events-none absolute inset-0 opacity-20" aria-hidden="true"></div>
-
-      <div class="relative z-10 mx-auto max-w-7xl px-6 pb-28 pt-32 md:pt-40">
+    <section class="ry-scope border-t border-line/10 ry-reveal" id="blog">
+      <div class="relative z-10 mx-auto max-w-7xl px-6 pb-28 pt-16 md:pt-24">
         <div class="flex flex-wrap items-end justify-between gap-6">
           <div>
-            <p class="eyebrow" data-reveal="rise">بیشتر بخوانید</p>
-            <h2 class="mt-5 text-4xl font-extrabold leading-[1.3] md:text-[2.7rem]"
+            <p class="ry-label-fa" data-reveal="rise">بیشتر بخوانید</p>
+            <h2 class="mt-4 ry-serif text-[2.2rem] md:text-[2.8rem] leading-[1.3] text-sand"
                 data-reveal="mask" data-delay="0.08">
               مطالب مرتبط
             </h2>
           </div>
-          <a href="{% url 'blog:list' %}" class="more-link text-base" data-reveal="pop">
+          <a href="{% url 'blog:list' %}" class="ry-link" data-reveal="pop">
             همهٔ مقالات
             {% icon "arrow-left" class="h-4 w-4" %}
           </a>
         </div>
 
         {% comment %} کاروسل مقالاتِ مرتبط — مقالهٔ فعلی حذف می‌شود {% endcomment %}
-        <div class="mt-14" data-reveal="clip">
+        <div class="mt-12" data-reveal="clip">
           {% articles_carousel exclude=article category=article.category limit=6 %}
         </div>
 
         {% comment %} ناوبری مقالهٔ قبلی و بعدی در همین دسته {% endcomment %}
         {% if prev_article or next_article %}
-          <nav class="mt-16 grid grid-cols-1 gap-5 border-t border-white/8 pt-10 md:grid-cols-2"
+          <nav class="mt-14 grid grid-cols-1 gap-5 border-t border-line/15 pt-10 md:grid-cols-2"
                aria-label="مقالات قبلی و بعدی" data-reveal="up">
             {% if prev_article %}
               <a href="{% url 'blog:detail' prev_article.slug %}"
-                 class="glass group flex flex-col gap-2.5 p-7 transition-colors hover:border-gold/50"
-                 style="border-radius: 1.75rem 0.75rem 1.75rem 0.75rem">
-                <span class="flex items-center gap-2 text-[10px] font-medium tracking-wider text-cream/40">
+                 class="bg-surface border border-line/15 p-6 transition-colors hover:border-sand/30 hover:bg-void">
+                <span class="flex items-center gap-2 ry-label text-sand/50">
                   {% icon "arrow-right" class="h-3.5 w-3.5" %}
                   مقالهٔ قبلی
                 </span>
-                <span class="text-lg font-bold text-cream transition-colors group-hover:text-gold-light">
+                <span class="mt-1 block ry-serif text-lg font-medium leading-[1.4] text-sand transition-colors hover:text-sand">
                   {{ prev_article.title|highlight }}
                 </span>
-                <span class="font-latin text-[10px] tracking-wider text-cream/45">
+                <span class="mt-2 block ry-label-fa text-sand/50">
                   <span class="fa-num">{{ prev_article.published_at|fa_jdate }}</span> ·
                   <span class="fa-num">{{ prev_article.reading_time|fa_digits }}</span> دقیقه
                 </span>
@@ -325,16 +279,15 @@
             {% endif %}
             {% if next_article %}
               <a href="{% url 'blog:detail' next_article.slug %}"
-                 class="glass group flex flex-col gap-2.5 p-7 transition-colors hover:border-gold/50 md:text-left"
-                 style="border-radius: 0.75rem 1.75rem 0.75rem 1.75rem">
-                <span class="flex items-center gap-2 text-[10px] font-medium tracking-wider text-cream/40 md:justify-end">
+                 class="bg-surface border border-line/15 p-6 transition-colors hover:border-sand/30 hover:bg-void md:text-left">
+                <span class="flex items-center gap-2 ry-label text-sand/50 md:justify-end">
                   مقالهٔ بعدی
                   {% icon "arrow-left" class="h-3.5 w-3.5" %}
                 </span>
-                <span class="text-lg font-bold text-cream transition-colors group-hover:text-gold-light">
+                <span class="mt-1 block ry-serif text-lg font-medium leading-[1.4] text-sand transition-colors hover:text-sand">
                   {{ next_article.title|highlight }}
                 </span>
-                <span class="font-latin text-[10px] tracking-wider text-cream/45">
+                <span class="mt-2 block ry-label-fa text-sand/50">
                   <span class="fa-num">{{ next_article.published_at|fa_jdate }}</span> ·
                   <span class="fa-num">{{ next_article.reading_time|fa_digits }}</span> دقیقه
                 </span>
