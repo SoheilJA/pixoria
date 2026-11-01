@@ -18,88 +18,57 @@
     <link rel="stylesheet" href="{% static 'css/tailwind.css' %}" />
   </head>
   <body class="min-h-screen bg-void font-sans text-sand antialiased">
-    <div class="mx-auto grid min-h-screen max-w-[1100px] grid-cols-1 gap-10 px-6 py-10 lg:grid-cols-2 lg:items-stretch lg:gap-16">
-      {% comment %} ─── برند سمت راست ─── {% endcomment %}
-      <section class="relative flex flex-col justify-between gap-10 lg:w-full" data-reveal="rise">
-        <div class="pointer-events-none absolute inset-0" aria-hidden="true">
-          <div class="ry-frame__circle" style="width: 180%; aspect-ratio: 1; border-color: rgba(216,207,192,0.04);"></div>
-        </div>
+    <div class="mx-auto flex min-h-screen max-w-[480px] flex-col items-center justify-center px-6 py-10">
+      
+      {% comment %} دکمه برگشت به سایت ─── {% endcomment %}
+      <a href="{% url 'home:home' %}" class="self-start mb-8 ry-btn ry-btn--line" data-reveal="rise">
+        {% icon "arrow-right" class="h-4 w-4" %}
+        برگشت به سایت
+      </a>
 
-        <a href="{% url 'home:home' %}" class="relative z-10 inline-flex items-center" aria-label="{{ settings.site_name|default:'پیکسوریا' }}">
-          {% if settings.logo %}
-            <img src="{{ settings.logo.url }}" alt="{{ settings.site_name }}" class="h-7 w-auto" />
-          {% else %}
-            {% pixel_wordmark "full" class="h-[26px] w-auto text-sand" %}
-          {% endif %}
-        </a>
-
-        <div class="relative z-10 max-w-[34ch]">
-          <p class="ry-label-fa mb-4">پنل مدیریت</p>
-          <h2 class="ry-serif ry-narrow text-[clamp(1.8rem,4vw,2.6rem)] leading-[1.15] text-sand">
-            محتوای سایت از همین‌جا ویرایش می‌شود.
-          </h2>
-          <p class="mt-4 leading-7 text-sand/55">
-            هر متن و تصویری که بازدیدکننده می‌بیند از مدیریت پیکسوریا قابل تغییر است.
-          </p>
-        </div>
-
-        {% if stats %}
-          <div class="relative z-10 ry-stat-grid" data-reveal="rise" data-delay="0.1">
-            {% for stat in stats %}
-              <div class="ry-stat text-center">
-                <p class="ry-stat__num font-mono font-bold fa-num" dir="ltr">{{ stat.prefix }}{{ stat.value|fa_digits }}{{ stat.suffix }}</p>
-                <p class="ry-stat__label">{{ stat.label }}</p>
-              </div>
-            {% endfor %}
-          </div>
-        {% endif %}
-      </section>
-
-      {% comment %} ─── فرم ورود ─── {% endcomment %}
-      <section class="flex items-center" data-reveal="rise" data-delay="0.1">
-        <div class="w-full max-w-[440px] mx-auto">
-          <div class="bg-surface border border-line/15 p-[clamp(24px,4vw,40px)]" style="border-radius: 1.5rem">
-            <div class="mb-7">
-              <p class="ry-label text-sand/50" dir="ltr">
-                {{ settings.site_name|default:"پیکسوریا" }} <span class="mx-1.5">·</span> <span>ورود</span>
-              </p>
-              <h1 class="mt-4 ry-serif ry-narrow text-[1.7rem] leading-[1.15] text-sand">ورود به حساب</h1>
-              <p class="mt-2.5 text-[0.9rem] text-sand/60">
-                فقط ادمین و سوپر ادمین مجاز هستند.
-              </p>
-            </div>
-
-            <form method="post" action="{% url 'admin:login' %}" class="flex flex-col gap-5">
-              {% csrf_token %}
-              <input type="hidden" name="next" value="{{ next }}" />
-
-              {% if form.errors %}
-                <div class="flex items-start gap-3 rounded-none border border-sand/30 bg-void p-4 text-sm text-sand/70" role="alert">
-                  {% icon "alert-triangle" class="mt-0.5 h-5 w-5 shrink-0 text-sand/50" %}
-                  <span>نام کاربری یا گذرواژه اشتباه است. دوباره تلاش کنید.</span>
-                </div>
-              {% endif %}
-
-              {% for field in form %}
-                <label class="field static" for="{{ field.id_for_label }}">
-                  {{ field }}
-                  <span>{{ field.label }}</span>
-                </label>
-                {% for error in field.errors %}
-                  <span class="field-err">{% icon "alert-circle" class="h-3.5 w-3.5" %}{{ error }}</span>
-                {% endfor %}
-              {% endfor %}
-
-              <button type="submit" class="ry-btn ry-btn--fill mt-1 w-full justify-center">
-                ورود
-                {% icon "arrow-left" class="h-4 w-4" %}
-              </button>
-            </form>
-
-            <p class="mt-7 border-t border-line/15 pt-5 text-center ry-label-fa text-sand/40">
-              © {{ settings.established_year|default:"۱۴۰۳" }} {{ settings.site_name|default:"پیکسوریا" }}
+      {% comment %} فرم ورود ─── {% endcomment %}
+      <section class="w-full" data-reveal="rise" data-delay="0.1">
+        <div class="bg-surface border border-line/15 p-[clamp(24px,4vw,40px)]" style="border-radius: 1.5rem">
+          <div class="mb-7">
+            <p class="ry-label text-sand/50" dir="ltr">
+              {{ settings.site_name|default:"پیکسوریا" }} <span class="mx-1.5">·</span> <span>پنل مدیریت</span>
+            </p>
+            <h1 class="mt-4 ry-serif ry-narrow text-[1.7rem] leading-[1.15] text-sand">ورود به حساب</h1>
+            <p class="mt-2.5 text-[0.9rem] text-sand/60">
+              فقط ادمین و سوپر ادمین مجاز هستند.
             </p>
           </div>
+
+          <form method="post" action="{% url 'admin:login' %}" class="flex flex-col gap-5">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ next }}" />
+
+            {% if form.errors %}
+              <div class="flex items-start gap-3 rounded-none border border-sand/30 bg-void p-4 text-sm text-sand/70" role="alert">
+                {% icon "alert-triangle" class="mt-0.5 h-5 w-5 shrink-0 text-sand/50" %}
+                <span>نام کاربری یا گذرواژه اشتباه است. دوباره تلاش کنید.</span>
+              </div>
+            {% endif %}
+
+            {% for field in form %}
+              <label class="field static" for="{{ field.id_for_label }}">
+                {{ field }}
+                <span>{{ field.label }}</span>
+              </label>
+              {% for error in field.errors %}
+                <span class="field-err">{% icon "alert-circle" class="h-3.5 w-3.5" %}{{ error }}</span>
+              {% endfor %}
+            {% endfor %}
+
+            <button type="submit" class="ry-btn ry-btn--fill mt-1 w-full justify-center">
+              ورود
+              {% icon "arrow-left" class="h-4 w-4" %}
+            </button>
+          </form>
+
+          <p class="mt-7 border-t border-line/15 pt-5 text-center ry-label-fa text-sand/40">
+            © {{ settings.established_year|default:"۱۴۰۳" }} {{ settings.site_name|default:"پیکسوریا" }}
+          </p>
         </div>
       </section>
     </div>
