@@ -1,5 +1,13 @@
 {% extends 'base.html' %}
 {% load icon_tags highlight_tags fa_digits %}
+{% comment %} صفحه تماس با ما — بازطراحی با زبان طراحی Ryoku.
+   همان ساختار داده‌ها و هوک‌های HTMX/پیکسز؛ فقط ظاهر با زبان جدید (void/sand/هیرلاین/سریف/مונו).
+   داده‌ها: page_section، form_section، form_points، map_section، faq_section، faq_items،
+   settings (phone, phone_secondary, website)، socials، form (ContactSubmissionForm)،
+   prefill_note، rate_limited، form_section.button_text/note.
+   فرم: HTMX POST به contact:contact، hx-target="this"، hx-swap="outerHTML".
+   موفقیت: _contact_success.html جایگزین کل فرم می‌شود. {% endcomment %}
+{% load icon_tags highlight_tags fa_digits %}
 
 {% block title %}
   تماس با ما — {{ settings.site_name }}
@@ -56,197 +64,163 @@
 {% endblock %}
 
 {% block content %}
-  {% comment %}هیرو — عنوان صفحه و کارت‌های اطلاعات تماس از SiteSettings{% endcomment %}
+  {% comment %} سکشن ۱: هیرو — عنوان + کارت‌های اطلاعات تماس {% endcomment %}
   {% if page_section %}
-    <section class="relative overflow-hidden bg-ink" data-mouse-parallax>
-    <div class="pointer-events-none absolute inset-0" aria-hidden="true">
-      <div data-depth="0.05" class="absolute right-[10%] top-[12%]">
-        <span data-float="14" class="orb block h-20 w-20"
-              style="background: radial-gradient(circle at 32% 30%, rgba(232,196,122,0.42), rgba(201,161,90,0.07) 60%, transparent 72%);"></span>
-      </div>
-      <div data-depth="0.08" class="absolute bottom-[14%] left-[7%]">
-        <span data-float="12" class="shard block h-24 w-20 rotate-12"></span>
-      </div>
-      <div data-depth="0.05" class="absolute left-[30%] top-[10%]">
-        <span data-float="10" class="orb block h-10 w-10"
-              style="background: radial-gradient(circle, rgba(46,99,255,0.5), transparent 70%);"></span>
-      </div>
-    </div>
-    <div class="pointer-events-none absolute -left-32 top-1/3 h-[30rem] w-[30rem] rounded-full opacity-30"
-         style="background: radial-gradient(circle, rgba(201,161,90,0.22), transparent 65%);"
-         aria-hidden="true"></div>
-    {% include "partials/_space_layer.html" with ring_spin="1" ring_class="-right-36 top-24 h-80 w-[34rem]" orb_variant="planet-orb-cream" orb_class="right-[12%] top-[22%] h-6 w-6" %}
-    <span class="stroke-title font-latin pointer-events-none absolute -bottom-10 left-0 select-none text-[20vw] font-light leading-none"
-          aria-hidden="true">hello</span>
+    <section id="contact-hero" class="ry-scope relative overflow-hidden border-b border-line/10">
+      <div class="relative z-10 mx-auto max-w-6xl px-6 py-24 md:py-36">
+        {% include 'components/_ry_section_header.html' with ry_num="01" ry_label_fa="تماس" ry_glyph="تـ" %}
 
-    <div class="relative z-10 mx-auto grid w-full max-w-7xl items-center gap-14 px-6 pb-24 pt-36 lg:grid-cols-12 lg:pt-44">
-      <div class="lg:col-span-5">
-        <div class="mb-5">{% include "components/_breadcrumb.html" %}</div>
-        {% if page_section.eyebrow %}
-          <p class="eyebrow" data-reveal="rise">{{ page_section.eyebrow }}</p>
-        {% endif %}
-        {% if page_section.title %}
-          <h1 class="mt-6 text-[2.6rem] font-extrabold leading-[1.25] sm:text-5xl lg:text-6xl"
-              data-reveal="mask">
-            {{ page_section.title|highlight }}
-          </h1>
-        {% endif %}
-        {% if page_section.description %}
-          <p class="mt-6 max-w-md text-lg font-light leading-8 text-cream/70"
-             data-reveal="blur" data-delay="0.12">
-            {{ page_section.description }}
-          </p>
-        {% endif %}
-        {% if page_section.response_note %}
-          <p class="mt-8 flex items-center gap-2 text-sm text-cream/50"
-             data-reveal="blur" data-delay="0.2">
-            {% icon "clock" class="h-4 w-4 text-gold" %} {{ page_section.response_note }}
-          </p>
-        {% endif %}
-      </div>
+        <div class="mt-14 grid gap-10 lg:grid-cols-12 lg:gap-10">
+          <div class="lg:col-span-5">
+            {% if page_section.eyebrow %}
+              <p class="ry-label-fa ry-reveal">{{ page_section.eyebrow }}</p>
+            {% endif %}
+            {% if page_section.title %}
+              <h1 class="ry-serif ry-reveal mt-4 text-4xl text-sand md:text-[2.85rem] md:leading-[1.4]" data-delay="0.06">
+                {{ page_section.title|highlight }}
+              </h1>
+            {% endif %}
+            {% if page_section.description %}
+              <p class="ry-reveal mt-7 text-[15px] leading-8 text-sand/65" data-delay="0.12">
+                {{ page_section.description }}
+              </p>
+            {% endif %}
+            {% if page_section.response_note %}
+              <p class="ry-reveal mt-6 flex items-center gap-2 text-sm text-sand/50" data-delay="0.18">
+                {% icon "clock" class="h-4 w-4" %} {{ page_section.response_note }}
+              </p>
+            {% endif %}
+          </div>
 
-      {% comment %}کارت‌های اطلاعات تماس — تلفن، همراه و وب‌سایت{% endcomment %}
-      {% if settings.phone or settings.phone_secondary or settings.website %}
-        <div class="grid gap-5 sm:grid-cols-2 lg:col-span-7">
-          {% if settings.phone %}
-            <a href="tel:{{ settings.phone }}"
-               class="tilt glass group relative flex flex-col gap-4 p-7 transition-transform hover:-translate-y-1.5 {% cycle '' 'lg:mt-10' '' 'lg:mt-10' %}"
-               style="{% cycle 'border-radius: 2rem 2rem 2rem 0.75rem' 'border-radius: 2rem 2rem 0.75rem 2rem' 'border-radius: 2rem 0.75rem 2rem 2rem' 'border-radius: 0.75rem 2rem 0.75rem 2rem' %}"
-               data-tilt data-reveal="rise">
-              <span class="glare" aria-hidden="true"></span>
-              <span class="icon-ring">{% icon "phone" class="h-5 w-5" %}</span>
-              <span>
-                <span class="block text-xs text-cream/50">{{ settings.phone_label|default:"دفتر مرکزی" }}</span>
-                <span class="fa-num mt-1 block text-2xl font-bold text-gold-light">{{ settings.phone|fa_digits }}</span>
-              </span>
-            </a>
-          {% endif %}
-          {% if settings.phone_secondary %}
-            <a href="tel:{{ settings.phone_secondary }}"
-               class="tilt glass group relative flex flex-col gap-4 p-7 transition-transform hover:-translate-y-1.5 {% cycle '' 'lg:mt-10' '' 'lg:mt-10' %}"
-               style="{% cycle 'border-radius: 2rem 2rem 2rem 0.75rem' 'border-radius: 2rem 2rem 0.75rem 2rem' 'border-radius: 2rem 0.75rem 2rem 2rem' 'border-radius: 0.75rem 2rem 0.75rem 2rem' %}"
-               data-tilt data-reveal="rise">
-              <span class="glare" aria-hidden="true"></span>
-              <span class="icon-ring">{% icon "smartphone" class="h-5 w-5" %}</span>
-              <span>
-                <span class="block text-xs text-cream/50">{{ settings.phone_secondary_label|default:"پشتیبانی" }}</span>
-                <span class="fa-num mt-1 block text-2xl font-bold text-gold-light">{{ settings.phone_secondary|fa_digits }}</span>
-              </span>
-            </a>
-          {% endif %}
-          {% if settings.website %}
-            <a href="{{ settings.website }}"
-               class="tilt glass group relative flex flex-col gap-4 p-7 transition-transform hover:-translate-y-1.5 {% cycle '' 'lg:mt-10' '' 'lg:mt-10' %}"
-               style="{% cycle 'border-radius: 2rem 2rem 2rem 0.75rem' 'border-radius: 2rem 2rem 0.75rem 2rem' 'border-radius: 2rem 0.75rem 2rem 2rem' 'border-radius: 0.75rem 2rem 0.75rem 2rem' %}"
-               data-tilt data-reveal="rise">
-              <span class="glare" aria-hidden="true"></span>
-              <span class="icon-ring">{% icon "globe" class="h-5 w-5" %}</span>
-              <span>
-                <span class="block text-xs text-cream/50">وب‌سایت</span>
-                <span dir="ltr" class="font-latin mt-1 block text-2xl font-bold text-gold-light">{{ settings.website }}</span>
-              </span>
-            </a>
-          {% endif %}
+          <div class="lg:col-span-7">
+            <div class="ry-reveal mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3" data-delay="0.2">
+              {% if settings.phone %}
+                <a href="tel:{{ settings.phone }}"
+                   class="ry-card group flex flex-col gap-4 p-7 transition-colors duration-200 hover:bg-surface"
+                   data-reveal="rise">
+                  <div class="flex items-center gap-3">
+                    <span class="ry-icobox" aria-hidden="true">{% icon "phone" class="h-5 w-5" %}</span>
+                    <h3 class="ry-serif text-xl text-sand">{{ settings.phone_label|default:"دفتر مرکزی" }}</h3>
+                  </div>
+                  <span class="ry-label" dir="ltr">{{ settings.phone|fa_digits }}</span>
+                </a>
+              {% endif %}
+              {% if settings.phone_secondary %}
+                <a href="tel:{{ settings.phone_secondary }}"
+                   class="ry-card group flex flex-col gap-4 p-7 transition-colors duration-200 hover:bg-surface"
+                   data-reveal="rise" data-delay="0.04">
+                  <div class="flex items-center gap-3">
+                    <span class="ry-icobox" aria-hidden="true">{% icon "smartphone" class="h-5 w-5" %}</span>
+                    <h3 class="ry-serif text-xl text-sand">{{ settings.phone_secondary_label|default:"پشتیبانی" }}</h3>
+                  </div>
+                  <span class="ry-label" dir="ltr">{{ settings.phone_secondary|fa_digits }}</span>
+                </a>
+              {% endif %}
+              {% if settings.website %}
+                <a href="{{ settings.website }}"
+                   class="ry-card group flex flex-col gap-4 p-7 transition-colors duration-200 hover:bg-surface"
+                   data-reveal="rise" data-delay="0.08">
+                  <div class="flex items-center gap-3">
+                    <span class="ry-icobox" aria-hidden="true">{% icon "globe" class="h-5 w-5" %}</span>
+                    <h3 class="ry-serif text-xl text-sand">وب‌سایت</h3>
+                  </div>
+                  <span class="ry-label" dir="ltr">{{ settings.website }}</span>
+                </a>
+              {% endif %}
+            </div>
+          </div>
         </div>
-      {% endif %}
-    </div>
+      </div>
     </section>
   {% endif %}
 
-  {% comment %}فرم تماس (روشن){% endcomment %}
-  <section id="form" class="relative bg-cream" style="border-radius: 9rem 3rem 0 0">
-    <div class="relative z-10 mx-auto grid max-w-7xl gap-12 px-6 pb-24 pt-24 lg:grid-cols-12">
-      <div class="lg:col-span-4">
-        {% if form_section.eyebrow %}
-          <p class="eyebrow eyebrow-dark" data-reveal="rise">{{ form_section.eyebrow }}</p>
-        {% endif %}
-        {% if form_section.title %}
-          <h2 class="mt-5 text-4xl font-extrabold leading-[1.3] text-paper"
-              data-reveal="mask">
-            {{ form_section.title|highlight:"dark" }}
-          </h2>
-        {% endif %}
-        {% if form_section.description %}
-          <p class="mt-5 font-light leading-8 text-coy"
-             data-reveal="blur" data-delay="0.1">
-            {{ form_section.description }}
-          </p>
-        {% endif %}
-        {% if form_points %}
-          <ul class="mt-8 space-y-4 text-sm text-coy"
-              data-reveal="blur" data-delay="0.16">
-            {% for point in form_points %}
-              <li class="flex items-center gap-3">
-                <span class="icon-ring">{% icon point.icon class="h-4 w-4" %}</span>
-                {{ point.text }}
-              </li>
-            {% endfor %}
-          </ul>
-        {% endif %}
-        {% if socials %}
-          <div class="mt-9 flex gap-3" data-reveal="pop" data-delay="0.22">
-            {% for social in socials %}
-              <a href="{{ social.url }}"
-                 class="soc !text-gold-dark"
-                 style="border-color: rgba(143, 107, 44, 0.4); background: rgba(255, 255, 255, 0.55);"
-                 aria-label="{{ social.name|default:social.label }}"
-                 target="_blank" rel="noopener noreferrer">
-                {% icon social.icon|default:"globe" class="h-4 w-4" %}
-              </a>
-            {% endfor %}
-          </div>
-        {% endif %}
-      </div>
+  {% comment %} سکشن ۲: فرم تماس + ستون اطلاعات (Ryoku layout) {% endcomment %}
+  <section id="contact-form" class="ry-scope relative overflow-hidden border-b border-line/10">
+    <div class="relative z-10 mx-auto max-w-6xl px-6 py-24 md:py-36">
+      <div class="mt-14 grid gap-14 lg:grid-cols-12 lg:gap-10">
+        <div class="lg:col-span-4">
+          {% include 'components/_ry_section_header.html' with ry_num="02" ry_label_fa="فرم" ry_glyph="مـ" %}
 
-      <div class="lg:col-span-8" data-reveal="rise">
-        {% comment %}خطِ «در حالِ مشاوره برای …» از لینکِ پلن‌های صفحهٔ خدمت
-          می‌آید؛ بیرونِ فرم قرار دارد تا بعد از تعویضِ htmx هم سر جای خود
-          بماند.{% endcomment %}
-        {% if prefill_note %}
-          <div class="mb-6 flex items-center gap-3 rounded-[1.25rem] border border-gold-dark/30 bg-gold/[.07] p-4 text-[0.92rem] text-paper">
-            {% icon "sparkles" class="h-5 w-5 shrink-0 text-gold-dark" %}
-            <span>در حالِ مشاوره برای <strong class="font-bold">{{ prefill_note }}</strong> — فرم را پر کنید تا جزئیات را هماهنگ کنیم.</span>
-          </div>
-        {% endif %}
-        {% include "contact/_contact_form.html" %}
+          {% if form_section.eyebrow %}
+            <p class="ry-label-fa ry-reveal mt-6">{{ form_section.eyebrow }}</p>
+          {% endif %}
+          {% if form_section.title %}
+            <h2 class="ry-serif ry-reveal mt-4 text-4xl text-sand md:text-[2.85rem] md:leading-[1.4]" data-delay="0.06">
+              {{ form_section.title|highlight }}
+            </h2>
+          {% endif %}
+          {% if form_section.description %}
+            <p class="ry-reveal mt-7 text-[15px] leading-8 text-sand/65" data-delay="0.12">
+              {{ form_section.description }}
+            </p>
+          {% endif %}
+          {% if form_points %}
+            <ul class="ry-reveal mt-8 space-y-3" data-delay="0.16">
+              {% for point in form_points %}
+                <li class="flex items-center gap-3">
+                  <span class="ry-icobox" aria-hidden="true">{% icon point.icon class="h-4 w-4" %}</span>
+                  <span class="text-sm text-sand/70">{{ point.text }}</span>
+                </li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+          {% if socials %}
+            <div class="ry-reveal mt-8 flex gap-3" data-delay="0.2">
+              {% for social in socials %}
+                <a href="{{ social.url }}"
+                   class="ry-soc"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   aria-label="{{ social.name|default:social.label }}">
+                  {% icon social.icon|default:"globe" class="h-4 w-4" %}
+                </a>
+              {% endfor %}
+            </div>
+          {% endif %}
+        </div>
+
+        <div class="lg:col-span-8" data-reveal="rise" data-delay="0.2">
+          {% if prefill_note %}
+            <div class="ry-notice mb-6" data-reveal="rise">
+              <div class="flex items-center gap-3">
+                <span class="ry-icobox" aria-hidden="true">{% icon "sparkles" class="h-5 w-5" %}</span>
+                <p class="text-sm text-sand/70">در حالِ مشاوره برای <strong>{{ prefill_note }}</strong> — فرم را پر کنید تا جزئیات را هماهنگ کنیم.</p>
+              </div>
+            </div>
+          {% endif %}
+          {% include "contact/_contact_form.html" %}
+        </div>
       </div>
     </div>
   </section>
 
-  {% comment %}دفتر و پوشش خدمات (تیره){% endcomment %}
+  {% comment %} سکشن ۳: دفتر و پوشش خدمات (Ryoku SVG map) {% endcomment %}
   {% if map_section %}
-    <section id="cities" class="relative overflow-hidden bg-ink2">
-      <svg class="divider divider-flip" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true">
-        <path d="M0,26 C260,84 520,82 760,44 C1000,6 1240,80 1440,30 L1440,0 L0,0 Z" fill="#f5f3ee" />
-      </svg>
-
+    <section id="cities" class="ry-scope relative overflow-hidden border-b border-line/10">
       <div class="relative z-10 mx-auto max-w-4xl px-6 pb-28 pt-32 text-center md:pt-40">
+        {% include 'components/_ry_section_header.html' with ry_num="03" ry_label_fa="دفتر" ry_glyph="دـ" %}
+
         {% if map_section.eyebrow %}
-          <p class="eyebrow eyebrow-c justify-center" data-reveal="rise">{{ map_section.eyebrow }}</p>
+          <p class="ry-label-fa ry-reveal justify-center">{{ map_section.eyebrow }}</p>
         {% endif %}
         {% if map_section.title %}
-          <h2 class="mt-5 text-4xl font-extrabold leading-[1.3] md:text-[2.7rem]"
-              data-reveal="mask" data-delay="0.08">
+          <h2 class="ry-serif ry-reveal mt-5 text-4xl text-sand md:text-[2.7rem]" data-delay="0.08">
             {{ map_section.title|highlight }}
           </h2>
         {% endif %}
         {% if map_section.subtitle %}
-          <p class="mx-auto mt-4 max-w-lg font-light leading-8 text-cream/60"
-             data-reveal="blur" data-delay="0.14">
+          <p class="ry-reveal mx-auto mt-4 max-w-lg text-[15px] leading-8 text-sand/65" data-delay="0.12">
             {{ map_section.subtitle }}
           </p>
         {% endif %}
 
-        <svg class="mx-auto mt-14 w-full max-w-2xl"
-             viewBox="0 0 800 300"
-             role="img"
-             aria-label="دفتر مرکزی پیکسوریا و حلقهٔ پوشش خدمات"
-             data-reveal="blur" data-delay="0.2">
+        {% comment %} نقشه الشعاعی Ryoku — خطوط هیرلاین، دایره مرکزی، نکات {% endcomment %}
+        <svg class="mx-auto ry-reveal mt-14 w-full max-w-2xl" viewBox="0 0 800 300" role="img" aria-label="دفتر مرکزی پیکسوریا و حلقهٔ پوشش خدمات" data-delay="0.2">
           <defs>
             <linearGradient id="cl" x1="0" y1="0" x2="1" y2="0">
-              <stop offset="0" stop-color="#8f6b2c" />
-              <stop offset=".5" stop-color="#e8c47a" />
-              <stop offset="1" stop-color="#c9a15a" />
+              <stop offset="0" stop-color="{{ '#8f6b2c' }}" />
+              <stop offset=".5" stop-color="{{ '#e8c47a' }}" />
+              <stop offset="1" stop-color="{{ '#c9a15a' }}" />
             </linearGradient>
             <radialGradient id="cg">
               <stop offset="0" stop-color="rgba(232,196,122,.55)" />
@@ -254,37 +228,31 @@
             </radialGradient>
           </defs>
 
-          {% comment %} حلقه‌های هم‌مرکز پوشش خدمات {% endcomment %}
-          <g fill="none" stroke="rgba(201,161,90,.28)">
+          <g fill="none" stroke="rgba(216,207,192,.28)">
             <circle cx="400" cy="160" r="96" stroke-dasharray="3 10" />
             <circle cx="400" cy="160" r="140" stroke-dasharray="3 12" opacity=".7" />
             <circle cx="400" cy="160" r="188" stroke-dasharray="2 14" opacity=".45" />
           </g>
-          {% comment %} حلقه‌های چرخان {% endcomment %}
-          <g fill="none" stroke="url(#cl)" stroke-width="1.6"
-             style="transform-origin: 400px 160px" class="cities-spin">
+
+          <g fill="none" stroke="url(#cl)" stroke-width="1.6" style="transform-origin: 400px 160px" class="cities-spin">
             <ellipse cx="400" cy="160" rx="118" ry="44" stroke-dasharray="8 14" opacity=".75" />
           </g>
-          <g fill="none" stroke="rgba(46,99,255,.55)" stroke-width="1.4"
-             style="transform-origin: 400px 160px" class="cities-spin-rev">
+          <g fill="none" stroke="rgba(46,99,255,.55)" stroke-width="1.4" style="transform-origin: 400px 160px" class="cities-spin-rev">
             <ellipse cx="400" cy="160" rx="168" ry="60" stroke-dasharray="5 16" opacity=".6" />
           </g>
 
-          {% comment %} هالهٔ مرکزی {% endcomment %}
           <circle r="78" fill="url(#cg)" cx="400" cy="160" />
 
-          {% comment %} گرهٔ مرکزی: دفتر {% endcomment %}
           <g>
-            <circle cx="400" cy="160" r="16" fill="#0a0a0c" stroke="#e8c47a" stroke-width="2.5" />
-            <circle cx="400" cy="160" r="5" fill="#e8c47a" />
-            <circle cx="400" cy="160" r="16" fill="none" stroke="#e8c47a" stroke-width="1.5">
+            <circle cx="400" cy="160" r="16" fill="#0d0e0c" stroke="{{ '#e8c47a' }}" stroke-width="2.5" />
+            <circle cx="400" cy="160" r="5" fill="{{ '#e8c47a' }}" />
+            <circle cx="400" cy="160" r="16" fill="none" stroke="{{ '#e8c47a' }}" stroke-width="1.5">
               <animate attributeName="r" values="16;40" dur="2.6s" repeatCount="indefinite" />
               <animate attributeName="opacity" values=".8;0" dur="2.6s" repeatCount="indefinite" />
             </circle>
           </g>
 
-          {% comment %} ماهواره‌های شناور روی حلقه‌ها {% endcomment %}
-          <circle r="5.5" fill="#e8c47a">
+          <circle r="5.5" fill="{{ '#e8c47a' }}">
             <animateMotion dur="4s" repeatCount="indefinite" path="M 400 44 A 118 44 0 1 1 399.9 44 Z" />
           </circle>
           <circle r="4" fill="#3b7bff">
@@ -295,12 +263,12 @@
           </circle>
 
           {% if map_section.office_name %}
-            <g font-size="24" font-weight="800" fill="#f5f3ee" text-anchor="middle">
+            <g font-size="24" font-weight="800" fill="{{ '#d8cfc0' }}" text-anchor="middle">
               <text x="400" y="252">{{ map_section.office_name }}</text>
             </g>
           {% endif %}
           {% if map_section.office_note %}
-            <g font-size="13" fill="rgba(245,243,238,.55)" text-anchor="middle">
+            <g font-size="13" fill="rgba(216,207,192,.55)" text-anchor="middle">
               <text x="400" y="274">{{ map_section.office_note }}</text>
             </g>
           {% endif %}
@@ -310,29 +278,36 @@
             </text>
           {% endif %}
         </svg>
+
+        {% if map_section.coverage_note %}
+          <p class="ry-reveal mt-6 text-xs leading-6 text-sand/40" data-delay="0.26">
+            {{ map_section.coverage_note }}
+          </p>
+        {% endif %}
       </div>
     </section>
   {% endif %}
 
-  {% comment %}پرسش‌های پرتکرار (روشن){% endcomment %}
+  {% comment %} سکشن ۴: پرسش‌های پرتکرار {% endcomment %}
   {% if faq_section and faq_items %}
-    <section id="faq" class="relative bg-cream2" style="border-radius: 3rem 9rem 0 0">
-      <div class="mx-auto max-w-3xl px-6 py-24">
-        <div class="text-center">
-          {% if faq_section.eyebrow %}
-            <p class="eyebrow eyebrow-dark eyebrow-c justify-center" data-reveal="rise">{{ faq_section.eyebrow }}</p>
-          {% endif %}
-          {% if faq_section.title %}
-            <h2 class="mt-5 text-4xl font-extrabold leading-[1.3] text-paper"
-                data-reveal="mask" data-delay="0.08">
-              {{ faq_section.title|highlight:"dark" }}
-            </h2>
-          {% endif %}
-        </div>
+    <section id="faq" class="ry-scope ry-faq-sec relative overflow-hidden border-b border-line/10">
+      <div class="relative z-10 mx-auto max-w-3xl px-6 py-24 md:py-36">
+        {% include 'components/_ry_section_header.html' with ry_num="04" ry_label_fa="پرسش‌ها" ry_glyph="سـ" %}
 
-        <div class="mt-12 space-y-4">
+        {% if faq_section.title %}
+          <h2 class="ry-serif ry-reveal mt-14 text-4xl text-sand md:text-[2.85rem] md:leading-[1.4]">
+            {{ faq_section.title|highlight }}
+          </h2>
+        {% endif %}
+        {% if faq_section.description %}
+          <p class="ry-reveal mt-6 max-w-xl text-[15px] leading-8 text-sand/65" data-delay="0.08">
+            {{ faq_section.description }}
+          </p>
+        {% endif %}
+
+        <div class="ry-reveal mt-14" id="faq-list" data-delay="0.12">
           {% for item in faq_items %}
-            <div class="faq-item" data-reveal="rise" data-delay="{% cycle '0' '0.06' '0.12' '0.18' %}">
+            <div class="faq-item ry-reveal" data-delay="{% cycle '0' '0.06' '0.12' '0.18' %}">
               <h3 class="m-0">
                 <button type="button" class="faq-q"
                         aria-expanded="false" aria-controls="cfaq-panel-{{ forloop.counter }}">
@@ -348,9 +323,9 @@
         </div>
 
         {% if faq_section.footer_question %}
-          <div class="mt-14 text-center" data-reveal="pop">
-            <p class="text-coy">{{ faq_section.footer_question }}</p>
-            <a href="#form" class="btn btn-gold mt-4 px-8 py-3.5" data-magnetic>
+          <div class="ry-reveal mt-14 text-center" data-delay="0.2">
+            <p class="text-sand/60">{{ faq_section.footer_question }}</p>
+            <a href="#contact-form" class="ry-btn ry-btn--fill mt-4 px-8 py-3.5" data-magnetic>
               {{ faq_section.footer_cta_text|default:"ارسال پیام" }} {% icon "arrow-left" class="h-4 w-4" %}
             </a>
           </div>

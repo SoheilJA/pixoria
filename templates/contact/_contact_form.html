@@ -1,73 +1,74 @@
 {% load icon_tags fa_digits %}
-{% comment %} فرم تماس v2 — حالت فرم (بار اول و بعد از خطای اعتبارسنجی) {% endcomment %}
-{% comment %} داده‌ها: form (ContactSubmissionForm)، form_section، rate_limited {% endcomment %}
-{% comment %} htmx: خود فرم را با outerHTML جایگزین می‌کند؛ موفقیت در _contact_success.html {% endcomment %}
+{% comment %} فرم تماس — بازطراحی Ryoku (void/sand/هیرلاین/سریف/مونو).
+   داده‌ها: form (ContactSubmissionForm)، form_section، rate_limited.
+   HTMX: hx-post، hx-target="this"، hx-swap="outerHTML"، hx-disabled-elt="#contact-submit".
+   موفقیت: _contact_success.html جایگزین کل فرم می‌شود.
+   طراحی: کارت void با هیرلاین، برچسب‌های field، دکمهٔ پر تیره. {% endcomment %}
 <form id="contact-form"
       hx-post="{% url 'contact:contact' %}"
       hx-target="this"
       hx-swap="outerHTML"
       hx-disabled-elt="#contact-submit"
-      class="glass-light p-8 md:p-10"
-      style="border-radius: 2.5rem 1rem 2.5rem 1rem"
+      class="ry-form-card"
       novalidate>
   {% csrf_token %}
-  {% comment %} هانی‌پات — برای کاربران مخفی است؛ ربات‌ها آن را پر می‌کنند {% endcomment %}
   {{ form.company_website }}
 
   {% if rate_limited %}
-    <div class="mb-6 flex items-start gap-3 rounded-[1rem] border border-[rgba(192,57,43,0.4)] bg-[rgba(192,57,43,0.07)] p-4 text-[0.92rem] text-[#a83a2b]" role="alert">
-      {% icon "alert-triangle" class="mt-0.5 h-5 w-5 shrink-0" %}
-      <span>تعداد درخواست‌های شما از حد مجاز عبور کرده است. کمی بعد دوباره تلاش کنید یا مستقیم با ما تماس بگیرید.</span>
+    <div class="ry-alert ry-reveal" role="alert">
+      <span class="ry-alert-ic" aria-hidden="true">{% icon "alert-triangle" class="h-5 w-5" %}</span>
+      <p class="text-sm text-sand/70">تعداد درخواست‌های شما از حد مجاز عبور کرده است. کمی بعد دوباره تلاش کنید یا مستقیم با ما تماس بگیرید.</p>
     </div>
   {% endif %}
 
-  <div class="grid gap-6 md:grid-cols-2">
+  <div class="ry-form-grid">
     <div>
-      <label class="field {% if form.name.errors %}invalid{% endif %}">
+      <label class="ry-field {% if form.name.errors %}ry-field-invalid{% endif %}">
         {{ form.name }}
         <span>نام و نام خانوادگی</span>
       </label>
       {% if form.name.errors %}
-        <span class="field-err">{% icon "alert-circle" class="h-3.5 w-3.5" %}{{ form.name.errors.0 }}</span>
+        <span class="ry-field-err">{% icon "alert-circle" class="h-3.5 w-3.5" %}{{ form.name.errors.0 }}</span>
       {% endif %}
     </div>
 
     <div>
-      <label class="field">
+      <label class="ry-field">
         {{ form.phone }}
         <span>شماره تماس (اختیاری)</span>
       </label>
       {% if form.phone.errors %}
-        <span class="field-err">{% icon "alert-circle" class="h-3.5 w-3.5" %}{{ form.phone.errors.0 }}</span>
+        <span class="ry-field-err">{% icon "alert-circle" class="h-3.5 w-3.5" %}{{ form.phone.errors.0 }}</span>
       {% endif %}
     </div>
 
     <div>
-      <label class="field static {% if form.subject.errors %}invalid{% endif %}">
+      <label class="ry-field {% if form.subject.errors %}ry-field-invalid{% endif %}">
         {{ form.subject }}
         <span>موضوع</span>
       </label>
       {% if form.subject.errors %}
-        <span class="field-err">{% icon "alert-circle" class="h-3.5 w-3.5" %}{{ form.subject.errors.0 }}</span>
+        <span class="ry-field-err">{% icon "alert-circle" class="h-3.5 w-3.5" %}{{ form.subject.errors.0 }}</span>
       {% endif %}
     </div>
   </div>
 
-  <div class="mt-6">
-    <label class="field {% if form.message.errors %}invalid{% endif %}">
+  <div class="ry-field-wrap mt-6">
+    <label class="ry-field {% if form.message.errors %}ry-field-invalid{% endif %}">
       {{ form.message }}
       <span>پیام شما</span>
     </label>
     {% if form.message.errors %}
-      <span class="field-err">{% icon "alert-circle" class="h-3.5 w-3.5" %}{{ form.message.errors.0 }}</span>
+      <span class="ry-field-err">{% icon "alert-circle" class="h-3.5 w-3.5" %}{{ form.message.errors.0 }}</span>
     {% endif %}
   </div>
 
-  <button id="contact-submit" type="submit" class="btn btn-gold mt-7 w-full px-8 py-4 text-lg" data-magnetic>
-    {% icon "send" class="h-5 w-5" %}
-    {{ form_section.button_text|default:"ارسال پیام" }}
+  <button id="contact-submit" type="submit" class="ry-btn ry-btn--ink w-full mt-7 px-8 py-4 text-lg" data-magnetic>
+    <span class="ry-btn__txt">{{ form_section.button_text|default:"ارسال پیام" }}</span>
+    <span class="ry-btn__arr" aria-hidden="true">{% icon "arrow-left" class="h-4 w-4" %}</span>
   </button>
   {% if form_section.note %}
-    <p class="mt-4 text-center text-xs text-coy/80">{{ form_section.note }}</p>
+    <p class="mt-5 text-center text-sm text-sand/45">{{ form_section.note }}</p>
   {% endif %}
+  {{ form.company_website }}
 </form>

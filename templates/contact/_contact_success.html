@@ -1,24 +1,19 @@
 {% load icon_tags %}
-{% comment %} فرم تماس v2 — حالت موفقیت (جایگزین کل فرم می‌شود) {% endcomment %}
-{% comment %} داده‌ها: form_section {% endcomment %}
-{% comment %} data-toast: pixoria.js بعد از swap هت‌ام‌ایکس پیام را در toast اعلام می‌کند {% endcomment %}
-<div class="glass-light flex flex-col items-center gap-6 p-8 text-center md:p-10"
-     style="border-radius: 2.5rem 1rem 2.5rem 1rem">
+{% comment %} فرم تماس — حالت موفقیت (Ryoku inverted block).
+   جایگزین کل فرم می‌شود (HTMX outerHTML).
+   data-toast: pixoria.js toast را فعال می‌کند.
+   دکمه «ارسال پیام دیگر» برمی‌گرداند به فرم. {% endcomment %}
+<div class="ry-inv ry-success-card ry-reveal" data-delay="0.06">
   <span data-toast="پیام شما با موفقیت ثبت شد؛ به‌زودی کارشناسان پیکسوریا با شما تماس می‌گیرند." hidden></span>
-  <span class="grid h-16 w-16 place-items-center rounded-full bg-gradient-to-br from-gold-light to-gold text-paper shadow-[0_18px_40px_-14px_rgba(201,161,90,0.7)]"
-        aria-hidden="true">
-    {% icon "check" class="h-8 w-8" %}
-  </span>
-  <div class="flex flex-col gap-3">
-    <h3 class="m-0 text-[clamp(1.2rem,1.6vw,1.5rem)] font-bold text-paper">پیام شما ثبت شد</h3>
-    <p class="m-0 max-w-[44ch] text-[0.98rem] leading-[1.7] text-coy">
-      از اینکه با ما تماس گرفتید سپاسگزاریم؛ کارشناسان پیکسوریا در اولین فرصت
-      پاسخ شما را می‌دهند.
+  <div class="ry-success-icon" aria-hidden="true">{% icon "check" class="h-10 w-10" %}</div>
+  <div class="ry-success-content">
+    <h3 class="ry-serif text-2xl text-void">پیام شما ثبت شد</h3>
+    <p class="mt-3 max-w-[44ch] text-sm leading-7 text-void/70">
+      از اینکه با ما تماس گرفتید سپاسگزاریم؛ کارشناسان پیکسوریا در اولین فرصت پاسخ شما را می‌دهند.
     </p>
   </div>
-  <a href="{% url 'contact:contact' %}"
-     class="btn btn-gold px-7 py-3.5"
-     data-magnetic>
-    ارسال پیام دیگر {% icon "arrow-left" class="h-4 w-4" %}
+  <a href="{% url 'contact:contact' %}" class="ry-btn ry-btn--ink-line w-full mt-6 px-7 py-3.5" data-magnetic>
+    <span class="ry-btn__txt">ارسال پیام دیگر</span>
+    <span class="ry-btn__arr" aria-hidden="true">{% icon "arrow-left" class="h-4 w-4" %}</span>
   </a>
 </div>
