@@ -917,6 +917,342 @@ html.has-preloader .preloader.pl-done {
   }
 }
 
+/* ===== Contact Form ===== */
+.ry-form-card {
+  background: var(--color-void);
+  border: 1px solid rgba(216, 207, 192, 0.15);
+  padding: 2rem;
+  border-radius: 0;
+}
+
+.ry-form-grid {
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 768px) {
+  .ry-form-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.ry-field-wrap {
+  width: 100%;
+}
+
+.ry-field {
+  display: block;
+  position: relative;
+  width: 100%;
+}
+
+.ry-field input,
+.ry-field select,
+.ry-field textarea {
+  width: 100%;
+  background: transparent;
+  border: 1px solid rgba(216, 207, 192, 0.15);
+  border-radius: 0;
+  padding: 0.85rem 1rem;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  color: var(--color-sand);
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+.ry-field input::placeholder,
+.ry-field textarea::placeholder {
+  color: transparent;
+}
+.ry-field label {
+  position: absolute;
+  top: 50%;
+  inset-inline-start: 1rem;
+  transform: translateY(-50%);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  color: rgba(216, 207, 192, 0.5);
+  pointer-events: none;
+  transition: all 0.2s ease;
+  background: var(--color-void);
+  padding-inline: 0.5rem;
+}
+.ry-field input:focus,
+.ry-field select:focus,
+.ry-field textarea:focus {
+  outline: none;
+  border-color: var(--color-sand);
+  background: rgba(216, 207, 192, 0.03);
+}
+.ry-field input:focus + label,
+.ry-field select:focus + label,
+.ry-field textarea:focus + label,
+.ry-field input:not(:placeholder-shown) + label,
+.ry-field select:not([value=""]) + label,
+.ry-field textarea:not(:placeholder-shown) + label {
+  top: 0;
+  transform: translateY(-100%) scale(0.85);
+  color: var(--color-sand);
+  background: var(--color-void);
+}
+.ry-field-invalid input,
+.ry-field-invalid select,
+.ry-field-invalid textarea {
+  border-color: #c0392b;
+}
+.ry-field-invalid input:focus,
+.ry-field-invalid select:focus,
+.ry-field-invalid textarea:focus {
+  border-color: #c0392b;
+}
+.ry-field-err {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.35rem;
+  font-size: 12px;
+  color: #c0392b;
+}
+
+.ry-field-wrap {
+  width: 100%;
+}
+
+.ry-form-grid {
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 768px) {
+  .ry-form-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.ry-form-card {
+  background: var(--color-void);
+  border: 1px solid rgba(216, 207, 192, 0.15);
+  padding: 2rem;
+  border-radius: 0;
+}
+
+.ry-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 0.8rem 1.6rem;
+  border: 1px solid transparent;
+  border-radius: 0;
+  font-family: var(--font-label);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  line-height: 1;
+  cursor: pointer;
+  text-decoration: none;
+  transition:
+    background-color 180ms ease,
+    color 180ms ease,
+    border-color 180ms ease;
+}
+.ry-btn:focus-visible {
+  outline: 1px solid var(--color-sand);
+  outline-offset: 3px;
+}
+.ry-btn--ink {
+  background: var(--color-void);
+  border-color: var(--color-void);
+  color: var(--color-sand);
+}
+.ry-btn--ink:hover {
+  background: transparent;
+  color: var(--color-void);
+}
+.ry-btn--ink-line {
+  background: transparent;
+  border-color: rgba(13, 14, 12, 0.4);
+  color: var(--color-void);
+}
+.ry-btn--ink-line:hover {
+  background: var(--color-void);
+  border-color: var(--color-void);
+  color: var(--color-sand);
+}
+.ry-btn__txt {
+  display: inline-block;
+}
+.ry-btn__arr {
+  display: inline-block;
+  transition: transform 0.2s ease;
+}
+.ry-btn:hover .ry-btn__arr {
+  transform: translateX(-4px);
+}
+
+/* Form Alert */
+.ry-alert {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  border: 1px solid rgba(192, 57, 43, 0.4);
+  border-radius: 0;
+  background: rgba(192, 57, 43, 0.07);
+  color: #a83a2b;
+}
+.ry-alert-ic {
+  flex-shrink: 0;
+  margin-top: 0.125rem;
+}
+
+/* ===== Contact Success Card ===== */
+.ry-success-card {
+  background: var(--color-sand);
+  color: var(--color-void);
+  padding: 3rem 2rem;
+  border-radius: 0;
+  text-align: center;
+  max-width: 28rem;
+  margin: 0 auto;
+}
+.ry-success-icon {
+  width: 4rem;
+  height: 4rem;
+  margin: 0 auto 1.5rem;
+  background: var(--color-void);
+  border: 1px solid var(--color-void);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.ry-success-icon svg {
+  width: 2.5rem;
+  height: 2.5rem;
+  stroke: var(--color-sand);
+}
+.ry-success-content h3 {
+  font-size: 1.75rem;
+  font-weight: 400;
+}
+.ry-success-content p {
+  margin-top: 1rem;
+  font-size: 1rem;
+  line-height: 1.7;
+  opacity: 0.75;
+}
+
+/* ===== Contact Notice ===== */
+.ry-notice {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  border: 1px solid rgba(216, 207, 192, 0.15);
+  border-radius: 0;
+  background: rgba(216, 207, 192, 0.05);
+}
+.ry-notice .ry-icobox {
+  flex-shrink: 0;
+  color: rgba(216, 207, 192, 0.6);
+}
+
+/* ===== Form Field Components ===== */
+.ry-field {
+  display: block;
+  position: relative;
+  width: 100%;
+}
+
+.ry-field input,
+.ry-field select,
+.ry-field textarea {
+  width: 100%;
+  background: transparent;
+  border: 1px solid rgba(216, 207, 192, 0.15);
+  border-radius: 0;
+  padding: 0.85rem 1rem;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  color: var(--color-sand);
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+.ry-field input::placeholder,
+.ry-field textarea::placeholder {
+  color: transparent;
+}
+.ry-field label {
+  position: absolute;
+  top: 50%;
+  inset-inline-start: 1rem;
+  transform: translateY(-50%);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  color: rgba(216, 207, 192, 0.5);
+  pointer-events: none;
+  transition: all 0.2s ease;
+  background: var(--color-void);
+  padding-inline: 0.5rem;
+}
+.ry-field input:focus,
+.ry-field select:focus,
+.ry-field textarea:focus {
+  outline: none;
+  border-color: var(--color-sand);
+  background: rgba(216, 207, 192, 0.03);
+}
+.ry-field input:focus + label,
+.ry-field select:focus + label,
+.ry-field textarea:focus + label,
+.ry-field input:not(:placeholder-shown) + label,
+.ry-field select:not([value=""]) + label,
+.ry-field textarea:not(:placeholder-shown) + label {
+  top: 0;
+  transform: translateY(-100%) scale(0.85);
+  color: var(--color-sand);
+  background: var(--color-void);
+}
+.ry-field-invalid input,
+.ry-field-invalid select,
+.ry-field-invalid textarea {
+  border-color: #c0392b;
+}
+.ry-field-invalid input:focus,
+.ry-field-invalid select:focus,
+.ry-field-invalid textarea:focus {
+  border-color: #c0392b;
+}
+.ry-field-err {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.35rem;
+  font-size: 12px;
+  color: #c0392b;
+}
+
+.ry-field-wrap {
+  width: 100%;
+}
+
+.ry-form-grid {
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 768px) {
+  .ry-form-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.ry-form-card {
+  background: var(--color-void);
+  border: 1px solid rgba(216, 207, 192, 0.15);
+  padding: 2rem;
+  border-radius: 0;
+}
+
 /* ===== Nav progress (T54) ===== */
 .nav-progress-bar {
   background: var(--color-sand) !important;

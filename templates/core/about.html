@@ -9,7 +9,7 @@
 {% endblock %}
 
 {% block extra_head %}
-  {% comment %} داده‌های ساختاریافته — سازمان، صفحهٔ درباره ما و مسیر نمایش {% endcomment %}
+  {% comment %} Structured data — Organization, AboutPage, BreadcrumbList {% endcomment %}
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -55,455 +55,244 @@
 {% endblock %}
 
 {% block content %}
-  {% comment %}هیرو — داستان استودیو با مدار خدمات{% endcomment %}
+  {% comment %} HERO — typography only (Ryoku): void bg, section header, serif H1, paragraph, 2 buttons, stats band, scroll cue, ghost year {% endcomment %}
   {% if hero %}
-    <section
-      class="relative flex min-h-[100svh] items-center overflow-hidden bg-ink"
-      data-mouse-parallax
-    >
-      <div class="pointer-events-none absolute inset-0" aria-hidden="true">
-        <div data-depth="0.05" class="absolute right-[8%] top-[10%]">
-          <span
-            data-float="14"
-            class="orb block h-20 w-20"
-            style="background: radial-gradient(circle at 32% 30%, rgba(232,196,122,0.42), rgba(201,161,90,0.07) 60%, transparent 72%);"
-          ></span>
-        </div>
-        <div data-depth="0.09" class="absolute left-[8%] bottom-[18%]">
-          <span data-float="12" class="shard block h-28 w-24 rotate-12"></span>
-        </div>
-        <div data-depth="0.06" class="absolute bottom-[26%] right-[30%]">
-          <span
-            data-float="10"
-            class="orb block h-10 w-10"
-            style="background: radial-gradient(circle, rgba(46,99,255,0.5), transparent 70%);"
-          ></span>
-        </div>
-      </div>
-      <div
-        class="pointer-events-none absolute -left-40 top-1/4 h-[34rem] w-[34rem] rounded-full opacity-30"
-        style="background: radial-gradient(circle, rgba(201,161,90,0.22), transparent 65%);"
-        aria-hidden="true"
-      ></div>
-      {% include "partials/_space_layer.html" with stars_only="1" %}
-      {% if settings.established_year %}
-        <span
-          class="stroke-title pointer-events-none absolute -bottom-16 left-0 select-none text-[24vw] font-extrabold leading-none"
-          aria-hidden="true">{{ settings.established_year|fa_digits }}</span
-        >
-      {% endif %}
+    <section id="about-hero" class="ry-scope relative overflow-hidden border-y border-line/10">
+      <div class="relative z-10 mx-auto max-w-6xl px-6 py-24 md:py-36">
+        {% include 'components/_ry_section_header.html' with ry_num="01" ry_label_fa="درباره ما" ry_glyph="هـ" %}
 
-      <div
-        class="relative z-10 mx-auto grid w-full max-w-7xl items-center gap-14 px-6 pb-24 pt-36 lg:grid-cols-2 lg:pt-28"
-      >
-        <div>
-          <div class="mb-5">{% include "components/_breadcrumb.html" %}</div>
-          {% if hero.eyebrow %}
-            <p class="eyebrow" data-reveal="rise">{{ hero.eyebrow }}</p>
-          {% endif %}
-          <h1
-            class="mt-6 text-[2.6rem] font-extrabold leading-[1.25] sm:text-5xl lg:text-6xl"
-            data-reveal="mask"
-          >
-            {{ hero.title|highlight }}
-          </h1>
-          <p
-            class="mt-6 max-w-xl text-lg font-light leading-8 text-cream/70"
-            data-reveal="blur"
-            data-delay="0.12"
-          >
-            {{ hero.description }}
-          </p>
-          <div
-            class="mt-10 flex flex-wrap gap-4"
-            data-reveal="pop"
-            data-delay="0.2"
-          >
-            <a
-              href="{% nav_url hero.cta_primary_url %}"
-              class="btn btn-gold px-8 py-4"
-              data-magnetic
-              >{{ hero.cta_primary_text }}
-              {% icon "arrow-left" class="h-4 w-4" %}</a
-            >
-            {% if hero.cta_secondary_url %}
+        <div class="mt-14 grid gap-16 lg:grid-cols-12 lg:gap-12">
+          <div class="lg:col-span-7">
+            {% if hero.eyebrow %}
+              <p class="ry-label-fa ry-reveal">{{ hero.eyebrow }}</p>
+            {% endif %}
+            <h1 class="ry-serif ry-reveal mt-4 text-4xl text-sand md:text-[3.5rem] md:leading-[1.15]" data-delay="0.06">
+              {{ hero.title|highlight:"dark" }}
+            </h1>
+            <p class="ry-reveal mt-7 text-[15px] leading-8 text-sand/65 max-w-xl" data-delay="0.12">
+              {{ hero.description }}
+            </p>
+
+            <div class="ry-reveal mt-10 flex flex-wrap gap-4" data-delay="0.18">
               <a
-                href="{% nav_url hero.cta_secondary_url %}"
-                class="btn btn-ghost px-8 py-4"
-                data-magnetic
-                >{{ hero.cta_secondary_text }}</a
+                href="{% nav_url hero.cta_primary_url %}"
+                class="ry-btn ry-btn--fill"
+                >{{ hero.cta_primary_text }}
+                {% icon "arrow-left" class="h-4 w-4" %}</a
               >
+              {% if hero.cta_secondary_url %}
+                <a
+                  href="{% nav_url hero.cta_secondary_url %}"
+                  class="ry-btn ry-btn--line"
+                  >{{ hero.cta_secondary_text }}</a
+                >
+              {% endif %}
+            </div>
+
+            {% comment %} Hairline stats band (compact) {% endcomment %}
+            {% if stats %}
+              <div class="ry-reveal mt-14 grid grid-cols-2 gap-x-8 gap-y-4 border-t border-line/10 pt-8" data-delay="0.24">
+                {% for stat in stats|slice:":4" %}
+                  <div class="ry-row grid grid-cols-[auto_1fr] items-center">
+                    <span class="ry-label-fa">{{ stat.label }}</span>
+                    <span class="text-lg font-display text-sand fa-num"
+                          data-counter="{{ stat.value }}"{% if stat.prefix %} data-prefix="{{ stat.prefix }}"{% endif %}{% if stat.suffix %} data-suffix="{{ stat.suffix }}"{% endif %}>۰</span>
+                  </div>
+                {% endfor %}
+              </div>
+            {% endif %}
+          </div>
+
+          {% comment %} Image panel — ry-frame with filmstrip if multiple images, else single frame {% endcomment %}
+          <div class="lg:col-span-5">
+            {% if story and story.image %}
+              <div class="ry-reveal" data-delay="0.1" data-ry-filmstrip>
+                <figure class="ry-frame">
+                  <span class="ry-frame__circle" aria-hidden="true"></span>
+                  <div class="aspect-[4/3] overflow-hidden">
+                    <img
+                      src="{{ story.image.url }}"
+                      alt="{{ story.image_alt|default:settings.site_name }}"
+                      class="w-full h-full object-cover"
+                    />
+                  </div>
+                  {% if story.image_caption %}
+                    <div class="mt-3 flex items-center justify-between gap-4">
+                      <span class="ry-label" dir="ltr">
+                        · <span data-ry-caption>{{ story.image_caption|truncatechars:28 }}</span>
+                      </span>
+                    </div>
+                  {% endif %}
+                </figure>
+              </div>
+            {% else %}
+              {% comment %} Placeholder for ASCII art per image policy §2b {% endcomment %}
+              <figure class="ry-frame ry-reveal" data-delay="0.1">
+                <div class="grid aspect-[4/3] place-items-center bg-surface">
+                  <div class="text-center">
+                    {% if settings.established_year %}
+                      <p class="ry-serif text-7xl text-sand/90">{{ settings.established_year|fa_digits }}</p>
+                    {% endif %}
+                    <span class="ry-label-fa mt-3 block">ASCII-ART-PLACEHOLDER</span>
+                  </div>
+                </div>
+              </figure>
             {% endif %}
           </div>
         </div>
-
-        {% comment %}سامانهٔ خورشیدی — هر خدمت یک سیاره در مدارِ اختصاصی{% endcomment %}
-        {% if services %}
-          <nav
-            class="relative mx-auto w-full max-w-[27rem]"
-            data-reveal="clip"
-            data-delay="0.15"
-            aria-label="خدمات پیکسوریا"
-          >
-            <div class="ss-system relative aspect-square w-full" data-pause>
-              <div class="ss-plane">
-                {% comment %}خورشیدِ درخشان در مرکز{% endcomment %}
-                <span class="ss-sun" aria-hidden="true">
-                  {% include "partials/_brand_mark.html" with class="h-1/3 w-1/3" %}
-                </span>
-
-                {% for service in services %}
-                  <div
-                    class="ss-orbit"
-                    style="--rx:{% cycle '20' '27' '34' '40' '45' '49' %}; --ry:{% cycle '13' '18' '22' '26' '30' '32' %}; --dur:{% cycle '30s' '42s' '26s' '50s' '34s' '46s' %}; --dir:{% cycle 'normal' 'reverse' 'reverse' 'normal' 'reverse' 'normal' %}; --delay:{% cycle '0' '-7' '-13' '-21' '-28' '-34' %}; --d:{% cycle '12%' '38%' '64%' '85%' '24%' '52%' %}; --size:{% cycle '3rem' '2.5rem' '3.25rem' '2.25rem' '2.75rem' '2.5rem' %};"
-                  >
-                    <span class="ss-ring" aria-hidden="true"></span>
-                    <a
-                      class="ss-planet {% cycle 'ss-a-gold' 'ss-a-royal' 'ss-a-gold-light' 'ss-a-cream' 'ss-a-gold-dark' 'ss-a-peri' %}"
-                      href="{% url 'services:detail' service.slug %}"
-                    >
-                      <span class="ss-up">
-                        {% icon service.icon %}
-                        <span class="ss-label">{{ service.title|plain }}</span>
-                      </span>
-                    </a>
-                  </div>
-                {% endfor %}
-
-                {% comment %}سنگ‌خاره‌ها و قمرهای کوچک{% endcomment %}
-                <span
-                  class="ss-orbit"
-                  style="--rx: 31; --ry: 20; --dur: 18s; --dir: reverse; --delay: -4; --d: 30%; --size: 0.4rem;"
-                  aria-hidden="true"
-                  ><span class="ss-debris ss-a-gold-light"></span
-                ></span>
-                <span
-                  class="ss-orbit"
-                  style="--rx: 43; --ry: 29; --dur: 24s; --dir: normal; --delay: -11; --d: 72%; --size: 0.35rem;"
-                  aria-hidden="true"
-                  ><span class="ss-debris ss-a-royal"></span
-                ></span>
-                <span
-                  class="ss-orbit"
-                  style="--rx: 17; --ry: 11; --dur: 14s; --dir: reverse; --delay: -2; --d: 55%; --size: 0.5rem;"
-                  aria-hidden="true"
-                  ><span class="ss-debris ss-a-cream"></span
-                ></span>
-              </div>
-            </div>
-          </nav>
-        {% endif %}
       </div>
+
+      {% if settings.established_year %}
+        <span
+          class="ry-ghost font-display pointer-events-none absolute -bottom-6 start-4 select-none text-[7rem] md:text-[11rem]"
+          aria-hidden="true"
+          >{{ settings.established_year|default:"۱۳۸۹"|fa_digits }}</span
+        >
+      {% endif %}
     </section>
   {% endif %}
 
-  {% comment %}داستان ما (روشن){% endcomment %}
+  {% comment %} STORY — Ryoku section: void bg, section header, serif title, paragraphs, chips, image frame {% endcomment %}
   {% if story %}
-    <section
-      id="story"
-      class="relative bg-cream"
-      style="border-radius: 3rem 9rem 0 0"
-    >
-      <div class="relative z-10 mx-auto max-w-7xl px-6 pb-24 pt-28 md:pt-36">
-        <div class="grid items-center gap-14 lg:grid-cols-12">
+    <section id="story" class="ry-scope relative overflow-hidden border-y border-line/10">
+      <div class="relative z-10 mx-auto max-w-6xl px-6 py-24 md:py-36">
+        {% include 'components/_ry_section_header.html' with ry_num="02" ry_label_fa="داستان ما" ry_glyph="د" %}
+
+        <div class="mt-14 grid gap-16 lg:grid-cols-12 lg:gap-12">
           <div class="lg:col-span-7">
             {% if story.eyebrow %}
-              <p class="eyebrow eyebrow-dark" data-reveal="rise">
-                {{ story.eyebrow }}
-              </p>
+              <p class="ry-label-fa ry-reveal">{{ story.eyebrow }}</p>
             {% endif %}
             {% if story.title %}
-              <h2
-                class="mt-5 text-4xl font-extrabold leading-[1.3] text-paper md:text-5xl"
-                data-reveal="mask"
-              >
+              <h2 class="ry-serif ry-reveal mt-4 text-4xl text-sand md:text-[2.85rem] md:leading-[1.4]" data-delay="0.06">
                 {{ story.title|highlight:"dark" }}
               </h2>
             {% endif %}
-            <p
-              class="mt-7 text-xl font-light leading-9 text-coy"
-              data-reveal="blur"
-              data-delay="0.1"
-            >
-              {{ story.description }}
-            </p>
+            {% if story.description %}
+              <p class="ry-reveal mt-7 text-[15px] leading-8 text-sand/65" data-delay="0.12">
+                {{ story.description }}
+              </p>
+            {% endif %}
             {% if story.body %}
-              <div
-                class="mt-5 space-y-4 font-light leading-8 text-coy"
-                data-reveal="blur"
-                data-delay="0.16"
-              >
+              <div class="ry-reveal mt-5 space-y-4 text-[15px] leading-8 text-sand/65" data-delay="0.18">
                 {{ story.body|linebreaks }}
               </div>
             {% endif %}
             {% if story.get_chips_list %}
-              <ul
-                class="mt-8 flex flex-wrap gap-3"
-                data-reveal="pop"
-                data-delay="0.28"
-              >
+              <ul class="ry-reveal mt-8 flex flex-wrap gap-2" data-delay="0.24">
                 {% for chip in story.get_chips_list %}
-                  <li class="s-chip-light">{{ chip }}</li>
+                  <li class="border border-line/15 px-3 py-1.5 text-xs text-sand/70">{{ chip }}</li>
                 {% endfor %}
               </ul>
             {% endif %}
+            {% if story.quote %}
+              <blockquote class="ry-reveal mt-12 border-r-2 border-line/20 pr-6" data-delay="0.3">
+                <p class="ry-serif text-2xl md:text-3xl leading-9 text-sand/80">
+                  {{ story.quote }}
+                </p>
+              </blockquote>
+            {% endif %}
           </div>
 
-          <figure class="relative lg:col-span-5" data-reveal="clip">
-            {% if settings.established_year %}
-              <span
-                class="stroke-title-light pointer-events-none absolute -top-14 left-0 select-none text-[7rem] font-extrabold leading-none"
-                aria-hidden="true"
-                >{{ settings.established_year|fa_digits }}</span
-              >
-            {% endif %}
+          <div class="lg:col-span-5">
             {% if story.image %}
-              <img
-                src="{{ story.image.url }}"
-                alt="{{ story.image_alt|default:settings.site_name }}"
-                loading="lazy"
-                decoding="async"
-                class="aspect-[4/3] w-full object-cover"
-                style="border-radius: 5rem 1.25rem 5rem 1.25rem; border: 1px solid rgba(201,161,90,0.5);"
-              />
+              <figure class="ry-frame ry-reveal" data-delay="0.1">
+                <span class="ry-frame__circle" aria-hidden="true"></span>
+                <div class="aspect-[4/3] overflow-hidden">
+                  <img
+                    src="{{ story.image.url }}"
+                    alt="{{ story.image_alt|default:settings.site_name }}"
+                    class="w-full h-full object-cover"
+                  />
+                </div>
+                {% if story.image_caption %}
+                  <figcaption class="ry-label mt-3">{{ story.image_caption }}</figcaption>
+                {% endif %}
+              </figure>
             {% else %}
-              {% comment %} تصویری بارگذاری نشده — یک مصورکِ مدار/سیاره به‌جای جای خالی {% endcomment %}
-              <div
-                class="grid aspect-[4/3] w-full place-items-center overflow-hidden bg-cream2"
-                style="border-radius: 5rem 1.25rem 5rem 1.25rem; border: 1px solid rgba(201,161,90,0.35);"
-                aria-hidden="true"
-              >
-                <span class="grid-bg absolute inset-0 opacity-50"></span>
-                {% include "components/_orbit_art.html" with class="relative h-44 w-44 text-gold-dark" %}
+              {% comment %} ASCII-ART-PLACEHOLDER per image policy §2b {% endcomment %}
+              <figure class="ry-frame ry-reveal" data-delay="0.1">
+                <div class="grid aspect-[4/3] place-items-center bg-surface">
+                  <span class="ry-label-fa">ASCII-ART-PLACEHOLDER</span>
+                </div>
+              </figure>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </section>
+  {% endif %}
+
+  {% comment %} JOURNEY / PROCESS — Ryoku vertical step list connected by hairline {% endcomment %}
+  {% if journey and journey_steps %}
+    <section id="journey" class="ry-scope relative overflow-hidden border-y border-line/10">
+      <div class="relative z-10 mx-auto max-w-6xl px-6 py-24 md:py-36">
+        {% include 'components/_ry_section_header.html' with ry_num="03" ry_label_fa="مسیر ما" ry_glyph="فـ" %}
+
+        {% if journey.eyebrow %}
+          <p class="ry-label-fa ry-reveal text-center">{{ journey.eyebrow }}</p>
+        {% endif %}
+        <h2 class="ry-serif ry-reveal mt-4 text-center text-4xl text-sand md:text-[2.85rem] md:leading-[1.4]" data-delay="0.06">
+          {{ journey.title|highlight }}
+        </h2>
+        {% if journey.subtitle %}
+          <p class="ry-reveal mt-4 text-center text-[15px] leading-8 text-sand/65 max-w-2xl mx-auto" data-delay="0.12">
+            {{ journey.subtitle }}
+          </p>
+        {% endif %}
+
+        {% comment %} Ryoku process list — vertical steps with hairline rail {% endcomment %}
+        <div class="ry-process ry-reveal mt-14 max-w-3xl mx-auto" data-delay="0.18">
+          {% for step in journey_steps %}
+            <div class="ry-process__item">
+              <div class="ry-process__node" aria-hidden="true">
+                {% icon "circle" class="h-5 w-5" %}
               </div>
-            {% endif %}
-            {% if story.image_caption %}
-              <figcaption
-                class="glass-light absolute bottom-6 right-6 flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium text-paper"
-              >
-                {% icon "map-pin" class="h-4 w-4 text-gold-dark" %}
-                {{ story.image_caption }}
-              </figcaption>
-            {% endif %}
-            <span
-              class="absolute -top-5 right-12 h-4 w-4 rotate-45 bg-gradient-to-br from-gold-dark to-gold-light shadow-[0_0_20px_2px_rgba(201,161,90,.5)]"
-              aria-hidden="true"
-            ></span>
-          </figure>
+              <div>
+                {% if step.year %}
+                  <p class="ry-label-fa mb-1">{{ step.year|fa_digits }}</p>
+                {% endif %}
+                <h3 class="ry-serif text-xl text-sand leading-snug">{{ step.title }}</h3>
+                {% if step.subtitle %}
+                  <p class="mt-2 text-[14px] leading-7 text-sand/55">{{ step.subtitle }}</p>
+                {% endif %}
+              </div>
+            </div>
+          {% endfor %}
         </div>
 
-        {% if story.quote %}
-          <blockquote
-            class="relative mx-auto mt-24 max-w-3xl text-center"
-            data-reveal="scale"
-          >
-            {% icon "quote" class="mx-auto h-10 w-10 text-gold-dark/60" %}
-            <p
-              class="mt-5 text-2xl font-light leading-10 text-paper md:text-3xl"
-            >
-              {{ story.quote }}
-            </p>
-            <span
-              class="mt-5 flex items-center justify-center gap-4"
-              aria-hidden="true"
-            >
-              <span class="h-px w-16 bg-gold-dark/40"></span>
-              <span class="h-2 w-2 rotate-45 bg-gold-dark"></span>
-              <span class="h-px w-16 bg-gold-dark/40"></span>
-            </span>
-          </blockquote>
+        {% if journey.badge_text %}
+          <div class="ry-reveal mt-12 text-center" data-delay="0.3">
+            <div class="inline-flex items-center gap-2 border border-line/15 px-4 py-2 text-sm">
+              {% icon journey.badge_icon class="h-4 w-4" %}
+              <span class="fa-num">{{ journey.badge_text|fa_digits }}</span>
+            </div>
+          </div>
         {% endif %}
       </div>
     </section>
   {% endif %}
 
-  {% comment %}مسیرِ حوزه‌های فعالیت (تیره){% endcomment %}
-  {% if journey and journey_steps %}
-    <section id="journey" class="relative overflow-hidden bg-ink2">
-      <svg
-        class="divider divider-flip"
-        viewBox="0 0 1440 90"
-        preserveAspectRatio="none"
-        aria-hidden="true"
-      >
-        <path
-          d="M0,26 C260,84 520,82 760,44 C1000,6 1240,80 1440,30 L1440,0 L0,0 Z"
-          fill="#f5f3ee"
-        />
-      </svg>
-
-      <div
-        class="relative z-10 mx-auto max-w-6xl px-6 pb-28 pt-32 md:pt-40"
-      >
-        <div class="text-center">
-          {% if journey.eyebrow %}
-            <p class="eyebrow eyebrow-c justify-center" data-reveal="rise">
-              {{ journey.eyebrow }}
-            </p>
-          {% endif %}
-          <h2
-            class="mt-5 text-4xl font-extrabold leading-[1.3] md:text-[2.7rem]"
-            data-reveal="mask"
-            data-delay="0.08"
-          >
-            {{ journey.title|highlight }}
-          </h2>
-          {% if journey.subtitle %}
-            <p
-              class="mx-auto mt-4 max-w-xl font-light leading-8 text-cream/60"
-              data-reveal="blur"
-              data-delay="0.14"
-            >
-              {{ journey.subtitle }}
-            </p>
-          {% endif %}
-        </div>
-
-        {% comment %}نقشهٔ مسیر (دسکتاپ) — گره‌ها و مسیر از دیتابیس ساخته می‌شوند{% endcomment %}
-        <div
-          class="relative mt-10 hidden lg:block"
-          data-reveal="clip"
-          data-delay="0.2"
-          style="aspect-ratio: 1000/340"
-        >
-          <svg
-            class="absolute inset-0 h-full w-full"
-            viewBox="0 0 1000 340"
-            preserveAspectRatio="none"
-            role="img"
-            aria-label="مسیر حوزه‌های فعالیت پیکسوریا"
-          >
-            <defs>
-              <linearGradient id="jl" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0" stop-color="#8f6b2c" />
-                <stop offset=".5" stop-color="#e8c47a" />
-                <stop offset="1" stop-color="#c9a15a" />
-              </linearGradient>
-            </defs>
-            <path
-              d="{{ journey_path }}"
-              fill="none"
-              stroke="url(#jl)"
-              stroke-width="2.5"
-              stroke-dasharray="3 10"
-              stroke-linecap="round"
-            />
-            {% for step in journey_steps %}
-              <g fill="#0a0a0c" stroke="#e8c47a" stroke-width="2">
-                <circle cx="{{ step.point_x }}" cy="{{ step.point_y }}" r="9" />
-              </g>
-              <g fill="#e8c47a">
-                <circle cx="{{ step.point_x }}" cy="{{ step.point_y }}" r="3" />
-              </g>
-              <text
-                x="{{ step.point_x }}"
-                y="{% if step.label_below %}{{ step.point_y|add:'42' }}{% else %}{{ step.point_y|add:'-28' }}{% endif %}"
-                font-size="17"
-                font-weight="700"
-                fill="#f5f3ee"
-                text-anchor="middle"
-              >
-                {{ step.label_bold }}
-              </text>
-              {% if step.label_small %}
-                <text
-                  x="{{ step.point_x }}"
-                  y="{% if step.label_below %}{{ step.point_y|add:'62' }}{% else %}{{ step.point_y|add:'-8' }}{% endif %}"
-                  font-size="11.5"
-                  fill="rgba(245,243,238,.55)"
-                  text-anchor="middle"
-                >
-                  {{ step.label_small }}
-                </text>
-              {% endif %}
-            {% endfor %}
-          </svg>
-          {% if journey.badge_text %}
-            <div
-              data-float="12"
-              class="glass absolute flex items-center gap-2 rounded-full px-6 py-3 text-sm font-bold text-gold-light"
-              style="left: 41%; top: 0"
-            >
-              {% icon journey.badge_icon class="h-4 w-4" %}
-              <span class="fa-num">{{ journey.badge_text|fa_digits }}</span>
-            </div>
-          {% endif %}
-        </div>
-
-        {% comment %}نسخهٔ موبایل — خط زمانی ساده{% endcomment %}
-        <div class="relative mt-14 lg:hidden" data-reveal="rise">
-          <span
-            class="absolute bottom-2 right-[5px] top-2 w-[2px] bg-gradient-to-b from-transparent via-gold/50 to-transparent"
-            aria-hidden="true"
-          ></span>
-          <ol class="space-y-10 pr-8">
-            {% for step in journey_steps %}
-              <li class="relative">
-                <span
-                  class="absolute -right-8 top-2 h-3.5 w-3.5 rotate-45 {% if forloop.last %}bg-gradient-to-br from-gold-dark to-gold-light shadow-[0_0_14px_2px_rgba(232,196,122,.5)]{% else %}bg-gold{% endif %}"
-                  aria-hidden="true"
-                ></span>
-                <h3 class="font-bold{% if forloop.last %} text-gold-light{% endif %}">
-                  {% if step.year %}
-                    <span class="fa-num ml-2 text-gold-light">{{ step.year|fa_digits }}</span> —
-                  {% endif %}{{ step.title }}
-                </h3>
-                {% if step.subtitle %}
-                  <p class="mt-1 text-sm text-cream/55">{{ step.subtitle }}</p>
-                {% endif %}
-              </li>
-            {% endfor %}
-          </ol>
-        </div>
-      </div>
-    </section>
-  {% endif %}
-
-  {% comment %}آمار (روشن){% endcomment %}
+  {% comment %} STATS — Ryoku stat grid (reused from homepage about section) {% endcomment %}
   {% if stats %}
-    <section
-      id="stats"
-      class="relative bg-cream2"
-      style="border-radius: 9rem 3rem 0 0"
-    >
-      <div class="mx-auto max-w-6xl px-6 py-24">
-        <div
-          class="glass-light relative overflow-hidden p-8 md:p-12"
-          style="border-radius: 3rem 1rem 3rem 1rem"
-          data-reveal="scale"
-        >
-          <span
-            class="pointer-events-none absolute -left-8 -top-10 h-36 w-36 rounded-full"
-            style="background: radial-gradient(circle, rgba(201,161,90,0.3), transparent 65%);"
-            aria-hidden="true"
-          ></span>
-          <ul class="relative grid grid-cols-2 gap-y-10 lg:grid-cols-4">
-            {% for stat in stats %}
-              <li
-                class="border-gold-dark/20 lg:border-l lg:px-8 {% if forloop.first %}lg:first:border-l-0 lg:first:pr-0{% endif %}{% if forloop.last %} lg:last:pl-0{% endif %}"
-              >
-                {% if stat.icon %}
-                  <span class="icon-ring"
-                    >{% icon stat.icon class="h-5 w-5" %}</span
-                  >
-                {% endif %}
-                <p
-                  class="mt-4 text-4xl font-extrabold text-goldgrad-dark md:text-5xl"
-                >
-                  <span
-                    class="fa-num"
-                    data-counter="{{ stat.value }}"{% if stat.prefix %} data-prefix="{{ stat.prefix }}"{% endif %}{% if stat.suffix %} data-suffix="{{ stat.suffix }}"{% endif %}
-                    >۰</span
-                  >
-                </p>
-                <p class="mt-2 text-sm text-coy">{{ stat.label }}</p>
-              </li>
-            {% endfor %}
-          </ul>
+    <section id="stats" class="ry-scope relative overflow-hidden border-y border-line/10">
+      <div class="relative z-10 mx-auto max-w-6xl px-6 py-24 md:py-36">
+        {% include 'components/_ry_section_header.html' with ry_num="04" ry_label_fa="آمار و ارقام" ry_glyph="آ" %}
+
+        <div class="ry-stat-grid ry-reveal mt-14" data-delay="0.1">
+          {% for stat in stats %}
+            <div class="ry-stat">
+              <p class="ry-stat__num">
+                <span
+                  class="fa-num"
+                  data-counter="{{ stat.value }}"{% if stat.prefix %} data-prefix="{{ stat.prefix }}"{% endif %}{% if stat.suffix %} data-suffix="{{ stat.suffix }}"{% endif %}
+                >۰</span>
+              </p>
+              <p class="ry-stat__label">{{ stat.label }}</p>
+            </div>
+          {% endfor %}
         </div>
       </div>
     </section>
   {% endif %}
-
-  {% comment %}دیوار برندها حذف شد — دیگر دادهٔ برندِ همکاری وجود ندارد.{% endcomment %}
 {% endblock %}
