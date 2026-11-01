@@ -114,7 +114,7 @@ This is a direct user instruction for the WHOLE redesign; every future section m
 | # | Section | Template | Status | Commit |
 | --- | --- | --- | --- | --- |
 | — | Foundation (tokens, fonts, base components) | `styles/input.css` + `static/fonts/` + partials + `ry-reveal.js` | ✅ | «راه‌اندازی توکن‌ها و کامپوننت‌های پایه‌ی طراحی جدید» |
-| — | Header/navigation | `templates/partials/_header.html` + `static/css/ry.css` | ✅ | «بازطراحی هدر» |
+| — | Header/navigation | `templates/partials/_header.html` + `static/css/ry.css` | ✅ | «بازطراحی هدر» + «بازطراحی هدر و منوی موبایل (رفع باگ دسکتاپ)» |
 | 1 | Hero | `templates/home/sections/_hero.html` | ✅ | «بازطراحی سکشن هیرو» |
 | 2 | درباره ما (about) | `templates/home/sections/_about.html` | ⏸ waiting for user approval | «بازطراحی سکشن دوم (درباره ما) با زبان طراحی جدید» |
 | 3 | خدمات (services) | `templates/home/sections/_services.html` | ✅ | «بازطراحی سکشن سوم (خدمات)» |
@@ -238,6 +238,37 @@ This is a direct user instruction for the WHOLE redesign; every future section m
   `GOLD="244,238,228"`). NOTE: that file's Persian comments were ALREADY mojibake on disk
   (pre-existing, not caused by this work — a comment-fixing pass could decode it later).
   The whole homepage now speaks the Ryoku language end to end.
+- Inner ABOUT PAGE (core/about.html) DONE, verified (render_check 200 clean, desktop
+  + zero console errors) and committed (`fb34d6c`). All four sections now speak Ryoku:
+  typographic hero (ry-sec-head «01 · درباره ما» + glyph «هـ», serif H1, square ry-btns,
+  hairline stats band with data-counter, ry-frame story image or ASCII-ART-PLACEHOLDER,
+  ghost year), story («02 · داستان ما» + «د», chips, serif blockquote), journey
+  («03 · مسیر ما» + «فـ», .ry-process vertical hairline list with year/title/subtitle,
+  badge chip), stats («04 · آمار و ارقام» + «آ», .ry-stat-grid). JS journey SVG path
+  helpers in views stay (unused by template now, backend untouched). NOTE: two
+  ASCII-ART-PLACEHOLDER spots registered here for the final ASCII pass (hero image
+  panel fallback when story.image unset; story image fallback).
+- HEADER FIX + MOBILE MENU REDESIGN (user reported desktop header broken): ROOT CAUSE
+  was CSS layering — Tailwind v4 utilities live in @layer utilities, so unlayered
+  custom CSS (`.ry-burger { display:grid }`, `#site-header .ry-btn { display:inline-flex }`)
+  ALWAYS beat `lg:hidden`/`hidden sm:inline-flex` utilities → burger AND CTA were
+  visible on desktop. Fix: display control moved into ry.css media queries
+  (burger: grid ≤1023px, none ≥lg; CTA: none <640px, inline-flex ≥sm) and dead
+  utilities removed from the template. LESSON: never pair Tailwind display utilities
+  with unlayered custom classes on the same element — put the media query in ry.css.
+  Also: removed duplicate `#scroll-progress` (lives in base.html), removed old gold
+  `box-shadow` leak on nav-solid (now `box-shadow: none` + void/88 + blur + hairline),
+  nav height 4.25rem (76px ≥lg), nav links 13px Vazirmatn (no tracking — Persian),
+  pixoria.js megamenu tile-close selector extended to `.ry-mega a` alongside
+  `.mega-menu a`, deduped `.ry-burger`/`.ry-msub` blocks in ry.css.
+- MOBILE MENU (ry-mmenu) fully styled — the old template classes had NO CSS (that was
+  the breakage): complete set now in ry.css — top row (brand + "navigation" eyebrow +
+  square close), list rows = mono number (.ry-label) + 1.45rem serif title + arrow with
+  hairline row separators, square accordion chevron with hairline divider + rotate on
+  open, .ry-msub submenu (20rem cap, hairline links), foot (full-width CTA + square
+  hairline phone chips + .ry-soc socials) and cropped outline ghost «PIXORIA»
+  (.ry-mmenu__ghost). Verified in browser at 360px: open/close/Escape/body-lock/
+  accordion (4 service links)/chips/socials/ghost all working, zero console errors.
 - LESSON (tooling): NEVER edit files via PowerShell `Get-Content`/`Set-Content` — PS 5.1
   reads UTF-8-no-BOM as ANSI and re-encoding mangles ALL Persian comments in the file
   (happened once; recovered via `git checkout HEAD -- styles/input.css` + re-adding the
@@ -271,9 +302,10 @@ This is a direct user instruction for the WHOLE redesign; every future section m
 
 ## 7. Next step
 
-All homepage body sections + CTA + footer + header are DONE. Remaining: the global review
-+ inner pages (about/contact/blog/portfolio/services lists + details, 404, login). One
-commit per step, update this file before each commit. ASCII-art pass (all
+All homepage body sections + CTA + footer + header are DONE. Inner about page DONE
+(Ryoku: typographic hero + story + journey process list + stat grid). Remaining:
+services pages (list + detail) → contact/blog/portfolio/404/login. One commit per
+step, update this file before each commit. ASCII-art pass (all
 `ASCII-ART-PLACEHOLDER` spots) happens AFTER the full redesign.
 
 ## 8. Resume instruction

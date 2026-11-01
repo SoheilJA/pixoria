@@ -1,27 +1,25 @@
 {% load icon_tags nav_tags highlight_tags fa_digits %}
-{% comment %} هدر Ryoku — نوارِ تمام‌عرض، کادربندیِ هیرلاین، منوی مگامنو و موبایل.
-   تمام هوک‌های JS pixoria.js حفظ شده‌اند: #site-header، #site-header nav (nav-solid)،
-   .nav-link (active/scroll)، #menu-open، #mobile-menu (+ .open)، data-menu-close،
-   data-m-accordion، li.m-sub-open، [data-mega-root] + .open، [data-mega-toggle].
-   طراحی: نوارِ تمام‌عرض، پس‌زمینهٔ شفاف → در اسکرول پس‌زمینهٔ void/90 + blur،
-   آیتم‌ها برچسب‌های ریزِ هیرلاین، دکمهٔ CTA مربع، همبرگر مربع.
-   مگامنو: پنل void با هیرلاین، کاشی‌های مربع.
-   موبایل: پوشش تمام‌صفحه void، لینک‌های سریف، آکاردئون خدمات، شبحِ PIXORIA.
-   Vertrag: تمام کلاس‌ها و IDهای JS دست‌نخورده. {% endcomment %}
+{% comment %} Ryoku Header — Full-width bar, hairline border, transparent→void/90 on scroll.
+   JS hooks preserved: #site-header, #site-header nav (.nav-solid), .nav-link (.active),
+   #menu-open, #mobile-menu (.open), [data-menu-close], [data-m-accordion],
+   li.m-sub-open, [data-mega-root] (.open), [data-mega-toggle].
+   Design: void bg, hairline bottom, ry-label nav items, square ry-btn CTA, square ry-burger.
+   Megamenu: void panel, hairline grid, square tiles.
+   Mobile: full-screen void overlay, ry-serif links, accordion services, ghost PIXORIA. {% endcomment %}
 {% url 'services:list' as services_url %}
 <header id="site-header" class="fixed inset-x-0 top-0 z-50">
   <nav class="ry-nav" aria-label="ناوبری اصلی">
-    {% comment %} لوگو {% endcomment %}
+    {% comment %} Logo {% endcomment %}
     <a href="{% url 'home:home' %}" class="flex items-center gap-3" aria-label="{{ settings.site_name }}">
       {% include "partials/_brand_lockup.html" %}
     </a>
 
-    {% comment %} ناوبری دسکتاپ — آیتم‌ها ثابت (apps/core/nav.py) {% endcomment %}
-    <ul class="hidden items-center gap-9 lg:flex" role="menubar">
+    {% comment %} Desktop nav — ry-label items with hairline underline {% endcomment %}
+    <ul class="hidden items-center gap-8 lg:flex" role="menubar">
       {% for item in nav_items %}
         {% nav_url item.url as item_url %}
         {% if item_url == services_url and services_footer %}
-          {% comment %} خدمات: لینک + چورون بازکنندهٔ مگامنو {% endcomment %}
+          {% comment %} Services: link + chevron for megamenu {% endcomment %}
           <li data-mega-root class="relative">
             <span class="flex items-center gap-1.5">
               <a class="nav-link" href="{{ item_url }}">{{ item.title }}</a>
@@ -48,11 +46,11 @@
               </div>
               {% if settings.mega_title %}
                 <div class="ry-mega__foot">
-                  <p class="text-xs text-sand/55">{{ settings.mega_title|highlight }}</p>
+                  <p class="ry-label-fa">{{ settings.mega_title|highlight }}</p>
                   {% if settings.mega_description %}
-                    <p class="mt-1 text-xs text-sand/55">{{ settings.mega_description }}</p>
+                    <p class="mt-1 ry-label-fa">{{ settings.mega_description }}</p>
                   {% endif %}
-                  <a href="{{ services_url }}" class="ry-link">
+                  <a href="{{ services_url }}" class="ry-link mt-2 inline-flex">
                     {{ settings.mega_cta_text|default:"مشاهده همه خدمات" }}
                     {% icon "arrow-left" class="h-3.5 w-3.5" %}
                   </a>
@@ -66,21 +64,21 @@
       {% endfor %}
     </ul>
 
-    {% comment %} سمت چپ: دکمهٔ CTA + همبرگر {% endcomment %}
-    <div class="flex items-center gap-2.5">
+    {% comment %} Right side: CTA + Burger {% endcomment %}
+    <div class="flex items-center gap-2">
       {% if header_settings and header_settings.show_cta %}
         <a
           href="{% nav_url header_settings.cta_url|default:'contact:contact' %}"
-          class="ry-btn ry-btn--fill hidden px-5 py-2.5 sm:inline-flex"
+          class="ry-btn ry-btn--fill"
           aria-label="{{ header_settings.cta_text }}"
         >
           {{ header_settings.cta_text }}
-          {% icon "arrow-left" class="h-4 w-4" %}
+          {% icon "arrow-left" class="h-3.5 w-3.5" %}
         </a>
       {% endif %}
       <button
         id="menu-open"
-        class="ry-burger lg:hidden"
+        class="ry-burger"
         aria-label="باز کردن منو"
         aria-controls="mobile-menu"
         aria-expanded="false"
@@ -91,13 +89,8 @@
   </nav>
 </header>
 
-{% comment %} منوی موبایل — پوشش تمام‌صفحه، انیمیشنِ پله‌ای، آکاردئون خدمات.
-   قراردادِ JS pixoria.js:
-   - #mobile-menu با کلاس .open
-   - .mm-close + data-menu-close برای بستن
-   - data-m-accordion روی چورون آکاردئون، li.m-sub-open برای باز
-   - #mobile-menu.open روی overlay
-   تمام کلاس‌ها و IDها دست‌نخورده. {% endcomment %}
+{% comment %} Mobile Menu — Full-screen void overlay, staggered ry-serif links, accordion services, ghost PIXORIA.
+   JS contract: #mobile-menu .open, .mm-close + data-menu-close, [data-m-accordion], li.m-sub-open. {% endcomment %}
 <div
   id="mobile-menu"
   class="fixed inset-0 z-[55] lg:hidden"
@@ -121,7 +114,7 @@
         {% for item in nav_items %}
           {% nav_url item.url as item_url %}
           {% if item_url == services_url and services_footer %}
-            {% comment %} خدمات: لینکِ خودِ صفحه + آکاردئونِ زیرمنو {% endcomment %}
+            {% comment %} Services: page link + accordion submenu {% endcomment %}
             <li class="m-has-sub">
               <div class="ry-mmenu__row" style="--m-i:{{ forloop.counter0 }}">
                 <a href="{{ item_url }}" class="ry-mmenu__link" {% if request.path == item_url %} aria-current="page"{% endif %}>
@@ -171,7 +164,6 @@
 
     <div class="ry-mmenu__foot" style="--m-i:{{ nav_items|length }}">
       {% if header_settings and header_settings.show_cta %}
-        {% comment %} دکمهٔ CTA — پرِ تیره {% endcomment %}
         <a
           href="{% nav_url header_settings.cta_url|default:'contact:contact' %}"
           class="ry-btn ry-btn--fill w-full"
@@ -213,5 +205,8 @@
         {% endif %}
       </div>
     </div>
+
+    {% comment %} شبحِ PIXORIA — خطِ دور، بریده در لبهٔ پایین {% endcomment %}
+    <div class="ry-mmenu__ghost" aria-hidden="true">PIXORIA</div>
   </div>
 </div>

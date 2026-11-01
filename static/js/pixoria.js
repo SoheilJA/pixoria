@@ -175,8 +175,8 @@ function init() {
     root.addEventListener("focusout", (e) => {
       if (!root.contains(e.relatedTarget)) setOpen(false);
     });
-    // بستن پس از کلیک روی یکی از کاشی‌ها
-    root.querySelectorAll(".mega-menu a").forEach((a) =>
+    // بستن پس از کلیک روی یکی از کاشی‌ها (پنلِ Ryoku یا مگامنوی قدیمی)
+    root.querySelectorAll(".ry-mega a, .mega-menu a").forEach((a) =>
       a.addEventListener("click", () => setOpen(false)),
     );
   });

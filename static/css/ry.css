@@ -10,43 +10,42 @@
 #site-header {
   z-index: 50;
 }
-#site-header nav {
-  transition:
-    background-color 0.3s ease,
-    border-color 0.3s ease,
-    box-shadow 0.3s ease;
-}
 #site-header nav.ry-nav {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-inline: auto;
-  max-width: none;
+  gap: 2rem;
   width: 100%;
-  height: 4rem;
-  padding-inline: 1.5rem;
+  height: 4.25rem;
+  padding-inline: clamp(1.25rem, 3.5vw, 2.75rem);
   background: transparent;
   border-bottom: 1px solid transparent;
   transition:
     background-color 0.3s ease,
-    border-color 0.3s ease,
-    box-shadow 0.3s ease;
+    border-color 0.3s ease;
+}
+@media (min-width: 1024px) {
+  #site-header nav.ry-nav {
+    height: 4.75rem;
+  }
 }
 #site-header nav.nav-solid {
   background: rgba(13, 14, 12, 0.88);
+  -webkit-backdrop-filter: blur(14px);
   backdrop-filter: blur(14px);
   border-bottom-color: rgba(216, 207, 192, 0.1);
-  box-shadow: 0 1px 24px -4px rgba(0, 0, 0, 0.25);
+  box-shadow: none;
 }
 
-/* Nav links */
+/* Nav links — sans، بدون tracking (فارسی)؛ زیرخطِ هیرلاین در هاور/فعال */
 #site-header .nav-link {
   position: relative;
   font-family: var(--font-sans);
-  font-size: 13.5px;
+  font-size: 13px;
+  line-height: 1.6;
   color: rgba(216, 207, 192, 0.65);
   text-decoration: none;
-  padding-block: 0.4rem;
+  padding-block: 0.45rem;
   transition: color 0.2s ease;
 }
 #site-header .nav-link:hover {
@@ -69,10 +68,15 @@
 #site-header .nav-link.active::after {
   width: 100%;
 }
+#site-header .nav-link:focus-visible {
+  outline: 1px solid var(--color-sand);
+  outline-offset: 3px;
+}
 
-/* CTA in header */
+/* CTA in header — نمایش با media query (utilityهای hidden/sm:inline-flex
+   در برابر CSS لایه‌بندی‌نشده می‌بازند) */
 #site-header .ry-btn {
-  display: inline-flex;
+  display: none;
   align-items: center;
   justify-content: center;
   gap: 0.6rem;
@@ -91,32 +95,12 @@
     color 180ms ease,
     border-color 180ms ease;
 }
+@media (min-width: 640px) {
+  #site-header .ry-btn {
+    display: inline-flex;
+  }
+}
 #site-header .ry-btn:focus-visible {
-  outline: 1px solid var(--color-sand);
-  outline-offset: 3px;
-}
-
-/* Burger button */
-.ry-burger {
-  display: grid;
-  place-items: center;
-  width: 2.5rem;
-  height: 2.5rem;
-  border: 1px solid rgba(216, 207, 192, 0.3);
-  color: var(--color-sand);
-  background: transparent;
-  cursor: pointer;
-  transition:
-    background-color 180ms ease,
-    color 180ms ease,
-    border-color 180ms ease;
-}
-.ry-burger:hover {
-  background: var(--color-sand);
-  border-color: var(--color-sand);
-  color: var(--color-void);
-}
-.ry-burger:focus-visible {
   outline: 1px solid var(--color-sand);
   outline-offset: 3px;
 }
@@ -223,7 +207,7 @@
   color: var(--color-sand);
 }
 
-/* ===== Burger ===== */
+/* Burger — فقط زیرِ lg (کنترلِ نمایش اینجا، نه با utility) */
 .ry-burger {
   display: grid;
   place-items: center;
@@ -238,6 +222,11 @@
     color 180ms ease,
     border-color 180ms ease;
 }
+@media (min-width: 1024px) {
+  .ry-burger {
+    display: none;
+  }
+}
 .ry-burger:hover {
   background: var(--color-sand);
   border-color: var(--color-sand);
@@ -248,7 +237,12 @@
   outline-offset: 3px;
 }
 
-/* ===== Mobile menu ===== */
+/* ========================================================================
+   MOBILE MENU — پوششِ تمام‌صفحهٔ void؛ ردیف‌های سریف با شمارهٔ مونو،
+   آکاردئونِ خدمات، چیپ‌های تماس، شبکه‌های اجتماعی و شبحِ PIXORIA.
+   قراردادِ JS: #mobile-menu.open، .mm-close/[data-menu-close]،
+   [data-m-accordion] + li.m-sub-open. همهٔ هوک‌ها دست‌نخورده.
+   ======================================================================== */
 #mobile-menu {
   visibility: hidden;
   opacity: 0;
@@ -258,16 +252,10 @@
   background: var(--color-void);
   pointer-events: none;
 }
-#mobile-menu::before {
-  display: none;
-}
 #mobile-menu.open {
   visibility: visible;
   opacity: 1;
   pointer-events: auto;
-}
-#mobile-menu::before {
-  display: none !important;
 }
 
 .ry-mmenu {
@@ -275,7 +263,6 @@
   inset: 0;
   display: flex;
   flex-direction: column;
-  gap: 0;
   padding:
     calc(1rem + env(safe-area-inset-top)) 1.35rem
     calc(1.1rem + env(safe-area-inset-bottom));
@@ -293,12 +280,13 @@
   transform: none;
 }
 
+/* — بالای منو: برند + برچسب + بستن — */
 .ry-mmenu__top {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  padding-bottom: 1.25rem;
+  padding-bottom: 1.1rem;
   border-bottom: 1px solid rgba(216, 207, 192, 0.12);
 }
 .ry-mmenu__brand {
@@ -307,16 +295,18 @@
   gap: 0.75rem;
 }
 .ry-mmenu__eyebrow {
+  font-family: var(--font-label);
   font-size: 10px;
   letter-spacing: 0.25em;
   text-transform: uppercase;
   color: rgba(216, 207, 192, 0.4);
 }
-.ry-mmenu__close {
+#mobile-menu .mm-close {
   display: grid;
   place-items: center;
   width: 2.5rem;
   height: 2.5rem;
+  flex: none;
   border: 1px solid rgba(216, 207, 192, 0.3);
   color: var(--color-sand);
   background: transparent;
@@ -325,13 +315,6 @@
     background-color 180ms ease,
     color 180ms ease,
     border-color 180ms ease;
-}
-#mobile-menu .mm-close {
-  width: 2.5rem;
-  height: 2.5rem;
-  border: 1px solid rgba(216, 207, 192, 0.3);
-  color: var(--color-sand);
-  background: transparent;
 }
 #mobile-menu .mm-close:hover {
   background: var(--color-sand);
@@ -343,68 +326,194 @@
   outline-offset: 3px;
 }
 
+/* — فهرستِ لینک‌ها: ردیف = شمارهٔ مونو + عنوانِ سریف + فلش — */
+.ry-mmenu__nav {
+  display: block;
+  flex: 1 1 auto;
+  min-height: 0;
+}
 .ry-mmenu__list {
-  flex: 1;
+  height: 100%;
   overflow-y: auto;
-  margin-top: 1.5rem;
+  margin-top: 0.5rem;
+  overscroll-behavior: contain;
+}
+.ry-mmenu__list > li {
+  border-bottom: 1px solid rgba(216, 207, 192, 0.1);
+}
+.ry-mmenu__row {
+  display: flex;
+  align-items: stretch;
 }
 .ry-mmenu__link {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: 1rem;
-  padding-block: 1.1rem;
-  border-bottom: 1px solid rgba(216, 207, 192, 0.1);
+  flex: 1;
+  min-width: 0;
+  padding-block: 1.15rem;
   text-decoration: none;
   color: var(--color-sand);
-}
-.ry-mmenu__link:hover {
-  color: var(--color-sand);
-}
-.ry-mmenu__idx {
-  font-family: var(--font-label);
-  font-size: 10px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: rgba(216, 207, 192, 0.4);
+  transition: color 0.2s ease;
 }
 .ry-mmenu__title {
   font-family: var(--font-display);
-  font-size: 1.5rem;
+  font-size: 1.45rem;
   font-weight: 400;
+  line-height: 1.3;
   color: var(--color-sand);
   flex: 1;
 }
 .ry-mmenu__arrow {
-  color: rgba(216, 207, 192, 0.4);
+  color: rgba(216, 207, 192, 0.35);
+  transition:
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+.ry-mmenu__link:hover .ry-mmenu__arrow,
+.ry-mmenu__link[aria-current="page"] .ry-mmenu__arrow {
+  color: var(--color-sand);
+  transform: translateX(-3px);
 }
 .ry-mmenu__link[aria-current="page"] .ry-mmenu__title {
-  color: var(--color-sand);
+  color: #fff;
+}
+.ry-mmenu__link:focus-visible {
+  outline: 1px solid var(--color-sand);
+  outline-offset: -1px;
 }
 
-/* Submenu accordion */
+/* چورونِ آکاردئون — نوارِ هیرلاینِ عمودی، چرخش با بازشدن */
+.ry-mmenu__chevron {
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  flex: none;
+  border: 0;
+  border-inline-start: 1px solid rgba(216, 207, 192, 0.1);
+  color: rgba(216, 207, 192, 0.6);
+  background: transparent;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+.ry-mmenu__chevron svg {
+  transition: transform 0.3s ease;
+}
+.ry-mmenu__chevron[aria-expanded="true"] svg {
+  transform: rotate(180deg);
+}
+.ry-mmenu__chevron:focus-visible {
+  outline: 1px solid var(--color-sand);
+  outline-offset: -1px;
+}
+
+/* زیرمنوی خدمات */
 .ry-msub {
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.35s ease;
 }
 li.m-sub-open .ry-msub {
-  max-height: 16rem;
+  max-height: 20rem;
 }
-.ry-msub a {
+.ry-msub-link {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 0.75rem 0 0.75rem 1rem;
-  border-bottom: 1px solid rgba(216, 207, 192, 0.08);
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.8rem 1.25rem 0.8rem 0;
+  border-bottom: 1px solid rgba(216, 207, 192, 0.07);
+  font-size: 14px;
   color: rgba(216, 207, 192, 0.65);
   text-decoration: none;
+  transition: color 0.2s ease;
 }
-.ry-msub a:hover {
+.ry-msub li:last-child .ry-msub-link {
+  border-bottom: 0;
+}
+.ry-msub-link:hover {
   color: var(--color-sand);
 }
+.ry-msub-link:focus-visible {
+  outline: 1px solid var(--color-sand);
+  outline-offset: -1px;
+}
+.ry-msub__arrow {
+  color: rgba(216, 207, 192, 0.35);
+}
 
-/* Staggered reveal animations for mobile menu items */
+/* — پایینِ منو: CTA + تماس + شبکه‌ها — */
+.ry-mmenu__foot {
+  flex: none;
+  margin-top: 1.1rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid rgba(216, 207, 192, 0.12);
+}
+.ry-mmenu__contact {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+.ry-mmenu__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.ry-mmenu__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  border: 1px solid rgba(216, 207, 192, 0.18);
+  padding: 0.5rem 0.85rem;
+  font-size: 12.5px;
+  color: rgba(216, 207, 192, 0.75);
+  text-decoration: none;
+  transition:
+    background-color 180ms ease,
+    color 180ms ease,
+    border-color 180ms ease;
+}
+.ry-mmenu__chip:hover {
+  background: rgba(216, 207, 192, 0.06);
+  border-color: rgba(216, 207, 192, 0.45);
+  color: var(--color-sand);
+}
+.ry-mmenu__chip:focus-visible {
+  outline: 1px solid var(--color-sand);
+  outline-offset: 3px;
+}
+.ry-mmenu__chip-ic {
+  display: grid;
+  place-items: center;
+  color: rgba(216, 207, 192, 0.5);
+}
+.ry-mmenu__social {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* شبحِ PIXORIA — خطِ دور، بریده در لبهٔ پایین */
+.ry-mmenu__ghost {
+  flex: none;
+  margin-top: 1.4rem;
+  height: clamp(2.6rem, 11vw, 4.5rem);
+  overflow: hidden;
+  font-family: var(--font-label);
+  font-size: clamp(4rem, 17vw, 7rem);
+  line-height: 1.05;
+  letter-spacing: 0.06em;
+  text-align: center;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(216, 207, 192, 0.12);
+  user-select: none;
+  pointer-events: none;
+}
+
+/* ورودِ پله‌ایِ آیتم‌ها */
 #mobile-menu.open .ry-mmenu [style*="--m-i"] {
   animation: ry-m-in 0.5s ease both;
   animation-delay: calc(var(--m-i, 0) * 60ms);
@@ -419,27 +528,13 @@ li.m-sub-open .ry-msub {
     transform: none;
   }
 }
-
-/* Submenu accordion */
-.ry-msub {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.35s ease;
-}
-li.m-sub-open .ry-msub {
-  max-height: 16rem;
-}
-.ry-msub a {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.75rem 0 0.75rem 1rem;
-  border-bottom: 1px solid rgba(216, 207, 192, 0.08);
-  color: rgba(216, 207, 192, 0.65);
-  text-decoration: none;
-}
-.ry-msub a:hover {
-  color: var(--color-sand);
+@media (prefers-reduced-motion: reduce) {
+  #mobile-menu,
+  #mobile-menu .ry-mmenu,
+  #mobile-menu.open .ry-mmenu [style*="--m-i"] {
+    transition: none;
+    animation: none;
+  }
 }
 
 /* ===== Scroll progress bar ===== */
