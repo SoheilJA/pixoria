@@ -54,7 +54,7 @@
 {% block content %}
   {% comment %} هیرو — عنوان پروژه، خلاصه و اطلاعات مشتری با گلیف "پـ" (پروژه) {% endcomment %}
   <section class="ry-scope ry-reveal">
-    <div class="relative z-10 mx-auto max-w-7xl px-6 py-28 md:py-40">
+    <div class="relative z-10 mx-auto max-w-7xl px-6 section-space">
       {% include "components/_ry_section_header.html" with ry_num="01" ry_label_fa="نمونه‌کارها" ry_glyph="پـ" %}
 
       {% comment %} مسیر نمایش — خانه ← نمونه‌کارها ← پروژهٔ فعلی {% endcomment %}
@@ -128,8 +128,8 @@
 
   {% comment %} تصویر اصلی پروژه — نمایش واقعی آپلودشده (سیاست §2b) {% endcomment %}
   {% if portfolio.image %}
-    <section class="ry-scope border-t border-line/10 ry-reveal">
-      <div class="relative z-10 mx-auto max-w-7xl px-6 py-16">
+<section class="ry-scope border-t border-line/10 ry-reveal">
+    <div class="relative z-10 mx-auto max-w-7xl px-6 section-space">
         {% include "components/_ry_frame.html" with ry_src=portfolio.image.url ry_alt=portfolio.image_alt|default:portfolio.title|plain ry_caption="01 / 01 · تصویر اصلی پروژه" ry_circle="1" %}
       </div>
     </section>
@@ -137,7 +137,7 @@
 
   {% comment %} دربارهٔ پروژه (روشن) — ستون چسبان + متن کامل{% endcomment %}
   <section class="ry-inv ry-reveal">
-    <div class="relative z-10 mx-auto max-w-7xl px-6 pb-24 pt-20 md:pt-28">
+    <div class="relative z-10 mx-auto max-w-7xl px-6 section-space">
       <div class="grid items-start gap-14 lg:grid-cols-12">
         {% comment %} ستون کناری — چسبان می‌ماند تا همراه متن اسکرول شود {% endcomment %}
         <div class="lg:col-span-4 lg:sticky lg:top-28 ry-reveal" data-delay="0.1">
@@ -169,8 +169,8 @@
 
   {% comment %} چالش و راهکار — دو کارت روی پس‌زمینهٔ void با حاشیه نازک {% endcomment %}
   {% if portfolio.challenge or portfolio.solution %}
-    <section class="ry-scope border-t border-line/10 ry-reveal">
-      <div class="relative z-10 mx-auto max-w-7xl px-6 pb-28 pt-16">
+<section class="ry-scope border-t border-line/10 ry-reveal">
+    <div class="relative z-10 mx-auto max-w-7xl px-6 section-space">
         <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
           {% if portfolio.challenge %}
             <article class="bg-surface border border-line/15 p-8 md:p-10"
@@ -210,7 +210,7 @@
   {% comment %} نتایج و آمار — جعبه‌های آمارِ Ryoku (ry-stat-grid) {% endcomment %}
   {% if portfolio.stats.all or portfolio.testimonial %}
     <section class="ry-scope border-t border-line/10 ry-reveal">
-      <div class="relative z-10 mx-auto max-w-7xl px-6 pb-28 pt-16 md:pt-24">
+      <div class="relative z-10 mx-auto max-w-7xl px-6 section-space">
         {% if portfolio.stats.all %}
           <div class="text-center">
             <p class="ry-label-fa justify-center" data-reveal="rise">نتایج</p>
@@ -256,7 +256,7 @@
   {% comment %} گالری — نمایش واقعی تصاویر آپلودشده (سیاست §2b) {% endcomment %}
   {% if portfolio.gallery.all %}
     <section class="ry-scope border-t border-line/10 ry-reveal">
-      <div class="relative z-10 mx-auto max-w-7xl px-6 pb-28 pt-16 md:pt-24">
+      <div class="relative z-10 mx-auto max-w-7xl px-6 section-space">
         <div class="text-center">
           <p class="ry-label-fa justify-center" data-reveal="rise">گالری</p>
           <h2 class="mt-4 ry-serif text-[2.2rem] md:text-[2.8rem] leading-[1.3] text-sand"
@@ -274,7 +274,7 @@
                    loading="lazy" decoding="async"
                    class="aspect-[4/3] w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]">
               {% if image.caption %}
-                <figcaption class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-void/95 to-transparent p-4 text-sm text-sand/80">
+                <figcaption class="absolute inset-x-0 bottom-0 bg-void/95 p-4 text-sm text-sand/80">
                   {{ image.caption }}
                 </figcaption>
               {% endif %}
@@ -288,7 +288,7 @@
   {% comment %} پروژه‌های دیگر — کاروسل + ناوبری پروژهٔ قبلی/بعدی. {% endcomment %}
   {% if prev_portfolio or next_portfolio %}
     <section class="ry-scope border-t border-line/10 ry-reveal" id="blog">
-      <div class="relative z-10 mx-auto max-w-7xl px-6 pb-28 pt-16 md:pt-24">
+      <div class="relative z-10 mx-auto max-w-7xl px-6 section-space">
         <div class="flex flex-wrap items-end justify-between gap-6">
           <div>
             <p class="ry-label-fa" data-reveal="rise">پروژه‌های دیگر</p>

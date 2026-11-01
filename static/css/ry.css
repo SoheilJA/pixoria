@@ -545,85 +545,6 @@ li.m-sub-open .ry-msub {
   background: var(--color-sand) !important;
 }
 
-/* ===== Preloader ===== */
-.preloader {
-  background: var(--color-void);
-}
-html.has-preloader .preloader {
-  display: grid;
-  animation: pl-out 0.45s 0.8s forwards;
-}
-html.has-preloader .preloader.pl-done {
-  animation-delay: 0s;
-}
-@keyframes pl-out {
-  to {
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-  }
-}
-.pl-scene {
-  position: relative;
-  display: grid;
-  place-items: center;
-  width: 7rem;
-  height: 7rem;
-}
-.pl-orbit {
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  border: 1px solid rgba(216, 207, 192, 0.25);
-  animation: pl-spin 1.6s linear infinite;
-}
-@keyframes pl-spin {
-  to {
-    rotate: 360deg;
-  }
-}
-.pl-planet {
-  position: absolute;
-  top: 0;
-  left: 50%;
-  width: 0.75rem;
-  height: 0.75rem;
-  border-radius: 50%;
-  background: var(--color-sand);
-  box-shadow: 0 0 12px 2px rgba(216, 207, 192, 0.4);
-  transform: translate(-50%, -50%);
-}
-@keyframes pl-spin {
-  to {
-    rotate: 360deg;
-  }
-}
-.pl-mark {
-  display: grid;
-  place-items: center;
-}
-.pl-line {
-  display: block;
-  width: 7rem;
-  height: 1px;
-  border-radius: 1px;
-  background: rgba(216, 207, 192, 0.08);
-  overflow: hidden;
-}
-.pl-fill {
-  display: block;
-  height: 100%;
-  width: 0;
-  border-radius: 1px;
-  background: var(--color-sand);
-  animation: pl-fill 0.95s cubic-bezier(0.25, 0.7, 0.3, 1) forwards;
-}
-@keyframes pl-fill {
-  to {
-    width: 100%;
-  }
-}
-
 /* ========================================================================
    PRELOADER — Full-screen ASCII Art Video-like Experience
    ======================================================================== */
@@ -642,8 +563,10 @@ html.has-preloader .preloader {
   animation: pl-fade-in 0.3s ease forwards;
 }
 
-html.has-preloader .preloader.pl-done {
-  animation: pl-out 0.5s ease 0.8s forwards;
+/* خروجِ پیش‌لودر — مستقل از has-preloader (ry.js اول pl-done را می‌گذارد
+   و بلافاصله کلاسِ html را برمی‌دارد؛ تأخیر را JS کنترل می‌کند) */
+.preloader.pl-done {
+  animation: pl-out 0.5s ease forwards;
 }
 
 @keyframes pl-fade-in {
@@ -659,6 +582,14 @@ html.has-preloader .preloader.pl-done {
   }
 }
 
+/* کاربرِ کاهشِ حرکت: پیش‌لودر اصلاً نمایش داده نشود (همان تضمینِ input.css؛
+   اینجا دوباره اعلام می‌شود تا ترتیبِ لودِ فایل‌ها برنده را تعیین نکند) */
+@media (prefers-reduced-motion: reduce) {
+  html.has-preloader .preloader {
+    display: none;
+  }
+}
+
 /* Background Layer */
 .pl-bg {
   position: absolute;
@@ -669,13 +600,7 @@ html.has-preloader .preloader.pl-done {
 .pl-scanlines {
   position: absolute;
   inset: 0;
-  background: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 2px,
-    rgba(216, 207, 192, 0.03) 2px,
-    rgba(216, 207, 192, 0.03) 4px
-  );
+  background: transparent;
   pointer-events: none;
   animation: pl-scanlines-move 8s linear infinite;
 }
@@ -899,7 +824,8 @@ html.has-preloader .preloader.pl-done {
   width: 60%;
   max-width: 300px;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(216, 207, 192, 0.3), transparent);
+  background: var(--color-sand);
+  opacity: 0.3;
 }
 
 .pl-copyright {
@@ -980,22 +906,6 @@ html.has-preloader .preloader.pl-done {
 @keyframes pl-pct-count {
   from { content: "0%"; }
   to { content: "100%"; }
-}
-
-/* Fade In Helper */
-@keyframes pl-fade-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-/* Glitch Flash */
-@keyframes pl-glitch-flash {
-  0% { opacity: 0; }
-  20% { opacity: 0.3; }
-  40% { opacity: 0; }
-  60% { opacity: 0.15; }
-  80% { opacity: 0; }
-  100% { opacity: 0; }
 }
 
 /* Reduced Motion */
@@ -1108,71 +1018,8 @@ html.has-preloader .preloader.pl-done {
   color: #c0392b;
 }
 
-.ry-field-wrap {
-  width: 100%;
-}
-
-.ry-form-grid {
-  display: grid;
-  gap: 1.25rem;
-  grid-template-columns: 1fr;
-}
-@media (min-width: 768px) {
-  .ry-form-grid {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-.ry-form-card {
-  background: var(--color-void);
-  border: 1px solid rgba(216, 207, 192, 0.15);
-  padding: 2rem;
-  border-radius: 0;
-}
-
-.ry-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.6rem;
-  padding: 0.8rem 1.6rem;
-  border: 1px solid transparent;
-  border-radius: 0;
-  font-family: var(--font-label);
-  font-size: 11px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  line-height: 1;
-  cursor: pointer;
-  text-decoration: none;
-  transition:
-    background-color 180ms ease,
-    color 180ms ease,
-    border-color 180ms ease;
-}
-.ry-btn:focus-visible {
-  outline: 1px solid var(--color-sand);
-  outline-offset: 3px;
-}
-.ry-btn--ink {
-  background: var(--color-void);
-  border-color: var(--color-void);
-  color: var(--color-sand);
-}
-.ry-btn--ink:hover {
-  background: transparent;
-  color: var(--color-void);
-}
-.ry-btn--ink-line {
-  background: transparent;
-  border-color: rgba(13, 14, 12, 0.4);
-  color: var(--color-void);
-}
-.ry-btn--ink-line:hover {
-  background: var(--color-void);
-  border-color: var(--color-void);
-  color: var(--color-sand);
-}
+/* تعریفِ پایهٔ .ry-btn و واریانت‌های --ink/--ink-line فقط در input.css
+   است (نسخهٔ تکراریِ واگرا حذف شد). اینجا فقط بخش‌های مخصوصِ منوی موبایل: */
 .ry-btn__txt {
   display: inline-block;
 }
@@ -1250,102 +1097,6 @@ html.has-preloader .preloader.pl-done {
 .ry-notice .ry-icobox {
   flex-shrink: 0;
   color: rgba(216, 207, 192, 0.6);
-}
-
-/* ===== Form Field Components ===== */
-.ry-field {
-  display: block;
-  position: relative;
-  width: 100%;
-}
-
-.ry-field input,
-.ry-field select,
-.ry-field textarea {
-  width: 100%;
-  background: transparent;
-  border: 1px solid rgba(216, 207, 192, 0.15);
-  border-radius: 0;
-  padding: 0.85rem 1rem;
-  font-family: var(--font-sans);
-  font-size: 14px;
-  color: var(--color-sand);
-  transition: border-color 0.2s ease, background-color 0.2s ease;
-}
-.ry-field input::placeholder,
-.ry-field textarea::placeholder {
-  color: transparent;
-}
-.ry-field label {
-  position: absolute;
-  top: 50%;
-  inset-inline-start: 1rem;
-  transform: translateY(-50%);
-  font-family: var(--font-sans);
-  font-size: 14px;
-  color: rgba(216, 207, 192, 0.5);
-  pointer-events: none;
-  transition: all 0.2s ease;
-  background: var(--color-void);
-  padding-inline: 0.5rem;
-}
-.ry-field input:focus,
-.ry-field select:focus,
-.ry-field textarea:focus {
-  outline: none;
-  border-color: var(--color-sand);
-  background: rgba(216, 207, 192, 0.03);
-}
-.ry-field input:focus + label,
-.ry-field select:focus + label,
-.ry-field textarea:focus + label,
-.ry-field input:not(:placeholder-shown) + label,
-.ry-field select:not([value=""]) + label,
-.ry-field textarea:not(:placeholder-shown) + label {
-  top: 0;
-  transform: translateY(-100%) scale(0.85);
-  color: var(--color-sand);
-  background: var(--color-void);
-}
-.ry-field-invalid input,
-.ry-field-invalid select,
-.ry-field-invalid textarea {
-  border-color: #c0392b;
-}
-.ry-field-invalid input:focus,
-.ry-field-invalid select:focus,
-.ry-field-invalid textarea:focus {
-  border-color: #c0392b;
-}
-.ry-field-err {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  margin-top: 0.35rem;
-  font-size: 12px;
-  color: #c0392b;
-}
-
-.ry-field-wrap {
-  width: 100%;
-}
-
-.ry-form-grid {
-  display: grid;
-  gap: 1.25rem;
-  grid-template-columns: 1fr;
-}
-@media (min-width: 768px) {
-  .ry-form-grid {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-.ry-form-card {
-  background: var(--color-void);
-  border: 1px solid rgba(216, 207, 192, 0.15);
-  padding: 2rem;
-  border-radius: 0;
 }
 
 /* ===== Nav progress (T54) ===== */

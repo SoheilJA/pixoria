@@ -54,7 +54,7 @@
 {% block content %}
   {% comment %} هیرو — عنوان مقاله، دسته‌بندی، برچسب‌ها و اطلاعات مقاله {% endcomment %}
   <section class="ry-scope ry-reveal">
-    <div class="relative z-10 mx-auto max-w-7xl px-6 py-28 md:py-40">
+    <div class="relative z-10 mx-auto max-w-7xl px-6 section-space">
       {% include "components/_breadcrumb.html" %}
 
       {% comment %} دسته‌بندی و برچسب‌ها {% endcomment %}
@@ -114,8 +114,8 @@
 
   {% comment %} تصویر کاور — نمایش واقعی آپلودشده (سیاست §2b) {% endcomment %}
   {% if article.cover_image %}
-    <section class="ry-scope border-t border-line/10 ry-reveal">
-      <div class="relative z-10 mx-auto max-w-7xl px-6 py-16">
+<section class="ry-scope border-t border-line/10 ry-reveal">
+    <div class="relative z-10 mx-auto max-w-7xl px-6 section-space">
         {% include "components/_ry_frame.html" with ry_src=article.cover_image.url ry_alt=article.get_cover_alt ry_caption="01 / 01 · کاور مقاله" ry_circle="1" %}
       </div>
     </section>
@@ -123,7 +123,7 @@
 
   {% comment %} متن مقاله — پس‌زمینهٔ void با تایپوگرافی prose-cream (مخصوص پس‌زمینه تیره) {% endcomment %}
   <section class="ry-scope border-t border-line/10 ry-reveal">
-    <div class="relative z-10 mx-auto max-w-7xl px-6 pb-24 pt-20 md:pt-28">
+    <div class="relative z-10 mx-auto max-w-7xl px-6 section-space">
       <div class="grid items-start gap-14 lg:grid-cols-12">
         {% comment %} متن مقاله — تایپوگرافیِ محتوای غنی {% endcomment %}
         <div class="lg:col-span-8 ry-reveal" data-delay="0.1">
@@ -237,7 +237,7 @@
   {% comment %} مطالب مرتبط — کاروسل مقالاتِ همین دسته + ناوبری مقالهٔ قبلی/بعدی. {% endcomment %}
   {% if has_related %}
     <section class="ry-scope border-t border-line/10 ry-reveal" id="blog">
-      <div class="relative z-10 mx-auto max-w-7xl px-6 pb-28 pt-16 md:pt-24">
+      <div class="relative z-10 mx-auto max-w-7xl px-6 section-space">
         <div class="flex flex-wrap items-end justify-between gap-6">
           <div>
             <p class="ry-label-fa" data-reveal="rise">بیشتر بخوانید</p>

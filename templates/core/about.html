@@ -58,7 +58,7 @@
   {% comment %} HERO — typography only (Ryoku): void bg, section header, serif H1, paragraph, 2 buttons, stats band, scroll cue, ghost year {% endcomment %}
   {% if hero %}
     <section id="about-hero" class="ry-scope relative overflow-hidden border-y border-line/10">
-      <div class="relative z-10 mx-auto max-w-6xl px-6 py-24 md:py-36">
+      <div class="relative z-10 mx-auto max-w-6xl px-6 section-space">
         {% include 'components/_ry_section_header.html' with ry_num="01" ry_label_fa="درباره ما" ry_glyph="هـ" %}
 
         <div class="mt-14 grid gap-16 lg:grid-cols-12 lg:gap-12">
@@ -155,7 +155,7 @@
   {% comment %} STORY — Ryoku section: void bg, section header, serif title, paragraphs, chips, image frame {% endcomment %}
   {% if story %}
     <section id="story" class="ry-scope relative overflow-hidden border-y border-line/10">
-      <div class="relative z-10 mx-auto max-w-6xl px-6 py-24 md:py-36">
+      <div class="relative z-10 mx-auto max-w-6xl px-6 section-space">
         {% include 'components/_ry_section_header.html' with ry_num="02" ry_label_fa="داستان ما" ry_glyph="د" %}
 
         <div class="mt-14 grid gap-16 lg:grid-cols-12 lg:gap-12">
@@ -226,7 +226,7 @@
   {% comment %} JOURNEY / PROCESS — Ryoku vertical step list connected by hairline {% endcomment %}
   {% if journey and journey_steps %}
     <section id="journey" class="ry-scope relative overflow-hidden border-y border-line/10">
-      <div class="relative z-10 mx-auto max-w-6xl px-6 py-24 md:py-36">
+      <div class="relative z-10 mx-auto max-w-6xl px-6 section-space">
         {% include 'components/_ry_section_header.html' with ry_num="03" ry_label_fa="مسیر ما" ry_glyph="فـ" %}
 
         {% if journey.eyebrow %}
@@ -276,7 +276,7 @@
   {% comment %} STATS — Ryoku stat grid (reused from homepage about section) {% endcomment %}
   {% if stats %}
     <section id="stats" class="ry-scope relative overflow-hidden border-y border-line/10">
-      <div class="relative z-10 mx-auto max-w-6xl px-6 py-24 md:py-36">
+      <div class="relative z-10 mx-auto max-w-6xl px-6 section-space">
         {% include 'components/_ry_section_header.html' with ry_num="04" ry_label_fa="آمار و ارقام" ry_glyph="آ" %}
 
         <div class="ry-stat-grid ry-reveal mt-14" data-delay="0.1">

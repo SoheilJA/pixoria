@@ -30,7 +30,7 @@
 {% block content %}
   {% comment %} هیرو — عنوان آرشیو نمونه‌کارها با گلیف "پـ" (پروژه) {% endcomment %}
   <section class="ry-scope ry-reveal">
-    <div class="relative z-10 mx-auto max-w-7xl px-6 py-28 md:py-40">
+    <div class="relative z-10 mx-auto max-w-7xl px-6 section-space">
       {% include "components/_ry_section_header.html" with ry_num="01" ry_label_fa="نمونه‌کارها" ry_glyph="پـ" %}
       <h1 class="mt-6 ry-serif ry-narrow text-[2.8rem] md:text-[3.5rem] lg:text-[4.5rem] leading-[1.15] text-sand">
         {% if page_section and page_section.title %}
@@ -63,7 +63,7 @@
 
   {% comment %} آرشیو — فیلتر دسته‌بندی + گرید پروژه‌ها {% endcomment %}
   <section class="ry-scope border-t border-line/10 ry-reveal" id="works" data-pf-root data-pf-sync data-carousel>
-    <div class="relative z-10 mx-auto max-w-7xl px-6 pb-28 pt-16">
+    <div class="relative z-10 mx-auto max-w-7xl px-6 section-space">
       {% comment %} فیلتر دسته‌بندی — کلید فیلتر = اسلاگ دسته‌بندی {% endcomment %}
       {% if categories %}
         <div class="flex flex-wrap gap-2.5" data-reveal="pop" data-pf-filters>

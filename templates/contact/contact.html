@@ -67,7 +67,7 @@
   {% comment %} سکشن ۱: هیرو — عنوان + کارت‌های اطلاعات تماس {% endcomment %}
   {% if page_section %}
     <section id="contact-hero" class="ry-scope relative overflow-hidden border-b border-line/10">
-      <div class="relative z-10 mx-auto max-w-6xl px-6 py-24 md:py-36">
+      <div class="relative z-10 mx-auto max-w-6xl px-6 section-space">
         {% include 'components/_ry_section_header.html' with ry_num="01" ry_label_fa="تماس" ry_glyph="تـ" %}
 
         <div class="mt-14 grid gap-10 lg:grid-cols-12 lg:gap-10">
@@ -136,7 +136,7 @@
 
   {% comment %} سکشن ۲: فرم تماس + ستون اطلاعات (Ryoku layout) {% endcomment %}
   <section id="contact-form" class="ry-scope relative overflow-hidden border-b border-line/10">
-    <div class="relative z-10 mx-auto max-w-6xl px-6 py-24 md:py-36">
+    <div class="relative z-10 mx-auto max-w-6xl px-6 section-space">
       <div class="mt-14 grid gap-14 lg:grid-cols-12 lg:gap-10">
         <div class="lg:col-span-4">
           {% include 'components/_ry_section_header.html' with ry_num="02" ry_label_fa="فرم" ry_glyph="مـ" %}
@@ -197,7 +197,7 @@
   {% comment %} سکشن ۳: دفتر و پوشش خدمات (Ryoku SVG map) {% endcomment %}
   {% if map_section %}
     <section id="cities" class="ry-scope relative overflow-hidden border-b border-line/10">
-      <div class="relative z-10 mx-auto max-w-4xl px-6 pb-28 pt-32 text-center md:pt-40">
+      <div class="relative z-10 mx-auto max-w-4xl px-6 section-space text-center">
         {% include 'components/_ry_section_header.html' with ry_num="03" ry_label_fa="دفتر" ry_glyph="دـ" %}
 
         {% if map_section.eyebrow %}
@@ -291,7 +291,7 @@
   {% comment %} سکشن ۴: پرسش‌های پرتکرار {% endcomment %}
   {% if faq_section and faq_items %}
     <section id="faq" class="ry-scope ry-faq-sec relative overflow-hidden border-b border-line/10">
-      <div class="relative z-10 mx-auto max-w-3xl px-6 py-24 md:py-36">
+      <div class="relative z-10 mx-auto max-w-3xl px-6 section-space">
         {% include 'components/_ry_section_header.html' with ry_num="04" ry_label_fa="پرسش‌ها" ry_glyph="سـ" %}
 
         {% if faq_section.title %}

@@ -100,7 +100,7 @@
 
   {% comment %} ── هیرو — مسیر صفحه، عنوان، مقدمه و دکمه‌ها ── {% endcomment %}
   <section class="ry-scope relative overflow-hidden border-b border-line/10">
-    <div class="relative z-10 mx-auto max-w-6xl px-6 py-24 md:py-36">
+    <div class="relative z-10 mx-auto max-w-6xl px-6 section-space">
       {% include "components/_breadcrumb.html" %}
 
       {% include 'components/_ry_section_header.html' with ry_num="01" ry_label_fa="خدمت" ry_glyph="خـ" %}
@@ -174,7 +174,7 @@
   {% comment %} ── مرور کلی — اولین بخشِ محتوای فعال (یا توضیحاتِ کاملِ خدمت) ── {% endcomment %}
   {% if overview or service.description %}
     <section class="ry-scope relative overflow-hidden border-b border-line/10">
-      <div class="relative z-10 mx-auto max-w-3xl px-6 py-24 md:py-32">
+      <div class="relative z-10 mx-auto max-w-3xl px-6 section-space">
 
         {% include 'components/_ry_section_header.html' with ry_num="02" ry_label_fa=overview.eyebrow|default:"مرور کلی" ry_glyph="شـ" %}
 
@@ -204,7 +204,7 @@
   {% comment %} ── خروجی‌ها — چه چیزی تحویل می‌گیرید (ردیف‌های هیرلاین) ── {% endcomment %}
   {% if deliverables %}
     <section class="ry-scope relative overflow-hidden border-b border-line/10">
-      <div class="relative z-10 mx-auto max-w-6xl px-6 py-24 md:py-32">
+      <div class="relative z-10 mx-auto max-w-6xl px-6 section-space">
 
         {% include 'components/_ry_section_header.html' with ry_num="03" ry_label_fa="خروجی‌های پروژه" ry_glyph="د" %}
 
@@ -229,7 +229,7 @@
   {% comment %} ── بخش‌های بلندِ محتوای سئو — تمام‌عرض یا دوستونی با تصویرِ واقعی ── {% endcomment %}
   {% for section in sections %}
     <section class="ry-scope relative overflow-hidden border-b border-line/10">
-      <div class="relative z-10 mx-auto max-w-6xl px-6 py-24 md:py-32">
+      <div class="relative z-10 mx-auto max-w-6xl px-6 section-space">
         {% if section.layout == 'full' %}
           <div class="max-w-3xl">
             {% if section.eyebrow %}
@@ -285,7 +285,7 @@
   {% comment %} ── کاربردها و صنایع — گریدِ مشخصاتِ هیرلاین ── {% endcomment %}
   {% if use_cases %}
     <section class="ry-scope relative overflow-hidden border-b border-line/10">
-      <div class="relative z-10 mx-auto max-w-6xl px-6 py-24 md:py-32">
+      <div class="relative z-10 mx-auto max-w-6xl px-6 section-space">
 
         {% include 'components/_ry_section_header.html' with ry_num="04" ry_label_fa="کاربردها و صنایع" ry_glyph="کـ" %}
 
@@ -313,7 +313,7 @@
   {% comment %} ── ابزارها و فناوری‌ها — مارکوی مربع (دو نسخه از لیست = حلقهٔ بی‌درنگ) ── {% endcomment %}
   {% if tools %}
     <section class="ry-scope ry-tools-sec relative overflow-hidden border-b border-line/10">
-      <div class="relative z-10 mx-auto max-w-6xl px-6 py-24 md:py-32">
+      <div class="relative z-10 mx-auto max-w-6xl px-6 section-space">
 
         {% include 'components/_ry_section_header.html' with ry_num="05" ry_label_fa="ابزارها و فناوری‌ها" ry_glyph="تـ" %}
 
@@ -348,7 +348,7 @@
   {% comment %} ── فرآیند — فهرستِ عمودیِ متصل به هیرلاین (همان الگوی مسیرِ درباره ما) ── {% endcomment %}
   {% if processes %}
     <section class="ry-scope relative overflow-hidden border-b border-line/10">
-      <div class="relative z-10 mx-auto max-w-6xl px-6 py-24 md:py-32">
+      <div class="relative z-10 mx-auto max-w-6xl px-6 section-space">
 
         {% include 'components/_ry_section_header.html' with ry_num="06" ry_label_fa="مراحل پروژه" ry_glyph="فـ" %}
 
@@ -387,7 +387,7 @@
   {% comment %} ── چرا ما — سه‌ستون با جداکنندهٔ هیرلاینِ عمودی ── {% endcomment %}
   {% if why_us %}
     <section class="ry-scope relative overflow-hidden border-b border-line/10">
-      <div class="relative z-10 mx-auto max-w-6xl px-6 py-24 md:py-32">
+      <div class="relative z-10 mx-auto max-w-6xl px-6 section-space">
 
         {% include 'components/_ry_section_header.html' with ry_num="07" ry_label_fa="چرا پیکسوریا" ry_glyph="چـ" %}
 
@@ -413,7 +413,7 @@
   {% comment %} ── آمار — جعبه‌های مربعِ هیرلاین (شمارشگرِ متنِ آزاد) ── {% endcomment %}
   {% if stats %}
     <section class="ry-scope relative overflow-hidden border-b border-line/10">
-      <div class="relative z-10 mx-auto max-w-6xl px-6 py-24 md:py-32">
+      <div class="relative z-10 mx-auto max-w-6xl px-6 section-space">
 
         {% include 'components/_ry_section_header.html' with ry_num="08" ry_label_fa="در یک نگاه" ry_glyph="آ" %}
 
@@ -435,7 +435,7 @@
   {% comment %} ── قیمت‌گذاری — پلنِ محبوب = بلوکِ معکوسِ شنی (مهم‌ترین CTA) ── {% endcomment %}
   {% if plans %}
     <section class="ry-scope relative overflow-hidden border-b border-line/10">
-      <div class="relative z-10 mx-auto max-w-6xl px-6 py-24 md:py-32">
+      <div class="relative z-10 mx-auto max-w-6xl px-6 section-space">
 
         {% include 'components/_ry_section_header.html' with ry_num="09" ry_label_fa="قیمت‌گذاری" ry_glyph="بـ" %}
 
@@ -553,7 +553,7 @@
   {% comment %} ── نمونه‌کارهای مرتبط با این خدمت (کاروسلِ مشترک — کارتِ Ryoku) ── {% endcomment %}
   {% if has_projects %}
     <section class="ry-scope relative overflow-hidden border-b border-line/10">
-      <div class="relative z-10 mx-auto max-w-6xl px-6 py-24 md:py-32">
+      <div class="relative z-10 mx-auto max-w-6xl px-6 section-space">
 
         {% include 'components/_ry_section_header.html' with ry_num="11" ry_label_fa="نمونه‌کارها" ry_glyph="پـ" %}
 
@@ -579,7 +579,7 @@
   {% comment %} ── سوالات متداولِ این خدمت (آکاردئونِ Ryoku) ── {% endcomment %}
   {% if faqs %}
     <section id="service-faq" class="ry-scope ry-faq-sec relative overflow-hidden border-b border-line/10">
-      <div class="relative z-10 mx-auto max-w-4xl px-6 py-24 md:py-32">
+      <div class="relative z-10 mx-auto max-w-4xl px-6 section-space">
 
         {% include 'components/_ry_section_header.html' with ry_num="12" ry_label_fa="سوالات متداول" ry_glyph="سـ" %}
 
@@ -614,7 +614,7 @@
   {% comment %} ── مقالاتِ مرتبط (کاروسلِ مشترک) — اسکوپِ #blog همان اُوررایدهای صفحهٔ اصلی ── {% endcomment %}
   {% if has_articles %}
     <section id="blog" class="ry-scope relative overflow-hidden border-b border-line/10">
-      <div class="relative z-10 mx-auto max-w-6xl px-6 py-24 md:py-32">
+      <div class="relative z-10 mx-auto max-w-6xl px-6 section-space">
 
         {% include 'components/_ry_section_header.html' with ry_num="13" ry_label_fa="مجلهٔ پیکسوریا" ry_glyph="مـ" %}
 

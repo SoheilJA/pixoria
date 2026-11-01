@@ -30,7 +30,7 @@
 {% block content %}
   {% comment %} هیرو — عنوان آرشیو بلاگ با گلیف "مـ" (مقاله) {% endcomment %}
   <section class="ry-scope ry-reveal">
-    <div class="relative z-10 mx-auto max-w-7xl px-6 py-28 md:py-40">
+    <div class="relative z-10 mx-auto max-w-7xl px-6 section-space">
       {% include "components/_ry_section_header.html" with ry_num="01" ry_label_fa="مقالات" ry_glyph="مـ" %}
       <h1 class="mt-6 ry-serif ry-narrow text-[2.8rem] md:text-[3.5rem] lg:text-[4.5rem] leading-[1.15] text-sand">
         {% if page_settings and page_settings.title %}
@@ -63,7 +63,7 @@
 
   {% comment %} آرشیو — مقالهٔ ویژه + فیلتر + گرید مقالات {% endcomment %}
   <section class="ry-scope border-t border-line/10 ry-reveal" data-blog-root>
-    <div class="relative z-10 mx-auto max-w-7xl px-6 pb-28 pt-16">
+    <div class="relative z-10 mx-auto max-w-7xl px-6 section-space">
       {% comment %} مقالهٔ ویژه — بزرگ‌ترین مقالهٔ انتخاب‌شده در ادمین {% endcomment %}
       {% if featured_article %}
         <a href="{% url 'blog:detail' featured_article.slug %}"
@@ -85,7 +85,7 @@
           <figcaption class="ry-label mt-3">
             <span class="ry-label-fa">ویژه</span>
           </figcaption>
-          <div class="absolute inset-0 bg-gradient-to-t from-void/90 to-transparent pointer-events-none" aria-hidden="true"></div>
+          <div class="absolute inset-0 bg-void/90 pointer-events-none" aria-hidden="true"></div>
           <div class="absolute inset-0 z-10 flex flex-col justify-end p-8 md:p-12 pointer-events-none">
             <p class="font-label text-[10px] tracking-[.22em] text-sand/50" dir="ltr">
               <span class="fa-num">{{ featured_article.published_at|fa_jdate }}</span>

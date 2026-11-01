@@ -21,6 +21,11 @@
   --color-sand: #d8cfc0;      /* تنها رنگ تاکیدی + متن اصلی */
   --color-line: #d8cfc0;      /* هیرلاین‌ها — همیشه با شفافیت (border-line/10) */
 
+  /* ── New accent system (Pixoria ASCII overhaul) ── */
+  --color-accent: #D97757;          /* primary action + ASCII ink */
+  --color-accent-ink: #141210;      /* text ON accent (dark) */
+  --color-accent-text-on-cream: #8C3B1F; /* darker shade for text/links on cream */
+
   --font-sans: "Vazirmatn", "Tahoma", sans-serif;
   --font-latin: "Space Grotesk", monospace;
   --font-display: "Amiri", "Vazirmatn", serif;
@@ -39,7 +44,18 @@
   --cream: #f5f3ee;
   --cream2: #efece5;
   --royal: #2e63ff;
+
+  /* New accent system */
+  --accent: #D97757;
+  --accent-ink: #141210;
+  --accent-text-on-cream: #8C3B1F;
 }
+
+/* Section spacing — unified clamp(72px, 9vw, 128px) */
+.section-space {
+  padding-block: clamp(4.5rem, 9vw, 8rem);
+}
+
 html {
   scroll-padding-top: 110px;
   overflow-x: clip;
@@ -77,28 +93,7 @@ html.lenis body {
     -webkit-backdrop-filter: blur(18px);
     backdrop-filter: blur(18px);
     box-shadow: 0 24px 60px -30px rgba(0, 0, 0, 0.7);
-  }
-  .glass::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    padding: 1px;
-    background: linear-gradient(
-      135deg,
-      rgba(232, 196, 122, 0.5),
-      rgba(255, 255, 255, 0.06) 38%,
-      rgba(201, 161, 90, 0.35)
-    );
-    -webkit-mask:
-      linear-gradient(#000 0 0) content-box,
-      linear-gradient(#000 0 0);
-    mask:
-      linear-gradient(#000 0 0) content-box,
-      linear-gradient(#000 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    pointer-events: none;
+    border: 1px solid rgba(216, 207, 192, 0.12);
   }
   .glass-light {
     position: relative;
@@ -106,28 +101,7 @@ html.lenis body {
     -webkit-backdrop-filter: blur(14px);
     backdrop-filter: blur(14px);
     box-shadow: 0 20px 50px -26px rgba(120, 95, 40, 0.4);
-  }
-  .glass-light::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    padding: 1px;
-    background: linear-gradient(
-      135deg,
-      rgba(201, 161, 90, 0.55),
-      rgba(255, 255, 255, 0.5) 45%,
-      rgba(143, 107, 44, 0.3)
-    );
-    -webkit-mask:
-      linear-gradient(#000 0 0) content-box,
-      linear-gradient(#000 0 0);
-    mask:
-      linear-gradient(#000 0 0) content-box,
-      linear-gradient(#000 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    pointer-events: none;
+    border: 1px solid rgba(216, 207, 192, 0.2);
   }
 }
 
@@ -141,22 +115,9 @@ html.lenis body {
     border-color 0.5s cubic-bezier(0.2, 0.8, 0.3, 1),
     box-shadow 0.5s cubic-bezier(0.2, 0.8, 0.3, 1);
 }
-/* اسکریم تیرهٔ پایین کاشی برای خوانایی کپشن روی عکس */
-.tile::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: linear-gradient(
-    to top,
-    rgba(10, 10, 12, 0.82),
-    rgba(10, 10, 12, 0.35) 28%,
-    transparent 58%
-  );
-}
 .tile:hover {
-  border-color: rgba(201, 161, 90, 0.38);
-  box-shadow: 0 45px 90px -45px rgba(201, 161, 90, 0.32);
+  border-color: rgba(217, 119, 87, 0.38);
+  box-shadow: 0 45px 90px -45px rgba(217, 119, 87, 0.32);
 }
 /* لایهٔ هاور: پنل تیرهٔ کامل از پایین می‌آید تا متن خوانا باشد */
 .tile-caption {
@@ -167,13 +128,7 @@ html.lenis body {
   flex-direction: column;
   justify-content: flex-end;
   padding: 1.75rem;
-  background: linear-gradient(
-    to top,
-    rgba(6, 6, 7, 0.97) 0%,
-    rgba(6, 6, 7, 0.92) 42%,
-    rgba(6, 6, 7, 0.55) 72%,
-    rgba(6, 6, 7, 0) 100%
-  );
+  background: rgba(6, 6, 7, 0.9);
   opacity: 0;
   transform: translateY(101%);
   transition:
@@ -190,12 +145,7 @@ html.lenis body {
   .tile-caption {
     opacity: 1;
     transform: translateY(0);
-    background: linear-gradient(
-      to top,
-      rgba(6, 6, 7, 0.95) 0%,
-      rgba(6, 6, 7, 0.7) 55%,
-      transparent 100%
-    );
+    background: rgba(6, 6, 7, 0.85);
   }
 }
 .tile-tag {
@@ -237,18 +187,11 @@ html.lenis body {
   transform: translateY(-2px);
 }
 .flt-btn.active {
-  color: #171207;
+  color: var(--accent-ink);
   font-weight: 600;
   border-color: transparent;
-  background: linear-gradient(
-    135deg,
-    #8f6b2c,
-    #c9a15a 30%,
-    #e8c47a 55%,
-    #c9a15a 80%,
-    #8f6b2c
-  );
-  box-shadow: 0 10px 30px -10px rgba(201, 161, 90, 0.55);
+  background: var(--accent);
+  box-shadow: 0 10px 30px -10px rgba(217, 119, 87, 0.55);
 }
 
 /* ---------- گوی‌های نورانی متحرک (شفق) ---------- */
@@ -283,13 +226,9 @@ html.lenis body {
   width: 2.5rem;
   height: 2.5rem;
   border-radius: 0.75rem;
-  border: 1px solid rgba(201, 161, 90, 0.18);
-  background: linear-gradient(
-    135deg,
-    rgba(201, 161, 90, 0.14),
-    rgba(255, 255, 255, 0.02)
-  );
-  color: #e8c47a;
+  border: 1px solid rgba(217, 119, 87, 0.18);
+  background: rgba(217, 119, 87, 0.1);
+  color: var(--accent);
   transition:
     transform 0.4s cubic-bezier(0.2, 0.8, 0.3, 1),
     border-color 0.4s,
@@ -297,12 +236,8 @@ html.lenis body {
 }
 .svc-card:hover .svc-icon {
   transform: translateY(-3px) scale(1.06);
-  border-color: rgba(201, 161, 90, 0.42);
-  background: linear-gradient(
-    135deg,
-    rgba(201, 161, 90, 0.26),
-    rgba(232, 196, 122, 0.12)
-  );
+  border-color: rgba(217, 119, 87, 0.42);
+  background: rgba(217, 119, 87, 0.2);
 }
 
 /* ---------- ماکت مرورگر ---------- */
@@ -313,7 +248,7 @@ html.lenis body {
   transform: translateY(-4px);
 }
 .svc-scan {
-  background: linear-gradient(to bottom, rgba(201, 161, 90, 0.1), transparent);
+  background: rgba(217, 119, 87, 0.1);
   animation: svcScan 4.5s ease-in-out infinite;
 }
 @keyframes svcScan {
@@ -398,14 +333,10 @@ html.lenis body {
   width: 4.3rem;
   height: 4.3rem;
   border-radius: 999px;
-  border: 1px solid rgba(201, 161, 90, 0.28);
-  background: radial-gradient(
-    circle at 35% 30%,
-    rgba(201, 161, 90, 0.18),
-    rgba(255, 255, 255, 0.02)
-  );
-  color: #e8c47a;
-  box-shadow: 0 12px 30px -14px rgba(201, 161, 90, 0.5);
+  border: 1px solid rgba(217, 119, 87, 0.28);
+  background: rgba(217, 119, 87, 0.18);
+  color: var(--accent);
+  box-shadow: 0 12px 30px -14px rgba(217, 119, 87, 0.5);
   transition:
     transform 0.45s cubic-bezier(0.2, 0.8, 0.3, 1),
     border-color 0.45s;
@@ -517,7 +448,7 @@ html.lenis body {
   right: 0;
   width: 4rem;
   height: 4rem;
-  background: linear-gradient(225deg, rgba(201, 161, 90, 0.2), transparent 62%);
+  background: rgba(217, 119, 87, 0.2);
   pointer-events: none;
 }
 
@@ -566,16 +497,12 @@ html.lenis body {
   height: 3.25rem;
   transform: translate(-50%, -50%);
   border-radius: 999px;
-  border: 1px solid rgba(201, 161, 90, 0.45);
-  background: radial-gradient(
-    circle at 35% 30%,
-    rgba(201, 161, 90, 0.28),
-    rgba(255, 255, 255, 0.03)
-  );
-  color: #e8c47a;
+  border: 1px solid rgba(217, 119, 87, 0.45);
+  background: rgba(217, 119, 87, 0.28);
+  color: var(--accent);
   font-size: 0.8rem;
   font-weight: 800;
-  box-shadow: 0 12px 26px -12px rgba(201, 161, 90, 0.55);
+  box-shadow: 0 12px 26px -12px rgba(217, 119, 87, 0.55);
 }
 .gps-node::after {
   content: "";
@@ -646,17 +573,7 @@ html.lenis body {
   font-size: clamp(2.6rem, 5vw, 3.75rem);
   font-weight: 800;
   line-height: 1;
-  background: linear-gradient(
-    105deg,
-    var(--gold-d) 0%,
-    var(--gold) 30%,
-    var(--gold-l) 50%,
-    var(--gold) 68%,
-    var(--gold-d) 100%
-  );
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  color: var(--accent);
   direction: ltr;
   unicode-bidi: isolate;
 }
@@ -672,9 +589,9 @@ html.lenis body {
   width: 2.5rem;
   height: 2.5rem;
   border-radius: 999px;
-  border: 1px solid rgba(201, 161, 90, 0.22);
-  background: rgba(201, 161, 90, 0.1);
-  color: #e8c47a;
+  border: 1px solid rgba(217, 119, 87, 0.22);
+  background: rgba(217, 119, 87, 0.1);
+  color: var(--accent);
 }
 
 /* ---------- وبلاگ ---------- */
@@ -695,9 +612,9 @@ html.lenis body {
   padding: 0.3rem 0.8rem;
   font-size: 0.7rem;
   font-weight: 600;
-  color: #171207;
-  background: linear-gradient(135deg, #e8c47a, #c9a15a);
-  box-shadow: 0 8px 22px -10px rgba(201, 161, 90, 0.6);
+  color: var(--accent-ink);
+  background: var(--accent);
+  box-shadow: 0 8px 22px -10px rgba(217, 119, 87, 0.6);
 }
 
 /* ---------- دکمه‌های اشتراک‌گذاری (متن مقاله) ---------- */
@@ -771,8 +688,8 @@ html.lenis body {
 }
 .faq-item.open .faq-icon {
   transform: rotate(135deg);
-  background: linear-gradient(135deg, #e8c47a, #c9a15a);
-  color: #171207;
+  background: var(--accent);
+  color: var(--accent-ink);
   border-color: transparent;
 }
 .faq-a {
@@ -800,7 +717,7 @@ html.lenis body {
   outline: none;
   resize: none;
   background: rgba(255, 255, 255, 0.75);
-  border: 1px solid rgba(143, 107, 44, 0.35);
+  border: 1px solid rgba(217, 119, 87, 0.35);
   border-radius: 1.1rem;
   padding: 1.2rem 1.15rem 0.55rem;
   transition:
@@ -810,7 +727,7 @@ html.lenis body {
 .field select {
   appearance: none;
   cursor: pointer;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%238f6b2c' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23D97757' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: left 1rem center;
   padding-left: 2.75rem;
@@ -824,8 +741,8 @@ html.lenis body {
 .field input:focus,
 .field textarea:focus,
 .field select:focus {
-  border-color: rgba(201, 161, 90, 0.85);
-  box-shadow: 0 0 0 3px rgba(201, 161, 90, 0.15);
+  border-color: rgba(217, 119, 87, 0.85);
+  box-shadow: 0 0 0 3px rgba(217, 119, 87, 0.15);
 }
 .field span {
   position: absolute;
@@ -843,7 +760,7 @@ html.lenis body {
 .field.static span {
   top: 0.35rem;
   font-size: 0.68rem;
-  color: var(--gold-d);
+  color: var(--accent-text-on-cream);
 }
 .field.invalid input,
 .field.invalid textarea,
@@ -984,12 +901,7 @@ html.lenis body {
     inset 0 1px 0 rgba(255, 255, 255, 0.6);
 }
 .about-scan {
-  background: linear-gradient(
-    to bottom,
-    rgba(201, 161, 90, 0.1),
-    rgba(201, 161, 90, 0.03) 45%,
-    transparent 75%
-  );
+  background: rgba(217, 119, 87, 0.1);
   animation: aboutScan 6s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
 @keyframes aboutScan {
@@ -1170,17 +1082,10 @@ html.lenis body {
   display: grid;
   place-items: center;
   color: rgba(10, 10, 12, 0.7);
-  background: radial-gradient(
-    circle at 50% 42%,
-    #ffeab9 0%,
-    #e8c47a 32%,
-    #c9a15a 56%,
-    rgba(201, 161, 90, 0.25) 76%,
-    rgba(201, 161, 90, 0) 100%
-  );
+  background: var(--accent);
   box-shadow:
-    0 0 46px 6px rgba(232, 196, 122, 0.38),
-    0 0 110px 24px rgba(201, 161, 90, 0.16);
+    0 0 46px 6px rgba(217, 119, 87, 0.38),
+    0 0 110px 24px rgba(217, 119, 87, 0.16);
   animation: ssSunPulse 6.5s ease-in-out infinite;
   z-index: 1;
 }
@@ -1252,14 +1157,10 @@ html.lenis body {
   width: var(--size, 2.5rem);
   aspect-ratio: 1;
   border-radius: 50%;
-  color: color-mix(in srgb, var(--pa, #c9a15a) 55%, #fff);
-  background: radial-gradient(
-    circle at 32% 28%,
-    color-mix(in srgb, var(--pa, #c9a15a) 48%, #16161b),
-    #0e0e12 64%
-  );
-  border: 1px solid color-mix(in srgb, var(--pa, #c9a15a) 72%, transparent);
-  box-shadow: 0 0 18px -3px color-mix(in srgb, var(--pa, #c9a15a) 80%, transparent);
+  color: var(--accent);
+  background: var(--color-void);
+  border: 1px solid rgba(217, 119, 87, 0.5);
+  box-shadow: 0 0 18px -3px rgba(217, 119, 87, 0.4);
   transition:
     transform 0.3s,
     box-shadow 0.3s;
@@ -1267,7 +1168,7 @@ html.lenis body {
 .ss-planet:hover,
 .ss-planet:focus-visible {
   transform: scale(1.14);
-  box-shadow: 0 0 26px -2px color-mix(in srgb, var(--pa, #c9a15a) 90%, transparent);
+  box-shadow: 0 0 26px -2px rgba(217, 119, 87, 0.6);
 }
 /* برگرداندنِ کجیِ صفحهٔ مدار + نگه‌داشتنِ آیکون و برچسبِ سیاره راست */
 .ss-up {
@@ -1374,44 +1275,36 @@ html.lenis body {
 .orbit-dot {
   position: absolute;
   border-radius: 50%;
-  background: radial-gradient(
-    circle at 40% 35%,
-    rgba(245, 243, 238, 0.95),
-    color-mix(in srgb, var(--pa, #c9a15a) 80%, #0a0a0c)
-  );
-  box-shadow: 0 0 10px 1px color-mix(in srgb, var(--pa, #c9a15a) 55%, transparent);
+  background: var(--accent);
+  box-shadow: 0 0 10px 1px rgba(217, 119, 87, 0.55);
 }
 .planet-orb {
   position: absolute;
   display: grid;
   place-items: center;
   border-radius: 50%;
-  color: color-mix(in srgb, var(--po, #c9a15a) 55%, #fff);
-  background: radial-gradient(
-    circle at 32% 30%,
-    color-mix(in srgb, var(--po, #c9a15a) 46%, #16161b),
-    #0e0e12 68%
-  );
-  border: 1px solid color-mix(in srgb, var(--po, #c9a15a) 68%, transparent);
-  box-shadow: 0 0 20px -3px color-mix(in srgb, var(--po, #c9a15a) 72%, transparent);
+  color: var(--accent);
+  background: var(--color-void);
+  border: 1px solid rgba(217, 119, 87, 0.68);
+  box-shadow: 0 0 20px -3px rgba(217, 119, 87, 0.4);
 }
 .planet-orb-gold {
-  --po: #c9a15a;
+  --po: var(--accent);
 }
 .planet-orb-gold-light {
-  --po: #e8c47a;
+  --po: var(--accent);
 }
 .planet-orb-gold-dark {
-  --po: #8f6b2c;
+  --po: var(--accent);
 }
 .planet-orb-royal {
-  --po: #2e63ff;
+  --po: var(--accent);
 }
 .planet-orb-cream {
-  --po: #f5f3ee;
+  --po: var(--color-sand);
 }
 .planet-orb-peri {
-  --po: #8ea8ff;
+  --po: var(--accent);
 }
 /* میدانِ ستاره‌ای: ستاره‌های کوچک روی یک کاشیِ ۵۶۰×۵۲۰ که تکرار می‌شود،
    به‌علاوهٔ لایهٔ روشن‌تری که آرام چشمک می‌زند (::before). */
@@ -1419,35 +1312,14 @@ html.lenis body {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  opacity: 0.5;
-  background-image:
-    radial-gradient(1.5px 1.5px at 7% 12%, rgba(245, 243, 238, 0.7), transparent 55%),
-    radial-gradient(1.2px 1.2px at 19% 34%, rgba(245, 243, 238, 0.4), transparent 55%),
-    radial-gradient(1.4px 1.4px at 31% 8%, rgba(245, 243, 238, 0.5), transparent 55%),
-    radial-gradient(1px 1px at 44% 62%, rgba(245, 243, 238, 0.35), transparent 55%),
-    radial-gradient(1.5px 1.5px at 57% 24%, rgba(232, 196, 122, 0.6), transparent 55%),
-    radial-gradient(1.1px 1.1px at 68% 78%, rgba(245, 243, 238, 0.45), transparent 55%),
-    radial-gradient(1.4px 1.4px at 79% 16%, rgba(245, 243, 238, 0.55), transparent 55%),
-    radial-gradient(1px 1px at 91% 52%, rgba(245, 243, 238, 0.35), transparent 55%),
-    radial-gradient(1.2px 1.2px at 12% 86%, rgba(245, 243, 238, 0.4), transparent 55%),
-    radial-gradient(1.5px 1.5px at 38% 92%, rgba(232, 196, 122, 0.5), transparent 55%),
-    radial-gradient(1.1px 1.1px at 63% 4%, rgba(245, 243, 238, 0.45), transparent 55%),
-    radial-gradient(1.3px 1.3px at 86% 90%, rgba(245, 243, 238, 0.4), transparent 55%),
-    radial-gradient(1px 1px at 52% 44%, rgba(245, 243, 238, 0.3), transparent 55%),
-    radial-gradient(1.2px 1.2px at 25% 54%, rgba(46, 99, 255, 0.5), transparent 55%);
-  background-size: 560px 520px;
+  opacity: 0.05;
+  background: var(--color-void);
 }
 .star-field::before {
   content: "";
   position: absolute;
   inset: 0;
-  background-image:
-    radial-gradient(1.8px 1.8px at 15% 22%, rgba(245, 243, 238, 0.9), transparent 55%),
-    radial-gradient(1.6px 1.6px at 48% 14%, rgba(232, 196, 122, 0.8), transparent 55%),
-    radial-gradient(1.8px 1.8px at 72% 66%, rgba(245, 243, 238, 0.85), transparent 55%),
-    radial-gradient(1.6px 1.6px at 94% 30%, rgba(245, 243, 238, 0.7), transparent 55%),
-    radial-gradient(1.7px 1.7px at 30% 74%, rgba(232, 196, 122, 0.7), transparent 55%);
-  background-size: 560px 520px;
+  background: var(--color-void);
   animation: starTwinkle 9s ease-in-out infinite;
 }
 @keyframes starTwinkle {
@@ -1472,28 +1344,28 @@ html.lenis body {
    T59/T60 است؛ عناصرِ دیگری این متغیرها را نمی‌خوانند، پس بخش‌های روشنِ
    صفحهٔ خدمت دست‌نخورده می‌مانند. */
 .svc-accent-gold {
-  --pa: #c9a15a;
-  --po: #c9a15a;
+  --pa: var(--accent);
+  --po: var(--accent);
 }
 .svc-accent-gold-light {
-  --pa: #e8c47a;
-  --po: #e8c47a;
+  --pa: var(--accent);
+  --po: var(--accent);
 }
 .svc-accent-gold-dark {
-  --pa: #8f6b2c;
-  --po: #8f6b2c;
+  --pa: var(--accent);
+  --po: var(--accent);
 }
 .svc-accent-royal {
-  --pa: #2e63ff;
-  --po: #2e63ff;
+  --pa: var(--accent);
+  --po: var(--accent);
 }
 .svc-accent-peri {
-  --pa: #8ea8ff;
-  --po: #8ea8ff;
+  --pa: var(--accent);
+  --po: var(--accent);
 }
 .svc-accent-cream {
-  --pa: #f5f3ee;
-  --po: #f5f3ee;
+  --pa: var(--color-sand);
+  --po: var(--color-sand);
 }
 
 /* ---------- اتمسفرِ مختصِ هر خدمت (T68) ----------
@@ -1516,9 +1388,9 @@ html.lenis body {
   gap: 0.4rem;
   padding: 0.42rem 0.8rem;
   border-radius: 999px;
-  border: 1px solid color-mix(in srgb, var(--pa, #c9a15a) 34%, transparent);
-  background: color-mix(in srgb, var(--pa, #c9a15a) 9%, rgba(10, 10, 12, 0.8));
-  color: color-mix(in srgb, var(--pa, #c9a15a) 82%, #f5f3ee);
+  border: 1px solid rgba(217, 119, 87, 0.34);
+  background: rgba(217, 119, 87, 0.09);
+  color: var(--accent);
   font-size: 0.7rem;
   font-weight: 600;
   white-space: nowrap;
@@ -1527,7 +1399,7 @@ html.lenis body {
 }
 .svc-chip svg {
   flex: none;
-  color: color-mix(in srgb, var(--pa, #c9a15a) 92%, #fff);
+  color: var(--accent);
 }
 
 /* ── موتیفِ شبکهٔ طرح‌بندی (web-design) ── */
@@ -1538,22 +1410,16 @@ html.lenis body {
   background-image:
     linear-gradient(
       to right,
-      color-mix(in srgb, var(--pa, #c9a15a) 24%, transparent) 1px,
+      rgba(217, 119, 87, 0.24) 1px,
       transparent 1px
     ),
     linear-gradient(
       to bottom,
-      color-mix(in srgb, var(--pa, #c9a15a) 24%, transparent) 1px,
+      rgba(217, 119, 87, 0.24) 1px,
       transparent 1px
     );
   background-size: 2.25rem 2.25rem;
   opacity: 0.4;
-  -webkit-mask-image: radial-gradient(
-    ellipse at 30% 16%,
-    #000 22%,
-    transparent 80%
-  );
-  mask-image: radial-gradient(ellipse at 30% 16%, #000 22%, transparent 80%);
   animation: svcBlueprintPan 24s linear infinite;
 }
 @keyframes svcBlueprintPan {
@@ -1572,12 +1438,8 @@ html.lenis body {
   padding: 0.5rem 0.5rem 0.65rem;
   overflow: hidden;
   border-radius: 1rem 1rem 1.2rem 1.2rem;
-  border: 1px solid color-mix(in srgb, var(--pa, #c9a15a) 30%, transparent);
-  background: linear-gradient(
-    165deg,
-    color-mix(in srgb, var(--pa, #c9a15a) 12%, #141417),
-    #08080a
-  );
+  border: 1px solid rgba(217, 119, 87, 0.3);
+  background: var(--color-void);
   box-shadow: 0 26px 54px -26px rgba(0, 0, 0, 0.9);
 }
 .svc-device::before {
@@ -1587,20 +1449,20 @@ html.lenis body {
   margin: 0 auto 0.5rem;
   content: "";
   border-radius: 999px;
-  background: color-mix(in srgb, var(--pa, #c9a15a) 60%, transparent);
+  background: rgba(217, 119, 87, 0.6);
 }
 .svc-device-bar {
   display: block;
   height: 0.3rem;
   margin-bottom: 0.4rem;
   border-radius: 999px;
-  background: color-mix(in srgb, var(--pa, #c9a15a) 38%, rgba(255, 255, 255, 0.1));
+  background: rgba(217, 119, 87, 0.38);
 }
 .svc-device-tile {
   display: block;
   height: 3.1rem;
   border-radius: 0.4rem;
-  background: color-mix(in srgb, var(--pa, #c9a15a) 15%, rgba(255, 255, 255, 0.04));
+  background: rgba(217, 119, 87, 0.15);
 }
 
 /* ── موتیفِ کد (programming) ── */
@@ -1612,9 +1474,9 @@ html.lenis body {
   min-width: 2.5rem;
   padding: 0.4rem 0.7rem;
   border-radius: 0.65rem;
-  border: 1px solid color-mix(in srgb, var(--pa, #2e63ff) 36%, transparent);
-  background: color-mix(in srgb, var(--pa, #2e63ff) 11%, rgba(6, 6, 7, 0.82));
-  color: color-mix(in srgb, var(--pa, #2e63ff) 84%, #f5f3ee);
+  border: 1px solid rgba(217, 119, 87, 0.36);
+  background: rgba(217, 119, 87, 0.11);
+  color: var(--accent);
   font-family: var(--font-latin);
   font-size: 0.72rem;
   font-weight: 600;
@@ -1629,12 +1491,8 @@ html.lenis body {
   inset-inline: 0;
   height: 1.35rem;
   pointer-events: none;
-  border-bottom: 1px solid color-mix(in srgb, var(--pa, #2e63ff) 62%, transparent);
-  background: linear-gradient(
-    180deg,
-    transparent,
-    color-mix(in srgb, var(--pa, #2e63ff) 12%, transparent)
-  );
+  border-bottom: 1px solid rgba(217, 119, 87, 0.62);
+  background: transparent;
   animation: svcType 5.5s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
 }
 @keyframes svcType {
@@ -1679,11 +1537,7 @@ html.lenis body {
   width: 0.15rem;
   transform-origin: top;
   border-radius: 999px;
-  background: linear-gradient(
-    to bottom,
-    color-mix(in srgb, var(--pa, #e8c47a) 70%, transparent),
-    transparent
-  );
+  background: var(--accent);
   animation: svcDrip 7s ease-in-out infinite;
 }
 @keyframes svcDrip {
@@ -1755,11 +1609,7 @@ html.lenis body {
   padding: 2rem;
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.06);
-  background: linear-gradient(
-    165deg,
-    rgba(255, 255, 255, 0.035),
-    rgba(255, 255, 255, 0.008)
-  );
+  background: rgba(255, 255, 255, 0.02);
   transition:
     transform 0.5s cubic-bezier(0.2, 0.8, 0.3, 1),
     border-color 0.4s,
@@ -1773,25 +1623,16 @@ html.lenis body {
   left: 0;
   right: 0;
   height: 3px;
-  background: linear-gradient(
-    to left,
-    color-mix(in srgb, var(--pa, #c9a15a) 35%, transparent),
-    var(--pa, #c9a15a) 50%,
-    color-mix(in srgb, var(--pa, #c9a15a) 35%, transparent)
-  );
+  background: var(--accent);
   opacity: 0;
   transition: opacity 0.4s;
 }
 .svc-list-card:hover,
 .svc-list-card:focus-visible {
   transform: translateY(-6px);
-  border-color: color-mix(in srgb, var(--pa, #c9a15a) 38%, transparent);
-  background: linear-gradient(
-    165deg,
-    color-mix(in srgb, var(--pa, #c9a15a) 10%, rgba(255, 255, 255, 0.03)),
-    rgba(255, 255, 255, 0.008)
-  );
-  box-shadow: 0 30px 60px -30px color-mix(in srgb, var(--pa, #c9a15a) 40%, transparent);
+  border-color: rgba(217, 119, 87, 0.38);
+  background: rgba(255, 255, 255, 0.03);
+  box-shadow: 0 30px 60px -30px rgba(217, 119, 87, 0.4);
   outline: none;
 }
 .svc-list-card:hover::before,
@@ -1814,7 +1655,7 @@ html.lenis body {
   padding-top: 0.5rem;
   font-size: 0.82rem;
   font-weight: 700;
-  color: color-mix(in srgb, var(--pa, #c9a15a) 82%, #f5f3ee);
+  color: var(--accent);
 }
 .svc-list-more svg {
   transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.3, 1);
@@ -1825,36 +1666,19 @@ html.lenis body {
 }
 
 .text-goldgrad {
-  background: linear-gradient(
-    105deg,
-    var(--gold-d) 0%,
-    var(--gold) 30%,
-    var(--gold-l) 50%,
-    var(--gold) 68%,
-    var(--gold-d) 100%
-  );
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  color: var(--accent);
+  font-weight: 600;
 }
 .text-goldgrad-dark {
-  background: linear-gradient(
-    105deg,
-    var(--gold-d),
-    var(--gold) 40%,
-    var(--gold-l) 55%,
-    var(--gold-d)
-  );
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  color: var(--accent);
+  font-weight: 600;
 }
 .stroke-title {
-  -webkit-text-stroke: 1px rgba(232, 196, 122, 0.22);
+  -webkit-text-stroke: 1px rgba(217, 119, 87, 0.22);
   color: transparent;
 }
 .stroke-title-light {
-  -webkit-text-stroke: 1px rgba(143, 107, 44, 0.28);
+  -webkit-text-stroke: 1px rgba(217, 119, 87, 0.28);
   color: transparent;
 }
 
@@ -1864,28 +1688,28 @@ html.lenis body {
   gap: 0.8rem;
   font-size: 0.85rem;
   font-weight: 500;
-  color: var(--gold-l);
+  color: var(--color-sand);
 }
 .eyebrow::before {
   content: "";
   width: 2.75rem;
   height: 1px;
-  background: linear-gradient(to left, var(--gold-l), transparent);
+  background: var(--color-sand);
 }
 .eyebrow-dark {
-  color: var(--gold-d);
+  color: var(--color-sand);
 }
 .eyebrow-dark::before {
-  background: linear-gradient(to left, var(--gold-d), transparent);
+  background: var(--color-sand);
 }
 .eyebrow-c::after {
   content: "";
   width: 2.75rem;
   height: 1px;
-  background: linear-gradient(to right, var(--gold-l), transparent);
+  background: var(--color-sand);
 }
 .eyebrow-c.eyebrow-dark::after {
-  background: linear-gradient(to right, var(--gold-d), transparent);
+  background: var(--color-sand);
 }
 
 /* ---------- nav ---------- */
@@ -1915,12 +1739,7 @@ html.lenis body {
   left: 0;
   height: 2px;
   border-radius: 2px;
-  background: linear-gradient(
-    90deg,
-    var(--gold-d),
-    var(--gold-l),
-    var(--gold-d)
-  );
+  background: var(--accent);
   transform: scaleX(0);
   transform-origin: right center;
   transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.3, 1);
@@ -1933,7 +1752,7 @@ html.lenis body {
 /* planet + ring + moon, no letter — see partials/_brand_mark.html */
 .brand-emblem {
   flex: none;
-  color: var(--gold-l);
+  color: var(--color-sand);
   transition: transform 0.5s;
 }
 a:hover .brand-emblem {
@@ -1961,38 +1780,31 @@ a:hover .brand-emblem {
     background 0.35s;
 }
 .btn-gold {
-  background: linear-gradient(
-    135deg,
-    var(--gold-d),
-    var(--gold) 32%,
-    var(--gold-l) 55%,
-    var(--gold) 80%,
-    var(--gold-d)
-  );
-  color: #171207;
-  box-shadow: 0 14px 40px -12px rgba(201, 161, 90, 0.55);
+  background: var(--accent);
+  color: var(--accent-ink);
+  box-shadow: 0 14px 40px -12px rgba(217, 119, 87, 0.55);
 }
 .btn-gold:hover {
-  filter: brightness(1.07);
-  box-shadow: 0 20px 55px -12px rgba(232, 196, 122, 0.65);
+  background: var(--color-sand);
+  box-shadow: 0 20px 55px -12px rgba(216, 207, 192, 0.65);
 }
 .btn-ghost {
-  border: 1px solid rgba(201, 161, 90, 0.45);
-  color: var(--cream);
+  border: 1px solid rgba(217, 119, 87, 0.45);
+  color: var(--color-sand);
   background: rgba(255, 255, 255, 0.03);
   -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
 }
 .btn-ghost:hover {
-  border-color: rgba(232, 196, 122, 0.9);
-  background: rgba(201, 161, 90, 0.08);
+  border-color: rgba(217, 119, 87, 0.9);
+  background: rgba(217, 119, 87, 0.08);
 }
 
 .more-link {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  color: var(--gold-l);
+  color: var(--color-sand);
   font-weight: 500;
   position: relative;
 }
@@ -2003,7 +1815,7 @@ a:hover .brand-emblem {
   right: 0;
   width: 100%;
   height: 1px;
-  background: linear-gradient(to left, var(--gold-l), transparent);
+  background: var(--color-sand);
   transform: scaleX(0);
   transform-origin: right;
   transition: transform 0.4s;
@@ -2020,10 +1832,10 @@ a:hover .brand-emblem {
 
 /* variant for light (cream) backgrounds — gold-light has no contrast there */
 .more-link-light {
-  color: var(--gold-d);
+  color: var(--accent-text-on-cream);
 }
 .more-link-light::after {
-  background: linear-gradient(to left, var(--gold-d), transparent);
+  background: var(--accent-text-on-cream);
 }
 
 /* ---------- tilt & glare ---------- */
@@ -2037,11 +1849,7 @@ a:hover .brand-emblem {
   border-radius: inherit;
   pointer-events: none;
   z-index: 5;
-  background: radial-gradient(
-    420px circle at var(--gx, 50%) var(--gy, 50%),
-    rgba(255, 255, 255, 0.16),
-    transparent 55%
-  );
+  background: var(--color-void);
   opacity: 0;
   transition: opacity 0.5s;
 }
@@ -2056,14 +1864,10 @@ a:hover .brand-emblem {
 }
 .shard {
   position: absolute;
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.14),
-    rgba(201, 161, 90, 0.08)
-  );
+  background: rgba(217, 119, 87, 0.08);
   -webkit-backdrop-filter: blur(6px);
   backdrop-filter: blur(6px);
-  border: 1px solid rgba(232, 196, 122, 0.25);
+  border: 1px solid rgba(217, 119, 87, 0.25);
   clip-path: polygon(15% 0, 100% 22%, 85% 100%, 0 76%);
 }
 .float-ring {
@@ -2123,14 +1927,8 @@ a:hover .brand-emblem {
   transform: scaleX(0);
   transform-origin: right center;
   border-radius: 3px;
-  background: linear-gradient(
-    to left,
-    #8f6b2c,
-    #c9a15a 30%,
-    #e8c47a 55%,
-    #2e63ff
-  );
-  box-shadow: 0 0 12px rgba(201, 161, 90, 0.55);
+  background: var(--accent);
+  box-shadow: 0 0 12px rgba(217, 119, 87, 0.55);
 }
 .nav-progress.done .nav-progress-bar {
   transform: scaleX(1);
@@ -2168,8 +1966,8 @@ a:hover .brand-emblem {
   width: 0.5rem;
   height: 0.5rem;
   border-radius: 50%;
-  background: radial-gradient(circle at 34% 30%, #f0d08f, #c9a15a 55%, #8f6b2c);
-  box-shadow: 0 0 8px 1px rgba(201, 161, 90, 0.6);
+  background: var(--accent);
+  box-shadow: 0 0 8px 1px rgba(217, 119, 87, 0.6);
   transform: translate(-50%, -50%);
 }
 
@@ -2198,8 +1996,8 @@ a:hover .brand-emblem {
 }
 @media (max-width: 1023px) {
   #hero-3d {
-    -webkit-mask-image: linear-gradient(180deg, #000 58%, transparent 92%);
-    mask-image: linear-gradient(180deg, #000 58%, transparent 92%);
+    -webkit-mask-image: none;
+    mask-image: none;
   }
 }
 .scroll-cue {
@@ -2208,7 +2006,7 @@ a:hover .brand-emblem {
   border-radius: 2px;
   position: relative;
   overflow: hidden;
-  background: linear-gradient(180deg, rgba(232, 196, 122, 0.7), transparent);
+  background: rgba(217, 119, 87, 0.7);
 }
 .scroll-cue::after {
   content: "";
@@ -2218,7 +2016,7 @@ a:hover .brand-emblem {
   width: 2px;
   height: 16px;
   border-radius: 2px;
-  background: var(--gold-l);
+  background: var(--color-sand);
   animation: cueDrop 1.9s ease-in-out infinite;
 }
 @keyframes cueDrop {
@@ -2265,13 +2063,9 @@ a:hover .brand-emblem {
   inset: 34%;
   border-radius: 38%;
   transform: rotate(45deg);
-  background: linear-gradient(
-    135deg,
-    rgba(232, 196, 122, 0.55),
-    rgba(143, 107, 44, 0.25)
-  );
+  background: rgba(217, 119, 87, 0.55);
   filter: blur(2px);
-  box-shadow: 0 0 80px -10px rgba(201, 161, 90, 0.5);
+  box-shadow: 0 0 80px -10px rgba(217, 119, 87, 0.5);
 }
 .fb-dot {
   position: absolute;
@@ -2282,8 +2076,8 @@ a:hover .brand-emblem {
 .fb-dotgold {
   top: 8%;
   left: 14%;
-  background: var(--gold-l);
-  box-shadow: 0 0 18px 2px rgba(232, 196, 122, 0.6);
+  background: var(--color-sand);
+  box-shadow: 0 0 18px 2px rgba(216, 207, 192, 0.6);
 }
 .fb-dotblue {
   bottom: 12%;
@@ -2332,15 +2126,9 @@ a:hover .brand-emblem {
   width: 44%;
   aspect-ratio: 1;
   border-radius: 999px;
-  background: radial-gradient(
-    circle at 34% 28%,
-    rgba(244, 236, 217, 0.95),
-    rgba(232, 196, 122, 0.6) 44%,
-    rgba(143, 107, 44, 0.3) 74%,
-    rgba(143, 107, 44, 0.08) 92%
-  );
+  background: var(--color-void);
   box-shadow:
-    0 0 90px -14px rgba(201, 161, 90, 0.65),
+    0 0 90px -14px rgba(217, 119, 87, 0.65),
     inset -20px -14px 42px -20px rgba(6, 6, 7, 0.9);
   animation: nfBob 9s ease-in-out infinite;
 }
@@ -2349,11 +2137,7 @@ a:hover .brand-emblem {
   position: absolute;
   inset: 14%;
   border-radius: 999px;
-  background: radial-gradient(
-    circle at 64% 66%,
-    rgba(6, 6, 7, 0.25),
-    transparent 62%
-  );
+  background: transparent;
 }
 .nf-ring {
   position: absolute;
@@ -2408,12 +2192,7 @@ a:hover .brand-emblem {
   width: 0.8rem;
   height: 0.8rem;
   border-radius: 999px;
-  background: radial-gradient(
-    circle at 36% 30%,
-    rgba(143, 168, 255, 0.95),
-    rgba(46, 99, 255, 0.55) 55%,
-    rgba(46, 99, 255, 0.12)
-  );
+  background: var(--royal);
   box-shadow: 0 0 16px 2px rgba(46, 99, 255, 0.6);
 }
 .nf-moon-2 {
@@ -2421,13 +2200,8 @@ a:hover .brand-emblem {
   height: 0.55rem;
   top: auto;
   bottom: 4%;
-  background: radial-gradient(
-    circle at 36% 30%,
-    rgba(244, 236, 217, 0.95),
-    rgba(232, 196, 122, 0.6) 55%,
-    rgba(201, 161, 90, 0.12)
-  );
-  box-shadow: 0 0 14px 2px rgba(232, 196, 122, 0.65);
+  background: var(--color-sand);
+  box-shadow: 0 0 14px 2px rgba(216, 207, 192, 0.65);
 }
 @keyframes nfSpin {
   to {
@@ -2464,12 +2238,7 @@ a:hover .brand-emblem {
   width: 13rem;
   height: 1px;
   rotate: -16deg;
-  background: linear-gradient(
-    to right,
-    transparent,
-    rgba(232, 196, 122, 0.9),
-    transparent
-  );
+  background: rgba(217, 119, 87, 0.9);
   filter: blur(0.5px);
   opacity: 0;
   transform: translateX(-16vw);
@@ -2607,20 +2376,16 @@ a:hover .brand-emblem {
   height: 2.75rem;
   flex: none;
   border-radius: 999px;
-  background: linear-gradient(
-    135deg,
-    rgba(201, 161, 90, 0.22),
-    rgba(232, 196, 122, 0.38)
-  );
-  border: 1px solid rgba(143, 107, 44, 0.4);
-  color: var(--gold-d);
+  background: rgba(217, 119, 87, 0.2);
+  border: 1px solid rgba(217, 119, 87, 0.4);
+  color: var(--accent-text-on-cream);
 }
 .type-chip {
   font-size: 11px;
   border-radius: 999px;
-  border: 1px solid rgba(201, 161, 90, 0.4);
-  background: rgba(201, 161, 90, 0.1);
-  color: var(--gold-l);
+  border: 1px solid rgba(217, 119, 87, 0.4);
+  background: rgba(217, 119, 87, 0.1);
+  color: var(--accent);
   padding: 0.2rem 0.8rem;
 }
 .avatar {
@@ -2630,9 +2395,9 @@ a:hover .brand-emblem {
   height: 3rem;
   flex: none;
   border-radius: 999px;
-  background: rgba(201, 161, 90, 0.15);
-  border: 1px solid rgba(232, 196, 122, 0.5);
-  color: var(--gold-l);
+  background: rgba(217, 119, 87, 0.15);
+  border: 1px solid rgba(217, 119, 87, 0.5);
+  color: var(--accent);
   font-weight: 700;
 }
 
@@ -2657,12 +2422,7 @@ a:hover .brand-emblem {
   left: 14px;
   right: 14px;
   height: 10px;
-  background: radial-gradient(
-      circle at 8px 5px,
-      rgba(232, 196, 122, 0.4) 2.2px,
-      transparent 3px
-    )
-    repeat-x;
+  background: rgba(217, 119, 87, 0.4);
   background-size: 16px 10px;
 }
 .film-strip::before {
@@ -2686,16 +2446,16 @@ a:hover .brand-emblem {
   height: 3rem;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(201, 161, 90, 0.35);
-  color: var(--cream);
+  border: 1px solid rgba(217, 119, 87, 0.35);
+  color: var(--color-sand);
   -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
   transition: all 0.3s;
 }
 .ctrl-btn:hover {
-  background: rgba(201, 161, 90, 0.15);
-  border-color: rgba(232, 196, 122, 0.8);
-  color: var(--gold-l);
+  background: rgba(217, 119, 87, 0.15);
+  border-color: rgba(217, 119, 87, 0.8);
+  color: var(--color-sand);
 }
 [data-slider],
 [data-carousel-track] {
@@ -2737,9 +2497,9 @@ a:hover .brand-emblem {
   height: 3.1rem;
   flex: none;
   border-radius: 999px;
-  background: linear-gradient(135deg, var(--gold-d), var(--gold-l));
-  color: #171207;
-  box-shadow: 0 10px 30px -10px rgba(201, 161, 90, 0.6);
+  background: var(--accent);
+  color: var(--accent-ink);
+  box-shadow: 0 10px 30px -10px rgba(217, 119, 87, 0.6);
   transition:
     filter 0.3s,
     transform 0.3s;
@@ -2765,7 +2525,7 @@ a:hover .brand-emblem {
   transition: background 0.3s;
 }
 .w-bar.played {
-  background: linear-gradient(180deg, var(--gold-l), var(--gold-d));
+  background: var(--accent);
 }
 .wave.playing .w-bar {
   animation: barPulse 1.1s ease-in-out infinite alternate;
@@ -2787,24 +2547,17 @@ a:hover .brand-emblem {
   gap: 1rem;
   min-height: 6.5rem;
   border-radius: 999px;
-  color: #171207;
+  color: var(--accent-ink);
   transform: rotate(-0.6deg);
-  background: linear-gradient(
-    135deg,
-    var(--gold-d),
-    var(--gold) 30%,
-    var(--gold-l) 55%,
-    var(--gold) 80%,
-    var(--gold-d)
-  );
-  box-shadow: 0 30px 70px -25px rgba(201, 161, 90, 0.55);
+  background: var(--accent);
+  box-shadow: 0 30px 70px -25px rgba(217, 119, 87, 0.55);
   transition:
     filter 0.35s,
     box-shadow 0.35s;
 }
 .pill-primary:hover {
   filter: brightness(1.05);
-  box-shadow: 0 36px 80px -25px rgba(232, 196, 122, 0.6);
+  box-shadow: 0 36px 80px -25px rgba(217, 119, 87, 0.6);
 }
 /* ---------- footer ---------- */
 .f-link {
@@ -2823,16 +2576,16 @@ a:hover .brand-emblem {
   flex: none;
   transform: rotate(45deg);
   opacity: 0.75;
-  background: linear-gradient(135deg, var(--gold-d), var(--gold-l));
+  background: var(--accent);
 }
 .f-link:hover {
-  color: var(--gold-l);
+  color: var(--color-sand);
   transform: translateX(-3px);
 }
 .footer-h {
   font-size: 0.95rem;
   font-weight: 700;
-  color: var(--gold-l);
+  color: var(--color-sand);
   margin-bottom: 1.4rem;
 }
 .soc {
@@ -2841,15 +2594,15 @@ a:hover .brand-emblem {
   width: 2.7rem;
   height: 2.7rem;
   border-radius: 999px;
-  border: 1px solid rgba(201, 161, 90, 0.35);
+  border: 1px solid rgba(217, 119, 87, 0.35);
   background: rgba(255, 255, 255, 0.04);
-  color: rgba(245, 243, 238, 0.7);
+  color: rgba(216, 207, 192, 0.7);
   transition: all 0.35s;
 }
 .soc:hover {
-  color: var(--gold-l);
-  border-color: rgba(232, 196, 122, 0.8);
-  background: rgba(201, 161, 90, 0.12);
+  color: var(--color-sand);
+  border-color: rgba(217, 119, 87, 0.8);
+  background: rgba(217, 119, 87, 0.12);
   transform: translateY(-3px);
 }
 
@@ -3041,14 +2794,7 @@ a:hover .brand-emblem {
   left: 0;
   right: 0;
   height: 3px;
-  background: linear-gradient(
-    to left,
-    #8f6b2c,
-    #c9a15a 30%,
-    #e8c47a 55%,
-    #c9a15a 80%,
-    #8f6b2c
-  );
+  background: var(--accent);
   opacity: 0;
   transition: opacity 0.35s;
 }
@@ -3072,7 +2818,7 @@ a:hover .brand-emblem {
 }
 .mega-tile:hover .mega-tile-title,
 .mega-tile:focus-visible .mega-tile-title {
-  color: var(--gold-l);
+  color: var(--color-sand);
 }
 /* سیارهٔ شیشه‌ایِ هر خدمت — رنگ تاکید از حلقهٔ آن می‌تابد */
 .mega-orb {
@@ -3082,7 +2828,7 @@ a:hover .brand-emblem {
   width: 3.25rem;
   height: 3.25rem;
   border-radius: 50%;
-  color: #171207;
+  color: var(--accent-ink);
   transition:
     transform 0.4s cubic-bezier(0.2, 0.8, 0.3, 1),
     box-shadow 0.4s;
@@ -3092,26 +2838,26 @@ a:hover .brand-emblem {
   z-index: 2;
 }
 .mega-orb-gold {
-  --orb-c: #e8c47a;
-  background: radial-gradient(circle at 34% 28%, #f0d08f, #c9a15a 52%, #8f6b2c);
+  --orb-c: var(--accent);
+  background: var(--accent);
   box-shadow:
-    0 10px 26px -8px rgba(201, 161, 90, 0.55),
-    rgba(232, 196, 122, 0.35) 0 0 0 1px inset;
+    0 10px 26px -8px rgba(217, 119, 87, 0.55),
+    rgba(217, 119, 87, 0.35) 0 0 0 1px inset;
 }
 .mega-orb-royal {
-  --orb-c: #8ba4ff;
-  background: radial-gradient(circle at 34% 28%, #9db2ff, #4470ff 52%, #244bcc);
-  color: #f5f3ee;
+  --orb-c: var(--royal);
+  background: var(--royal);
+  color: var(--color-cream);
   box-shadow:
     0 10px 26px -8px rgba(46, 99, 255, 0.5),
     rgba(139, 164, 255, 0.35) 0 0 0 1px inset;
 }
 .mega-orb-cream {
-  --orb-c: #f5f3ee;
-  background: radial-gradient(circle at 34% 28%, #ffffff, #efece5 52%, #c9c3b6);
+  --orb-c: var(--color-sand);
+  background: var(--color-sand);
   box-shadow:
-    0 10px 26px -10px rgba(245, 243, 238, 0.45),
-    rgba(245, 243, 238, 0.4) 0 0 0 1px inset;
+    0 10px 26px -10px rgba(216, 207, 192, 0.45),
+    rgba(216, 207, 192, 0.4) 0 0 0 1px inset;
 }
 .svc-list-card:hover .mega-orb,
 .svc-list-card:focus-visible .mega-orb,
@@ -3162,13 +2908,8 @@ a:hover .brand-emblem {
   justify-content: space-between;
   gap: 1.25rem;
   padding: 0.8rem 1.5rem;
-  background: linear-gradient(
-    135deg,
-    rgba(201, 161, 90, 0.1),
-    rgba(232, 196, 122, 0.03) 40%,
-    rgba(46, 99, 255, 0.03)
-  );
-  border-top: 1px solid rgba(201, 161, 90, 0.1);
+  background: rgba(217, 119, 87, 0.1);
+  border-top: 1px solid rgba(217, 119, 87, 0.1);
   overflow: hidden;
 }
 .mega-banner::after {
@@ -3178,11 +2919,7 @@ a:hover .brand-emblem {
   right: -5%;
   width: 18rem;
   height: 18rem;
-  background: radial-gradient(
-    circle,
-    rgba(201, 161, 90, 0.08),
-    transparent 65%
-  );
+  background: rgba(217, 119, 87, 0.08);
   pointer-events: none;
 }
 .mega-banner-content {
@@ -3210,15 +2947,8 @@ a:hover .brand-emblem {
   gap: 0.5rem;
   padding: 0.5rem 1.1rem;
   border-radius: 999px;
-  background: linear-gradient(
-    135deg,
-    #8f6b2c,
-    #c9a15a 30%,
-    #e8c47a 55%,
-    #c9a15a 80%,
-    #8f6b2c
-  );
-  color: #171207;
+  background: var(--accent);
+  color: var(--accent-ink);
   font-size: 0.75rem;
   font-weight: 600;
   white-space: nowrap;
@@ -3245,7 +2975,7 @@ a:hover .brand-emblem {
 .prose-cream {
   font-size: 1.06rem;
   line-height: 1.95;
-  letter-spacing: 0.005em;
+  letter-spacing: 0;
 }
 .prose-ink {
   color: #4a4438;
@@ -3271,7 +3001,7 @@ a:hover .brand-emblem {
 .prose-cream h4 {
   font-weight: 800;
   line-height: 1.35;
-  letter-spacing: -0.01em;
+  letter-spacing: 0;
 }
 .prose-ink h2,
 .prose-cream h2 {
@@ -3289,7 +3019,7 @@ a:hover .brand-emblem {
   width: 2.75rem;
   height: 3px;
   border-radius: 999px;
-  background: linear-gradient(to left, var(--gold), rgba(201, 161, 90, 0.1));
+  background: var(--accent);
 }
 .prose-ink h2 {
   color: #1e1b15;
@@ -3616,10 +3346,10 @@ a:hover .brand-emblem {
   border: none;
 }
 .prose-ink hr {
-  background: linear-gradient(to left, rgba(143, 107, 44, 0.45), transparent);
+  background: rgba(217, 119, 87, 0.45);
 }
 .prose-cream hr {
-  background: linear-gradient(to left, rgba(201, 161, 90, 0.45), transparent);
+  background: rgba(217, 119, 87, 0.45);
 }
 
 /* ═══════════════ زبان طراحی Ryoku (بازطراحی) ═══════════════
@@ -3654,7 +3384,7 @@ a:hover .brand-emblem {
 /* برچسبِ ریز فارسی — حروف فارسی چسبیده‌اند؛ فاصلهٔ حروف هرگز */
 .ry-label-fa {
   font-family: var(--font-sans);
-  font-size: 10.5px;
+  font-size: 12px;
   line-height: 1.7;
   letter-spacing: 0;
   color: rgba(216, 207, 192, 0.55);
@@ -3972,7 +3702,7 @@ a:hover .brand-emblem {
   background: var(--color-void);
   padding: 0.3rem 0.8rem;
   font-family: var(--font-sans);
-  font-size: 10.5px;
+  font-size: 12px;
   color: rgba(216, 207, 192, 0.75);
 }
 #blog .carousel .blog-card .font-latin {
@@ -4170,7 +3900,7 @@ a:hover .brand-emblem {
 .ry-stat__label {
   margin-top: 0.6rem;
   font-family: var(--font-sans);
-  font-size: 10.5px;
+  font-size: 12px;
   color: rgba(216, 207, 192, 0.5);
 }
 
