@@ -273,14 +273,14 @@ templates/
 | پوشه/فایل | نقش |
 | --- | --- |
 | `css/tailwind.css` | ⚙️ **فایل تولیدی است — هرگز مستقیم ویرایش نکنید!** خروجی `npm run build` از `styles/input.css` |
-| `css/hero.css` | استایل بوم «میدانِ زنده» (هیرو و فوتر) |
 | `css/motion.css` | همهٔ انیمیشن‌های حرکتی CSS (reveal، شمارنده، …) — جایگزین GSAP |
-| `css/sections.css` | بازطراحی دستنویس سکشن‌ها (کاشی‌ها، منوی موبایل، …) |
+| `css/ry.css` | زبان طراحی Ryoku: توکن‌ها، کامپوننت‌ها (header، mobile menu، forms، cards، ...)، overrides برای سکشن‌های داخلی |
 | `js/pixoria.js` | 🎛 **فایل JS اصلی سایت** (ماژول ES، ~۱۳۰۰ خط): Lenis، منوی موبایل، reveal ها با IntersectionObserver، شمارنده‌ها، اسلایدر/کاروسل‌ها، آکاردئون FAQ، فیلتر نمونه‌کار، marquee، رسم مسیر GPS فرآیند، toast، نوار پیشرفت مطالعه/TOC/کپی‌لینک بلاگ. فقط ماشه می‌زند — خودِ حرکت CSS است؛ روی دستگاه ضعیف / `prefers-reduced-motion` / لمسی همه‌چیز نرم عقب می‌نشیند |
 | `js/hero-field.js` | موتور بوم دوبعدی هیرو/فوتر (شبکهٔ نقاط پیکسلی با ربایش ماوس)؛ سقف نقطه، خواب rAF خارج از دید، سازگار با htmx |
-| `js/cta-animations.js` | انیمیشن‌های قدیمی Anime.js (legacy — الان بخش «چرا» با CSS کار می‌کند) |
+| `js/ry-reveal.js` | اسکرول‌ریولِ سبک Ryoku (IntersectionObserver، vanilla، `prefers-reduced-motion`) |
+| `js/ry.js` | تعاملات Ryoku: فیلم‌استریپِ About، پیش‌لودر ASCII Art، Matrix rain |
 | `js/htmx.min.js` | کتابخانهٔ htmx 1.9.10 (لوکال) |
-| `js/vendor/lenis.js` · `vendor/anime.min.js` | کتابخانه‌های Lenis و Anime.js |
+| `js/vendor/lenis.js` | کتابخانه Lenis (اسکرول نرم) |
 | `fonts/` | فونت‌های self-hosted: `font_urls.css` (@font-face ها) + woff2 های Vazirmatn (فارسی/لاتین، وزن ۳۰۰–۶۰۰) و Space Grotesk |
 | `brand/` | وردمارک پیکسلی (`wordmark-full.svg`، `mark-compact.svg`) + **۶ گزینهٔ لوگوی فضایی** در `option-1-orbit` تا `option-6-crescent` (هر کدام: logo-full/mark/mono + favicon و آیکون‌های PWA) + `README.md` مستندات مفاهیم |
 | `lucide/sprite.svg` | 🎯 اسپرایت آیکون‌های Lucide (v0.544) — تنها منبع آیکونِ کل سایت و ادمین |
@@ -407,7 +407,7 @@ gunicorn config.wsgi:application
 2. **Singleton ها**: اکثر مدل‌های سکشن فقط یک رکورد مجازند (خطای «فقط یک … مجاز است» + حذف دکمهٔ افزودن در ادمین).
 3. **WebP خودکار**: تصاویر آپلودی همهٔ مدل‌های دارای `WEBP_FIELDS` به WebP فشرده می‌شوند؛ نیازی به فشرده‌سازی دستی نیست (تصاویر قدیمی: `compress_images --write`).
 4. **آیکون‌ها فقط Lucide لوکال**: هیچ CDN ای در سایت نیست؛ نام آیکون انگلیسی است (lucide.dev/icons) و نام‌های قدیمی خودکار نگاشت می‌شوند. آیکون ناموجود = رندر هیچ (fail-soft).
-5. **هیچ GSAP ای نیست**: حرکت‌ها در `motion.css`/`sections.css` است و `pixoria.js` فقط کلاس/متغیر CSS ست می‌کند (استثنا: شمارش عددی با ارقام فارسی).
+5. **هیچ GSAP/Anime.js ای نیست**: حرکت‌ها در `motion.css` است و `pixoria.js` فقط کلاس/متغیر CSS ست می‌کند (استثنا: شمارش عددی با ارقام فارسی).
 6. **htmx فقط دو نقش دارد**: بارگذاری «بیشتر» بلاگ و ارسال فرم تماس؛ ناوبری عادی چندصفحه‌ای است (hx-boost حذف شده).
 7. **ادمین در `/who-are-you/`** است — این مسیر را عوض نکنید مگر عمداً (در `config/urls.py`).
 8. **پس از تغییر استاتیک، collectstatic فراموش نشود** (§۱۵) — رایج‌ترین دلیل «تغییر اعمال نشد».
@@ -424,7 +424,7 @@ gunicorn config.wsgi:application
 | --- | --- |
 | متن هیرو / دکمه‌های صفحهٔ اصلی | ادمین → `home → هیرو سکشن` |
 | رنگ یا فونت سایت | `styles/input.css` (بخش `@theme`) → build + collectstatic |
-| انیمیشن یک سکشن | `static/css/motion.css` / `sections.css` (و ماشهٔ آن در `static/js/pixoria.js`) |
+| انیمیشن یک سکشن | `static/css/motion.css` (و ماشهٔ آن در `static/js/pixoria.js`) |
 | یک آیکون را عوض کنم | ادمین → فیلد آیکون همان رکورد (آیکون‌پیکر) |
 | منوی هدر | `apps/core/nav.py` |
 | فوتر (لینک‌ها، متن، اعتماد) | ادمین → `core` (FooterLinkGroup، SiteSettings) |
@@ -438,4 +438,4 @@ gunicorn config.wsgi:application
 | اسکریپت‌های محتوای اولیه | `apps/*/management/commands/seed_*.py` |
 
 ---
-*آخرین به‌روزرسانی: ۱۴۰۵/۰۸/۰۹ — بر اساس بازرسی کامل کدبیس (Django 5.2 · Tailwind v4 · htmx 1.9.10 · Lucide v0.544).*
+*آخرین به‌روزرسانی: ۱۴۰۵/۰۸/۱۰ — بر اساس بازرسی کامل کدبیس (Django 5.2 · Tailwind v4 · htmx 1.9.10 · Lucide v0.544). حذف `hero.css`، `sections.css`، `cta-animations.js`، `anime.min.js`؛ اضافه‌شدن `ry.css`، `ry-reveal.js`، `ry.js`.*
