@@ -1355,3 +1355,114 @@ html.has-preloader .preloader.pl-done {
 .nav-orbit-planet {
   background: var(--color-sand) !important;
 }
+
+/* ========================================================================
+   RYOKU — اسکوپ‌های صفحاتِ داخلی (خدمات)
+   ======================================================================== */
+
+/* breadcrumb مشترک داخل ry-scope — مونوی ریز، بدون گردی و طلایی */
+.ry-scope nav[aria-label="مسیر صفحه"] {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  color: rgba(216, 207, 192, 0.5);
+}
+.ry-scope nav[aria-label="مسیر صفحه"] a,
+.ry-scope nav[aria-label="مسیر صفحه"] span {
+  border-radius: 0;
+  color: rgba(216, 207, 192, 0.5);
+}
+.ry-scope nav[aria-label="مسیر صفحه"] a:hover {
+  color: var(--color-sand);
+}
+.ry-scope nav[aria-label="مسیر صفحه"] [aria-current="page"] {
+  color: var(--color-sand);
+  font-weight: 500;
+}
+.ry-scope nav[aria-label="مسیر صفحه"] svg {
+  color: rgba(216, 207, 192, 0.35);
+}
+
+/* prose-cream (خروجی TinyMCE) داخل ry-scope — سریفِ عنوان، شنی به‌جای طلایی */
+.ry-scope .prose-cream {
+  color: rgba(216, 207, 192, 0.72);
+}
+.ry-scope .prose-cream h2,
+.ry-scope .prose-cream h3 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  color: var(--color-sand);
+  letter-spacing: 0;
+}
+.ry-scope .prose-cream h2::before {
+  width: 2.25rem;
+  height: 1px;
+  border-radius: 0;
+  background: rgba(216, 207, 192, 0.55);
+}
+.ry-scope .prose-cream strong {
+  color: var(--color-sand);
+  font-weight: 600;
+}
+.ry-scope .prose-cream a {
+  color: var(--color-sand);
+  text-decoration-color: rgba(216, 207, 192, 0.35);
+}
+.ry-scope .prose-cream a:hover {
+  color: #fff;
+  text-decoration-color: var(--color-sand);
+}
+.ry-scope .prose-cream code {
+  background: rgba(216, 207, 192, 0.07);
+  color: var(--color-sand);
+  border: 1px solid rgba(216, 207, 192, 0.2);
+}
+.ry-scope .prose-cream ul > li::before {
+  width: 5px;
+  height: 5px;
+  border-radius: 0;
+  transform: none;
+  background: var(--color-sand);
+}
+.ry-scope .prose-cream ol > li::before {
+  border-radius: 0;
+  color: var(--color-sand);
+  background: rgba(216, 207, 192, 0.08);
+  border: 1px solid rgba(216, 207, 192, 0.25);
+}
+.ry-scope .prose-cream blockquote {
+  border-inline-end-width: 1px;
+  border-color: rgba(216, 207, 192, 0.3);
+  background: rgba(216, 207, 192, 0.04);
+  color: rgba(216, 207, 192, 0.85);
+}
+.ry-scope .prose-cream pre {
+  border-radius: 0;
+  background: var(--color-surface);
+  border-color: rgba(216, 207, 192, 0.15);
+}
+.ry-scope .prose-cream img {
+  border-radius: 0;
+}
+
+/* چیپ‌های مارکوی ابزارها — مربعِ هیرلاین به‌جای کپسولِ شیشه‌ای روشن */
+.ry-tools-sec .s-chip-light {
+  border-radius: 0;
+  border: 1px solid rgba(216, 207, 192, 0.18);
+  background: transparent;
+  color: rgba(216, 207, 192, 0.7);
+  box-shadow: none;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  padding: 0.55rem 1rem;
+  font-size: 13px;
+  font-weight: 400;
+}
+.ry-tools-sec .s-chip-light svg {
+  color: rgba(216, 207, 192, 0.5);
+}
+
+/* گرهٔ فرآیند در صفحات داخلی — عددِ مونو کمی بزرگ‌تر */
+.ry-process__node .ry-label {
+  font-size: 9px;
+  letter-spacing: 0.12em;
+}

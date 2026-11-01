@@ -1,12 +1,24 @@
 {% load component_tags %}
 {% comment %} کامپوننتِ کاروسل نمونه‌کارها — خودش کوئری می‌زند (projects_tags). {% endcomment %}
 {% comment %} شامل یک کارت برای هر نمونه‌کار؛ خالی چیزی چاپ نمی‌کند. {% endcomment %}
+{% comment %} دو ظاهر: وقتی با service= صدا زده شود (صفحهٔ خدمت) کارتِ Ryoku؛ {% endcomment %}
+{% comment %} بقیهٔ جاها (detail نمونه‌کار) ظاهرِ قبلی — بدون تغییر در بک‌اند. {% endcomment %}
 {% comment %} شعاع گوشه‌های متغیر با cycle در همین حلقه تولید می‌شود (در include ریست می‌شود). {% endcomment %}
 {% if projects %}
-  {% carousel %}
-    {% for project in projects %}
-      {% cycle '2.5rem' '2.75rem 0.75rem' '0.9rem' '0.75rem 2.75rem' '1.75rem' '1rem 4rem' as card_radius silent %}
-      {% include "components/_project_card.html" with project=project radius=card_radius class="w-[min(86vw,360px)] shrink-0 snap-start md:w-[min(46vw,400px)] lg:w-[min(30vw,400px)]" %}
-    {% endfor %}
-  {% endcarousel %}
+  {% if service %}
+    {# ── کارتِ Ryoku (صفحهٔ خدمت) ── #}
+    {% carousel %}
+      {% for project in projects %}
+        {% include "components/_ry_project_card.html" with project=project index=forloop.counter|stringformat:"02d" class="w-[min(86vw,400px)] shrink-0 snap-start" %}
+      {% endfor %}
+    {% endcarousel %}
+  {% else %}
+    {# ── ظاهر قبلی ── #}
+    {% carousel %}
+      {% for project in projects %}
+        {% cycle '2.5rem' '2.75rem 0.75rem' '0.9rem' '0.75rem 2.75rem' '1.75rem' '1rem 4rem' as card_radius silent %}
+        {% include "components/_project_card.html" with project=project radius=card_radius class="w-[min(86vw,360px)] shrink-0 snap-start md:w-[min(46vw,400px)] lg:w-[min(30vw,400px)]" %}
+      {% endfor %}
+    {% endcarousel %}
+  {% endif %}
 {% endif %}

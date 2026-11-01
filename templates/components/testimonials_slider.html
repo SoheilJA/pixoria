@@ -3,16 +3,22 @@
 {% comment %} title/eyebrow/section_id از طریق تگ پاس داده می‌شوند؛ تگ خالی چیزی چاپ نمی‌کند. {% endcomment %}
 {% comment %} pixoria.js هر [data-slider] را مستقل راه‌اندازی می‌کند؛ پس چند اسلایدر در یک {% endcomment %}
 {% comment %} صفحه کار می‌کنند و هیچ id تکراری نداریم. کارتها فقط متنی هستند. {% endcomment %}
-{% comment %} دو ظاهر: صفحهٔ اصلی (id="testimonials") با زبان طراحی Ryoku؛ بقیهٔ {% endcomment %}
-{% comment %} صفحات (فعلاً detail خدمت) با ظاهرِ قبلی — بدون هیچ تغییری در بک‌اند. {% endcomment %}
+{% comment %} دو ظاهر: صفحهٔ اصلی (id="testimonials") و صفحهٔ خدمت
+   (id="service-testimonials") با زبان طراحی Ryoku — فقط شمارهٔ سکشن فرق
+   می‌کند (۰۸ در خانه، ۱۰ در خدمت). ظاهرِ قبلی برای صفحاتِ هنوز بازطراحی
+   نشده می‌ماند. بدون هیچ تغییری در بک‌اند. {% endcomment %}
 
-{% if section_id == "testimonials" %}
-  {# ── ظاهر Ryoku (صفحهٔ اصلی) ── #}
+{% if section_id == "testimonials" or section_id == "service-testimonials" %}
+  {# ── ظاهر Ryoku ── #}
   {% if testimonials %}
     <section id="{{ section_id }}" class="ry-scope relative overflow-hidden border-b border-line/10">
       <div data-slider-root class="relative z-10 mx-auto max-w-6xl px-6 py-24 md:py-36">
 
-        {% include 'components/_ry_section_header.html' with ry_num="08" ry_label_fa=eyebrow|default:"نظرات مشتریان" ry_glyph="نـ" %}
+        {% if section_id == "testimonials" %}
+          {% include 'components/_ry_section_header.html' with ry_num="08" ry_label_fa=eyebrow|default:"نظرات مشتریان" ry_glyph="نـ" %}
+        {% else %}
+          {% include 'components/_ry_section_header.html' with ry_num="10" ry_label_fa=eyebrow|default:"نظرات مشتریان" ry_glyph="نـ" %}
+        {% endif %}
 
         {% if title %}
           <h2 class="ry-serif ry-reveal mt-14 max-w-2xl text-4xl text-sand md:text-[2.85rem] md:leading-[1.4]">

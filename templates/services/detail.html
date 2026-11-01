@@ -84,844 +84,556 @@
 
 {% block content %}
   {% comment %}
-    اسکلتِ صفحهٔ اختصاصیِ خدمت (T63). پوششِ بیرونی لهجهٔ رنگیِ خدمت را روی
-    کلِ صفحه تنظیم می‌کند (--pa/--po) تا حلقه‌ها، سیاره و تزئین‌های
-    «سامانهٔ خورشیدی» همرنگِ همان خدمت باشند. هر بخش با {% if %} محافظت
-    می‌شود تا صفحه با دیتابیسِ خالی هم بدون خطا رندر شود.
-    بخش‌های محتوایی (T64: خروجی‌ها/بخش‌های بلند/کاربردها/ابزارها،
-    T65: فرآیند/چرا ما/آمار، T66: قیمت‌گذاری، T67: نظرات/نمونه‌کارها/سوالات/
-    خدمات و مقالات مرتبط) در همین جایگاه‌های نشانه‌گذاری‌شده اضافه می‌شوند.
+    صفحهٔ اختصاصیِ خدمت — بازطراحی با زبان طراحی Ryoku.
+    ساختار: هیروی تایپوگرافیک (breadcrumb + سربرگِ 01 · خدمت + عنوانِ سریف +
+    دو دکمهٔ مربع + قابِ ASCII-ART-PLACEHOLDER به‌جای مصورسازی‌های قدیمی) →
+    مرور کلی (prose) → خروجی‌ها (ردیف‌های هیرلاین) → بخش‌های بلندِ محتوا
+    (تمام‌عرض یا دوستونی با تصویرِ واقعی در قاب) → کاربردها → ابزارها
+    (مارکوی مربع) → فرآیند (فهرستِ عمودیِ هیرلاین) → چرا ما (سه‌ستونِ
+    هیرلاین) → آمار (جعبه‌های مربع) → قیمت‌گذاری (پلنِ محبوب = بلوکِ معکوسِ
+    شنی) → نظرات/نمونه‌کارها/سوالات/مقالات (کامپوننت‌های مشترک با اسکوپِ
+    Ryoku). شماره‌گذاری سکشن‌ها با گلیف‌های هم‌معنای صفحهٔ اصلی.
+    داده‌ها (بدون تغییر): service، overview، sections، deliverables، tools،
+    use_cases، stats، why_us، processes، plans، faqs، has_projects،
+    has_articles.
   {% endcomment %}
-  <div class="{{ service.accent_class }}">
 
-    {% comment %} ── هیرو — مسیر صفحه، عنوان، مقدمه، دکمه‌ها و آرتورکِ اختصاصیِ خدمت ── {% endcomment %}
-    <section class="relative overflow-hidden bg-ink" data-mouse-parallax data-pause>
-      {% include "partials/_space_layer.html" with ring_spin="1" ring_class="-left-48 -bottom-24 h-[34rem] w-[46rem]" orb_variant="planet-orb-"|add:service.accent orb_class="left-[7%] top-[14%] h-7 w-7" %}
-      <div class="pointer-events-none absolute -right-40 top-1/4 h-[32rem] w-[32rem] rounded-full opacity-25"
-           style="background: radial-gradient(circle, color-mix(in srgb, var(--pa, #c9a15a) 22%, transparent 65%));"
-           aria-hidden="true"></div>
-      <span class="stroke-title font-latin pointer-events-none absolute -bottom-10 left-0 select-none text-[15vw] font-light leading-none"
-            aria-hidden="true">service</span>
+  {% comment %} ── هیرو — مسیر صفحه، عنوان، مقدمه و دکمه‌ها ── {% endcomment %}
+  <section class="ry-scope relative overflow-hidden border-b border-line/10">
+    <div class="relative z-10 mx-auto max-w-6xl px-6 py-24 md:py-36">
+      {% include "components/_breadcrumb.html" %}
 
-      <div class="relative z-10 mx-auto max-w-7xl px-6 pb-28 pt-36 md:pt-48">
-        {% include "components/_breadcrumb.html" %}
+      {% include 'components/_ry_section_header.html' with ry_num="01" ry_label_fa="خدمت" ry_glyph="خـ" %}
 
-        <div class="mt-10 grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-16">
-          {% comment %} ستونِ متن {% endcomment %}
-          <div data-reveal="mask">
-            {% if service.hero_eyebrow %}
-              <p class="eyebrow">{{ service.hero_eyebrow }}</p>
+      <div class="mt-12 grid gap-14 lg:grid-cols-12 lg:gap-12">
+        {% comment %} ستونِ متن {% endcomment %}
+        <div class="lg:col-span-7">
+          {% if service.hero_eyebrow %}
+            <p class="ry-label-fa ry-reveal">{{ service.hero_eyebrow }}</p>
+          {% endif %}
+          <h1 class="ry-serif ry-reveal mt-4 text-4xl text-sand md:text-[3.25rem] md:leading-[1.25]"
+              data-delay="0.06">
+            {{ service.hero_title|default:service.title|highlight:"dark" }}
+          </h1>
+          {% if service.hero_lead or service.excerpt %}
+            <p class="ry-reveal mt-6 max-w-xl text-[15px] leading-8 text-sand/65"
+               data-delay="0.12">
+              {{ service.hero_lead|default:service.excerpt }}
+            </p>
+          {% endif %}
+          {% if service.get_chips_list %}
+            <ul class="ry-reveal mt-6 flex flex-wrap gap-2" data-delay="0.16">
+              {% for chip in service.get_chips_list %}
+                <li class="border border-line/15 px-3 py-1.5 text-xs text-sand/70">{{ chip }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+          <div class="ry-reveal mt-10 flex flex-wrap gap-4" data-delay="0.2">
+            {% if service.hero_cta_primary_text %}
+              <a href="{% nav_url service.hero_cta_primary_url %}" class="ry-btn ry-btn--fill">
+                {{ service.hero_cta_primary_text }}
+                {% icon "arrow-left" class="h-4 w-4" %}
+              </a>
+            {% else %}
+              <a href="{% url 'contact:contact' %}" class="ry-btn ry-btn--fill">
+                درخواست مشاوره
+                {% icon "arrow-left" class="h-4 w-4" %}
+              </a>
             {% endif %}
-            <h1 class="mt-6 text-[2.6rem] font-extrabold leading-[1.2] sm:text-5xl lg:text-[3.5rem]">
-              {{ service.hero_title|default:service.title|highlight }}
-            </h1>
-            {% if service.hero_lead or service.excerpt %}
-              <p class="mt-6 max-w-xl text-lg font-light leading-8 text-cream/70"
-                 data-reveal="mask" data-delay="0.06">
-                {{ service.hero_lead|default:service.excerpt }}
-              </p>
+            {% if service.hero_cta_secondary_text and service.hero_cta_secondary_url %}
+              <a href="{% nav_url service.hero_cta_secondary_url %}" class="ry-btn ry-btn--line">
+                {{ service.hero_cta_secondary_text }}
+              </a>
             {% endif %}
-            {% if service.get_chips_list %}
-              <div class="mt-7 flex flex-wrap gap-2.5" data-reveal="pop" data-delay="0.1">
-                {% for chip in service.get_chips_list %}
-                  <span class="s-chip">{{ chip }}</span>
-                {% endfor %}
+          </div>
+        </div>
+
+        {% comment %} ستونِ تصویر — قابِ Ryoku با جای‌نگهدارِ ASCII (سیاست §2b:
+           مصورسازی‌های تزئینیِ قدیمی حذف شد؛ در گذرِ نهایی ASCII جایش را می‌گیرد) {% endcomment %}
+        <div class="lg:col-span-5">
+          <figure class="ry-frame ry-reveal" data-delay="0.1">
+            <span class="ry-frame__circle" aria-hidden="true"></span>
+            <div class="grid aspect-[4/3] place-items-center bg-surface">
+              <div class="text-center">
+                <span class="text-sand/40" aria-hidden="true">{% icon service.icon class="h-8 w-8" %}</span>
+                <span class="ry-label mt-4 block" dir="ltr">ASCII-ART-PLACEHOLDER</span>
               </div>
+            </div>
+            {% if service.badge %}
+              <figcaption class="ry-label-fa mt-3">{{ service.badge }}</figcaption>
             {% endif %}
-            <div class="mt-10 flex flex-wrap gap-4" data-reveal="pop" data-delay="0.16">
-              {% if service.hero_cta_primary_text %}
-                <a href="{% nav_url service.hero_cta_primary_url %}" class="btn btn-gold px-8 py-4" data-magnetic>
-                  {{ service.hero_cta_primary_text }}
-                  {% icon "arrow-left" class="h-4 w-4" %}
-                </a>
-              {% else %}
-                <a href="{% url 'contact:contact' %}" class="btn btn-gold px-8 py-4" data-magnetic>
-                  درخواست مشاوره
-                  {% icon "arrow-left" class="h-4 w-4" %}
-                </a>
+          </figure>
+        </div>
+      </div>
+    </div>
+
+    <span class="ry-ghost font-label pointer-events-none absolute -bottom-6 start-4 select-none text-[16vw]"
+          dir="ltr" aria-hidden="true">SERVICE</span>
+  </section>
+
+  {% comment %} ── مرور کلی — اولین بخشِ محتوای فعال (یا توضیحاتِ کاملِ خدمت) ── {% endcomment %}
+  {% if overview or service.description %}
+    <section class="ry-scope relative overflow-hidden border-b border-line/10">
+      <div class="relative z-10 mx-auto max-w-3xl px-6 py-24 md:py-32">
+
+        {% include 'components/_ry_section_header.html' with ry_num="02" ry_label_fa=overview.eyebrow|default:"مرور کلی" ry_glyph="شـ" %}
+
+        {% if overview %}
+          {% if overview.title %}
+            <h2 class="ry-serif ry-reveal mt-12 text-4xl text-sand md:text-[2.85rem] md:leading-[1.4]"
+                data-delay="0.06">
+              {{ overview.title|highlight:"dark" }}
+            </h2>
+          {% endif %}
+          <div class="prose-cream ry-reveal mt-8" data-delay="0.12">
+            {{ overview.body|safe }}
+          </div>
+        {% else %}
+          <h2 class="ry-serif ry-reveal mt-12 text-4xl text-sand md:text-[2.85rem] md:leading-[1.4]"
+              data-delay="0.06">
+            {{ service.title|highlight:"dark" }} چیست؟
+          </h2>
+          <div class="prose-cream ry-reveal mt-8" data-delay="0.12">
+            {{ service.description|linebreaksbr|safe }}
+          </div>
+        {% endif %}
+      </div>
+    </section>
+  {% endif %}
+
+  {% comment %} ── خروجی‌ها — چه چیزی تحویل می‌گیرید (ردیف‌های هیرلاین) ── {% endcomment %}
+  {% if deliverables %}
+    <section class="ry-scope relative overflow-hidden border-b border-line/10">
+      <div class="relative z-10 mx-auto max-w-6xl px-6 py-24 md:py-32">
+
+        {% include 'components/_ry_section_header.html' with ry_num="03" ry_label_fa="خروجی‌های پروژه" ry_glyph="د" %}
+
+        <h2 class="ry-serif ry-reveal mt-12 max-w-2xl text-4xl text-sand md:text-[2.85rem] md:leading-[1.4]"
+            data-delay="0.06">
+          چه چیزی تحویل می‌گیرید؟
+        </h2>
+
+        <div class="ry-reveal mt-12 grid gap-x-12 md:grid-cols-2" data-delay="0.12">
+          {% for item in deliverables %}
+            <div class="ry-row grid grid-cols-[auto_1fr_auto] items-center gap-4">
+              <span class="text-sand/50" aria-hidden="true">{% icon "check" class="h-4 w-4" %}</span>
+              <span class="text-[14.5px] leading-7 text-sand/80">{{ item.title }}</span>
+              <span class="ry-label" dir="ltr">{{ forloop.counter|stringformat:"02d" }}</span>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+  {% endif %}
+
+  {% comment %} ── بخش‌های بلندِ محتوای سئو — تمام‌عرض یا دوستونی با تصویرِ واقعی ── {% endcomment %}
+  {% for section in sections %}
+    <section class="ry-scope relative overflow-hidden border-b border-line/10">
+      <div class="relative z-10 mx-auto max-w-6xl px-6 py-24 md:py-32">
+        {% if section.layout == 'full' %}
+          <div class="max-w-3xl">
+            {% if section.eyebrow %}
+              <p class="ry-label-fa ry-reveal">{{ section.eyebrow }}</p>
+            {% endif %}
+            <h2 class="ry-serif ry-reveal mt-4 text-3xl text-sand md:text-[2.4rem] md:leading-[1.4]"
+                data-delay="0.06">
+              {{ section.title|highlight:"dark" }}
+            </h2>
+            <div class="prose-cream ry-reveal mt-7" data-delay="0.12">
+              {{ section.body|safe }}
+            </div>
+          </div>
+        {% else %}
+          {% comment %} چیدمانِ left/right: پنلِ تصویر با order در RTL جابه‌جا می‌شود {% endcomment %}
+          <div class="grid gap-12 lg:grid-cols-2 lg:gap-16">
+            <div class="{% if section.layout == 'left' %}lg:order-2{% endif %}">
+              {% if section.eyebrow %}
+                <p class="ry-label-fa ry-reveal">{{ section.eyebrow }}</p>
               {% endif %}
-              {% if service.hero_cta_secondary_text and service.hero_cta_secondary_url %}
-                <a href="{% nav_url service.hero_cta_secondary_url %}" class="btn btn-ghost px-8 py-4" data-magnetic>
-                  {{ service.hero_cta_secondary_text }}
-                </a>
+              <h2 class="ry-serif ry-reveal mt-4 text-3xl text-sand md:text-[2.4rem] md:leading-[1.4]"
+                  data-delay="0.06">
+                {{ section.title|highlight:"dark" }}
+              </h2>
+              <div class="prose-cream ry-reveal mt-7" data-delay="0.12">
+                {{ section.body|safe }}
+              </div>
+            </div>
+            <div class="{% if section.layout == 'left' %}lg:order-1{% endif %}">
+              {% if section.image %}
+                {% comment %} تصویرِ واقعیِ محتوا — عیناً و بدونِ پردازش (سیاست §2b) {% endcomment %}
+                <figure class="ry-frame ry-reveal" data-delay="0.1">
+                  <img src="{{ section.image.url }}"
+                       alt="{{ section.image_alt|default:section.title|plain }}"
+                       loading="lazy" decoding="async"
+                       class="aspect-[4/3] w-full object-cover">
+                </figure>
+              {% else %}
+                {% comment %} ASCII-ART-PLACEHOLDER — پنلِ تزئینیِ بدونِ تصویر (سیاست §2b) {% endcomment %}
+                <figure class="ry-frame ry-reveal" data-delay="0.1">
+                  <div class="grid aspect-[4/3] place-items-center bg-surface">
+                    <span class="ry-label" dir="ltr">ASCII-ART-PLACEHOLDER</span>
+                  </div>
+                </figure>
               {% endif %}
             </div>
           </div>
+        {% endif %}
+      </div>
+    </section>
+  {% endfor %}
 
-          {% comment %} ستونِ آرتورک — تصویرسازیِ مختصِ نوعِ `visual` خدمت (T68 آن را گسترش می‌دهد) {% endcomment %}
-          <div class="service-theme-{{ service.visual }} relative mx-auto w-full max-w-xl" data-reveal="clip" data-delay="0.12">
-            <span class="orbit-ring orbit-ring--spin absolute -right-14 -top-16 h-80 w-80 opacity-60"
-                  aria-hidden="true"></span>
-            <span class="orbit-dot absolute -right-3 top-2 h-3.5 w-3.5" aria-hidden="true"></span>
+  {% comment %} ── کاربردها و صنایع — گریدِ مشخصاتِ هیرلاین ── {% endcomment %}
+  {% if use_cases %}
+    <section class="ry-scope relative overflow-hidden border-b border-line/10">
+      <div class="relative z-10 mx-auto max-w-6xl px-6 py-24 md:py-32">
 
-            {% if service.visual == 'browser' %}
-              {% comment %} ماکت مرورگر + شبکهٔ طرح‌بندی + ماکتِ موبایل (T68) {% endcomment %}
-              <div class="svc-device" data-float-spin="12" aria-hidden="true">
-                <span class="svc-device-bar"></span>
-                <span class="svc-device-bar w-2/3"></span>
-                <span class="svc-device-tile"></span>
-              </div>
-              <div class="svc-browser relative w-full overflow-hidden border border-white/[.08] bg-ink/60 shadow-2xl"
-                   style="border-radius: 1.25rem 1.25rem 0.75rem 0.75rem">
-                <div class="flex items-center gap-2.5 border-b border-white/[.06] px-5 py-4">
-                  <span class="h-3 w-3 rounded-full bg-gold/50"></span>
-                  <span class="h-3 w-3 rounded-full bg-cream/20"></span>
-                  <span class="h-3 w-3 rounded-full bg-royal/50"></span>
-                  <span class="mr-3.5 flex-1 truncate rounded-full bg-white/[.05] px-4 py-1.5 text-left font-latin text-[10px] text-cream/40">pixoria.ir</span>
-                </div>
-                <div class="relative grid-bg p-7">
-                  <span class="svc-blueprint" aria-hidden="true"></span>
-                  <div class="svc-scan absolute inset-x-0 top-0 h-32"></div>
-                  <div class="h-24 rounded-xl bg-gradient-to-l from-gold/25 to-transparent"></div>
-                  <div class="mt-4 grid grid-cols-3 gap-3">
-                    <div class="h-14 rounded-lg bg-white/[.06]"></div>
-                    <div class="h-14 rounded-lg bg-white/[.06]"></div>
-                    <div class="h-14 rounded-lg bg-white/[.06]"></div>
-                  </div>
-                  <div class="mt-4 space-y-2.5">
-                    <div class="h-2.5 w-3/4 rounded-full bg-white/[.07]"></div>
-                    <div class="h-2.5 w-1/2 rounded-full bg-white/[.05]"></div>
-                  </div>
-                </div>
-              </div>
-              <span class="svc-chip -left-3 top-1/4" data-float="9">
-                {% icon "shopping-cart" class="h-4 w-4" %} فروشگاه آنلاین
-              </span>
-              <span class="svc-chip -bottom-5 left-10" data-float="11">
-                {% icon "smartphone" class="h-4 w-4" %} موبایل‌اول
-              </span>
+        {% include 'components/_ry_section_header.html' with ry_num="04" ry_label_fa="کاربردها و صنایع" ry_glyph="کـ" %}
 
-            {% elif service.visual == 'terminal' %}
-              {% comment %} ترمینال + گلیف‌های کد و خطِ تایپ‌کننده (T68) {% endcomment %}
-              <span class="svc-glyph -top-5 left-10" data-float="10">&lt;/&gt;</span>
-              <span class="svc-glyph -right-4 bottom-12" data-float="12">{ }</span>
-              <span class="svc-glyph -left-4 top-1/3" data-float="8">git</span>
-              <div class="svc-terminal relative flex flex-col overflow-hidden border border-white/[.08] bg-ink3/80 shadow-2xl"
-                   style="border-radius: 1rem; min-height: 18rem">
-                <div class="flex flex-none items-center justify-between border-b border-white/[.06] px-5 py-3.5">
-                  <span class="font-latin text-[10px] tracking-[.2em] text-cream/40">BASH</span>
-                  <div class="flex gap-2">
-                    <span class="h-2.5 w-2.5 rounded-full bg-gold/50"></span>
-                    <span class="h-2.5 w-2.5 rounded-full bg-cream/15"></span>
-                    <span class="h-2.5 w-2.5 rounded-full bg-royal/50"></span>
-                  </div>
-                </div>
-                <div class="relative flex flex-1 flex-col overflow-hidden p-5 font-latin text-xs leading-relaxed" dir="ltr">
-                  <span class="svc-type" aria-hidden="true"></span>
-                  <p class="text-cream/45"><span class="text-gold-light">$</span> pixoria build --prod</p>
-                  <p class="mt-2 text-cream/55"><span class="text-royal">✓</span> compiling modules <span class="text-cream/30">… ۱۲۴ فایل</span></p>
-                  <p class="mt-1.5 text-cream/55"><span class="text-royal">✓</span> running test suite <span class="text-gold/70">۸۱۲ passed</span></p>
-                  <p class="mt-1.5 text-cream/55"><span class="text-royal">✓</span> deploying to edge <span class="cursor-blink">▋</span></p>
-                  <div class="mt-auto pt-4">
-                    <div class="h-1.5 overflow-hidden rounded-full bg-white/[.08]">
-                      <span class="svc-build-bar block h-full w-0 rounded-full bg-gradient-to-l from-gold-light to-gold"></span>
-                    </div>
-                    <p class="mt-2.5 text-[10px] text-cream/35">deploying to production…</p>
-                  </div>
-                </div>
-              </div>
+        <h2 class="ry-serif ry-reveal mt-12 max-w-2xl text-4xl text-sand md:text-[2.85rem] md:leading-[1.4]"
+            data-delay="0.06">
+          این خدمت کجا کار می‌کند؟
+        </h2>
 
-            {% elif service.visual == 'palette' %}
-              {% comment %} پالت رنگی + پوستر + نمونه‌های رنگ شناور (T68) {% endcomment %}
-              <div class="svc-swatch -top-5 left-1/2" data-float-spin="10" aria-hidden="true">
-                <span style="background: var(--pa)"></span>
-                <span class="bg-gold-light/90"></span>
-                <span class="bg-royal/90"></span>
-                <span class="bg-cream/80"></span>
-                <span class="bg-gold-dark/90"></span>
-                <span class="bg-white/15"></span>
-              </div>
-              <div class="svc-swatch -bottom-6 right-10" data-float-spin="12" aria-hidden="true">
-                <span class="bg-royal/90"></span>
-                <span style="background: var(--pa)"></span>
-                <span class="bg-gold/80"></span>
-                <span class="bg-cream/70"></span>
-                <span class="bg-gold-dark/80"></span>
-                <span class="bg-white/15"></span>
-              </div>
-              <div class="relative flex items-center gap-6">
-                <div class="svc-palette relative h-40 w-40 shrink-0">
-                  <span class="svc-palette-ring absolute inset-0 rounded-full">
-                    <span class="absolute left-1/2 top-0 h-5 w-5 -translate-x-1/2 rounded-full bg-gold-light shadow-[0_0_14px_rgba(232,196,122,0.8)]"></span>
-                    <span class="svc-palette-dot absolute right-1 top-1/3 h-4 w-4 rounded-full bg-royal shadow-[0_0_14px_rgba(46,99,255,0.8)]"></span>
-                    <span class="svc-palette-dot absolute bottom-2 right-1/4 h-4 w-4 rounded-full bg-cream shadow-[0_0_14px_rgba(245,243,238,0.6)]"></span>
-                    <span class="svc-palette-dot absolute bottom-2 left-1/4 h-4 w-4 rounded-full bg-gold-dark shadow-[0_0_14px_rgba(143,107,44,0.8)]"></span>
-                  </span>
-                  <span class="absolute inset-[34%] rounded-full bg-ink2 ring-1 ring-gold/25"></span>
-                </div>
-                <div class="svc-poster relative aspect-[16/11] flex-1 overflow-hidden border border-white/[.08] bg-ink/50"
-                     style="border-radius: 1rem" aria-hidden="true">
-                  <span class="grid-bg absolute inset-0 opacity-60"></span>
-                  <span class="svc-drip right-12 h-20" aria-hidden="true"></span>
-                  <span class="svc-drip right-24 h-12" style="animation-delay: 2.4s" aria-hidden="true"></span>
-                  <span class="svc-poster-sun absolute -right-10 -top-12 h-44 w-44 rounded-full"
-                        style="background: radial-gradient(circle, rgba(232,196,122,0.55), rgba(201,161,90,0.12) 55%, transparent 72%);"></span>
-                  <span class="svc-poster-disc absolute left-6 top-7 h-24 w-24 rounded-full border-2 border-dashed border-gold/40"></span>
-                  <span class="svc-poster-disc svc-poster-disc-2 absolute left-14 top-14 h-24 w-24 rounded-full border border-royal/30"></span>
-                  <span class="svc-poster-bar absolute bottom-16 right-6 h-2.5 w-24 rounded-full bg-gradient-to-l from-royal/70 to-transparent"></span>
-                  <span class="svc-poster-bar absolute bottom-10 right-6 h-2.5 w-16 rounded-full bg-gold/50"></span>
-                  <div class="absolute left-6 top-6 flex gap-1.5" dir="ltr">
-                    <span class="h-4 w-4 rounded-full bg-gold-light/90"></span>
-                    <span class="h-4 w-4 rounded-full bg-royal/90"></span>
-                    <span class="h-4 w-4 rounded-full bg-cream/80"></span>
-                    <span class="h-4 w-4 rounded-full bg-gold-dark/90"></span>
-                  </div>
-                  <div class="absolute inset-x-4 bottom-3">
-                    <div class="h-1 rounded-full bg-white/15">
-                      <span class="block h-full w-2/3 rounded-full bg-gradient-to-l from-gold-light to-gold" aria-hidden="true"></span>
-                    </div>
-                    <p class="mt-2 flex items-center justify-between text-[10px] text-cream/70">
-                      <span>پوستر و هویت بصری</span><span>CMYK آمادهٔ چاپ</span>
-                    </p>
-                  </div>
-                </div>
-              </div>
+        <div class="ry-reveal mt-12 grid gap-px border border-line/10 bg-line/10 sm:grid-cols-2 lg:grid-cols-4"
+             data-delay="0.12">
+          {% for use_case in use_cases %}
+            <article class="flex flex-col bg-void p-7">
+              <span class="text-sand/50" aria-hidden="true">{% icon use_case.icon class="h-5 w-5" %}</span>
+              <h3 class="ry-serif mt-6 text-[1.3rem] leading-[1.5] text-sand">{{ use_case.title }}</h3>
+              {% if use_case.description %}
+                <p class="mt-3 text-[13.5px] leading-7 text-sand/55">{{ use_case.description }}</p>
+              {% endif %}
+            </article>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+  {% endif %}
 
-            {% elif service.visual == 'diamond' %}
-              {% comment %} شبکهٔ راهنمای لوگو + خطِ کشیده‌شدنِ الماس (T68) {% endcomment %}
-              <div class="svc-diamond relative grid aspect-square w-full max-w-sm place-items-center overflow-hidden border border-white/[.07] bg-ink/40 shadow-2xl"
-                   style="border-radius: 1.75rem">
-                <span class="grid-bg absolute inset-0 opacity-70"></span>
-                <svg viewBox="0 0 220 220" class="absolute inset-0 h-full w-full" fill="none" aria-hidden="true">
-                  <defs>
-                    <linearGradient id="svc-hero-diamond" x1="0" y1="0" x2="1" y2="1">
-                      <stop offset="0" stop-color="#e8c47a" />
-                      <stop offset="0.55" stop-color="#c9a15a" />
-                      <stop offset="1" stop-color="#8f6b2c" />
-                    </linearGradient>
-                  </defs>
-                  <g class="svc-guide" stroke-dasharray="2 6">
-                    <line x1="110" y1="0" x2="110" y2="220" />
-                    <line x1="0" y1="110" x2="220" y2="110" />
-                    <line x1="36" y1="36" x2="184" y2="184" />
-                    <line x1="184" y1="36" x2="36" y2="184" />
-                    <circle cx="110" cy="110" r="96" />
-                    <circle cx="110" cy="110" r="32" />
-                  </g>
-                  {% comment %} درجه‌های شبکهٔ راهنما — مثل خط‌کشِ طراحِ لوگو {% endcomment %}
-                  <g class="svc-ticks" stroke-width="1.5" stroke-linecap="round">
-                    <line class="svc-tick" x1="40" y1="104" x2="40" y2="116" />
-                    <line class="svc-tick" x1="68" y1="104" x2="68" y2="116" />
-                    <line class="svc-tick" x1="96" y1="104" x2="96" y2="116" />
-                    <line class="svc-tick" x1="124" y1="104" x2="124" y2="116" />
-                    <line class="svc-tick" x1="152" y1="104" x2="152" y2="116" />
-                    <line class="svc-tick" x1="180" y1="104" x2="180" y2="116" />
-                    <line class="svc-tick" x1="104" y1="40" x2="116" y2="40" />
-                    <line class="svc-tick" x1="104" y1="68" x2="116" y2="68" />
-                    <line class="svc-tick" x1="104" y1="152" x2="116" y2="152" />
-                    <line class="svc-tick" x1="104" y1="180" x2="116" y2="180" />
-                  </g>
-                  <circle class="spin-slow" cx="110" cy="110" r="104" fill="none" stroke="url(#svc-hero-diamond)" stroke-width="1.5" stroke-dasharray="3 10" opacity=".8" />
-                  <circle class="svc-logo-ring-2" cx="110" cy="110" r="76" fill="none" stroke="url(#svc-hero-diamond)" stroke-width="1" stroke-dasharray="1 8" opacity=".55" />
-                  <path class="svc-logo-diamond svc-logo-draw" pathLength="1" d="M110 58 L162 110 L110 162 L58 110 Z" fill="none" stroke="url(#svc-hero-diamond)" stroke-width="2.5" />
-                  <path class="svc-logo-diamond-inner" d="M110 84 L136 110 L110 136 L84 110 Z" fill="url(#svc-hero-diamond)" opacity=".92" />
-                  <ellipse cx="110" cy="110" rx="22" ry="7.5" transform="rotate(-20 110 110)" fill="none" stroke="#0d0d0f" stroke-width="2" opacity="0.5" />
-                  <circle cx="110" cy="110" r="12.5" fill="#0d0d0f" />
-                </svg>
-              </div>
-              <span class="svc-chip -bottom-5 left-12" data-float="10">
-                {% icon "ruler" class="h-4 w-4" %} شبکهٔ راهنما
-              </span>
+  {% comment %} ── ابزارها و فناوری‌ها — مارکوی مربع (دو نسخه از لیست = حلقهٔ بی‌درنگ) ── {% endcomment %}
+  {% if tools %}
+    <section class="ry-scope ry-tools-sec relative overflow-hidden border-b border-line/10">
+      <div class="relative z-10 mx-auto max-w-6xl px-6 py-24 md:py-32">
 
-            {% else %}
-              {% comment %} بدون تصویرسازی — مدالِ آیکونِ خدمت {% endcomment %}
-              <div class="glass relative grid aspect-square w-full max-w-sm place-items-center" style="border-radius: 2rem">
-                <span class="icon-ring icon-ring-pulse h-24 w-24">{% icon service.icon class="h-10 w-10" %}</span>
-              </div>
-            {% endif %}
+        {% include 'components/_ry_section_header.html' with ry_num="05" ry_label_fa="ابزارها و فناوری‌ها" ry_glyph="تـ" %}
 
-            {% if service.badge %}
-              <span data-float="10" class="glass absolute -top-3 right-4 rounded-full px-3.5 py-1.5 text-[11px] text-gold-light">
-                {{ service.badge }}
-              </span>
-            {% endif %}
+        <h2 class="ry-serif ry-reveal mt-12 max-w-2xl text-4xl text-sand md:text-[2.85rem] md:leading-[1.4]"
+            data-delay="0.06">
+          با چه ابزارهایی کار می‌کنیم؟
+        </h2>
+
+        <div class="ry-reveal mt-12" data-delay="0.12">
+          <div class="marquee marquee-slow" dir="ltr">
+            <div class="marquee-group">
+              {% for tool in tools %}
+                <span class="s-chip-light">
+                  {% if tool.icon %}{% icon tool.icon class="h-4 w-4" %}{% endif %}
+                  {{ tool.name }}
+                </span>
+              {% endfor %}
+              {% comment %} نسخهٔ دومِ همان آیتم‌ها — translateX(-50%) را بی‌درنگ می‌کند {% endcomment %}
+              {% for tool in tools %}
+                <span class="s-chip-light" aria-hidden="true">
+                  {% if tool.icon %}{% icon tool.icon class="h-4 w-4" %}{% endif %}
+                  {{ tool.name }}
+                </span>
+              {% endfor %}
+            </div>
           </div>
         </div>
       </div>
     </section>
+  {% endif %}
 
-    {% comment %} ── مرور کلی — اولین بخشِ محتوای فعال (یا توضیحاتِ کاملِ خدمت) ── {% endcomment %}
-    {% if overview or service.description %}
-      <section class="relative bg-cream" style="border-radius: 3rem 9rem 0 0">
-        <div class="relative z-10 mx-auto max-w-3xl px-6 pb-28 pt-28 md:pt-36">
-          {% if overview %}
-            {% if overview.eyebrow %}
-              <p class="eyebrow eyebrow-dark" data-reveal="rise">{{ overview.eyebrow }}</p>
-            {% endif %}
-            <h2 class="mt-5 text-3xl font-extrabold leading-[1.3] text-paper md:text-[2.4rem]"
-                data-reveal="mask" data-delay="0.06">
-              {{ overview.title|highlight }}
-            </h2>
-            <div class="prose-ink mt-8" data-reveal="blur" data-delay="0.12">
-              {{ overview.body|safe }}
-            </div>
-          {% else %}
-            <p class="eyebrow eyebrow-dark" data-reveal="rise">مرور کلی</p>
-            <h2 class="mt-5 text-3xl font-extrabold leading-[1.3] text-paper md:text-[2.4rem]"
-                data-reveal="mask" data-delay="0.06">
-              {{ service.title|highlight }} چیست؟
-            </h2>
-            <div class="prose-ink mt-8" data-reveal="blur" data-delay="0.12">
-              {{ service.description|linebreaksbr|safe }}
-            </div>
-          {% endif %}
-        </div>
-      </section>
-    {% endif %}
+  {% comment %} ── فرآیند — فهرستِ عمودیِ متصل به هیرلاین (همان الگوی مسیرِ درباره ما) ── {% endcomment %}
+  {% if processes %}
+    <section class="ry-scope relative overflow-hidden border-b border-line/10">
+      <div class="relative z-10 mx-auto max-w-6xl px-6 py-24 md:py-32">
 
-    {% comment %} ── T64: خروجی‌ها — چه چیزی تحویل می‌گیرید ── {% endcomment %}
-    {% if deliverables %}
-      <section class="relative bg-cream2">
-        <div class="relative z-10 mx-auto max-w-7xl px-6 pb-28 pt-24 md:pt-28">
-          <div class="max-w-2xl">
-            <p class="eyebrow eyebrow-dark" data-reveal="rise">خروجی‌های پروژه</p>
-            <h2 class="mt-5 text-4xl font-extrabold leading-[1.3] text-paper md:text-[2.7rem]"
-                data-reveal="mask" data-delay="0.06">
-              چه چیزی تحویل می‌گیرید؟
-            </h2>
-          </div>
-          <div class="mt-14 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {% for item in deliverables %}
-              <div class="glass-light flex items-center gap-4 p-6"
-                   style="border-radius: {% cycle '1.5rem' '1rem' '1.75rem 0.75rem' %}"
-                   data-reveal="rise" data-delay="{% cycle '0' '0.06' '0.12' %}">
-                <span class="icon-ring h-11 w-11 shrink-0">{% icon "check" class="h-5 w-5" %}</span>
-                <span class="text-[0.95rem] font-medium leading-7 text-paper">{{ item.title }}</span>
+        {% include 'components/_ry_section_header.html' with ry_num="06" ry_label_fa="مراحل پروژه" ry_glyph="فـ" %}
+
+        <h2 class="ry-serif ry-reveal mt-12 max-w-2xl text-4xl text-sand md:text-[2.85rem] md:leading-[1.4]"
+            data-delay="0.06">
+          {{ "از ایده تا [[انتشار]]"|highlight:"dark" }}
+        </h2>
+
+        <div class="ry-process ry-reveal mt-12" data-delay="0.12">
+          {% for step in processes %}
+            <div class="ry-process__item">
+              <div class="ry-process__node" aria-hidden="true">
+                <span class="ry-label" dir="ltr">{{ forloop.counter|stringformat:"02d" }}</span>
               </div>
-            {% endfor %}
-          </div>
-        </div>
-      </section>
-    {% endif %}
-
-    {% comment %} ── T64: بخش‌های بلندِ محتوای سئو — چیدمانِ متناوبِ روشن/تیره ── {% endcomment %}
-    {% for section in sections %}
-      {% with dark=forloop.counter0|divisibleby:2 %}
-        <section class="relative overflow-hidden {% if dark %}bg-ink2{% else %}bg-cream2{% endif %}">
-          <svg class="divider divider-flip" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true">
-            <path d="M0,26 C260,84 520,82 760,44 C1000,6 1240,80 1440,30 L1440,0 L0,0 Z"
-                  fill="{% if dark %}#121214{% else %}#efece5{% endif %}"></path>
-          </svg>
-
-          {% if section.layout == 'full' %}
-            <div class="relative z-10 mx-auto max-w-3xl px-6 pb-28 pt-28 md:pt-36">
-              {% if section.eyebrow %}
-                <p class="{% if dark %}eyebrow{% else %}eyebrow-dark{% endif %}" data-reveal="rise">
-                  {{ section.eyebrow }}
-                </p>
-              {% endif %}
-              <h2 class="mt-5 text-3xl font-extrabold leading-[1.3] {% if dark %}text-cream{% else %}text-paper{% endif %} md:text-[2.4rem]"
-                  data-reveal="mask" data-delay="0.06">
-                {{ section.title|highlight }}
-              </h2>
-              <div class="{% if dark %}prose-cream{% else %}prose-ink{% endif %} mt-8"
-                   data-reveal="blur" data-delay="0.12">
-                {{ section.body|safe }}
-              </div>
-            </div>
-          {% else %}
-            {% comment %} چیدمانِ left/right: پنلِ تصویر با order در RTL جابه‌جا می‌شود {% endcomment %}
-            <div class="relative z-10 mx-auto max-w-7xl px-6 pb-28 pt-28 md:pt-32">
-              <div class="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-16">
-                <div class="{% if section.layout == 'left' %}lg:order-2{% endif %}"
-                     data-reveal="{% if section.layout == 'left' %}left{% else %}right{% endif %}">
-                  {% if section.image %}
-                    <figure class="relative overflow-hidden border border-gold/20 shadow-2xl"
-                            style="border-radius: 1.75rem">
-                      <img src="{{ section.image.url }}"
-                           alt="{{ section.image_alt|default:section.title|plain }}"
-                           loading="lazy" decoding="async"
-                           class="aspect-[4/3] h-full w-full object-cover">
-                    </figure>
-                  {% else %}
-                    {% comment %} پنلِ سیاره‌ای — پنجره‌ای تیره با حلقهٔ مداریِ همرنگِ خدمت {% endcomment %}
-                    <div class="glass relative grid aspect-square w-full max-w-xs place-items-center overflow-hidden mx-auto"
-                         style="border-radius: 2rem">
-                      <span class="grid-bg absolute inset-0 opacity-40" aria-hidden="true"></span>
-                      <span class="orbit-ring orbit-ring--spin absolute inset-5 opacity-60" aria-hidden="true"></span>
-                      <span class="orbit-dot absolute right-7 top-9 h-3 w-3" aria-hidden="true"></span>
-                      <span class="planet-orb absolute right-4 top-6 h-8 w-8" data-float="8" aria-hidden="true"></span>
-                      <span class="icon-ring icon-ring-pulse h-20 w-20">{% icon service.icon class="h-9 w-9" %}</span>
-                    </div>
-                  {% endif %}
-                </div>
-                <div class="{% if section.layout == 'left' %}lg:order-1{% endif %}">
-                  {% if section.eyebrow %}
-                    <p class="{% if dark %}eyebrow{% else %}eyebrow-dark{% endif %}" data-reveal="rise">
-                      {{ section.eyebrow }}
-                    </p>
-                  {% endif %}
-                  <h2 class="mt-5 text-3xl font-extrabold leading-[1.3] {% if dark %}text-cream{% else %}text-paper{% endif %} md:text-[2.3rem]"
-                      data-reveal="mask" data-delay="0.06">
-                    {{ section.title|highlight }}
-                  </h2>
-                  <div class="{% if dark %}prose-cream{% else %}prose-ink{% endif %} mt-7"
-                       data-reveal="blur" data-delay="0.12">
-                    {{ section.body|safe }}
-                  </div>
-                </div>
-              </div>
-            </div>
-          {% endif %}
-        </section>
-      {% endwith %}
-    {% endfor %}
-
-    {% comment %} ── T64: کاربردها و صنایع ── {% endcomment %}
-    {% if use_cases %}
-      <section class="relative overflow-hidden bg-ink2">
-        <svg class="divider divider-flip" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true">
-          <path d="M0,26 C260,84 520,82 760,44 C1000,6 1240,80 1440,30 L1440,0 L0,0 Z" fill="#121214"></path>
-        </svg>
-        <div class="grid-bg pointer-events-none absolute inset-0 opacity-20" aria-hidden="true"></div>
-        <div class="relative z-10 mx-auto max-w-7xl px-6 pb-28 pt-28 md:pt-32">
-          <div class="max-w-2xl">
-            <p class="eyebrow" data-reveal="rise">کاربردها و صنایع</p>
-            <h2 class="mt-5 text-4xl font-extrabold leading-[1.3] md:text-[2.7rem]"
-                data-reveal="mask" data-delay="0.06">
-              این خدمت کجا کار می‌کند؟
-            </h2>
-          </div>
-          <div class="mt-14 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {% for use_case in use_cases %}
-              <div class="glass p-7" style="border-radius: {% cycle '1.5rem' '1rem' '1.75rem 0.75rem' %}"
-                   data-reveal="rise" data-delay="{% cycle '0' '0.06' '0.12' '0.18' %}">
-                <span class="icon-ring h-11 w-11">{% icon use_case.icon class="h-5 w-5" %}</span>
-                <h3 class="mt-5 text-lg font-bold text-cream">{{ use_case.title }}</h3>
-                {% if use_case.description %}
-                  <p class="mt-2.5 text-sm leading-7 text-cream/55">{{ use_case.description }}</p>
+              <div>
+                <h3 class="ry-serif text-xl text-sand leading-snug">{{ step.title }}</h3>
+                {% if step.description %}
+                  <p class="mt-2 text-[14px] leading-7 text-sand/55">{{ step.description }}</p>
                 {% endif %}
               </div>
-            {% endfor %}
-          </div>
-        </div>
-      </section>
-    {% endif %}
-
-    {% comment %} ── T64: ابزارها و فناوری‌ها — مارکوی پیوسته (دو نسخه از لیست = حلقهٔ بی‌درنگ) ── {% endcomment %}
-    {% if tools %}
-      <section class="relative bg-cream2">
-        <svg class="divider divider-flip" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true">
-          <path d="M0,26 C260,84 520,82 760,44 C1000,6 1240,80 1440,30 L1440,0 L0,0 Z" fill="#efece5"></path>
-        </svg>
-        <div class="relative z-10 mx-auto max-w-7xl px-6 pb-28 pt-28 md:pt-32">
-          <div class="max-w-2xl">
-            <p class="eyebrow eyebrow-dark" data-reveal="rise">ابزارها و فناوری‌ها</p>
-            <h2 class="mt-5 text-4xl font-extrabold leading-[1.3] text-paper md:text-[2.7rem]"
-                data-reveal="mask" data-delay="0.06">
-              با چه ابزارهایی کار می‌کنیم؟
-            </h2>
-          </div>
-          <div class="mt-14" data-reveal="clip">
-            <div class="marquee marquee-slow" dir="ltr">
-              <div class="marquee-group">
-                {% for tool in tools %}
-                  <span class="s-chip-light gap-2 text-[0.9rem] font-medium">
-                    {% if tool.icon %}{% icon tool.icon class="h-4 w-4 text-gold-dark" %}{% endif %}
-                    {{ tool.name }}
-                  </span>
-                {% endfor %}
-                {% comment %} نسخهٔ دومِ همان آیتم‌ها — translateX(-50%) را بی‌درنگ می‌کند {% endcomment %}
-                {% for tool in tools %}
-                  <span class="s-chip-light gap-2 text-[0.9rem] font-medium" aria-hidden="true">
-                    {% if tool.icon %}{% icon tool.icon class="h-4 w-4 text-gold-dark" %}{% endif %}
-                    {{ tool.name }}
-                  </span>
-                {% endfor %}
-              </div>
             </div>
-          </div>
+          {% endfor %}
         </div>
-      </section>
-    {% endif %}
 
-    {% comment %} ── T65: خطِ زمانِ فرآیند — مسیرِ GPS با گره‌های شماره‌گذاری‌شده ── {% endcomment %}
-    {% if processes %}
-      <section class="relative overflow-hidden bg-ink2">
-        {% comment %} fill همرنگِ خودِ بخش است: رنگِ تیره را به هر بخشِ بالایی ریشه می‌کند {% endcomment %}
-        <svg class="divider divider-flip" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true">
-          <path d="M0,26 C260,84 520,82 760,44 C1000,6 1240,80 1440,30 L1440,0 L0,0 Z" fill="#121214"></path>
-        </svg>
-        <div class="grid-bg pointer-events-none absolute inset-0 opacity-20" aria-hidden="true"></div>
+        {% comment %} یادداشتِ تحویل و زمان‌بندی {% endcomment %}
+        <p class="ry-reveal mt-12 inline-flex items-start gap-3 border border-line/15 px-5 py-3.5 text-[13.5px] leading-7 text-sand/60"
+           data-delay="0.18">
+          {% icon "clock" class="mt-1 h-4 w-4 flex-none text-sand/50" %}
+          زمانِ تحویل به دامنه و حجمِ پروژه بستگی دارد؛ در جلسهٔ مشاورهٔ رایگان
+          زمان‌بندیِ دقیق را دریافت می‌کنید.
+        </p>
+      </div>
+    </section>
+  {% endif %}
 
-        <div class="relative z-10 mx-auto max-w-7xl px-6 pb-28 pt-28 md:pt-32">
-          <div class="text-center">
-            <p class="eyebrow" data-reveal="rise">مراحل پروژه</p>
-            <h2 class="mt-5 text-4xl font-extrabold leading-[1.3] md:text-[2.7rem]"
-                data-reveal="mask" data-delay="0.06">
-              {{ "از ایده تا [[انتشار]]"|highlight }}
-            </h2>
-          </div>
+  {% comment %} ── چرا ما — سه‌ستون با جداکنندهٔ هیرلاینِ عمودی ── {% endcomment %}
+  {% if why_us %}
+    <section class="ry-scope relative overflow-hidden border-b border-line/10">
+      <div class="relative z-10 mx-auto max-w-6xl px-6 py-24 md:py-32">
 
-          {% comment %} مسیر: خطِ چراغ‌دار از راست (اولین مرحله) به چپ — یک گره برای هر مرحله {% endcomment %}
-          <div class="relative mt-16 lg:mt-20" data-gps-root>
-            {% if processes|length > 1 %}
-              {% with steps=processes|length|add:"-1" %}
-                <div class="relative h-28 sm:h-32">
-                  <svg class="absolute inset-0 h-full w-full" viewBox="0 0 1000 120" preserveAspectRatio="none" aria-hidden="true">
-                    <defs>
-                      <linearGradient id="gpsGrad" x1="1" y1="0" x2="0" y2="0">
-                        <stop offset="0" stop-color="#e8c47a"></stop>
-                        <stop offset="0.5" stop-color="#c9a15a"></stop>
-                        <stop offset="1" stop-color="#8f6b2c"></stop>
-                      </linearGradient>
-                    </defs>
-                    {% comment %} preserveAspectRatio="none" viewBox را کش می‌دهد {% endcomment %}
-                    {% comment %} stroke با vector-effect نازک می‌ماند (input.css) {% endcomment %}
-                    <path class="gps-base" d="M960,60 L40,60"></path>
-                    <path class="gps-move" d="M960,60 L40,60"></path>
-                    <path class="gps-draw" pathLength="1" d="M960,60 L40,60"></path>
-                    <circle class="gps-dot" cx="960" cy="60" r="7"></circle>
-                  </svg>
-                  {% comment %}widthratio فقط ضرب‌و‌تقسیم بلد است؛ پایهٔ ۴٪
-                    را calc اضافه می‌کند تا گره‌ها دقیقاً روی دو سرِ خط
-                    (۴٪ تا ۹۶٪ عرض) بنشینند — همان جاهایی که خط تمام می‌شود.{% endcomment %}
-                  {% for step in processes %}
-                    <span class="gps-node" style="left: calc({% widthratio forloop.revcounter|add:"-1" steps 92 %}% + 4%); top: 50%"
-                          aria-hidden="true">{{ forloop.counter|stringformat:"02d"|fa_digits }}</span>
-                  {% endfor %}
-                </div>
-              {% endwith %}
+        {% include 'components/_ry_section_header.html' with ry_num="07" ry_label_fa="چرا پیکسوریا" ry_glyph="چـ" %}
+
+        <h2 class="ry-serif ry-reveal mt-12 max-w-2xl text-4xl text-sand md:text-[2.85rem] md:leading-[1.4]"
+            data-delay="0.06">
+          {{ "چرا این پروژه را به [[ما]] بسپارید؟"|highlight:"dark" }}
+        </h2>
+
+        <div class="ry-reveal mt-12 grid gap-px border border-line/10 bg-line/10 sm:grid-cols-2 lg:grid-cols-3"
+             data-delay="0.12">
+          {% for item in why_us %}
+            <article class="flex flex-col bg-void p-8">
+              <span class="text-sand/50" aria-hidden="true">{% icon item.icon class="h-5 w-5" %}</span>
+              <h3 class="ry-serif mt-6 text-[1.35rem] leading-[1.5] text-sand">{{ item.title }}</h3>
+              <p class="mt-3 text-[13.5px] leading-7 text-sand/55">{{ item.description }}</p>
+            </article>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+  {% endif %}
+
+  {% comment %} ── آمار — جعبه‌های مربعِ هیرلاین (شمارشگرِ متنِ آزاد) ── {% endcomment %}
+  {% if stats %}
+    <section class="ry-scope relative overflow-hidden border-b border-line/10">
+      <div class="relative z-10 mx-auto max-w-6xl px-6 py-24 md:py-32">
+
+        {% include 'components/_ry_section_header.html' with ry_num="08" ry_label_fa="در یک نگاه" ry_glyph="آ" %}
+
+        <div class="ry-stat-grid ry-reveal mt-12" data-delay="0.1">
+          {% for stat in stats %}
+            <div class="ry-stat">
+              <p class="ry-stat__num fa-num" data-count-text="{{ stat.number }}">{{ stat.number|fa_digits }}</p>
+              <p class="ry-stat__label">{{ stat.label }}</p>
+              {% if stat.description %}
+                <p class="mt-1 text-[11px] leading-5 text-sand/40">{{ stat.description }}</p>
+              {% endif %}
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+  {% endif %}
+
+  {% comment %} ── قیمت‌گذاری — پلنِ محبوب = بلوکِ معکوسِ شنی (مهم‌ترین CTA) ── {% endcomment %}
+  {% if plans %}
+    <section class="ry-scope relative overflow-hidden border-b border-line/10">
+      <div class="relative z-10 mx-auto max-w-6xl px-6 py-24 md:py-32">
+
+        {% include 'components/_ry_section_header.html' with ry_num="09" ry_label_fa="قیمت‌گذاری" ry_glyph="بـ" %}
+
+        <h2 class="ry-serif ry-reveal mt-12 max-w-2xl text-4xl text-sand md:text-[2.85rem] md:leading-[1.4]"
+            data-delay="0.06">
+          تعرفهٔ {{ service.title|highlight:"dark" }}
+        </h2>
+        <p class="ry-reveal mt-4 max-w-xl text-[15px] leading-8 text-sand/65" data-delay="0.12">
+          قیمت‌ها «شروع از» است؛ در جلسهٔ مشاورهٔ رایگان بر اساسِ حجم و ماژول‌های پروژه دقیق می‌شود.
+        </p>
+
+        <div class="ry-reveal mt-12 grid items-start gap-6 md:grid-cols-3" data-delay="0.18">
+          {% for plan in plans %}
+            {% if plan.is_featured %}
+              <article class="ry-inv relative flex flex-col p-8">
+                <span class="ry-label-fa text-void/60!">{{ plan.name }}</span>
+                {% if plan.discount_label %}
+                  <span class="mt-2 w-fit border border-void/30 px-2.5 py-1 text-[11px] text-void/80">{{ plan.discount_label }}</span>
+                {% endif %}
             {% else %}
-              <div class="relative h-20">
-                <span class="gps-node" style="left: 50%; top: 50%" aria-hidden="true">۰۱</span>
+              <article class="relative flex flex-col border border-line/15 bg-void p-8">
+                <span class="ry-label-fa">{{ plan.name }}</span>
+                {% if plan.discount_label %}
+                  <span class="mt-2 w-fit border border-line/20 px-2.5 py-1 text-[11px] text-sand/60">{{ plan.discount_label }}</span>
+                {% endif %}
+            {% endif %}
+
+            {% if plan.tagline %}
+              <p class="mt-3 text-[13.5px] leading-7 {% if plan.is_featured %}text-void/70{% else %}text-sand/55{% endif %}">{{ plan.tagline }}</p>
+            {% endif %}
+
+            {% comment %} قیمت: عدد به تومان (با Optional قیمتِ خط‌خورده)، یا متنِ جایگزین {% endcomment %}
+            {% if plan.price %}
+              <div class="mt-6">
+                {% if plan.old_price %}
+                  <p class="line-through fa-num text-sm {% if plan.is_featured %}text-void/50{% else %}text-sand/40{% endif %}">{{ plan.old_price|fa_price }} {{ plan.price_currency }}</p>
+                {% endif %}
+                <p class="mt-2 flex flex-wrap items-baseline gap-x-2 gap-y-1">
+                  {% if plan.price_prefix %}
+                    <span class="text-sm {% if plan.is_featured %}text-void/70{% else %}text-sand/60{% endif %}">{{ plan.price_prefix }}</span>
+                  {% endif %}
+                  <span class="ry-serif fa-num text-[2.5rem] leading-none {% if plan.is_featured %}text-void{% else %}text-sand{% endif %}">{{ plan.price|fa_price }}</span>
+                  {% if plan.price_currency %}
+                    <span class="text-sm {% if plan.is_featured %}text-void/70{% else %}text-sand/60{% endif %}">{{ plan.price_currency }}</span>
+                  {% endif %}
+                </p>
+              </div>
+            {% else %}
+              <div class="mt-6">
+                <p class="ry-serif text-3xl leading-none {% if plan.is_featured %}text-void{% else %}text-sand{% endif %}">{{ plan.price_note|default:"تماس بگیرید" }}</p>
+                <p class="mt-2 text-xs {% if plan.is_featured %}text-void/60{% else %}text-sand/45{% endif %}">قیمتِ نهایی در جلسهٔ مشاورهٔ رایگان مشخص می‌شود.</p>
               </div>
             {% endif %}
 
-            <div class="grid gap-6 {% if processes|length > 1 %}lg:grid-cols-{{ processes|length }}{% endif %}">
-              {% for step in processes %}
-                <article class="process-step glass tilt group relative overflow-hidden p-7"
-                         style="border-radius: 1.5rem 1.5rem 1.5rem 0.6rem"
-                         data-reveal="rise" data-delay="{% cycle '0' '0.08' '0.16' '0.24' '0.32' %}">
-                  <span class="glare" aria-hidden="true"></span>
-                  <span class="process-node">{{ forloop.counter|stringformat:"02d"|fa_digits }}</span>
-                  <h3 class="mt-4 text-lg font-bold text-cream">{{ step.title }}</h3>
-                  {% if step.description %}
-                    <p class="mt-2.5 text-sm leading-7 text-cream/55">{{ step.description }}</p>
-                  {% endif %}
-                </article>
-              {% endfor %}
-            </div>
-          </div>
-
-          {% comment %} یادداشتِ تحویل و زمان‌بندی {% endcomment %}
-          <div class="mt-14 flex justify-center" data-reveal="pop">
-            <p class="glass inline-flex items-center gap-3 rounded-full px-6 py-3.5 text-[0.85rem] leading-7 text-cream/70">
-              {% icon "clock" class="h-4 w-4 shrink-0 text-gold-light" %}
-              زمانِ تحویل به دامنه و حجمِ پروژه بستگی دارد؛ در جلسهٔ مشاورهٔ رایگان
-              زمان‌بندیِ دقیق را دریافت می‌کنید.
-            </p>
-          </div>
-        </div>
-      </section>
-    {% endif %}
-
-    {% comment %} ── T65: چرا ما — مزایای همکاری با لهجهٔ رنگیِ خدمت ── {% endcomment %}
-    {% if why_us %}
-      <section class="relative overflow-hidden bg-cream" style="clip-path: polygon(0 0, 100% 5.5%, 100% 100%, 0 100%)">
-        <div class="grid-bg pointer-events-none absolute inset-0 opacity-60" aria-hidden="true"></div>
-        <div class="aurora-blob pointer-events-none absolute -top-20 right-[10%] h-96 w-96 rounded-full opacity-50"
-             style="background: radial-gradient(circle, color-mix(in srgb, var(--pa, #c9a15a) 22%, transparent 65%))" aria-hidden="true"></div>
-
-        <div class="relative mx-auto max-w-7xl px-6 pb-28 pt-40 md:pt-48">
-          <div class="text-center">
-            <p class="eyebrow eyebrow-dark eyebrow-c justify-center" data-reveal="rise">چرا پیکسوریا؟</p>
-            <h2 class="mt-5 text-4xl font-extrabold leading-[1.3] text-paper md:text-[2.7rem]"
-                data-reveal="mask" data-delay="0.08">
-              {{ "چرا این پروژه را به [[ما]] بسپارید؟"|highlight:"dark" }}
-            </h2>
-          </div>
-
-          <div class="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {% for item in why_us %}
-              <article class="why-card glass-light tilt group relative overflow-hidden p-7"
-                       style="border-radius: {% cycle '1.75rem 0.75rem 1.75rem 0.75rem' '0.75rem 1.75rem 0.75rem 1.75rem' %}"
-                       data-reveal="rise" data-delay="{% cycle '0' '0.08' '0.16' '0.24' '0.32' %}">
-                <span class="glare" aria-hidden="true"></span>
-                <span class="why-idx" aria-hidden="true">{{ forloop.counter|stringformat:"02d"|fa_digits }}</span>
-                <span class="why-corner" aria-hidden="true"></span>
-                <div class="relative z-10 flex items-center gap-3">
-                  <span class="icon-ring icon-ring-pulse shrink-0">{% icon item.icon class="h-5 w-5" %}</span>
-                  <h3 class="font-bold text-paper">{{ item.title }}</h3>
-                </div>
-                <p class="relative z-10 mt-3 text-sm leading-7 text-coy">{{ item.description }}</p>
-                <span class="why-line" aria-hidden="true"></span>
-              </article>
-            {% endfor %}
-          </div>
-        </div>
-      </section>
-    {% endif %}
-
-    {% comment %} ── T65: آمار — شمارشگرهای متنِ آزاد (data-count-text در pixoria.js) ── {% endcomment %}
-    {% if stats %}
-      {% comment %} گوشه‌های گرد به جای موج: چه بخشِ قبلی روشن باشد چه تیره، درست می‌نشیند {% endcomment %}
-      <section class="relative overflow-hidden bg-ink3" style="border-radius: 3rem 9rem 0 0">
-        <div class="grid-bg pointer-events-none absolute inset-0 opacity-30" aria-hidden="true"></div>
-        <div class="pointer-events-none absolute left-1/2 top-0 h-96 w-96 -translate-x-1/2 rounded-full opacity-25 aurora-blob"
-             style="background: radial-gradient(circle, color-mix(in srgb, var(--pa, #c9a15a) 30%, transparent 65%))" aria-hidden="true"></div>
-
-        <div class="relative z-10 mx-auto max-w-7xl px-6 pb-24 pt-28 md:pt-32">
-          <div class="text-center">
-            <p class="eyebrow" data-reveal="rise">در یک نگاه</p>
-            <h2 class="mt-5 text-3xl font-extrabold leading-[1.3] md:text-[2.4rem]"
-                data-reveal="mask" data-delay="0.08">
-              {{ "پیکسوریا به [[عدد]]"|highlight }}
-            </h2>
-          </div>
-
-          <div class="mt-14 grid grid-cols-2 gap-5 lg:grid-cols-4">
-            {% for stat in stats %}
-              <div class="stat-card glass tilt relative overflow-hidden p-8 text-center"
-                   style="border-radius: {% cycle '1.75rem' '1.25rem' %}"
-                   data-reveal="rise" data-delay="{% cycle '0' '0.1' '0.2' '0.3' %}">
-                <span class="glare" aria-hidden="true"></span>
-                <p class="stat-num fa-num stat-num-fa" data-count-text="{{ stat.number }}">{{ stat.number|fa_digits }}</p>
-                <p class="mt-2 text-sm text-cream/55">{{ stat.label }}</p>
-                {% if stat.description %}
-                  <p class="mt-1 text-xs text-cream/35">{{ stat.description }}</p>
-                {% endif %}
-              </div>
-            {% endfor %}
-          </div>
-        </div>
-      </section>
-    {% endif %}
-
-    {% comment %} ── T66: قیمت‌گذاری — سه پلنِ ازپیش‌تعریف‌شده در ادمین ── {% endcomment %}
-    {% comment %} سکشن وقتی هیچ پلنِ فعالی نباشد کاملًا رندر نمی‌شود. {% endcomment %}
-    {% if plans %}
-      <section class="relative overflow-hidden bg-cream2" style="border-radius: 3rem 9rem 0 0">
-        <div class="aurora-blob pointer-events-none absolute -right-32 top-10 h-96 w-96 rounded-full opacity-40"
-             style="background: radial-gradient(circle, color-mix(in srgb, var(--pa, #c9a15a) 16%, transparent 65%))" aria-hidden="true"></div>
-
-        <div class="relative z-10 mx-auto max-w-7xl px-6 pb-28 pt-28 md:pt-36">
-          <div class="text-center">
-            <p class="eyebrow eyebrow-dark eyebrow-c justify-center" data-reveal="rise">قیمت‌گذاری</p>
-            <h2 class="mt-5 text-4xl font-extrabold leading-[1.3] text-paper md:text-[2.5rem]"
-                data-reveal="mask" data-delay="0.08">
-              تعرفهٔ {{ service.title|highlight:"dark" }}
-            </h2>
-            <p class="mx-auto mt-4 max-w-xl font-light leading-8 text-coy"
-               data-reveal="blur" data-delay="0.14">
-              قیمت‌ها «شروع از» است؛ در جلسهٔ مشاورهٔ رایگان بر اساسِ حجم و ماژول‌های پروژه دقیق می‌شود.
-            </p>
-          </div>
-
-          <div class="mt-16 grid items-start gap-6 md:grid-cols-3">
-            {% for plan in plans %}
-              {% cycle '0' '0.08' '0.16' as plan_delay silent %}
-              {% if plan.is_featured %}
-                {% comment %} پلنِ پیشنهادی: کارتِ طلاییِ برآمده با برچسبِ «محبوب‌ترین» {% endcomment %}
-                {% comment %} pt-10 پس از p-8: بالای کارت نفسِ برچسبِ بیرونزده را میدهد؛ {% endcomment %}
-                {% comment %} بدونِ مارجینِ منفی که محتوای ابتدای کارت را به‌هم میریخت {% endcomment %}
-                <article class="relative flex flex-col p-8 pt-10 text-paper"
-                         style="border-radius: 0.75rem 1.75rem 0.75rem 1.75rem;
-                                background: linear-gradient(150deg, rgba(232,196,122,0.32), rgba(255,255,255,0.92) 55%);
-                                border: 1.5px solid rgba(143,107,44,0.55);
-                                box-shadow: 0 30px 70px -25px rgba(143,107,44,0.55)"
-                         data-reveal="scale" data-delay="{{ plan_delay }}">
-                  <span class="absolute -top-4 right-1/2 translate-x-1/2 whitespace-nowrap rounded-full px-5 py-1.5 text-xs font-bold text-[#171207] shadow-lg"
-                        style="background: linear-gradient(135deg, #8f6b2c, #e8c47a)">محبوب‌ترین</span>
-              {% else %}
-                <article class="glass-light relative flex flex-col p-8"
-                         style="border-radius: {% cycle '1.75rem 1.75rem 1.75rem 0.75rem' '1.75rem 0.75rem 1.75rem 0.75rem' %}"
-                         data-reveal="scale" data-delay="{{ plan_delay }}">
-              {% endif %}
-
-                <div class="flex flex-wrap items-center gap-3">
-                  <h3 class="text-xl font-bold text-paper">{{ plan.name }}</h3>
-                  {% if plan.discount_label %}
-                    <span class="rounded-full bg-gold/15 px-3 py-1 text-xs font-medium text-gold-dark">{{ plan.discount_label }}</span>
-                  {% endif %}
-                </div>
-                {% if plan.tagline %}
-                  <p class="mt-2 text-sm font-light leading-7 text-coy">{{ plan.tagline }}</p>
-                {% endif %}
-
-                {% comment %} قیمت: عدد به تومان (با Optional قیمتِ خط‌خورده)، یا متنِ جایگزین {% endcomment %}
-                {% if plan.price %}
-                  <div class="mt-6">
-                    {% if plan.old_price %}
-                      <p class="line-through fa-num text-sm text-coy/60">{{ plan.old_price|fa_price }} {{ plan.price_currency }}</p>
+            {% comment %} ویژگی‌ها: تیک برای شامل‌شده، ضربدر برای شامل‌نشده {% endcomment %}
+            {% if plan.features.all %}
+              <ul class="mt-7 flex-1 space-y-3 border-t pt-6 text-sm {% if plan.is_featured %}border-void/20 text-void/80{% else %}border-line/15 text-sand/65{% endif %}">
+                {% for feature in plan.features.all %}
+                  <li class="flex gap-2.5">
+                    {% if feature.included %}
+                      {% if plan.is_featured %}
+                        {% icon "check" class="mt-1 h-4 w-4 flex-none text-void" %}
+                      {% else %}
+                        {% icon "check" class="mt-1 h-4 w-4 flex-none text-sand" %}
+                      {% endif %}
+                      <span>{{ feature.title }}</span>
+                    {% else %}
+                      {% if plan.is_featured %}
+                        {% icon "x" class="mt-1 h-4 w-4 flex-none text-void/40" %}
+                      {% else %}
+                        {% icon "x" class="mt-1 h-4 w-4 flex-none text-sand/35" %}
+                      {% endif %}
+                      <span class="{% if plan.is_featured %}text-void/50{% else %}text-sand/40{% endif %}">{{ feature.title }}</span>
                     {% endif %}
-                    <p class="mt-2 flex flex-wrap items-baseline gap-x-2 gap-y-1">
-                      {% if plan.price_prefix %}
-                        <span class="text-sm text-coy">{{ plan.price_prefix }}</span>
-                      {% endif %}
-                      <span class="fa-num text-[2.5rem] font-extrabold leading-none text-goldgrad-dark">{{ plan.price|fa_price }}</span>
-                      {% if plan.price_currency %}
-                        <span class="text-sm text-coy">{{ plan.price_currency }}</span>
-                      {% endif %}
-                    </p>
-                  </div>
-                {% else %}
-                  <div class="mt-6">
-                    <p class="flex flex-wrap items-baseline gap-x-2 gap-y-1">
-                      <span class="text-2xl font-extrabold leading-none text-goldgrad-dark">{{ plan.price_note|default:"تماس بگیرید" }}</span>
-                    </p>
-                    <p class="mt-2 text-xs text-coy/80">قیمتِ نهایی در جلسهٔ مشاورهٔ رایگان مشخص می‌شود.</p>
-                  </div>
-                {% endif %}
+                  </li>
+                {% endfor %}
+              </ul>
+            {% else %}
+              {% comment %} بدونِ ویژگی هم دکمه باید پایینِ کارت بماند {% endcomment %}
+              <div class="flex-1"></div>
+            {% endif %}
 
-                {% comment %} ویژگی‌ها: تیک برای شامل‌شده، ضربدر برای شامل‌نشده {% endcomment %}
-                {% if plan.features.all %}
-                  <ul class="mt-7 flex-1 space-y-3.5 border-t border-gold-dark/15 pt-7 text-sm text-coy">
-                    {% for feature in plan.features.all %}
-                      <li class="flex gap-2.5">
-                        {% if feature.included %}
-                          {% icon "check" class="mt-1 h-4 w-4 flex-none text-gold-dark" %}
-                          <span>{{ feature.title }}</span>
-                        {% else %}
-                          {% icon "x" class="mt-1 h-4 w-4 flex-none text-coy/45" %}
-                          <span class="text-coy/55">{{ feature.title }}</span>
-                        {% endif %}
-                      </li>
-                    {% endfor %}
-                  </ul>
-                {% else %}
-                  {% comment %} بدونِ ویژگی هم دکمه باید پایینِ کارت بماند {% endcomment %}
-                  <div class="flex-1"></div>
-                {% endif %}
-
-                {% comment %} دکمهٔ پلن: cta_url دلخواه، وگرنه فرم تماس با پارامترهای پیش‌پر {% endcomment %}
-                {% if plan.cta_url %}
-                  <a href="{% nav_url plan.cta_url %}"
-                     class="btn mt-8 w-full px-6 py-3.5 text-paper"
-                     style="border: 1.5px solid rgba(143,107,44,0.5); background: rgba(255,255,255,0.5);"
-                     data-magnetic>
-                {% elif plan.is_featured %}
-                  <a href="{% url 'contact:contact' %}?plan={{ plan.plan_type }}&amp;service={{ service.slug }}"
-                     class="btn btn-gold mt-8 w-full px-6 py-3.5" data-magnetic>
-                {% else %}
-                  <a href="{% url 'contact:contact' %}?plan={{ plan.plan_type }}&amp;service={{ service.slug }}"
-                     class="btn mt-8 w-full px-6 py-3.5 text-paper"
-                     style="border: 1.5px solid rgba(143,107,44,0.5); background: rgba(255,255,255,0.5);"
-                     data-magnetic>
-                {% endif %}
-                  {% if plan.cta_label %}
-                    {{ plan.cta_label }}
-                  {% elif plan.is_featured %}
-                    درخواست مشاوره
-                  {% else %}
-                    ثبت سفارش
-                  {% endif %}
-                  {% if plan.is_featured %}
-                    {% icon "arrow-left" class="h-4 w-4" %}
-                  {% endif %}
-                </a>
-              </article>
-            {% endfor %}
-          </div>
-
-        </div>
-      </section>
-    {% endif %}
-
-    {% comment %}T67: نظرات مشتریان، نمونه‌کارهای مرتبط، سوالات متداول،
-         خدمات و مقالاتِ مرتبط + JSON-LD های Service/FAQPage{% endcomment %}
-
-    {% comment %} ── T67: نظرات مشتریانِ این خدمت (اسلایدرِ مشترک) ── {% endcomment %}
-    {% testimonials_slider service=service title="مشتریانِ این خدمت چه می‌گویند؟" eyebrow="نظرات مشتریان" id="service-testimonials" %}
-
-    {% comment %} ── T67: نمونه‌کارهای مرتبط با این خدمت (کاروسلِ مشترک) ── {% endcomment %}
-    {% comment %} هدر فقط وقتی چاپ می‌شود که کارتی وجود داشته باشد (has_projects در ویو، {% endcomment %}
-    {% comment %} هم‌زمان با کوئریِ کامپوننت) — وگرنه بخش کامل غیب می‌شود. {% endcomment %}
-    {% if has_projects %}
-      <section class="relative overflow-hidden bg-cream2" style="border-radius: 3rem 9rem 0 0">
-        <div class="aurora-blob pointer-events-none absolute -left-32 top-10 h-96 w-96 rounded-full opacity-40"
-             style="background: radial-gradient(circle, color-mix(in srgb, var(--pa, #c9a15a) 16%, transparent 65%))" aria-hidden="true"></div>
-
-        <div class="relative z-10 mx-auto max-w-7xl px-6 pb-28 pt-28 md:pt-36">
-          <div class="flex flex-wrap items-end justify-between gap-6">
-            <div>
-              <p class="eyebrow eyebrow-dark" data-reveal="rise">نمونه‌کارها</p>
-              <h2 class="mt-5 text-4xl font-extrabold leading-[1.3] text-paper md:text-[2.7rem]"
-                  data-reveal="mask" data-delay="0.08">
-                {{ "کارهایی که با [[این خدمت]] کردیم"|highlight:"dark" }}
-              </h2>
-            </div>
-            <a href="{% url 'portfolio:list' %}" class="more-link more-link-light text-base" data-reveal="pop">
-              همهٔ نمونه‌کارها
-              {% icon "arrow-left" class="h-4 w-4" %}
+            {% comment %} دکمهٔ پلن: cta_url دلخواه، وگرنه فرم تماس با پارامترهای پیش‌پر {% endcomment %}
+            {% if plan.cta_url %}
+              <a href="{% nav_url plan.cta_url %}"
+                 class="ry-btn mt-8 w-full {% if plan.is_featured %}ry-btn--ink{% else %}ry-btn--line{% endif %}">
+            {% elif plan.is_featured %}
+              <a href="{% url 'contact:contact' %}?plan={{ plan.plan_type }}&amp;service={{ service.slug }}"
+                 class="ry-btn ry-btn--ink mt-8 w-full">
+            {% else %}
+              <a href="{% url 'contact:contact' %}?plan={{ plan.plan_type }}&amp;service={{ service.slug }}"
+                 class="ry-btn ry-btn--line mt-8 w-full">
+            {% endif %}
+              {% if plan.cta_label %}
+                {{ plan.cta_label }}
+              {% elif plan.is_featured %}
+                درخواست مشاوره
+              {% else %}
+                ثبت سفارش
+              {% endif %}
+              {% if plan.is_featured %}
+                {% icon "arrow-left" class="h-4 w-4" %}
+              {% endif %}
             </a>
-          </div>
-
-          {% comment %} کاروسل نمونه‌کارهای همین خدمت — خودش کوئری می‌زند {% endcomment %}
-          <div class="mt-14" data-reveal="clip">
-            {% projects_carousel service=service limit=6 %}
-          </div>
+          </article>
+        {% endfor %}
         </div>
-      </section>
-    {% endif %}
+      </div>
+    </section>
+  {% endif %}
 
-    {% comment %} ── T67: سوالات متداولِ این خدمت (همان آکاردئونِ صفحهٔ اصلی) ── {% endcomment %}
-    {% if faqs %}
-      <section id="service-faq" class="relative overflow-hidden bg-cream">
-        <div class="grid-bg pointer-events-none absolute inset-0 opacity-50" aria-hidden="true"></div>
-        <div class="pointer-events-none absolute left-[-4rem] top-1/3 h-72 w-72 rounded-full opacity-40 aurora-blob"
-             style="background: radial-gradient(circle, color-mix(in srgb, var(--pa, #c9a15a) 0.2, transparent 65%))" aria-hidden="true"></div>
+  {% comment %} ── نظرات مشتریانِ این خدمت (اسلایدرِ مشترک — شاخهٔ Ryoku با 10) ── {% endcomment %}
+  {% testimonials_slider service=service title="مشتریانِ این خدمت چه می‌گویند؟" eyebrow="نظرات مشتریان" id="service-testimonials" %}
 
-        <div class="relative mx-auto max-w-4xl px-6 pb-28 pt-32 md:pt-40">
-          <div class="text-center">
-            <p class="eyebrow eyebrow-dark eyebrow-c justify-center" data-reveal="rise">سوالات متداول</p>
-            <h2 class="mt-5 text-4xl font-extrabold leading-[1.3] text-paper md:text-[2.7rem]"
-                data-reveal="mask" data-delay="0.08">
-              {{ "سوالاتِ رایج دربارهٔ [[این خدمت]]"|highlight:"dark" }}
-            </h2>
-            <p class="mx-auto mt-4 max-w-xl font-light leading-8 text-coy" data-reveal="blur" data-delay="0.14">
-              اگر سوالِ شما اینجا نیست، در جلسهٔ مشاورهٔ رایگان پاسخ می‌دهیم.
-            </p>
-          </div>
+  {% comment %} ── نمونه‌کارهای مرتبط با این خدمت (کاروسلِ مشترک — کارتِ Ryoku) ── {% endcomment %}
+  {% if has_projects %}
+    <section class="ry-scope relative overflow-hidden border-b border-line/10">
+      <div class="relative z-10 mx-auto max-w-6xl px-6 py-24 md:py-32">
 
-          <div class="mt-12 space-y-3.5">
-            {% for item in faqs %}
-              <div class="faq-item" data-reveal="rise" data-delay="{% cycle '0' '0.06' '0.12' '0.18' '0.24' '0.3' '0.36' '0.42' %}">
-                <h3 class="m-0">
-                  <button type="button" class="faq-q"
-                          aria-expanded="false" aria-controls="svc-faq-panel-{{ forloop.counter }}">
-                    <span>{{ item.question }}</span>
-                    <span class="faq-icon" aria-hidden="true">{% icon "plus" class="h-4 w-4" %}</span>
-                  </button>
-                </h3>
-                <div id="svc-faq-panel-{{ forloop.counter }}" class="faq-a" role="region">
-                  <p>{{ item.answer|linebreaksbr }}</p>
-                </div>
+        {% include 'components/_ry_section_header.html' with ry_num="11" ry_label_fa="نمونه‌کارها" ry_glyph="پـ" %}
+
+        <div class="mt-12 flex flex-wrap items-end justify-between gap-6">
+          <h2 class="ry-serif ry-reveal max-w-2xl text-4xl text-sand md:text-[2.85rem] md:leading-[1.4]"
+              data-delay="0.06">
+            {{ "کارهایی که با [[این خدمت]] کردیم"|highlight:"dark" }}
+          </h2>
+          <a href="{% url 'portfolio:list' %}" class="ry-link ry-reveal" data-delay="0.08">
+            همهٔ نمونه‌کارها
+            {% icon "arrow-left" class="h-4 w-4" %}
+          </a>
+        </div>
+
+        {% comment %} کاروسل نمونه‌کارهای همین خدمت — خودش کوئری می‌زند {% endcomment %}
+        <div class="ry-reveal mt-12" data-delay="0.12">
+          {% projects_carousel service=service limit=6 %}
+        </div>
+      </div>
+    </section>
+  {% endif %}
+
+  {% comment %} ── سوالات متداولِ این خدمت (آکاردئونِ Ryoku) ── {% endcomment %}
+  {% if faqs %}
+    <section id="service-faq" class="ry-scope ry-faq-sec relative overflow-hidden border-b border-line/10">
+      <div class="relative z-10 mx-auto max-w-4xl px-6 py-24 md:py-32">
+
+        {% include 'components/_ry_section_header.html' with ry_num="12" ry_label_fa="سوالات متداول" ry_glyph="سـ" %}
+
+        <h2 class="ry-serif ry-reveal mt-12 max-w-2xl text-4xl text-sand md:text-[2.85rem] md:leading-[1.4]"
+            data-delay="0.06">
+          {{ "سوالاتِ رایج دربارهٔ [[این خدمت]]"|highlight:"dark" }}
+        </h2>
+        <p class="ry-reveal mt-4 max-w-xl text-[15px] leading-8 text-sand/65" data-delay="0.12">
+          اگر سوالِ شما اینجا نیست، در جلسهٔ مشاورهٔ رایگان پاسخ می‌دهیم.
+        </p>
+
+        <div class="ry-reveal mt-12" data-delay="0.18">
+          {% for item in faqs %}
+            <div class="faq-item">
+              <h3 class="m-0">
+                <button type="button" class="faq-q"
+                        aria-expanded="false" aria-controls="svc-faq-panel-{{ forloop.counter }}">
+                  <span>{{ item.question }}</span>
+                  <span class="faq-icon" aria-hidden="true">{% icon "plus" class="h-4 w-4" %}</span>
+                </button>
+              </h3>
+              <div id="svc-faq-panel-{{ forloop.counter }}" class="faq-a" role="region">
+                <p>{{ item.answer|linebreaksbr }}</p>
               </div>
-            {% endfor %}
-          </div>
-        </div>
-      </section>
-    {% endif %}
-
-
-    {% comment %} ── T67: مقالاتِ مرتبط با این خدمت (کاروسلِ مشترک) ── {% endcomment %}
-    {% if has_articles %}
-      <section class="relative overflow-hidden bg-cream2" style="border-radius: 3rem 9rem 0 0">
-        <div class="aurora-blob pointer-events-none absolute -right-32 top-10 h-96 w-96 rounded-full opacity-40"
-             style="background: radial-gradient(circle, color-mix(in srgb, var(--pa, #c9a15a) 16%, transparent 65%))" aria-hidden="true"></div>
-
-        <div class="relative z-10 mx-auto max-w-7xl px-6 pb-28 pt-28 md:pt-36">
-          <div class="flex flex-wrap items-end justify-between gap-6">
-            <div>
-              <p class="eyebrow eyebrow-dark" data-reveal="rise">مجلهٔ پیکسوریا</p>
-              <h2 class="mt-5 text-4xl font-extrabold leading-[1.3] text-paper md:text-[2.7rem]"
-                  data-reveal="mask" data-delay="0.08">
-                {{ "بیشتر دربارهٔ [[این خدمت]] بخوانید"|highlight:"dark" }}
-              </h2>
             </div>
-            <a href="{% url 'blog:list' %}" class="more-link more-link-light text-base" data-reveal="pop">
-              همهٔ مقالات
-              {% icon "arrow-left" class="h-4 w-4" %}
-            </a>
-          </div>
-
-          {% comment %} کاروسل مقالاتِ مرتبط — خودش کوئری می‌زند {% endcomment %}
-          <div class="mt-14" data-reveal="clip">
-            {% articles_carousel service=service limit=6 %}
-          </div>
+          {% endfor %}
         </div>
-      </section>
-    {% endif %}
-  </div>
+      </div>
+    </section>
+  {% endif %}
+
+  {% comment %} ── مقالاتِ مرتبط (کاروسلِ مشترک) — اسکوپِ #blog همان اُوررایدهای صفحهٔ اصلی ── {% endcomment %}
+  {% if has_articles %}
+    <section id="blog" class="ry-scope relative overflow-hidden border-b border-line/10">
+      <div class="relative z-10 mx-auto max-w-6xl px-6 py-24 md:py-32">
+
+        {% include 'components/_ry_section_header.html' with ry_num="13" ry_label_fa="مجلهٔ پیکسوریا" ry_glyph="مـ" %}
+
+        <div class="mt-12 flex flex-wrap items-end justify-between gap-6">
+          <h2 class="ry-serif ry-reveal max-w-2xl text-4xl text-sand md:text-[2.85rem] md:leading-[1.4]"
+              data-delay="0.06">
+            {{ "بیشتر دربارهٔ [[این خدمت]] بخوانید"|highlight:"dark" }}
+          </h2>
+          <a href="{% url 'blog:list' %}" class="ry-link ry-reveal" data-delay="0.08">
+            همهٔ مقالات
+            {% icon "arrow-left" class="h-4 w-4" %}
+          </a>
+        </div>
+
+        {% comment %} کاروسل مقالاتِ مرتبط — خودش کوئری می‌زند {% endcomment %}
+        <div class="ry-reveal mt-12" data-delay="0.12">
+          {% articles_carousel service=service limit=6 %}
+        </div>
+      </div>
+    </section>
+  {% endif %}
 {% endblock %}
