@@ -34,7 +34,6 @@
 | `.env.example` | نمونهٔ متغیرهای محیطی با توضیح فارسی. برای استفاده کپی کنید به `.env` (لوکال) یا `.env.production` (سرور)؛ فایل‌های واقعی gitignore شده‌اند |
 | `.gitignore` | `venv/`، `.env*`، خروجی‌های `public/static` و `public/media`، `node_modules`، پروفایل‌های کروم تستی، فایل‌های موقت `scripts/_*.py` |
 | `install.bat` | نصب CLI دپلوی «Runflare» روی ویندوز (نیازمند Run as Administrator). ربطی به کد سایت ندارد |
-| `index.html` | ⚠️ **پروتوتایپ قدیمیِ استاتیک** (نسخهٔ قبل از Django؛ به `site.css`ای اشاره می‌کند که دیگر وجود ندارد). فقط مرجع است — بخشی از سایت فعلی نیست و تغییرش اثری ندارد |
 | `prompt/` | دو اسکرین‌شات مرجع طراحی (`ryoku-dev.jpg`) — خروجی مورد انتظارِ ظاهری |
 | `venv/` | محیط مجازی پایتون (gitignore شده). اجرای پایتون: `venv\Scripts\python` |
 | `database/` | مکان فایل دیتابیس SQLite (`db.sqlite3`) — مسیرش در `config/settings.py` تعیین شده |
