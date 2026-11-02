@@ -42,27 +42,20 @@
       {% endif %}
     </div>
 
-<div>
+    <div>
       <div class="field {% if form.subject.errors %}field--error{% endif %}">
         <div class="field__select-wrap">
-          <!-- Native select (hidden, for form submission) - Django renders the full widget -->
           {{ form.subject }}
-          <!-- Custom trigger button -->
           <button type="button" class="field__select-trigger" aria-haspopup="listbox" aria-expanded="false" aria-label="انتخاب موضوع">
             <span class="field__select-text">موضوع را انتخاب کنید</span>
             {% icon "chevron-down" class="h-4 w-4" %}
           </button>
           <label class="field__label" for="{{ form.subject.id_for_label }}">موضوع</label>
-          <!-- Custom dropdown -->
           <div class="field__dropdown" role="listbox" hidden>
             <div class="field__option" role="option" data-value="">موضوع را انتخاب کنید</div>
           </div>
         </div>
       </div>
-      {% if form.subject.errors %}
-        <span class="field__error">{% icon "alert-circle" class="h-3.5 w-3.5" %}{{ form.subject.errors.0 }}</span>
-      {% endif %}
-    </div>
       {% if form.subject.errors %}
         <span class="field__error">{% icon "alert-circle" class="h-3.5 w-3.5" %}{{ form.subject.errors.0 }}</span>
       {% endif %}
