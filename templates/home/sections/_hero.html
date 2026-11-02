@@ -1,10 +1,15 @@
 {% load icon_tags fa_digits highlight_tags nav_tags static %}
-{% comment %} هیرو — بازطراحی ۱۰.۱: RTL، متن راست، ASCII چپ (armada-horizon)، آمارها تحت دکمه‌ها، بدون گرادیان {% endcomment %}
+{% comment %} هیرو — متن چپ (RTL)، ASCII راست (ascii-magic-art dynamic) {% endcomment %}
 <section id="home" class="relative overflow-hidden bg-void" aria-label="معرفی">
   <div class="relative z-20 min-h-screen flex flex-col lg:flex-row-reverse">
     
+    {% comment %} ستون چپ — ASCII آرت (dynamic از ascii-magic-art) {% endcomment %}
+    <div class="relative w-full lg:w-[55%] lg:min-h-screen hidden lg:block" aria-hidden="true">
+      <ascii-art piece="{{ hero.ascii_piece|default:'cliff-lighthouse-night' }}" look="{{ hero.ascii_look|default:'dots' }}" bg="{{ hero.ascii_bg|default:'black' }}" class="w-full h-full"></ascii-art>
+    </div>
+
     {% comment %} ستون راست — متن و CTA {% endcomment %}
-    <div class="relative z-10 w-full lg:w-[45%] flex flex-col justify-center px-6 py-20 lg:py-32 lg:pr-16 lg:pl-8">
+    <div class="relative z-10 w-full lg:w-[45%] flex flex-col justify-center px-6 py-20 lg:py-32 lg:pr-8 lg:pl-16">
       <div class="max-w-3xl">
         {% if hero.eyebrow %}
           <p class="ry-label-fa ry-reveal">{{ hero.eyebrow }}</p>
@@ -56,98 +61,11 @@
       </div>
     </div>
 
-    {% comment %} ستون چپ — ASCII آرت (armada-horizon) پرارتفاع، لبه چپ {% endcomment %}
-    <div class="relative w-full lg:w-[55%] lg:-ml-4 lg:min-h-screen hidden lg:block" aria-hidden="true">
-      <div class="ascii-scene-wrapper ascii-scene--hero"
-           data-ascii-scene="armada-horizon"
-           data-ascii-options='{"seed": "hero-1"}'
-           data-ascii-fps="30"
-           data-ascii-width="80"
-           data-ascii-height="40"
-           aria-label="نمودار آسکی پهنه геро — ناوگان فضایی و سیاره">
-        <canvas class="ascii-canvas" loading="lazy" aria-hidden="true"></canvas>
-        <noscript>
-          <div class="ascii-fallback" style="
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100%;
-            min-height: 180px;
-            background: var(--color-void);
-            color: var(--color-sand);
-            font-family: monospace;
-            font-size: clamp(10px, 1.5vw, 14px);
-            border: 1px solid rgba(216, 207, 192, 0.1);
-            border-radius: 0.5rem;
-          ">
-            [ASCII Armada Horizon scene — requires JavaScript]
-          </div>
-        </noscript>
-      </div>
-      <script type="module">
-        import('{% static "js/ascii/engine.js" %}').then(() => {
-          import('{% static "js/ascii/scenes/armada-horizon.js" %}').then(() => {
-            if (window.initAsciiFromDOM) {
-              const wrapper = document.currentScript?.closest('[data-ascii-scene]');
-              if (wrapper && !wrapper._asciiEngine) {
-                window.initAsciiFromDOM(wrapper);
-              }
-            }
-          }).catch(err => {
-            console.warn('ASCII Armada Horizon scene failed to load:', err);
-          });
-        }).catch(err => {
-          console.warn('ASCII Engine failed to load:', err);
-        });
-      </script>
-    </div>
-
   </div>
 
   {% comment %} موبایل: ASCII بنر زیر متن (~۳۰۰px) {% endcomment %}
   <div class="lg:hidden w-full" aria-hidden="true">
-    <div class="ascii-scene-wrapper ascii-scene--hero-mobile"
-         data-ascii-scene="armada-horizon"
-         data-ascii-options='{"seed": "hero-mobile"}'
-         data-ascii-fps="30"
-         data-ascii-width="80"
-         data-ascii-height="40"
-         aria-label="نمودار آسکی موبایل — ناوگان فضایی">
-      <canvas class="ascii-canvas" loading="lazy" aria-hidden="true"></canvas>
-      <noscript>
-        <div class="ascii-fallback" style="
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          height: 100%;
-          min-height: 180px;
-          background: var(--color-void);
-          color: var(--color-sand);
-          font-family: monospace;
-          font-size: clamp(10px, 1.5vw, 14px);
-          border: 1px solid rgba(216, 207, 192, 0.1);
-          border-radius: 0.5rem;
-        ">
-          [ASCII Armada Horizon scene — requires JavaScript]
-        </div>
-      </noscript>
-    </div>
-    <script type="module">
-      import('{% static "js/ascii/engine.js" %}').then(() => {
-        import('{% static "js/ascii/scenes/armada-horizon.js" %}').then(() => {
-          if (window.initAsciiFromDOM) {
-            const wrapper = document.currentScript?.closest('[data-ascii-scene]');
-            if (wrapper && !wrapper._asciiEngine) {
-              window.initAsciiFromDOM(wrapper);
-            }
-          }
-        }).catch(err => {
-          console.warn('ASCII Armada Horizon scene failed to load:', err);
-        });
-      }).catch(err => {
-        console.warn('ASCII Engine failed to load:', err);
-      });
-    </script>
+    <ascii-art piece="{{ hero.ascii_piece|default:'cliff-lighthouse-night' }}" look="{{ hero.ascii_look|default:'dots' }}" bg="{{ hero.ascii_bg|default:'black' }}" class="w-full h-[300px]"></ascii-art>
   </div>
 
   {% comment %} سرنخِ اسکرول — خطِ ساده با نبضِ آرام {% endcomment %}
