@@ -1,72 +1,39 @@
-{% load icon_tags highlight_tags nav_tags fa_digits %}
-{% comment %} خدمات — بازطراحی با زبان طراحی Ryoku (پس‌زمینهٔ void، شنی، هیرلاین، سریف).
-   ساختار: سربرگِ سکشن (03 · خدمات + گلیف) → عنوانِ سریف + توضیحِ باریک →
-   گریدِ ۲×۲ با جداکننده‌های هیرلاینِ ۱px (به‌جای کارت‌های جدا): در هر سلول
-   شمارهٔ مونو + نشانِ خدمت + عنوانِ سریف + پاراگراف + چیپ‌های مربع +
-   لینکِ متنیِ زیرخط‌دار. تصویرسازی‌های CSSِ قدیمی (مرورگر/ترمینال/پالت/الماس)
-   حذف شدند — زبان جدید تایپوگرافیک است.
-   داده‌ها (بدون تغییر): services_section، services (Service.featured).
-   فیلدِ visual فقط تعیین‌کنندهٔ ظاهرِ قدیمی بود و در این قالب استفاده نمی‌شود. {% endcomment %}
+{% load icon_tags fa_digits nav_tags %}
+{% comment %} خدمات — ۱۰.۲: ۴ کارتِ پورتره با ASCII، هرکارت لینک کامل به صفحه سرویس
+   کارت‌ها: طراحی سایت (globe)، برنامه‌نویسی (starship)، طراحی لوگو (ringed-planet)، طراحی گرافیکی (galaxy-fleet)
+   دسکتاپ: ۴ ستون، تبلت ۲×۲، موبایل اسکرول افقی snapping
+   حالت hover/focus: پس‌زمینه نارنجی پر، متن تیره، ASCII palette ink + animate (active)
+   بدون گرادیان، ترنزیشن ≤۲۰۰ms {% endcomment %}
 {% if services %}
   <section id="services" class="ry-scope relative overflow-hidden border-b border-line/10">
-    <div class="relative z-10 mx-auto max-w-6xl px-6 section-space">
+    <div class="relative z-10 mx-auto max-w-[1280px] px-6 section-space">
 
-      {% include 'components/_ry_section_header.html' with ry_num="03" ry_label_fa="خدمات" ry_glyph="خـ" %}
+      {% include "components/_ry_section_header.html" with ry_num="03" ry_label_fa="خدمات" %}
 
-      <div class="mt-14 grid gap-10 lg:grid-cols-12">
-        <div class="lg:col-span-7">
-          {% if services_section.title %}
-            <h2 class="ry-serif ry-reveal text-4xl text-sand md:text-[2.85rem] md:leading-[1.4]">
-              {{ services_section.title|highlight }}
-            </h2>
-          {% endif %}
-        </div>
-        {% if services_section.description %}
-          <p class="ry-reveal text-[15px] leading-8 text-sand/65 lg:col-span-5" data-delay="0.08">
-            {{ services_section.description }}
-          </p>
-        {% endif %}
-      </div>
-
-      {% comment %} گریدِ هیرلاینی — gap-px روی زمینهٔ خط + سلول‌های void {% endcomment %}
-      <div class="ry-reveal mt-16 grid gap-px border border-line/10 bg-line/10 md:grid-cols-2" data-delay="0.12">
+      <div class="mt-14 grid gap-6 lg:grid-cols-4" role="list" aria-label="فهرست خدمات">
         {% for service in services %}
-          <article class="group flex flex-col bg-void p-8 transition-colors duration-200 hover:bg-surface md:p-10">
-            <div class="flex items-center justify-between gap-4">
-              <span class="ry-label" dir="ltr">0{{ forloop.counter }}</span>
-              {% if service.badge %}
-                <span class="ry-label-fa">{{ service.badge }}</span>
-              {% endif %}
-            </div>
-
-            <div class="mt-9 flex items-center gap-3.5">
-              <span class="text-sand/60" aria-hidden="true">{% icon service.icon class="h-5 w-5" %}</span>
-              <h3 class="ry-serif text-[1.7rem] leading-[1.5] text-sand md:text-3xl">
-                {{ service.title|highlight }}
-              </h3>
-            </div>
-
-            {% if service.excerpt %}
-              <p class="mt-4 text-[14.5px] leading-8 text-sand/60">{{ service.excerpt }}</p>
-            {% endif %}
-
-            {% if service.chips %}
-              <ul class="mt-6 flex flex-wrap gap-2">
-                {% for chip in service.get_chips_list %}
-                  <li class="border border-line/15 px-3 py-1.5 text-xs text-sand/70">{{ chip }}</li>
-                {% endfor %}
-              </ul>
-            {% endif %}
-
-            <a
-              href="{% url 'services:detail' service.slug %}"
-              class="ry-link mt-auto pt-9"
-              aria-label="مشاهدهٔ صفحهٔ خدمت {{ service.title|plain }}"
-            >
-              مشاهدهٔ خدمت
-              {% icon "arrow-left" class="h-4 w-4" %}
-            </a>
-          </article>
+          {% comment %} تعیین صحنه ASCII بر اساس slug خدمت {% endcomment %}
+          {% if "web" in service.slug or "design" in service.slug %}
+            {% with ascii_scene="globe" ascii_options='{"radius": 10}' %}
+              {% include "home/sections/_service_card.html" %}
+            {% endwith %}
+          {% elif "program" in service.slug or "software" in service.slug or "dev" in service.slug %}
+            {% with ascii_scene="starship" ascii_options='{}' %}
+              {% include "home/sections/_service_card.html" %}
+            {% endwith %}
+          {% elif "logo" in service.slug or "brand" in service.slug %}
+            {% with ascii_scene="ringed-planet" ascii_options='{"radius": 10}' %}
+              {% include "home/sections/_service_card.html" %}
+            {% endwith %}
+          {% elif "graphic" in service.slug or "advertis" in service.slug %}
+            {% with ascii_scene="galaxy-fleet" ascii_options='{}' %}
+              {% include "home/sections/_service_card.html" %}
+            {% endwith %}
+          {% else %}
+            {% with ascii_scene="globe" ascii_options='{"radius": 10}' %}
+              {% include "home/sections/_service_card.html" %}
+            {% endwith %}
+          {% endif %}
         {% endfor %}
       </div>
     </div>
