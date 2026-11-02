@@ -11,7 +11,7 @@ Source of truth: this file. If you (the agent) were interrupted: read this file 
 - ASCII files: static/js/ascii/engine.js, static/js/ascii/scenes/*.js, static/css/ascii.css, templates/components/ascii.html (to create)
 
 ## LAST ACTION
-(2026-11-02) Phase 2.3 completed. Header button uses .btn--fill (orange). Nav active indicator (desktop underline + mobile title/arrow) now uses --accent orange. Tested on dark (home, services) and cream (blog, contact) backgrounds - buttons render correctly. Next: P2.4 commit.
+(2026-11-02) Phase 3.1-3.3 complete. Created unified .field component (floating label, single border, error/disabled/loading states, autofill handling). Created vanilla JS CustomSelect component (no Alpine dependency) with native select sync. Applied to contact form (subject field) and login form. Built and tested. Next: P3.4 ?service=&plan= prefill, P3.5 commit.
 
 ## BLOCKERS / ASSUMPTIONS
 - (none yet)
@@ -49,9 +49,9 @@ Source of truth: this file. If you (the agent) were interrupted: read this file 
 - [x] P2.2 Replace every button/CTA usage site-wide
 - [x] P2.3 Header button + nav active indicator in orange
 - [x] P2.4 Test all states on dark and cream. Commit
-- [ ] P3.1 .field component (input/textarea/floating label/single border)
-- [ ] P3.2 Custom select (Alpine) + native fallback styling
-- [ ] P3.3 Apply to contact form and login form; keep Django validation/CSRF
+- [x] P3.1 .field component (input/textarea/floating label/single border)
+- [x] P3.2 Custom select (vanilla JS) + native fallback styling
+- [x] P3.3 Apply to contact form and login form; keep Django validation/CSRF
 - [ ] P3.4 ?service=&plan= prefill
 - [ ] P3.5 Autofill + error + disabled + loading states. Commit
 - [ ] P4.1 New eyebrow partial; remove stray letter everywhere

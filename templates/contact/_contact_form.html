@@ -23,43 +23,59 @@
 
   <div class="ry-form-grid">
     <div>
-      <label class="ry-field {% if form.name.errors %}ry-field-invalid{% endif %}">
+      <div class="field {% if form.name.errors %}field--error{% endif %}">
         {{ form.name }}
-        <span>نام و نام خانوادگی</span>
-      </label>
+        <label class="field__label" for="{{ form.name.id_for_label }}">نام و نام خانوادگی</label>
+      </div>
       {% if form.name.errors %}
-        <span class="ry-field-err">{% icon "alert-circle" class="h-3.5 w-3.5" %}{{ form.name.errors.0 }}</span>
+        <span class="field__error">{% icon "alert-circle" class="h-3.5 w-3.5" %}{{ form.name.errors.0 }}</span>
       {% endif %}
     </div>
 
     <div>
-      <label class="ry-field">
+      <div class="field">
         {{ form.phone }}
-        <span>شماره تماس (اختیاری)</span>
-      </label>
+        <label class="field__label" for="{{ form.phone.id_for_label }}">شماره تماس (اختیاری)</label>
+      </div>
       {% if form.phone.errors %}
-        <span class="ry-field-err">{% icon "alert-circle" class="h-3.5 w-3.5" %}{{ form.phone.errors.0 }}</span>
+        <span class="field__error">{% icon "alert-circle" class="h-3.5 w-3.5" %}{{ form.phone.errors.0 }}</span>
       {% endif %}
     </div>
 
-    <div>
-      <label class="ry-field {% if form.subject.errors %}ry-field-invalid{% endif %}">
-        {{ form.subject }}
-        <span>موضوع</span>
-      </label>
+<div>
+      <div class="field {% if form.subject.errors %}field--error{% endif %}">
+        <div class="field__select-wrap">
+          <!-- Native select (hidden, for form submission) - Django renders the full widget -->
+          {{ form.subject }}
+          <!-- Custom trigger button -->
+          <button type="button" class="field__select-trigger" aria-haspopup="listbox" aria-expanded="false" aria-label="انتخاب موضوع">
+            <span class="field__select-text">موضوع را انتخاب کنید</span>
+            {% icon "chevron-down" class="h-4 w-4" %}
+          </button>
+          <label class="field__label" for="{{ form.subject.id_for_label }}">موضوع</label>
+          <!-- Custom dropdown -->
+          <div class="field__dropdown" role="listbox" hidden>
+            <div class="field__option" role="option" data-value="">موضوع را انتخاب کنید</div>
+          </div>
+        </div>
+      </div>
       {% if form.subject.errors %}
-        <span class="ry-field-err">{% icon "alert-circle" class="h-3.5 w-3.5" %}{{ form.subject.errors.0 }}</span>
+        <span class="field__error">{% icon "alert-circle" class="h-3.5 w-3.5" %}{{ form.subject.errors.0 }}</span>
+      {% endif %}
+    </div>
+      {% if form.subject.errors %}
+        <span class="field__error">{% icon "alert-circle" class="h-3.5 w-3.5" %}{{ form.subject.errors.0 }}</span>
       {% endif %}
     </div>
   </div>
 
   <div class="ry-field-wrap mt-6">
-    <label class="ry-field {% if form.message.errors %}ry-field-invalid{% endif %}">
+    <div class="field {% if form.message.errors %}field--error{% endif %}">
       {{ form.message }}
-      <span>پیام شما</span>
-    </label>
+      <label class="field__label" for="{{ form.message.id_for_label }}">پیام شما</label>
+    </div>
     {% if form.message.errors %}
-      <span class="ry-field-err">{% icon "alert-circle" class="h-3.5 w-3.5" %}{{ form.message.errors.0 }}</span>
+      <span class="field__error">{% icon "alert-circle" class="h-3.5 w-3.5" %}{{ form.message.errors.0 }}</span>
     {% endif %}
   </div>
 

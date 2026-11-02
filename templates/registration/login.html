@@ -79,12 +79,12 @@
 
             {% for field in form %}
               <div>
-                <label class="field static" for="{{ field.id_for_label }}">
+                <div class="field {% if field.errors %}field--error{% endif %}">
                   {{ field }}
-                  <span>{{ field.label }}</span>
-                </label>
+                  <label class="field__label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                </div>
                 {% for error in field.errors %}
-                  <span class="field-err">{% icon "alert-circle" class="h-3.5 w-3.5" %}{{ error }}</span>
+                  <span class="field__error">{% icon "alert-circle" class="h-3.5 w-3.5" %}{{ error }}</span>
                 {% endfor %}
               </div>
             {% endfor %}

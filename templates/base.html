@@ -184,6 +184,125 @@
     <script defer src="{% static 'js/hero-field.js' %}"></script>
     {% comment %} HTMX — برای فرم‌های ارسال بدون بازبارگذاری صفحه {% endcomment %}
     <script defer src="{% static 'js/htmx.min.js' %}"></script>
+    {% comment %} Custom Select — vanilla JS (no Alpine dependency) {% endcomment %}
+    <script>
+      // Custom Select Component - Vanilla JS
+      class CustomSelect {
+        constructor(wrapper) {
+          this.wrapper = wrapper;
+          // Django renders the select directly, find it
+          this.native = wrapper.querySelector('select[id^="id_"]');
+          this.trigger = wrapper.querySelector('.field__select-trigger');
+          this.dropdown = wrapper.querySelector('.field__dropdown');
+          this.textEl = wrapper.querySelector('.field__select-text');
+          this.options = [];
+          this.open = false;
+
+          if (!this.native || !this.trigger || !this.dropdown) {
+            console.warn('CustomSelect: missing elements', { 
+              wrapper, 
+              native: this.native, 
+              trigger: !!this.trigger, 
+              dropdown: !!this.dropdown 
+            });
+            return;
+          }
+
+          this.init();
+          this.wrapper._customSelect = this;
+        }
+
+        init() {
+          // Read options from native select
+          this.options = Array.from(this.native.options).map(opt => ({
+            value: opt.value,
+            text: opt.text
+          }));
+          this.selectedText = this.native.options[this.native.selectedIndex]?.text || '';
+
+          // Build dropdown options
+          this.renderDropdown();
+
+          // Event listeners
+          this.trigger.addEventListener('click', () => this.toggle());
+          this.trigger.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') this.close();
+          });
+          this.dropdown.addEventListener('click', (e) => {
+            const option = e.target.closest('.field__option');
+            if (option) this.select(option.dataset.value, option.textContent.trim());
+          });
+
+          // Sync native select changes
+          this.native.addEventListener('change', () => {
+            this.selectedText = this.native.options[this.native.selectedIndex]?.text || '';
+            this.updateTrigger();
+          });
+
+          // Close on outside click
+          document.addEventListener('click', (e) => {
+            if (!this.wrapper.contains(e.target)) this.close();
+          });
+
+          this.updateTrigger();
+          console.log('CustomSelect initialized', this.wrapper);
+        }
+
+        renderDropdown() {
+          this.dropdown.innerHTML = this.options.map(opt => `
+            <div class="field__option" role="option" data-value="${opt.value}">
+              ${opt.text}
+            </div>
+          `).join('');
+        }
+
+        updateTrigger() {
+          this.textEl.textContent = this.selectedText || 'موضوع را انتخاب کنید';
+          this.textEl.style.color = this.selectedText ? 'var(--color-sand)' : 'rgba(216, 207, 192, 0.5)';
+        }
+
+        toggle() {
+          this.open ? this.close() : this.openDropdown();
+        }
+
+        openDropdown() {
+          this.open = true;
+          this.dropdown.hidden = false;
+          this.trigger.setAttribute('aria-expanded', 'true');
+        }
+
+        close() {
+          this.open = false;
+          this.dropdown.hidden = true;
+          this.trigger.setAttribute('aria-expanded', 'false');
+        }
+
+        select(value, text) {
+          this.native.value = value;
+          this.native.dispatchEvent(new Event('change', { bubbles: true }));
+          this.selectedText = text;
+          this.updateTrigger();
+          this.close();
+        }
+      }
+
+      // Auto-initialize all custom selects
+      function initCustomSelects() {
+        console.log('Initializing custom selects...');
+        document.querySelectorAll('.field__select-wrap').forEach(wrapper => {
+          if (!wrapper._customSelect) {
+            new CustomSelect(wrapper);
+          }
+        });
+      }
+
+      // Run on DOMContentLoaded
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initCustomSelects);
+      } else {
+        initCustomSelects();
+      }
+    </script>
     {% block extra_js %}
     {% endblock %}
   </body>

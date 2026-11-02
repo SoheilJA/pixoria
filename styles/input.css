@@ -709,22 +709,43 @@ html.lenis body {
   position: relative;
   display: block;
 }
-.field input,
-.field textarea,
-.field select {
+/* ═══════════════════════════════════════════
+   FIELD COMPONENT — Material Design outlined field
+   .field (wrapper) → input/textarea/select + label
+   واریانت‌ها: .field--error, .field--disabled, .field--loading
+   Select سفارشی: .field__select + Alpine fallback
+   ═══════════════════════════════════════════ */
+.field {
+  position: relative;
+  display: block;
   width: 100%;
-  color: #2b2620;
-  outline: none;
-  resize: none;
-  background: rgba(255, 255, 255, 0.75);
-  border: 1px solid rgba(217, 119, 87, 0.35);
-  border-radius: 1.1rem;
-  padding: 1.2rem 1.15rem 0.55rem;
-  transition:
-    border-color 0.3s,
-    box-shadow 0.3s;
+  font-family: var(--font-sans);
 }
-.field select {
+.field__input,
+.field__textarea,
+.field__select {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(217, 119, 87, 0.35);
+  border-radius: 0.75rem;
+  color: var(--color-sand);
+  font-size: 14px;
+  line-height: 1.5;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+.field__textarea {
+  min-height: 10rem;
+  resize: vertical;
+  padding: 0.85rem 1rem;
+}
+.field__input,
+.field__select {
+  padding: 0.85rem 1rem 0.85rem 1rem;
+}
+.field__select {
   appearance: none;
   cursor: pointer;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23D97757' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
@@ -732,49 +753,213 @@ html.lenis body {
   background-position: left 1rem center;
   padding-left: 2.75rem;
 }
-.field select option {
-  color: #2b2620;
-}
-.field textarea {
-  min-height: 9rem;
-}
-.field input:focus,
-.field textarea:focus,
-.field select:focus {
-  border-color: rgba(217, 119, 87, 0.85);
-  box-shadow: 0 0 0 3px rgba(217, 119, 87, 0.15);
-}
-.field span {
+
+/* Native select hidden for custom dropdown - positioned off-screen but accessible */
+.field__select--native {
   position: absolute;
-  top: 0.95rem;
-  right: 1.15rem;
-  color: #8a8172;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  opacity: 0;
   pointer-events: none;
-  transition: all 0.25s;
-  font-size: 0.95rem;
 }
-.field input:focus + span,
-.field input:not(:placeholder-shown) + span,
-.field textarea:focus + span,
-.field textarea:not(:placeholder-shown) + span,
-.field.static span {
-  top: 0.35rem;
-  font-size: 0.68rem;
-  color: var(--accent-text-on-cream);
-}
-.field.invalid input,
-.field.invalid textarea,
-.field.invalid select {
-  border-color: rgba(192, 57, 43, 0.65);
-  box-shadow: 0 0 0 3px rgba(192, 57, 43, 0.12);
-}
-.field-err {
+
+/* Custom select trigger button */
+.field__select-trigger {
   display: flex;
   align-items: center;
-  gap: 0.4rem;
-  margin-top: 0.4rem;
-  font-size: 0.76rem;
-  color: #a83a2b;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0.85rem 1rem 0.85rem 1rem;
+  background: transparent;
+  border: none;
+  border-radius: 0.75rem;
+  color: var(--color-sand);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  text-align: right;
+  cursor: pointer;
+}
+.field__select-trigger:focus-visible {
+  outline: none;
+}
+.field__select-trigger:hover {
+  background: rgba(217, 119, 87, 0.05);
+}
+.field__select-text {
+  flex: 1;
+  color: rgba(216, 207, 192, 0.5);
+  transition: color 0.2s;
+}
+.field--filled .field__select-text,
+.field__select-trigger:focus .field__select-text {
+  color: var(--color-sand);
+}
+
+.field__select option {
+  background: var(--color-void);
+  color: var(--color-sand);
+}
+.field__label {
+  position: absolute;
+  top: 50%;
+  right: 1rem;
+  transform: translateY(-50%);
+  font-size: 14px;
+  color: rgba(216, 207, 192, 0.5);
+  pointer-events: none;
+  transition: all 0.2s ease;
+  background: var(--color-void);
+  padding: 0 0.5rem;
+}
+.field__input:focus,
+.field__textarea:focus,
+.field__select:focus {
+  outline: none;
+  border-color: var(--accent);
+  background: rgba(217, 119, 87, 0.08);
+  box-shadow: 0 0 0 3px rgba(217, 119, 87, 0.15);
+}
+.field__input:focus + .field__label,
+.field__textarea:focus + .field__label,
+.field__select:focus + .field__label,
+.field__input:not(:placeholder-shown) + .field__label,
+.field__textarea:not(:placeholder-shown) + .field__label,
+.field__select:not([value=""]):not([value=""]) + .field__label,
+.field--filled .field__label {
+  top: 0;
+  transform: translateY(-100%) scale(0.85);
+  color: var(--accent);
+}
+
+/* --- Error state --- */
+.field--error .field__input,
+.field--error .field__textarea,
+.field--error .field__select {
+  border-color: rgba(192, 57, 43, 0.65);
+}
+.field--error .field__input:focus,
+.field--error .field__textarea:focus,
+.field--error .field__select:focus {
+  border-color: #c0392b;
+  box-shadow: 0 0 0 3px rgba(192, 57, 43, 0.12);
+}
+.field--error .field__label {
+  color: #c0392b;
+}
+.field__error {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.35rem;
+  font-size: 12px;
+  color: #c0392b;
+}
+
+/* --- Disabled state --- */
+.field--disabled .field__input,
+.field--disabled .field__textarea,
+.field--disabled .field__select {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: rgba(255, 255, 255, 0.02);
+  border-color: rgba(216, 207, 192, 0.1);
+}
+.field--disabled .field__label {
+  color: rgba(216, 207, 192, 0.25);
+}
+
+/* --- Loading state --- */
+.field--loading .field__input,
+.field--loading .field__textarea,
+.field--loading .field__select {
+  background-image: none;
+  padding-left: 2.5rem;
+}
+.field--loading::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0.85rem;
+  width: 16px;
+  height: 16px;
+  margin-top: -8px;
+  border: 2px solid rgba(217, 119, 87, 0.3);
+  border-right-color: var(--accent);
+  border-radius: 50%;
+  animation: field-spin 0.7s linear infinite;
+  pointer-events: none;
+}
+@keyframes field-spin { to { transform: rotate(360deg); } }
+
+/* --- Autofill handling --- */
+.field__input:-webkit-autofill,
+.field__input:-webkit-autofill:hover,
+.field__input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px var(--color-void) inset !important;
+  -webkit-text-fill-color: var(--color-sand) !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+.field__input:-webkit-autofill + .field__label {
+  top: 0;
+  transform: translateY(-100%) scale(0.85);
+  color: var(--accent);
+}
+
+/* --- Select wrapper for Alpine custom select --- */
+.field__select-wrap {
+  position: relative;
+}
+.field__select-wrap .field__select {
+  padding-right: 3rem;
+}
+.field__select-btn {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.5rem;
+  background: rgba(217, 119, 87, 0.1);
+  color: var(--accent);
+  pointer-events: none;
+}
+
+/* --- Custom Select Dropdown (Alpine) --- */
+.field__dropdown {
+  position: absolute;
+  top: calc(100% + 0.35rem);
+  left: 0;
+  right: 0;
+  z-index: 50;
+  background: var(--color-void);
+  border: 1px solid rgba(217, 119, 87, 0.35);
+  border-radius: 0.75rem;
+  box-shadow: 0 16px 40px -12px rgba(0, 0, 0, 0.6);
+  max-height: 220px;
+  overflow-y: auto;
+}
+.field__option {
+  display: flex;
+  align-items: center;
+  padding: 0.65rem 1rem;
+  cursor: pointer;
+  color: var(--color-sand);
+  transition: background 0.15s;
+}
+.field__option:hover,
+.field__option:focus {
+  background: rgba(217, 119, 87, 0.1);
+  outline: none;
+}
+.field__option[aria-selected="true"] {
+  background: rgba(217, 119, 87, 0.15);
+  color: var(--accent);
 }
 
 /* ---------- نقشهٔ دفتر (contact) ---------- */
