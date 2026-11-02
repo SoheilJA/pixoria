@@ -708,7 +708,9 @@ html.lenis body {
 .field {
   position: relative;
   display: block;
+  margin-bottom: 1.5rem;
 }
+
 /* ═══════════════════════════════════════════
    FIELD COMPONENT — Material Design outlined field
    .field (wrapper) → input/textarea/select + label
@@ -832,7 +834,7 @@ html.lenis body {
 /* --- Base label styles (floating label) --- */
 .field__label {
   position: absolute;
-  top: 50%;
+  top: 0.85rem;
   right: 1rem;
   transform: translateY(-50%);
   font-size: 14px;
@@ -841,6 +843,13 @@ html.lenis body {
   transition: all 0.2s ease;
   background: transparent;
   padding: 0 0.5rem;
+}
+
+/* Textarea label - positioned at top, not middle */
+.field > textarea + .field__label,
+.field__textarea + .field__label {
+  top: 0.85rem;
+  transform: translateY(-100%);
 }
 
 .field__input:focus,
@@ -872,6 +881,23 @@ html.lenis body {
   top: 0;
   transform: translateY(-100%) scale(0.85);
   color: var(--accent);
+}
+
+/* Hide floating label for select when custom trigger shows selected value */
+.field__select-wrap:has(select:not([value=""])) .field__label {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-100%) scale(0.85);
+  pointer-events: none;
+}
+
+/* For textarea, ensure label moves to top properly when focused/filled */
+.field > textarea:focus + .field__label,
+.field__textarea:focus + .field__label,
+.field > textarea:not(:placeholder-shown) + .field__label,
+.field__textarea:not(:placeholder-shown) + .field__label {
+  top: 0;
+  transform: translateY(-100%) scale(0.85);
 }
 
 /* --- Error state --- */
