@@ -75,6 +75,8 @@
     <link rel="stylesheet" href="{% static 'css/motion.css' %}" />
     {% comment %} بازطراحی Ryoku — لودِ آخرین برای غلبه بر استایل‌های قدیمی {% endcomment %}
     <link rel="stylesheet" href="{% static 'css/ry.css' %}" />
+    {% comment %} ASCII Canvas Styles {% endcomment %}
+    <link rel="stylesheet" href="{% static 'css/ascii.css' %}" />
     {% block extra_css %}
     {% endblock %}
     {% block extra_head %}
@@ -149,9 +151,10 @@
     <main id="main" class="min-w-0">
       {% block content %}
       {% endblock %}
-      {% include "partials/_cta.html" %}
-      {% block afterPrefooter %}
-      {% endblock %}
+{% include "partials/_cta.html" %}
+    {% include "partials/_ascii_band.html" %}
+    {% block afterPrefooter %}
+    {% endblock %}
     </main>
 
     {% include "partials/_footer.html" %}

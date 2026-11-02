@@ -1,0 +1,56 @@
+{% load static %}
+{% comment %} باندِ پیش‌فوتر ASCII — deep-space-drift، تمام‌عرض، بین CTA و فوتر
+   ارتفاع: دسکتاپ ۴۲۰px / موبایل ۲۶۰px
+   بدون کادر، لبه‌ها thinning، solid dark bg
+   seed متغیر برای تنوع در صفحات
+   یک خط متنی اختیاری می‌تواند رو برود (برند تگ‌لاین) {% endcomment %}
+<div class="ascii-band relative w-full overflow-hidden" aria-hidden="true">
+  <div class="ascii-scene-wrapper ascii-scene--band"
+       data-ascii-scene="deep-space-drift"
+       data-ascii-options='{"seed": "band-{{ request.path|slugify }}"}'
+       data-ascii-fps="20"
+       data-ascii-width="100"
+       data-ascii-height="30"
+       data-ascii-palette="cream"
+       data-ascii-state="idle"
+       aria-hidden="true">
+    <canvas class="ascii-canvas" loading="lazy" aria-hidden="true"></canvas>
+    <noscript>
+      <div class="ascii-fallback" style="
+        display: flex; align-items: center; justify-content: center;
+        width: 100%; height: 100%; min-height: 180px;
+        background: var(--color-void);
+        color: var(--color-sand);
+        font-family: monospace; font-size: clamp(10px, 1.5vw, 14px);
+        border: 1px solid rgba(216, 207, 192, 0.1);
+        border-radius: 0.5rem;
+      ">
+        [ASCII Deep Space Drift scene — requires JavaScript]
+      </div>
+    </noscript>
+  </div>
+
+  {% comment %} برند تگ‌لاین اختیاری روی باند {% endcomment %}
+  <div class="absolute inset-x-0 bottom-8 z-10 text-center pointer-events-none">
+    <p class="ry-label-fa text-cream/30 tracking-wider uppercase">
+      پیکسوریا · استودیوی طراحی و توسعه
+    </p>
+  </div>
+
+  <script type="module">
+    import('{% static "js/ascii/engine.js" %}').then(() => {
+      import('{% static "js/ascii/scenes/deep-space-drift.js" %}').then(() => {
+        if (window.initAsciiFromDOM) {
+          const wrapper = document.currentScript?.closest('[data-ascii-scene]');
+          if (wrapper && !wrapper._asciiEngine) {
+            window.initAsciiFromDOM(wrapper);
+          }
+        }
+      }).catch(err => {
+        console.warn('ASCII Deep Space Drift scene failed to load:', err);
+      });
+    }).catch(err => {
+      console.warn('ASCII Engine failed to load:', err);
+    });
+  </script>
+</div>
