@@ -15,9 +15,6 @@ class HeroSectionAdmin(admin.ModelAdmin):
         "cta_primary_url",
         "cta_secondary_text",
         "cta_secondary_url",
-        "ascii_piece",
-        "ascii_look",
-        "ascii_bg",
     ]
 
     def has_add_permission(self, request):

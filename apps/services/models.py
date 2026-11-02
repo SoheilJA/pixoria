@@ -140,27 +140,6 @@ class Service(WebPImageMixin, models.Model):
         verbose_name="تصویرسازی کارت",
         help_text="تصویرسازی اختصاصیِ کارت در صفحه اصلی (ماکت مرورگر، ترمینال و ...)",
     )
-    ascii_piece = models.CharField(
-        max_length=100,
-        blank=True,
-        default="",
-        verbose_name="قطعه ASCII (ascii-magic-art)",
-        help_text="نام قطعه از ascii-magic-art (مثال: cliff-lighthouse-night, black-hole). خالی = پیش‌فرض بر اساس slug",
-    )
-    ascii_look = models.CharField(
-        max_length=20,
-        blank=True,
-        default="dots",
-        verbose_name="سبک ASCII",
-        help_text="سبک رندر: dots، blocks، lines، braille و غیره",
-    )
-    ascii_bg = models.CharField(
-        max_length=20,
-        blank=True,
-        default="transparent",
-        verbose_name="پس‌زمینه ASCII",
-        help_text="transparent، black، یا کد رنگ هگز",
-    )
     card_span = models.CharField(
         max_length=10,
         choices=SPAN_CHOICES,
@@ -275,31 +254,6 @@ class Service(WebPImageMixin, models.Model):
         if self.accent == "cream":
             return "cream"
         return "gold"
-
-    @property
-    def ascii_piece_resolved(self):
-        """نام قطعه ASCII — اگر در ادمین ست شده باشد، وگرنه بر اساس slug پیش‌فرض."""
-        if self.ascii_piece:
-            return self.ascii_piece
-        slug = self.slug or ""
-        # Check more specific patterns first
-        if "logo" in slug or "brand" in slug:
-            return "ringed-planet"
-        if "graphic" in slug or "advertis" in slug:
-            return "spiral-galaxy"
-        if "program" in slug or "software" in slug or "dev" in slug:
-            return "starfield-warp"
-        if "web" in slug or "design" in slug:
-            return "wireframe-globe"
-        return "wireframe-globe"
-
-    @property
-    def ascii_look_resolved(self):
-        return self.ascii_look or "dots"
-
-    @property
-    def ascii_bg_resolved(self):
-        return self.ascii_bg or "transparent"
 
     def get_meta_title(self):
         """عنوان متا یا fallback به عنوانِ خدمت — متنِ ساده (بدونِ مارکرِ [[ ]])."""

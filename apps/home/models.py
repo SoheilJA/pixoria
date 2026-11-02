@@ -57,24 +57,6 @@ class HeroSection(models.Model):
             "خالی بگذارید تا دکمهٔ دوم نمایش داده نشود"
         ),
     )
-    ascii_piece = models.CharField(
-        max_length=100,
-        verbose_name="نام قطعه ASCII",
-        default="cliff-lighthouse-night",
-        help_text="نامِ دقیقِ قطعه از ascii-magic-art (مثال: cliff-lighthouse-night, black-hole). لیست در node_modules/ascii-magic-art/pieces/",
-    )
-    ascii_look = models.CharField(
-        max_length=20,
-        verbose_name="سبک نمایش ASCII",
-        default="dots",
-        help_text="سبک رندر: dots، blocks، lines، braille و غیره",
-    )
-    ascii_bg = models.CharField(
-        max_length=20,
-        verbose_name="رنگ پس‌زمینه ASCII",
-        default="black",
-        help_text="رنگ پس‌زمینه: black، transparent، یا کد رنگ هگز",
-    )
 
     class Meta:
         verbose_name = "هیرو سکشن"
