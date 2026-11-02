@@ -21,7 +21,7 @@
     <div class="mx-auto flex min-h-screen max-w-[480px] flex-col items-center justify-center px-6 py-10">
       
       {% comment %} دکمه برگشت به سایت ─── {% endcomment %}
-      <a href="{% url 'home:home' %}" class="self-start mb-8 ry-btn ry-btn--line" data-reveal="rise">
+      <a href="{% url 'home:home' %}" class="self-start mb-8 btn btn--line" data-reveal="rise">
         {% icon "arrow-right" class="h-4 w-4" %}
         برگشت به سایت
       </a>
@@ -60,7 +60,7 @@
               {% endfor %}
             {% endfor %}
 
-            <button type="submit" class="ry-btn ry-btn--fill mt-1 w-full justify-center">
+            <button type="submit" class="btn btn--fill mt-1 w-full justify-center">
               ورود
               {% icon "arrow-left" class="h-4 w-4" %}
             </button>

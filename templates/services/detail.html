@@ -130,18 +130,18 @@
           {% endif %}
           <div class="ry-reveal mt-10 flex flex-wrap gap-4" data-delay="0.2">
             {% if service.hero_cta_primary_text %}
-              <a href="{% nav_url service.hero_cta_primary_url %}" class="ry-btn ry-btn--fill">
+              <a href="{% nav_url service.hero_cta_primary_url %}" class="btn btn--fill">
                 {{ service.hero_cta_primary_text }}
                 {% icon "arrow-left" class="h-4 w-4" %}
               </a>
             {% else %}
-              <a href="{% url 'contact:contact' %}" class="ry-btn ry-btn--fill">
+              <a href="{% url 'contact:contact' %}" class="btn btn--fill">
                 درخواست مشاوره
                 {% icon "arrow-left" class="h-4 w-4" %}
               </a>
             {% endif %}
             {% if service.hero_cta_secondary_text and service.hero_cta_secondary_url %}
-              <a href="{% nav_url service.hero_cta_secondary_url %}" class="ry-btn ry-btn--line">
+              <a href="{% nav_url service.hero_cta_secondary_url %}" class="btn btn--line">
                 {{ service.hero_cta_secondary_text }}
               </a>
             {% endif %}
@@ -518,16 +518,16 @@
               <div class="flex-1"></div>
             {% endif %}
 
-            {% comment %} دکمهٔ پلن: cta_url دلخواه، وگرنه فرم تماس با پارامترهای پیش‌پر {% endcomment %}
+{% comment %} دکمهٔ پلن: cta_url دلخواه، وگرنه فرم تماس با پارامترهای پیش‌پر {% endcomment %}
             {% if plan.cta_url %}
               <a href="{% nav_url plan.cta_url %}"
-                 class="ry-btn mt-8 w-full {% if plan.is_featured %}ry-btn--ink{% else %}ry-btn--line{% endif %}">
+                 class="btn mt-8 w-full {% if plan.is_featured %}btn--ink{% else %}btn--line{% endif %}">
             {% elif plan.is_featured %}
-              <a href="{% url 'contact:contact' %}?plan={{ plan.plan_type }}&amp;service={{ service.slug }}"
-                 class="ry-btn ry-btn--ink mt-8 w-full">
+              <a href="{% url 'contact:contact' %}?plan={{ plan.plan_type }}&service={{ service.slug }}"
+                 class="btn btn--ink mt-8 w-full">
             {% else %}
-              <a href="{% url 'contact:contact' %}?plan={{ plan.plan_type }}&amp;service={{ service.slug }}"
-                 class="ry-btn ry-btn--line mt-8 w-full">
+              <a href="{% url 'contact:contact' %}?plan={{ plan.plan_type }}&service={{ service.slug }}"
+                 class="btn btn--line mt-8 w-full">
             {% endif %}
               {% if plan.cta_label %}
                 {{ plan.cta_label }}

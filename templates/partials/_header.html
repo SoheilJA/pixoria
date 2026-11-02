@@ -69,7 +69,7 @@
       {% if header_settings and header_settings.show_cta %}
         <a
           href="{% nav_url header_settings.cta_url|default:'contact:contact' %}"
-          class="ry-btn ry-btn--fill"
+          class="btn btn--fill"
           aria-label="{{ header_settings.cta_text }}"
         >
           {{ header_settings.cta_text }}
@@ -166,7 +166,7 @@
       {% if header_settings and header_settings.show_cta %}
         <a
           href="{% nav_url header_settings.cta_url|default:'contact:contact' %}"
-          class="ry-btn ry-btn--fill w-full"
+          class="btn btn--fill w-full"
         >
           <span class="ry-btn__txt">{{ header_settings.cta_text }}</span>
           <span class="ry-btn__arr" aria-hidden="true">{% icon "arrow-left" class="h-4 w-4" %}</span>

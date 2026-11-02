@@ -135,7 +135,7 @@
       {% comment %} دکمهٔ «مقالات بیشتر» — با HTMX صفحهٔ بعد را به گرید می‌چسباند {% endcomment %}
       <div class="mt-14 text-center" id="load-more-wrapper" hx-swap-oob="true">
         {% if has_next %}
-          <a href="{{ load_more_url }}" class="ry-btn ry-btn--line">
+          <a href="{{ load_more_url }}" class="btn btn--line">
             مقالات بیشتر
             {% icon "arrow-down" class="h-4 w-4" %}
           </a>

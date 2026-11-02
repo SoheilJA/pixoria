@@ -64,7 +64,7 @@
       {% if portfolio.categories.all %}
         <div class="mt-6 flex flex-wrap gap-2" data-reveal="pop" data-delay="0.06">
           {% for category in portfolio.categories.all %}
-            <a href="{{ category.filter_url }}" class="ry-btn ry-btn--line text-sm">
+            <a href="{{ category.filter_url }}" class="btn btn--line text-sm">
               {% icon "layers" class="h-3.5 w-3.5" %}
               {{ category.name }}
             </a>
@@ -111,13 +111,13 @@
 
       {% comment %} دکمه بازگشت به آرشیو {% endcomment %}
       <div class="mt-10 flex flex-wrap gap-4" data-reveal="pop" data-delay="0.24">
-        <a href="{% url 'portfolio:list' %}" class="ry-btn ry-btn--line">
+        <a href="{% url 'portfolio:list' %}" class="btn btn--line">
           {% icon "arrow-right" class="h-4 w-4" %}
           همهٔ نمونه‌کارها
         </a>
         {% if portfolio.client_url %}
           <a href="{{ portfolio.client_url }}" target="_blank" rel="noopener noreferrer"
-             class="ry-btn ry-btn--fill">
+             class="btn btn--fill">
             مشاهدهٔ سایت پروژه
             {% icon "external-link" class="h-4 w-4" %}
           </a>

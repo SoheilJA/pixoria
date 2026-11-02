@@ -60,8 +60,8 @@
       {% comment %} دسته‌بندی و برچسب‌ها {% endcomment %}
       <div class="mt-6 flex flex-wrap gap-2" data-reveal="pop" data-delay="0.06">
         {% if article.category %}
-          <a href="{% url 'blog:list' %}?category={{ article.category.slug }}"
-             class="ry-btn ry-btn--line text-sm">
+<a href="{% url 'blog:list' %}?category={{ article.category.slug }}"
+             class="btn btn--line text-sm">
             {% icon "book-open" class="h-3.5 w-3.5" %}
             {{ article.category.title }}
           </a>
@@ -148,21 +148,21 @@
               <span class="ry-label-fa">اشتراک‌گذاری</span>
               <a href="https://x.com/intent/post?url={{ request.build_absolute_uri|urlencode }}"
                  target="_blank" rel="noopener noreferrer"
-                 title="اشتراک‌گذاری در ایکس" aria-label="اشتراک‌گذاری در ایکس" class="ry-btn ry-btn--line text-sm">
+                 title="اشتراک‌گذاری در ایکس" aria-label="اشتراک‌گذاری در ایکس" class="btn btn--line text-sm">
                 {% icon "x" %}<span class="hidden sm:inline">ایکس</span>
               </a>
               <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ request.build_absolute_uri|urlencode }}"
                  target="_blank" rel="noopener noreferrer"
-                 title="اشتراک‌گذاری در لینکدین" aria-label="اشتراک‌گذاری در لینکدین" class="ry-btn ry-btn--line text-sm">
+                 title="اشتراک‌گذاری در لینکدین" aria-label="اشتراک‌گذاری در لینکدین" class="btn btn--line text-sm">
                 {% icon "linkedin" %}<span class="hidden sm:inline">لینکدین</span>
               </a>
               <a href="https://t.me/share/url?url={{ request.build_absolute_uri|urlencode }}&text={{ article.title|plain|urlencode }}"
                  target="_blank" rel="noopener noreferrer"
-                 title="اشتراک‌گذاری در تلگرام" aria-label="اشتراک‌گذاری در تلگرام" class="ry-btn ry-btn--line text-sm">
+                 title="اشتراک‌گذاری در تلگرام" aria-label="اشتراک‌گذاری در تلگرام" class="btn btn--line text-sm">
                 {% icon "send" %}<span class="hidden sm:inline">تلگرام</span>
               </a>
               <button type="button" data-copy-link
-                      title="کپی کردن لینک مقاله" aria-label="کپی کردن لینک مقاله" class="ry-btn ry-btn--line text-sm">
+                      title="کپی کردن لینک مقاله" aria-label="کپی کردن لینک مقاله" class="btn btn--line text-sm">
                 <span data-copy-default class="inline-flex items-center gap-2">
                   {% icon "link" %}<span>کپی لینک</span>
                 </span>

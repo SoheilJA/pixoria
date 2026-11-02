@@ -48,13 +48,13 @@
         </p>
 
         <div class="ry-term__actions">
-          <a href="{% url 'contact:contact' %}" class="ry-btn ry-btn--ink">
+          <a href="{% url 'contact:contact' %}" class="btn btn--ink">
             {% icon "message-circle" class="h-4 w-4" %}
             <span>مشاوره رایگان</span>
             {% icon "arrow-left" class="h-4 w-4" %}
           </a>
           {% if cta.phone %}
-            <a href="tel:{{ cta.phone }}" class="ry-btn ry-btn--ink-line">
+            <a href="tel:{{ cta.phone }}" class="btn btn--ink-line">
               {% icon "phone" class="h-4 w-4" %}
               <span class="fa-num">{{ cta.phone|fa_digits }}</span>
             </a>

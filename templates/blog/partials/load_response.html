@@ -4,7 +4,7 @@
 
 <div id="load-more-wrapper" hx-swap-oob="true">
   {% if has_next %}
-    <button class="btn btn-ghost px-8 py-4" id="load-more-btn"
+    <button class="btn btn--line px-8 py-4" id="load-more-btn"
             hx-get="{% url 'blog:load' %}?category={{ current_category }}&page={{ next_page }}"
             hx-target="#blog-grid"
             hx-swap="beforeend">

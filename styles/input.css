@@ -1779,6 +1779,120 @@ a:hover .brand-emblem {
     border-color 0.35s,
     background 0.35s;
 }
+/* ═══════════════════════════════════════════
+   BUTTON SYSTEM — unified
+   متغیرها: --accent (پر) / --accent-ink (متن روی پر) / --accent-text-on-cream (متن روی کرم)
+   واریانت‌ها:
+     .btn--fill      پرِ اصلی (اکسنت)
+     .btn--line      خطی (مرز اکسنت)
+     .btn--ink       پرِ روی کرم (متن تیره)
+     .btn--ink-line  خطی روی کمر (مرز/متن تیره)
+   حالت‌ها: hover / focus-visible / disabled / loading
+   ═══════════════════════════════════════════ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 0.85rem 1.6rem;
+  font-family: var(--font-label);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  line-height: 1;
+  border: 1px solid transparent;
+  border-radius: 0;
+  cursor: pointer;
+  text-decoration: none;
+  transition:
+    background-color 180ms ease,
+    color 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    transform 180ms ease;
+}
+.btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.btn:disabled,
+.btn[aria-disabled="true"] {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+.btn .spinner {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: btn-spin 0.7s linear infinite;
+}
+@keyframes btn-spin { to { transform: rotate(360deg); } }
+
+/* --- واریانت پرِ اصلی (روی پس‌زمینه تیره) --- */
+.btn--fill {
+  background: var(--accent);
+  color: var(--accent-ink);
+  box-shadow: 0 14px 40px -12px rgba(217, 119, 87, 0.55);
+}
+.btn--fill:hover:not(:disabled) {
+  background: var(--color-sand);
+  box-shadow: 0 20px 55px -12px rgba(216, 207, 192, 0.65);
+  transform: translateY(-2px);
+}
+.btn--fill:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+/* --- واریانت خطی (روی پس‌زمینه تیره) --- */
+.btn--line {
+  border-color: rgba(217, 119, 87, 0.45);
+  color: var(--color-sand);
+  background: rgba(255, 255, 255, 0.03);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+.btn--line:hover:not(:disabled) {
+  border-color: rgba(217, 119, 87, 0.9);
+  background: rgba(217, 119, 87, 0.08);
+  transform: translateY(-2px);
+}
+
+/* --- واریانت پرِ روی کرم (متن تیره) --- */
+.btn--ink {
+  background: var(--accent);
+  color: var(--accent-ink);
+  box-shadow: 0 14px 40px -12px rgba(217, 119, 87, 0.55);
+}
+.btn--ink:hover:not(:disabled) {
+  background: var(--color-sand);
+  box-shadow: 0 20px 55px -12px rgba(216, 207, 192, 0.65);
+  transform: translateY(-2px);
+}
+
+/* --- واریانت خطی روی کرم (مرز/متن تیره) --- */
+.btn--ink-line {
+  border-color: rgba(217, 119, 87, 0.6);
+  color: var(--accent-text-on-cream);
+  background: transparent;
+}
+.btn--ink-line:hover:not(:disabled) {
+  border-color: var(--accent-text-on-cream);
+  background: rgba(217, 119, 87, 0.08);
+  color: var(--accent-text-on-cream);
+  transform: translateY(-2px);
+}
+
+/* --- سایزها --- */
+.btn--sm { padding: 0.55rem 1rem; font-size: 10px; }
+.btn--lg { padding: 1.1rem 2.2rem; font-size: 12px; }
+
+/* --- سازگاری با کلاس‌های قدیمی --- */
 .btn-gold {
   background: var(--accent);
   color: var(--accent-ink);
@@ -1787,6 +1901,7 @@ a:hover .brand-emblem {
 .btn-gold:hover {
   background: var(--color-sand);
   box-shadow: 0 20px 55px -12px rgba(216, 207, 192, 0.65);
+  transform: translateY(-2px);
 }
 .btn-ghost {
   border: 1px solid rgba(217, 119, 87, 0.45);
@@ -1798,6 +1913,7 @@ a:hover .brand-emblem {
 .btn-ghost:hover {
   border-color: rgba(217, 119, 87, 0.9);
   background: rgba(217, 119, 87, 0.08);
+  transform: translateY(-2px);
 }
 
 .more-link {
