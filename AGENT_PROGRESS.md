@@ -11,7 +11,14 @@ Source of truth: this file. If you (the agent) were interrupted: read this file 
 - ASCII files: static/js/ascii/engine.js, static/js/ascii/scenes/*.js, static/css/ascii.css, templates/components/ascii.html (to create)
 
 ## LAST ACTION
-(2026-11-02) Phase 5 complete. ASCII system created: engine.js (grid, loop, IntersectionObserver, reduced motion, manual init), 6 scenes (globe, starship, ringed-planet, galaxy-fleet, armada-horizon, deep-space-drift), ascii.css, components/ascii.html. Contact page SVG replaced with ASCII globe. All scenes register on window.AsciiScenes. Engine disabled auto-init for manual scene loading. Tested on contact page - globe renders at 30fps, pauses when offscreen.
+(2026-11-02) P9 complete — All ASCII-ART-PLACEHOLDER occurrences replaced with custom engine.js + scenes/*.js:
+- About page: hero panel (armada-horizon), story panel (deep-space-drift)
+- Contact page: map section (globe)
+- Service detail: hero panel (globe), section panels (deep-space-drift)
+- Home hero: armada-horizon
+- Home services: globe/starship/ringed-planet/galaxy-fleet
+- Pre-footer band: deep-space-drift
+Fixed cliff-lighthouse-night 404 by switching to armada-horizon. Fixed TemplateSyntaxError in services/detail.html by adding {% load static %}.
 
 ## BLOCKERS / ASSUMPTIONS
 - (none yet)
@@ -63,10 +70,10 @@ Source of truth: this file. If you (the agent) were interrupted: read this file 
 - [x] P5.4 Scenes: galaxy-fleet, armada-horizon, deep-space-drift
 - [x] P5.5 ascii.css + components/ascii.html
 - [x] P5.6 Performance check (CPU idle when offscreen, <=30fps). Commit
-- [ ] P6 — Home hero per 10.1. Commit
-- [ ] P7 — Home services row per 10.2. Commit
-- [ ] P8 — CTA redesign + pre-footer band per Sections 7, 8, 10.3 (on every page via base/partials). Commit
-- [ ] P9 — Replace remaining placeholders — About, Home leftovers, Contact (10.4). grep for ASCII-ART-PLACEHOLDER = 0. Commit
+- [x] P6 — Home hero per 10.1. Commit
+- [x] P7 — Home services row per 10.2. Commit
+- [x] P8 — CTA redesign + pre-footer band per Sections 7, 8, 10.3 (on every page via base/partials). Commit
+- [x] P9 — Replace remaining placeholders — About, Home leftovers, Contact (10.4). grep for ASCII-ART-PLACEHOLDER = 0. Commit
 - [ ] P10 — Service pages — 4 pages per 10.5 (one page per sub-step, commit after each)
 - [ ] P11 — UI/UX cleanup — go through AUDIT list item by item, tick each. Commit
 - [ ] P12 — Final QA per Section 13

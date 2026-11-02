@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load icon_tags highlight_tags fa_digits nav_tags json_tags projects_tags articles_tags testimonial_tags %}
+{% load static icon_tags highlight_tags fa_digits nav_tags json_tags projects_tags articles_tags testimonial_tags %}
 
 {% block title %}{{ service.get_meta_title }} — {{ settings.site_name }}{% endblock %}
 {% block description %}{{ service.get_meta_description }}{% endblock %}
@@ -148,22 +148,40 @@
           </div>
         </div>
 
-        {% comment %} ستونِ تصویر — قابِ Ryoku با جای‌نگهدارِ ASCII (سیاست §2b:
+{% comment %} ستونِ تصویر — قابِ Ryoku با جای‌نگهدارِ ASCII (سیاست §2b:
            مصورسازی‌های تزئینیِ قدیمی حذف شد؛ در گذرِ نهایی ASCII جایش را می‌گیرد) {% endcomment %}
-        <div class="lg:col-span-5">
-          <figure class="ry-frame ry-reveal" data-delay="0.1">
-            <span class="ry-frame__circle" aria-hidden="true"></span>
-            <div class="grid aspect-[4/3] place-items-center bg-surface">
-              <div class="text-center">
-                <span class="text-sand/40" aria-hidden="true">{% icon service.icon class="h-8 w-8" %}</span>
-                <span class="ry-label mt-4 block" dir="ltr">ASCII-ART-PLACEHOLDER</span>
+          <div class="lg:col-span-5">
+            <figure class="ry-frame ry-reveal" data-delay="0.1">
+              <span class="ry-frame__circle" aria-hidden="true"></span>
+              <div class="grid aspect-[4/3] place-items-center bg-surface">
+                {% comment %} Dynamic ASCII scene based on service slug {% endcomment %}
+                {% if "logo" in service.slug or "brand" in service.slug %}
+                  {% with ascii_scene="ringed-planet" ascii_options='{"radius": 10}' %}
+                    {% include "services/partials/_ascii_scene.html" %}
+                  {% endwith %}
+                {% elif "graphic" in service.slug or "advertis" in service.slug %}
+                  {% with ascii_scene="galaxy-fleet" ascii_options='{}' %}
+                    {% include "services/partials/_ascii_scene.html" %}
+                  {% endwith %}
+                {% elif "program" in service.slug or "software" in service.slug or "dev" in service.slug %}
+                  {% with ascii_scene="starship" ascii_options='{}' %}
+                    {% include "services/partials/_ascii_scene.html" %}
+                  {% endwith %}
+                {% elif "web" in service.slug or "design" in service.slug %}
+                  {% with ascii_scene="globe" ascii_options='{"radius": 12}' %}
+                    {% include "services/partials/_ascii_scene.html" %}
+                  {% endwith %}
+                {% else %}
+                  {% with ascii_scene="globe" ascii_options='{"radius": 12}' %}
+                    {% include "services/partials/_ascii_scene.html" %}
+                  {% endwith %}
+                {% endif %}
               </div>
-            </div>
-            {% if service.badge %}
-              <figcaption class="ry-label-fa mt-3">{{ service.badge }}</figcaption>
-            {% endif %}
-          </figure>
-        </div>
+              {% if service.badge %}
+                <figcaption class="ry-label-fa mt-3">{{ service.badge }}</figcaption>
+              {% endif %}
+            </figure>
+          </div>
       </div>
     </div>
 
@@ -268,13 +286,32 @@
                        class="aspect-[4/3] w-full object-cover">
                 </figure>
               {% else %}
-                {% comment %} ASCII-ART-PLACEHOLDER — پنلِ تزئینیِ بدونِ تصویر (سیاست §2b) {% endcomment %}
+                {% comment %} ASCII art panel — decorative panel without image (policy §2b) {% endcomment %}
                 <figure class="ry-frame ry-reveal" data-delay="0.1">
-                  <div class="grid aspect-[4/3] place-items-center bg-surface">
-                    <span class="ry-label" dir="ltr">ASCII-ART-PLACEHOLDER</span>
-                  </div>
+                  {% comment %} Dynamic ASCII scene based on service slug {% endcomment %}
+                  {% if "logo" in service.slug or "brand" in service.slug %}
+                    {% with ascii_scene="ringed-planet" ascii_options='{"radius": 10, "seed": "service-section-"|add:forloop.counter}' %}
+                      {% include "services/partials/_ascii_scene.html" %}
+                    {% endwith %}
+                  {% elif "graphic" in service.slug or "advertis" in service.slug %}
+                    {% with ascii_scene="galaxy-fleet" ascii_options='{"seed": "service-section-"|add:forloop.counter}' %}
+                      {% include "services/partials/_ascii_scene.html" %}
+                    {% endwith %}
+                  {% elif "program" in service.slug or "software" in service.slug or "dev" in service.slug %}
+                    {% with ascii_scene="starship" ascii_options='{"seed": "service-section-"|add:forloop.counter}' %}
+                      {% include "services/partials/_ascii_scene.html" %}
+                    {% endwith %}
+                  {% elif "web" in service.slug or "design" in service.slug %}
+                    {% with ascii_scene="globe" ascii_options='{"radius": 10, "seed": "service-section-"|add:forloop.counter}' %}
+                      {% include "services/partials/_ascii_scene.html" %}
+                    {% endwith %}
+                  {% else %}
+                    {% with ascii_scene="deep-space-drift" ascii_options='{"seed": "service-section-"|add:forloop.counter}' %}
+                      {% include "services/partials/_ascii_scene.html" %}
+                    {% endwith %}
+                  {% endif %}
                 </figure>
-              {% endif %}
+                {% endif %}
             </div>
           </div>
         {% endif %}
