@@ -1,69 +1,157 @@
-{% load icon_tags fa_digits highlight_tags nav_tags %}
-{% comment %} هیرو — بازطراحی با زبان طراحی Ryoku.
-   تایپوگرافیِ خالص: برچسبِ ریز + عنوانِ بزرگِ سریف + پاراگرافِ کوتاه + دو
-   دکمهٔ مربع + نوارِ آمارِ هیرلاینی. بومِ «میدانِ زنده» (hero-field.js) با
-   همان موتور و هوکِ data-hx-field حفظ شده و فقط رنگ‌هایش به خانوادهٔ شنی
-   تغییر کرده. سرنخِ اسکرول با خطِ ساده.
-   داده‌ها (بدون تغییر): hero (HeroSection) و hero_stats (شمارنده‌های واقعی
-   از ویو). HUD گوشه‌ها تزئینی است. {% endcomment %}
+{% load icon_tags fa_digits highlight_tags nav_tags static %}
+{% comment %} هیرو — بازطراحی ۱۰.۱: RTL، متن راست، ASCII چپ (armada-horizon)، آمارها تحت دکمه‌ها، بدون گرادیان {% endcomment %}
 <section id="home" class="relative overflow-hidden bg-void" aria-label="معرفی">
-  {% comment %} بومِ نقطه‌ها — موتورِ همان hero-field.js با رنگِ شنی {% endcomment %}
-  <canvas class="absolute inset-0 h-full w-full" data-hx-field aria-hidden="true"></canvas>
-
-  {% comment %} HUD گوشه‌ها — برچسب‌های مونوی تزئینی {% endcomment %}
-  <div class="pointer-events-none absolute inset-x-6 top-24 z-10 hidden justify-between md:flex" aria-hidden="true">
-    <span class="ry-label" dir="ltr">pixoria® studio</span>
-    <span class="ry-label" dir="ltr">est. 2018 — tehran</span>
-  </div>
-  <div class="pointer-events-none absolute inset-x-6 bottom-10 z-10 hidden justify-between md:flex" aria-hidden="true">
-    <span class="ry-label" dir="ltr">field: active</span>
-    <span class="ry-label" dir="ltr">35.6892 N / 51.3890 E</span>
-  </div>
-
-  {% comment %} واژهٔ شبحِ لاتین — کم‌رنگ، گوشهٔ پایین {% endcomment %}
-  <span class="ry-ghost font-label pointer-events-none absolute -bottom-4 start-6 z-10 hidden select-none text-[13vw] leading-none tracking-[0.04em] lg:block" aria-hidden="true">PIXORIA</span>
-
-  <div class="relative z-20 mx-auto flex min-h-[92svh] max-w-6xl flex-col justify-center px-6 pb-24 pt-32">
-    <div class="max-w-3xl">
-      {% if hero.eyebrow %}
-        <p class="ry-label-fa ry-reveal">{{ hero.eyebrow }}</p>
-      {% endif %}
-      <h1 class="ry-serif ry-reveal mt-6 text-[2.5rem] leading-[1.25] text-sand sm:text-[3rem] md:text-[4rem] lg:text-[4.6rem] md:leading-[1.25]" data-delay="0.06">
-        {{ hero.title|highlight }}
-      </h1>
-      <p class="ry-reveal mt-5 max-w-xl text-[14px] leading-7 text-sand/65 sm:text-[15px] sm:leading-8 md:text-base" data-delay="0.14">
-        {{ hero.description|linebreaksbr }}
-      </p>
-
-      <div class="ry-reveal mt-10 flex flex-wrap gap-3" data-delay="0.22">
-        {% if hero.cta_primary_text %}
-          <a href="{% nav_url hero.cta_primary_url %}" class="btn btn--fill px-7 py-4">
-            {{ hero.cta_primary_text }} {% icon "arrow-left" class="h-4 w-4" %}
-          </a>
+  <div class="relative z-20 min-h-screen flex flex-col lg:flex-row-reverse">
+    
+    {% comment %} ستون راست — متن و CTA {% endcomment %}
+    <div class="relative z-10 w-full lg:w-[45%] flex flex-col justify-center px-6 py-20 lg:py-32 lg:pr-16 lg:pl-8">
+      <div class="max-w-3xl">
+        {% if hero.eyebrow %}
+          <p class="ry-label-fa ry-reveal">{{ hero.eyebrow }}</p>
         {% endif %}
-        {% if hero.cta_secondary_text and hero.cta_secondary_url %}
-          <a href="{% nav_url hero.cta_secondary_url %}" class="btn btn--line px-7 py-4">
-            {{ hero.cta_secondary_text }}
-          </a>
-        {% endif %}
-      </div>
+        <h1 class="ry-serif ry-reveal mt-6 text-[2.5rem] leading-[1.25] text-sand sm:text-[3rem] md:text-[4rem] lg:text-[4.6rem] md:leading-[1.25]" data-delay="0.06">
+          {{ hero.title|highlight }}
+        </h1>
+        <p class="ry-reveal mt-5 max-w-xl text-[14px] leading-7 text-sand/65 sm:text-[15px] sm:leading-8 md:text-base" data-delay="0.14">
+          {{ hero.description|linebreaksbr }}
+        </p>
 
-      {% comment %} نوارِ آمار — شمارنده‌های واقعی از ویو {% endcomment %}
-      {% if hero_stats %}
-        <div class="ry-reveal mt-16 flex flex-wrap gap-x-12 gap-y-5 border-t border-line/10 pt-7" data-delay="0.3">
-          {% for stat in hero_stats %}
-            <span class="flex items-baseline gap-2.5">
-              <b class="ry-serif fa-num text-2xl font-normal text-sand">{{ stat.value|fa_digits }}</b>
-              {% if stat.label %}<span class="ry-label-fa">{{ stat.label }}</span>{% endif %}
-            </span>
-          {% endfor %}
+        <div class="ry-reveal mt-10 flex flex-wrap gap-3" data-delay="0.22">
+          {% if hero.cta_primary_text %}
+            <a href="{% nav_url hero.cta_primary_url %}" class="btn btn--fill px-7 py-4">
+              {{ hero.cta_primary_text }} {% icon "arrow-left" class="h-4 w-4" %}
+            </a>
+          {% endif %}
+          {% if hero.cta_secondary_text and hero.cta_secondary_url %}
+            <a href="{% nav_url hero.cta_secondary_url %}" class="btn btn--line px-7 py-4">
+              {{ hero.cta_secondary_text }}
+            </a>
+          {% endif %}
         </div>
-      {% endif %}
+
+        {% comment %} آمارها — ۳ مورد: سال / پروژه / مشتری {% endcomment %}
+        <div class="ry-reveal mt-16 flex flex-wrap gap-x-12 gap-y-6" data-delay="0.3">
+          {% if hero_stats %}
+            {% for stat in hero_stats %}
+              <span class="flex items-baseline gap-2.5">
+                <b class="ry-serif fa-num text-2xl font-normal text-sand">{{ stat.value|fa_digits }}</b>
+                {% if stat.label %}<span class="ry-label-fa">{{ stat.label }}</span>{% endif %}
+              </span>
+            {% endfor %}
+          {% else %}
+            <span class="flex items-baseline gap-2.5">
+              <b class="ry-serif fa-num text-2xl font-normal text-sand">{{ 7|fa_digits }}</b>
+              <span class="ry-label-fa">سال تجربه</span>
+            </span>
+            <span class="flex items-baseline gap-2.5">
+              <b class="ry-serif fa-num text-2xl font-normal text-sand">{{ 120|fa_digits }}</b>
+              <span class="ry-label-fa">پروژه تحویل</span>
+            </span>
+            <span class="flex items-baseline gap-2.5">
+              <b class="ry-serif fa-num text-2xl font-normal text-sand">{{ 85|fa_digits }}</b>
+              <span class="ry-label-fa">مشتری راضی</span>
+            </span>
+          {% endif %}
+        </div>
+      </div>
     </div>
+
+    {% comment %} ستون چپ — ASCII آرت (armada-horizon) پرارتفاع، لبه چپ {% endcomment %}
+    <div class="relative w-full lg:w-[55%] lg:-ml-4 lg:min-h-screen hidden lg:block" aria-hidden="true">
+      <div class="ascii-scene-wrapper ascii-scene--hero"
+           data-ascii-scene="armada-horizon"
+           data-ascii-options='{"seed": "hero-1"}'
+           data-ascii-fps="30"
+           data-ascii-width="80"
+           data-ascii-height="40"
+           aria-label="نمودار آسکی پهنه геро — ناوگان فضایی و سیاره">
+        <canvas class="ascii-canvas" loading="lazy" aria-hidden="true"></canvas>
+        <noscript>
+          <div class="ascii-fallback" style="
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            min-height: 180px;
+            background: var(--color-void);
+            color: var(--color-sand);
+            font-family: monospace;
+            font-size: clamp(10px, 1.5vw, 14px);
+            border: 1px solid rgba(216, 207, 192, 0.1);
+            border-radius: 0.5rem;
+          ">
+            [ASCII Armada Horizon scene — requires JavaScript]
+          </div>
+        </noscript>
+      </div>
+      <script type="module">
+        import('{% static "js/ascii/engine.js" %}').then(() => {
+          import('{% static "js/ascii/scenes/armada-horizon.js" %}').then(() => {
+            if (window.initAsciiFromDOM) {
+              const wrapper = document.currentScript?.closest('[data-ascii-scene]');
+              if (wrapper && !wrapper._asciiEngine) {
+                window.initAsciiFromDOM(wrapper);
+              }
+            }
+          }).catch(err => {
+            console.warn('ASCII Armada Horizon scene failed to load:', err);
+          });
+        }).catch(err => {
+          console.warn('ASCII Engine failed to load:', err);
+        });
+      </script>
+    </div>
+
+  </div>
+
+  {% comment %} موبایل: ASCII بنر زیر متن (~۳۰۰px) {% endcomment %}
+  <div class="lg:hidden w-full" aria-hidden="true">
+    <div class="ascii-scene-wrapper ascii-scene--hero-mobile"
+         data-ascii-scene="armada-horizon"
+         data-ascii-options='{"seed": "hero-mobile"}'
+         data-ascii-fps="30"
+         data-ascii-width="80"
+         data-ascii-height="40"
+         aria-label="نمودار آسکی موبایل — ناوگان فضایی">
+      <canvas class="ascii-canvas" loading="lazy" aria-hidden="true"></canvas>
+      <noscript>
+        <div class="ascii-fallback" style="
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          height: 100%;
+          min-height: 180px;
+          background: var(--color-void);
+          color: var(--color-sand);
+          font-family: monospace;
+          font-size: clamp(10px, 1.5vw, 14px);
+          border: 1px solid rgba(216, 207, 192, 0.1);
+          border-radius: 0.5rem;
+        ">
+          [ASCII Armada Horizon scene — requires JavaScript]
+        </div>
+      </noscript>
+    </div>
+    <script type="module">
+      import('{% static "js/ascii/engine.js" %}').then(() => {
+        import('{% static "js/ascii/scenes/armada-horizon.js" %}').then(() => {
+          if (window.initAsciiFromDOM) {
+            const wrapper = document.currentScript?.closest('[data-ascii-scene]');
+            if (wrapper && !wrapper._asciiEngine) {
+              window.initAsciiFromDOM(wrapper);
+            }
+          }
+        }).catch(err => {
+          console.warn('ASCII Armada Horizon scene failed to load:', err);
+        });
+      }).catch(err => {
+        console.warn('ASCII Engine failed to load:', err);
+      });
+    </script>
   </div>
 
   {% comment %} سرنخِ اسکرول — خطِ ساده با نبضِ آرام {% endcomment %}
-  <div class="absolute bottom-0 start-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-3" aria-hidden="true">
+  <div class="absolute bottom-0 start-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-3 pb-8 lg:pb-12" aria-hidden="true">
     <span class="ry-label-fa">اسکرول</span>
     <span class="ry-cue block h-16 w-px"></span>
   </div>

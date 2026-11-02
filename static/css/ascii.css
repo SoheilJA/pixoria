@@ -88,6 +88,13 @@
   font-size: clamp(10px, 2vw, 14px);
 }
 
+.ascii-scene--hero-mobile .ascii-canvas {
+  aspect-ratio: 4 / 1;
+  min-height: 280px;
+  max-height: 320px;
+  font-size: clamp(8px, 1.5vw, 10px);
+}
+
 .ascii-scene--contact .ascii-canvas {
   aspect-ratio: 1 / 1;
   min-height: 250px;
