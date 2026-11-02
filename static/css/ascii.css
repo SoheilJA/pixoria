@@ -113,9 +113,7 @@
 
 /* Grid overlay for debugging (dev only) */
 .ascii-canvas[data-debug] {
-  background-image:
-    linear-gradient(rgba(217, 119, 87, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(217, 119, 87, 0.05) 1px, transparent 1px);
+  background-color: transparent;
   background-size: 10px 20px;
 }
 
