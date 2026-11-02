@@ -1763,22 +1763,6 @@ a:hover .brand-emblem {
    منوی موبایل به css/sections.css منتقل شد (بازطراحیِ تمام‌صفحه).
    ---------- */
 
-/* ---------- buttons ---------- */
-.btn {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.6rem;
-  border-radius: 999px;
-  font-weight: 500;
-  will-change: transform;
-  transition:
-    box-shadow 0.35s,
-    filter 0.35s,
-    border-color 0.35s,
-    background 0.35s;
-}
 /* ═══════════════════════════════════════════
    BUTTON SYSTEM — unified
    متغیرها: --accent (پر) / --accent-ink (متن روی پر) / --accent-text-on-cream (متن روی کرم)

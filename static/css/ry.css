@@ -372,11 +372,11 @@
 }
 .ry-mmenu__link:hover .ry-mmenu__arrow,
 .ry-mmenu__link[aria-current="page"] .ry-mmenu__arrow {
-  color: var(--color-sand);
+  color: var(--accent);
   transform: translateX(-3px);
 }
 .ry-mmenu__link[aria-current="page"] .ry-mmenu__title {
-  color: #fff;
+  color: var(--accent);
 }
 .ry-mmenu__link:focus-visible {
   outline: 1px solid var(--color-sand);

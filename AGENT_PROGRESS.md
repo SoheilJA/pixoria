@@ -11,7 +11,7 @@ Source of truth: this file. If you (the agent) were interrupted: read this file 
 - ASCII files: static/js/ascii/engine.js, static/js/ascii/scenes/*.js, static/css/ascii.css, templates/components/ascii.html (to create)
 
 ## LAST ACTION
-(2026-11-01) Removed ALL visual gradients from input.css and templates. Fixed font sizes (minimum 12px for Persian text), removed letter-spacing from Persian text. Unified section spacing with .section-space utility (clamp(4.5rem, 9vw, 8rem)). Applied to all section templates (home, about, services, portfolio, blog, contact, partials). Built and collected static. Next: P2.1 create .btn system.
+(2026-11-02) Phase 2.3 completed. Header button uses .btn--fill (orange). Nav active indicator (desktop underline + mobile title/arrow) now uses --accent orange. Tested on dark (home, services) and cream (blog, contact) backgrounds - buttons render correctly. Next: P2.4 commit.
 
 ## BLOCKERS / ASSUMPTIONS
 - (none yet)
@@ -45,10 +45,10 @@ Source of truth: this file. If you (the agent) were interrupted: read this file 
 - [x] P1.3 Fix font-size/contrast floors; remove letter-spacing on Persian
 - [x] P1.4 Unify section spacing scale
 - [x] P1.5 Replace gold tint with cream/orange. Commit
-- [ ] P2.1 Create .btn system
-- [ ] P2.2 Replace every button/CTA usage site-wide
-- [ ] P2.3 Header button + nav active indicator in orange
-- [ ] P2.4 Test all states on dark and cream. Commit
+- [x] P2.1 Create .btn system
+- [x] P2.2 Replace every button/CTA usage site-wide
+- [x] P2.3 Header button + nav active indicator in orange
+- [x] P2.4 Test all states on dark and cream. Commit
 - [ ] P3.1 .field component (input/textarea/floating label/single border)
 - [ ] P3.2 Custom select (Alpine) + native fallback styling
 - [ ] P3.3 Apply to contact form and login form; keep Django validation/CSRF
