@@ -22,7 +22,7 @@
   --color-line: #d8cfc0;      /* هیرلاین‌ها — همیشه با شفافیت (border-line/10) */
 
   /* ── New accent system (Pixoria ASCII overhaul) ── */
-  --color-accent: #D97757;          /* primary action + ASCII ink */
+  --color-accent: #E06C2E;          /* primary action + ASCII ink - more vibrant orange */
   --color-accent-ink: #141210;      /* text ON accent (dark) */
   --color-accent-text-on-cream: #8C3B1F; /* darker shade for text/links on cream */
 
@@ -46,7 +46,7 @@
   --royal: #2e63ff;
 
   /* New accent system */
-  --accent: #D97757;
+  --accent: #E06C2E;
   --accent-ink: #141210;
   --accent-text-on-cream: #8C3B1F;
 }
@@ -817,6 +817,21 @@ html.lenis body {
   background: var(--color-void);
   color: var(--color-sand);
 }
+
+/* --- Base label styles (floating label) --- */
+.field__label {
+  position: absolute;
+  top: 50%;
+  right: 1rem;
+  transform: translateY(-50%);
+  font-size: 14px;
+  color: rgba(216, 207, 192, 0.5);
+  pointer-events: none;
+  transition: all 0.2s ease;
+  background: var(--color-void);
+  padding: 0 0.5rem;
+}
+
 .field__input:focus,
 .field__textarea:focus,
 .field__select:focus,
