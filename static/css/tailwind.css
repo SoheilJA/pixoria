@@ -1111,6 +1111,15 @@
       border-color: color-mix(in oklab, var(--color-white) 10%, transparent);
     }
   }
+  .bg-accent {
+    background-color: var(--color-accent);
+  }
+  .bg-accent\/20 {
+    background-color: color-mix(in srgb, #D97757 20%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      background-color: color-mix(in oklab, var(--color-accent) 20%, transparent);
+    }
+  }
   .bg-gold {
     background-color: var(--color-gold);
   }
@@ -1610,6 +1619,24 @@
   .text-accent {
     color: var(--color-accent);
   }
+  .text-accent\/50 {
+    color: color-mix(in srgb, #D97757 50%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      color: color-mix(in oklab, var(--color-accent) 50%, transparent);
+    }
+  }
+  .text-accent\/60 {
+    color: color-mix(in srgb, #D97757 60%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      color: color-mix(in oklab, var(--color-accent) 60%, transparent);
+    }
+  }
+  .text-accent\/80 {
+    color: color-mix(in srgb, #D97757 80%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      color: color-mix(in oklab, var(--color-accent) 80%, transparent);
+    }
+  }
   .text-cream {
     color: var(--color-cream);
   }
@@ -2062,6 +2089,9 @@
   }
   .focus\:rounded-full:focus {
     border-radius: calc(infinity * 1px);
+  }
+  .focus\:bg-accent:focus {
+    background-color: var(--color-accent);
   }
   .focus\:bg-gold:focus {
     background-color: var(--color-gold);
@@ -3753,7 +3783,8 @@ html.lenis, html.lenis body {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background-color: transparent;
+  background-image: linear-gradient( to right, rgba(217, 119, 87, 0.24) 1px, transparent 1px ), linear-gradient( to bottom, rgba(217, 119, 87, 0.24) 1px, transparent 1px );
+  background-size: 2.25rem 2.25rem;
   opacity: 0.4;
   animation: svcBlueprintPan 24s linear infinite;
 }
@@ -4601,9 +4632,13 @@ a:hover .brand-emblem {
   }
 }
 .edge-fade {
+  -webkit-mask-image: linear-gradient( 90deg, transparent, #000 6%, #000 94%, transparent );
+  mask-image: linear-gradient( 90deg, transparent, #000 6%, #000 94%, transparent );
 }
 .marquee {
   overflow: hidden;
+  -webkit-mask-image: linear-gradient( 90deg, transparent, #000 8%, #000 92%, transparent );
+  mask-image: linear-gradient( 90deg, transparent, #000 8%, #000 92%, transparent );
 }
 .marquee-track {
   display: flex;
@@ -4705,11 +4740,11 @@ a:hover .brand-emblem {
   font-weight: 700;
 }
 .grid-bg {
-  background-color: transparent;
+  background-image: linear-gradient(rgba(232, 196, 122, 0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(232, 196, 122, 0.07) 1px, transparent 1px);
   background-size: 36px 36px;
 }
 .pixel-bg {
-  background-color: transparent;
+  background-image: radial-gradient( rgba(232, 196, 122, 0.14) 1px, transparent 1.5px );
   background-size: 18px 18px;
 }
 .film-strip::before, .film-strip::after {
@@ -5623,7 +5658,7 @@ a:hover .brand-emblem {
   inset: -6px;
   pointer-events: none;
   --cm: rgba(216, 207, 192, 0.65);
-  background-color: transparent;
+  background-image: linear-gradient(var(--cm), var(--cm)), linear-gradient(var(--cm), var(--cm)), linear-gradient(var(--cm), var(--cm)), linear-gradient(var(--cm), var(--cm)), linear-gradient(var(--cm), var(--cm)), linear-gradient(var(--cm), var(--cm)), linear-gradient(var(--cm), var(--cm)), linear-gradient(var(--cm), var(--cm));
   background-repeat: no-repeat;
   background-position: left top, left top, right top, right top, left bottom, left bottom, right bottom, right bottom;
   background-size: 10px 1px, 1px 10px, 10px 1px, 1px 10px, 10px 1px, 1px 10px, 10px 1px, 1px 10px;
@@ -5703,7 +5738,7 @@ a:hover .brand-emblem {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background-color: transparent;
+  background-image: radial-gradient(rgba(216, 207, 192, 0.5) 1px, transparent 1.15px);
   background-size: 4px 4px;
   mix-blend-mode: overlay;
 }

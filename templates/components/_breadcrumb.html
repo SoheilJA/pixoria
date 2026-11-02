@@ -17,14 +17,14 @@
             {% comment %} جداکنندهٔ چپ‌نما (RTL) {% endcomment %}
             <span
               aria-hidden="true"
-              class="{% if theme == "light" %}text-gold-dark{% else %}text-gold/80{% endif %}"
+              class="{% if theme == "light" %}text-accent-dark{% else %}text-accent/80{% endif %}"
               >{% icon "chevron-left" class="h-3.5 w-3.5 md:h-4 md:w-4" %}</span
             >
           {% endif %}
           {% if item.url %}
             <a
               href="{{ item.url }}"
-              class="rounded px-1.5 py-1 transition-colors {% if theme == "light" %}text-ink/70 hover:text-gold-dark{% else %}text-cream/70 hover:text-gold-light{% endif %}"
+              class="rounded px-1.5 py-1 transition-colors {% if theme == "light" %}text-ink/70 hover:text-accent-dark{% else %}text-cream/70 hover:text-accent-light{% endif %}"
               >{{ item.label }}</a
             >
           {% elif forloop.last %}

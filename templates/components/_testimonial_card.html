@@ -52,10 +52,10 @@
       <span class="glare" aria-hidden="true"></span>
       <div class="flex items-center justify-between">
         {% if t.rating %}
-          <div class="flex gap-1 text-gold-light" aria-label="امتیاز {{ t.rating|fa_digits }} از ۵">
+          <div class="flex gap-1 text-accent-light" aria-label="امتیاز {{ t.rating|fa_digits }} از ۵">
             {% for i in "12345" %}
               {% if forloop.counter <= t.rating %}
-                {% icon "star" class="h-4 w-4 fill-gold-light" %}
+                {% icon "star" class="h-4 w-4 fill-accent-light" %}
               {% else %}
                 {% icon "star" class="h-4 w-4 text-cream/20" %}
               {% endif %}
@@ -64,7 +64,7 @@
         {% endif %}
         <span class="type-chip">متن</span>
       </div>
-      {% icon "quote" class="mt-7 h-8 w-8 text-gold/50" %}
+      {% icon "quote" class="mt-7 h-8 w-8 text-accent/50" %}
       {% if t.text %}
         <p class="mt-4 flex-1 font-light leading-8 text-cream/85">«{{ t.text }}»</p>
       {% endif %}
