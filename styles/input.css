@@ -4146,22 +4146,32 @@ a:hover .brand-emblem {
   }
 }
 
-/* ---------- Ryoku: سربرگ سکشن (شماره · عنوان + هیرلاین + گلیف) ---------- */
+/* ---------- Ryoku: سربرگ سکشن (شماره · عنوان + هیرلاین + مربع نارنجی) ---------- */
 .ry-sec-head {
   display: flex;
   align-items: center;
   gap: 1.25rem;
 }
+.ry-sec-head .ry-label-fa,
+.ry-sec-head .ry-label {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+.ry-sec-head .ry-num {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: var(--accent);
+  line-height: 1;
+}
+.ry-sec-head .ry-sep {
+  color: rgba(216, 207, 192, 0.4);
+}
 .ry-sec-head__line {
   flex: 1;
   height: 1px;
   background: rgba(216, 207, 192, 0.12);
-}
-.ry-sec-head__glyph {
-  font-family: var(--font-display);
-  font-size: 1.35rem;
-  line-height: 1;
-  color: rgba(216, 207, 192, 0.65);
 }
 
 /* ---------- Ryoku: جعبه‌های آمار ---------- */

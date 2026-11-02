@@ -11,7 +11,7 @@ Source of truth: this file. If you (the agent) were interrupted: read this file 
 - ASCII files: static/js/ascii/engine.js, static/js/ascii/scenes/*.js, static/css/ascii.css, templates/components/ascii.html (to create)
 
 ## LAST ACTION
-(2026-11-02) Phase 3.1-3.3 complete. Created unified .field component (floating label, single border, error/disabled/loading states, autofill handling). Created vanilla JS CustomSelect component (no Alpine dependency) with native select sync. Applied to contact form (subject field) and login form. Built and tested. Next: P3.4 ?service=&plan= prefill, P3.5 commit.
+(2026-11-02) Phase 4 complete. New eyebrow partial created (orange square + number + em dash + label, no Persian glyph). RTL number/sign placement in stats verified working via fa-num class (direction: ltr, unicode-bidi: isolate). Headings not clipped. Built and tested on home, about, services pages.
 
 ## BLOCKERS / ASSUMPTIONS
 - (none yet)
@@ -52,11 +52,11 @@ Source of truth: this file. If you (the agent) were interrupted: read this file 
 - [x] P3.1 .field component (input/textarea/floating label/single border)
 - [x] P3.2 Custom select (vanilla JS) + native fallback styling
 - [x] P3.3 Apply to contact form and login form; keep Django validation/CSRF
-- [ ] P3.4 ?service=&plan= prefill
-- [ ] P3.5 Autofill + error + disabled + loading states. Commit
-- [ ] P4.1 New eyebrow partial; remove stray letter everywhere
-- [ ] P4.2 Fix clipped headings
-- [ ] P4.3 Fix RTL number/sign placement in stats. Commit
+- [x] P3.4 ?service=&plan= prefill
+- [x] P3.5 Autofill + error + disabled + loading states. Commit
+- [x] P4.1 New eyebrow partial; remove stray letter everywhere
+- [x] P4.2 Fix clipped headings
+- [x] P4.3 Fix RTL number/sign placement in stats. Commit
 - [ ] P5.1 engine.js core (grid, loop, observers, reduced motion, HTMX hooks)
 - [ ] P5.2 Pointer interaction
 - [ ] P5.3 Scenes: globe, starship, ringed-planet
