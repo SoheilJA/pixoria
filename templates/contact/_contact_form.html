@@ -21,7 +21,7 @@
     </div>
   {% endif %}
 
-  <div class="ry-form-grid">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6" style="margin-top: 1.5rem;">
     <div>
       <div class="field {% if form.name.errors %}field--error{% endif %}">
         {{ form.name }}
@@ -42,7 +42,7 @@
       {% endif %}
     </div>
 
-    <div>
+    <div class="md:col-span-2">
       <div class="field {% if form.subject.errors %}field--error{% endif %}">
         <div class="field__select-wrap">
           {{ form.subject }}
@@ -62,7 +62,7 @@
     </div>
   </div>
 
-  <div class="ry-field-wrap mt-6">
+  <div class="mt-6">
     <div class="field {% if form.message.errors %}field--error{% endif %}">
       {{ form.message }}
       <label class="field__label" for="{{ form.message.id_for_label }}">پیام شما</label>

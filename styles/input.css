@@ -721,6 +721,9 @@ html.lenis body {
   width: 100%;
   font-family: var(--font-sans);
 }
+.field > input,
+.field > textarea,
+.field > select,
 .field__input,
 .field__textarea,
 .field__select {
@@ -736,15 +739,19 @@ html.lenis body {
     background-color 0.2s ease,
     box-shadow 0.2s ease;
 }
+.field > textarea,
 .field__textarea {
   min-height: 10rem;
   resize: vertical;
   padding: 0.85rem 1rem;
 }
+.field > input,
+.field > select,
 .field__input,
 .field__select {
   padding: 0.85rem 1rem 0.85rem 1rem;
 }
+.field > select,
 .field__select {
   appearance: none;
   cursor: pointer;
@@ -772,20 +779,29 @@ html.lenis body {
   justify-content: space-between;
   width: 100%;
   padding: 0.85rem 1rem 0.85rem 1rem;
-  background: transparent;
-  border: none;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(217, 119, 87, 0.35);
   border-radius: 0.75rem;
   color: var(--color-sand);
   font-family: var(--font-sans);
   font-size: 14px;
+  line-height: 1.5;
   text-align: right;
   cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 .field__select-trigger:focus-visible {
   outline: none;
+  border-color: var(--accent);
+  background: rgba(217, 119, 87, 0.08);
+  box-shadow: 0 0 0 3px rgba(217, 119, 87, 0.15);
 }
 .field__select-trigger:hover {
-  background: rgba(217, 119, 87, 0.05);
+  background: rgba(217, 119, 87, 0.08);
+  border-color: rgba(217, 119, 87, 0.5);
 }
 .field__select-text {
   flex: 1;
@@ -801,21 +817,12 @@ html.lenis body {
   background: var(--color-void);
   color: var(--color-sand);
 }
-.field__label {
-  position: absolute;
-  top: 50%;
-  right: 1rem;
-  transform: translateY(-50%);
-  font-size: 14px;
-  color: rgba(216, 207, 192, 0.5);
-  pointer-events: none;
-  transition: all 0.2s ease;
-  background: var(--color-void);
-  padding: 0 0.5rem;
-}
 .field__input:focus,
 .field__textarea:focus,
-.field__select:focus {
+.field__select:focus,
+.field > input:focus,
+.field > textarea:focus,
+.field > select:focus {
   outline: none;
   border-color: var(--accent);
   background: rgba(217, 119, 87, 0.08);
@@ -824,9 +831,15 @@ html.lenis body {
 .field__input:focus + .field__label,
 .field__textarea:focus + .field__label,
 .field__select:focus + .field__label,
+.field > input:focus + .field__label,
+.field > textarea:focus + .field__label,
+.field > select:focus + .field__label,
 .field__input:not(:placeholder-shown) + .field__label,
 .field__textarea:not(:placeholder-shown) + .field__label,
 .field__select:not([value=""]):not([value=""]) + .field__label,
+.field > input:not(:placeholder-shown) + .field__label,
+.field > textarea:not(:placeholder-shown) + .field__label,
+.field > select:not([value=""]):not([value=""]) + .field__label,
 .field--filled .field__label {
   top: 0;
   transform: translateY(-100%) scale(0.85);
@@ -836,12 +849,18 @@ html.lenis body {
 /* --- Error state --- */
 .field--error .field__input,
 .field--error .field__textarea,
-.field--error .field__select {
+.field--error .field__select,
+.field--error > input,
+.field--error > textarea,
+.field--error > select {
   border-color: rgba(192, 57, 43, 0.65);
 }
 .field--error .field__input:focus,
 .field--error .field__textarea:focus,
-.field--error .field__select:focus {
+.field--error .field__select:focus,
+.field--error > input:focus,
+.field--error > textarea:focus,
+.field--error > select:focus {
   border-color: #c0392b;
   box-shadow: 0 0 0 3px rgba(192, 57, 43, 0.12);
 }
@@ -860,7 +879,10 @@ html.lenis body {
 /* --- Disabled state --- */
 .field--disabled .field__input,
 .field--disabled .field__textarea,
-.field--disabled .field__select {
+.field--disabled .field__select,
+.field--disabled > input,
+.field--disabled > textarea,
+.field--disabled > select {
   opacity: 0.5;
   cursor: not-allowed;
   background: rgba(255, 255, 255, 0.02);
@@ -873,7 +895,10 @@ html.lenis body {
 /* --- Loading state --- */
 .field--loading .field__input,
 .field--loading .field__textarea,
-.field--loading .field__select {
+.field--loading .field__select,
+.field--loading > input,
+.field--loading > textarea,
+.field--loading > select {
   background-image: none;
   padding-left: 2.5rem;
 }
@@ -896,12 +921,16 @@ html.lenis body {
 /* --- Autofill handling --- */
 .field__input:-webkit-autofill,
 .field__input:-webkit-autofill:hover,
-.field__input:-webkit-autofill:focus {
+.field__input:-webkit-autofill:focus,
+.field > input:-webkit-autofill,
+.field > input:-webkit-autofill:hover,
+.field > input:-webkit-autofill:focus {
   -webkit-box-shadow: 0 0 0 1000px var(--color-void) inset !important;
   -webkit-text-fill-color: var(--color-sand) !important;
   transition: background-color 5000s ease-in-out 0s;
 }
-.field__input:-webkit-autofill + .field__label {
+.field__input:-webkit-autofill + .field__label,
+.field > input:-webkit-autofill + .field__label {
   top: 0;
   transform: translateY(-100%) scale(0.85);
   color: var(--accent);
