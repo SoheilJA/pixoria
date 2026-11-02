@@ -1,9 +1,5 @@
 {% load icon_tags fa_digits nav_tags %}
-{% comment %} خدمات — ۱۰.۲: ۴ کارتِ پورتره با ASCII، هرکارت لینک کامل به صفحه سرویس
-   کارت‌ها: طراحی سایت (globe)، برنامه‌نویسی (starship)، طراحی لوگو (ringed-planet)، طراحی گرافیکی (galaxy-fleet)
-   دسکتاپ: ۴ ستون، تبلت ۲×۲، موبایل اسکرول افقی snapping
-   حالت hover/focus: پس‌زمینه نارنجی پر، متن تیره، ASCII palette ink + animate (active)
-   بدون گرادیان، ترنزیشن ≤۲۰۰ms {% endcomment %}
+{% comment %} خدمات — کارت‌ها با ASCII داینامیک از مدل Service {% endcomment %}
 {% if services %}
   <section id="services" class="ry-scope relative overflow-hidden border-b border-line/10">
     <div class="relative z-10 mx-auto max-w-[1280px] px-6 section-space">
@@ -12,28 +8,7 @@
 
       <div class="mt-14 grid gap-6 lg:grid-cols-4" role="list" aria-label="فهرست خدمات">
         {% for service in services %}
-          {% comment %} تعیین صحنه ASCII بر اساس slug خدمت {% endcomment %}
-          {% if "web" in service.slug or "design" in service.slug %}
-            {% with ascii_scene="globe" ascii_options='{"radius": 10}' %}
-              {% include "home/sections/_service_card.html" %}
-            {% endwith %}
-          {% elif "program" in service.slug or "software" in service.slug or "dev" in service.slug %}
-            {% with ascii_scene="starship" ascii_options='{}' %}
-              {% include "home/sections/_service_card.html" %}
-            {% endwith %}
-          {% elif "logo" in service.slug or "brand" in service.slug %}
-            {% with ascii_scene="ringed-planet" ascii_options='{"radius": 10}' %}
-              {% include "home/sections/_service_card.html" %}
-            {% endwith %}
-          {% elif "graphic" in service.slug or "advertis" in service.slug %}
-            {% with ascii_scene="galaxy-fleet" ascii_options='{}' %}
-              {% include "home/sections/_service_card.html" %}
-            {% endwith %}
-          {% else %}
-            {% with ascii_scene="globe" ascii_options='{"radius": 10}' %}
-              {% include "home/sections/_service_card.html" %}
-            {% endwith %}
-          {% endif %}
+          {% include "home/sections/_service_card.html" %}
         {% endfor %}
       </div>
     </div>

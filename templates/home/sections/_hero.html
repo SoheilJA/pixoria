@@ -63,9 +63,11 @@
 
   </div>
 
-  {% comment %} موبایل: ASCII بنر زیر متن (~۳۰۰px) {% endcomment %}
+  {% comment %} موبایل: ASCII بنر زیر متن (~۳۰۰px) — center center {% endcomment %}
   <div class="lg:hidden w-full" aria-hidden="true">
-    <ascii-art piece="{{ hero.ascii_piece|default:'cliff-lighthouse-night' }}" look="{{ hero.ascii_look|default:'dots' }}" bg="{{ hero.ascii_bg|default:'black' }}" class="w-full h-[300px]"></ascii-art>
+    <div class="relative w-full h-[300px] flex items-center justify-center overflow-hidden">
+      <ascii-art piece="{{ hero.ascii_piece|default:'cliff-lighthouse-night' }}" look="{{ hero.ascii_look|default:'dots' }}" bg="{{ hero.ascii_bg|default:'black' }}" class="w-full h-full"></ascii-art>
+    </div>
   </div>
 
   {% comment %} سرنخِ اسکرول — خطِ ساده با نبضِ آرام {% endcomment %}

@@ -1,15 +1,15 @@
 {% load static highlight_tags icon_tags %}
-{% comment %} کارتِ خدمت — پورتره با ASCII میانی، لینک کامل
-   Context لازم: service, ascii_scene, ascii_options (JSON string)
-   حالت hover/focus: پس‌زمینه پر نارنجی، متن تیره، ASCII palette ink + active
+{% comment %} کارتِ خدمت — پورتره با ASCII میانی (ascii-magic-art داینامیک)، لینک کامل
+   Context لازم: service
+   حالت hover/focus: پس‌زمینه پر نارنجی، متن تیره
    ترنزیشن ≤۲۰۰ms، بدون گرادیان {% endcomment %}
 <article class="group relative flex flex-col h-full bg-void border border-line/10
-           transition-colors duration-200
-           hover:bg-accent hover:text-accent-ink
-           focus-within:bg-accent focus-within:text-accent-ink
-           focus-within:outline-none focus-within:ring-2 focus-within:ring-accent"
-     role="listitem"
-     tabindex="0">
+            transition-colors duration-200
+            hover:bg-accent hover:text-accent-ink
+            focus-within:bg-accent focus-within:text-accent-ink
+            focus-within:outline-none focus-within:ring-2 focus-within:ring-accent"
+      role="listitem"
+      tabindex="0">
   <a href="{% url 'services:detail' service.slug %}"
      class="flex flex-col h-full p-6 md:p-8"
      aria-label="مشاهده صفحهٔ خدمت {{ service.title }}">
@@ -24,60 +24,13 @@
       {% endif %}
     </div>
 
-    {% comment %} ASCII میانی — flex-grow، idle/active palette {% endcomment %}
-    <div class="my-8 flex flex-1 items-center justify-center min-h-[200px] md:min-h-[240px]">
-      <div class="ascii-scene-wrapper ascii-scene--service"
-           data-ascii-scene="{{ ascii_scene }}"
-           data-ascii-options='{{ ascii_options|safe }}'
-           data-ascii-fps="24"
-           data-ascii-width="70"
-           data-ascii-height="35"
-           data-ascii-palette="ink"
-           data-ascii-state="idle"
-           aria-hidden="true">
-        <canvas class="ascii-canvas" loading="lazy" aria-hidden="true"></canvas>
-        <noscript>
-          <div class="ascii-fallback" style="
-            display: flex; align-items: center; justify-content: center;
-            width: 100%; height: 100%; min-height: 180px;
-            background: var(--color-void);
-            color: var(--color-sand);
-            font-family: monospace; font-size: clamp(10px, 1.5vw, 14px);
-            border: 1px solid rgba(216, 207, 192, 0.1);
-            border-radius: 0.5rem;
-          ">
-            [ASCII {{ ascii_scene|title }} scene]
-          </div>
-        </noscript>
-      </div>
-      <script type="module">
-        import('{% static "js/ascii/engine.js" %}').then(() => {
-          import('{% static "js/ascii/scenes/"|add:ascii_scene|add:".js" %}').then(() => {
-            if (window.initAsciiFromDOM) {
-              const wrapper = document.currentScript?.closest('[data-ascii-scene]');
-              if (wrapper && !wrapper._asciiEngine) {
-                // Set active state on hover/focus of parent card
-                const card = wrapper.closest('article.group');
-                if (card) {
-                  card.addEventListener('mouseenter', () => wrapper.dataset.asciiState = 'active');
-                  card.addEventListener('mouseleave', () => wrapper.dataset.asciiState = 'idle');
-                  card.addEventListener('focusin', () => wrapper.dataset.asciiState = 'active');
-                  card.addEventListener('focusout', () => wrapper.dataset.asciiState = 'idle');
-                }
-                window.initAsciiFromDOM(wrapper);
-              }
-            }
-          }).catch(err => {
-            console.warn('ASCII scene failed to load:', err);
-          });
-        }).catch(err => {
-          console.warn('ASCII Engine failed to load:', err);
-        });
-      </script>
+    {% comment %} ASCII میانی — flex-grow، در باکس محدود می‌ماند، center center {% endcomment %}
+    <div class="my-8 flex flex-1 items-center justify-center min-h-[200px] md:min-h-[240px] relative overflow-hidden">
+      <ascii-art piece="{{ service.ascii_piece_resolved }}" look="{{ service.ascii_look_resolved }}" bg="{{ service.ascii_bg_resolved }}" class="w-full h-full absolute inset-0"></ascii-art>
     </div>
 
     {% comment %} فوتر کارت: عنوان + توضیح ۲ خط + لینک مشاهده {% endcomment %}
-    <div class="mt-auto pt-6">
+    <div class="mt-auto pt-6 relative z-10">
       <h3 class="ry-serif text-2xl md:text-3xl leading-tight text-sand
                  group-hover:text-accent-ink group-focus-within:text-accent-ink
                  transition-colors duration-200">
@@ -99,21 +52,5 @@
         {% icon "arrow-left" class="h-3.5 w-3.5" %}
       </span>
     </div>
-
-    <script>
-      // Activate ASCII on card hover/focus - use IIFE to avoid variable conflicts
-      (() => {
-        const card = document.currentScript?.closest('article.group');
-        const asciiWrapper = card?.querySelector('[data-ascii-scene]');
-        if (card && asciiWrapper) {
-          const setActive = () => asciiWrapper.dataset.asciiState = 'active';
-          const setIdle = () => asciiWrapper.dataset.asciiState = 'idle';
-          card.addEventListener('mouseenter', setActive);
-          card.addEventListener('mouseleave', setIdle);
-          card.addEventListener('focusin', setActive);
-          card.addEventListener('focusout', setIdle);
-        }
-      })();
-    </script>
   </a>
 </article>

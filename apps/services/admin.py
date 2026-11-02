@@ -182,7 +182,7 @@ class ServiceAdmin(IconPreviewMixin, admin.ModelAdmin):
         ("هویت خدمت", {"fields": ["title", "slug", "icon", "excerpt", "description"]}),
         (
             "کارت صفحه اصلی",
-            {"fields": ["visual", "card_span", "chips", "badge", "featured", "order"]},
+            {"fields": ["visual", "card_span", "ascii_piece", "ascii_look", "ascii_bg", "chips", "badge", "featured", "order"]},
         ),
         ("تگ‌ها", {"fields": ["tags"]}),
         (
