@@ -1,0 +1,160 @@
+/**
+ * ASCII Canvas Styles
+ * Minimal styling for ASCII art canvases
+ */
+
+/* Canvas base */
+.ascii-canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 2 / 1;
+  min-height: 200px;
+  background: var(--color-void);
+  color: var(--color-sand);
+  font-family: "JetBrains Mono", "Fira Code", "Consolas", monospace;
+  font-size: clamp(8px, 1.5vw, 12px);
+  line-height: 1.2;
+  letter-spacing: 0;
+  white-space: pre;
+  overflow: hidden;
+  border: 1px solid rgba(216, 207, 192, 0.1);
+  border-radius: 0.5rem;
+}
+
+/* Container for responsive sizing */
+.ascii-container {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+}
+
+.ascii-container canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* Scene wrapper for placement in sections */
+.ascii-scene-wrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 2 / 1;
+  min-height: 180px;
+  max-height: 400px;
+}
+
+.ascii-scene-wrapper canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Loading state */
+.ascii-canvas[data-loading] {
+  opacity: 0.5;
+}
+
+.ascii-canvas[data-loading]::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 24px;
+  height: 24px;
+  border: 2px solid rgba(217, 119, 87, 0.3);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: ascii-spin 1s linear infinite;
+}
+
+@keyframes ascii-spin {
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* Reduced motion - static fallback */
+@media (prefers-reduced-motion: reduce) {
+  .ascii-canvas {
+    /* Canvas will render single frame via engine */
+  }
+}
+
+/* Scene-specific sizing */
+.ascii-scene--hero .ascii-canvas {
+  aspect-ratio: 16 / 9;
+  min-height: 300px;
+  font-size: clamp(10px, 2vw, 14px);
+}
+
+.ascii-scene--contact .ascii-canvas {
+  aspect-ratio: 1 / 1;
+  min-height: 250px;
+  max-height: 350px;
+}
+
+.ascii-scene--service .ascii-canvas {
+  aspect-ratio: 4 / 3;
+  min-height: 200px;
+}
+
+.ascii-scene--about .ascii-canvas {
+  aspect-ratio: 3 / 2;
+  min-height: 220px;
+}
+
+/* Grid overlay for debugging (dev only) */
+.ascii-canvas[data-debug] {
+  background-image:
+    linear-gradient(rgba(217, 119, 87, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(217, 119, 87, 0.05) 1px, transparent 1px);
+  background-size: 10px 20px;
+}
+
+/* Full-width ASCII band (for pre-footer CTA) */
+.ascii-band {
+  width: 100%;
+  aspect-ratio: 4 / 1;
+  min-height: 120px;
+  max-height: 200px;
+  background: var(--color-void);
+  border-block: 1px solid rgba(216, 207, 192, 0.1);
+}
+
+.ascii-band canvas {
+  width: 100%;
+  height: 100%;
+  font-size: clamp(8px, 1vw, 10px);
+}
+
+/* Inline ASCII (for small decorative elements) */
+.ascii-inline {
+  display: inline-block;
+  font-family: "JetBrains Mono", "Fira Code", monospace;
+  font-size: 0.85em;
+  line-height: 1.2;
+  color: var(--accent);
+  white-space: pre;
+  letter-spacing: 0;
+}
+
+/* Accessibility - provide text alternative */
+.ascii-canvas[aria-label] {
+  /* Canvas itself is decorative, aria-label on wrapper provides context */
+}
+
+/* Focus visible for keyboard navigation */
+.ascii-canvas:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Print styles */
+@media print {
+  .ascii-canvas,
+  .ascii-scene-wrapper,
+  .ascii-band {
+    display: none;
+  }
+}

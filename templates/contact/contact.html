@@ -193,12 +193,11 @@
       </div>
     </div>
   </section>
-
-  {% comment %} سکشن ۳: دفتر و پوشش خدمات (Ryoku SVG map) {% endcomment %}
+{% comment %} سکشن ۳: دفتر و پوشش خدمات (ASCII Globe) {% endcomment %}
   {% if map_section %}
     <section id="cities" class="ry-scope relative overflow-hidden border-b border-line/10">
       <div class="relative z-10 mx-auto max-w-4xl px-6 section-space text-center">
-        {% include 'components/_ry_section_header.html' with ry_num="03" ry_label_fa="دفتر" ry_glyph="دـ" %}
+        {% include 'components/_ry_section_header.html' with ry_num="03" ry_label_fa="دفتر" %}
 
         {% if map_section.eyebrow %}
           <p class="ry-label-fa ry-reveal justify-center">{{ map_section.eyebrow }}</p>
@@ -214,73 +213,74 @@
           </p>
         {% endif %}
 
-        {% comment %} نقشه الشعاعی Ryoku — خطوط هیرلاین، دایره مرکزی، نکات {% endcomment %}
-        <svg class="mx-auto ry-reveal mt-14 w-full max-w-2xl" viewBox="0 0 800 300" role="img" aria-label="دفتر مرکزی پیکسوریا و حلقهٔ پوشش خدمات" data-delay="0.2">
-          <defs>
-            <linearGradient id="cl" x1="0" y1="0" x2="1" y2="0">
-              <stop offset="0" stop-color="{{ '#8f6b2c' }}" />
-              <stop offset=".5" stop-color="{{ '#e8c47a' }}" />
-              <stop offset="1" stop-color="{{ '#c9a15a' }}" />
-            </linearGradient>
-            <radialGradient id="cg">
-              <stop offset="0" stop-color="rgba(232,196,122,.55)" />
-              <stop offset="1" stop-color="rgba(232,196,122,0)" />
-            </radialGradient>
-          </defs>
+        {% comment %} ASCII Globe — replaces SVG animation {% endcomment %}
+        <div class="ry-reveal mx-auto mt-14 max-w-2xl" data-delay="0.2">
+          {% load static %}
+          <div class="ascii-scene-wrapper ascii-scene--contact"
+               data-ascii-scene="globe"
+               data-ascii-options='{"radius": 14, "latLines": 7, "lonLines": 12}'
+               data-ascii-fps="30"
+               data-ascii-width="80"
+               data-ascii-height="40"
+               aria-label="نمودار زمین ASCII نشان‌دهنده پوشش خدمات جهانی"
+               id="ascii-globe-contact">
+            <canvas class="ascii-canvas" id="ascii-globe-contact_canvas" loading="lazy" aria-hidden="true"></canvas>
+            <noscript>
+              <div class="ascii-fallback" style="
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                height: 100%;
+                min-height: 180px;
+                background: var(--color-void);
+                color: var(--color-sand);
+                font-family: monospace;
+                font-size: clamp(10px, 1.5vw, 14px);
+                border: 1px solid rgba(216, 207, 192, 0.1);
+                border-radius: 0.5rem;
+              ">
+                [ASCII Globe scene — requires JavaScript]
+              </div>
+            </noscript>
+          </div>
+          <script type="module">
+            import('{% static "js/ascii/engine.js" %}').then(() => {
+              // Load the globe scene
+              import('{% static "js/ascii/scenes/globe.js" %}').then(() => {
+                // Wait for scene to be registered, then initialize
+                const initAscii = () => {
+                  if (window.AsciiScenes?.globe && window.initAsciiFromDOM) {
+                    const wrapper = document.currentScript?.closest('[data-ascii-scene]');
+                    if (wrapper && !wrapper._asciiEngine) {
+                      window.initAsciiFromDOM(wrapper);
+                    }
+                  } else {
+                    // Retry after a short delay
+                    setTimeout(initAscii, 50);
+                  }
+                };
+                initAscii();
+              }).catch(err => {
+                console.warn('ASCII Globe scene failed to load:', err);
+              });
+            }).catch(err => {
+              console.warn('ASCII Engine failed to load:', err);
+            });
+          </script>
+        </div>
 
-          <g fill="none" stroke="rgba(216,207,192,.28)">
-            <circle cx="400" cy="160" r="96" stroke-dasharray="3 10" />
-            <circle cx="400" cy="160" r="140" stroke-dasharray="3 12" opacity=".7" />
-            <circle cx="400" cy="160" r="188" stroke-dasharray="2 14" opacity=".45" />
-          </g>
-
-          <g fill="none" stroke="url(#cl)" stroke-width="1.6" style="transform-origin: 400px 160px" class="cities-spin">
-            <ellipse cx="400" cy="160" rx="118" ry="44" stroke-dasharray="8 14" opacity=".75" />
-          </g>
-          <g fill="none" stroke="rgba(46,99,255,.55)" stroke-width="1.4" style="transform-origin: 400px 160px" class="cities-spin-rev">
-            <ellipse cx="400" cy="160" rx="168" ry="60" stroke-dasharray="5 16" opacity=".6" />
-          </g>
-
-          <circle r="78" fill="url(#cg)" cx="400" cy="160" />
-
-          <g>
-            <circle cx="400" cy="160" r="16" fill="#0d0e0c" stroke="{{ '#e8c47a' }}" stroke-width="2.5" />
-            <circle cx="400" cy="160" r="5" fill="{{ '#e8c47a' }}" />
-            <circle cx="400" cy="160" r="16" fill="none" stroke="{{ '#e8c47a' }}" stroke-width="1.5">
-              <animate attributeName="r" values="16;40" dur="2.6s" repeatCount="indefinite" />
-              <animate attributeName="opacity" values=".8;0" dur="2.6s" repeatCount="indefinite" />
-            </circle>
-          </g>
-
-          <circle r="5.5" fill="{{ '#e8c47a' }}">
-            <animateMotion dur="4s" repeatCount="indefinite" path="M 400 44 A 118 44 0 1 1 399.9 44 Z" />
-          </circle>
-          <circle r="4" fill="#3b7bff">
-            <animateMotion dur="5.6s" repeatCount="indefinite" path="M 400 100 A 168 60 0 1 0 399.9 100 Z" />
-          </circle>
-          <circle r="3.5" fill="rgba(245,243,238,.8)">
-            <animateMotion dur="7s" repeatCount="indefinite" path="M 400 64 A 96 96 0 1 1 399.9 64 Z" />
-          </circle>
-
-          {% if map_section.office_name %}
-            <g font-size="24" font-weight="800" fill="{{ '#d8cfc0' }}" text-anchor="middle">
-              <text x="400" y="252">{{ map_section.office_name }}</text>
-            </g>
-          {% endif %}
-          {% if map_section.office_note %}
-            <g font-size="13" fill="rgba(216,207,192,.55)" text-anchor="middle">
-              <text x="400" y="274">{{ map_section.office_note }}</text>
-            </g>
-          {% endif %}
-          {% if map_section.coverage_note %}
-            <text x="400" y="36" text-anchor="middle" font-size="13" fill="rgba(232,196,122,.8)">
-              {{ map_section.coverage_note }}
-            </text>
-          {% endif %}
-        </svg>
-
+        {% if map_section.office_name %}
+          <p class="ry-reveal mt-6 text-lg font-semibold text-sand" data-delay="0.24">
+            {{ map_section.office_name }}
+          </p>
+        {% endif %}
+        {% if map_section.office_note %}
+          <p class="ry-reveal mt-2 text-sm text-sand/55" data-delay="0.28">
+            {{ map_section.office_note }}
+          </p>
+        {% endif %}
         {% if map_section.coverage_note %}
-          <p class="ry-reveal mt-6 text-xs leading-6 text-sand/40" data-delay="0.26">
+          <p class="ry-reveal mt-4 text-xs leading-6 text-sand/40" data-delay="0.32">
             {{ map_section.coverage_note }}
           </p>
         {% endif %}

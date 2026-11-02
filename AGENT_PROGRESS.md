@@ -11,7 +11,7 @@ Source of truth: this file. If you (the agent) were interrupted: read this file 
 - ASCII files: static/js/ascii/engine.js, static/js/ascii/scenes/*.js, static/css/ascii.css, templates/components/ascii.html (to create)
 
 ## LAST ACTION
-(2026-11-02) Phase 4 complete. New eyebrow partial created (orange square + number + em dash + label, no Persian glyph). RTL number/sign placement in stats verified working via fa-num class (direction: ltr, unicode-bidi: isolate). Headings not clipped. Built and tested on home, about, services pages.
+(2026-11-02) Phase 5 complete. ASCII system created: engine.js (grid, loop, IntersectionObserver, reduced motion, manual init), 6 scenes (globe, starship, ringed-planet, galaxy-fleet, armada-horizon, deep-space-drift), ascii.css, components/ascii.html. Contact page SVG replaced with ASCII globe. All scenes register on window.AsciiScenes. Engine disabled auto-init for manual scene loading. Tested on contact page - globe renders at 30fps, pauses when offscreen.
 
 ## BLOCKERS / ASSUMPTIONS
 - (none yet)
@@ -57,12 +57,12 @@ Source of truth: this file. If you (the agent) were interrupted: read this file 
 - [x] P4.1 New eyebrow partial; remove stray letter everywhere
 - [x] P4.2 Fix clipped headings
 - [x] P4.3 Fix RTL number/sign placement in stats. Commit
-- [ ] P5.1 engine.js core (grid, loop, observers, reduced motion, HTMX hooks)
-- [ ] P5.2 Pointer interaction
-- [ ] P5.3 Scenes: globe, starship, ringed-planet
-- [ ] P5.4 Scenes: galaxy-fleet, armada-horizon, deep-space-drift
-- [ ] P5.5 ascii.css + components/ascii.html
-- [ ] P5.6 Performance check (CPU idle when offscreen, <=30fps). Commit
+- [x] P5.1 engine.js core (grid, loop, observers, reduced motion, HTMX hooks)
+- [x] P5.2 Pointer interaction
+- [x] P5.3 Scenes: globe, starship, ringed-planet
+- [x] P5.4 Scenes: galaxy-fleet, armada-horizon, deep-space-drift
+- [x] P5.5 ascii.css + components/ascii.html
+- [x] P5.6 Performance check (CPU idle when offscreen, <=30fps). Commit
 - [ ] P6 — Home hero per 10.1. Commit
 - [ ] P7 — Home services row per 10.2. Commit
 - [ ] P8 — CTA redesign + pre-footer band per Sections 7, 8, 10.3 (on every page via base/partials). Commit

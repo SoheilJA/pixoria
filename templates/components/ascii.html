@@ -1,0 +1,66 @@
+{% comment %}
+ASCII Canvas Component
+Usage:
+  {% include 'components/ascii.html' with scene="globe" scene_options='{"radius": 12}' canvas_id="ascii-globe" %}
+  
+Parameters:
+  scene: string - scene name (globe, starship, ringed-planet, galaxy-fleet, armada-horizon, deep-space-drift)
+  scene_options: JSON string - options passed to scene constructor
+  canvas_id: string - optional ID for the canvas element
+  class: string - optional CSS classes for wrapper
+  width: int - optional grid width
+  height: int - optional grid height
+  fps: int - optional frame rate (default 30)
+  aria_label: string - accessibility label
+  lazy: bool - whether to lazy-load (default true)
+{% endcomment %}
+
+{% load static %}
+
+<div class="ascii-scene-wrapper {% if wrapper_class %}{{ wrapper_class }}{% endif %}"
+     data-ascii-scene="{{ scene }}"
+     data-ascii-options='{{ scene_options|default:"{}"|safe }}'
+     data-ascii-fps="{{ fps|default:30 }}"
+     data-ascii-width="{{ width|default:80 }}"
+     data-ascii-height="{{ height|default:40 }}"
+     {% if aria_label %}aria-label="{{ aria_label }}"{% endif %}
+     {% if canvas_id %}id="{{ canvas_id }}"{% endif %}>
+  <canvas class="ascii-canvas"
+          {% if canvas_id %}id="{{ canvas_id }}_canvas"{% endif %}
+          {% if lazy|default:true %}loading="lazy"{% endif %}
+          aria-hidden="true">
+  </canvas>
+  <noscript>
+    <div class="ascii-fallback" style="
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      min-height: 180px;
+      background: var(--color-void);
+      color: var(--color-sand);
+      font-family: monospace;
+      font-size: clamp(10px, 1.5vw, 14px);
+      border: 1px solid rgba(216, 207, 192, 0.1);
+      border-radius: 0.5rem;
+    ">
+      [ASCII {{ scene|title }} scene — requires JavaScript]
+    </div>
+  </noscript>
+</div>
+
+<script type="module">
+  // Dynamic import for performance - only loads when component is on page
+  import('{% static "js/ascii/engine.js" %}').then(() => {
+    // Engine auto-initializes via initAsciiFromDOM()
+    // If this component was added via HTMX after initial load, trigger init
+    if (window.initAsciiFromDOM) {
+      const wrapper = document.currentScript?.closest('[data-ascii-scene]');
+      if (wrapper && !wrapper._asciiEngine) {
+        window.initAsciiFromDOM(wrapper);
+      }
+    }
+  }).catch(err => {
+    console.warn('ASCII Engine failed to load:', err);
+  });
+</script>

@@ -281,4 +281,4 @@ STORAGES = {
 # و نسخه‌های .gz که در STATIC_ROOT ساخته شده‌اند را نادیده می‌گیرد. با
 # خاموش کردنِ این گزینه، فایل‌ها از STATIC_ROOT سرو می‌شوند و gzip فعال
 # می‌شود. collectstatic باید بعد از هر تغییرِ فایل‌های استاتیک اجرا شود.
-WHITENOISE_USE_FINDERS = False
+WHITENOISE_USE_FINDERS = True
