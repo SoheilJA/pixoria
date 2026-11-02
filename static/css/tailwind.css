@@ -58,9 +58,6 @@
     --color-ink: #0a0a0c;
     --color-ink2: #121214;
     --color-cream: #f5f3ee;
-    --color-gold: #c9a15a;
-    --color-gold-light: #e8c47a;
-    --color-gold-dark: #8f6b2c;
     --color-void: #0d0e0c;
     --color-surface: #121311;
     --color-sand: #d8cfc0;
@@ -1120,15 +1117,6 @@
       background-color: color-mix(in oklab, var(--color-accent) 20%, transparent);
     }
   }
-  .bg-gold {
-    background-color: var(--color-gold);
-  }
-  .bg-gold\/20 {
-    background-color: color-mix(in srgb, #c9a15a 20%, transparent);
-    @supports (color: color-mix(in lab, red, red)) {
-      background-color: color-mix(in oklab, var(--color-gold) 20%, transparent);
-    }
-  }
   .bg-ink {
     background-color: var(--color-ink);
   }
@@ -1183,8 +1171,8 @@
       background-color: color-mix(in oklab, var(--color-void) 95%, transparent);
     }
   }
-  .fill-gold-light {
-    fill: var(--color-gold-light);
+  .fill-accent-light {
+    fill: var(--color-accent-light);
   }
   .fill-sand {
     fill: var(--color-sand);
@@ -1700,33 +1688,6 @@
       color: color-mix(in oklab, var(--color-cream) 85%, transparent);
     }
   }
-  .text-gold {
-    color: var(--color-gold);
-  }
-  .text-gold-dark {
-    color: var(--color-gold-dark);
-  }
-  .text-gold-light {
-    color: var(--color-gold-light);
-  }
-  .text-gold\/50 {
-    color: color-mix(in srgb, #c9a15a 50%, transparent);
-    @supports (color: color-mix(in lab, red, red)) {
-      color: color-mix(in oklab, var(--color-gold) 50%, transparent);
-    }
-  }
-  .text-gold\/60 {
-    color: color-mix(in srgb, #c9a15a 60%, transparent);
-    @supports (color: color-mix(in lab, red, red)) {
-      color: color-mix(in oklab, var(--color-gold) 60%, transparent);
-    }
-  }
-  .text-gold\/80 {
-    color: color-mix(in srgb, #c9a15a 80%, transparent);
-    @supports (color: color-mix(in lab, red, red)) {
-      color: color-mix(in oklab, var(--color-gold) 80%, transparent);
-    }
-  }
   .text-ink {
     color: var(--color-ink);
   }
@@ -2055,11 +2016,11 @@
     .hover\:text-cream:hover {
       color: var(--color-cream);
     }
-    .hover\:text-gold-dark:hover {
-      color: var(--color-gold-dark);
+    .hover\:text-accent-dark:hover {
+      color: var(--color-accent-dark);
     }
-    .hover\:text-gold-light:hover {
-      color: var(--color-gold-light);
+    .hover\:text-accent-light:hover {
+      color: var(--color-accent-light);
     }
     .hover\:text-sand:hover {
       color: var(--color-sand);
@@ -2093,8 +2054,8 @@
   .focus\:bg-accent:focus {
     background-color: var(--color-accent);
   }
-  .focus\:bg-gold:focus {
-    background-color: var(--color-gold);
+  .focus\:bg-accent:focus {
+    background-color: var(--color-accent);
   }
   .focus\:px-5:focus {
     padding-inline: calc(var(--spacing) * 5);
@@ -2461,9 +2422,6 @@
   }
 }
 :root {
-  --gold: #c9a15a;
-  --gold-l: #e8c47a;
-  --gold-d: #8f6b2c;
   --ink: #0a0a0c;
   --ink2: #121214;
   --ink3: #060607;
@@ -2969,9 +2927,9 @@ html.lenis, html.lenis body {
   flex: none;
 }
 .share-btn:hover {
-  color: var(--gold-d);
-  border-color: var(--gold);
-  background: rgba(201, 161, 90, 0.12);
+  color: var(--accent-dark);
+  border-color: var(--accent);
+  background: rgba(217, 119, 87, 0.12);
 }
 .faq-item {
   border: 1px solid rgba(30, 27, 21, 0.12);
@@ -4009,14 +3967,6 @@ html.lenis, html.lenis body {
 .svc-list-card:hover .svc-list-more svg, .svc-list-card:focus-visible .svc-list-more svg {
   transform: translateX(-0.3rem);
 }
-.text-goldgrad {
-  color: var(--accent);
-  font-weight: 600;
-}
-.text-goldgrad-dark {
-  color: var(--accent);
-  font-weight: 600;
-}
 .stroke-title {
   -webkit-text-stroke: 1px rgba(217, 119, 87, 0.22);
   color: transparent;
@@ -4188,16 +4138,6 @@ a:hover .brand-emblem {
 .btn--lg {
   padding: 1.1rem 2.2rem;
   font-size: 12px;
-}
-.btn-gold {
-  background: var(--accent);
-  color: var(--accent-ink);
-  box-shadow: 0 14px 40px -12px rgba(217, 119, 87, 0.55);
-}
-.btn-gold:hover {
-  background: var(--color-sand);
-  box-shadow: 0 20px 55px -12px rgba(216, 207, 192, 0.65);
-  transform: translateY(-2px);
 }
 .btn-ghost {
   border: 1px solid rgba(217, 119, 87, 0.45);
@@ -4687,9 +4627,9 @@ a:hover .brand-emblem {
   height: 2.75rem;
   flex: none;
   border-radius: 0.9rem 1.7rem 0.9rem 1.7rem;
-  background: rgba(201, 161, 90, 0.12);
-  border: 1px solid rgba(201, 161, 90, 0.35);
-  color: var(--gold-l);
+  background: rgba(217, 119, 87, 0.12);
+  border: 1px solid rgba(217, 119, 87, 0.35);
+  color: var(--accent-light);
   font-weight: 700;
 }
 .ghost-num {
@@ -4801,7 +4741,7 @@ a:hover .brand-emblem {
   transition: 0.35s;
 }
 .slider-dot.active {
-  background: var(--gold-l);
+  background: var(--accent-light);
   width: 24px;
 }
 .play-badge {
@@ -4810,9 +4750,9 @@ a:hover .brand-emblem {
   width: 4.25rem;
   height: 4.25rem;
   border-radius: 999px;
-  color: var(--gold-l);
+  color: var(--accent-light);
   background: rgba(10, 10, 12, 0.45);
-  border: 1px solid rgba(232, 196, 122, 0.6);
+  border: 1px solid rgba(217, 119, 87, 0.6);
   -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
   box-shadow: 0 0 44px -8px rgba(201, 161, 90, 0.55);
@@ -4986,7 +4926,7 @@ a:hover .brand-emblem {
 }
 .mega-chevron:hover {
   background: rgba(255, 255, 255, 0.06);
-  color: var(--gold-l);
+  color: var(--accent-light);
 }
 .mega-chevron svg {
   transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.3, 1);
@@ -4995,7 +4935,7 @@ a:hover .brand-emblem {
   transform: rotate(180deg);
 }
 .mega-chevron:focus-visible {
-  outline: 2px solid var(--gold-l);
+  outline: 2px solid var(--accent-light);
   outline-offset: 2px;
 }
 .mega-menu {
@@ -5289,10 +5229,10 @@ a:hover .brand-emblem {
   font-size: 1rem;
   font-weight: 700;
   margin: 1.3em 0 0.5em;
-  color: var(--gold-d);
+  color: var(--accent-dark);
 }
 .prose-cream h5, .prose-cream h6 {
-  color: var(--gold-l);
+  color: var(--accent-light);
 }
 .prose-ink a, .prose-cream a {
   font-weight: 600;
@@ -5302,20 +5242,20 @@ a:hover .brand-emblem {
   transition: color 0.25s;
 }
 .prose-ink a {
-  color: var(--gold-d);
-  text-decoration-color: rgba(143, 107, 44, 0.4);
+  color: var(--accent-dark);
+  text-decoration-color: rgba(184, 90, 66, 0.4);
 }
 .prose-ink a:hover {
-  color: var(--gold);
-  text-decoration-color: var(--gold);
+  color: var(--accent);
+  text-decoration-color: var(--accent);
 }
 .prose-cream a {
-  color: var(--gold-l);
-  text-decoration-color: rgba(232, 196, 122, 0.4);
+  color: var(--accent-light);
+  text-decoration-color: rgba(232, 141, 111, 0.4);
 }
 .prose-cream a:hover {
   color: #fff;
-  text-decoration-color: var(--gold-l);
+  text-decoration-color: var(--accent-light);
 }
 .prose-ink strong, .prose-cream strong {
   font-weight: 800;
@@ -5367,7 +5307,7 @@ a:hover .brand-emblem {
   width: 7px;
   height: 7px;
   transform: rotate(45deg);
-  background: var(--gold);
+  background: var(--accent);
   opacity: 0.85;
 }
 .prose-ink ol, .prose-cream ol {
@@ -5392,20 +5332,21 @@ a:hover .brand-emblem {
   border-radius: 999px;
 }
 .prose-ink ol > li::before {
-  color: var(--gold-d);
-  background: rgba(201, 161, 90, 0.14);
-  border: 1px solid rgba(143, 107, 44, 0.3);
+  color: var(--accent-dark);
+  background: rgba(217, 119, 87, 0.14);
+  border: 1px solid rgba(184, 90, 66, 0.3);
 }
 .prose-cream ol > li::before {
-  color: var(--gold-l);
-  background: rgba(201, 161, 90, 0.12);
-  border: 1px solid rgba(201, 161, 90, 0.35);
+  color: var(--accent-light);
+  background: rgba(217, 119, 87, 0.12);
+  border: 1px solid rgba(217, 119, 87, 0.35);
 }
 .prose-ink blockquote, .prose-cream blockquote {
   margin: 1.9em 0;
   padding: 0.35em 1.4em 0.35em 0;
-  border-right: 3px solid var(--gold);
+  border-right: 3px solid var(--accent);
   font-size: 1.12rem;
+  font-weight: 500;
   font-weight: 500;
   line-height: 1.8;
 }
@@ -5441,8 +5382,8 @@ a:hover .brand-emblem {
 }
 .prose-cream code {
   background: rgba(255, 255, 255, 0.07);
-  color: var(--gold-l);
-  border: 1px solid rgba(232, 196, 122, 0.22);
+  color: var(--accent-light);
+  border: 1px solid rgba(217, 119, 87, 0.22);
 }
 .prose-ink pre, .prose-cream pre {
   margin: 1.7em 0;
@@ -5571,12 +5512,6 @@ a:hover .brand-emblem {
   letter-spacing: 0;
   color: rgba(216, 207, 192, 0.55);
 }
-.ry-scope .text-goldgrad, .ry-scope .text-goldgrad-dark {
-  background: none;
-  -webkit-background-clip: border-box;
-  background-clip: border-box;
-  -webkit-text-fill-color: currentColor;
-  color: var(--color-sand);
   font-weight: 700;
 }
 .ry-btn {
@@ -5841,16 +5776,9 @@ a:hover .brand-emblem {
 #blog .carousel .blog-card .text-cream\/55 {
   color: rgba(216, 207, 192, 0.55);
 }
-#blog .carousel .blog-card .text-gold-light {
-  color: var(--color-sand);
-}
-.ry-inv .text-goldgrad, .ry-inv .text-goldgrad-dark {
-  background: none;
-  -webkit-background-clip: border-box;
-  background-clip: border-box;
-  -webkit-text-fill-color: currentColor;
+#blog .carousel .blog-card .text-accent-light {
   color: var(--color-void);
-  font-weight: 700;
+}
 }
 .ry-btn--ink {
   background: var(--color-void);
