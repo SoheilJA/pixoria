@@ -95,7 +95,7 @@
                 {% for stat in stats|slice:":4" %}
                   <div class="ry-row grid grid-cols-[auto_1fr] items-center">
                     <span class="ry-label-fa">{{ stat.label }}</span>
-                    <span class="text-lg font-display text-sand fa-num"
+                    <span class="text-lg font-display text-sand fa-num" dir="ltr"
                           data-counter="{{ stat.value }}"{% if stat.prefix %} data-prefix="{{ stat.prefix }}"{% endif %}{% if stat.suffix %} data-suffix="{{ stat.suffix }}"{% endif %}>۰</span>
                   </div>
                 {% endfor %}
@@ -357,7 +357,7 @@
             <div class="ry-stat">
               <p class="ry-stat__num">
                 <span
-                  class="fa-num"
+                  class="fa-num" dir="ltr"
                   data-counter="{{ stat.value }}"{% if stat.prefix %} data-prefix="{{ stat.prefix }}"{% endif %}{% if stat.suffix %} data-suffix="{{ stat.suffix }}"{% endif %}
                 >۰</span>
               </p>
