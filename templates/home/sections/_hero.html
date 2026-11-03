@@ -30,23 +30,23 @@
             [ASCII Armada Horizon scene — requires JavaScript]
           </div>
         </noscript>
-      </div>
-      <script type="module">
-        import('{% static "js/ascii/engine.js" %}').then(() => {
-          import('{% static "js/ascii/scenes/armada-horizon.js" %}').then(() => {
-            if (window.initAsciiFromDOM) {
-              const wrapper = document.currentScript?.closest('[data-ascii-scene]');
-              if (wrapper && !wrapper._asciiEngine) {
-                window.initAsciiFromDOM(wrapper);
+        <script type="module">
+          import('{% static "js/ascii/engine.js" %}').then(() => {
+            import('{% static "js/ascii/scenes/armada-horizon.js" %}').then(() => {
+              if (window.initAsciiFromDOM) {
+                const wrapper = document.currentScript?.closest('[data-ascii-scene]');
+                if (wrapper && !wrapper._asciiEngine) {
+                  window.initAsciiFromDOM(wrapper);
+                }
               }
-            }
+            }).catch(err => {
+              console.warn('ASCII Armada Horizon scene failed to load:', err);
+            });
           }).catch(err => {
-            console.warn('ASCII Armada Horizon scene failed to load:', err);
+            console.warn('ASCII Engine failed to load:', err);
           });
-        }).catch(err => {
-          console.warn('ASCII Engine failed to load:', err);
-        });
-      </script>
+        </script>
+      </div>
     </div>
 
     {% comment %} ستون راست — متن و CTA {% endcomment %}
@@ -131,23 +131,23 @@
           [ASCII Armada Horizon scene — requires JavaScript]
         </div>
       </noscript>
-    </div>
-    <script type="module">
-      import('{% static "js/ascii/engine.js" %}').then(() => {
-        import('{% static "js/ascii/scenes/armada-horizon.js" %}').then(() => {
-          if (window.initAsciiFromDOM) {
-            const wrapper = document.currentScript?.closest('[data-ascii-scene]');
-            if (wrapper && !wrapper._asciiEngine) {
-              window.initAsciiFromDOM(wrapper);
+      <script type="module">
+        import('{% static "js/ascii/engine.js" %}').then(() => {
+          import('{% static "js/ascii/scenes/armada-horizon.js" %}').then(() => {
+            if (window.initAsciiFromDOM) {
+              const wrapper = document.currentScript?.closest('[data-ascii-scene]');
+              if (wrapper && !wrapper._asciiEngine) {
+                window.initAsciiFromDOM(wrapper);
+              }
             }
-          }
+          }).catch(err => {
+            console.warn('ASCII Armada Horizon scene failed to load:', err);
+          });
         }).catch(err => {
-          console.warn('ASCII Armada Horizon scene failed to load:', err);
+          console.warn('ASCII Engine failed to load:', err);
         });
-      }).catch(err => {
-        console.warn('ASCII Engine failed to load:', err);
-      });
-    </script>
+      </script>
+    </div>
   </div>
 
   {% comment %} سرنخِ اسکرول — خطِ ساده با نبضِ آرام {% endcomment %}

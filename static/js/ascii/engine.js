@@ -67,6 +67,16 @@ class AsciiEngine {
     );
 
     this.observer.observe(this.canvas);
+
+    // ResizeObserver to handle layout changes (not just window resize)
+    // Observe the parent wrapper since canvas is 100% width/height
+    if (window.ResizeObserver) {
+      const wrapper = this.canvas.parentElement;
+      if (wrapper) {
+        this.resizeObserver = new ResizeObserver(() => this.resize());
+        this.resizeObserver.observe(wrapper);
+      }
+    }
   }
 
   handleVisibilityChange() {
@@ -170,6 +180,10 @@ class AsciiEngine {
       this.observer.disconnect();
       this.observer = null;
     }
+    if (this.resizeObserver) {
+      this.resizeObserver.disconnect();
+      this.resizeObserver = null;
+    }
     document.removeEventListener('visibilitychange', this.handleVisibilityChange);
   }
 }
@@ -183,14 +197,25 @@ class AsciiScene {
     this.options = options;
   }
 
+  clearGrid(grid) {
+    for (let y = 0; y < grid.length; y++) {
+      for (let x = 0; x < grid[y].length; x++) {
+        grid[y][x] = ' ';
+      }
+    }
+  }
+
   update(grid, width, height) {
     this.time += 1/30;
     // Override in subclasses
   }
 
   setPixel(grid, x, y, char) {
-    if (x >= 0 && x < grid[0].length && y >= 0 && y < grid.length) {
-      grid[y][x] = char;
+    if (!grid || grid.length === 0 || !grid[0] || grid[0].length === 0) return;
+    const xi = Math.round(x);
+    const yi = Math.round(y);
+    if (xi >= 0 && xi < grid[0].length && yi >= 0 && yi < grid.length) {
+      grid[yi][xi] = char;
     }
   }
 

@@ -301,9 +301,47 @@
 
       // Run on DOMContentLoaded
       if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initCustomSelects);
+        document.addEventListener('DOMContentLoaded', async () => {
+          initCustomSelects();
+          // Load ASCII engine and all scenes, then initialize
+          try {
+            await import('{% static "js/ascii/engine.js" %}');
+            // Load all scenes
+            await Promise.all([
+              import('{% static "js/ascii/scenes/armada-horizon.js" %}'),
+              import('{% static "js/ascii/scenes/globe.js" %}'),
+              import('{% static "js/ascii/scenes/starship.js" %}'),
+              import('{% static "js/ascii/scenes/ringed-planet.js" %}'),
+              import('{% static "js/ascii/scenes/galaxy-fleet.js" %}'),
+              import('{% static "js/ascii/scenes/deep-space-drift.js" %}')
+            ]);
+          } catch (e) {
+            console.warn('ASCII Engine/Scenes failed to load:', e);
+          }
+          if (window.initAsciiFromDOM) {
+            window.initAsciiFromDOM(document);
+          }
+        });
       } else {
         initCustomSelects();
+        (async () => {
+          try {
+            await import('{% static "js/ascii/engine.js" %}');
+            await Promise.all([
+              import('{% static "js/ascii/scenes/armada-horizon.js" %}'),
+              import('{% static "js/ascii/scenes/globe.js" %}'),
+              import('{% static "js/ascii/scenes/starship.js" %}'),
+              import('{% static "js/ascii/scenes/ringed-planet.js" %}'),
+              import('{% static "js/ascii/scenes/galaxy-fleet.js" %}'),
+              import('{% static "js/ascii/scenes/deep-space-drift.js" %}')
+            ]);
+          } catch (e) {
+            console.warn('ASCII Engine/Scenes failed to load:', e);
+          }
+          if (window.initAsciiFromDOM) {
+            window.initAsciiFromDOM(document);
+          }
+        })();
       }
     </script>
     {% block extra_js %}

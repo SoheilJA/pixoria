@@ -290,23 +290,23 @@
                 <figure class="ry-frame ry-reveal" data-delay="0.1">
                   {% comment %} Dynamic ASCII scene based on service slug {% endcomment %}
                   {% if "logo" in service.slug or "brand" in service.slug %}
-                    {% with ascii_scene="ringed-planet" ascii_options='{"radius": 10, "seed": "service-section-"|add:forloop.counter}' %}
+                    {% with ascii_scene="ringed-planet" ascii_options='{"radius": 10, "seed": "service-section-logo"}' %}
                       {% include "services/partials/_ascii_scene.html" %}
                     {% endwith %}
                   {% elif "graphic" in service.slug or "advertis" in service.slug %}
-                    {% with ascii_scene="galaxy-fleet" ascii_options='{"seed": "service-section-"|add:forloop.counter}' %}
+                    {% with ascii_scene="galaxy-fleet" ascii_options='{"seed": "service-section-graphic"}' %}
                       {% include "services/partials/_ascii_scene.html" %}
                     {% endwith %}
                   {% elif "program" in service.slug or "software" in service.slug or "dev" in service.slug %}
-                    {% with ascii_scene="starship" ascii_options='{"seed": "service-section-"|add:forloop.counter}' %}
+                    {% with ascii_scene="starship" ascii_options='{"seed": "service-section-program"}' %}
                       {% include "services/partials/_ascii_scene.html" %}
                     {% endwith %}
                   {% elif "web" in service.slug or "design" in service.slug %}
-                    {% with ascii_scene="globe" ascii_options='{"radius": 10, "seed": "service-section-"|add:forloop.counter}' %}
+                    {% with ascii_scene="globe" ascii_options='{"radius": 10, "seed": "service-section-web"}' %}
                       {% include "services/partials/_ascii_scene.html" %}
                     {% endwith %}
                   {% else %}
-                    {% with ascii_scene="deep-space-drift" ascii_options='{"seed": "service-section-"|add:forloop.counter}' %}
+                    {% with ascii_scene="deep-space-drift" ascii_options='{"seed": "service-section-other"}' %}
                       {% include "services/partials/_ascii_scene.html" %}
                     {% endwith %}
                   {% endif %}
